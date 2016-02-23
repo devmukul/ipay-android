@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_horizontal_margin">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/portrait"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_face_black_24dp"
+        app:riv_border_color="@color/colorPrimary"
+        app:riv_border_width="1dip"
+        app:riv_corner_radius="50dip"
+        app:riv_oval="false" />
+
+    <TextView
+        android:id="@+id/request_number"
+        style="@style/TextStylePrimaryMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/portrait" />
+
+    <TextView
+        android:id="@+id/amount"
+        style="@style/TextStylePrimarySmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/request_number"
+        android:layout_toRightOf="@+id/portrait"
+        android:gravity="left" />
+
+    <TextView
+        android:id="@+id/description"
+        style="@style/TextStylePrimarySmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/amount"
+        android:layout_toRightOf="@+id/portrait"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/time"
+        style="@style/TextStylePrimarySmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/description"
+        android:layout_toRightOf="@+id/portrait" />
+
+    <ImageView
+        android:id="@+id/cancel_request"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:padding="@dimen/value5"
+        android:src="@drawable/ic_cancel_black_24dp" />
+
+</RelativeLayout>

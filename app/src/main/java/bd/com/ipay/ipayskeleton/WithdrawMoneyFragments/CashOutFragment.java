@@ -1,0 +1,319 @@
+package bd.com.ipay.ipayskeleton.WithdrawMoneyFragments;
+
+import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+
+public class CashOutFragment extends Fragment implements HttpResponseListener {
+
+    private HttpRequestPostAsyncTask mCashOutTask = null;
+    private WithdrawMoneyResponse mWithdrawMoneyResponse;
+
+    private HttpRequestPostAsyncTask mGetBankTask = null;
+    private GetBankListResponse mBankListResponse;
+
+    private Button buttonWithdrawMoney;
+    private EditText mBankAccountNumberEditText;
+    private EditText mDescriptionEditText;
+    private EditText mAmountEditText;
+    private TextView mLinkABankNoteTextView;
+    private ImageView mBankPicker;
+    private List<UserBankClass> mListUserBankClasses;
+    private ArrayList<String> mUserBankNameList;
+    private ArrayList<String> mUserBankAccountNumberList;
+    private String[] bankArray;
+    private int selectedBankPosition = 0;
+
+    private ProgressDialog mProgressDialog;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_cash_out, container, false);
+        mBankAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
+        mDescriptionEditText = (EditText) v.findViewById(R.id.description);
+        mAmountEditText = (EditText) v.findViewById(R.id.amount);
+        buttonWithdrawMoney = (Button) v.findViewById(R.id.button_cash_out);
+        mBankPicker = (ImageView) v.findViewById(R.id.accountPicker);
+        mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
+
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
+        bankArray = getResources().getStringArray(R.array.default_banks);
+        mUserBankNameList = new ArrayList<String>();
+        mUserBankAccountNumberList = new ArrayList<String>();
+
+        // Prepare the bank list
+        getBankList();
+
+        buttonWithdrawMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    showAlertDialogue();
+                } else if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mBankPicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBankListAlertDialogue();
+            }
+        });
+
+        return v;
+    }
+
+    private void getBankList() {
+        if (mGetBankTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
+        mProgressDialog.show();
+        GetBankListRequest mGetBankListRequest = new GetBankListRequest(Constants.DUMMY);
+        Gson gson = new Gson();
+        String json = gson.toJson(mGetBankListRequest);
+        mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
+                Constants.BASE_URL_POST_MM + Constants.URL_GET_BANK, json, getActivity());
+        mGetBankTask.mHttpResponseListener = this;
+        mGetBankTask.execute((Void) null);
+    }
+
+    private void attemptWithdrawMoney(String amount, String accountNumber, String description) {
+        if (mCashOutTask != null) {
+            return;
+        }
+
+        if (!accountNumber.equals(mListUserBankClasses.get(selectedBankPosition).getAccountNumber())) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.invalid_account_number, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        mProgressDialog.show();
+        long bankAccountId = mListUserBankClasses.get(selectedBankPosition).getBankAccountId();
+
+        WithdrawMoneyRequest mWithdrawMoneyRequest = new WithdrawMoneyRequest(bankAccountId,
+                Double.parseDouble(amount), description);
+        Gson gson = new Gson();
+        String json = gson.toJson(mWithdrawMoneyRequest);
+        mCashOutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, json, getActivity());
+        mCashOutTask.mHttpResponseListener = this;
+        mCashOutTask.execute((Void) null);
+
+    }
+
+    private void showAlertDialogue() {
+
+        mAmountEditText.setError(null);
+        mBankAccountNumberEditText.setError(null);
+
+        boolean cancel = false;
+        View focusView = null;
+
+        final String amount = mAmountEditText.getText().toString().trim();
+        final String accountNumber = mBankAccountNumberEditText.getText().toString().trim();
+        final String description = mDescriptionEditText.getText().toString().trim();
+
+        if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
+            focusView = mAmountEditText;
+            mAmountEditText.setError(getString(R.string.please_enter_amount));
+            cancel = true;
+        }
+        if (!(mBankAccountNumberEditText.getText().toString().trim().length() > 0)) {
+            focusView = mBankAccountNumberEditText;
+            mBankAccountNumberEditText.setError(getString(R.string.enter_bank_account_number));
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+
+            AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+            alertDialogue.setTitle(R.string.confirm_add_money);
+            alertDialogue.setMessage("You're going to withdraw " + amount + " BDT from iPay to your Account Number: "
+                    + accountNumber
+                    + "\nDo you want to continue?");
+
+            alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    attemptWithdrawMoney(amount, accountNumber, description);
+                }
+            });
+
+            alertDialogue.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Do nothing
+                }
+            });
+
+            alertDialogue.show();
+        }
+    }
+
+    private void showBankListAlertDialogue() {
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(getActivity());
+        builderSingle.setIcon(R.drawable.ic_account_balance_black_24dp);
+        builderSingle.setTitle(getString(R.string.select_a_bank));
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.select_dialog_singlechoice);
+
+        for (int i = 0; i < mUserBankNameList.size(); i++) {
+            arrayAdapter.add(mUserBankAccountNumberList.get(i) + "," + mUserBankNameList.get(i));
+        }
+
+        builderSingle.setNegativeButton(
+                R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builderSingle.setAdapter(
+                arrayAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final String strName = arrayAdapter.getItem(which);
+                        selectedBankPosition = which;
+                        String[] accountNumberAndBankName = strName.split(",");
+                        final String accountNumber = accountNumberAndBankName[0];
+
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(
+                                getActivity());
+                        builderInner.setMessage(strName);
+                        builderInner.setTitle(R.string.your_selected_bank_account_is);
+                        builderInner.setPositiveButton(
+                                R.string.zxing_button_ok,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(
+                                            DialogInterface dialog,
+                                            int which) {
+                                        mBankAccountNumberEditText.setText(accountNumber.trim());
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builderInner.show();
+                    }
+                });
+        builderSingle.show();
+    }
+
+    @Override
+    public void httpResponseReceiver(String result) {
+        if (result == null) {
+            mProgressDialog.show();
+            mGetBankTask = null;
+            mCashOutTask = null;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<String> resultList = Arrays.asList(result.split(";"));
+        Gson gson = new Gson();
+
+        if (resultList.get(0).equals(Constants.COMMAND_WITHDRAW_MONEY)) {
+
+            if (resultList.size() > 2) {
+                try {
+                    mWithdrawMoneyResponse = gson.fromJson(resultList.get(2), WithdrawMoneyResponse.class);
+                    String message = mWithdrawMoneyResponse.getMessage();
+
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        // Return to HomeActivity
+                        getActivity().finish();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
+
+            mProgressDialog.dismiss();
+            mCashOutTask = null;
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_BANK_LIST)) {
+            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+
+                if (resultList.size() > 2) {
+
+                    try {
+                        mBankListResponse = gson.fromJson(resultList.get(2), GetBankListResponse.class);
+
+                        mListUserBankClasses = mBankListResponse.getBanks();
+
+                        if (mListUserBankClasses == null) {
+                            mBankPicker.setEnabled(false);
+                            buttonWithdrawMoney.setEnabled(false);
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
+                            mLinkABankNoteTextView.setVisibility(View.VISIBLE);
+
+                        } else {
+                            mLinkABankNoteTextView.setVisibility(View.GONE);
+                            for (int i = 0; i < mListUserBankClasses.size(); i++) {
+                                int index = Integer.parseInt(mListUserBankClasses.get(i).getBankId() + "");
+                                mUserBankNameList.add(bankArray[index]);
+                                mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            mProgressDialog.dismiss();
+            mGetBankTask = null;
+
+        }
+    }
+}

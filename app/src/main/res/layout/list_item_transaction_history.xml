@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_horizontal_margin">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/portrait"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_transaction_history"
+        app:riv_border_color="@color/colorPrimary"
+        app:riv_border_width="1dip"
+        app:riv_corner_radius="50dip"
+        app:riv_oval="false" />
+
+    <TextView
+        android:id="@+id/otherUserName"
+        style="@style/TextStylePrimaryMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/portrait" />
+
+    <TextView
+        android:id="@+id/transaction_type"
+        style="@style/TextStylePrimarySmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/value5"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/amount"
+        style="@style/TextStylePrimarySmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="100" />
+
+    <ImageView
+        android:id="@+id/status"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginRight="@dimen/value10"
+        android:layout_toLeftOf="@+id/amount"
+        android:src="@drawable/ic_error" />
+
+    <TextView
+        android:id="@+id/activity_description"
+        style="@style/TextStylePrimarySmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/otherUserName"
+        android:layout_toRightOf="@+id/portrait"
+        android:gravity="left" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_description"
+        android:layout_toRightOf="@+id/portrait" />
+</RelativeLayout>
