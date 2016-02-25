@@ -521,7 +521,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mEmailVerificationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    // TODO change the email verification icon beside email address
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();

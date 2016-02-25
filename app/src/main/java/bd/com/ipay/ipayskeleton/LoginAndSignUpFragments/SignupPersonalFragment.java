@@ -227,7 +227,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             // perform the user login attempt.
             mProgressDialog.show();
             OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
-                    mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestPersonalSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,

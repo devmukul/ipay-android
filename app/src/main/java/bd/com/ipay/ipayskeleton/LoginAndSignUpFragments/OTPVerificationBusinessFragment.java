@@ -103,7 +103,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
-        new CountDownTimer(60000, 1000) {
+        new CountDownTimer(1800000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
@@ -129,7 +129,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
             OTPRequestBusinessSignup mOtpRequestBusinessSignup = new OTPRequestBusinessSignup
                     (SignupOrLoginActivity.mMobileNumberBusiness,
-                            mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE);
+                            Constants.MOBILE_ANDROID + mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE);
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestBusinessSignup);
             mRequestOTPTask = new
@@ -157,7 +157,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                 SignupOrLoginActivity.mPostcodeBusiness, SignupOrLoginActivity.mCountryBusiness);
 
         SignupRequestBusiness mSignupModel = new SignupRequestBusiness(SignupOrLoginActivity.mMobileNumberBusiness,
-                mDeviceID, SignupOrLoginActivity.mFirstNameBusiness, SignupOrLoginActivity.mAccountType,
+                Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mFirstNameBusiness, SignupOrLoginActivity.mAccountType,
                 SignupOrLoginActivity.mLastNameBusiness, SignupOrLoginActivity.mBirthdayBusinessHolder,
                 Utilities.md5(SignupOrLoginActivity.mPasswordBusiness), "M", mOTPEditText.getText().toString().trim(),
                 SignupOrLoginActivity.mBusinessName, SignupOrLoginActivity.mTypeofBusiness,
@@ -178,7 +178,8 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         }
 
         mProgressDialog.show();
-        LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin), mDeviceID);
+        LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin),
+                Constants.MOBILE_ANDROID + mDeviceID, null, null, null);
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
         mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
@@ -272,7 +273,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
                 Firebase rootRef = new Firebase(Constants.PATH_TO_IPAY_USERS);
                 Firebase newUserRef = rootRef.child(SignupOrLoginActivity.mMobileNumberBusiness);
-                UserPersonal mUserPersonal = new UserPersonal(SignupOrLoginActivity.mMobileNumberBusiness, mDeviceID,
+                UserPersonal mUserPersonal = new UserPersonal(SignupOrLoginActivity.mMobileNumberBusiness, Constants.MOBILE_ANDROID + mDeviceID,
                         SignupOrLoginActivity.mFirstNameBusiness, SignupOrLoginActivity.mLastNameBusiness,
                         SignupOrLoginActivity.mBirthdayBusinessHolder, SignupOrLoginActivity.mPasswordBusiness, "M");
                 newUserRef.setValue(mUserPersonal);
@@ -283,7 +284,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             }
 
             mProgressDialog.dismiss();
-            mRequestOTPTask = null;
+            mLoginTask = null;
         }
     }
 }

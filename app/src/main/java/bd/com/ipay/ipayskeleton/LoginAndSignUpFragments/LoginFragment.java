@@ -53,6 +53,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
     private ProgressDialog mProgressDialog;
     private String mDeviceID;
+    private SharedPreferences pref;
 
     @Override
     public void onResume() {
@@ -65,6 +66,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_login, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
@@ -117,10 +119,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 if (mMobileNumberEditText.getText().toString().trim().length() != 14) {
                     mMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
                     Toast.makeText(getActivity(), R.string.error_invalid_mobile_number, Toast.LENGTH_LONG).show();
-                    
+
                 } else {
                     String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-                    attemptSendOTP(mobileNumber, mDeviceID);
+                    attemptSendOTP(mobileNumber, Constants.MOBILE_ANDROID + mDeviceID);
                     dialog.dismiss();
                 }
             }
@@ -185,9 +187,23 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
 
+            // Save user's login information while trying to login
+            SignupOrLoginActivity.mMobileNumber = mUserNameLogin;
+            SignupOrLoginActivity.mPassword = mPasswordLogin;
+            SignupOrLoginActivity.mMobileNumberBusiness = mUserNameLogin;
+            SignupOrLoginActivity.mPasswordBusiness = mPasswordLogin;
+
             mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
             mProgressDialog.show();
-            LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin), mDeviceID);
+
+            String UUID = null;
+            if (pref.contains(mUserNameLogin)) {
+                UUID = pref.getString(mUserNameLogin, null);
+            }
+
+            // TODO: in otp verification personal business
+            LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin),
+                    Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null);
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
@@ -227,9 +243,21 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         pref.edit().putString(Constants.USERID, mUserNameLogin).commit();
                         pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+
+                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_ACCEPTED)) {
+                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
+
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        // First time login from this device. Verify OTP for secure login
+                        ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
+
+
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();

@@ -324,7 +324,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
             // perform the user login attempt.
             mProgressDialog.show();
             OTPRequestBusinessSignup mOtpRequestBusinessSignup = new OTPRequestBusinessSignup(SignupOrLoginActivity.mMobileNumberBusiness,
-                    mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE);
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE);
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestBusinessSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,

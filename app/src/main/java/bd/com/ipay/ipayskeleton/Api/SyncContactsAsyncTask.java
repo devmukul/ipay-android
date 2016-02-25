@@ -85,7 +85,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
                                                 Log.d("ipay users:", mSubscriberEntry.getMobileNumber());
                                             }
 
-                                            // TODO: remove this profile pic download shit... fuck this shit
+                                            // TODO: remove this profile pic download ..
 //                                            GetProfilePictureRequest mGetProfilePictureRequest = new GetProfilePictureRequest(mSubscriberEntry.getMobileNumber());
                                             GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
                                             String uri = mGetUserInfoRequestBuilder.getGeneratedUri();

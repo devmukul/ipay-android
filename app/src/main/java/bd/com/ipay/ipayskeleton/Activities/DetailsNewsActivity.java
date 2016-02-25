@@ -64,7 +64,8 @@ public class DetailsNewsActivity extends FragmentActivity {
         mHeaderTitle.setText(title);
         mDescription.setText(description);
         mHeaderSubTitle.setText(subDescription);
-        loadFullSizeImage();
+
+        if (imageUrl.length() > 0) loadFullSizeImage();
     }
 
     private void loadFullSizeImage() {

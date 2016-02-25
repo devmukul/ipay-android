@@ -12,7 +12,6 @@ import bd.com.ipay.ipayskeleton.MakePaymentFragments.CreateInvoiceFragment;
 import bd.com.ipay.ipayskeleton.MakePaymentFragments.InvoicesReceivedFragment;
 import bd.com.ipay.ipayskeleton.MakePaymentFragments.InvoicesSentFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.RequestMoneyFragments.RequestMoneyFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class MakePaymentActivity extends AppCompatActivity {

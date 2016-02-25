@@ -53,6 +53,7 @@
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
+    <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
     <string name="error_invalid_first_name">Please enter name</string>
     <string name="error_invalid_last_name">Please enter last name</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
@@ -84,6 +85,8 @@
     <string name="no_more_results">No more results to show</string>
     <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
     <string name="confirm_query">Are you sure?</string>
+    <string name="confirm_add_to_trusted_title">Trust this device?</string>
+    <string name="confirm_add_to_trusted_msg">Do you want to add this device in your trusted device list?</string>
     <string name="confirm_add_money">Are you sure?</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_get_failed">Failed to fetch profile picture.</string>
@@ -152,10 +155,13 @@
     <string name="pin_save_success">Pin saved successfully.</string>
     <string name="otp_going_to_send">We are sending an OTP to your mobile number. Please enter the OTP in the box below.</string>
     <string name="activate">Activate</string>
+    <string name="verify">Verify</string>
     <string name="resend_otp_description">If you did not receive the OTP in your mobile in 60 seconds, please click the button Resend to send the OTP again.</string>
+    <string name="verify_otp_for_trust_description">You are going to login fist time from this device. Please verify the OTP sent to your mobile for a secure login.</string>
     <string name="resend">Resend</string>
     <string name="not_implemented">Not implemented yet.</string>
     <string name="send_money">Send Money</string>
+    <string name="send_invoice">Send Invoice</string>
     <string name="payment">Payment</string>
     <string name="password_recovery">Password Recovery</string>
     <string name="add_a_bank">Add a Bank</string>
@@ -183,10 +189,12 @@
     <string name="no_contact_selected">No contacts selected</string>
     <string name="scan_cancelled">Scan cancelled</string>
     <string name="account_name">Account Name</string>
+    <string name="adding_trusted_device">Setting your device as trusted.</string>
     <string name="alert_verify_email">We are going to send an email in your email account.</string>
     <string name="uploading_profile_picture">Uploading profile picture</string>
     <string name="submitting_request_money">Submitting your request for money</string>
     <string name="failed_request_money">Money request failed</string>
+    <string name="failed_invoice_creation">Invoice creation failed</string>
     <string name="failed_add_bank">Failed to add the bank with iPay. Please try again later.</string>
     <string name="failed_remove_bank">Failed to remove this bank from your iPay account. Please try again later.</string>
     <string name="failed_disable_bank">Failed to disable this bank. Please try again later.</string>
@@ -206,14 +214,17 @@
     <string name="login_with_existing_account">Login with existing account</string>
     <string name="have_an_existing_account">Have an existing account?</string>
     <string name="enter_amount">Enter an amount in BDT</string>
+    <string name="enter_vat">VAT in BDT</string>
     <string name="description">Add a purpose (Optional)</string>
     <string name="description_mandatory">Add a purpose</string>
+    <string name="item_description">Item description</string>
     <string name="please_add_description">Please add a purpose</string>
     <string name="add_title">Add a title</string>
     <string name="please_add_title">Please add a title</string>
     <string name="otp_sent">OTP sent. Please wait...</string>
     <string name="please_enter_mobile_number">Please enter a mobile number.</string>
     <string name="please_enter_amount">Please enter an amount.</string>
+    <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="sign_up_with_ipay">Sign up with iPay</string>
     <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
     <string name="please_fill_up_the_following">Please fill up the following information</string>
@@ -229,6 +240,7 @@
     <string name="pending_get_failed">Could not fetch pending requests</string>
     <string name="recharging_balance">Processing mobile recharge...</string>
     <string name="saving_pin">Saving PIN...</string>
+    <string name="failed_add_trusted_device">Could not add trusted device</string>
     <string name="change_password_progress">Change password on progress...</string>
     <string name="change_password_success">Password changed successfully...</string>
     <string name="enter_current_pass">Enter current password</string>
@@ -270,6 +282,7 @@
     <string name="title_signup_personal_page">Sign up with iPay</string>
     <string name="title_signup_business_page">Sign up with iPay</string>
     <string name="title_otp_verification_for_personal">Verify OTP</string>
+    <string name="title_otp_verification_for_add_trusted_device">Verify OTP</string>
     <string name="title_otp_verification_for_business">Verify OTP</string>
     <string name="title_select_account_type_page">Welcome to iPay</string>
 

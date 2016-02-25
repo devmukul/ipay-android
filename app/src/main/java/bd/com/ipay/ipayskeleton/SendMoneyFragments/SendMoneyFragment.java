@@ -330,7 +330,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         } else {
             try {
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE + "/image/"
+                        .load(Constants.BASE_URL_IMAGE_SERVER + "/image/"
                                 + receiver.replaceAll("[^0-9]", "")
                                 + ".jpg")
                         .into(image);

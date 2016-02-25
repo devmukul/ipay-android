@@ -19,47 +19,46 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
+import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.CreateInvoiceRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.CreateInvoiceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateInvoiceFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mRequestMoneyTask = null;
-    private RequestMoneyResponse mRequestMoneyResponse;
+    private HttpRequestPostAsyncTask mCreateInvoiceTask = null;
+    private CreateInvoiceResponse mCreateInvoiceResponse;
 
     private final int PICK_CONTACT = 100;
 
-    private Button buttonRequest;
+    private Button buttonCreateInvoice;
     private Button buttonSelectFromContacts;
-    private Button buttonShowQRCode;
     private EditText mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
-    private EditText mTitleEditText;
+    private EditText mVATEditText;
     private ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_request_money, container, false);
+        View v = inflater.inflate(R.layout.fragment_create_invoice, container, false);
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
-        buttonShowQRCode = (Button) v.findViewById(R.id.button_show_qr_code);
         buttonSelectFromContacts = (Button) v.findViewById(R.id.select_sender_from_contacts);
-        buttonRequest = (Button) v.findViewById(R.id.button_request_money);
+        buttonCreateInvoice = (Button) v.findViewById(R.id.button_request_money);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        mTitleEditText = (EditText) v.findViewById(R.id.title_request);
+        mVATEditText = (EditText) v.findViewById(R.id.vat);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
@@ -72,15 +71,7 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        buttonShowQRCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        buttonRequest.setOnClickListener(new View.OnClickListener() {
+        buttonCreateInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) attemptRequestMoney();
@@ -93,7 +84,7 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
     }
 
     private void attemptRequestMoney() {
-        if (mRequestMoneyTask != null) {
+        if (mCreateInvoiceTask != null) {
             return;
         }
 
@@ -101,9 +92,9 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
         View focusView = null;
 
         String receiver = mMobileNumberEditText.getText().toString();
-        String title = mTitleEditText.getText().toString();
         String description = mDescriptionEditText.getText().toString();
         String amount = mAmountEditText.getText().toString();
+        String vat = mVATEditText.getText().toString();
 
         // Check for a validation
         if (!(amount.length() > 0 && Double.parseDouble(amount) > 0)) {
@@ -112,9 +103,9 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
             cancel = true;
         }
 
-        if (title.length() == 0) {
-            mTitleEditText.setError(getString(R.string.please_add_title));
-            focusView = mTitleEditText;
+        if (!(vat.length() > 0 && Double.parseDouble(vat) > 0)) {
+            mVATEditText.setError(getString(R.string.please_enter_vat_amount));
+            focusView = mVATEditText;
             cancel = true;
         }
 
@@ -136,16 +127,17 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
             focusView.requestFocus();
         } else {
 
+
             mProgressDialog.setMessage(getString(R.string.requesting_money));
             mProgressDialog.show();
-            RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(receiver, Double.parseDouble(amount)
-                    , title, description);
+            CreateInvoiceRequest mCreateInvoiceRequest = new CreateInvoiceRequest(description,
+                    BigDecimal.valueOf(Double.parseDouble(amount)), BigDecimal.valueOf(Double.parseDouble(vat)), receiver);
             Gson gson = new Gson();
-            String json = gson.toJson(mRequestMoneyRequest);
-            mRequestMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY,
-                    Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY, json, getActivity());
-            mRequestMoneyTask.mHttpResponseListener = this;
-            mRequestMoneyTask.execute((Void) null);
+            String json = gson.toJson(mCreateInvoiceRequest);
+            mCreateInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_INVOICE,
+                    Constants.BASE_URL_SM + Constants.URL_PAYMENT_CREATE_INVOICE, json, getActivity());
+            mCreateInvoiceTask.mHttpResponseListener = this;
+            mCreateInvoiceTask.execute((Void) null);
         }
 
     }
@@ -154,7 +146,7 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
     public void httpResponseReceiver(String result) {
         if (result == null) {
             mProgressDialog.dismiss();
-            mRequestMoneyTask = null;
+            mCreateInvoiceTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -163,30 +155,30 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_REQUEST_MONEY)) {
+        if (resultList.get(0).equals(Constants.COMMAND_CREATE_INVOICE)) {
 
             if (resultList.size() > 2) {
                 try {
-                    mRequestMoneyResponse = gson.fromJson(resultList.get(2), RequestMoneyResponse.class);
+                    mCreateInvoiceResponse = gson.fromJson(resultList.get(2), CreateInvoiceResponse.class);
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        ((RequestMoneyActivity) getActivity()).switchToRequestsFragment();
+                        ((MakePaymentActivity) getActivity()).switchToInvoicesSentFragment();
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), mCreateInvoiceResponse.getMessage(), Toast.LENGTH_LONG).show();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
                 }
             } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
 
             mProgressDialog.dismiss();
-            mRequestMoneyTask = null;
+            mCreateInvoiceTask = null;
         }
     }
 
@@ -238,8 +230,6 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
                         .getString(cursor
                                 .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
-                // TODO: Can use name and contact ID
-//                list.add(name);
                 Cursor phones = getActivity().getContentResolver().query(
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         null,

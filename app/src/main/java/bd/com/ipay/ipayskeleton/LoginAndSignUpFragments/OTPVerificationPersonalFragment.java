@@ -127,7 +127,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             mProgressDialog.show();
 
             OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
-                    mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestPersonalSignup);
             mRequestOTPTask = new
@@ -147,7 +147,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             return;
         }
         mProgressDialog.show();
-        SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber, mDeviceID,
+        SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
+                Constants.MOBILE_ANDROID + mDeviceID,
                 SignupOrLoginActivity.mFirstName, SignupOrLoginActivity.mLastName,
                 SignupOrLoginActivity.mBirthday, Utilities.md5(SignupOrLoginActivity.mPassword),
                 SignupOrLoginActivity.mGender, mOTPEditText.getText().toString().trim(), Constants.PERSONAL_ACCOUNT_TYPE);
@@ -166,7 +167,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         }
 
         mProgressDialog.show();
-        LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin), mDeviceID);
+        LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin),
+                Constants.MOBILE_ANDROID + mDeviceID, null, null, null);
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
         mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
@@ -246,7 +248,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
                         mResendOTPButton.setEnabled(false);
-                        new CountDownTimer(60000, 1000) {
+                        new CountDownTimer(1800000, 1000) {
 
                             public void onTick(long millisUntilFinished) {
                                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
@@ -285,7 +287,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
                         Firebase rootRef = new Firebase(Constants.PATH_TO_IPAY_USERS);
                         Firebase newUserRef = rootRef.child(SignupOrLoginActivity.mMobileNumber);
-                        UserPersonal mUserPersonal = new UserPersonal(SignupOrLoginActivity.mMobileNumber, mDeviceID,
+                        UserPersonal mUserPersonal = new UserPersonal(SignupOrLoginActivity.mMobileNumber,
+                                Constants.MOBILE_ANDROID + mDeviceID,
                                 SignupOrLoginActivity.mFirstName, SignupOrLoginActivity.mLastName,
                                 SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword, SignupOrLoginActivity.mGender);
                         newUserRef.setValue(mUserPersonal);
@@ -303,7 +306,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                 Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
 
             mProgressDialog.dismiss();
-            mRequestOTPTask = null;
+            mLoginTask = null;
         }
     }
 }

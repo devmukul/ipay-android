@@ -276,7 +276,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
             private TextView mSenderNumber;
             private TextView mAmount;
             private TextView mTime;
-            private TextView mDescription;
+            private TextView mTitle;
             private ImageView mCancel;
             private ImageView mAccept;
             private RoundedImageView mPortrait;
@@ -287,7 +287,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
                 mSenderNumber = (TextView) itemView.findViewById(R.id.request_number);
                 mAmount = (TextView) itemView.findViewById(R.id.amount);
                 mTime = (TextView) itemView.findViewById(R.id.time);
-                mDescription = (TextView) itemView.findViewById(R.id.description);
+                mTitle = (TextView) itemView.findViewById(R.id.description);
                 mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
                 mAccept = (ImageView) itemView.findViewById(R.id.accept_request);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
@@ -300,7 +300,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
                 mAmount.setText(pendingPaymentRequestClasses.get(pos).getAmount() + " BDT");
                 mTime.setText(time);
                 mSenderNumber.setText(pendingPaymentRequestClasses.get(pos).getSenderMobileNumber());
-                mDescription.setText(pendingPaymentRequestClasses.get(pos).getDescription());
+                mTitle.setText(pendingPaymentRequestClasses.get(pos).getTitle());
 
                 mAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -318,7 +318,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
 
                 // TODO: profile pic fetch change hobe
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE + "/image/"
+                        .load(Constants.BASE_URL_IMAGE_SERVER + "/image/"
                                 + pendingPaymentRequestClasses.get(pos).getReceiverMobileNumber().replaceAll("[^0-9]", "")
                                 + ".jpg")
                         .placeholder(R.drawable.ic_face_black_24dp)

@@ -123,8 +123,8 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 new RequestMoneyAcceptRejectOrCancelRequest(id);
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mCancelPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REQUEST_CANCEL, json, getActivity());
+        mCancelPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT_REQUEST_CANCEL, json, getActivity());
         mCancelPaymentRequestTask.mHttpResponseListener = this;
         mCancelPaymentRequestTask.execute((Void) null);
     }
@@ -222,7 +222,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
             private TextView mSenderNumber;
             private TextView mAmount;
             private TextView mTime;
-            private TextView mDescription;
+            private TextView mTitleOfProduct;
             private ImageView mCancel;
             private RoundedImageView mPortrait;
 
@@ -232,7 +232,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 mSenderNumber = (TextView) itemView.findViewById(R.id.request_number);
                 mAmount = (TextView) itemView.findViewById(R.id.amount);
                 mTime = (TextView) itemView.findViewById(R.id.time);
-                mDescription = (TextView) itemView.findViewById(R.id.description);
+                mTitleOfProduct = (TextView) itemView.findViewById(R.id.description);
                 mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
             }
@@ -244,7 +244,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 mAmount.setText(pendingPaymentClasses.get(pos).getAmount() + " BDT");
                 mTime.setText(time);
                 mSenderNumber.setText(pendingPaymentClasses.get(pos).getReceiverMobileNumber());
-                mDescription.setText(pendingPaymentClasses.get(pos).getDescription());
+                mTitleOfProduct.setText(pendingPaymentClasses.get(pos).getTitle());
 
                 mCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -255,7 +255,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
                 // TODO: profile pic fetch change hobe
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE + "/image/"
+                        .load(Constants.BASE_URL_IMAGE_SERVER + "/image/"
                                 + pendingPaymentClasses.get(pos).getReceiverMobileNumber().replaceAll("[^0-9]", "")
                                 + ".jpg")
                         .placeholder(R.drawable.ic_face_black_24dp)

@@ -332,6 +332,12 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void setActionsOfFAB() {
+
+        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
+            mMakePaymentFAB.setLabelText(getString(R.string.make_payment));
+        else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
+            mMakePaymentFAB.setLabelText(getString(R.string.create_invoice));
+
         mSendMoneyFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

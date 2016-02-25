@@ -12,6 +12,7 @@ import bd.com.ipay.ipayskeleton.ForgotPasswordFragments.OTPVerificationForgotPas
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationPersonalFragment;
+import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationTrustFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupPersonalFragment;
@@ -96,6 +97,12 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public void switchToOTPVerificationBusinessFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new OTPVerificationBusinessFragment()).commit();
+        switchedToAccountSelection = false;
+    }
+
+    public void switchToOTPVerificationTrustedFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new OTPVerificationTrustFragment()).commit();
         switchedToAccountSelection = false;
     }
 

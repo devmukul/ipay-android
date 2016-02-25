@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -69,6 +70,19 @@ public class DownloadProfilePictureGetAsyncTask extends AsyncTask<Void, Void, St
         try {
             HttpEntity entity = mHttpResponse.getEntity();
             int status = mHttpResponse.getStatusLine().getStatusCode();
+            Header[] headers = mHttpResponse.getAllHeaders();
+
+            if (headers.length > 0) {
+                for (Header header : headers) {
+                    if (header.getName().equals(Constants.TOKEN)) {
+                        HomeActivity.iPayToken = header.getValue();
+                        break;
+                    } else if (header.getName().equals(Constants.NEW_TOKEN)) {
+                        HomeActivity.iPayToken = header.getValue();
+                        break;
+                    }
+                }
+            }
 
             response = entity.getContent();
             // json is UTF-8 by default

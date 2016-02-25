@@ -316,7 +316,7 @@ public class OthersRequestFragment extends Fragment implements HttpResponseListe
 
                 // TODO: profile pic fetch change hobe
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE + "/image/"
+                        .load(Constants.BASE_URL_IMAGE_SERVER + "/image/"
                                 + pendingMoneyRequestClasses.get(pos).getReceiverMobileNumber().replaceAll("[^0-9]", "")
                                 + ".jpg")
                         .placeholder(R.drawable.ic_face_black_24dp)

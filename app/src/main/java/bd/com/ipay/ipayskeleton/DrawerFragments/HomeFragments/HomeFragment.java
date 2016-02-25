@@ -2,6 +2,8 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -12,8 +14,10 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +41,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.News;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -46,12 +52,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private RefreshBalanceResponse mRefreshBalanceResponse;
 
+    private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
+    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
+
     private HttpRequestGetAsyncTask mGetNewsFeedTask = null;
     private GetNewsFeedResponse mGetNewsFeedResponse;
 
     private TextView mUserNameTextView;
     private SharedPreferences pref;
     private String userName;
+    private String UUID;
+    private String userID;
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
     private RecyclerView mNewsFeedRecyclerView;
@@ -74,6 +85,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         userName = pref.getString(Constants.USERNAME, "");
+        userID = pref.getString(Constants.USERID, "");
+
+        if (pref.contains(userID))
+            UUID = pref.getString(userID, null);
+
         mUserNameTextView = (TextView) v.findViewById(R.id.welcome_text);
         mUserNameTextView.setText("Welcome " + userName);
         balanceView = (TextView) v.findViewById(R.id.balance);
@@ -113,6 +129,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        // Add to trusted device?
+        if (UUID == null) {
+            showAlertDialogueForAddTrustedDevice();
+        }
+
         return v;
     }
 
@@ -129,6 +150,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.setCancelable(false);
         }
 
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_refreshing));
         mProgressDialog.show();
         RefreshBalanceRequest mLoginModel = new RefreshBalanceRequest(pref.getString(Constants.USERID, ""));
         Gson gson = new Gson();
@@ -140,6 +162,32 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             mRefreshBalanceTask.execute((Void) null);
+        }
+    }
+
+    private void addToTrustedDeviceList() {
+        if (mAddTrustedDeviceTask != null) {
+            return;
+        }
+
+        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        String mDeviceID = telephonyManager.getDeviceId();
+        String mDeveiceName = android.os.Build.MANUFACTURER + "-" + android.os.Build.PRODUCT + " -" + Build.MODEL;
+
+
+        mProgressDialog.setMessage(getString(R.string.adding_trusted_device));
+        mProgressDialog.show();
+
+        AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeveiceName, Constants.MOBILE_ANDROID + mDeviceID);
+        Gson gson = new Gson();
+        String json = gson.toJson(mAddToTrustedDeviceRequest);
+        mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
+                Constants.BASE_URL_POST_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
+        mAddTrustedDeviceTask.mHttpResponseListener = this;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mAddTrustedDeviceTask.execute((Void) null);
         }
     }
 
@@ -236,7 +284,56 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             mSwipeRefreshLayout.setRefreshing(false);
             mGetNewsFeedTask = null;
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
+
+            if (resultList.size() > 2) {
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+
+                    try {
+                        mAddToTrustedDeviceResponse = gson.fromJson(resultList.get(2), AddToTrustedDeviceResponse.class);
+                        String UUID = mAddToTrustedDeviceResponse.getUUID();
+                        pref.edit().putString(userID, UUID).commit();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+
+            mProgressDialog.dismiss();
+            mAddTrustedDeviceTask = null;
         }
+    }
+
+    private void showAlertDialogueForAddTrustedDevice() {
+
+        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+
+        alertDialogue.setTitle(R.string.confirm_add_to_trusted_title);
+        alertDialogue.setMessage(R.string.confirm_add_to_trusted_msg);
+
+        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (Utilities.isConnectionAvailable(getActivity()))
+                    addToTrustedDeviceList();
+            }
+        });
+
+        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+
+        alertDialogue.show();
     }
 
     public class NewsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -276,7 +373,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 if (subDescription != null) mNewsSubDescription.setText(subDescription);
 
                 if (imageUrl != null) Glide.with(getActivity())
-                        .load(imageUrl)
+                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
                         .crossFade()
                         .placeholder(R.drawable.dummy)
                         .into(mNewsImage);
@@ -286,11 +383,26 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     public void onClick(View v) {
 
                         final Intent intent = new Intent(getActivity(), DetailsNewsActivity.class);
-                        intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_TITLE, title);
-                        intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_DESCRIPTION, description);
-                        intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_SUB_DESCRIPTION, subDescription);
-                        intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_FULL, imageUrl);
-                        intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_THUMBNAIL, imageUrlThumbnail);
+
+                        if (title != null)
+                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_TITLE, title);
+                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_TITLE, "");
+
+                        if (description != null)
+                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_DESCRIPTION, description);
+                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_DESCRIPTION, "");
+
+                        if (subDescription != null)
+                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_SUB_DESCRIPTION, subDescription);
+                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_SUB_DESCRIPTION, "");
+
+                        if (imageUrl != null)
+                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_FULL, Constants.BASE_URL_IMAGE_SERVER + imageUrl);
+                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_FULL, "");
+
+                        if (imageUrlThumbnail != null)
+                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_THUMBNAIL, Constants.BASE_URL_IMAGE_SERVER + imageUrlThumbnail);
+                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_THUMBNAIL, "");
 
                         Pair<View, String> p1 = Pair.create((View) mNewsImage, getString(R.string.transition_image));
                         Pair<View, String> p2 = Pair.create((View) mNewsHeadLine, getString(R.string.transition_title));

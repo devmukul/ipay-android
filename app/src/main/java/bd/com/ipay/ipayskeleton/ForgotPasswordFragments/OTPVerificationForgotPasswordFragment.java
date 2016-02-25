@@ -84,7 +84,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
-        new CountDownTimer(60000, 1000) {
+        new CountDownTimer(1800000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
@@ -126,21 +126,20 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
             focusView.requestFocus();
         } else {
 
+            mProgressDialog.setMessage(getString(R.string.progress_dialog_saving_new_pass));
+            mProgressDialog.show();
+            String otp = mOTPEditText.getText().toString().trim();
+            String newPassword = Utilities.md5(mNewPasswordEditText.getText().toString().trim());
+
+            ForgetPassOTPConfirmationRequest mForgetPassOTPConfirmationRequest = new ForgetPassOTPConfirmationRequest
+                    (SignupOrLoginActivity.mMobileNumber, Constants.MOBILE_ANDROID + mDeviceID, otp, newPassword);
+            Gson gson = new Gson();
+            String json = gson.toJson(mForgetPassOTPConfirmationRequest);
+            mOTPConfirmationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_FORGET_PASSWORD_CONFIRM_OTP,
+                    Constants.BASE_URL_POST_MM + Constants.URL_CONFIRM_OTP_FORGET_PASSWORD, json, getActivity());
+            mOTPConfirmationTask.mHttpResponseListener = this;
+            mOTPConfirmationTask.execute((Void) null);
         }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_saving_new_pass));
-        mProgressDialog.show();
-        String otp = mOTPEditText.getText().toString().trim();
-        String newPassword = Utilities.md5(mNewPasswordEditText.getText().toString().trim());
-
-        ForgetPassOTPConfirmationRequest mForgetPassOTPConfirmationRequest = new ForgetPassOTPConfirmationRequest
-                (SignupOrLoginActivity.mMobileNumber, mDeviceID, otp, newPassword);
-        Gson gson = new Gson();
-        String json = gson.toJson(mForgetPassOTPConfirmationRequest);
-        mOTPConfirmationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_FORGET_PASSWORD_CONFIRM_OTP,
-                Constants.BASE_URL_POST_MM + Constants.URL_CONFIRM_OTP_FORGET_PASSWORD, json, getActivity());
-        mOTPConfirmationTask.mHttpResponseListener = this;
-        mOTPConfirmationTask.execute((Void) null);
     }
 
     @Override

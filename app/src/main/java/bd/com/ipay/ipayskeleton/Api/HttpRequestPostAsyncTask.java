@@ -64,6 +64,9 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
                     if (header.getName().equals(Constants.TOKEN)) {
                         HomeActivity.iPayToken = header.getValue();
                         break;
+                    } else if (header.getName().equals(Constants.NEW_TOKEN)) {
+                        HomeActivity.iPayToken = header.getValue();
+                        break;
                     }
                 }
             }

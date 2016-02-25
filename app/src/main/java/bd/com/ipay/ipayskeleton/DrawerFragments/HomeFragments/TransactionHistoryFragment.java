@@ -66,7 +66,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     historyPageCount = 0;
-                    userTransactionHistoryClasses.clear();
+                    if (userTransactionHistoryClasses != null)
+                        userTransactionHistoryClasses.clear();
                     getTransactionHistory();
                 }
             }

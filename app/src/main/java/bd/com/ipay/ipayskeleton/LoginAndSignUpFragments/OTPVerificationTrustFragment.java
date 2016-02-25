@@ -1,0 +1,161 @@
+package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import java.util.Arrays;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
+import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+
+public class OTPVerificationTrustFragment extends Fragment implements HttpResponseListener {
+
+    private HttpRequestPostAsyncTask mLoginTask = null;
+    private LoginResponse mLoginResponseModel;
+
+    private Button mActivateButton;
+    private EditText mOTPEditText;
+
+    private String mDeviceID;
+    private ProgressDialog mProgressDialog;
+    private SharedPreferences pref;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_otp_verification_for_add_trusted_device);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_otp_verification_trusted_device, container, false);
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
+        mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
+
+        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        mDeviceID = telephonyManager.getDeviceId();
+
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
+
+        mActivateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword);
+
+                } else if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        return v;
+    }
+
+    private void attemptLogin(String mUserNameLogin, String mPasswordLogin) {
+        if (mLoginTask != null) {
+            return;
+        }
+
+        boolean cancel = false;
+        View focusView = null;
+
+        if (mOTPEditText.getText().toString().trim().length() == 0) {
+            mOTPEditText.setError(getString(R.string.error_invalid_otp));
+            focusView = mOTPEditText;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+
+            String otp = mOTPEditText.getText().toString().trim();
+
+            mProgressDialog.show();
+            LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin),
+                    Constants.MOBILE_ANDROID + mDeviceID, null, otp, null);
+            Gson gson = new Gson();
+            String json = gson.toJson(mLoginModel);
+            mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
+                    Constants.BASE_URL_POST_MM + Constants.URL_LOGIN, json, getActivity());
+            mLoginTask.mHttpResponseListener = this;
+            mLoginTask.execute((Void) null);
+        }
+    }
+
+    @Override
+    public void httpResponseReceiver(String result) {
+
+        if (result == null) {
+            mProgressDialog.dismiss();
+            mLoginTask = null;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<String> resultList = Arrays.asList(result.split(";"));
+        Gson gson = new Gson();
+
+        if (resultList.get(0).equals(Constants.COMMAND_LOG_IN)) {
+
+            if (resultList.size() > 2) {
+
+                try {
+                    mLoginResponseModel = gson.fromJson(resultList.get(2), LoginResponse.class);
+                    String message = mLoginResponseModel.getMessage();
+
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
+                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
+
+                        if (mLoginResponseModel.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
+                            pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).commit();
+                        else
+                            pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).commit();
+
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
+
+            mProgressDialog.dismiss();
+            mLoginTask = null;
+        }
+    }
+}
+

@@ -7,6 +7,7 @@ public class Constants {
     public static final String GENDER_MALE = "M";
     public static final String GENDER_FEMALE = "F";
     public static final String TOKEN = "token";
+    public static final String NEW_TOKEN = "New-Token";
     public static final String USERNAME = "USERNAME";
     public static final String EMAIL = "EMAIL";
     public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
@@ -20,6 +21,7 @@ public class Constants {
     public static final String LAST_NAME = "LAST_NAME";
     public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public static final String BOUNDARY = "iPayBoundary";
+    public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String DUMMY = "DUMMY";
     public static final String MULTIPART_FORM_DATA_NAME = "file";
     public static final String STARTING_DATE_OF_IPAY = "01/01/2016";
@@ -28,12 +30,12 @@ public class Constants {
     public static final int STARTING_YEAR = 2016;
 
     // For POST Requests
-//    public static final String BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
-    public static final String BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
+    public static final String BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
+//    public static final String BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
 
     // For GET Requests
-//    public static final String BASE_URL_GET_MM = "10.10.10.10";
-    public static final String BASE_URL_GET_MM = "10.15.10.10";
+    public static final String BASE_URL_GET_MM = "10.10.10.10";
+    //    public static final String BASE_URL_GET_MM = "10.15.10.10";
     public static final int BASE_URL_GET_MM_PORT = 8080;
     public static final String BASE_URL_GET_MM_PATH = "/mmweb";
 
@@ -41,11 +43,8 @@ public class Constants {
 //    public static final String BASE_URL_IMAGE_SERVER = "http://10.10.10.10/";
     public static final String BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 
-    //    public static final String BASE_URL_POST_MM = "http://live.ipay.com.bd:8080/mmweb/";
-//    public static final String BASE_URL_SM = "http://live.ipay.com.bd:8080/ism/";
-//    public static final String BASE_URL_SM = "http://10.10.10.10:8080/ism/";
-    public static final String BASE_URL_SM = "http://10.15.10.10:8080/ism/";
-    public static final String BASE_URL_IMAGE = "http://live.ipay.com.bd:81";
+    public static final String BASE_URL_SM = "http://10.10.10.10:8080/ism/";
+//    public static final String BASE_URL_IMAGE = "http://live.ipay.com.bd:81";
 
     public static final String URL_SIGN_UP = "signup/activation";
     public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
@@ -53,6 +52,7 @@ public class Constants {
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
     public static final String URL_LOGIN = "signin";
     public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
+    public static final String URL_ADD_TRUSTED_DEVICE = "settings/device/add";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
     public static final String URL_SEND_MONEY = "transaction/send";
     public static final String URL_SEND_MONEY_QUERY = "transaction/send/query";
@@ -79,6 +79,7 @@ public class Constants {
     public static final String URL_PAYMENT_REQUEST_ACCEPT = "payment/accept";
     public static final String URL_PAYMENT_REQUEST_REJECT = "payment/reject";
     public static final String URL_PAYMENT_REQUEST_CANCEL = "payment/cancel";
+    public static final String URL_PAYMENT_CREATE_INVOICE = "payment/invoice";
     public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/set";
     public static final String URL_DOWNLOAD_PROFILE_PICTURE_FRIEND = "user/profile/profilepicture/download/friend";
     public static final String URL_ADD_A_BANK = "bank/add";
@@ -116,6 +117,7 @@ public class Constants {
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
     public static final String COMMAND_GET_USER_ACTIVITIES = "COMMAND_GET_USER_ACTIVITIES";
     public static final String COMMAND_GET_TRANSACTION_HISTORY = "COMMAND_GET_TRANSACTION_HISTORY";
+    public static final String COMMAND_ADD_TRUSTED_DEVICE = "COMMAND_ADD_TRUSTED_DEVICE";
     public static final String COMMAND_GET_PENDING_REQUESTS_OTHERS = "COMMAND_GET_PENDING_REQUESTS_OTHERS";
     public static final String COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED = "COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED";
     public static final String COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT = "COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT";
@@ -127,6 +129,7 @@ public class Constants {
     public static final String COMMAND_REJECT_PAYMENT_REQUEST = "COMMAND_REJECT_PAYMENT_REQUEST";
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
+    public static final String COMMAND_CREATE_INVOICE = "COMMAND_CREATE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";

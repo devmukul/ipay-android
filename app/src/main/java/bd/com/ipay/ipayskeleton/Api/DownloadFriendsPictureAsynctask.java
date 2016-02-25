@@ -69,6 +69,10 @@ public class DownloadFriendsPictureAsynctask extends AsyncTask<Void, Void, Strin
                     if (header.getName().equals(Constants.TOKEN)) {
                         HomeActivity.iPayToken = header.getValue();
                         break;
+                        
+                    } else if (header.getName().equals(Constants.NEW_TOKEN)) {
+                        HomeActivity.iPayToken = header.getValue();
+                        break;
                     }
                 }
             }
