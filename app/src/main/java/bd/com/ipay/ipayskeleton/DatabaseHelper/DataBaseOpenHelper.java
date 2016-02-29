@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.DatabaseHelper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -11,9 +10,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
-import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.District;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.SubscriberEntry;
-import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.Thana;
 
 public class DataBaseOpenHelper extends OrmLiteSqliteOpenHelper {
 
@@ -21,8 +18,6 @@ public class DataBaseOpenHelper extends OrmLiteSqliteOpenHelper {
     private String name;
 
     private Dao<SubscriberEntry, Long> subscriberEntryDao;
-    private Dao<District, Long> districtDao;
-    private Dao<Thana, Long> thanaDao;
 
     public DataBaseOpenHelper(Context context, String name, int version) {
         super(context, name, null, version);
@@ -61,31 +56,5 @@ public class DataBaseOpenHelper extends OrmLiteSqliteOpenHelper {
         }
 
         return subscriberEntryDao;
-    }
-
-    public Dao<District, Long> getDistrictDao() {
-        getWritableDatabase();
-        if (districtDao == null) {
-            try {
-                districtDao = getDao(District.class);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return districtDao;
-    }
-
-    public Dao<Thana, Long> getThanaDao() {
-        getWritableDatabase();
-        if (thanaDao == null) {
-            try {
-                thanaDao = getDao(Thana.class);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return thanaDao;
     }
 }
