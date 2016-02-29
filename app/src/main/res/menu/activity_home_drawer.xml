@@ -45,6 +45,10 @@
                 android:icon="@drawable/ic_monetization_on_black_24dp"
                 android:title="@string/money_withdraw" />
             <item
+                android:id="@+id/nav_event"
+                android:icon="@drawable/ic_event_black_24dp"
+                android:title="@string/events" />
+            <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_power_settings_new_black_24dp"
                 android:title="@string/logout" />

@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -214,9 +215,12 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
 
                         // Request a login immediately after sign up
-                        if (Utilities.isConnectionAvailable(getActivity()))
-                            attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword);
+                        // TODO: can be used later. Do not delete
+//                        if (Utilities.isConnectionAvailable(getActivity()))
+//                            attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword);
 
+                        // TODO: For now, switch to login fragment after a successful sign up
+                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
                     } else {
                         if (getActivity() != null)

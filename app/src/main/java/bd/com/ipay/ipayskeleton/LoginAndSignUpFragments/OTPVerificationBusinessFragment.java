@@ -221,8 +221,12 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                 pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE).commit();
                 pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
 
+                // TODO: Do not remove this. Can be used later
                 // Request a login immediately after sign up
-                attemptLogin(SignupOrLoginActivity.mMobileNumberBusiness, SignupOrLoginActivity.mPasswordBusiness);
+//                attemptLogin(SignupOrLoginActivity.mMobileNumberBusiness, SignupOrLoginActivity.mPasswordBusiness);
+
+                // TODO: For now, switch to login fragment after a successful sign up
+                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
             } else {
                 if (getActivity() != null)

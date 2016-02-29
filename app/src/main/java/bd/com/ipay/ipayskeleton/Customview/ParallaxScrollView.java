@@ -194,14 +194,16 @@ public class ParallaxScrollView extends ScrollView {
 
         if (mImageViewHeight == -1) {
 
-            mImageViewHeight = mImageView.getHeight();
+            if (mImageView != null) {
+                mImageViewHeight = mImageView.getHeight();
 
-            double imageRatio = ((double) mImageView.getDrawable()
-                    .getIntrinsicWidth()) / ((double) mImageView.getWidth());
+                double imageRatio = ((double) mImageView.getDrawable()
+                        .getIntrinsicWidth()) / ((double) mImageView.getWidth());
 
-            mDrawableMaxHeight = (int) ((mImageView.getDrawable()
-                    .getIntrinsicHeight() / imageRatio) * (zoomRatio > 1 ? zoomRatio
-                    : 1));
+                mDrawableMaxHeight = (int) ((mImageView.getDrawable()
+                        .getIntrinsicHeight() / imageRatio) * (zoomRatio > 1 ? zoomRatio
+                        : 1));
+            }
 
         }
 

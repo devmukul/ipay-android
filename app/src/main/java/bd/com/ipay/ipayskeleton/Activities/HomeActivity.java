@@ -277,6 +277,10 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(HomeActivity.this, RequestMoneyActivity.class);
             startActivity(intent);
 
+        } else if (id == R.id.nav_event) {
+
+            // TODO: start activity for event
+
         } else if (id == R.id.nav_settings) {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountSettingsFragment()).commit();

@@ -51,6 +51,7 @@
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
+    <string name="empty_events_list">No recent events found.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
@@ -175,6 +176,7 @@
     <string name="requesting_money">Money request processing...</string>
     <string name="add_money">Add Money</string>
     <string name="money_withdraw">Money Withdraw</string>
+    <string name="events">Events</string>
     <string name="make_payment">Make Payment</string>
     <string name="zxinglib_msg_default_status">Place a barcode inside the viewfinder rectangle to scan it. </string>
     <string name="qr_code">QR Code</string>
