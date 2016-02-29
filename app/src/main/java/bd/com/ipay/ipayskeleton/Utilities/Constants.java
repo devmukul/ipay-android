@@ -58,6 +58,7 @@ public class Constants {
     public static final String URL_SEND_MONEY_QUERY = "transaction/send/query";
     public static final String URL_REFRESH_BALANCE = "user/balance";
     public static final String URL_GET_USER_INFO = "user/userinfo";
+    public static final String URL_RESOURCE = "resource";
     public static final String URL_GET_NEWS_FEED = "news";
     public static final String URL_TOPUP_REQUEST = "topup/dotopup";
     public static final String URL_EMAIL_VERIFICATION = "settings/email/verification";
@@ -149,6 +150,9 @@ public class Constants {
     public static final String COMMAND_GET_NEWS_FEED = "COMMAND_GET_NEWS_FEED";
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
     public static final String COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND = "COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND";
+
+    // Resource
+    public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";
 
     // FireBase
     public static final String PATH_TO_IPAY_USERS = "https://ipay-com-test.firebaseio.com/data/iPay-users/";

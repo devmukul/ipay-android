@@ -2,12 +2,12 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Resource;
 
 import java.util.List;
 
-public class GetBankResponse {
+public class GetAvailableBankResponse {
 
     private String message;
     private List<Bank> resource;
 
-    public GetBankResponse() {
+    public GetAvailableBankResponse() {
 
     }
 
@@ -15,7 +15,7 @@ public class GetBankResponse {
         return message;
     }
 
-    public List<Bank> getBanks() {
+    public List<Bank> getAvailableBanks() {
         return resource;
     }
 }

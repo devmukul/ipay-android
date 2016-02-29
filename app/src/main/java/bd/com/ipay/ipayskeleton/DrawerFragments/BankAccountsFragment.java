@@ -3,11 +3,14 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +30,8 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
@@ -40,6 +45,10 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetAvailableBankResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -60,6 +69,9 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
     private HttpRequestPostAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
+
+    private HttpRequestGetAsyncTask mGetAvailableBanksTask = null;
+    private GetAvailableBankResponse mGetAvailableBankResponse;
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mBankListRecyclerView;
@@ -91,6 +103,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         });
 
         if (Utilities.isConnectionAvailable(getActivity())) {
+            getAvailableBankList();
             getBankList();
         }
 
@@ -100,6 +113,27 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mBankListRecyclerView.setAdapter(mBankListAdapter);
 
         return v;
+    }
+
+    private void getAvailableBankList() {
+        if (mGetAvailableBanksTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage("Fetching bank lists...");
+        mProgressDialog.show();
+
+        BankRequestBuilder bankRequestBuilder = new BankRequestBuilder();
+        String uri = bankRequestBuilder.getGeneratedUri();
+        mGetAvailableBanksTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_AVAILABLE_BANK_LIST,
+                uri, getActivity());
+        mGetAvailableBanksTask.mHttpResponseListener = this;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mGetAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mGetAvailableBanksTask.execute();
+        }
     }
 
     private void getBankList() {
@@ -401,7 +435,22 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             mProgressDialog.dismiss();
             mEnableBankAccountTask = null;
 
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_AVAILABLE_BANK_LIST)) {
+            try {
+                Log.d("Response", resultList.get(1) + ", " + resultList.get(2));
+                mGetAvailableBankResponse = gson.fromJson(resultList.get(2), GetAvailableBankResponse.class);
+                loadBanks(mGetAvailableBankResponse.getAvailableBanks());
+            } catch(Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), "Failed loading bank list", Toast.LENGTH_LONG).show();
+                }
+            }
         }
+    }
+
+    private void loadBanks(List<Bank> availableBanks) {
+        Log.d("Banks", availableBanks.toString());
     }
 
     public class BankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
