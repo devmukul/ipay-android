@@ -139,7 +139,6 @@ public class HomeActivity extends AppCompatActivity
         } else {
 
             // TODO: remove the else part
-            // TODO: remove this shit... this is shit... shit
             // TODO: implement ContactsContract to see the changes in contacts and then update each time
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 new SyncContactsAsyncTask(HomeActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
