@@ -92,7 +92,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         addNewBankButton = (Button) v.findViewById(R.id.button_add_bank);
         mProgressDialog = new ProgressDialog(getActivity());
-        bankArray = getResources().getStringArray(R.array.default_banks);
+//        bankArray = getResources().getStringArray(R.array.default_banks);
         bankAccountTypes = getResources().getStringArray(R.array.default_bank_account_types);
 
         addNewBankButton.setOnClickListener(new View.OnClickListener() {
@@ -106,11 +106,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             getAvailableBankList();
             getBankList();
         }
-
-        mBankListAdapter = new BankListAdapter();
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mBankListRecyclerView.setLayoutManager(mLayoutManager);
-        mBankListRecyclerView.setAdapter(mBankListAdapter);
 
         return v;
     }
@@ -172,8 +167,10 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         final EditText mAccountNameEditText = (EditText) view.findViewById(R.id.bank_account_name);
         final EditText mAccountNumberEditText = (EditText) view.findViewById(R.id.bank_account_number);
 
-        ArrayAdapter<CharSequence> mAdapterBanks = ArrayAdapter.createFromResource(getActivity(),
-                R.array.default_banks, android.R.layout.simple_dropdown_item_1line);
+//        ArrayAdapter<CharSequence> mAdapterBanks = ArrayAdapter.createFromResource(getActivity(),
+//                R.array.default_banks, android.R.layout.simple_dropdown_item_1line);
+        ArrayAdapter<CharSequence> mAdapterBanks = new ArrayAdapter<CharSequence>(
+                getActivity(), android.R.layout.simple_dropdown_item_1line, bankArray);
         mBankListSpinner.setAdapter(mAdapterBanks);
 
         ArrayAdapter<CharSequence> mAdapterAccountTypes = ArrayAdapter.createFromResource(getActivity(),
@@ -451,6 +448,16 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
     private void loadBanks(List<Bank> availableBanks) {
         Log.d("Banks", availableBanks.toString());
+
+        bankArray = new String[availableBanks.size()];
+        for (int i = 0; i < availableBanks.size(); i++) {
+            bankArray[i] = availableBanks.get(i).getName();
+        }
+
+        mBankListAdapter = new BankListAdapter();
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mBankListRecyclerView.setLayoutManager(mLayoutManager);
+        mBankListRecyclerView.setAdapter(mBankListAdapter);
     }
 
     public class BankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
