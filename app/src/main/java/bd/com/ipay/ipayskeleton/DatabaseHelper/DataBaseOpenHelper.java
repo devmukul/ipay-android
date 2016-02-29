@@ -4,10 +4,25 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DataBaseOpenHelper extends SQLiteOpenHelper {
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
+
+import java.sql.SQLException;
+
+import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.District;
+import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.SubscriberEntry;
+import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.Thana;
+
+public class DataBaseOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private int newVersion;
     private String name;
+
+    private Dao<SubscriberEntry, Long> subscriberEntryDao;
+    private Dao<District, Long> districtDao;
+    private Dao<Thana, Long> thanaDao;
 
     public DataBaseOpenHelper(Context context, String name, int version) {
         super(context, name, null, version);
@@ -16,17 +31,61 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase db, ConnectionSource source) {
 
-        db.execSQL("create table if not exists "
-                + DBConstants.DB_TABLE_SUBSCRIBERS
-                + "(_id integer primary key autoincrement, mobile_number text not null, "
-                + "name text)");
+//        db.execSQL("create table if not exists "
+//                + DBConstants.DB_TABLE_SUBSCRIBERS
+//                + "(_id integer primary key autoincrement, mobile_number text not null, "
+//                + "name text)");
+        try {
+            TableUtils.createTable(source, SubscriberEntry.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, ConnectionSource source, int oldVersion, int newVersion) {
 
+    }
+
+    public Dao<SubscriberEntry, Long> getSubscriberEntryDao() {
+        getWritableDatabase();
+        if (subscriberEntryDao == null) {
+            try {
+                subscriberEntryDao = getDao(SubscriberEntry.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return subscriberEntryDao;
+    }
+
+    public Dao<District, Long> getDistrictDao() {
+        getWritableDatabase();
+        if (districtDao == null) {
+            try {
+                districtDao = getDao(District.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return districtDao;
+    }
+
+    public Dao<Thana, Long> getThanaDao() {
+        getWritableDatabase();
+        if (thanaDao == null) {
+            try {
+                thanaDao = getDao(Thana.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return thanaDao;
     }
 }
