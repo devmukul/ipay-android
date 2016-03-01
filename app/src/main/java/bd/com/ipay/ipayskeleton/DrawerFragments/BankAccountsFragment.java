@@ -479,7 +479,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 final long bankAccoutID = mListUserBankClasses.get(pos).getBankAccountId();
                 final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();
 
-                // TODO: Alert! Check this when Masud Vai comes.
                 String bankName = bankArray[Integer.parseInt(mListUserBankClasses.get(pos).getBankId() + "")];
                 String accountType = bankAccountTypes[Integer.parseInt(mListUserBankClasses.get(pos).getAccountType() + "")];
                 mBankAccountNumber.setText(mListUserBankClasses.get(pos).getAccountNumber());
