@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +24,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Events.Participant;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.PendingMoneyRequestClass;
@@ -44,31 +44,20 @@ public class SelectParticipantsFromListFrament extends Fragment implements HttpR
     private RecyclerView mParticipantsListRecyclerView;
     private ParticipantsListAdapter mParticipantsListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<PendingMoneyRequestClass> pendingMoneyRequestClasses;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private List<Participant> listOfParticipants;
 
-    private int historyPageCount = 0;
+    private int pageCount = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_requests, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
         mParticipantsListRecyclerView = (RecyclerView) v.findViewById(R.id.list_my_requests);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         mParticipantsListAdapter = new ParticipantsListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mParticipantsListRecyclerView.setLayoutManager(mLayoutManager);
         mParticipantsListRecyclerView.setAdapter(mParticipantsListAdapter);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshPendingList();
-                }
-            }
-        });
 
         return v;
     }
@@ -84,10 +73,10 @@ public class SelectParticipantsFromListFrament extends Fragment implements HttpR
     private void refreshPendingList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
 
-            historyPageCount = 0;
-            if (pendingMoneyRequestClasses != null)
-                pendingMoneyRequestClasses.clear();
-            pendingMoneyRequestClasses = null;
+            pageCount = 0;
+            if (listOfParticipants != null)
+                listOfParticipants.clear();
+            listOfParticipants = null;
             getPendingRequests();
 
         } else if (getActivity() != null)
@@ -99,7 +88,7 @@ public class SelectParticipantsFromListFrament extends Fragment implements HttpR
             return;
         }
 
-        GetPendingRequest mUserActivityRequest = new GetPendingRequest(null, historyPageCount);
+        GetPendingRequest mUserActivityRequest = new GetPendingRequest(null, pageCount);
         Gson gson = new Gson();
         String json = gson.toJson(mUserActivityRequest);
         mPendingRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_REQUESTS_ME,
@@ -148,12 +137,12 @@ public class SelectParticipantsFromListFrament extends Fragment implements HttpR
 
                         mGetPendingRequestResponse = gson.fromJson(resultList.get(2), GetPendingRequestResponse.class);
 
-                        if (pendingMoneyRequestClasses == null) {
-                            pendingMoneyRequestClasses = mGetPendingRequestResponse.getRequests();
+                        if (listOfParticipants == null) {
+                            listOfParticipants = mGetPendingRequestResponse.getRequests();
                         } else {
                             List<PendingMoneyRequestClass> tempPendingMoneyRequestClasses;
                             tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getRequests();
-                            pendingMoneyRequestClasses.addAll(tempPendingMoneyRequestClasses);
+                            listOfParticipants.addAll(tempPendingMoneyRequestClasses);
                         }
 
                         mParticipantsListAdapter.notifyDataSetChanged();
@@ -186,10 +175,10 @@ public class SelectParticipantsFromListFrament extends Fragment implements HttpR
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                         // Refresh the pending list
-                        if (pendingMoneyRequestClasses != null)
-                            pendingMoneyRequestClasses.clear();
-                        pendingMoneyRequestClasses = null;
-                        historyPageCount = 0;
+                        if (listOfParticipants != null)
+                            listOfParticipants.clear();
+                        listOfParticipants = null;
+                        pageCount = 0;
                         getPendingRequests();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -235,12 +224,12 @@ public class SelectParticipantsFromListFrament extends Fragment implements HttpR
 
             public void bindView(int pos) {
 
-                final long id = pendingMoneyRequestClasses.get(pos).getId();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
-                mAmount.setText(pendingMoneyRequestClasses.get(pos).getAmount() + " BDT");
+                final long id = listOfParticipants.get(pos).getId();
+                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(listOfParticipants.get(pos).getRequestTime());
+                mAmount.setText(listOfParticipants.get(pos).getAmount() + " BDT");
                 mTime.setText(time);
-                mSenderNumber.setText(pendingMoneyRequestClasses.get(pos).getReceiverMobileNumber());
-                mDescription.setText(pendingMoneyRequestClasses.get(pos).getDescription());
+                mSenderNumber.setText(listOfParticipants.get(pos).getReceiverMobileNumber());
+                mDescription.setText(listOfParticipants.get(pos).getDescription());
 
                 mCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -252,7 +241,7 @@ public class SelectParticipantsFromListFrament extends Fragment implements HttpR
                 // TODO: profile pic fetch change hobe
                 Glide.with(getActivity())
                         .load(Constants.BASE_URL_IMAGE_SERVER + "/image/"
-                                + pendingMoneyRequestClasses.get(pos).getReceiverMobileNumber().replaceAll("[^0-9]", "")
+                                + listOfParticipants.get(pos).getReceiverMobileNumber().replaceAll("[^0-9]", "")
                                 + ".jpg")
                         .placeholder(R.drawable.ic_face_black_24dp)
                         .into(mPortrait);
@@ -285,8 +274,8 @@ public class SelectParticipantsFromListFrament extends Fragment implements HttpR
 
         @Override
         public int getItemCount() {
-            if (pendingMoneyRequestClasses != null)
-                return pendingMoneyRequestClasses.size();
+            if (listOfParticipants != null)
+                return listOfParticipants.size();
             else return 0;
         }
 

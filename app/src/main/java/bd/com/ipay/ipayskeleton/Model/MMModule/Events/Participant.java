@@ -1,33 +1,26 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Events;
 
-import java.math.BigDecimal;
-
 public class Participant {
 
     public long id;
-    public BigDecimal charge;
-    public long endTime;
-    public String name;
-    public long startTime;
+    public String participantName;
+    public String participantMobileNumber;
+    public String participantDetailedInformation;
 
     public long getId() {
         return id;
     }
 
-    public BigDecimal getCharge() {
-        return charge;
+    public String getParticipantName() {
+        return participantName;
     }
 
-    public long getEndTime() {
-        return endTime;
+    public String getParticipantMobileNumber() {
+        return participantMobileNumber;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public long getStartTime() {
-        return startTime;
+    public String getParticipantDetailedInformation() {
+        return participantDetailedInformation;
     }
 }
 
