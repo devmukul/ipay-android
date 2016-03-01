@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.RequestMoneyFragments;
+package bd.com.ipay.ipayskeleton.EventFragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,12 +8,13 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.RequestMoneyFragments.MyRequestFragment;
+import bd.com.ipay.ipayskeleton.RequestMoneyFragments.OthersRequestFragment;
 
-public class RequestFragments extends Fragment implements View.OnClickListener {
+public class EventFragments extends Fragment implements View.OnClickListener {
 
     public static final int TAB_FIRST = 0;
     public static final int TAB_SECOND = 1;
@@ -43,23 +44,23 @@ public class RequestFragments extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_request_money_pending_list, container, false);
-        viewPager = (ViewPager) v.findViewById(R.id.requestViewPager);
+        View v = inflater.inflate(R.layout.fragment_event_list_fragments, container, false);
+        viewPager = (ViewPager) v.findViewById(R.id.eventViewPager);
 
-        firstTab = (TextView) v.findViewById(R.id.my_requests_tab);
+        firstTab = (TextView) v.findViewById(R.id.events_tab);
         firstTab.setOnClickListener(this);
-        secondTab = (TextView) v.findViewById(R.id.request_from_others_tab);
+        secondTab = (TextView) v.findViewById(R.id.payments_tab);
         secondTab.setOnClickListener(this);
 
-        firstTabIndicator = v.findViewById(R.id.my_requests_tab_indicator);
-        secondTabIndicator = v.findViewById(R.id.request_from_others_tab_indicator);
+        firstTabIndicator = v.findViewById(R.id.events_tab_indicator);
+        secondTabIndicator = v.findViewById(R.id.payments_tab_indicator);
 
         return v;
     }
 
     private void setUpViewPager() {
 
-        adapter = new PendingListPageAdapter(getChildFragmentManager());
+        adapter = new EventPageAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
 
         setTab();
@@ -102,9 +103,9 @@ public class RequestFragments extends Fragment implements View.OnClickListener {
         });
     }
 
-    private class PendingListPageAdapter extends FragmentStatePagerAdapter {
+    private class EventPageAdapter extends FragmentStatePagerAdapter {
 
-        public PendingListPageAdapter(FragmentManager fm) {
+        public EventPageAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -113,9 +114,11 @@ public class RequestFragments extends Fragment implements View.OnClickListener {
             Fragment fragment;
             switch (pos) {
                 case 0:
+                    // TODO: event list fragment
                     fragment = new MyRequestFragment();
                     break;
                 case 1:
+                    // TODO: payments list fragment
                     fragment = new OthersRequestFragment();
                     break;
                 default:
