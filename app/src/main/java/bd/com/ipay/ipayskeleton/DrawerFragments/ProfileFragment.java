@@ -398,12 +398,12 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                 Glide.with(getActivity())
                         .load(Constants.BASE_URL_IMAGE_SERVER + url)
                         .crossFade()
-                        .placeholder(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))
                         .into(mProfilePicture);
 
             else Glide.with(getActivity())
                     .load(android.R.color.transparent)
+                    .placeholder(R.drawable.ic_person)
                     .into(mProfilePicture);
         } catch (Exception e) {
             e.printStackTrace();
