@@ -362,14 +362,14 @@
         <item>Barisal</item>
     </string-array>
 
-    <string-array name="default_banks">
-        <item>Brac Bank</item>
-        <item>Dhaka Bank</item>
-        <item>Markentile Bank Ltd</item>
-        <item>Dutch Bangla Bank Ltd</item>
-        <item>NRB Bank</item>
-        <item>Standard Chattered</item>
-    </string-array>
+    <!--<string-array name="default_banks">-->
+        <!--<item>Brac Bank</item>-->
+        <!--<item>Dhaka Bank</item>-->
+        <!--<item>Markentile Bank Ltd</item>-->
+        <!--<item>Dutch Bangla Bank Ltd</item>-->
+        <!--<item>NRB Bank</item>-->
+        <!--<item>Standard Chattered</item>-->
+    <!--</string-array>-->
 
     <string-array name="default_bank_account_types">
         <item>Current</item>

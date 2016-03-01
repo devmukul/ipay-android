@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -67,7 +68,7 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
-        bankArray = getResources().getStringArray(R.array.default_banks);
+        bankArray = CommonData.getAvailableBankNames();
         mUserBankNameList = new ArrayList<String>();
         mUserBankAccountNumberList = new ArrayList<String>();
 

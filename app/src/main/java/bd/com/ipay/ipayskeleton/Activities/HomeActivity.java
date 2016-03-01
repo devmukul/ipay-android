@@ -17,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,8 +56,11 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoRequestBuilder
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetAvailableBankResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
+import bd.com.ipay.ipayskeleton.Utilities.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -68,6 +72,9 @@ public class HomeActivity extends AppCompatActivity
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
+
+    private HttpRequestGetAsyncTask mGetAvailableBanksTask = null;
+    private GetAvailableBankResponse mGetAvailableBankResponse;
 
     private TextView mUserNameTextView;
     private RoundedImageView mPortrait;
@@ -148,6 +155,10 @@ public class HomeActivity extends AppCompatActivity
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
+
+        // Load the list of available banks, which will be accessed from multiple activities
+        getAvailableBankList();
+
     }
 
     @Override
@@ -415,6 +426,24 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    private void getAvailableBankList() {
+        if (mGetAvailableBanksTask != null) {
+            return;
+        }
+
+        BankRequestBuilder bankRequestBuilder = new BankRequestBuilder();
+        String uri = bankRequestBuilder.getGeneratedUri();
+        mGetAvailableBanksTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_AVAILABLE_BANK_LIST,
+                uri, this);
+        mGetAvailableBanksTask.mHttpResponseListener = this;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mGetAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mGetAvailableBanksTask.execute();
+        }
+    }
+
     @Override
     public void httpResponseReceiver(String result) {
 
@@ -470,6 +499,17 @@ public class HomeActivity extends AppCompatActivity
 
             mGetProfileInfoTask = null;
 
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_AVAILABLE_BANK_LIST)) {
+            try {
+                // TODO: remove logging
+                mGetAvailableBankResponse = gson.fromJson(resultList.get(2), GetAvailableBankResponse.class);
+                Log.d("Available Banks", mGetAvailableBankResponse.getAvailableBanks().toString());
+                CommonData.setAvailableBanks(mGetAvailableBankResponse.getAvailableBanks());
+                mGetAvailableBanksTask = null;
+            } catch(Exception e) {
+                e.printStackTrace();
+                Toast.makeText(HomeActivity.this, "Failed loading bank list", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }
