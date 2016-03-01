@@ -106,6 +106,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     private int emailVerificationStatus;
 
+    private boolean profilePictureUpdated = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -394,17 +396,23 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     private void setProfilePicture(String url) {
         try {
-            if (!url.equals(""))
+            if (!url.equals("")) {
                 Glide.with(getActivity())
                         .load(Constants.BASE_URL_IMAGE_SERVER + url)
                         .crossFade()
                         .transform(new CircleTransform(getActivity()))
                         .into(mProfilePicture);
-
-            else Glide.with(getActivity())
-                    .load(android.R.color.transparent)
-                    .placeholder(R.drawable.ic_person)
-                    .into(mProfilePicture);
+                if (profilePictureUpdated) {
+                    ProfilePictureChangeListener listener = (ProfilePictureChangeListener) getActivity();
+                    listener.onProfilePictureChange(url);
+                }
+            }
+            else {
+                Glide.with(getActivity())
+                        .load(android.R.color.transparent)
+                        .placeholder(R.drawable.ic_person)
+                        .into(mProfilePicture);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -499,6 +507,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 
+                    profilePictureUpdated = true;
                     getProfileInfo();
 
                 } else {
@@ -588,4 +597,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         alertDialogue.show();
     }
 
+    public interface ProfilePictureChangeListener {
+        void onProfilePictureChange(String imageUrl);
+    }
 }

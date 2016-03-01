@@ -66,7 +66,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener,
+        ProfileFragment.ProfilePictureChangeListener {
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -92,6 +93,8 @@ public class HomeActivity extends AppCompatActivity
     public static String iPayToken = "";
 
     private boolean switchedToHomeFragment = true;
+
+    private static final int PROFILE_ACTIVITY_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,23 +209,11 @@ public class HomeActivity extends AppCompatActivity
             super.onBackPressed();
     }
 
-    private void setProfilePicture() {
-
-        String imageUrl = "";
-
-        if (profilePictures.size() > 0) {
-            for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
-                UserProfilePictureClass userProfilePictureClass = it.next();
-                imageUrl = userProfilePictureClass.getUrl();
-                break;
-            }
-        }
-
+    private void setProfilePicture(String imageUrl) {
         try {
             if (!imageUrl.equals(""))
                 Glide.with(HomeActivity.this)
                         .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
-                        .placeholder(R.drawable.ic_person)
                         .transform(new CircleTransform(HomeActivity.this))
                         .into(mPortrait);
             else Glide.with(HomeActivity.this)
@@ -477,9 +468,18 @@ public class HomeActivity extends AppCompatActivity
             try {
                 mGetUserInfoResponse = gson.fromJson(resultList.get(2), GetUserInfoResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-//                    Toast.makeText(HomeActivity.this, mGetUserInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                     profilePictures = mGetUserInfoResponse.getProfilePictures();
-                    setProfilePicture();
+
+                    String imageUrl = "";
+                    if (profilePictures.size() > 0) {
+                        for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
+                            UserProfilePictureClass userProfilePictureClass = it.next();
+                            imageUrl = userProfilePictureClass.getUrl();
+                            break;
+                        }
+                    }
+
+                    setProfilePicture(imageUrl);
                 } else {
                     Toast.makeText(HomeActivity.this, R.string.profile_picture_get_failed, Toast.LENGTH_SHORT).show();
                 }
@@ -491,5 +491,10 @@ public class HomeActivity extends AppCompatActivity
             mGetProfileInfoTask = null;
 
         }
+    }
+
+    @Override
+    public void onProfilePictureChange(String imageUrl) {
+        setProfilePicture(imageUrl);
     }
 }
