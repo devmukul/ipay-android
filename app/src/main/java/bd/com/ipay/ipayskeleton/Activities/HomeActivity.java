@@ -157,6 +157,7 @@ public class HomeActivity extends AppCompatActivity
 
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
+        System.out.println(iPayToken);
     }
 
     @Override
