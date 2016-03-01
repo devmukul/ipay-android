@@ -145,6 +145,7 @@ public class HomeActivity extends AppCompatActivity
 
             // TODO: remove the else part
             // TODO: implement ContactsContract to see the changes in contacts and then update each time
+            // TODO: wow. This is complete sh**!
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 new SyncContactsAsyncTask(HomeActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
@@ -287,7 +288,8 @@ public class HomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_event) {
 
-            // TODO: start activity for event
+            Intent intent = new Intent(HomeActivity.this, EventActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_settings) {
 

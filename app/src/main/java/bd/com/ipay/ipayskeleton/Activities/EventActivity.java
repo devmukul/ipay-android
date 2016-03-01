@@ -6,12 +6,14 @@ import android.view.View;
 
 import com.github.clans.fab.FloatingActionButton;
 
+import bd.com.ipay.ipayskeleton.EventFragments.CreateNewEventFragment;
+import bd.com.ipay.ipayskeleton.EventFragments.EventFragments;
 import bd.com.ipay.ipayskeleton.R;
 
 public class EventActivity extends AppCompatActivity {
 
     private FloatingActionButton mFabCreateNewEvent;
-    private boolean switchedToEventList = true;
+    private boolean switchedToEventFragments = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,31 +28,29 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
-        switchToEventsFragment();
+        switchToEventFragments();
     }
 
     @Override
     public void onBackPressed() {
-        if (switchedToEventList) super.onBackPressed();
+        if (switchedToEventFragments) super.onBackPressed();
         else {
-            switchToEventsFragment();
+            switchToEventFragments();
         }
     }
 
-    public void switchToEventsFragment() {
-        // TODO
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, new EventsFragment()).commit();
-//        mFabCreateNewEvent.setVisibility(View.VISIBLE);
-//        switchedToEventList = true;
+    public void switchToEventFragments() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new EventFragments()).commit();
+        mFabCreateNewEvent.setVisibility(View.VISIBLE);
+        switchedToEventFragments = true;
     }
 
     public void switchToCreateNewEventFragment() {
-        // TODO
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, new CreateNewEventFragment()).commit();
-//        mFabCreateNewEvent.setVisibility(View.GONE);
-//        switchedToEventList = false;
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new CreateNewEventFragment()).commit();
+        mFabCreateNewEvent.setVisibility(View.GONE);
+        switchedToEventFragments = false;
     }
 }
 
