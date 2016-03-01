@@ -37,12 +37,13 @@ public class DataHelper {
         try {
             dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
                     DATABASE_VERSION);
+            dOpenHelper.getSubscriberEntryDao().create(mSubscriberEntry);
 
-            ContentValues values = new ContentValues();
-            values.put(DBConstants.KEY_MOBILE_NUMBER, mSubscriberEntry.getMobileNumber());
-            values.put(DBConstants.KEY_NAME, mSubscriberEntry.getName());
-            db = dOpenHelper.getWritableDatabase();
-            db.insert(DBConstants.DB_TABLE_SUBSCRIBERS, null, values);
+//            ContentValues values = new ContentValues();
+//            values.put(DBConstants.KEY_MOBILE_NUMBER, mSubscriberEntry.getMobileNumber());
+//            values.put(DBConstants.KEY_NAME, mSubscriberEntry.getName());
+//            db = dOpenHelper.getWritableDatabase();
+//            db.insert(DBConstants.DB_TABLE_SUBSCRIBERS, null, values);
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,4 +112,5 @@ public class DataHelper {
         }
         return true;
     }
+
 }
