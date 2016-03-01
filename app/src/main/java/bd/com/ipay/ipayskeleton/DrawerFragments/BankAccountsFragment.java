@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
@@ -40,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -83,7 +85,16 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mProgressDialog = new ProgressDialog(getActivity());
         bankAccountTypes = getResources().getStringArray(R.array.default_bank_account_types);
 
-        bankArray = CommonData.getAvailableBankNames();
+        // It might be possible that we have failed to load the available bank list during
+        // application startup. In that case first try to load the available bank list first, and
+        // then load user bank details. Otherwise directly load the bank list.
+        if (CommonData.isAvailableBankListLoaded()) {
+            bankArray = CommonData.getAvailableBankNames();
+            getBankList();
+        }
+        else {
+            attemptRefreshAvailableBankNames();
+        }
 
         addNewBankButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,10 +103,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             }
         });
 
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getBankList();
-        }
-
         mBankListAdapter = new BankListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mBankListRecyclerView.setLayoutManager(mLayoutManager);
@@ -103,6 +110,29 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
         return v;
     }
+
+    private void attemptRefreshAvailableBankNames() {
+        GetAvailableBankAsyncTask mGetAvailableBankAsyncTask = new GetAvailableBankAsyncTask(getActivity(),
+                new GetAvailableBankAsyncTask.BankLoadListener() {
+                    @Override
+                    public void onLoadSuccess(List<Bank> banks) {
+                        mProgressDialog.dismiss();
+                        bankArray = CommonData.getAvailableBankNames();
+                        getBankList();
+                    }
+
+                    @Override
+                    public void onLoadFailed() {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.failed_available_bank_list_loading, Toast.LENGTH_LONG).show();
+                            getActivity().finish();
+                        }
+                    }
+                });
+        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
+        mProgressDialog.show();
+        mGetAvailableBankAsyncTask.execute();
+    };
 
     private void getBankList() {
         if (mGetBankTask != null) {
@@ -448,6 +478,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
                 final long bankAccoutID = mListUserBankClasses.get(pos).getBankAccountId();
                 final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();
+
+                // TODO: Alert! Check this when Masud Vai comes.
                 String bankName = bankArray[Integer.parseInt(mListUserBankClasses.get(pos).getBankId() + "")];
                 String accountType = bankAccountTypes[Integer.parseInt(mListUserBankClasses.get(pos).getAccountType() + "")];
                 mBankAccountNumber.setText(mListUserBankClasses.get(pos).getAccountNumber());

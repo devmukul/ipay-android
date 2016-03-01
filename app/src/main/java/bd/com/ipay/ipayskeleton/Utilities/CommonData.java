@@ -12,6 +12,10 @@ public class CommonData {
         return availableBanks;
     }
 
+    public static boolean isAvailableBankListLoaded() {
+        return availableBanks != null && !availableBanks.isEmpty();
+    }
+
     // TODO: handle error (check for null etc)
     public static String[] getAvailableBankNames() {
         String[] availableBankNames = new String[availableBanks.size()];

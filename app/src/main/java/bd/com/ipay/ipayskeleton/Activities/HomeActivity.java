@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -72,9 +73,6 @@ public class HomeActivity extends AppCompatActivity
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
-
-    private HttpRequestGetAsyncTask mGetAvailableBanksTask = null;
-    private GetAvailableBankResponse mGetAvailableBankResponse;
 
     private TextView mUserNameTextView;
     private RoundedImageView mPortrait;
@@ -158,7 +156,6 @@ public class HomeActivity extends AppCompatActivity
 
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
-
     }
 
     @Override
@@ -427,20 +424,11 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void getAvailableBankList() {
-        if (mGetAvailableBanksTask != null) {
-            return;
-        }
-
-        BankRequestBuilder bankRequestBuilder = new BankRequestBuilder();
-        String uri = bankRequestBuilder.getGeneratedUri();
-        mGetAvailableBanksTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_AVAILABLE_BANK_LIST,
-                uri, this);
-        mGetAvailableBanksTask.mHttpResponseListener = this;
-
+        GetAvailableBankAsyncTask getAvailableBanksTask = new GetAvailableBankAsyncTask(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mGetAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            mGetAvailableBanksTask.execute();
+            getAvailableBanksTask.execute();
         }
     }
 
@@ -499,17 +487,6 @@ public class HomeActivity extends AppCompatActivity
 
             mGetProfileInfoTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_AVAILABLE_BANK_LIST)) {
-            try {
-                // TODO: remove logging
-                mGetAvailableBankResponse = gson.fromJson(resultList.get(2), GetAvailableBankResponse.class);
-                Log.d("Available Banks", mGetAvailableBankResponse.getAvailableBanks().toString());
-                CommonData.setAvailableBanks(mGetAvailableBankResponse.getAvailableBanks());
-                mGetAvailableBanksTask = null;
-            } catch(Exception e) {
-                e.printStackTrace();
-                Toast.makeText(HomeActivity.this, "Failed loading bank list", Toast.LENGTH_LONG).show();
-            }
         }
     }
 }
