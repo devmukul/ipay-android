@@ -1,7 +1,21 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Events;
 
-/**
- * Created by masudias on 2016-03-01.
- */
+import java.util.List;
+
 public class GetAllParticipantsResponse {
+
+    private List<Participant> participants;
+    private boolean hasNext;
+
+    public GetAllParticipantsResponse() {
+
+    }
+
+    public List<Participant> getParticipants() {
+        return participants;
+    }
+
+    public boolean isHasNext() {
+        return hasNext;
+    }
 }
