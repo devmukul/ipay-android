@@ -27,11 +27,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseBusinessSignup;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -132,10 +135,6 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
         mBusinessDistrict.setAdapter(mAdapterDistrict);
         mBusinessHolderDistrict.setAdapter(mAdapterDistrict);
 
-        ArrayAdapter<CharSequence> mAdapterBusinessType = ArrayAdapter.createFromResource(getActivity(),
-                R.array.business_type, android.R.layout.simple_dropdown_item_1line);
-        mBusinessType.setAdapter(mAdapterBusinessType);
-
         mDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,6 +163,13 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
                 }
             }
         });
+
+        // Asynchronously load business types into the spinner
+        GetBusinessTypesAsyncTask getBusinessTypesAsyncTask =
+                new GetBusinessTypesAsyncTask(getActivity(), businessTypeLoadListener);
+        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_business_types));
+        mProgressDialog.show();
+        getBusinessTypesAsyncTask.execute();
 
         return v;
     }
@@ -463,6 +469,23 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
             mRequestOTPTask = null;
         }
     }
+
+    GetBusinessTypesAsyncTask.BusinessTypeLoadListener businessTypeLoadListener =
+            new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
+        @Override
+        public void onLoadSuccess(List<BusinessType> businessTypes) {
+            ArrayAdapter<String> businessTypeAdapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    CommonData.getBusinessTypeNames());
+            mBusinessType.setAdapter(businessTypeAdapter);
+            mProgressDialog.dismiss();
+        }
+
+        @Override
+        public void onLoadFailed() {
+
+        }
+    };
 }
 
 
