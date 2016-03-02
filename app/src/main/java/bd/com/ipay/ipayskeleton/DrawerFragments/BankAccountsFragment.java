@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private RecyclerView.LayoutManager mLayoutManager;
     private Button addNewBankButton;
     private List<UserBankClass> mListUserBankClasses;
-    private String[] bankArray;
     private String[] bankAccountTypes;
 
 
@@ -89,7 +89,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         // application startup. In that case first try to load the available bank list first, and
         // then load user bank details. Otherwise directly load the bank list.
         if (CommonData.isAvailableBankListLoaded()) {
-            bankArray = CommonData.getAvailableBankNames();
             getBankList();
         }
         else {
@@ -117,7 +116,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     @Override
                     public void onLoadSuccess(List<Bank> banks) {
                         mProgressDialog.dismiss();
-                        bankArray = CommonData.getAvailableBankNames();
                         getBankList();
                     }
 
@@ -170,10 +168,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         final EditText mAccountNameEditText = (EditText) view.findViewById(R.id.bank_account_name);
         final EditText mAccountNumberEditText = (EditText) view.findViewById(R.id.bank_account_number);
 
-//        ArrayAdapter<CharSequence> mAdapterBanks = ArrayAdapter.createFromResource(getActivity(),
-//                R.array.default_banks, android.R.layout.simple_dropdown_item_1line);
         ArrayAdapter<CharSequence> mAdapterBanks = new ArrayAdapter<CharSequence>(
-                getActivity(), android.R.layout.simple_dropdown_item_1line, bankArray);
+                getActivity(), android.R.layout.simple_dropdown_item_1line, CommonData.getAvailableBankNames());
         mBankListSpinner.setAdapter(mAdapterBanks);
 
         ArrayAdapter<CharSequence> mAdapterAccountTypes = ArrayAdapter.createFromResource(getActivity(),
@@ -183,7 +179,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                attemptAddBank(mBankListSpinner.getSelectedItemPosition(), mAccountTypesSpinner.getSelectedItemPosition(),
+                Bank bank = CommonData.getAvailableBanks().get(mBankListSpinner.getSelectedItemPosition());
+                attemptAddBank((int) bank.getId(), mAccountTypesSpinner.getSelectedItemPosition(),
                         mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
                 dialog.dismiss();
             }
@@ -479,7 +476,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 final long bankAccoutID = mListUserBankClasses.get(pos).getBankAccountId();
                 final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();
 
-                String bankName = bankArray[Integer.parseInt(mListUserBankClasses.get(pos).getBankId() + "")];
+                long bankId = mListUserBankClasses.get(pos).getBankId();
+                String bankName = CommonData.getBankById(bankId).getName();
                 String accountType = bankAccountTypes[Integer.parseInt(mListUserBankClasses.get(pos).getAccountType() + "")];
                 mBankAccountNumber.setText(mListUserBankClasses.get(pos).getAccountNumber());
                 mBankName.setText(bankName);

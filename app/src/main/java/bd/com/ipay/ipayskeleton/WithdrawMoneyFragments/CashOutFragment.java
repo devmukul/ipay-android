@@ -52,7 +52,6 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
     private List<UserBankClass> mListUserBankClasses;
     private ArrayList<String> mUserBankNameList;
     private ArrayList<String> mUserBankAccountNumberList;
-    private String[] bankArray;
     private int selectedBankPosition = 0;
 
     private ProgressDialog mProgressDialog;
@@ -77,7 +76,6 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
         // application startup. In that case first try to load the available bank list first, and
         // then load user bank details. Otherwise directly load the bank list.
         if (CommonData.isAvailableBankListLoaded()) {
-            bankArray = CommonData.getAvailableBankNames();
             getBankList();
         }
         else {
@@ -110,7 +108,6 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
                     @Override
                     public void onLoadSuccess(List<Bank> banks) {
                         mProgressDialog.dismiss();
-                        bankArray = CommonData.getAvailableBankNames();
                         getBankList();
                     }
 
@@ -329,8 +326,9 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
                         } else {
                             mLinkABankNoteTextView.setVisibility(View.GONE);
                             for (int i = 0; i < mListUserBankClasses.size(); i++) {
-                                int index = Integer.parseInt(mListUserBankClasses.get(i).getBankId() + "");
-                                mUserBankNameList.add(bankArray[index]);
+                                long bankId = mListUserBankClasses.get(i).getBankId();
+                                Bank bank = CommonData.getBankById(bankId);
+                                mUserBankNameList.add(bank.getName());
                                 mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
                             }
                         }

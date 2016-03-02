@@ -1,7 +1,11 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
@@ -9,6 +13,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
 
 public class CommonData {
     private static List<Bank> availableBanks;
+    private static Map<Long, Bank> availableBanksMap;
+
     private static List<Thana> thanas;
     private static List<District> districts;
 
@@ -29,11 +35,17 @@ public class CommonData {
         return availableBankNames;
     }
 
-    public static void setAvailableBanks(List<Bank> banks) {
-        CommonData.availableBanks = banks;
+    public static Bank getBankById(long id) {
+        return availableBanksMap.get(id);
     }
 
-
+    public static void setAvailableBanks(List<Bank> banks) {
+        CommonData.availableBanks = banks;
+        availableBanksMap = new HashMap<>();
+        for (Bank bank : banks) {
+            availableBanksMap.put(bank.getId(), bank);
+        }
+    }
 
 
     public static List<Thana> getThanas() {
