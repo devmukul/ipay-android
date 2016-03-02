@@ -62,6 +62,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetAvailableBankResponse
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.CommonData;
+import bd.com.ipay.ipayskeleton.Utilities.CommonDataLoader;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -160,6 +161,7 @@ public class HomeActivity extends AppCompatActivity
 
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
+        CommonDataLoader.loadThanas(this);
 //        Log.i("Token", HomeActivity.iPayToken);
     }
 

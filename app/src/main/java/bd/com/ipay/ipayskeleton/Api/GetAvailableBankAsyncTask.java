@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -38,8 +36,6 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
                             GetAvailableBankResponse.class);
 
                     List<Bank> availableBanks = getAvailableBankResponse.getAvailableBanks();
-                    // TODO: remove logging
-                    Log.d("Available Banks", availableBanks.toString());
                     CommonData.setAvailableBanks(availableBanks);
 
                     if (listener != null) {

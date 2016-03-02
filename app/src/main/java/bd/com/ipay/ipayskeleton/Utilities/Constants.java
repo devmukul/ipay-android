@@ -23,6 +23,8 @@ public class Constants {
     public static final String BOUNDARY = "iPayBoundary";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String DUMMY = "DUMMY";
+    public static final String THANA = "thana";
+    public static final String DISTRICT = "district";
     public static final String MULTIPART_FORM_DATA_NAME = "file";
     public static final String STARTING_DATE_OF_IPAY = "01/01/2016";
     public static final int STARTING_DATE = 01;
@@ -153,6 +155,7 @@ public class Constants {
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";
+    public static final String COMMAND_GET_THANA_LIST = "COMMAND_GET_THANA_LIST";
 
     // FireBase
     public static final String PATH_TO_IPAY_USERS = "https://ipay-com-test.firebaseio.com/data/iPay-users/";
