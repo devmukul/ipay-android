@@ -61,6 +61,7 @@
     <string name="forgot_password"><u>Forgot your password?</u></string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="add_new_participant">Add new participant</string>
     <string name="remove_this_account_query">Remove this account from your bank list?</string>
     <string name="accept_money_request_confirm">Are you sure you want to accept this request for sending money?</string>
     <string name="reject_money_request_confirm">Are you sure you want to reject this request for sending money?</string>

@@ -1,29 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/add_new_participant_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_add_participant"
+            style="@style/MenuButtonsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_black_24dp"
+            fab:fab_label="@string/make_payment" />
 
         <TextView
-            android:layout_width="match_parent"
+            style="@style/TextStylePrimaryMedium"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:text="@string/my_requests"
-            android:textStyle="bold" />
-
-    </RelativeLayout>
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="@string/add_new_participant" />
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_all_participants"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/activity_horizontal_margin" />
 
 
 </LinearLayout>

@@ -3,15 +3,20 @@ package bd.com.ipay.ipayskeleton.AddParticipantsFragments;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -40,6 +45,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Participant> listOfParticipants;
     private ArrayList<String> selectedParticipants;
+    private LinearLayout mAddNewParticipant;
 
     private int pageCount = 0;
 
@@ -48,12 +54,20 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         View v = inflater.inflate(R.layout.fragment_list_all_participants, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
         mParticipantsListRecyclerView = (RecyclerView) v.findViewById(R.id.list_all_participants);
+        mAddNewParticipant = (LinearLayout) v.findViewById(R.id.add_new_participant_layout);
         selectedParticipants = new ArrayList<String>();
 
         mParticipantsListAdapter = new ParticipantsListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mParticipantsListRecyclerView.setLayoutManager(mLayoutManager);
         mParticipantsListRecyclerView.setAdapter(mParticipantsListAdapter);
+
+        mAddNewParticipant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
 
         return v;
     }
@@ -64,6 +78,41 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         if (Utilities.isConnectionAvailable(getActivity())) {
             getParticipantsList();
         }
+    }
+
+    private void forgetPasswordDialogue() {
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.forgot_your_password)
+                .customView(R.layout.dialog_forget_password_get_mobile_number, true)
+                .positiveText(R.string.submit)
+                .negativeText(R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
+        View view = dialog.getCustomView();
+        final EditText mMobileNumberEditText = (EditText) view.findViewById(R.id.mobile_number);
+
+        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                if (mMobileNumberEditText.getText().toString().trim().length() != 14) {
+                    mMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
+                    Toast.makeText(getActivity(), R.string.error_invalid_mobile_number, Toast.LENGTH_LONG).show();
+
+                } else {
+                    String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+                    attemptSendOTP(mobileNumber, Constants.MOBILE_ANDROID + mDeviceID);
+                    dialog.dismiss();
+                }
+            }
+        });
+
     }
 
     private void getParticipantsList() {
