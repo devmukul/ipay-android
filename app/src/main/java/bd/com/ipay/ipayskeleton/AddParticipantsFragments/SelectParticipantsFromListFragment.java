@@ -44,7 +44,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
     private ParticipantsListAdapter mParticipantsListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Participant> listOfParticipants;
-    private ArrayList<String> selectedParticipants;
+    private ArrayList<Participant> selectedParticipants;
     private LinearLayout mAddNewParticipant;
 
     private int pageCount = 0;
@@ -55,7 +55,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         mProgressDialog = new ProgressDialog(getActivity());
         mParticipantsListRecyclerView = (RecyclerView) v.findViewById(R.id.list_all_participants);
         mAddNewParticipant = (LinearLayout) v.findViewById(R.id.add_new_participant_layout);
-        selectedParticipants = new ArrayList<String>();
+        selectedParticipants = new ArrayList<Participant>();
 
         mParticipantsListAdapter = new ParticipantsListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -65,7 +65,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         mAddNewParticipant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                showAddNewParticipantDialog();
             }
         });
 
@@ -80,11 +80,11 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         }
     }
 
-    private void forgetPasswordDialogue() {
+    private void showAddNewParticipantDialog() {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.forgot_your_password)
-                .customView(R.layout.dialog_forget_password_get_mobile_number, true)
-                .positiveText(R.string.submit)
+                .title(R.string.add_new_participant)
+                .customView(R.layout.dialog_add_new_participant, true)
+                .positiveText(R.string.add)
                 .negativeText(R.string.cancel)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -96,6 +96,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
 
         View view = dialog.getCustomView();
         final EditText mMobileNumberEditText = (EditText) view.findViewById(R.id.mobile_number);
+        final EditText mParticipantName = (EditText) view.findViewById(R.id.name);
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
@@ -105,9 +106,25 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
                     mMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
                     Toast.makeText(getActivity(), R.string.error_invalid_mobile_number, Toast.LENGTH_LONG).show();
 
+                } else if (mParticipantName.getText().toString().trim().length() == 0) {
+                    mParticipantName.setError(getString(R.string.error_invalid_name));
+                    Toast.makeText(getActivity(), R.string.error_invalid_name, Toast.LENGTH_LONG).show();
+
                 } else {
+
                     String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-                    attemptSendOTP(mobileNumber, Constants.MOBILE_ANDROID + mDeviceID);
+                    String name = mParticipantName.getText().toString().trim();
+                    Participant mParticipant = new Participant(name, mobileNumber);
+
+                    if (listOfParticipants.contains(mParticipant)) {
+                        listOfParticipants.add(mParticipant);
+                        selectedParticipants.add(mParticipant);
+
+                        mParticipantsListAdapter.notifyDataSetChanged();
+
+                    } else
+                        Toast.makeText(getActivity(), R.string.participant_already_added, Toast.LENGTH_LONG).show();
+
                     dialog.dismiss();
                 }
             }
@@ -218,7 +235,8 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
                     mParticipantDetails.setText(participantDetail);
                 }
 
-                if (selectedParticipants.contains(id)) mSelectCheckbox.setChecked(true);
+                final Participant mParticipant = new Participant(participantName, participantNumber);
+                if (selectedParticipants.contains(mParticipant)) mSelectCheckbox.setChecked(true);
                 else mSelectCheckbox.setChecked(false);
 
                 mSelectCheckbox.setOnClickListener(new View.OnClickListener() {
@@ -226,10 +244,10 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
                     public void onClick(View v) {
                         if (mSelectCheckbox.isChecked()) {
                             mSelectCheckbox.setChecked(false);
-                            selectedParticipants.remove(id);
+                            selectedParticipants.remove(mParticipant);
                         } else {
                             mSelectCheckbox.setChecked(true);
-                            selectedParticipants.add(id);
+                            selectedParticipants.add(mParticipant);
                         }
                     }
                 });

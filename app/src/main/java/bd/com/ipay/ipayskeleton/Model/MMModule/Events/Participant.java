@@ -7,6 +7,18 @@ public class Participant {
     public String participantMobileNumber;
     public String participantDetailedInformation;
 
+    public Participant(String participantName, String participantMobileNumber) {
+        this.participantName = participantName;
+        this.participantMobileNumber = participantMobileNumber;
+    }
+
+    public Participant(long id, String participantName, String participantMobileNumber, String participantDetailedInformation) {
+        this.id = id;
+        this.participantName = participantName;
+        this.participantMobileNumber = participantMobileNumber;
+        this.participantDetailedInformation = participantDetailedInformation;
+    }
+
     public long getId() {
         return id;
     }
