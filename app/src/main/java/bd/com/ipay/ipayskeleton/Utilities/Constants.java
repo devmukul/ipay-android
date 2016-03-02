@@ -156,6 +156,7 @@ public class Constants {
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";
     public static final String COMMAND_GET_THANA_LIST = "COMMAND_GET_THANA_LIST";
+    public static final String COMMAND_GET_DISTRICT_LIST = "COMMAND_GET_DISTRICT_LIST";
 
     // FireBase
     public static final String PATH_TO_IPAY_USERS = "https://ipay-com-test.firebaseio.com/data/iPay-users/";

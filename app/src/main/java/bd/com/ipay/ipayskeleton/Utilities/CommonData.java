@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
 
 public class CommonData {
     private static List<Bank> availableBanks;
     private static List<Thana> thanas;
+    private static List<District> districts;
 
     public static List<Bank> getAvailableBanks() {
         return availableBanks;
@@ -53,5 +55,29 @@ public class CommonData {
 
     public static void setThanas(List<Thana> thanas) {
         CommonData.thanas = thanas;
+    }
+
+
+
+
+    public static List<District> getDistricts() {
+        return districts;
+    }
+
+    public static boolean isDistrictLoaded() {
+        return districts != null && !districts.isEmpty();
+    }
+
+    public static String[] getDistrictNames() {
+        String[] districtNames = new String[districts.size()];
+        for (int i = 0; i < districts.size(); i++) {
+            districtNames[i] = districts.get(i).getName();
+        }
+
+        return districtNames;
+    }
+
+    public static void setDistricts(List<District> districts) {
+        CommonData.districts = districts;
     }
 }

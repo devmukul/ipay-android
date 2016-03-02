@@ -161,7 +161,7 @@ public class HomeActivity extends AppCompatActivity
 
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
-        CommonDataLoader.loadThanas(this);
+        CommonDataLoader.loadAll(this);
 //        Log.i("Token", HomeActivity.iPayToken);
     }
 
