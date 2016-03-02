@@ -1,28 +1,21 @@
 package bd.com.ipay.ipayskeleton.AddParticipantsFragments;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -46,7 +39,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
     private ParticipantsListAdapter mParticipantsListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Participant> listOfParticipants;
-    private HashMap<Long, String> selectedParticipants;
+    private ArrayList<String> selectedParticipants;
 
     private int pageCount = 0;
 
@@ -55,6 +48,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         View v = inflater.inflate(R.layout.fragment_list_all_participants, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
         mParticipantsListRecyclerView = (RecyclerView) v.findViewById(R.id.list_all_participants);
+        selectedParticipants = new ArrayList<String>();
 
         mParticipantsListAdapter = new ParticipantsListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -158,7 +152,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
 
             public void bindView(int pos) {
 
-                final long id = listOfParticipants.get(pos).getId();
+                final String id = listOfParticipants.get(pos).getId() + "";
                 final String participantNumber = listOfParticipants.get(pos).getParticipantMobileNumber();
                 final String participantName = listOfParticipants.get(pos).getParticipantName();
                 final String participantDetail = listOfParticipants.get(pos).getParticipantDetailedInformation();
@@ -175,7 +169,21 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
                     mParticipantDetails.setText(participantDetail);
                 }
 
-                if()
+                if (selectedParticipants.contains(id)) mSelectCheckbox.setChecked(true);
+                else mSelectCheckbox.setChecked(false);
+
+                mSelectCheckbox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mSelectCheckbox.isChecked()) {
+                            mSelectCheckbox.setChecked(false);
+                            selectedParticipants.remove(id);
+                        } else {
+                            mSelectCheckbox.setChecked(true);
+                            selectedParticipants.add(id);
+                        }
+                    }
+                });
 
             }
         }
