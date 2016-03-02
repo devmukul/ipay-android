@@ -36,16 +36,13 @@ public class GetDistrictAsyncTask extends HttpRequestGetAsyncTask {
                     Gson gson = new Gson();
                     GetDistrictResponse getDistrictResponse = gson.fromJson(resultArr[2],
                             GetDistrictResponse.class);
-
                     List<District> districts = getDistrictResponse.getDistricts();
-                    CommonData.setDistricts(districts);
+                    StringBuilder xml = new StringBuilder();
+                    for (District district : districts) {
+                        xml.append("<item>" + district.getName() + "</item>");
+                    }
 
-                    Log.i("districts", districts.toString());
-
-                    SharedPreferences.Editor sharedPreferenceEditor
-                            = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                    sharedPreferenceEditor.putString(Constants.DISTRICT, resultArr[2]);
-                    sharedPreferenceEditor.apply();
+                    Log.i("Districts", xml.toString());
                 } catch(Exception e) {
                     e.printStackTrace();
                 }

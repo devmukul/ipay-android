@@ -35,14 +35,12 @@ public class GetThanaAsyncTask extends HttpRequestGetAsyncTask {
                             GetThanaResponse.class);
 
                     List<Thana> thanas = getThanaResponse.getThanas();
-                    CommonData.setThanas(thanas);
+                    StringBuilder xml = new StringBuilder();
+                    for (Thana thana : thanas) {
+                        xml.append("<item>" + thana.getName() + "</item>");
+                    }
 
-                    Log.i("Thanas", thanas.toString());
-
-                    SharedPreferences.Editor sharedPreferenceEditor
-                            = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                    sharedPreferenceEditor.putString(Constants.THANA, resultArr[2]);
-                    sharedPreferenceEditor.apply();
+                    Log.i("Thanas", xml.toString());
                 } catch(Exception e) {
                     e.printStackTrace();
                 }

@@ -57,6 +57,14 @@ public class CommonData {
         CommonData.thanas = thanas;
     }
 
+    public static String[] getThanaNamesWithNoSelection() {
+        String[] thanaNames = getThanaNames();
+        String[] thanaNamesWithNoSelection = new String[thanaNames.length + 1];
+        thanaNamesWithNoSelection[0] = "No Selection";
+        System.arraycopy(thanaNames, 0, thanaNamesWithNoSelection, 1, thanaNames.length);
+        return thanaNamesWithNoSelection;
+    }
+
 
 
 
@@ -75,6 +83,14 @@ public class CommonData {
         }
 
         return districtNames;
+    }
+
+    public static String[] getDistrictNamesWithNoSelection() {
+        String[] districtNames = getDistrictNames();
+        String[] districtNamesWithNoSelection = new String[districtNames.length + 1];
+        districtNamesWithNoSelection[0] = "No Selection";
+        System.arraycopy(districtNames, 0, districtNamesWithNoSelection, 1, districtNames.length);
+        return districtNamesWithNoSelection;
     }
 
     public static void setDistricts(List<District> districts) {
