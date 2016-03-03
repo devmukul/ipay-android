@@ -48,6 +48,8 @@ public class Constants {
     public static final String BASE_URL_SM = "http://10.10.10.10:8080/ism/";
 //    public static final String BASE_URL_IMAGE = "http://live.ipay.com.bd:81";
 
+    public static final String SCHEME = "http";
+
     public static final String URL_SIGN_UP = "signup/activation";
     public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
     public static final String URL_OTP_REQUEST = "signup";
@@ -93,6 +95,9 @@ public class Constants {
     public static final String URL_ADD_MONEY = "banktransaction/cashin";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
     public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
+    public static final String URL_GET_INVITE_INFO = "settings/invitation";
+    public static final String URL_SEND_INVITE = "settings/invitation";
+
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
     public static final String HTTP_RESPONSE_STATUS_OK = "200";

@@ -66,6 +66,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private BottomSheetLayout mBottomSheetLayout;
     private MenuSheetView mContactInviteSheetView;
 
+    // When a contact item is clicked, we need to access its name and number from the sheet view.
+    // So saving these in these two variables.
+    private String selectedName;
+    private String selectedNumber;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -366,7 +371,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.i("Name & Number", name + ":" + bdNumber);
+                        selectedNumber = bdNumber;
+                        selectedName = name;
+
                         mBottomSheetLayout.showWithSheetView(mContactInviteSheetView);
                     }
                 });
