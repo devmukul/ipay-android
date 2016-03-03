@@ -109,6 +109,8 @@ public class ContactsFragment extends Fragment implements
         miPayAdapter = new SubscriberListAdapter();
         mRecyclerView.setAdapter(mAdapter);
 
+        mProgressDialog = new ProgressDialog(getActivity());
+
         dir = new File(Environment.getExternalStorageDirectory().getPath()
                 + Constants.PICTURE_FOLDER);
         if (!dir.exists()) dir.mkdir();
@@ -156,9 +158,7 @@ public class ContactsFragment extends Fragment implements
     }
 
     private void getInviteInfo() {
-        Log.e("Invite", "Fetching invite info");
-
-        if (mGetInviteInfoTask != null) {
+        if (mGetInviteInfoTask == null) {
             mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
                     new GetInviteInfoRequestBuilder().getGeneratedUri(), getActivity(), this);
             mGetInviteInfoTask.execute();
@@ -166,8 +166,6 @@ public class ContactsFragment extends Fragment implements
     }
 
     private void sendInvite(String phoneNumber) {
-        Log.e("Invite", "Sending invite " + phoneNumber);
-
         if (mGetInviteInfoResponse == null) {
             Toast.makeText(getActivity(), R.string.failed_sending_invitation,
                     Toast.LENGTH_LONG).show();
@@ -354,6 +352,7 @@ public class ContactsFragment extends Fragment implements
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
             try {
                 mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
+//                Log.e("Invite", mGetInviteInfoResponse.toString());
             }
             catch (Exception e) {
                 e.printStackTrace();
