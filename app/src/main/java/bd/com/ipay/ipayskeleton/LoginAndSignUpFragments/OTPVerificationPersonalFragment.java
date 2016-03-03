@@ -155,10 +155,10 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         String promoCode = mPromoCodeEditText.getText().toString().trim();
         String otp = mOTPEditText.getText().toString().trim();
-        if (promoCode.isEmpty()) {
-            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
-            return;
-        }
+//        if (promoCode.isEmpty()) {
+//            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
+//            return;
+//        }
 
         mProgressDialog.show();
         SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
