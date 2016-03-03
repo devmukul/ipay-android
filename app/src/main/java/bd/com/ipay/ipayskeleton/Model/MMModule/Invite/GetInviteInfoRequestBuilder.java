@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public abstract class GetInviteInfoRequestBuilder {
+public class GetInviteInfoRequestBuilder {
 
     private String generatedUri;
 

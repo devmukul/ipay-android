@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -27,19 +28,31 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.commons.MenuSheetView;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Invite.GetInviteInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Invite.GetInviteInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Invite.SendInviteRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Invite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
-public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ContactsFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>, HttpResponseListener {
 
     private static final String TAG = "ContactsFragment";
     private static final int ALL_TAB = 0;
@@ -70,6 +83,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     // So saving these in these two variables.
     private String selectedName;
     private String selectedNumber;
+
+    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
+    private GetInviteInfoResponse mGetInviteInfoResponse;
+
+    private HttpRequestPostAsyncTask mSendInviteTask = null;
+    private SendInviteResponse mSendInviteResponse;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,17 +139,62 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         mContactInviteSheetView = new MenuSheetView(getActivity(), MenuSheetView.MenuType.LIST, "", new MenuSheetView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(getActivity(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                if (item.getItemId() == R.id.action_invite) {
+                    sendInvite(selectedNumber);
+                }
                 if (mBottomSheetLayout.isSheetShowing()) {
                     mBottomSheetLayout.dismissSheet();
                 }
                 return true;
             }
         });
-
         mContactInviteSheetView.inflateMenu(R.menu.contact_invite);
 
+        getInviteInfo();
+
         return v;
+    }
+
+    private void getInviteInfo() {
+        Log.e("Invite", "Fetching invite info");
+
+        if (mGetInviteInfoTask != null) {
+            mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
+                    new GetInviteInfoRequestBuilder().getGeneratedUri(), getActivity(), this);
+            mGetInviteInfoTask.execute();
+        }
+    }
+
+    private void sendInvite(String phoneNumber) {
+        Log.e("Invite", "Sending invite " + phoneNumber);
+
+        if (mGetInviteInfoResponse == null) {
+            Toast.makeText(getActivity(), R.string.failed_sending_invitation,
+                    Toast.LENGTH_LONG).show();
+            getInviteInfo();
+        }
+        else if (mGetInviteInfoResponse.invitees.size() >= mGetInviteInfoResponse.totalLimit) {
+            Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
+                    Toast.LENGTH_LONG).show();
+        }
+        else if (mGetInviteInfoResponse.invitees.contains(phoneNumber)) {
+            Toast.makeText(getActivity(), R.string.invitation_already_sent,
+                    Toast.LENGTH_LONG).show();
+        }
+        else {
+            mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
+            mProgressDialog.show();
+
+            List<String> invitees = new ArrayList<>();
+            invitees.add(phoneNumber);
+
+            SendInviteRequest sendInviteRequest = new SendInviteRequest(invitees);
+            Gson gson = new Gson();
+            String json = gson.toJson(sendInviteRequest);
+            mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
+                    Constants.BASE_URL_POST_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
+            mSendInviteTask.execute();
+        }
     }
 
     @Override
@@ -242,6 +308,60 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         } else if (loader.getId() == SUBSCRIBER_LOADER) {
             miPayAdapter.swapCursor(null);
         }
+    }
+
+    @Override
+    public void httpResponseReceiver(String result) {
+        if (result == null) {
+            mProgressDialog.dismiss();
+            mGetInviteInfoTask = null;
+            mSendInviteTask = null;
+
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT).show();
+
+            return;
+        }
+
+        List<String> resultList = Arrays.asList(result.split(";"));
+        Gson gson = new Gson();
+
+        if (resultList.get(0).equals(Constants.COMMAND_SEND_INVITE)) {
+            try {
+                mSendInviteResponse = gson.fromJson(resultList.get(2), SendInviteResponse.class);
+
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
+                    }
+                    // TODO better add the number from the response
+                    mGetInviteInfoResponse.invitees.add(selectedNumber);
+                    getInviteInfo();
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            mProgressDialog.dismiss();
+            mSendInviteTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
+            try {
+                mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mGetInviteInfoTask = null;
+        }
+
     }
 
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -371,10 +491,13 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        selectedNumber = bdNumber;
-                        selectedName = name;
+                        // Only show the invite option for non-subscribers
+                        if (subscriber == null || !subscriber.containsKey(bdNumber)) {
+                            selectedNumber = bdNumber;
+                            selectedName = name;
 
-                        mBottomSheetLayout.showWithSheetView(mContactInviteSheetView);
+                            mBottomSheetLayout.showWithSheetView(mContactInviteSheetView);
+                        }
                     }
                 });
             }

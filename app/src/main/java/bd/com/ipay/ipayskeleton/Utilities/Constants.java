@@ -166,6 +166,10 @@ public class Constants {
     public static final String COMMAND_GET_THANA_LIST = "COMMAND_GET_THANA_LIST";
     public static final String COMMAND_GET_DISTRICT_LIST = "COMMAND_GET_DISTRICT_LIST";
 
+    // Invite
+    public static final String COMMAND_GET_INVITE_INFO = "COMMAND_GET_INVITE_INFO";
+    public static final String COMMAND_SEND_INVITE = "COMMAND_SEND_INVITE";
+
     // FireBase
     public static final String PATH_TO_IPAY_USERS = "https://ipay-com-test.firebaseio.com/data/iPay-users/";
     public static final String PATH_TO_USER_CONTACTS = "https://ipay-com-test.firebaseio.com/data/users-contacts/";

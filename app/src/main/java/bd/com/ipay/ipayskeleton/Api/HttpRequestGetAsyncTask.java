@@ -35,9 +35,14 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
     private HttpResponse mHttpResponse;
 
     public HttpRequestGetAsyncTask(String API_COMMAND, String mUri, Context mContext) {
+        this(API_COMMAND, mUri, mContext, null);
+    }
+
+    public HttpRequestGetAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
         this.API_COMMAND = API_COMMAND;
         this.mUri = mUri;
         this.mContext = mContext;
+        this.mHttpResponseListener = listener;
     }
 
     @Override
