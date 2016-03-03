@@ -10,9 +10,12 @@ public class SignupRequestPersonal {
     private String passwordHash;
     private String gender;
     private String otp;
+//    private String promoCode;
     private int accountType;
 
-    public SignupRequestPersonal(String mobileNumber, String deviceId, String firstName, String lastName, String dob, String passwordHash, String gender, String otp, int accountType) {
+    public SignupRequestPersonal(String mobileNumber, String deviceId, String firstName,
+                                 String lastName, String dob, String passwordHash, String gender,
+                                 String otp, String promoCode, int accountType) {
         this.mobileNumber = mobileNumber;
         this.deviceId = deviceId;
         this.firstName = firstName;
@@ -21,6 +24,7 @@ public class SignupRequestPersonal {
         this.passwordHash = passwordHash;
         this.gender = gender;
         this.otp = otp;
+//        this.promoCode = promoCode;
         this.accountType = accountType;
     }
 }

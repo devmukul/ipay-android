@@ -55,6 +55,7 @@
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
+    <string name="error_promo_code_empty">Please enter the promo code</string>
     <string name="error_invalid_first_name">Please enter name</string>
     <string name="error_invalid_name">Please enter name</string>
     <string name="error_invalid_last_name">Please enter last name</string>
@@ -153,6 +154,7 @@
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
     <string name="enter_otp">Enter OTP</string>
+    <string name="enter_promo_code">Enter Promo Code</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
     <string name="recharge_failed">Mobile recharge failed.</string>

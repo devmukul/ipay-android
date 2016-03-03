@@ -53,6 +53,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     private Button mActivateButton;
     private Button mResendOTPButton;
     private EditText mOTPEditText;
+    private EditText mPromoCodeEditText;
     private TextView mTimerTextView;
 
     private String mDeviceID;
@@ -72,6 +73,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
+        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
@@ -147,12 +149,24 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         if (mSignUpTask != null) {
             return;
         }
+
+        // TODO check for OTP?
+        mPromoCodeEditText.setError(null);
+
+        String promoCode = mPromoCodeEditText.getText().toString().trim();
+        String otp = mOTPEditText.getText().toString().trim();
+        if (promoCode.isEmpty()) {
+            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
+            return;
+        }
+
         mProgressDialog.show();
         SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
                 Constants.MOBILE_ANDROID + mDeviceID,
                 SignupOrLoginActivity.mFirstName, SignupOrLoginActivity.mLastName,
                 SignupOrLoginActivity.mBirthday, Utilities.md5(SignupOrLoginActivity.mPassword),
-                SignupOrLoginActivity.mGender, mOTPEditText.getText().toString().trim(), Constants.PERSONAL_ACCOUNT_TYPE);
+                SignupOrLoginActivity.mGender, otp, promoCode,
+                Constants.PERSONAL_ACCOUNT_TYPE);
         Gson gson = new Gson();
         String json = gson.toJson(mSignupModel);
         mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP,

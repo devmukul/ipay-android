@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Invite;
 import java.util.List;
 
 public class GetInviteInfoResponse {
+    public String message;
     public int totalLimit;
     public List<String> invitees;
 

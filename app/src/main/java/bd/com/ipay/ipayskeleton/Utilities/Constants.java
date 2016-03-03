@@ -32,11 +32,11 @@ public class Constants {
     public static final int STARTING_YEAR = 2016;
 
     // For POST Requests
-    public static final String BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
+    public static final String BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
 //    public static final String BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
 
     // For GET Requests
-    public static final String BASE_URL_GET_MM = "10.10.10.10";
+    public static final String BASE_URL_GET_MM = "10.15.10.10";
     //    public static final String BASE_URL_GET_MM = "10.15.10.10";
     public static final int BASE_URL_GET_MM_PORT = 8080;
     public static final String BASE_URL_GET_MM_PATH = "/mmweb";
@@ -45,7 +45,7 @@ public class Constants {
 //    public static final String BASE_URL_IMAGE_SERVER = "http://10.10.10.10/";
     public static final String BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 
-    public static final String BASE_URL_SM = "http://10.10.10.10:8080/ism/";
+    public static final String BASE_URL_SM = "http://10.15.10.10:8080/ism/";
 //    public static final String BASE_URL_IMAGE = "http://live.ipay.com.bd:81";
 
     public static final String SCHEME = "http";
