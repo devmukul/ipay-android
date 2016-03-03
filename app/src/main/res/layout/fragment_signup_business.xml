@@ -331,7 +331,7 @@
                         android:hint="@string/birthday_dd_mm_yy"
                         android:imeActionLabel="@string/action_sign_in_short"
                         android:imeOptions="actionUnspecified"
-                        android:inputType="text"
+                        android:inputType="date"
                         android:maxLines="1"
                         android:singleLine="true" />
 

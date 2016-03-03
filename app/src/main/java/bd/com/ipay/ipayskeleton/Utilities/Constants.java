@@ -31,22 +31,26 @@ public class Constants {
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
 
+    // Member Management (MM) Module
     // For POST Requests
-    public static final String BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
-//    public static final String BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
-
+    public static final String BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
     // For GET Requests
-    public static final String BASE_URL_GET_MM = "10.15.10.10";
-    //    public static final String BASE_URL_GET_MM = "10.15.10.10";
+    public static final String BASE_URL_GET_MM = "10.10.10.10";
     public static final int BASE_URL_GET_MM_PORT = 8080;
     public static final String BASE_URL_GET_MM_PATH = "/mmweb";
 
     // For Images
-//    public static final String BASE_URL_IMAGE_SERVER = "http://10.10.10.10/";
     public static final String BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 
-    public static final String BASE_URL_SM = "http://10.15.10.10:8080/ism/";
-//    public static final String BASE_URL_IMAGE = "http://live.ipay.com.bd:81";
+    // Service Module (SM)
+    public static final String BASE_URL_SM = "http://10.10.10.10:8080/ism/";
+
+
+    // Event Management (EM) Module
+    public static final String BASE_URL_GET_EM = "10.10.10.10";
+    public static final int BASE_URL_GET_EM_PORT = 8080;
+    public static final String BASE_URL_GET_EM_PATH = "";
+    public static final String BASE_URL_POST_EM = "http://10.10.10.10:8080/";
 
     public static final String SCHEME = "http";
 
@@ -94,6 +98,8 @@ public class Constants {
     public static final String URL_GET_BANK = "bank/get";
     public static final String URL_ADD_MONEY = "banktransaction/cashin";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
+    public static final String URL_EVENT_LIST = "events/user/eventList/";
+    public static final String URL_EVENT_CATEGORIES = "categories";
     public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
     public static final String URL_GET_INVITE_INFO = "settings/invitations";
     public static final String URL_SEND_INVITE = "settings/invitations";
@@ -158,6 +164,7 @@ public class Constants {
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
     public static final String COMMAND_GET_NEWS_FEED = "COMMAND_GET_NEWS_FEED";
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
+    public static final String COMMAND_EVENT_CATEGORIES = "COMMAND_EVENT_CATEGORIES";
     public static final String COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND = "COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND";
 
     // Resource
@@ -198,4 +205,10 @@ public class Constants {
     public static final int EMAIL_VERIFICATION_STATUS_VERIFIED = 2;
     public static final int EMAIL_VERIFICATION_STATUS_NOT_VERIFIED = 0;
     public static final int EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS = 1;
+
+    public static final int EVENT_STATUS_ACTIVE = 1;
+    public static final int EVENT_STATUS_INACTIVE = 2;
+
+    public static final int EVENT_PARTICIPANT_TYPE_ANYONE = 0;
+    public static final int EVENT_PARTICIPANT_TYPE_FROM_LIST = 3;
 }

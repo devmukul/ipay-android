@@ -140,8 +140,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             );
             mRequestOTPTask.mHttpResponseListener = this;
             mRequestOTPTask.execute((Void) null);
-        } else {
-            // TODO: For business account
         }
     }
 
@@ -150,29 +148,44 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             return;
         }
 
-        // TODO check for OTP?
-        mPromoCodeEditText.setError(null);
+        boolean cancel = false;
+        View focusView = null;
 
         String promoCode = mPromoCodeEditText.getText().toString().trim();
         String otp = mOTPEditText.getText().toString().trim();
-//        if (promoCode.isEmpty()) {
-//            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
-//            return;
-//        }
 
-        mProgressDialog.show();
-        SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
-                Constants.MOBILE_ANDROID + mDeviceID,
-                SignupOrLoginActivity.mFirstName, SignupOrLoginActivity.mLastName,
-                SignupOrLoginActivity.mBirthday, Utilities.md5(SignupOrLoginActivity.mPassword),
-                SignupOrLoginActivity.mGender, otp, promoCode,
-                Constants.PERSONAL_ACCOUNT_TYPE);
-        Gson gson = new Gson();
-        String json = gson.toJson(mSignupModel);
-        mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP,
-                Constants.BASE_URL_POST_MM + Constants.URL_SIGN_UP, json, getActivity());
-        mSignUpTask.mHttpResponseListener = this;
-        mSignUpTask.execute((Void) null);
+        if (promoCode.length() == 0) {
+            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
+            focusView = mPromoCodeEditText;
+            cancel = true;
+        }
+
+        if (otp.length() == 0) {
+            mOTPEditText.setError(getActivity().getString(R.string.error_invalid_otp));
+            focusView = mOTPEditText;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+
+            mProgressDialog.show();
+            SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
+                    Constants.MOBILE_ANDROID + mDeviceID,
+                    SignupOrLoginActivity.mFirstName, SignupOrLoginActivity.mLastName,
+                    SignupOrLoginActivity.mBirthday, Utilities.md5(SignupOrLoginActivity.mPassword),
+                    SignupOrLoginActivity.mGender, otp, promoCode,
+                    Constants.PERSONAL_ACCOUNT_TYPE);
+            Gson gson = new Gson();
+            String json = gson.toJson(mSignupModel);
+            mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP,
+                    Constants.BASE_URL_POST_MM + Constants.URL_SIGN_UP, json, getActivity());
+            mSignUpTask.mHttpResponseListener = this;
+            mSignUpTask.execute((Void) null);
+        }
 
     }
 

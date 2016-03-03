@@ -53,6 +53,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
     private Button mActivateButton;
     private Button mResendOTPButton;
     private EditText mOTPEditText;
+    private EditText mPromoCodeEditText;
     private TextView mTimerTextView;
 
     private String mDeviceID;
@@ -72,6 +73,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
+        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
@@ -146,29 +148,54 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         if (mSignUpTask != null) {
             return;
         }
-        mProgressDialog.show();
 
-        AddressClass mBusinessAddress = new AddressClass(SignupOrLoginActivity.mAddressLine1Business,
-                SignupOrLoginActivity.mAddressLine2Business, SignupOrLoginActivity.mCityBusiness, SignupOrLoginActivity.mDistrictBusiness,
-                SignupOrLoginActivity.mPostcodeBusiness, SignupOrLoginActivity.mCountryBusiness);
+        boolean cancel = false;
+        View focusView = null;
 
-        AddressClass mBusinessHolderAddress = new AddressClass(SignupOrLoginActivity.mAddressLine1Business,
-                SignupOrLoginActivity.mAddressLine2Business, SignupOrLoginActivity.mCityBusiness, SignupOrLoginActivity.mDistrictBusiness,
-                SignupOrLoginActivity.mPostcodeBusiness, SignupOrLoginActivity.mCountryBusiness);
+        String promoCode = mPromoCodeEditText.getText().toString().trim();
+        String otp = mOTPEditText.getText().toString().trim();
 
-        SignupRequestBusiness mSignupModel = new SignupRequestBusiness(SignupOrLoginActivity.mMobileNumberBusiness,
-                Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mFirstNameBusiness, SignupOrLoginActivity.mAccountType,
-                SignupOrLoginActivity.mLastNameBusiness, SignupOrLoginActivity.mBirthdayBusinessHolder,
-                Utilities.md5(SignupOrLoginActivity.mPasswordBusiness), "M", mOTPEditText.getText().toString().trim(),
-                SignupOrLoginActivity.mBusinessName, SignupOrLoginActivity.mTypeofBusiness,
-                SignupOrLoginActivity.mEmailBusiness, SignupOrLoginActivity.mEmailBusiness,
-                SignupOrLoginActivity.mMobileNumberBusiness, mBusinessAddress, mBusinessHolderAddress);
-        Gson gson = new Gson();
-        String json = gson.toJson(mSignupModel);
-        mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_BUSINESS,
-                Constants.BASE_URL_POST_MM + Constants.URL_SIGN_UP_BUSINESS, json, getActivity());
-        mSignUpTask.mHttpResponseListener = this;
-        mSignUpTask.execute((Void) null);
+        if (promoCode.length() == 0) {
+            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
+            focusView = mPromoCodeEditText;
+            cancel = true;
+        }
+
+        if (otp.length() == 0) {
+            mOTPEditText.setError(getActivity().getString(R.string.error_invalid_otp));
+            focusView = mOTPEditText;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            mProgressDialog.show();
+
+            AddressClass mBusinessAddress = new AddressClass(SignupOrLoginActivity.mAddressLine1Business,
+                    SignupOrLoginActivity.mAddressLine2Business, SignupOrLoginActivity.mCityBusiness, SignupOrLoginActivity.mDistrictBusiness,
+                    SignupOrLoginActivity.mPostcodeBusiness, SignupOrLoginActivity.mCountryBusiness);
+
+            AddressClass mBusinessHolderAddress = new AddressClass(SignupOrLoginActivity.mAddressLine1Business,
+                    SignupOrLoginActivity.mAddressLine2Business, SignupOrLoginActivity.mCityBusiness, SignupOrLoginActivity.mDistrictBusiness,
+                    SignupOrLoginActivity.mPostcodeBusiness, SignupOrLoginActivity.mCountryBusiness);
+
+            SignupRequestBusiness mSignupModel = new SignupRequestBusiness(SignupOrLoginActivity.mMobileNumberBusiness,
+                    Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mFirstNameBusiness, SignupOrLoginActivity.mAccountType,
+                    SignupOrLoginActivity.mLastNameBusiness, SignupOrLoginActivity.mBirthdayBusinessHolder,
+                    Utilities.md5(SignupOrLoginActivity.mPasswordBusiness), "M", otp,
+                    SignupOrLoginActivity.mBusinessName, SignupOrLoginActivity.mTypeofBusiness,
+                    SignupOrLoginActivity.mEmailBusiness, SignupOrLoginActivity.mEmailBusiness,
+                    SignupOrLoginActivity.mMobileNumberBusiness, mBusinessAddress, mBusinessHolderAddress, promoCode);
+            Gson gson = new Gson();
+            String json = gson.toJson(mSignupModel);
+            mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_BUSINESS,
+                    Constants.BASE_URL_POST_MM + Constants.URL_SIGN_UP_BUSINESS, json, getActivity());
+            mSignUpTask.mHttpResponseListener = this;
+            mSignUpTask.execute((Void) null);
+        }
 
     }
 

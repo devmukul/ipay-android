@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Events;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses;
 
 import java.math.BigDecimal;
 

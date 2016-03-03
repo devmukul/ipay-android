@@ -1,91 +1,95 @@
 package bd.com.ipay.ipayskeleton.EventFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
-import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Events.CreateNewEventResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Events.GetEventCategoriesRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Events.GetEventCategoriesResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateNewEventFragment extends Fragment implements HttpResponseListener {
 
-    // TODO : copied from request money. Change this
-    private HttpRequestPostAsyncTask mRequestMoneyTask = null;
-    private RequestMoneyResponse mRequestMoneyResponse;
+    private HttpRequestPostAsyncTask mCreateEventTask = null;
+    private CreateNewEventResponse mCreateNewEventResponse;
 
-    private final int PICK_CONTACT = 100;
+    private HttpRequestGetAsyncTask mGetEventCategoryTask = null;
+    private GetEventCategoriesResponse mGetEventCategoriesResponse;
 
-    private Button buttonRequest;
-    private Button buttonSelectFromContacts;
-    private Button buttonShowQRCode;
-    private EditText mMobileNumberEditText;
-    private EditText mDescriptionEditText;
-    private EditText mAmountEditText;
-    private EditText mTitleEditText;
+    private Button buttonCreateEvent;
+    private EditText mNameOfEventEditText;
+    private EditText mEventDescriptionEditText;
+    private EditText mPerTicketCostEditText;
+    private EditText mStartDateEditText;
+    private EditText mEndDateEditText;
+    private EditText mMaxNumberOfParticipantsEditText;
+    private EditText mContactPersonNameEditText;
+    private EditText mContactPersonNumberEditText;
+    private EditText mNoOfParticipantsCanPayFromOneAccEditText;
+    private EditText mEventLinkEditText;
+
+    private Spinner eventCategorySpinner;
+    private Spinner eventParticipantTypeSpinner;
+    private Spinner eventStatusSpinner;
+
+    private ImageView startDatePicker;
+    private ImageView endDatePicker;
+
     private ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_request_money, container, false);
-        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
-        buttonShowQRCode = (Button) v.findViewById(R.id.button_show_qr_code);
-        buttonSelectFromContacts = (Button) v.findViewById(R.id.select_sender_from_contacts);
-        buttonRequest = (Button) v.findViewById(R.id.button_request_money);
-        mDescriptionEditText = (EditText) v.findViewById(R.id.description);
-        mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        mTitleEditText = (EditText) v.findViewById(R.id.title_request);
+        View v = inflater.inflate(R.layout.fragment_create_new_event, container, false);
+        buttonCreateEvent = (Button) v.findViewById(R.id.create_new_event_button);
+        mNameOfEventEditText = (EditText) v.findViewById(R.id.event_name);
+        mEventDescriptionEditText = (EditText) v.findViewById(R.id.event_description);
+        mPerTicketCostEditText = (EditText) v.findViewById(R.id.per_ticket_cost);
+        mStartDateEditText = (EditText) v.findViewById(R.id.start_date);
+        mEndDateEditText = (EditText) v.findViewById(R.id.end_date);
+        mMaxNumberOfParticipantsEditText = (EditText) v.findViewById(R.id.max_number_of_participants);
+        mContactPersonNameEditText = (EditText) v.findViewById(R.id.contact_person);
+        mContactPersonNumberEditText = (EditText) v.findViewById(R.id.contact_person_number);
+        mNoOfParticipantsCanPayFromOneAccEditText = (EditText) v.findViewById(R.id.max_number_of_participants_can_pay_from_one_account);
+        mEventLinkEditText = (EditText) v.findViewById(R.id.event_link);
+        eventCategorySpinner = (Spinner) v.findViewById(R.id.spinner_category);
+        eventParticipantTypeSpinner = (Spinner) v.findViewById(R.id.spinner_participation_type);
+        eventStatusSpinner = (Spinner) v.findViewById(R.id.spinner_event_status);
+        startDatePicker = (ImageView) v.findViewById(R.id.startDatePicker);
+        endDatePicker = (ImageView) v.findViewById(R.id.endDatePicker);
+
+        // Get event categories
+        getCategories();
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
 
-        buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
+        buttonCreateEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, PICK_CONTACT);
-            }
-        });
-
-        buttonShowQRCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        buttonRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) attemptRequestMoney();
-                else if (getActivity() != null)
+                if (Utilities.isConnectionAvailable(getActivity())) { // TODO: create event
+                } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
@@ -93,69 +97,32 @@ public class CreateNewEventFragment extends Fragment implements HttpResponseList
         return v;
     }
 
-    private void attemptRequestMoney() {
-        if (mRequestMoneyTask != null) {
+    private void getCategories() {
+        if (mGetEventCategoryTask != null) {
             return;
         }
 
-        boolean cancel = false;
-        View focusView = null;
+        GetEventCategoriesRequestBuilder mGetEventCategoriesRequestBuilder =
+                new GetEventCategoriesRequestBuilder();
 
-        String receiver = mMobileNumberEditText.getText().toString();
-        String title = mTitleEditText.getText().toString();
-        String description = mDescriptionEditText.getText().toString();
-        String amount = mAmountEditText.getText().toString();
+        String mUri = mGetEventCategoriesRequestBuilder.getGeneratedUri();
+        mGetEventCategoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_EVENT_CATEGORIES,
+                mUri, getActivity());
+        mGetEventCategoryTask.mHttpResponseListener = this;
 
-        // Check for a validation
-        if (!(amount.length() > 0 && Double.parseDouble(amount) > 0)) {
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            focusView = mAmountEditText;
-            cancel = true;
-        }
-
-        if (title.length() == 0) {
-            mTitleEditText.setError(getString(R.string.please_add_title));
-            focusView = mTitleEditText;
-            cancel = true;
-        }
-
-        if (description.length() == 0) {
-            mDescriptionEditText.setError(getString(R.string.please_add_description));
-            focusView = mDescriptionEditText;
-            cancel = true;
-        }
-
-        if (receiver.length() == 0) {
-            mMobileNumberEditText.setError(getString(R.string.enter_mobile_number));
-            focusView = mMobileNumberEditText;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mGetEventCategoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-
-            mProgressDialog.setMessage(getString(R.string.requesting_money));
-            mProgressDialog.show();
-            RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(receiver, Double.parseDouble(amount)
-                    , title, description);
-            Gson gson = new Gson();
-            String json = gson.toJson(mRequestMoneyRequest);
-            mRequestMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY,
-                    Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY, json, getActivity());
-            mRequestMoneyTask.mHttpResponseListener = this;
-            mRequestMoneyTask.execute((Void) null);
+            mGetEventCategoryTask.execute((Void) null);
         }
-
     }
 
     @Override
     public void httpResponseReceiver(String result) {
         if (result == null) {
             mProgressDialog.dismiss();
-            mRequestMoneyTask = null;
+            mCreateEventTask = null;
+            mGetEventCategoryTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -164,102 +131,28 @@ public class CreateNewEventFragment extends Fragment implements HttpResponseList
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_REQUEST_MONEY)) {
+        if (resultList.get(0).equals(Constants.COMMAND_EVENT_CATEGORIES)) {
 
             if (resultList.size() > 2) {
                 try {
-                    mRequestMoneyResponse = gson.fromJson(resultList.get(2), RequestMoneyResponse.class);
+                    mGetEventCategoriesResponse = gson.fromJson(resultList.get(2), GetEventCategoriesResponse.class);
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        ((RequestMoneyActivity) getActivity()).switchToRequestsFragment();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        // TODO
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.failed_to_fetch_categories, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.failed_to_fetch_categories, Toast.LENGTH_SHORT).show();
                 }
             } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.failed_to_fetch_categories, Toast.LENGTH_SHORT).show();
 
             mProgressDialog.dismiss();
-            mRequestMoneyTask = null;
+            mGetEventCategoryTask = null;
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Activity.RESULT_OK && requestCode == PICK_CONTACT) {
-
-            final CharSequence[] numbers = getNameAndPhoneList(data.getData());
-            int size = numbers.length;
-            if (size < 1)
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.account_type_business,
-                            Toast.LENGTH_LONG).show();
-                else if (size == 1) {
-                    mMobileNumberEditText.setText(numbers[0].toString().replaceAll("\\D", ""));
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getString(R.string.pick_a_number));
-                    builder.setItems(numbers, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mMobileNumberEditText.setText(numbers[which]);
-                        }
-                    });
-                    builder.show();
-                }
-        } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
-                        Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public CharSequence[] getNameAndPhoneList(Uri data) {
-        ArrayList<String> list = new ArrayList<String>();
-
-        Cursor cursor = getActivity().getContentResolver().query(data, null, null,
-                null, null);
-        if (cursor.moveToFirst()) {
-            if (cursor
-                    .getString(
-                            cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
-                    .equals("1")) {
-                String contactId = cursor.getString(cursor
-                        .getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cursor
-                        .getString(cursor
-                                .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-                // TODO: Can use name and contact ID
-//                list.add(name);
-                Cursor phones = getActivity().getContentResolver().query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-                                + " = " + contactId, null, null);
-                int numberIndex = phones
-                        .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                while (phones.moveToNext())
-                    list.add(phones.getString(numberIndex));
-
-                phones.close();
-            }
-        }
-        cursor.close();
-
-        CharSequence[] numbers = new CharSequence[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            numbers[i] = list.get(i);
-        }
-        return numbers;
     }
 }

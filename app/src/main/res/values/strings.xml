@@ -48,6 +48,7 @@
     <string name="invalid_country">Please enter a Country</string>
     <string name="occupation">Occupation</string>
     <string name="mobile_number">Mobile Number</string>
+    <string name="contact_person_mobile_number">Mobile number of contact person</string>
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
@@ -71,6 +72,7 @@
     <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
     <string name="account_type_personal">Personal</string>
     <string name="create_invoice">Create Invoice</string>
+    <string name="create_event">Create Event</string>
     <string name="no_contacts">No Contacts Available</string>
     <string name="contacts">Contacts</string>
     <string name="country">Country</string>
@@ -199,7 +201,12 @@
     <string name="enter_bank_account_number">Enter Bank Account Number</string>
     <string name="no_number_found">No number found for this contact</string>
     <string name="pick_a_number">Choose a number</string>
+    <string name="event_link">Event link</string>
     <string name="no_contact_selected">No contacts selected</string>
+    <string name="per_ticket_cost">Per ticket cost in BDT</string>
+    <string name="max_participant">Max number of participants</string>
+    <string name="max_participant_can_pay_from_one_account">No. of participants can pay from one account</string>
+    <string name="contact_person">Contact person</string>
     <string name="scan_cancelled">Scan cancelled</string>
     <string name="account_name">Account Name</string>
     <string name="adding_trusted_device">Setting your device as trusted.</string>
@@ -207,6 +214,7 @@
     <string name="uploading_profile_picture">Uploading profile picture</string>
     <string name="submitting_request_money">Submitting your request for money</string>
     <string name="failed_request_money">Money request failed</string>
+    <string name="failed_to_fetch_categories">Failed to fetch event categories</string>
     <string name="failed_invoice_creation">Invoice creation failed</string>
     <string name="failed_add_bank">Failed to add the bank with iPay. Please try again later.</string>
     <string name="failed_remove_bank">Failed to remove this bank from your iPay account. Please try again later.</string>
@@ -227,9 +235,15 @@
     <string name="login_with_existing_account">Login with existing account</string>
     <string name="have_an_existing_account">Have an existing account?</string>
     <string name="enter_amount">Enter an amount in BDT</string>
+    <string name="event_name">Name of the event</string>
+    <string name="event_category">Category</string>
+    <string name="event_status">Event status</string>
+    <string name="event_select_participants_type">Select participants</string>
+    <string name="event_location">Event location</string>
     <string name="enter_vat">VAT in BDT</string>
     <string name="description">Add a purpose (Optional)</string>
     <string name="description_mandatory">Add a purpose</string>
+    <string name="description_event">Event description</string>
     <string name="item_description">Item description</string>
     <string name="please_add_description">Please add a purpose</string>
     <string name="add_title">Add a title</string>
@@ -238,6 +252,8 @@
     <string name="please_enter_mobile_number">Please enter a mobile number.</string>
     <string name="please_enter_amount">Please enter an amount.</string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
+    <string name="start_date">Start date (dd/mm/yyyy)</string>
+    <string name="end_date">End date (dd/mm/yyyy)</string>
     <string name="sign_up_with_ipay">Sign up with iPay</string>
     <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
     <string name="please_fill_up_the_following">Please fill up the following information</string>
@@ -405,6 +421,16 @@
     <string-array name="transaction_types">
         <item>Received</item>
         <item>Sent</item>
+    </string-array>
+
+    <string-array name="event_status_type">
+        <item>Active</item>
+        <item>Inactive</item>
+    </string-array>
+
+    <string-array name="event_participant_type">
+        <item>Anyone</item>
+        <item>Selected participants</item>
     </string-array>
 
 </resources>

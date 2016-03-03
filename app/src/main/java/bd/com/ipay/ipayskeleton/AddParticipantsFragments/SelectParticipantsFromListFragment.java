@@ -26,7 +26,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.GetAllParticipantsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Events.Participant;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses.Participant;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -114,7 +114,9 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
 
                     String mobileNumber = mMobileNumberEditText.getText().toString().trim();
                     String name = mParticipantName.getText().toString().trim();
-                    Participant mParticipant = new Participant(name, mobileNumber);
+                    Participant mParticipant = new Participant();
+                    mParticipant.setParticipantName(name);
+                    mParticipant.setParticipantMobileNumber(mobileNumber);
 
                     if (listOfParticipants.contains(mParticipant)) {
                         listOfParticipants.add(mParticipant);
@@ -235,7 +237,9 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
                     mParticipantDetails.setText(participantDetail);
                 }
 
-                final Participant mParticipant = new Participant(participantName, participantNumber);
+                final Participant mParticipant = new Participant();
+                mParticipant.setParticipantName(participantName);
+                mParticipant.setParticipantMobileNumber(participantNumber);
                 if (selectedParticipants.contains(mParticipant)) mSelectCheckbox.setChecked(true);
                 else mSelectCheckbox.setChecked(false);
 

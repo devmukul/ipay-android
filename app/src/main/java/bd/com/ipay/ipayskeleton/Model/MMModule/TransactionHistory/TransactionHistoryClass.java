@@ -18,6 +18,9 @@ public class TransactionHistoryClass {
     public String otherUserName;
 //    public Set<UserProfilePictureClass> otherUserprofilePictures = new HashSet<>();
 
+    public TransactionHistoryClass() {
+    }
+
     public String getOtherMobileNumber() {
         return otherMobileNumber;
     }

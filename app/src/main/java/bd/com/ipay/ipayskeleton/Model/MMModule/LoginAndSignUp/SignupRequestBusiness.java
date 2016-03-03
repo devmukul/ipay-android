@@ -18,13 +18,14 @@ public class SignupRequestBusiness {
     public String personalMobileNumber;
     public AddressClass personalAddress;
     public AddressClass businessAddress;
+    private String promoCode;
 
-    public SignupRequestBusiness(String mobileNumber, String deviceId, String firstName,
-                                 int accountType, String lastName, String dob, String passwordHash,
-                                 String gender, String otp, String businessName, String businessType,
-                                 String businessEmail, String personalEmail, String personalMobileNumber,
-                                 AddressClass personalAddress, AddressClass businessAddress) {
-
+    public SignupRequestBusiness(String mobileNumber, String deviceId,
+                                 String firstName, int accountType, String lastName, String dob,
+                                 String passwordHash, String gender, String otp, String businessName,
+                                 String businessType, String businessEmail, String personalEmail,
+                                 String personalMobileNumber, AddressClass personalAddress,
+                                 AddressClass businessAddress, String promoCode) {
         this.mobileNumber = mobileNumber;
         this.deviceId = deviceId;
         this.firstName = firstName;
@@ -41,5 +42,6 @@ public class SignupRequestBusiness {
         this.personalMobileNumber = personalMobileNumber;
         this.personalAddress = personalAddress;
         this.businessAddress = businessAddress;
+        this.promoCode = promoCode;
     }
 }
