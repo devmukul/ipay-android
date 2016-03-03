@@ -60,6 +60,7 @@
     <string name="error_invalid_name">Please enter name</string>
     <string name="error_invalid_last_name">Please enter last name</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
+    <string name="error_loading_data">Error loading data. Please try again.</string>
     <string name="forgot_password"><u>Forgot your password?</u></string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="are_you_sure">Are you sure?</string>

@@ -483,7 +483,11 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
 
         @Override
         public void onLoadFailed() {
-
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), R.string.error_loading_data, Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+                mProgressDialog.dismiss();
+            }
         }
     };
 }
