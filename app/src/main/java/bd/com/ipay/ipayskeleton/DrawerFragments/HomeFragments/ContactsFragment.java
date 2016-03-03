@@ -15,14 +15,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.MenuSheetView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
@@ -59,11 +63,15 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private LinearLayout contactsFilterHolder;
     private HashMap<String, String> subscriber = new HashMap<>();
 
+    private BottomSheetLayout mBottomSheetLayout;
+    private MenuSheetView mContactInviteSheetView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
+        mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
         allContactsTab = (TextView) v.findViewById(R.id.all_contacts_tab);
@@ -101,6 +109,19 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
         getLoaderManager().initLoader(SUBSCRIBER_LOADER, null, this);
+
+        mContactInviteSheetView = new MenuSheetView(getActivity(), MenuSheetView.MenuType.LIST, "", new MenuSheetView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(getActivity(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                if (mBottomSheetLayout.isSheetShowing()) {
+                    mBottomSheetLayout.dismissSheet();
+                }
+                return true;
+            }
+        });
+
+        mContactInviteSheetView.inflateMenu(R.menu.contact_invite);
 
         return v;
     }
@@ -235,6 +256,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
+            private View itemView;
+
             private TextView mPortraitTxt;
             private TextView mName;
             private RoundedImageView mPortrait;
@@ -242,6 +265,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
             public ViewHolder(View itemView) {
                 super(itemView);
+
+                this.itemView = itemView;
 
                 mPortraitTxt = (TextView) itemView.findViewById(R.id.portraitTxt);
                 mName = (TextView) itemView.findViewById(R.id.name);
@@ -257,7 +282,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 mCursor.moveToPosition(getAdapterPosition());
                 int index = mCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-                String name = mCursor.getString(index);
+                final String name = mCursor.getString(index);
                 mName.setText(name);
 
                 index = mCursor.getColumnIndex(ContactsContract.Contacts._ID);
@@ -276,6 +301,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     }
                 } else isSubscriber.setVisibility(View.GONE);
 
+                // The Number needs to be accessed within the anonymous inner class,
+                // so making it final
+                final String bdNumber = number;
 
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;
@@ -334,7 +362,16 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         .crossFade()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(mPortrait);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("Name & Number", name + ":" + bdNumber);
+                        mBottomSheetLayout.showWithSheetView(mContactInviteSheetView);
+                    }
+                });
             }
+
         }
 
         public class SectionViewHolder extends ViewHolder {

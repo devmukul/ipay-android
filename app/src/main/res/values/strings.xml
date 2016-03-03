@@ -310,6 +310,7 @@
     <string name="crash_dialog_ok_toast">Thank you!</string>
     <string name="reopen_application">Please re-open the application.</string>
     <string name="failed_available_bank_list_loading">Failed to load bank lists. Please try again later</string>
+    <string name="menu_invite">Invite to iPay</string>
 
     <string-array name="account_types">
         <item>Personal</item>
