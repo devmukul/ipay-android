@@ -18,7 +18,7 @@ public class EventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request_money);
+        setContentView(R.layout.activity_event);
         mFabCreateNewEvent = (FloatingActionButton) findViewById(R.id.fab_create_new_event);
 
         mFabCreateNewEvent.setOnClickListener(new View.OnClickListener() {

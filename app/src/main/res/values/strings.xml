@@ -53,6 +53,7 @@
     <string name="confirm_password_not_matched">Password did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
     <string name="empty_events_list">No recent events found.</string>
+    <string name="empty_recommendation_request_list">No recommendation requests available.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
@@ -82,7 +83,9 @@
     <string name="gender">Gender</string>
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>
+    <string name="reject">Reject</string>
     <string name="remove">Remove</string>
+    <string name="mark_as_spam">Mark as spam</string>
     <string name="to">To</string>
     <string name="from">From</string>
     <string name="to_date">To (dd/mm/yyyy)</string>
@@ -130,6 +133,7 @@
     <string name="could_not_cancel_money_request">Could not cancel the request. Please try again later.</string>
     <string name="could_not_accept_money_request">Could not accept the request. Please try again later.</string>
     <string name="progress_dialog_text_logging_in">Signing in...</string>
+    <string name="progress_dialog_send_for_recommendation">Sending recommendation request...</string>
     <string name="progress_dialog_saving_new_pass">Saving new password...</string>
     <string name="no_linked_bank_found">No linked bank account found</string>
     <string name="please_link_a_bank_for_cash_in">Please link your bank account with iPay to add money from your bank account</string>
@@ -140,6 +144,7 @@
     <string name="progress_dialog_text_sending_sms">Sending SMS to your mobile...</string>
     <string name="progress_dialog_refreshing">Refreshing...</string>
     <string name="progress_dialog_processing">Processing...</string>
+    <string name="progress_dialog_recommendation_list">Fecthing recommendation requests...</string>
     <string name="progress_dialog_initializing">Setting up the account. Please wait...</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information...</string>
     <string name="progress_dialog_cancelling">Cancelling request...</string>
@@ -182,9 +187,13 @@
     <string name="removing_bank">Bank is being removed...</string>
     <string name="disabling_bank">Bank is being disabled...</string>
     <string name="enabling_bank">Bank is being enabled...</string>
+    <string name="verifying_user">Verifying user...</string>
+    <string name="rejecting_user">Rejecting recommendation request...</string>
+    <string name="recommendation_mark_as_spam">Marking as spam!</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="request_money">Request Money</string>
+    <string name="request_recommendation">Recommendation Requests</string>
     <string name="requesting_money">Money request processing...</string>
     <string name="add_money">Add Money</string>
     <string name="money_withdraw">Money Withdraw</string>
@@ -331,11 +340,16 @@
     <string name="reopen_application">Please re-open the application.</string>
     <string name="failed_available_bank_list_loading">Failed to load bank lists. Please try again later</string>
     <string name="menu_invite">Invite to iPay</string>
+    <string name="menu_ask_for_recommendation">Ask for recommendation</string>
+    <string name="send_invite">Send invitation</string>
+    <string name="recommendation">Recommendation</string>
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
+    <string name="failed_asking_recommendation">Failed to place a recommendation request.</string>
     <string name="invitaiton_limit_exceeded">Maximum invitation limit exceeded</string>
     <string name="invitation_already_sent">You have already sent invitation to this number</string>
     <string name="failed_request">Request failed</string>
     <string name="invitation_sent">Invitation sent</string>
+    <string name="ask_for_recommendation_sent">Recommendation request sent</string>
 
     <string-array name="account_types">
         <item>Personal</item>

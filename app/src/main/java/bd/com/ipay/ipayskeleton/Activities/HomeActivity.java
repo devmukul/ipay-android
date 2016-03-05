@@ -51,6 +51,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoRequestBuilder;
@@ -285,6 +286,12 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountSettingsFragment()).commit();
+            switchedToHomeFragment = false;
+            paymentMenus.close(true);
+
+        } else if (id == R.id.nav_request_recommendation) {
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new RecommendationRequestsFragment()).commit();
             switchedToHomeFragment = false;
             paymentMenus.close(true);
 

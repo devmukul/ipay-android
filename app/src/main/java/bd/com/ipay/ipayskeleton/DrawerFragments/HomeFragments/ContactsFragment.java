@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,22 +42,18 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Invite.GetInviteInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Invite.GetInviteInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Invite.SendInviteRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Invite.SendInviteResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
 public class ContactsFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, HttpResponseListener {
-
-    private static final String TAG = "ContactsFragment";
-    private static final int ALL_TAB = 0;
-    private static final int IPAY_TAB = 1;
-
-    private int selectedTab = 0;
 
     private static final int CONTACTS_QUERY_LOADER = 0;
     private static final int SUBSCRIBER_LOADER = 1;
@@ -73,11 +68,11 @@ public class ContactsFragment extends Fragment implements
 
     //    private HashMap<String, String> subscriber = new HashMap<>();
     private boolean digitSectionViewAdded = false;
-    private LinearLayout contactsFilterHolder;
     private HashMap<String, String> subscriber = new HashMap<>();
 
     private BottomSheetLayout mBottomSheetLayout;
     private MenuSheetView mContactInviteSheetView;
+    private MenuSheetView mContactRecommendationSheetView;
 
     // When a contact item is clicked, we need to access its name and number from the sheet view.
     // So saving these in these two variables.
@@ -86,6 +81,9 @@ public class ContactsFragment extends Fragment implements
 
     private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private GetInviteInfoResponse mGetInviteInfoResponse;
+
+    private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
+    private AskForRecommendationResponse mAskForRecommendationResponse;
 
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
@@ -102,7 +100,6 @@ public class ContactsFragment extends Fragment implements
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
         allContactsTab = (TextView) v.findViewById(R.id.all_contacts_tab);
         iPayContactsTab = (TextView) v.findViewById(R.id.ipay_contacts_tab);
-        contactsFilterHolder = (LinearLayout) v.findViewById(R.id.contacts_filter_linear_layout);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ContactListAdapter();
@@ -118,7 +115,6 @@ public class ContactsFragment extends Fragment implements
         allContactsTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedTab = ALL_TAB;
                 allContactsTab.setBackgroundResource(R.drawable.contacts_tab_selected_background);
                 iPayContactsTab.setBackgroundResource(0);
                 mRecyclerView.setAdapter(mAdapter);
@@ -128,7 +124,6 @@ public class ContactsFragment extends Fragment implements
         iPayContactsTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedTab = IPAY_TAB;
                 iPayContactsTab.setBackgroundResource(R.drawable.contacts_tab_selected_background);
                 allContactsTab.setBackgroundResource(0);
                 mRecyclerView.setAdapter(miPayAdapter);
@@ -138,12 +133,15 @@ public class ContactsFragment extends Fragment implements
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
         getLoaderManager().initLoader(SUBSCRIBER_LOADER, null, this);
 
-        mContactInviteSheetView = new MenuSheetView(getActivity(), MenuSheetView.MenuType.LIST, "", new MenuSheetView.OnMenuItemClickListener() {
+        mContactInviteSheetView = new MenuSheetView(getActivity(), MenuSheetView.MenuType.LIST,
+                getString(R.string.send_invite), new MenuSheetView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+
                 if (item.getItemId() == R.id.action_invite) {
                     sendInvite(selectedNumber);
                 }
+
                 if (mBottomSheetLayout.isSheetShowing()) {
                     mBottomSheetLayout.dismissSheet();
                 }
@@ -151,6 +149,23 @@ public class ContactsFragment extends Fragment implements
             }
         });
         mContactInviteSheetView.inflateMenu(R.menu.contact_invite);
+
+        mContactRecommendationSheetView = new MenuSheetView(getActivity(), MenuSheetView.MenuType.LIST,
+                getString(R.string.recommendation), new MenuSheetView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                if (item.getItemId() == R.id.action_ask_recommendation) {
+                    sendRecommendationRequest(selectedNumber);
+                }
+
+                if (mBottomSheetLayout.isSheetShowing()) {
+                    mBottomSheetLayout.dismissSheet();
+                }
+                return true;
+            }
+        });
+        mContactRecommendationSheetView.inflateMenu(R.menu.contact_ask_for_recommendation);
 
         getInviteInfo();
 
@@ -170,16 +185,13 @@ public class ContactsFragment extends Fragment implements
             Toast.makeText(getActivity(), R.string.failed_sending_invitation,
                     Toast.LENGTH_LONG).show();
             getInviteInfo();
-        }
-        else if (mGetInviteInfoResponse.invitees.size() >= mGetInviteInfoResponse.totalLimit) {
+        } else if (mGetInviteInfoResponse.invitees.size() >= mGetInviteInfoResponse.totalLimit) {
             Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
                     Toast.LENGTH_LONG).show();
-        }
-        else if (mGetInviteInfoResponse.invitees.contains(phoneNumber)) {
+        } else if (mGetInviteInfoResponse.invitees.contains(phoneNumber)) {
             Toast.makeText(getActivity(), R.string.invitation_already_sent,
                     Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
             mProgressDialog.show();
 
@@ -193,6 +205,23 @@ public class ContactsFragment extends Fragment implements
                     Constants.BASE_URL_POST_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
             mSendInviteTask.execute();
         }
+    }
+
+    private void sendRecommendationRequest(String mobileNumber) {
+        if (mAskForRecommendationTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_recommendation));
+        mProgressDialog.show();
+        AskForRecommendationRequest mAskForRecommendationRequest =
+                new AskForRecommendationRequest(mobileNumber);
+        Gson gson = new Gson();
+        String json = gson.toJson(mAskForRecommendationRequest);
+        mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
+                Constants.BASE_URL_POST_MM + Constants.URL_ASK_FOR_RECOMMENDATION, json, getActivity());
+        mAskForRecommendationTask.mHttpResponseListener = this;
+        mAskForRecommendationTask.execute((Void) null);
     }
 
     @Override
@@ -326,19 +355,21 @@ public class ContactsFragment extends Fragment implements
 
         if (resultList.get(0).equals(Constants.COMMAND_SEND_INVITE)) {
             try {
-                mSendInviteResponse = gson.fromJson(resultList.get(2), SendInviteResponse.class);
+                if (resultList.size() > 2) {
+                    mSendInviteResponse = gson.fromJson(resultList.get(2), SendInviteResponse.class);
 
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
-                    }
-                    // TODO better add the number from the response
-                    mGetInviteInfoResponse.invitees.add(selectedNumber);
-                    getInviteInfo();
-                } else {
-                    if (getActivity() != null) {
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
+                        }
+
+                        mGetInviteInfoResponse.invitees.add(selectedNumber);
+                        getInviteInfo();
+                    } else if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
+                } else if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -349,12 +380,39 @@ public class ContactsFragment extends Fragment implements
 
             mProgressDialog.dismiss();
             mSendInviteTask = null;
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
+            try {
+
+                if (resultList.size() > 2) {
+                    mAskForRecommendationResponse = gson.fromJson(resultList.get(2), AskForRecommendationResponse.class);
+
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
+                        }
+                    } else if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mAskForRecommendationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            mProgressDialog.dismiss();
+            mAskForRecommendationTask = null;
+
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
             try {
-                mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
-//                Log.e("Invite", mGetInviteInfoResponse.toString());
-            }
-            catch (Exception e) {
+                if (resultList.size() > 2)
+                    mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -427,7 +485,7 @@ public class ContactsFragment extends Fragment implements
 
                 // The Number needs to be accessed within the anonymous inner class,
                 // so making it final
-                final String bdNumber = number;
+                final String contactNumber = number;
 
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;
@@ -491,11 +549,19 @@ public class ContactsFragment extends Fragment implements
                     @Override
                     public void onClick(View v) {
                         // Only show the invite option for non-subscribers
-                        if (subscriber == null || !subscriber.containsKey(bdNumber)) {
-                            selectedNumber = bdNumber;
+                        if (subscriber == null || !subscriber.containsKey(contactNumber)) {
+                            selectedNumber = contactNumber;
                             selectedName = name;
 
+                            mContactInviteSheetView.setTitle(name);
                             mBottomSheetLayout.showWithSheetView(mContactInviteSheetView);
+
+                        } else {
+                            selectedNumber = contactNumber;
+                            selectedName = name;
+
+                            mContactRecommendationSheetView.setTitle(name);
+                            mBottomSheetLayout.showWithSheetView(mContactRecommendationSheetView);
                         }
                     }
                 });
@@ -660,7 +726,7 @@ public class ContactsFragment extends Fragment implements
 
                 mCursor.moveToPosition(getAdapterPosition());
                 int index = mCursor.getColumnIndex(DBConstants.KEY_NAME);
-                String name = mCursor.getString(index);
+                final String name = mCursor.getString(index);
                 mName.setText(name);
 
                 index = mCursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
@@ -713,6 +779,18 @@ public class ContactsFragment extends Fragment implements
                     mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_yellow);
                 else
                     mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_azure);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectedNumber = mobileNumber;
+                        selectedName = name;
+
+                        mContactRecommendationSheetView.setTitle(name);
+                        mBottomSheetLayout.showWithSheetView(mContactRecommendationSheetView);
+                    }
+
+                });
             }
         }
 
@@ -815,7 +893,8 @@ public class ContactsFragment extends Fragment implements
 
             if (previous == null) {
                 return SECTION_VIEW;
-            } else if (!String.valueOf(name.charAt(0)).toUpperCase().contains(String.valueOf(previous.charAt(0)).toUpperCase())) {
+            } else if (!String.valueOf(name.charAt(0)).toUpperCase().
+                    contains(String.valueOf(previous.charAt(0)).toUpperCase())) {
                 if (name.startsWith("+")) {
                     if (!digitSectionViewAdded) return SECTION_VIEW;
                 } else if (name.charAt(0) >= '0' && name.charAt(0) <= '9') {
