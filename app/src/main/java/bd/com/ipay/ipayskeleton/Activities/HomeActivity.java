@@ -152,7 +152,7 @@ public class HomeActivity extends AppCompatActivity
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
 
-//        setProfilePicture("");
+        setProfilePicture("");
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
         // TODO: get userinfo here and set
@@ -217,8 +217,7 @@ public class HomeActivity extends AppCompatActivity
                         .transform(new CircleTransform(HomeActivity.this))
                         .into(mPortrait);
             else Glide.with(HomeActivity.this)
-                    .load(android.R.color.transparent)
-                    .placeholder(R.drawable.ic_person)
+                    .load(R.drawable.ic_person)
                     .transform(new CircleTransform(HomeActivity.this))
                     .into(mPortrait);
 
