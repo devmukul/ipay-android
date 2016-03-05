@@ -176,6 +176,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        setProfilePicture("");
+
         getProfileInfo();
         disableAllEdits();
 
@@ -400,6 +402,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                 Glide.with(getActivity())
                         .load(Constants.BASE_URL_IMAGE_SERVER + url)
                         .crossFade()
+                        .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))
                         .into(mProfilePicture);
                 if (profilePictureUpdated) {
@@ -411,6 +414,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                 Glide.with(getActivity())
                         .load(android.R.color.transparent)
                         .placeholder(R.drawable.ic_person)
+                        .crossFade()
                         .into(mProfilePicture);
             }
         } catch (Exception e) {

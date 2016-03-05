@@ -33,24 +33,24 @@ public class Constants {
 
     // Member Management (MM) Module
     // For POST Requests
-    public static final String BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
+    public static final String BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
     // For GET Requests
-    public static final String BASE_URL_GET_MM = "10.10.10.10";
+    public static final String BASE_URL_GET_MM = "10.15.10.10";
     public static final int BASE_URL_GET_MM_PORT = 8080;
     public static final String BASE_URL_GET_MM_PATH = "/mmweb";
 
     // For Images
-    public static final String BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
+    public static final String BASE_URL_IMAGE_SERVER = "http://10.15.10.10";
 
     // Service Module (SM)
-    public static final String BASE_URL_SM = "http://10.10.10.10:8080/ism/";
+    public static final String BASE_URL_SM = "http://10.15.10.10:8080/ism/";
 
 
     // Event Management (EM) Module
-    public static final String BASE_URL_GET_EM = "10.10.10.10";
+    public static final String BASE_URL_GET_EM = "10.15.10.10";
     public static final int BASE_URL_GET_EM_PORT = 8080;
     public static final String BASE_URL_GET_EM_PATH = "";
-    public static final String BASE_URL_POST_EM = "http://10.10.10.10:8080/";
+    public static final String BASE_URL_POST_EM = "http://10.15.10.10:8080/";
 
     public static final String SCHEME = "http";
 

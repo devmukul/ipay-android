@@ -123,8 +123,6 @@ public class HomeActivity extends AppCompatActivity
         mUserNameTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.username);
         mPortrait = (RoundedImageView) navigationView.getHeaderView(0).findViewById(R.id.portrait);
         mUserNameTextView.setText(mUserID);
-        // TODO: get userinfo here and set
-        getProfileInfo();
         navigationView.setNavigationItemSelectedListener(this);
 
         paymentMenus = (FloatingActionMenu) findViewById(R.id.payment_menus);
@@ -154,10 +152,13 @@ public class HomeActivity extends AppCompatActivity
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
 
+//        setProfilePicture("");
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
+        // TODO: get userinfo here and set
+        getProfileInfo();
 //        CommonDataLoader.loadAll(this);
-        Log.i("Token", HomeActivity.iPayToken);
+//        Log.i("Token", HomeActivity.iPayToken);
     }
 
     @Override
@@ -211,6 +212,8 @@ public class HomeActivity extends AppCompatActivity
             if (!imageUrl.equals(""))
                 Glide.with(HomeActivity.this)
                         .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .error(R.drawable.ic_person)
+                        .crossFade()
                         .transform(new CircleTransform(HomeActivity.this))
                         .into(mPortrait);
             else Glide.with(HomeActivity.this)
