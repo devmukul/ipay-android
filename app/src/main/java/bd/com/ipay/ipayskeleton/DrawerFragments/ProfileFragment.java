@@ -176,8 +176,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        setProfilePicture("");
-
         getProfileInfo();
         disableAllEdits();
 
