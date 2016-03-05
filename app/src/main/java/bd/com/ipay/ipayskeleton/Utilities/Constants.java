@@ -33,9 +33,9 @@ public class Constants {
 
     // Member Management (MM) Module
     // For POST Requests
-    public static final String BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
+    public static final String BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
     // For GET Requests
-    public static final String BASE_URL_GET_MM = "10.10.10.10";
+    public static final String BASE_URL_GET_MM = "10.15.10.10";
     public static final int BASE_URL_GET_MM_PORT = 8080;
     public static final String BASE_URL_GET_MM_PATH = "/mmweb";
 
@@ -59,6 +59,9 @@ public class Constants {
     public static final String URL_OTP_REQUEST = "signup";
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
     public static final String URL_LOGIN = "signin";
+    public static final String URL_ASK_FOR_RECOMMENDATION = "kyc/verificationRequest";
+    public static final String URL_GET_RECOMMENDATION_REQUESTS = "kyc/verificationRequestList";
+    public static final String URL_RECOMMEND_ACTION = "kyc/verifyRequest";
     public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
     public static final String URL_ADD_TRUSTED_DEVICE = "settings/device/add";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
@@ -124,6 +127,7 @@ public class Constants {
     public static final String COMMAND_SIGN_UP = "COMMAND_SIGN_UP";
     public static final String COMMAND_SIGN_UP_BUSINESS = "COMMAND_SIGN_UP_BUSINESS";
     public static final String COMMAND_LOG_IN = "COMMAND_LOG_IN";
+    public static final String COMMAND_ASK_FOR_RECOMMENDATION = "COMMAND_ASK_FOR_RECOMMENDATION";
     public static final String COMMAND_FORGET_PASSWORD_SEND_OTP = "COMMAND_FORGET_PASSWORD_SEND_OTP";
     public static final String COMMAND_FORGET_PASSWORD_CONFIRM_OTP = "COMMAND_FORGET_PASSWORD_CONFIRM_OTP";
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
@@ -160,7 +164,9 @@ public class Constants {
     public static final String COMMAND_EMAIL_VERIFICATION_REQUEST = "COMMAND_EMAIL_VERIFICATION_REQUEST";
     public static final String COMMAND_SET_PROFILE_INFO_REQUEST = "COMMAND_SET_PROFILE_INFO_REQUEST";
     public static final String COMMAND_GET_BANK_LIST = "COMMAND_GET_BANK_LIST";
+    public static final String COMMAND_GET_RECOMMENDATION_REQUESTS = "COMMAND_GET_RECOMMENDATION_REQUESTS";
     public static final String COMMAND_ADD_MONEY = "COMMAND_ADD_MONEY";
+    public static final String COMMAND_RECOMMEND_ACTION = "COMMAND_RECOMMEND_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
     public static final String COMMAND_GET_NEWS_FEED = "COMMAND_GET_NEWS_FEED";
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
@@ -208,6 +214,11 @@ public class Constants {
 
     public static final int EVENT_STATUS_ACTIVE = 1;
     public static final int EVENT_STATUS_INACTIVE = 2;
+
+    public static final String RECOMMENDATION_STATUS_PENDING = "pending";
+    public static final String RECOMMENDATION_STATUS_REJECTED = "cancel";
+    public static final String RECOMMENDATION_STATUS_VERIFIED = "accept";
+    public static final String RECOMMENDATION_STATUS_SPAM = "spam";
 
     public static final int EVENT_PARTICIPANT_TYPE_ANYONE = 0;
     public static final int EVENT_PARTICIPANT_TYPE_FROM_LIST = 3;

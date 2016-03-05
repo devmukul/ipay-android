@@ -41,13 +41,18 @@
                 android:icon="@drawable/ic_transfer_within_a_station_black_24dp"
                 android:title="@string/request_money" />
             <item
+                android:id="@+id/nav_request_recommendation"
+                android:icon="@drawable/ic_fingerprint_black_24dp"
+                android:title="@string/request_recommendation" />
+            <item
                 android:id="@+id/nav_withdraw_money"
                 android:icon="@drawable/ic_monetization_on_black_24dp"
                 android:title="@string/money_withdraw" />
             <item
                 android:id="@+id/nav_event"
                 android:icon="@drawable/ic_event_black_24dp"
-                android:title="@string/events" />
+                android:title="@string/events"
+                android:visible="false" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_power_settings_new_black_24dp"

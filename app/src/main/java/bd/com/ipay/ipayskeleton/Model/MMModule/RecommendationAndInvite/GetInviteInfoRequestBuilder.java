@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Invite;
+package bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite;
 
 import org.apache.http.client.utils.URIBuilder;
 
