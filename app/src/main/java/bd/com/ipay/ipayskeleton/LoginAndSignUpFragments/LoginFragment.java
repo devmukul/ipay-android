@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -232,6 +233,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
+//        Log.i("Report", resultList.toString());
         if (resultList.get(0).equals(Constants.COMMAND_LOG_IN)) {
             try {
                 if (resultList.size() > 2) {

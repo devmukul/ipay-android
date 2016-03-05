@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +85,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         TransactionHistoryRequest mTransactionHistoryRequest = new TransactionHistoryRequest(null, historyPageCount);
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
+        Log.i("json", json);
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
@@ -100,6 +102,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
         }
+
+//        Log.i("Response", result);
 
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
