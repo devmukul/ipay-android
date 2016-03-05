@@ -240,6 +240,8 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
                     mRecommendationStatus.setImageResource(R.drawable.ic_warning_black_24dp);
                 }
 
+                optionsLayout.setVisibility(View.GONE);
+
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -247,7 +249,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
                             if (optionsLayout.getVisibility() == View.VISIBLE)
                                 optionsLayout.setVisibility(View.GONE);
                             else optionsLayout.setVisibility(View.VISIBLE);
-                        } else optionsLayout.setVisibility(View.GONE);
+                        }
                     }
                 });
 
@@ -317,7 +319,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_bank_accounts,
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommendation_requests,
                     parent, false);
 
             ViewHolder vh = new ViewHolder(v);

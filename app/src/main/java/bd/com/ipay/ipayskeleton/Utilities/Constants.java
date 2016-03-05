@@ -33,9 +33,9 @@ public class Constants {
 
     // Member Management (MM) Module
     // For POST Requests
-    public static final String BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
+    public static final String BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
     // For GET Requests
-    public static final String BASE_URL_GET_MM = "10.15.10.10";
+    public static final String BASE_URL_GET_MM = "10.10.10.10";
     public static final int BASE_URL_GET_MM_PORT = 8080;
     public static final String BASE_URL_GET_MM_PATH = "/mmweb";
 
