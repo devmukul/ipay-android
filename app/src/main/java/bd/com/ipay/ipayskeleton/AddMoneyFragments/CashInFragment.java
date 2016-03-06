@@ -327,7 +327,18 @@ public class CashInFragment extends Fragment implements HttpResponseListener {
                     try {
                         mBankListResponse = gson.fromJson(resultList.get(2), GetBankListResponse.class);
 
-                        mListUserBankClasses = mBankListResponse.getBanks();
+                        // TODO This is a hack. Consider removing this later.
+                        //
+                        // It might be possible that for some bank ids added earlier
+                        // (on the era of the hardcoded bank list), corresponding bank names
+                        // cannot be found. Filter those ids first to prevent crash.
+                        List<UserBankClass> allBanks = mBankListResponse.getBanks();
+                        mListUserBankClasses = new ArrayList<>();
+                        for (UserBankClass bank : allBanks) {
+                            if (CommonData.getBankById(bank.getBankId()) != null) {
+                                mListUserBankClasses.add(bank);
+                            }
+                        }
 
                         if (mListUserBankClasses == null) {
                             mBankPicker.setEnabled(false);
