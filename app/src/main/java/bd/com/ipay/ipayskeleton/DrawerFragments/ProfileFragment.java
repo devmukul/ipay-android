@@ -433,6 +433,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
+
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 

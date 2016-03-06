@@ -159,7 +159,9 @@ public class HomeActivity extends AppCompatActivity
         // TODO: get userinfo here and set
         getProfileInfo();
 //        CommonDataLoader.loadAll(this);
-//        Log.i("Token", HomeActivity.iPayToken);
+        if (Constants.DEBUG) {
+            Log.i("Token", HomeActivity.iPayToken);
+        }
     }
 
     @Override

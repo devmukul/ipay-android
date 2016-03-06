@@ -31,28 +31,78 @@ public class Constants {
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
 
+    // Server Type 1 -> dev server
+    // Server Type 2 -> staging server
+    // Server Type 3 -> release eserver
+    public static final int SERVER_TYPE = 1;
+
     // Member Management (MM) Module
     // For POST Requests
     public static final String BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
     // For GET Requests
-    public static final String BASE_URL_GET_MM = "10.10.10.10";
-    public static final int BASE_URL_GET_MM_PORT = 8080;
-    public static final String BASE_URL_GET_MM_PATH = "/mmweb";
+    public static final String BASE_URL_GET_MM;
+    public static final int BASE_URL_GET_MM_PORT;
+    public static final String BASE_URL_GET_MM_PATH;
 
     // For Images
-    public static final String BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
+    public static final String BASE_URL_IMAGE_SERVER;
 
     // Service Module (SM)
-    public static final String BASE_URL_SM = "http://10.10.10.10:8086/";
+    public static final String BASE_URL_SM;
 
 
     // Event Management (EM) Module
-    public static final String BASE_URL_GET_EM = "10.10.10.10";
-    public static final int BASE_URL_GET_EM_PORT = 8080;
-    public static final String BASE_URL_GET_EM_PATH = "";
-    public static final String BASE_URL_POST_EM = "http://10.10.10.10:8080/";
+    public static final String BASE_URL_GET_EM;
+    public static final int BASE_URL_GET_EM_PORT;
+    public static final String BASE_URL_GET_EM_PATH;
+    public static final String BASE_URL_POST_EM;
 
     public static final String SCHEME = "http";
+
+    static {
+        if (SERVER_TYPE == 1) {
+            BASE_URL_GET_MM = "10.10.10.10";
+            BASE_URL_GET_MM_PORT = 8080;
+            BASE_URL_GET_MM_PATH = "/mmweb";
+
+            BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
+
+            BASE_URL_SM = "http://10.10.10.10:8086/";
+
+            BASE_URL_GET_EM = "10.10.10.10";
+            BASE_URL_GET_EM_PORT = 8080;
+            BASE_URL_GET_EM_PATH = "";
+            BASE_URL_POST_EM = "http://10.10.10.10:8080/";
+        }
+        else if (SERVER_TYPE == 2) {
+            BASE_URL_GET_MM = "10.15.10.10";
+            BASE_URL_GET_MM_PORT = 8080;
+            BASE_URL_GET_MM_PATH = "/mmweb";
+
+            BASE_URL_IMAGE_SERVER = "http://10.15.10.10";
+
+            BASE_URL_SM = "http://10.15.10.10:8080/ism/";
+
+            BASE_URL_GET_EM = "10.15.10.10";
+            BASE_URL_GET_EM_PORT = 8080;
+            BASE_URL_GET_EM_PATH = "";
+            BASE_URL_POST_EM = "http://10.15.10.10:8080/";
+        }
+        else {
+            BASE_URL_GET_MM = "10.20.10.10";
+            BASE_URL_GET_MM_PORT = 8080;
+            BASE_URL_GET_MM_PATH = "/mmweb";
+
+            BASE_URL_IMAGE_SERVER = "http://10.20.10.10";
+
+            BASE_URL_SM = "http://10.20.10.10:8080/ism/";
+
+            BASE_URL_GET_EM = "10.20.10.10";
+            BASE_URL_GET_EM_PORT = 8080;
+            BASE_URL_GET_EM_PATH = "";
+            BASE_URL_POST_EM = "http://10.20.10.10:8080/";
+        }
+    }
 
     public static final String URL_SIGN_UP = "signup/activation";
     public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
@@ -222,4 +272,6 @@ public class Constants {
 
     public static final int EVENT_PARTICIPANT_TYPE_ANYONE = 0;
     public static final int EVENT_PARTICIPANT_TYPE_FROM_LIST = 3;
+
+    public static final boolean DEBUG = true;
 }

@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Api;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -55,6 +56,10 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... params) {
+        if (Constants.DEBUG) {
+            Log.i("uri", mUri);
+            Log.i("json", mJsonString);
+        }
 
         if (Utilities.isConnectionAvailable(mContext))
             mHttpResponse = makeRequest(mUri, mJsonString);
@@ -107,6 +112,9 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(final String result) {
+        if (Constants.DEBUG) {
+            Log.i("Result", result);
+        }
 
         if (result != null) {
             List<String> resultList = Arrays.asList(result.split(";"));
@@ -118,7 +126,7 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
                     try {
                         Gson gson = new Gson();
                         message = gson.fromJson(resultList.get(2), LoginResponse.class).getMessage();
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
