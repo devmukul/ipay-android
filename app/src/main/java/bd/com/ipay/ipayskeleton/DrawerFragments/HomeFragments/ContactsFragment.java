@@ -473,9 +473,7 @@ public class ContactsFragment extends Fragment implements
                 String number = ContactEngine.getContactNumberFromId(getActivity(), contactId);
 
                 if (number != null) {
-                    number = number.replaceAll("[^0-9]", "");
-                    if (number.length() == 11) number = "+88" + number;
-                    else if (number.length() == 13) number = "+" + number;
+                    number = ContactEngine.convertToInternationalFormat(number);
                     if (subscriber != null && subscriber.containsKey(number)) {
                         isSubscriber.setVisibility(View.VISIBLE);
                     } else {

@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyFragment extends Fragment implements HttpResponseListener {
@@ -226,9 +227,9 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             cancel = true;
         }
-        if (!(mMobileNumberEditText.getText().toString().trim().length() > 0)) {
+        if (!ContactEngine.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.please_enter_mobile_number));
+            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;
         }
 
@@ -241,7 +242,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             // perform the user login attempt.
 
             mProgressDialog.show();
-            SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(senderMobileNumber, mobileNumber, amount, description);
+            SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(
+                    senderMobileNumber, ContactEngine.convertToInternationalFormat(mobileNumber), amount, description);
             Gson gson = new Gson();
             String json = gson.toJson(mSendMoneyRequest);
             mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
@@ -274,9 +276,9 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             cancel = true;
         }
-        if (!(mMobileNumberEditText.getText().toString().trim().length() > 0)) {
+        if (!ContactEngine.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.please_enter_mobile_number));
+            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;
         }
 
@@ -289,7 +291,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             // perform the user login attempt.
 
             mProgressDialog.show();
-            SendMoneyQueryRequest mSendMoneyQueryRequest = new SendMoneyQueryRequest(senderMobileNumber, mobileNumber, amount);
+            SendMoneyQueryRequest mSendMoneyQueryRequest = new SendMoneyQueryRequest(
+                    senderMobileNumber, ContactEngine.convertToInternationalFormat(mobileNumber), amount);
             Gson gson = new Gson();
             String json = gson.toJson(mSendMoneyQueryRequest);
             mSendMoneyQueryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY_QUERY,

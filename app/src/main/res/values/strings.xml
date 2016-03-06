@@ -258,7 +258,7 @@
     <string name="add_title">Add a title</string>
     <string name="please_add_title">Please add a title</string>
     <string name="otp_sent">OTP sent. Please wait...</string>
-    <string name="please_enter_mobile_number">Please enter a mobile number.</string>
+    <string name="please_enter_valid_mobile_number">Please enter a valid mobile number.</string>
     <string name="please_enter_amount">Please enter an amount.</string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>

@@ -31,11 +31,6 @@ public class Constants {
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
 
-    // Server Type 1 -> dev server
-    // Server Type 2 -> staging server
-    // Server Type 3 -> release server
-    public static final int SERVER_TYPE = 2;
-
     // Member Management (MM) Module
     // For POST Requests
     public static final String BASE_URL_POST_MM;
@@ -58,6 +53,11 @@ public class Constants {
     public static final String BASE_URL_POST_EM;
 
     public static final String SCHEME = "http";
+
+    // Server Type 1 -> dev server
+    // Server Type 2 -> staging server
+    // Server Type 3 -> release server
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {

@@ -17,6 +17,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 import android.provider.ContactsContract.RawContacts;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -922,6 +923,41 @@ public class ContactEngine {
                 order);
 
         return cursor;
+    }
+
+    /**
+     * Converts a bangladeshi phone number to corresponding international format.
+     * E.g. converts 019111111111 to +88019111111111.
+     *
+     * You might want to call {@link ContactEngine#isValidNumber(String)} before making this call.
+     */
+    public static String convertToInternationalFormat(String number) {
+        if (number == null)
+            return null;
+
+        number = number.trim();
+
+        if (number.length() == 14 && number.startsWith("+880"))
+            return number;
+
+        number = number.replaceAll("[^0-9]", "");
+        if (number.length() == 11)
+            return "+88" + number;
+        else if (number.length() == 13)
+            return "+" + number;
+        else
+            return number;
+    }
+
+    public static boolean isValidNumber(String number) {
+        number = number.trim();
+        if (number.length() == 11 && number.startsWith("0"))
+            return true;
+        if (number.length() == 13 && number.startsWith("880"))
+            return true;
+        if (number.length() == 14 && number.startsWith("+880"))
+            return true;
+        return false;
     }
 
     public static class CustomContactData {
