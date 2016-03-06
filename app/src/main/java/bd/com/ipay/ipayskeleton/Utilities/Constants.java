@@ -38,7 +38,7 @@ public class Constants {
 
     // Member Management (MM) Module
     // For POST Requests
-    public static final String BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
+    public static final String BASE_URL_POST_MM;
     // For GET Requests
     public static final String BASE_URL_GET_MM;
     public static final int BASE_URL_GET_MM_PORT;
@@ -61,6 +61,8 @@ public class Constants {
 
     static {
         if (SERVER_TYPE == 1) {
+            BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
+
             BASE_URL_GET_MM = "10.10.10.10";
             BASE_URL_GET_MM_PORT = 8080;
             BASE_URL_GET_MM_PATH = "/mmweb";
@@ -75,6 +77,8 @@ public class Constants {
             BASE_URL_POST_EM = "http://10.10.10.10:8080/";
         }
         else if (SERVER_TYPE == 2) {
+            BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
+
             BASE_URL_GET_MM = "10.15.10.10";
             BASE_URL_GET_MM_PORT = 8080;
             BASE_URL_GET_MM_PATH = "/mmweb";
@@ -89,6 +93,8 @@ public class Constants {
             BASE_URL_POST_EM = "http://10.15.10.10:8080/";
         }
         else {
+            BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
+
             BASE_URL_GET_MM = "10.20.10.10";
             BASE_URL_GET_MM_PORT = 8080;
             BASE_URL_GET_MM_PATH = "/mmweb";
