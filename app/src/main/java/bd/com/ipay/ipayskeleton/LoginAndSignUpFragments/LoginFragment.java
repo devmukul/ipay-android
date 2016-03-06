@@ -93,6 +93,14 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        if (SignupOrLoginActivity.mMobileNumber != null) {
+            // Delete +880 from the prefix
+            String mobileNumberWithoutPrefix = SignupOrLoginActivity.mMobileNumber.substring(
+                    Math.max(0, SignupOrLoginActivity.mMobileNumber.length() - 10),
+                    SignupOrLoginActivity.mMobileNumber.length());
+            mUserNameLoginView.setText(mobileNumberWithoutPrefix);
+        }
+
         return v;
     }
 
