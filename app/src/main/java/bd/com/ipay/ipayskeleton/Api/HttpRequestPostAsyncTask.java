@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,6 +25,8 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -109,7 +113,18 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
 
             if (resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED)) {
                 // In case of un-authorization go to login activity
+                String message = mContext.getString(R.string.please_log_in_again);
+                if (resultList.size() > 2) {
+                    try {
+                        Gson gson = new Gson();
+                        message = gson.fromJson(resultList.get(2), LoginResponse.class).getMessage();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
+                intent.putExtra(SignupOrLoginActivity.MESSAGE, message);
                 mContext.startActivity(intent);
 
             } else

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -53,6 +54,8 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mPostcodeBusinessHolder;
     public static String mTypeofBusiness;
 
+    public static final String MESSAGE = "message";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +70,10 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
             switchedToAccountSelection = true;
+        }
+
+        if (getIntent().hasExtra(MESSAGE)) {
+            Toast.makeText(this, getIntent().getStringExtra(MESSAGE), Toast.LENGTH_LONG).show();
         }
     }
 
