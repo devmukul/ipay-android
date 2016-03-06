@@ -108,7 +108,10 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(final String result) {
         if (Constants.DEBUG) {
-            Log.i("Result", result);
+            if (result == null)
+                Log.e("Result", null);
+            else
+                Log.i("Result", result);
         }
 
         if (result != null) {
@@ -127,6 +130,7 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
 
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
                 intent.putExtra(SignupOrLoginActivity.MESSAGE, message);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mContext.startActivity(intent);
 
             } else

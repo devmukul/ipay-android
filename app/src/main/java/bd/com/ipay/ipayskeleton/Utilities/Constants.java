@@ -57,7 +57,7 @@ public class Constants {
     // Server Type 1 -> dev server
     // Server Type 2 -> staging server
     // Server Type 3 -> release server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = 2;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -93,7 +93,7 @@ public class Constants {
             BASE_URL_POST_EM = "http://10.15.10.10:8080/";
         }
         else {
-            BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
+            BASE_URL_POST_MM = "http://10.20.10.10:8080/mmweb/";
 
             BASE_URL_GET_MM = "10.20.10.10";
             BASE_URL_GET_MM_PORT = 8080;
