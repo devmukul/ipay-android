@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,13 +72,13 @@ public class ContactsFragment extends Fragment implements
     private HashMap<String, String> subscriber = new HashMap<>();
 
     private BottomSheetLayout mBottomSheetLayout;
-    private MenuSheetView mContactInviteSheetView;
     private MenuSheetView mContactRecommendationSheetView;
 
     // When a contact item is clicked, we need to access its name and number from the sheet view.
     // So saving these in these two variables.
-    private String selectedName;
-    private String selectedNumber;
+    private String mSelectedName;
+    private String mSelectedNumber;
+    private String mSelectedImageUrl;
 
     private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private GetInviteInfoResponse mGetInviteInfoResponse;
@@ -89,6 +90,11 @@ public class ContactsFragment extends Fragment implements
     private SendInviteResponse mSendInviteResponse;
 
     private ProgressDialog mProgressDialog;
+
+    private View mSheetViewNonSubscriber;
+    private View mSheetViewSubscriber;
+
+    private Button mInviteButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -133,22 +139,19 @@ public class ContactsFragment extends Fragment implements
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
         getLoaderManager().initLoader(SUBSCRIBER_LOADER, null, this);
 
-        mContactInviteSheetView = new MenuSheetView(getActivity(), MenuSheetView.MenuType.LIST,
-                getString(R.string.send_invite), new MenuSheetView.OnMenuItemClickListener() {
+        mSheetViewNonSubscriber = getActivity().getLayoutInflater()
+                .inflate(R.layout.sheet_view_contact_non_subscriber, null);
+        mInviteButton = (Button) mSheetViewNonSubscriber.findViewById(R.id.button_invite);
+        mInviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                if (item.getItemId() == R.id.action_invite) {
-                    sendInvite(selectedNumber);
-                }
+            public void onClick(View v) {
+                sendInvite(mSelectedNumber);
 
                 if (mBottomSheetLayout.isSheetShowing()) {
                     mBottomSheetLayout.dismissSheet();
                 }
-                return true;
             }
         });
-        mContactInviteSheetView.inflateMenu(R.menu.contact_invite);
 
         mContactRecommendationSheetView = new MenuSheetView(getActivity(), MenuSheetView.MenuType.LIST,
                 getString(R.string.recommendation), new MenuSheetView.OnMenuItemClickListener() {
@@ -156,7 +159,7 @@ public class ContactsFragment extends Fragment implements
             public boolean onMenuItemClick(MenuItem item) {
 
                 if (item.getItemId() == R.id.action_ask_recommendation) {
-                    sendRecommendationRequest(selectedNumber);
+                    sendRecommendationRequest(mSelectedNumber);
                 }
 
                 if (mBottomSheetLayout.isSheetShowing()) {
@@ -222,6 +225,27 @@ public class ContactsFragment extends Fragment implements
                 Constants.BASE_URL_POST_MM + Constants.URL_ASK_FOR_RECOMMENDATION, json, getActivity());
         mAskForRecommendationTask.mHttpResponseListener = this;
         mAskForRecommendationTask.execute((Void) null);
+    }
+
+    private void setContactInformation(View v, String contactName, String contactNumber, String imageUrl) {
+        TextView contactNameView = (TextView) v.findViewById(R.id.textview_contact_name);
+        ImageView contactImage = (ImageView) v.findViewById(R.id.image_contact);
+
+        contactNameView.setText(contactName);
+
+//        if (imageUrl != null && !imageUrl.equals(""))
+//            Glide.with(getActivity())
+//                    .load(imageUrl)
+//                    .placeholder(R.drawable.ic_person)
+//                    .error(R.drawable.ic_person)
+//                    .centerCrop()
+////                    .transform(new CircleTransform(HomeActivity.this))
+//                    .into(contactImage);
+//        else Glide.with(getActivity())
+//                .load(R.drawable.dummy)
+//                .centerCrop()
+////                .transform(new CircleTransform(HomeActivity.this))
+//                .into(contactImage);
     }
 
     @Override
@@ -363,7 +387,7 @@ public class ContactsFragment extends Fragment implements
                             Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
                         }
 
-                        mGetInviteInfoResponse.invitees.add(selectedNumber);
+                        mGetInviteInfoResponse.invitees.add(mSelectedNumber);
                         getInviteInfo();
                     } else if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -481,10 +505,6 @@ public class ContactsFragment extends Fragment implements
                     }
                 } else isSubscriber.setVisibility(View.GONE);
 
-                // The Number needs to be accessed within the anonymous inner class,
-                // so making it final
-                final String contactNumber = number;
-
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;
 
@@ -503,6 +523,11 @@ public class ContactsFragment extends Fragment implements
                                 Long.parseLong(photoID));
                     }
                 }
+
+                // The Number needs to be accessed within the anonymous inner class,
+                // so making it final
+                final String contactNumber = number;
+                final String imageUrl = (photoUri == null? null : photoUri.toString());
 
                 if (name.startsWith("+") && name.length() > 1)
                     mPortraitTxt.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
@@ -546,21 +571,23 @@ public class ContactsFragment extends Fragment implements
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mSelectedNumber = contactNumber;
+                        mSelectedName = name;
+                        mSelectedImageUrl = imageUrl;
+
                         // Only show the invite option for non-subscribers
                         if (subscriber == null || !subscriber.containsKey(contactNumber)) {
-                            selectedNumber = contactNumber;
-                            selectedName = name;
-
-                            mContactInviteSheetView.setTitle(name);
-                            mBottomSheetLayout.showWithSheetView(mContactInviteSheetView);
+                            mBottomSheetLayout.showWithSheetView(mSheetViewNonSubscriber);
+                            setContactInformation(mSheetViewNonSubscriber, mSelectedName, mSelectedNumber, mSelectedImageUrl);
 
                         } else {
-                            selectedNumber = contactNumber;
-                            selectedName = name;
-
                             mContactRecommendationSheetView.setTitle(name);
                             mBottomSheetLayout.showWithSheetView(mContactRecommendationSheetView);
+                            setContactInformation(mSheetViewNonSubscriber, mSelectedName, mSelectedNumber, mSelectedImageUrl);
                         }
+
+                        // Show the sheet in the expanded view
+                        mBottomSheetLayout.expandSheet();
                     }
                 });
             }
@@ -781,8 +808,8 @@ public class ContactsFragment extends Fragment implements
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        selectedNumber = mobileNumber;
-                        selectedName = name;
+                        mSelectedNumber = mobileNumber;
+                        mSelectedName = name;
 
                         mContactRecommendationSheetView.setTitle(name);
                         mBottomSheetLayout.showWithSheetView(mContactRecommendationSheetView);
