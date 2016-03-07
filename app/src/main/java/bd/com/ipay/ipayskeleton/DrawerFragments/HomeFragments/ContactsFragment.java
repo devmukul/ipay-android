@@ -274,7 +274,6 @@ public class ContactsFragment extends Fragment implements
 
     private void setPlaceHolderImage(ImageView contactImage, int backgroundColor) {
         contactImage.setBackgroundResource(backgroundColor);
-        contactImage.addPa
         Glide.with(getActivity())
                 .load(R.drawable.people)
                 .fitCenter()
