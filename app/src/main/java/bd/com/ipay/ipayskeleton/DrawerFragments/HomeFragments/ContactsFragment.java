@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,6 +26,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -92,6 +96,20 @@ public class ContactsFragment extends Fragment implements
 
     private Button mInviteButton;
     private Button mAskForRecommendationButton;
+
+    private final int[] COLORS = {
+            R.color.background_default,
+            R.color.background_blue,
+            R.color.background_bright_pink,
+            R.color.background_cyan,
+            R.color.background_magenta,
+            R.color.background_orange,
+            R.color.background_red,
+            R.color.background_spring_green,
+            R.color.background_violet,
+            R.color.background_yellow,
+            R.color.background_azure
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -221,23 +239,47 @@ public class ContactsFragment extends Fragment implements
         mAskForRecommendationTask.execute((Void) null);
     }
 
-    private void setContactInformation(View v, String contactName, String contactNumber, String imageUrl) {
-        TextView contactNameView = (TextView) v.findViewById(R.id.textview_contact_name);
-        ImageView contactImage = (ImageView) v.findViewById(R.id.image_contact);
+    private void setContactInformation(View v, String contactName, String contactNumber,
+                                       String imageUrl, final int backgroundColor) {
+        final TextView contactNameView = (TextView) v.findViewById(R.id.textview_contact_name);
+        final ImageView contactImage = (ImageView) v.findViewById(R.id.image_contact);
 
+        contactImage.setBackgroundResource(backgroundColor);
         contactNameView.setText(contactName);
 
-        if (imageUrl != null && !imageUrl.equals(""))
+        if (imageUrl != null && !imageUrl.equals("")) {
             Glide.with(getActivity())
                     .load(imageUrl)
-                    .placeholder(R.drawable.dummy)
-                    .error(R.drawable.dummy)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            Log.e("Resource", "Test");
+                            setPlaceHolderImage(contactImage, backgroundColor);
+                            return true;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model,
+                                                       Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            Log.e("Resource", "Ready");
+                            return false;
+                        }
+                    })
                     .centerCrop()
                     .into(contactImage);
-        else Glide.with(getActivity())
-                    .load(R.drawable.dummy)
-                    .centerCrop()
-                    .into(contactImage);
+        }
+        else {
+            contactImage.setBackgroundResource(backgroundColor);
+            setPlaceHolderImage(contactImage, backgroundColor);
+        }
+    }
+
+    private void setPlaceHolderImage(ImageView contactImage, int backgroundColor) {
+        contactImage.setBackgroundResource(backgroundColor);
+        Glide.with(getActivity())
+                .load(R.drawable.people)
+                .fitCenter()
+                .into(contactImage);
     }
 
     @Override
@@ -526,6 +568,7 @@ public class ContactsFragment extends Fragment implements
                 else mPortraitTxt.setText(String.valueOf(name.charAt(0)).toUpperCase());
 
 
+
                 if (randomColor == 0)
                     mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle);
                 else if (randomColor == 1)
@@ -569,11 +612,13 @@ public class ContactsFragment extends Fragment implements
                         // Only show the invite option for non-subscribers
                         if (subscriber == null || !subscriber.containsKey(contactNumber)) {
                             mBottomSheetLayout.showWithSheetView(mSheetViewNonSubscriber);
-                            setContactInformation(mSheetViewNonSubscriber, mSelectedName, mSelectedNumber, imageUrl);
+                            setContactInformation(mSheetViewNonSubscriber, mSelectedName,
+                                    mSelectedNumber, imageUrl, COLORS[randomColor]);
 
                         } else {
                             mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
-                            setContactInformation(mSheetViewSubscriber, mSelectedName, mSelectedNumber, imageUrl);
+                            setContactInformation(mSheetViewSubscriber, mSelectedName,
+                                    mSelectedNumber, imageUrl, COLORS[randomColor]);
                         }
 
                         // Show the sheet in the expanded view
@@ -805,7 +850,8 @@ public class ContactsFragment extends Fragment implements
                         mSelectedNumber = mobileNumber;
                         mSelectedName = name;
 
-                        setContactInformation(mSheetViewSubscriber, mSelectedName, mSelectedNumber, imageUrl);
+                        setContactInformation(mSheetViewSubscriber, mSelectedName,
+                                mSelectedNumber, imageUrl, COLORS[randomColor]);
                         mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
                     }
 
