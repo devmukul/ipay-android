@@ -9,8 +9,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dummy"
+            android:layout_height="200dp"
             android:id="@+id/image_contact" />
 
         <View

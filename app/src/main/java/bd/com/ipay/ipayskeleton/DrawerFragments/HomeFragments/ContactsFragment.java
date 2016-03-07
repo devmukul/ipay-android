@@ -16,7 +16,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,7 +26,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.flipboard.bottomsheet.commons.MenuSheetView;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -72,13 +70,11 @@ public class ContactsFragment extends Fragment implements
     private HashMap<String, String> subscriber = new HashMap<>();
 
     private BottomSheetLayout mBottomSheetLayout;
-    private MenuSheetView mContactRecommendationSheetView;
 
     // When a contact item is clicked, we need to access its name and number from the sheet view.
     // So saving these in these two variables.
     private String mSelectedName;
     private String mSelectedNumber;
-    private String mSelectedImageUrl;
 
     private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private GetInviteInfoResponse mGetInviteInfoResponse;
@@ -95,6 +91,7 @@ public class ContactsFragment extends Fragment implements
     private View mSheetViewSubscriber;
 
     private Button mInviteButton;
+    private Button mAskForRecommendationButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -153,22 +150,19 @@ public class ContactsFragment extends Fragment implements
             }
         });
 
-        mContactRecommendationSheetView = new MenuSheetView(getActivity(), MenuSheetView.MenuType.LIST,
-                getString(R.string.recommendation), new MenuSheetView.OnMenuItemClickListener() {
+        mSheetViewSubscriber = getActivity().getLayoutInflater()
+                .inflate(R.layout.sheet_view_contact_subscriber, null);
+        mAskForRecommendationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_recommendation);
+        mAskForRecommendationButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                if (item.getItemId() == R.id.action_ask_recommendation) {
-                    sendRecommendationRequest(mSelectedNumber);
-                }
+            public void onClick(View v) {
+                sendRecommendationRequest(mSelectedNumber);
 
                 if (mBottomSheetLayout.isSheetShowing()) {
                     mBottomSheetLayout.dismissSheet();
                 }
-                return true;
             }
         });
-        mContactRecommendationSheetView.inflateMenu(R.menu.contact_ask_for_recommendation);
 
         getInviteInfo();
 
@@ -233,19 +227,17 @@ public class ContactsFragment extends Fragment implements
 
         contactNameView.setText(contactName);
 
-//        if (imageUrl != null && !imageUrl.equals(""))
-//            Glide.with(getActivity())
-//                    .load(imageUrl)
-//                    .placeholder(R.drawable.ic_person)
-//                    .error(R.drawable.ic_person)
-//                    .centerCrop()
-////                    .transform(new CircleTransform(HomeActivity.this))
-//                    .into(contactImage);
-//        else Glide.with(getActivity())
-//                .load(R.drawable.dummy)
-//                .centerCrop()
-////                .transform(new CircleTransform(HomeActivity.this))
-//                .into(contactImage);
+        if (imageUrl != null && !imageUrl.equals(""))
+            Glide.with(getActivity())
+                    .load(imageUrl)
+                    .placeholder(R.drawable.dummy)
+                    .error(R.drawable.dummy)
+                    .centerCrop()
+                    .into(contactImage);
+        else Glide.with(getActivity())
+                    .load(R.drawable.dummy)
+                    .centerCrop()
+                    .into(contactImage);
     }
 
     @Override
@@ -573,17 +565,15 @@ public class ContactsFragment extends Fragment implements
                     public void onClick(View v) {
                         mSelectedNumber = contactNumber;
                         mSelectedName = name;
-                        mSelectedImageUrl = imageUrl;
 
                         // Only show the invite option for non-subscribers
                         if (subscriber == null || !subscriber.containsKey(contactNumber)) {
                             mBottomSheetLayout.showWithSheetView(mSheetViewNonSubscriber);
-                            setContactInformation(mSheetViewNonSubscriber, mSelectedName, mSelectedNumber, mSelectedImageUrl);
+                            setContactInformation(mSheetViewNonSubscriber, mSelectedName, mSelectedNumber, imageUrl);
 
                         } else {
-                            mContactRecommendationSheetView.setTitle(name);
-                            mBottomSheetLayout.showWithSheetView(mContactRecommendationSheetView);
-                            setContactInformation(mSheetViewNonSubscriber, mSelectedName, mSelectedNumber, mSelectedImageUrl);
+                            mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
+                            setContactInformation(mSheetViewSubscriber, mSelectedName, mSelectedNumber, imageUrl);
                         }
 
                         // Show the sheet in the expanded view
@@ -762,15 +752,19 @@ public class ContactsFragment extends Fragment implements
 
                 isSubscriber.setVisibility(View.VISIBLE);
 
+                final String imageUrl;
+
                 // Set profile pic
                 File file = new File(dir, mobileNumber.replaceAll("[^0-9]", "") + ".jpg");
                 if (file.exists()) {
+                    imageUrl = file.getAbsolutePath();
                     Glide.with(getActivity())
-                            .load(file.getAbsolutePath().toString())
+                            .load(imageUrl)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)     // Skip the cache. Load from disk each time
                             .into(mPortrait);
                 } else {
+                    imageUrl = null;
                     Glide.with(getActivity())
                             .load(android.R.color.transparent)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -811,8 +805,8 @@ public class ContactsFragment extends Fragment implements
                         mSelectedNumber = mobileNumber;
                         mSelectedName = name;
 
-                        mContactRecommendationSheetView.setTitle(name);
-                        mBottomSheetLayout.showWithSheetView(mContactRecommendationSheetView);
+                        setContactInformation(mSheetViewSubscriber, mSelectedName, mSelectedNumber, imageUrl);
+                        mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
                     }
 
                 });

@@ -174,11 +174,10 @@
 
     <style name="SheetButton" parent="@android:style/Widget.Button">
         <item name="android:textSize">16.0sp</item>
-        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:gravity">center_vertical|left</item>
         <item name="android:background">@android:color/white</item>
         <item name="android:drawablePadding">20dp</item>
-        <item name="android:padding">16dp</item>
+        <item name="android:padding">12dp</item>
     </style>
 
     <style name="FabStyle">

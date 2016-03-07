@@ -340,7 +340,7 @@
     <string name="reopen_application">Please re-open the application.</string>
     <string name="failed_available_bank_list_loading">Failed to load bank lists. Please try again later</string>
     <string name="invite_to_ipay">Invite to iPay</string>
-    <string name="menu_ask_for_recommendation">Ask for recommendation</string>
+    <string name="ask_for_recommendation">Ask for recommendation</string>
     <string name="send_invite">Send invitation</string>
     <string name="recommendation">Recommendation</string>
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
