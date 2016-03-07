@@ -23,14 +23,6 @@
             android:drawableLeft="@drawable/ic_fingerprint_black_24dp"
             android:id="@+id/button_ask_for_recommendation" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Test Button"
-            style="@style/SheetButton"
-            android:drawableLeft="@drawable/ic_share_black_24dp"
-            android:id="@+id/button_test" />
-
     </LinearLayout>
 
 </LinearLayout>

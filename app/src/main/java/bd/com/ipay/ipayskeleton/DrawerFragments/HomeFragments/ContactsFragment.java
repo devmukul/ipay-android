@@ -265,7 +265,7 @@ public class ContactsFragment extends Fragment implements
                             return false;
                         }
                     })
-                    .centerCrop()
+                    .fitCenter()
                     .into(contactImage);
         }
         else {
