@@ -57,24 +57,24 @@ public class Constants {
     // Server Type 1 -> dev server
     // Server Type 2 -> staging server
     // Server Type 3 -> release server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {
-            BASE_URL_POST_MM = "http://10.10.10.10:8080/mmweb/";
+            BASE_URL_POST_MM = "http://10.10.10.10:8085/";
 
             BASE_URL_GET_MM = "10.10.10.10";
-            BASE_URL_GET_MM_PORT = 8080;
-            BASE_URL_GET_MM_PATH = "/mmweb";
+            BASE_URL_GET_MM_PORT = 8085;
+            BASE_URL_GET_MM_PATH = "";
 
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 
-            BASE_URL_SM = "http://10.10.10.10:8086/";
+            BASE_URL_SM = "http://10.10.10.10:8085/";
 
             BASE_URL_GET_EM = "10.10.10.10";
-            BASE_URL_GET_EM_PORT = 8080;
+            BASE_URL_GET_EM_PORT = 8085;
             BASE_URL_GET_EM_PATH = "";
-            BASE_URL_POST_EM = "http://10.10.10.10:8080/";
+            BASE_URL_POST_EM = "http://10.10.10.10:8085/";
         }
         else if (SERVER_TYPE == 2) {
             BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
