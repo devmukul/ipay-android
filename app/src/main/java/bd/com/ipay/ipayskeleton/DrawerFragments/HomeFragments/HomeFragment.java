@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DetailsNewsActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -84,6 +85,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        ((HomeActivity)getActivity()).setTitle(R.string.app_name);
+
         userName = pref.getString(Constants.USERNAME, "");
         userID = pref.getString(Constants.USERID, "");
 
@@ -288,20 +291,20 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         } else if (resultList.get(0).equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
 
             if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
 
-                    try {
-                        mAddToTrustedDeviceResponse = gson.fromJson(resultList.get(2), AddToTrustedDeviceResponse.class);
+                mAddToTrustedDeviceResponse = gson.fromJson(resultList.get(2), AddToTrustedDeviceResponse.class);
+
+                try {
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         pref.edit().putString(userID, UUID).commit();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
                 }

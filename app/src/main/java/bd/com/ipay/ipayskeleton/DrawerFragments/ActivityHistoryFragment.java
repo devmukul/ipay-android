@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityClass;
@@ -119,6 +120,8 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user_activity, container, false);
+        ((HomeActivity) getActivity()).setTitle(R.string.activity_log);
+
         activityLogTypes = getResources().getStringArray(R.array.activity_log_types);
         mActivityLogRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);

@@ -22,6 +22,7 @@
                 android:id="@+id/imageview_header"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/parallax_image_height"
+                android:adjustViewBounds="true"
                 android:src="@drawable/dummy"
                 android:transitionName="@string/transition_image" />
 

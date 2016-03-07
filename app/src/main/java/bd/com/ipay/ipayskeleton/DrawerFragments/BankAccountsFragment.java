@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -79,6 +80,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bank_accounts, container, false);
+        ((HomeActivity) getActivity()).setTitle(R.string.bank_accounts);
+
         mBankListRecyclerView = (RecyclerView) v.findViewById(R.id.list_bank);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         addNewBankButton = (Button) v.findViewById(R.id.button_add_bank);
@@ -90,8 +93,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         // then load user bank details. Otherwise directly load the bank list.
         if (CommonData.isAvailableBankListLoaded()) {
             getBankList();
-        }
-        else {
+        } else {
             attemptRefreshAvailableBankNames();
         }
 
@@ -130,7 +132,9 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
         mProgressDialog.show();
         mGetAvailableBankAsyncTask.execute();
-    };
+    }
+
+    ;
 
     private void getBankList() {
         if (mGetBankTask != null) {

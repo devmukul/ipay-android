@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetRecommendationRequests;
@@ -57,6 +58,8 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_recommendation_requests, container, false);
+        ((HomeActivity) getActivity()).setTitle(R.string.recommendation);
+
         mRecommendationRequestsRecyclerView = (RecyclerView) v.findViewById(R.id.list_recommendation_requests);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mProgressDialog = new ProgressDialog(getActivity());
