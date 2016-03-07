@@ -253,7 +253,6 @@ public class ContactsFragment extends Fragment implements
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            Log.e("Resource", "Test");
                             setPlaceHolderImage(contactImage, backgroundColor);
                             return true;
                         }
@@ -261,11 +260,10 @@ public class ContactsFragment extends Fragment implements
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model,
                                                        Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            Log.e("Resource", "Ready");
                             return false;
                         }
                     })
-                    .fitCenter()
+                    .centerCrop()
                     .into(contactImage);
         }
         else {
@@ -276,6 +274,7 @@ public class ContactsFragment extends Fragment implements
 
     private void setPlaceHolderImage(ImageView contactImage, int backgroundColor) {
         contactImage.setBackgroundResource(backgroundColor);
+        contactImage.addPa
         Glide.with(getActivity())
                 .load(R.drawable.people)
                 .fitCenter()

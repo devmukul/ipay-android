@@ -14,7 +14,7 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="40dp"
+            android:layout_height="46dp"
             android:layout_gravity="bottom"
             android:background="@color/colorBlackTransparent" />
 
@@ -22,12 +22,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:textSize="24sp"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Large Text"
             android:textColor="@android:color/white"
-            android:layout_gravity="bottom|center_horizontal"
+            android:layout_gravity="bottom|left"
             android:id="@+id/textview_contact_name" />
     </FrameLayout>
 </LinearLayout>
