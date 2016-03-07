@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordRequest;
@@ -60,6 +61,8 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_account_settings, container, false);
+        ((HomeActivity) getActivity()).setTitle(R.string.account_settings);
+
         mEnterPINEditText = (EditText) v.findViewById(R.id.new_pin);
         mEnterPasswordEditText = (EditText) v.findViewById(R.id.password);
 

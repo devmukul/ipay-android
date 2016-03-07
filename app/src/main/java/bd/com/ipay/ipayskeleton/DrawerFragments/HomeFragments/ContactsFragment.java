@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -117,6 +118,7 @@ public class ContactsFragment extends Fragment implements
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
         mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
+        ((HomeActivity) getActivity()).setTitle(R.string.contacts);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
         allContactsTab = (TextView) v.findViewById(R.id.all_contacts_tab);

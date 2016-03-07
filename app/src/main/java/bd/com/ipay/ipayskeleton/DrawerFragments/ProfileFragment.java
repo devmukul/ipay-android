@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
@@ -119,6 +120,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        ((HomeActivity) getActivity()).setTitle(R.string.profile);
+
         profilePictures = new HashSet<>();
 
         userID = pref.getString(Constants.USERID, "");
@@ -408,8 +411,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                     ProfilePictureChangeListener listener = (ProfilePictureChangeListener) getActivity();
                     listener.onProfilePictureChange(url);
                 }
-            }
-            else {
+            } else {
                 Glide.with(getActivity())
                         .load(R.drawable.ic_person)
                         .crossFade()

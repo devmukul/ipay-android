@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
@@ -48,6 +49,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_transaction_history, container, false);
+        ((HomeActivity) getActivity()).setTitle(R.string.transaction_history);
+
         transactionHistoryTypes = getResources().getStringArray(R.array.transaction_types);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
