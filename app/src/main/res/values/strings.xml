@@ -352,7 +352,7 @@
     <string name="invitation_sent">Invitation sent</string>
     <string name="ask_for_recommendation_sent">Recommendation request sent</string>
     <string name="please_log_in_again">Please log in again</string>
-    <string name="your_latest_transactions">Your latest transactions</string>
+    <string name="your_latest_transactions">Recent transactions</string>
     <string name="show_all_transactions">SHOW ALL TRANSACTIONS</string>
 
     <string-array name="account_types">

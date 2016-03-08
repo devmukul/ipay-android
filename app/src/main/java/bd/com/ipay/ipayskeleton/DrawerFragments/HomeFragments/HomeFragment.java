@@ -9,10 +9,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,7 +36,6 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.CashInActivity;
 import bd.com.ipay.ipayskeleton.Activities.CashOutActivity;
-import bd.com.ipay.ipayskeleton.Activities.DetailsNewsActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
@@ -59,6 +56,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceR
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import link.fls.swipestack.SwipeStack;
 
 public class HomeFragment extends Fragment implements HttpResponseListener {
 
@@ -80,12 +78,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private String userID;
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
-    private RecyclerView mNewsFeedRecyclerView;
+    //    private RecyclerView mNewsFeedRecyclerView;
     private NewsFeedAdapter mNewsFeedAdapter;
     private List<News> newsFeedResponsesList;
     private ImageView refreshBalanceButton;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView.LayoutManager mNewsFeedLayoutManager;
+//    private RecyclerView.LayoutManager mNewsFeedLayoutManager;
 
     private View mSendMoneyButtonView;
     private View mMakePaymentButtonView;
@@ -101,6 +99,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
+
+    private SwipeStack swipeStack;
 
     private int pageCount = 0;
     private boolean hasNext = false;
@@ -131,10 +131,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mSendMoneyButtonView = v.findViewById(R.id.layout_send_money);
         mMakePaymentButtonView = v.findViewById(R.id.layout_make_payment);
         mMobileRechargeView = v.findViewById(R.id.layout_topup);
+        swipeStack = (SwipeStack) v.findViewById(R.id.swipeStack);
 
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
-        mNewsFeedRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
+//        mNewsFeedRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
@@ -146,10 +147,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mShowAllTransactionButton = (Button) v.findViewById(R.id.button_show_all_transactions);
 
 
-        mNewsFeedLayoutManager = new LinearLayoutManager(getActivity());
+//        mNewsFeedLayoutManager = new LinearLayoutManager(getActivity());
         mNewsFeedAdapter = new NewsFeedAdapter();
-        mNewsFeedRecyclerView.setLayoutManager(mNewsFeedLayoutManager);
-        mNewsFeedRecyclerView.setAdapter(mNewsFeedAdapter);
+        swipeStack.setAdapter(mNewsFeedAdapter);
+//        mNewsFeedRecyclerView.setLayoutManager(mNewsFeedLayoutManager);
+//        mNewsFeedRecyclerView.setAdapter(mNewsFeedAdapter);
 
         mTransactionHistoryLayoutManager = new LinearLayoutManager(getActivity());
         mTransactionHistoryAdapter = new TransactionHistoryAdapter();
@@ -423,8 +425,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             mProgressDialog.dismiss();
             mAddTrustedDeviceTask = null;
-        }
-        else if (resultList.get(0).equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
             if (resultList.size() > 2) {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
 
@@ -477,181 +478,232 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         alertDialogue.show();
     }
 
-    public class NewsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private static final int FOOTER_VIEW = 1;
+    public class NewsFeedAdapter extends BaseAdapter {
 
         public NewsFeedAdapter() {
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private ImageView mNewsImage;
-            private TextView mNewsHeadLine;
-            private TextView mNewsSubDescription;
-            private TextView loadMoreTextView;
-            private Button mmButtonReadMore;
-
-            public ViewHolder(final View itemView) {
-                super(itemView);
-
-                mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
-                mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
-                mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
-                mmButtonReadMore = (Button) itemView.findViewById(R.id.read_more);
-                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-            }
-
-            public void bindView(int pos) {
-
-                final long newsID = newsFeedResponsesList.get(pos).getId();
-                final String description = newsFeedResponsesList.get(pos).getDescription();
-                final String title = newsFeedResponsesList.get(pos).getTitle();
-                final String subDescription = newsFeedResponsesList.get(pos).getSubDescription();
-                final String imageUrl = newsFeedResponsesList.get(pos).getImageUrl();
-                final String imageUrlThumbnail = newsFeedResponsesList.get(pos).getImageThumbnailUrl();
-
-                if (title != null) mNewsHeadLine.setText(title);
-                if (subDescription != null) mNewsSubDescription.setText(subDescription);
-
-                if (imageUrl != null) Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
-                        .crossFade()
-                        .placeholder(R.drawable.dummy)
-                        .into(mNewsImage);
-
-                mmButtonReadMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        final Intent intent = new Intent(getActivity(), DetailsNewsActivity.class);
-
-                        if (title != null)
-                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_TITLE, title);
-                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_TITLE, "");
-
-                        if (description != null)
-                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_DESCRIPTION, description);
-                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_DESCRIPTION, "");
-
-                        if (subDescription != null)
-                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_SUB_DESCRIPTION, subDescription);
-                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_SUB_DESCRIPTION, "");
-
-                        if (imageUrl != null)
-                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_FULL, Constants.BASE_URL_IMAGE_SERVER + imageUrl);
-                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_FULL, "");
-
-                        if (imageUrlThumbnail != null)
-                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_THUMBNAIL, Constants.BASE_URL_IMAGE_SERVER + imageUrlThumbnail);
-                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_THUMBNAIL, "");
-
-                        Pair<View, String> p1 = Pair.create((View) mNewsImage, getString(R.string.transition_image));
-                        Pair<View, String> p2 = Pair.create((View) mNewsHeadLine, getString(R.string.transition_title));
-                        Pair<View, String> p3 = Pair.create((View) mNewsSubDescription, getString(R.string.transition_sub_title));
-
-                        ActivityOptionsCompat options = ActivityOptionsCompat.
-                                makeSceneTransitionAnimation(getActivity(), p1, p2, p3);
-
-                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-                        } else startActivity(intent);
-
-                    }
-                });
-            }
-
-            public void bindViewFooter(int pos) {
-                if (hasNext) loadMoreTextView.setText(R.string.load_more);
-                else loadMoreTextView.setText(R.string.no_more_results);
-            }
-        }
-
-        public class FooterViewHolder extends ViewHolder {
-            public FooterViewHolder(View itemView) {
-                super(itemView);
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasNext) {
-                            pageCount = pageCount + 1;
-                            getNewsFeed();
-                        }
-                    }
-                });
-
-                TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                if (hasNext) loadMoreTextView.setText(R.string.load_more);
-                else loadMoreTextView.setText(R.string.no_more_results);
-            }
-        }
-
-        // Now define the viewholder for Normal list item
-        public class NormalViewHolder extends ViewHolder {
-            public NormalViewHolder(View itemView) {
-                super(itemView);
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Do whatever you want on clicking the normal items
-                    }
-                });
-            }
-        }
-
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-
-            if (viewType == FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
-
-                FooterViewHolder vh = new FooterViewHolder(v);
-
-                return vh;
-            }
-
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_news_feed, parent, false);
-
-            NormalViewHolder vh = new NormalViewHolder(v);
-
-            return vh;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                if (holder instanceof NormalViewHolder) {
-                    NormalViewHolder vh = (NormalViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof FooterViewHolder) {
-                    FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindViewFooter(position);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
+        public int getCount() {
             if (newsFeedResponsesList != null)
-                return newsFeedResponsesList.size() + 1;
+                return newsFeedResponsesList.size();
             else return 0;
         }
 
         @Override
-        public int getItemViewType(int position) {
+        public News getItem(int position) {
+            return newsFeedResponsesList.get(position);
+        }
 
-            if (position == newsFeedResponsesList.size()) {
-                // This is where we'll add footer.
-                return FOOTER_VIEW;
-            }
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
 
-            return super.getItemViewType(position);
+        @Override
+        public View getView(final int pos, View itemView, ViewGroup parent) {
+
+            itemView = getActivity().getLayoutInflater().inflate(R.layout.list_item_news_feed, parent, false);
+            ImageView mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
+            TextView mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
+            TextView mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
+            Button mmButtonReadMore = (Button) itemView.findViewById(R.id.read_more);
+
+            final long newsID = newsFeedResponsesList.get(pos).getId();
+            final String description = newsFeedResponsesList.get(pos).getDescription();
+            final String title = newsFeedResponsesList.get(pos).getTitle();
+            final String subDescription = newsFeedResponsesList.get(pos).getSubDescription();
+            final String imageUrl = newsFeedResponsesList.get(pos).getImageUrl();
+            final String imageUrlThumbnail = newsFeedResponsesList.get(pos).getImageThumbnailUrl();
+
+            if (title != null) mNewsHeadLine.setText(title);
+            if (subDescription != null) mNewsSubDescription.setText(subDescription);
+
+            if (imageUrl != null) Glide.with(getActivity())
+                    .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                    .crossFade()
+                    .placeholder(R.drawable.dummy)
+                    .into(mNewsImage);
+
+            return itemView;
         }
     }
+
+//    public class NewsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+//
+//        private static final int FOOTER_VIEW = 1;
+//
+//        public NewsFeedAdapter() {
+//        }
+//
+//        public class ViewHolder extends RecyclerView.ViewHolder {
+//            private ImageView mNewsImage;
+//            private TextView mNewsHeadLine;
+//            private TextView mNewsSubDescription;
+//            private TextView loadMoreTextView;
+//            private Button mmButtonReadMore;
+//
+//            public ViewHolder(final View itemView) {
+//                super(itemView);
+//
+//                mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
+//                mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
+//                mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
+//                mmButtonReadMore = (Button) itemView.findViewById(R.id.read_more);
+//                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+//            }
+//
+//            public void bindView(int pos) {
+//
+//                final long newsID = newsFeedResponsesList.get(pos).getId();
+//                final String description = newsFeedResponsesList.get(pos).getDescription();
+//                final String title = newsFeedResponsesList.get(pos).getTitle();
+//                final String subDescription = newsFeedResponsesList.get(pos).getSubDescription();
+//                final String imageUrl = newsFeedResponsesList.get(pos).getImageUrl();
+//                final String imageUrlThumbnail = newsFeedResponsesList.get(pos).getImageThumbnailUrl();
+//
+//                if (title != null) mNewsHeadLine.setText(title);
+//                if (subDescription != null) mNewsSubDescription.setText(subDescription);
+//
+//                if (imageUrl != null) Glide.with(getActivity())
+//                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+//                        .crossFade()
+//                        .placeholder(R.drawable.dummy)
+//                        .into(mNewsImage);
+//
+//                mmButtonReadMore.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        final Intent intent = new Intent(getActivity(), DetailsNewsActivity.class);
+//
+//                        if (title != null)
+//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_TITLE, title);
+//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_TITLE, "");
+//
+//                        if (description != null)
+//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_DESCRIPTION, description);
+//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_DESCRIPTION, "");
+//
+//                        if (subDescription != null)
+//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_SUB_DESCRIPTION, subDescription);
+//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_SUB_DESCRIPTION, "");
+//
+//                        if (imageUrl != null)
+//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_FULL, Constants.BASE_URL_IMAGE_SERVER + imageUrl);
+//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_FULL, "");
+//
+//                        if (imageUrlThumbnail != null)
+//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_THUMBNAIL, Constants.BASE_URL_IMAGE_SERVER + imageUrlThumbnail);
+//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_THUMBNAIL, "");
+//
+//                        Pair<View, String> p1 = Pair.create((View) mNewsImage, getString(R.string.transition_image));
+//                        Pair<View, String> p2 = Pair.create((View) mNewsHeadLine, getString(R.string.transition_title));
+//                        Pair<View, String> p3 = Pair.create((View) mNewsSubDescription, getString(R.string.transition_sub_title));
+//
+//                        ActivityOptionsCompat options = ActivityOptionsCompat.
+//                                makeSceneTransitionAnimation(getActivity(), p1, p2, p3);
+//
+//                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+//                        } else startActivity(intent);
+//
+//                    }
+//                });
+//            }
+//
+//            public void bindViewFooter(int pos) {
+//                if (hasNext) loadMoreTextView.setText(R.string.load_more);
+//                else loadMoreTextView.setText(R.string.no_more_results);
+//            }
+//        }
+//
+//        public class FooterViewHolder extends ViewHolder {
+//            public FooterViewHolder(View itemView) {
+//                super(itemView);
+//                itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (hasNext) {
+//                            pageCount = pageCount + 1;
+//                            getNewsFeed();
+//                        }
+//                    }
+//                });
+//
+//                TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+//                if (hasNext) loadMoreTextView.setText(R.string.load_more);
+//                else loadMoreTextView.setText(R.string.no_more_results);
+//            }
+//        }
+//
+//        // Now define the viewholder for Normal list item
+//        public class NormalViewHolder extends ViewHolder {
+//            public NormalViewHolder(View itemView) {
+//                super(itemView);
+//
+//                itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        // Do whatever you want on clicking the normal items
+//                    }
+//                });
+//            }
+//        }
+//
+//        @Override
+//        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//
+//            View v;
+//
+//            if (viewType == FOOTER_VIEW) {
+//                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
+//
+//                FooterViewHolder vh = new FooterViewHolder(v);
+//
+//                return vh;
+//            }
+//
+//            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_news_feed, parent, false);
+//
+//            NormalViewHolder vh = new NormalViewHolder(v);
+//
+//            return vh;
+//        }
+//
+//        @Override
+//        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+//            try {
+//                if (holder instanceof NormalViewHolder) {
+//                    NormalViewHolder vh = (NormalViewHolder) holder;
+//                    vh.bindView(position);
+//                } else if (holder instanceof FooterViewHolder) {
+//                    FooterViewHolder vh = (FooterViewHolder) holder;
+//                    vh.bindViewFooter(position);
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        @Override
+//        public int getItemCount() {
+//            if (newsFeedResponsesList != null)
+//                return newsFeedResponsesList.size() + 1;
+//            else return 0;
+//        }
+//
+//        @Override
+//        public int getItemViewType(int position) {
+//
+//            if (position == newsFeedResponsesList.size()) {
+//                // This is where we'll add footer.
+//                return FOOTER_VIEW;
+//            }
+//
+//            return super.getItemViewType(position);
+//        }
+//    }
 
     public class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
