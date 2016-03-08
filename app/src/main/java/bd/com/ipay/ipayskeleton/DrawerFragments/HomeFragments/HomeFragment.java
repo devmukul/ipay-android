@@ -30,9 +30,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 
-import org.w3c.dom.Text;
-
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,6 +51,9 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.News;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -68,6 +71,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetNewsFeedTask = null;
     private GetNewsFeedResponse mGetNewsFeedResponse;
 
+    private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
+    private TransactionHistoryResponse mTransactionHistoryResponse;
+
     private SharedPreferences pref;
     private String userName;
     private String UUID;
@@ -76,10 +82,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private TextView balanceView;
     private RecyclerView mNewsFeedRecyclerView;
     private NewsFeedAdapter mNewsFeedAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private List<News> newsFeedResponsesList;
     private ImageView refreshBalanceButton;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView.LayoutManager mNewsFeedLayoutManager;
 
     private View mSendMoneyButtonView;
     private View mMakePaymentButtonView;
@@ -87,6 +93,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private Button mAddMoneyButton;
     private Button mWithdrawMoneyButton;
+
+    private Button mShowAllTransactionButton;
+
+    private String[] transactionHistoryTypes;
+    private List<TransactionHistoryClass> userTransactionHistoryClasses;
+    private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
+    private RecyclerView mTransactionHistoryRecyclerView;
+    private TransactionHistoryAdapter mTransactionHistoryAdapter;
 
     private int pageCount = 0;
     private boolean hasNext = false;
@@ -100,7 +114,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        ((HomeActivity) getActivity()).setTitle(R.string.app_name);
+        getActivity().setTitle(R.string.app_name);
 
         userName = pref.getString(Constants.USERNAME, "");
         userID = pref.getString(Constants.USERID, "");
@@ -127,10 +141,20 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
 
+        transactionHistoryTypes = getResources().getStringArray(R.array.transaction_types);
+        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
+        mShowAllTransactionButton = (Button) v.findViewById(R.id.button_show_all_transactions);
+
+
+        mNewsFeedLayoutManager = new LinearLayoutManager(getActivity());
         mNewsFeedAdapter = new NewsFeedAdapter();
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mNewsFeedRecyclerView.setLayoutManager(mLayoutManager);
+        mNewsFeedRecyclerView.setLayoutManager(mNewsFeedLayoutManager);
         mNewsFeedRecyclerView.setAdapter(mNewsFeedAdapter);
+
+        mTransactionHistoryLayoutManager = new LinearLayoutManager(getActivity());
+        mTransactionHistoryAdapter = new TransactionHistoryAdapter();
+        mTransactionHistoryRecyclerView.setLayoutManager(mTransactionHistoryLayoutManager);
+        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
 
         refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +169,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         if (Utilities.isConnectionAvailable(getActivity())) {
             refreshBalance();
             getNewsFeed();
+            getTransactionHistory();
         }
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -200,6 +225,15 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CashOutActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        mShowAllTransactionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, new TransactionHistoryFragment()).commit();
+                ((HomeActivity) getActivity()).switchedToHomeFragment = false;
             }
         });
 
@@ -271,6 +305,20 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         } else {
             mGetNewsFeedTask.execute((Void) null);
         }
+    }
+
+    private void getTransactionHistory() {
+        if (mTransactionHistoryTask != null) {
+            return;
+        }
+
+        TransactionHistoryRequest mTransactionHistoryRequest = new TransactionHistoryRequest(null, 0);
+        Gson gson = new Gson();
+        String json = gson.toJson(mTransactionHistoryRequest);
+        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
+                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
+        mTransactionHistoryTask.mHttpResponseListener = this;
+        mTransactionHistoryTask.execute();
     }
 
     @Override
@@ -375,6 +423,34 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             mProgressDialog.dismiss();
             mAddTrustedDeviceTask = null;
+        }
+        else if (resultList.get(0).equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
+            if (resultList.size() > 2) {
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+
+                    try {
+                        mTransactionHistoryResponse = gson.fromJson(resultList.get(2), TransactionHistoryResponse.class);
+
+                        // Show only last 5 transactions
+                        userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
+                                0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
+
+                        mTransactionHistoryAdapter.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+
+            mTransactionHistoryTask = null;
         }
     }
 
@@ -573,6 +649,111 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 return FOOTER_VIEW;
             }
 
+            return super.getItemViewType(position);
+        }
+    }
+
+    public class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        public class TransactionHistoryViewHolder extends RecyclerView.ViewHolder {
+            private TextView mTransactionType;
+            private TextView mTransactionDescription;
+            private TextView mTime;
+            private TextView mOtherUserName;
+            private RoundedImageView mPortrait;
+            private TextView mAmountTextView;
+            private ImageView statusView;
+
+            public TransactionHistoryViewHolder(final View itemView) {
+                super(itemView);
+
+                mTransactionType = (TextView) itemView.findViewById(R.id.transaction_type);
+                mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
+                mOtherUserName = (TextView) itemView.findViewById(R.id.otherUserName);
+                mTime = (TextView) itemView.findViewById(R.id.time);
+                mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
+                statusView = (ImageView) itemView.findViewById(R.id.status);
+                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+            }
+
+            public void bindView(int pos) {
+                int transactionType = userTransactionHistoryClasses.get(pos).getTransactionType();
+                int index = 0;
+                if (transactionType == Constants.TRANSACTION_TYPE_DEBIT) {
+                    index = 0;
+                } else if (transactionType == Constants.TRANSACTION_TYPE_CREDIT) {
+                    index = 1;
+                }
+                String type = transactionHistoryTypes[index];
+                String description = userTransactionHistoryClasses.get(pos).getDescription();
+                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a")
+                        .format(userTransactionHistoryClasses.get(pos).getTime());
+                mTransactionType.setText(type);
+
+                // Handle debit credit
+                if (userTransactionHistoryClasses.get(pos).getTransactionType() == Constants.TRANSACTION_TYPE_DEBIT)
+                    mAmountTextView.setText("+" + userTransactionHistoryClasses.get(pos).getAmount());
+                else
+                    mAmountTextView.setText("-" + userTransactionHistoryClasses.get(pos).getAmount());
+
+                if (userTransactionHistoryClasses.get(pos).getOtherUserName() != null)
+                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherUserName());
+                else
+                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherMobileNumber());
+
+                mTransactionDescription.setText(description);
+                mTime.setText(time);
+
+                if (userTransactionHistoryClasses.get(pos).getStatus().toString()
+                        .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
+                    statusView.setVisibility(View.GONE);
+
+                } else if (userTransactionHistoryClasses.get(pos).getStatus().toString()
+                        .equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
+                    mAmountTextView.setTextColor(getResources().getColor(R.color.colorDivider));
+                    statusView.setVisibility(View.GONE);
+
+                } else {
+                    mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
+                    statusView.setVisibility(View.VISIBLE);
+
+                }
+
+                //TODO: remove this when pro pic came
+                Glide.with(getActivity())
+                        .load(R.drawable.ic_transaction_history)
+                        .into(mPortrait);
+            }
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
+            TransactionHistoryViewHolder vh = new TransactionHistoryViewHolder(v);
+
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                TransactionHistoryViewHolder vh = (TransactionHistoryViewHolder) holder;
+                vh.bindView(position);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (userTransactionHistoryClasses != null)
+                return userTransactionHistoryClasses.size();
+            else return 0;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
             return super.getItemViewType(position);
         }
     }

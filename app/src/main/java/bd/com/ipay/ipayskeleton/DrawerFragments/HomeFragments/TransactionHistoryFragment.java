@@ -49,7 +49,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_transaction_history, container, false);
-        ((HomeActivity) getActivity()).setTitle(R.string.transaction_history);
+        getActivity().setTitle(R.string.transaction_history);
 
         transactionHistoryTypes = getResources().getStringArray(R.array.transaction_types);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -88,7 +88,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         TransactionHistoryRequest mTransactionHistoryRequest = new TransactionHistoryRequest(null, historyPageCount);
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
-        Log.i("json", json);
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
@@ -105,8 +104,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
         }
-
-//        Log.i("Response", result);
 
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();

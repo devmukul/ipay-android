@@ -75,7 +75,7 @@ public class HomeActivity extends AppCompatActivity
 
     public static String iPayToken = "";
 
-    private boolean switchedToHomeFragment = true;
+    public boolean switchedToHomeFragment = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
