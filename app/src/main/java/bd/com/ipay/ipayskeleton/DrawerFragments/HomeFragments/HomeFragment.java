@@ -21,6 +21,8 @@ import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -209,16 +211,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
-        if (!pref.contains(Constants.FIRST_LAUNCH)) {
-            mProgressDialog.setMessage(getString(R.string.progress_dialog_refreshing));
-            mProgressDialog.setCancelable(true);
-        } else {
-            mProgressDialog.setMessage(getString(R.string.progress_dialog_initializing));
-            mProgressDialog.setCancelable(false);
-        }
+        Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotation);
+        rotation.setRepeatCount(Animation.INFINITE);
+        refreshBalanceButton.startAnimation(rotation);
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_refreshing));
-        mProgressDialog.show();
         RefreshBalanceRequest mLoginModel = new RefreshBalanceRequest(pref.getString(Constants.USERID, ""));
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
@@ -287,6 +283,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+
+            refreshBalanceButton.clearAnimation();
             return;
         }
 
@@ -315,7 +313,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG).show();
 
-            mProgressDialog.dismiss();
+            refreshBalanceButton.clearAnimation();
             mRefreshBalanceTask = null;
 
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_NEWS_FEED)) {
