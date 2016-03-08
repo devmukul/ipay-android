@@ -158,6 +158,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
         mTransactionHistoryAdapter = new TransactionHistoryAdapter();
         mTransactionHistoryRecyclerView.setLayoutManager(mTransactionHistoryLayoutManager);
         mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+        mTransactionHistoryRecyclerView.setNestedScrollingEnabled(false);
 
         refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -451,6 +452,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                         // Show only last 5 transactions
                         userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
                                 0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
+                        int transactionHistoryRowHeight =
+                                (int) (getResources().getDimension(R.dimen.list_item_transaction_history_height)
+                                        );
+                        mTransactionHistoryRecyclerView.getLayoutParams().height =
+                                transactionHistoryRowHeight * userTransactionHistoryClasses.size();
 
                         mTransactionHistoryAdapter.notifyDataSetChanged();
 
