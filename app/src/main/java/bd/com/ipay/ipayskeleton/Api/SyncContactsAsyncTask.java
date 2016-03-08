@@ -190,6 +190,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
             }
         }
 
+        cur.close();
+
         return userFriends;
     }
 }

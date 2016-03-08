@@ -34,6 +34,9 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DetailsNewsActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -59,7 +62,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetNewsFeedTask = null;
     private GetNewsFeedResponse mGetNewsFeedResponse;
 
-    private TextView mUserNameTextView;
     private SharedPreferences pref;
     private String userName;
     private String UUID;
@@ -72,6 +74,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private List<News> newsFeedResponsesList;
     private ImageView refreshBalanceButton;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private View mSendMoneyButtonView;
+    private View mMakePaymentButtonView;
+    private View mMobileRechargeView;
 
     private int pageCount = 0;
     private boolean hasNext = false;
@@ -93,8 +99,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         if (pref.contains(userID))
             UUID = pref.getString(userID, null);
 
-        mUserNameTextView = (TextView) v.findViewById(R.id.welcome_text);
-        mUserNameTextView.setText("Welcome " + userName);
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
         mNewsFeedRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
@@ -136,6 +140,34 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         if (UUID == null) {
             showAlertDialogueForAddTrustedDevice();
         }
+
+        mSendMoneyButtonView = v.findViewById(R.id.layout_send_money);
+        mMakePaymentButtonView = v.findViewById(R.id.layout_make_payment);
+        mMobileRechargeView = v.findViewById(R.id.layout_topup);
+
+        mSendMoneyButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mMakePaymentButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MakePaymentActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mMobileRechargeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return v;
     }

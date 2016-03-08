@@ -46,7 +46,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_mobile_topup, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        ((HomeActivity) getActivity()).setTitle(R.string.topup);
 
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);

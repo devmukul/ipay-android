@@ -17,6 +17,25 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="HomeImageButtonStyle">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:background">@drawable/background_home_button</item>
+    </style>
+
+    <style name="HomeImageTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
     <style name="MenuLabelsStyle">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">#FFFFFF</item>
@@ -25,6 +44,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <!-- TODO remove this -->
     <style name="MenuButtonsStyle">
         <item name="fab_size">mini</item>
         <item name="fab_showAnimation">@anim/jump_from_down</item>

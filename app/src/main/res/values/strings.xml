@@ -293,7 +293,7 @@
     <string name="link_bank_account">Link a Bank</string>
     <string name="bank_accounts">Bank Accounts</string>
     <string name="logout">Log out</string>
-    <string name="topup">Mobile recharge</string>
+    <string name="topup">Mobile Recharge</string>
     <string name="transaction_history">Transaction History</string>
     <string name="notification">Notification</string>
     <string name="settings">Settings</string>
