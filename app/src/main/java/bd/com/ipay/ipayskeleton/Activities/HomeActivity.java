@@ -1,9 +1,5 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,15 +17,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.client.Firebase;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -79,19 +71,11 @@ public class HomeActivity extends AppCompatActivity
     private Set<UserProfilePictureClass> profilePictures;
 
     private ProgressDialog mProgressDialog;
-    private FloatingActionButton mSendMoneyFAB;
-    private FloatingActionButton mMakePaymentFAB;
-    private FloatingActionButton mAddMoneyFAB;
-    private FloatingActionButton mTopUpFAB;
     private NavigationView mNavigationView;
-    private FloatingActionMenu mFloatingActionMenu;
-    private FloatingActionMenu paymentMenus;
 
     public static String iPayToken = "";
 
     private boolean switchedToHomeFragment = true;
-
-    private static final int PROFILE_ACTIVITY_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,12 +91,6 @@ public class HomeActivity extends AppCompatActivity
         Firebase.setAndroidContext(this);
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mFloatingActionMenu = (FloatingActionMenu) findViewById(R.id.payment_menus);
-
-        mSendMoneyFAB = (FloatingActionButton) findViewById(R.id.fab_send_money);
-        mMakePaymentFAB = (FloatingActionButton) findViewById(R.id.fab_make_payment);
-        mAddMoneyFAB = (FloatingActionButton) findViewById(R.id.fab_cash_in);
-        mTopUpFAB = (FloatingActionButton) findViewById(R.id.fab_top_up);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -126,10 +104,6 @@ public class HomeActivity extends AppCompatActivity
         mUserNameTextView.setText(mUserID);
         navigationView.setNavigationItemSelectedListener(this);
 
-        paymentMenus = (FloatingActionMenu) findViewById(R.id.payment_menus);
-        createCustomAnimation();
-        setActionsOfFAB();
-
         // TODO: Handle multiple entry in firebase database
         // TODO: Later, we'll update the firebase database periodically
         if (!pref.contains(Constants.FIRST_LAUNCH)) {
@@ -140,10 +114,8 @@ public class HomeActivity extends AppCompatActivity
             }
 
         } else {
-
             // TODO: remove the else part
             // TODO: implement ContactsContract to see the changes in contacts and then update each time
-            // TODO: wow. This is complete sh**!
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 new SyncContactsAsyncTask(HomeActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
@@ -158,7 +130,6 @@ public class HomeActivity extends AppCompatActivity
         getAvailableBankList();
         // TODO: get userinfo here and set
         getProfileInfo();
-//        CommonDataLoader.loadAll(this);
         if (Constants.DEBUG) {
             Log.i("Token", HomeActivity.iPayToken);
         }
@@ -186,12 +157,10 @@ public class HomeActivity extends AppCompatActivity
             case R.id.action_contacts:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new ContactsFragment()).commit();
                 switchedToHomeFragment = false;
-                paymentMenus.close(true);
                 return true;
             case R.id.action_transaction:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
                 switchedToHomeFragment = false;
-                paymentMenus.close(true);
                 return true;
 
             default:
@@ -233,7 +202,6 @@ public class HomeActivity extends AppCompatActivity
         mNavigationView.getMenu().getItem(0).setChecked(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
         switchedToHomeFragment = true;
-        mFloatingActionMenu.setVisibility(View.VISIBLE);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -246,13 +214,11 @@ public class HomeActivity extends AppCompatActivity
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
             switchedToHomeFragment = true;
-            paymentMenus.close(true);
 
         } else if (id == R.id.nav_profile) {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ProfileFragment()).commit();
             switchedToHomeFragment = false;
-            paymentMenus.close(true);
 
         } else if (id == R.id.nav_notification) {
 
@@ -260,20 +226,13 @@ public class HomeActivity extends AppCompatActivity
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new BankAccountsFragment()).commit();
             switchedToHomeFragment = false;
-            paymentMenus.close(true);
 
         } else if (id == R.id.nav_user_activity) {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ActivityHistoryFragment()).commit();
             switchedToHomeFragment = false;
-            paymentMenus.close(true);
 
         } else if (id == R.id.nav_support) {
-
-        } else if (id == R.id.nav_withdraw_money) {
-
-            Intent intent = new Intent(HomeActivity.this, CashOutActivity.class);
-            startActivity(intent);
 
         } else if (id == R.id.nav_request_money) {
 
@@ -289,13 +248,11 @@ public class HomeActivity extends AppCompatActivity
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountSettingsFragment()).commit();
             switchedToHomeFragment = false;
-            paymentMenus.close(true);
 
         } else if (id == R.id.nav_request_recommendation) {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new RecommendationRequestsFragment()).commit();
             switchedToHomeFragment = false;
-            paymentMenus.close(true);
 
         } else if (id == R.id.nav_logout) {
 
@@ -311,77 +268,6 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void createCustomAnimation() {
-
-        AnimatorSet set = new AnimatorSet();
-
-        ObjectAnimator scaleOutX = ObjectAnimator.ofFloat(paymentMenus.getMenuIconView(), "scaleX", 1.0f, 0.2f);
-        ObjectAnimator scaleOutY = ObjectAnimator.ofFloat(paymentMenus.getMenuIconView(), "scaleY", 1.0f, 0.2f);
-
-        ObjectAnimator scaleInX = ObjectAnimator.ofFloat(paymentMenus.getMenuIconView(), "scaleX", 0.2f, 1.0f);
-        ObjectAnimator scaleInY = ObjectAnimator.ofFloat(paymentMenus.getMenuIconView(), "scaleY", 0.2f, 1.0f);
-
-        scaleOutX.setDuration(50);
-        scaleOutY.setDuration(50);
-
-        scaleInX.setDuration(150);
-        scaleInY.setDuration(150);
-
-        scaleInX.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                paymentMenus.getMenuIconView().setImageResource(paymentMenus.isOpened()
-                        ? R.drawable.ic_close_black_24dp : R.drawable.ic_payment_black_24dp);
-            }
-        });
-
-        set.play(scaleOutX).with(scaleOutY);
-        set.play(scaleInX).with(scaleInY).after(scaleOutX);
-        set.setInterpolator(new OvershootInterpolator(2));
-
-        paymentMenus.setIconToggleAnimatorSet(set);
-    }
-
-    private void setActionsOfFAB() {
-
-        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
-            mMakePaymentFAB.setLabelText(getString(R.string.make_payment));
-        else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
-            mMakePaymentFAB.setLabelText(getString(R.string.create_invoice));
-
-        mSendMoneyFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, SendMoneyActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        mMakePaymentFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, MakePaymentActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        mAddMoneyFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, CashInActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        mTopUpFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, TopUpActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     private void attemptLogout() {

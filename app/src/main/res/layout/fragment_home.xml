@@ -181,19 +181,10 @@
         android:text="@string/whats_new"
         android:textStyle="bold" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_gravity="right" />
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin">
+        android:layout_height="wrap_content" >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_recent_activity_logs"

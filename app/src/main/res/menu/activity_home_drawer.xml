@@ -45,10 +45,6 @@
                 android:icon="@drawable/ic_fingerprint_black_24dp"
                 android:title="@string/request_recommendation" />
             <item
-                android:id="@+id/nav_withdraw_money"
-                android:icon="@drawable/ic_monetization_on_black_24dp"
-                android:title="@string/withdraw_money" />
-            <item
                 android:id="@+id/nav_event"
                 android:icon="@drawable/ic_event_black_24dp"
                 android:title="@string/events"
