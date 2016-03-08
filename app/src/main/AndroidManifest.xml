@@ -83,7 +83,7 @@
 
         <activity
             android:name=".Activities.CashOutActivity"
-            android:label="@string/money_withdraw"
+            android:label="@string/withdraw_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"></activity>

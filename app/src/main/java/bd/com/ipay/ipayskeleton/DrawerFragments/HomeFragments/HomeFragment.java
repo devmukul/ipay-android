@@ -29,9 +29,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.CashInActivity;
+import bd.com.ipay.ipayskeleton.Activities.CashOutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DetailsNewsActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
@@ -79,6 +83,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private View mMakePaymentButtonView;
     private View mMobileRechargeView;
 
+    private Button mAddMoneyButton;
+    private Button mWithdrawMoneyButton;
+
     private int pageCount = 0;
     private boolean hasNext = false;
 
@@ -91,7 +98,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        ((HomeActivity)getActivity()).setTitle(R.string.app_name);
+        ((HomeActivity) getActivity()).setTitle(R.string.app_name);
 
         userName = pref.getString(Constants.USERNAME, "");
         userID = pref.getString(Constants.USERID, "");
@@ -99,11 +106,24 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         if (pref.contains(userID))
             UUID = pref.getString(userID, null);
 
+        TextView makePaymentLabel = (TextView) v.findViewById(R.id.textview_make_payment);
+        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
+            makePaymentLabel.setText(getString(R.string.make_payment));
+        else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
+            makePaymentLabel.setText(getString(R.string.create_invoice));
+
+        mSendMoneyButtonView = v.findViewById(R.id.layout_send_money);
+        mMakePaymentButtonView = v.findViewById(R.id.layout_make_payment);
+        mMobileRechargeView = v.findViewById(R.id.layout_topup);
+
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
         mNewsFeedRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+
+        mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
+        mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
 
         mNewsFeedAdapter = new NewsFeedAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -141,10 +161,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             showAlertDialogueForAddTrustedDevice();
         }
 
-        mSendMoneyButtonView = v.findViewById(R.id.layout_send_money);
-        mMakePaymentButtonView = v.findViewById(R.id.layout_make_payment);
-        mMobileRechargeView = v.findViewById(R.id.layout_topup);
-
         mSendMoneyButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +181,22 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CashInActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CashOutActivity.class);
                 startActivity(intent);
             }
         });
