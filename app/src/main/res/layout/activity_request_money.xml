@@ -19,6 +19,6 @@
         app:fabSize="normal"
         app:elevation="4dp"
         app:borderWidth="0dp"
-        android:background="@drawable/background_fab" />
+        app:backgroundTint="@color/background_fab"/>
 
 </RelativeLayout>
