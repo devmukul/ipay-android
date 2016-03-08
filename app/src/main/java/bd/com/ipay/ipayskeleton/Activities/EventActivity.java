@@ -1,10 +1,9 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-
-import com.github.clans.fab.FloatingActionButton;
 
 import bd.com.ipay.ipayskeleton.EventFragments.CreateNewEventFragment;
 import bd.com.ipay.ipayskeleton.EventFragments.EventFragments;

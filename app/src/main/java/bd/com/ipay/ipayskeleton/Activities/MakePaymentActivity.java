@@ -3,10 +3,9 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-
-import com.github.clans.fab.FloatingActionButton;
 
 import bd.com.ipay.ipayskeleton.MakePaymentFragments.CreateInvoiceFragment;
 import bd.com.ipay.ipayskeleton.MakePaymentFragments.InvoicesReceivedFragment;
