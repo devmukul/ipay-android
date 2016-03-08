@@ -58,7 +58,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import link.fls.swipestack.SwipeStack;
 
-public class HomeFragment extends Fragment implements HttpResponseListener {
+public class HomeFragment extends Fragment implements HttpResponseListener, SwipeStack.SwipeStackListener {
 
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private RefreshBalanceResponse mRefreshBalanceResponse;
@@ -150,6 +150,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 //        mNewsFeedLayoutManager = new LinearLayoutManager(getActivity());
         mNewsFeedAdapter = new NewsFeedAdapter();
         swipeStack.setAdapter(mNewsFeedAdapter);
+        swipeStack.setListener(this);
 //        mNewsFeedRecyclerView.setLayoutManager(mNewsFeedLayoutManager);
 //        mNewsFeedRecyclerView.setAdapter(mNewsFeedAdapter);
 
@@ -321,6 +322,21 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.execute();
+    }
+
+    @Override
+    public void onViewSwipedToLeft(int position) {
+
+    }
+
+    @Override
+    public void onViewSwipedToRight(int position) {
+
+    }
+
+    @Override
+    public void onStackEmpty() {
+        swipeStack.setVisibility(View.GONE);
     }
 
     @Override

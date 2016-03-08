@@ -131,7 +131,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                 } else {
                     String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-                    attemptSendOTP(mobileNumber, Constants.MOBILE_ANDROID + mDeviceID);
+                    if (Utilities.isConnectionAvailable(getActivity()))
+                        attemptSendOTP(mobileNumber, Constants.MOBILE_ANDROID + mDeviceID);
+                    else
+                        Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
                     dialog.dismiss();
                 }
             }
