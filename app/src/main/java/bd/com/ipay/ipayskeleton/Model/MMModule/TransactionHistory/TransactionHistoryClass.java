@@ -1,19 +1,14 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
-
 public class TransactionHistoryClass {
 
-    public String otherMobileNumber;
+    public String receiverInfo;
     public int transactionType;
-    public double amount;
+    public double effectiveAmount;
     public int serviceType;
-    public String description;
+    public String purpose;
     public Integer currencyCode;
-    public Integer status;
+    public Integer statusCode;
     public long time;
     public String otherUserName;
 //    public Set<UserProfilePictureClass> otherUserprofilePictures = new HashSet<>();
@@ -21,32 +16,32 @@ public class TransactionHistoryClass {
     public TransactionHistoryClass() {
     }
 
-    public String getOtherMobileNumber() {
-        return otherMobileNumber;
+    public String getReceiverInfo() {
+        return receiverInfo;
     }
 
     public int getTransactionType() {
         return transactionType;
     }
 
-    public double getAmount() {
-        return amount;
+    public double getEffectiveAmount() {
+        return effectiveAmount;
     }
 
     public int getServiceType() {
         return serviceType;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPurpose() {
+        return purpose;
     }
 
     public Integer getCurrencyCode() {
         return currencyCode;
     }
 
-    public Integer getStatus() {
-        return status;
+    public Integer getStatusCode() {
+        return statusCode;
     }
 
     public long getTime() {

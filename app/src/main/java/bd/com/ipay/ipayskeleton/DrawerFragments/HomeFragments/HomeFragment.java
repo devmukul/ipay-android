@@ -20,12 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -798,31 +795,31 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                     index = 1;
                 }
                 String type = transactionHistoryTypes[index];
-                String description = userTransactionHistoryClasses.get(pos).getDescription();
+                String description = userTransactionHistoryClasses.get(pos).getPurpose();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a")
                         .format(userTransactionHistoryClasses.get(pos).getTime());
                 mTransactionType.setText(type);
 
                 // Handle debit credit
                 if (userTransactionHistoryClasses.get(pos).getTransactionType() == Constants.TRANSACTION_TYPE_DEBIT)
-                    mAmountTextView.setText("+" + userTransactionHistoryClasses.get(pos).getAmount());
+                    mAmountTextView.setText("+" + userTransactionHistoryClasses.get(pos).getEffectiveAmount());
                 else
-                    mAmountTextView.setText("-" + userTransactionHistoryClasses.get(pos).getAmount());
+                    mAmountTextView.setText("-" + userTransactionHistoryClasses.get(pos).getEffectiveAmount());
 
                 if (userTransactionHistoryClasses.get(pos).getOtherUserName() != null)
                     mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherUserName());
                 else
-                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherMobileNumber());
+                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getReceiverInfo());
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
 
-                if (userTransactionHistoryClasses.get(pos).getStatus().toString()
+                if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
                     statusView.setVisibility(View.GONE);
 
-                } else if (userTransactionHistoryClasses.get(pos).getStatus().toString()
+                } else if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorDivider));
                     statusView.setVisibility(View.GONE);

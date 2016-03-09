@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
@@ -183,30 +181,30 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                     index = 1;
                 }
                 String type = transactionHistoryTypes[index];
-                String description = userTransactionHistoryClasses.get(pos).getDescription();
+                String description = userTransactionHistoryClasses.get(pos).getPurpose();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
                 mTransactionType.setText(type);
 
                 // Handle debit credit
                 if (userTransactionHistoryClasses.get(pos).getTransactionType() == Constants.TRANSACTION_TYPE_DEBIT)
-                    mAmountTextView.setText("+" + userTransactionHistoryClasses.get(pos).getAmount());
+                    mAmountTextView.setText("+" + userTransactionHistoryClasses.get(pos).getEffectiveAmount());
                 else
-                    mAmountTextView.setText("-" + userTransactionHistoryClasses.get(pos).getAmount());
+                    mAmountTextView.setText("-" + userTransactionHistoryClasses.get(pos).getEffectiveAmount());
 
                 if (userTransactionHistoryClasses.get(pos).getOtherUserName() != null)
                     mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherUserName());
                 else
-                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherMobileNumber());
+                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getReceiverInfo());
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
 
-                if (userTransactionHistoryClasses.get(pos).getStatus().toString()
+                if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
                     statusView.setVisibility(View.GONE);
 
-                } else if (userTransactionHistoryClasses.get(pos).getStatus().toString()
+                } else if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorDivider));
                     statusView.setVisibility(View.GONE);
