@@ -92,6 +92,7 @@
     <string name="from_date">From (dd/mm/yyyy)</string>
     <string name="request_failed">Request failed.</string>
     <string name="load_more">Load more...</string>
+    <string name="balance_placeholder">Balance: Tk.  </string>
     <string name="no_more_results">No more results to show</string>
     <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
     <string name="confirm_query">Are you sure?</string>

@@ -387,7 +387,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                     try {
                         mRefreshBalanceResponse = gson.fromJson(resultList.get(2), RefreshBalanceResponse.class);
                         String balance = mRefreshBalanceResponse.getBalance() + "";
-                        if (balance != null) balanceView.setText(balance + " BDT");
+                        if (balance != null)
+                            balanceView.setText(getString(R.string.balance_placeholder) + balance);
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
