@@ -64,7 +64,8 @@ public class HomeActivity extends AppCompatActivity
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
-    private TextView mUserNameTextView;
+    private TextView mMobileNumberView;
+    private TextView mNameView;
     private RoundedImageView mPortrait;
     private SharedPreferences pref;
     private String mUserID;
@@ -100,9 +101,10 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        mUserNameTextView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.username);
+        mMobileNumberView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
+        mNameView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textview_name);
         mPortrait = (RoundedImageView) navigationView.getHeaderView(0).findViewById(R.id.portrait);
-        mUserNameTextView.setText(mUserID);
+        mMobileNumberView.setText(mUserID);
         navigationView.setNavigationItemSelectedListener(this);
 
         // TODO: Handle multiple entry in firebase database
@@ -132,7 +134,7 @@ public class HomeActivity extends AppCompatActivity
         // TODO: get userinfo here and set
         getProfileInfo();
         if (Constants.DEBUG) {
-            Log.i("Token", HomeActivity.iPayToken);
+            Log.w("Token", HomeActivity.iPayToken);
         }
     }
 
@@ -363,6 +365,8 @@ public class HomeActivity extends AppCompatActivity
             try {
                 mGetUserInfoResponse = gson.fromJson(resultList.get(2), GetUserInfoResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mNameView.setText(mGetUserInfoResponse.getName());
+
                     profilePictures = mGetUserInfoResponse.getProfilePictures();
 
                     String imageUrl = "";
