@@ -285,6 +285,8 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             }
 
             if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.successful_sign_up, Toast.LENGTH_LONG).show();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
 
             } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {

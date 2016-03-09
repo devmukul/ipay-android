@@ -476,16 +476,19 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                         userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
                                 0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
 
+                        int transactionHistoryRowHeight =
+                                (int) (getResources().getDimension(R.dimen.list_item_transaction_history_height));
+                        mTransactionHistoryRecyclerView.getLayoutParams().height =
+                                transactionHistoryRowHeight * userTransactionHistoryClasses.size();
+
                         if (!userTransactionHistoryClasses.isEmpty()) {
                             transactionView.setVisibility(View.VISIBLE);
+                            mTransactionHistoryAdapter.notifyDataSetChanged();
 
                             if (mTransactionHistoryResponse.getTransactions().size() > userTransactionHistoryClasses.size()) {
                                 mShowAllTransactionButton.setVisibility(View.VISIBLE);
                             }
-
-                            mTransactionHistoryAdapter.notifyDataSetChanged();
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
