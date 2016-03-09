@@ -74,6 +74,7 @@ public class HomeActivity extends AppCompatActivity
     private NavigationView mNavigationView;
 
     public static String iPayToken = "";
+    public static boolean newsFeedLoadedOnce = false;
 
     public boolean switchedToHomeFragment = true;
 

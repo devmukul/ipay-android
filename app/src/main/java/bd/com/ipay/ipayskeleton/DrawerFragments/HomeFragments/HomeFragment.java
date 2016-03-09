@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -80,7 +79,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
     private TextView balanceView;
     //    private RecyclerView mNewsFeedRecyclerView;
     private NewsFeedAdapter mNewsFeedAdapter;
-    private List<News> newsFeedResponsesList;
+    public static List<News> newsFeedResponsesList;
+    private int itemsRemoved = 0;
+
     private ImageView refreshBalanceButton;
 //    private SwipeRefreshLayout mSwipeRefreshLayout;
 //    private RecyclerView.LayoutManager mNewsFeedLayoutManager;
@@ -109,6 +110,16 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (itemsRemoved > 0) {
+            for (int i = 0; i < itemsRemoved; i++) newsFeedResponsesList.remove(0);
+            if (mNewsFeedAdapter != null) mNewsFeedAdapter.notifyDataSetChanged();
+            itemsRemoved = 0;
+        }
     }
 
     @Override
@@ -174,7 +185,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
         // Refresh balance each time home page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
             refreshBalance();
-            getNewsFeed();
+
+            // Check if the news feed is already cleared or not
+            if (!HomeActivity.newsFeedLoadedOnce) getNewsFeed();
+            else if (newsFeedResponsesList.size() == 0) swipeStack.setVisibility(View.GONE);
+
             getTransactionHistory();
         }
 
@@ -329,12 +344,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
 
     @Override
     public void onViewSwipedToLeft(int position) {
-
+        itemsRemoved++;
     }
 
     @Override
     public void onViewSwipedToRight(int position) {
-
+        itemsRemoved++;
     }
 
     @Override
@@ -401,8 +416,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                             newsFeedResponsesList.addAll(tempUserActivityResponsesList);
                         }
 
+                        HomeActivity.newsFeedLoadedOnce = true;
                         hasNext = mGetNewsFeedResponse.isHasNext();
                         mNewsFeedAdapter.notifyDataSetChanged();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
@@ -511,6 +528,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
     public class NewsFeedAdapter extends BaseAdapter {
 
         public NewsFeedAdapter() {
+        }
+
+        public void removeFromQueue() {
+            newsFeedResponsesList.remove(0);
+            notifyDataSetChanged();
         }
 
         @Override
