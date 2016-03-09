@@ -14,14 +14,18 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -471,18 +475,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                         userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
                                 0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
 
-                        int transactionHistoryRowHeight =
-                                (int) (getResources().getDimension(R.dimen.list_item_transaction_history_height));
-                        mTransactionHistoryRecyclerView.getLayoutParams().height =
-                                transactionHistoryRowHeight * userTransactionHistoryClasses.size();
-
                         if (!userTransactionHistoryClasses.isEmpty()) {
                             transactionView.setVisibility(View.VISIBLE);
-                            mTransactionHistoryAdapter.notifyDataSetChanged();
 
                             if (mTransactionHistoryResponse.getTransactions().size() > userTransactionHistoryClasses.size()) {
                                 mShowAllTransactionButton.setVisibility(View.VISIBLE);
                             }
+
+                            mTransactionHistoryAdapter.notifyDataSetChanged();
                         }
 
                     } catch (Exception e) {
@@ -760,6 +760,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
     public class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public class TransactionHistoryViewHolder extends RecyclerView.ViewHolder {
+            private View mItemView;
+
             private TextView mTransactionType;
             private TextView mTransactionDescription;
             private TextView mTime;
@@ -770,6 +772,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
 
             public TransactionHistoryViewHolder(final View itemView) {
                 super(itemView);
+                Log.w("View", itemView.getHeight() + " " + itemView.getMeasuredHeight());
+
+                mItemView = itemView;
 
                 mTransactionType = (TextView) itemView.findViewById(R.id.transaction_type);
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
@@ -828,6 +833,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                 Glide.with(getActivity())
                         .load(R.drawable.ic_transaction_history)
                         .into(mPortrait);
+            }
+
+            public View getItemView() {
+                return mItemView;
             }
         }
 

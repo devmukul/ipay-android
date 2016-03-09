@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -183,7 +184,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"
@@ -196,8 +197,8 @@
                 android:id="@+id/list_transaction_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@android:color/white"
-                android:fillViewport="true"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp" />
 
@@ -236,4 +237,4 @@
         <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
