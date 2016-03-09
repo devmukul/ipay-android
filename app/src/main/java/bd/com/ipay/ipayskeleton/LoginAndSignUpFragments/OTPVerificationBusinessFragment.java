@@ -183,8 +183,8 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     SignupOrLoginActivity.mPostcodeBusiness, SignupOrLoginActivity.mCountryBusiness);
 
             SignupRequestBusiness mSignupModel = new SignupRequestBusiness(SignupOrLoginActivity.mMobileNumberBusiness,
-                    Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mFirstNameBusiness, SignupOrLoginActivity.mAccountType,
-                    SignupOrLoginActivity.mLastNameBusiness, SignupOrLoginActivity.mBirthdayBusinessHolder,
+                    Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mNameBusiness, SignupOrLoginActivity.mAccountType,
+                    SignupOrLoginActivity.mBirthdayBusinessHolder,
                     Utilities.md5(SignupOrLoginActivity.mPasswordBusiness), "M", otp,
                     SignupOrLoginActivity.mBusinessName, SignupOrLoginActivity.mTypeofBusiness,
                     SignupOrLoginActivity.mEmailBusiness, SignupOrLoginActivity.mEmailBusiness,
@@ -240,8 +240,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                 SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                 pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).commit();
                 pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPasswordBusiness).commit();
-                pref.edit().putString(Constants.FIRST_NAME, SignupOrLoginActivity.mFirstNameBusiness).commit();
-                pref.edit().putString(Constants.LAST_NAME, SignupOrLoginActivity.mLastNameBusiness).commit();
+                pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mNameBusiness).commit();
                 pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder).commit();
                 pref.edit().putString(Constants.GENDER, "M").commit();
                 pref.edit().putString(Constants.USERCOUNTRY, SignupOrLoginActivity.mCountryBusiness).commit();   // TODO
@@ -305,7 +304,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                 Firebase rootRef = new Firebase(Constants.PATH_TO_IPAY_USERS);
                 Firebase newUserRef = rootRef.child(SignupOrLoginActivity.mMobileNumberBusiness);
                 UserPersonal mUserPersonal = new UserPersonal(SignupOrLoginActivity.mMobileNumberBusiness, Constants.MOBILE_ANDROID + mDeviceID,
-                        SignupOrLoginActivity.mFirstNameBusiness, SignupOrLoginActivity.mLastNameBusiness,
+                        SignupOrLoginActivity.mNameBusiness,
                         SignupOrLoginActivity.mBirthdayBusinessHolder, SignupOrLoginActivity.mPasswordBusiness, "M");
                 newUserRef.setValue(mUserPersonal);
 

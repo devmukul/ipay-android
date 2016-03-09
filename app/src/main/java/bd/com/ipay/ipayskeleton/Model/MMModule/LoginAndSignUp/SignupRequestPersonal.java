@@ -4,8 +4,7 @@ public class SignupRequestPersonal {
 
     private String mobileNumber;
     private String deviceId;
-    private String firstName;
-    private String lastName;
+    private String name;
     private String dob;
     private String passwordHash;
     private String gender;
@@ -13,13 +12,12 @@ public class SignupRequestPersonal {
     private String promoCode;
     private int accountType;
 
-    public SignupRequestPersonal(String mobileNumber, String deviceId, String firstName,
-                                 String lastName, String dob, String passwordHash, String gender,
+    public SignupRequestPersonal(String mobileNumber, String deviceId, String name,
+                                 String dob, String passwordHash, String gender,
                                  String otp, String promoCode, int accountType) {
         this.mobileNumber = mobileNumber;
         this.deviceId = deviceId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.dob = dob;
         this.passwordHash = passwordHash;
         this.gender = gender;

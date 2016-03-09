@@ -41,7 +41,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
 
     private EditText mPasswordView;
     private EditText mConfirmPasswordView;
-    private EditText mFirstNameView;
+    private EditText mNameView;
     private EditText mMobileNumberView;
     private ImageView mDatePickerButton;
     private Button mSignupPersonalButton;
@@ -75,7 +75,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
 
         mPasswordView = (EditText) v.findViewById(R.id.password);
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
-        mFirstNameView = (EditText) v.findViewById(R.id.user_first_name);
+        mNameView = (EditText) v.findViewById(R.id.user_name);
         mMobileNumberView = (EditText) v.findViewById(R.id.mobile_number);
         mSignupPersonalButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
@@ -121,7 +121,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             }
         });
 
-//        if (SignupOrLoginActivity.mFirstName != null) {
+//        if (SignupOrLoginActivity.mName != null) {
 //            rePopulateData();
 //        }
 
@@ -129,7 +129,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
     }
 
     private void rePopulateData() {
-        mFirstNameView.setText(SignupOrLoginActivity.mFirstName);
+        mNameView.setText(SignupOrLoginActivity.mName);
         mMobileNumberView.setText(SignupOrLoginActivity.mMobileNumber);
         mPasswordView.setText(SignupOrLoginActivity.mPassword);
         mConfirmPasswordView.setText(SignupOrLoginActivity.mPassword);
@@ -149,17 +149,9 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
 
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mPassword = mPasswordView.getText().toString().trim();
-        String name = mFirstNameView.getText().toString().trim();
-        String lastName = name.substring(name.lastIndexOf(" ") + 1);
+        String name = mNameView.getText().toString().trim();
 
-        String firstName = "";
-        if (name.split(" ").length > 1) {
-            String names[] = name.split(" ");
-            firstName = names[0];
-        } else firstName = lastName;
-
-        SignupOrLoginActivity.mFirstName = firstName;
-        SignupOrLoginActivity.mLastName = lastName;
+        SignupOrLoginActivity.mName = name;
         SignupOrLoginActivity.mMobileNumber = "+880" + mMobileNumberView.getText().toString().trim();  // TODO: change Bangladesh
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         SignupOrLoginActivity.mBirthday = mBirthdayEditText.getText().toString().trim();
@@ -188,9 +180,9 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             cancel = true;
         }
 
-        if (mFirstNameView.getText().toString().trim().length() == 0) {
-            mFirstNameView.setError(getString(R.string.error_invalid_first_name));
-            focusView = mFirstNameView;
+        if (mNameView.getText().toString().trim().length() == 0) {
+            mNameView.setError(getString(R.string.error_invalid_first_name));
+            focusView = mNameView;
             cancel = true;
         }
 

@@ -4,8 +4,7 @@ public class UserPersonal {
 
     private String mobileNumber;
     private String deviceId;
-    private String firstName;
-    private String lastName;
+    private String name;
     private String dob;
     private String passwordHash;
     private String gender;
@@ -13,12 +12,11 @@ public class UserPersonal {
     public UserPersonal() {
     }
 
-    public UserPersonal(String mobileNumber, String deviceId, String firstName,
-                        String lastName, String dob, String passwordHash, String gender) {
+    public UserPersonal(String mobileNumber, String deviceId, String name,
+                        String dob, String passwordHash, String gender) {
         this.mobileNumber = mobileNumber;
         this.deviceId = deviceId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.dob = dob;
         this.passwordHash = passwordHash;
         this.gender = gender;
@@ -32,12 +30,8 @@ public class UserPersonal {
         return deviceId;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
+    public String getName() {
+        return name;
     }
 
     public String getDob() {

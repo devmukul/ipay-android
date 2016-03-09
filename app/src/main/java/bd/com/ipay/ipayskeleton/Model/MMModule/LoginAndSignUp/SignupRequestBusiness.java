@@ -4,9 +4,8 @@ public class SignupRequestBusiness {
 
     public String mobileNumber;
     public String deviceId;
-    public String firstName;
+    public String name;
     public int accountType;
-    public String lastName;
     public String dob;
     public String passwordHash;
     public String gender;
@@ -21,16 +20,15 @@ public class SignupRequestBusiness {
     private String promoCode;
 
     public SignupRequestBusiness(String mobileNumber, String deviceId,
-                                 String firstName, int accountType, String lastName, String dob,
+                                 String name, int accountType, String dob,
                                  String passwordHash, String gender, String otp, String businessName,
                                  String businessType, String businessEmail, String personalEmail,
                                  String personalMobileNumber, AddressClass personalAddress,
                                  AddressClass businessAddress, String promoCode) {
         this.mobileNumber = mobileNumber;
         this.deviceId = deviceId;
-        this.firstName = firstName;
+        this.name = name;
         this.accountType = accountType;
-        this.lastName = lastName;
         this.dob = dob;
         this.passwordHash = passwordHash;
         this.gender = gender;

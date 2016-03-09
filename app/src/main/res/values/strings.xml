@@ -21,7 +21,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="first_name">First Name</string>
+    <string name="name">Name</string>
     <string name="enter_current_pin">Enter your current PIN</string>
     <string name="enter_your_pin">Enter your PIN</string>
     <string name="enter_new_pin">Enter a new PIN</string>

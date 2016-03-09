@@ -15,7 +15,7 @@ public class Constants {
     public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String LOGGEDIN = "LOGGEDIN";
     public static final String PASSWORD = "PASSWORD";
-    public static final String FIRST_NAME = "FIRST_NAME";
+    public static final String NAME = "NAME";
     public static final String BIRTHDAY = "BIRTHDAY";
     public static final String GENDER = "GENDER";
     public static final String LAST_NAME = "LAST_NAME";
@@ -57,7 +57,7 @@ public class Constants {
     // Server Type 1 -> dev server
     // Server Type 2 -> staging server
     // Server Type 3 -> release server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {

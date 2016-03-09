@@ -3,8 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
 public class SetProfileInfoRequest {
 
     public String mobileNumber;
-    public String firstName;
-    public String lastName;
+    public String name;
     public String gender;
     public String dob;
     public String country;
@@ -17,12 +16,11 @@ public class SetProfileInfoRequest {
     public String district;
     public String postalCode;
 
-    public SetProfileInfoRequest(String mobileNumber, String firstName, String lastName, String gender,
+    public SetProfileInfoRequest(String mobileNumber, String name, String gender,
                                  String dob, String country, String email, String NIDNumber, String occupation,
                                  String addressLine1, String addressLine2, String city, String district, String postalCode) {
         this.mobileNumber = mobileNumber;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.gender = gender;
         this.dob = dob;
         this.country = country;

@@ -6,8 +6,7 @@ import java.util.Set;
 public class GetProfileInfoResponse {
 
     public String mobileNumber;
-    public String firstName;
-    public String lastName;
+    public String name;
     public String gender;
     public String dob;
 
@@ -31,12 +30,8 @@ public class GetProfileInfoResponse {
         return mobileNumber;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
+    public String getName() {
+        return name;
     }
 
     public String getGender() {

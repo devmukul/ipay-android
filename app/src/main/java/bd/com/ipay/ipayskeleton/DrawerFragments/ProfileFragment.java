@@ -67,8 +67,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask;
     private SetProfilePictureResponse mSetProfilePictureResponse;
 
-    private EditText mFirstNameEditText;
-    private EditText mLastNameEditText;
+    private EditText mNameEditText;
     private EditText mEmailEditText;
     private EditText mAddressLine1EditText;
     private EditText mAddressLine2EditText;
@@ -81,8 +80,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private RoundedImageView mProfilePicture;
     private ProgressDialog mProgressDialog;
 
-    private String userFirstName;
-    private String userLastName;
+    private String userName;
     private String userEmail;
     private String userOccupation;
     private String userNID;
@@ -120,7 +118,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        ((HomeActivity) getActivity()).setTitle(R.string.profile);
+        getActivity().setTitle(R.string.profile);
 
         profilePictures = new HashSet<>();
 
@@ -129,8 +127,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         userDOB = pref.getString(Constants.BIRTHDAY, "");
         userCountry = pref.getString(Constants.USERCOUNTRY, "");
 
-        mFirstNameEditText = (EditText) v.findViewById(R.id.first_name);
-        mLastNameEditText = (EditText) v.findViewById(R.id.last_name);
+        mNameEditText = (EditText) v.findViewById(R.id.name);
         mEmailEditText = (EditText) v.findViewById(R.id.email);
         mAddressLine1EditText = (EditText) v.findViewById(R.id.address_line_1);
         mAddressLine2EditText = (EditText) v.findViewById(R.id.address_line_2);
@@ -261,15 +258,9 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         boolean cancel = false;
         View focusView = null;
 
-        if (mFirstNameEditText.getText().toString().trim().length() == 0) {
-            mFirstNameEditText.setError(getString(R.string.error_invalid_first_name));
-            focusView = mFirstNameEditText;
-            cancel = true;
-        }
-
-        if (mLastNameEditText.getText().toString().trim().length() == 0) {
-            mLastNameEditText.setError(getString(R.string.error_invalid_last_name));
-            focusView = mLastNameEditText;
+        if (mNameEditText.getText().toString().trim().length() == 0) {
+            mNameEditText.setError(getString(R.string.error_invalid_first_name));
+            focusView = mNameEditText;
             cancel = true;
         }
 
@@ -279,8 +270,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             focusView.requestFocus();
         } else {
 
-            userFirstName = mFirstNameEditText.getText().toString().trim();
-            userLastName = mLastNameEditText.getText().toString().trim();
+            userName = mNameEditText.getText().toString().trim();
             userNID = mNIDEditText.getText().toString().trim();
             userEmail = mEmailEditText.getText().toString().trim();
             userAddressLine1 = mAddressLine1EditText.getText().toString().trim();
@@ -299,12 +289,11 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
             mProgressDialog.setMessage(getString(R.string.saving_profile_information));
             mProgressDialog.show();
-            SetProfileInfoRequest mSetProfileInfoRequest = new SetProfileInfoRequest(userID, userFirstName, userLastName,
+            SetProfileInfoRequest mSetProfileInfoRequest = new SetProfileInfoRequest(userID, userName,
                     userGender, userDOB, userCountry, userEmail, userNID, userOccupation, userAddressLine1,
                     userAddressLine2, userCity, userDistrict, userPostCode);
             Gson gson = new Gson();
             String json = gson.toJson(mSetProfileInfoRequest);
-            Log.d("json", json);
             mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
                     Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, json, getActivity());
             mSetProfileInfoTask.mHttpResponseListener = this;
@@ -315,8 +304,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private void disableAllEdits() {
         isEditEnabled = false;
 
-        mFirstNameEditText.setEnabled(false);
-        mLastNameEditText.setEnabled(false);
+        mNameEditText.setEnabled(false);
         mEmailEditText.setEnabled(false);
         mAddressLine1EditText.setEnabled(false);
         mAddressLine2EditText.setEnabled(false);
@@ -330,8 +318,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private void enableAllEdits() {
         isEditEnabled = true;
 
-        mFirstNameEditText.setEnabled(true);
-        mLastNameEditText.setEnabled(true);
+        mNameEditText.setEnabled(true);
         mEmailEditText.setEnabled(true);
         mAddressLine1EditText.setEnabled(true);
         mAddressLine2EditText.setEnabled(true);
@@ -343,14 +330,13 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     }
 
     private void setProfileInformation() {
-        mFirstNameEditText.setText(userFirstName);
-        mLastNameEditText.setText(userLastName);
+        mNameEditText.setText(userName);
         mNIDEditText.setText(userNID);
         mEmailEditText.setText(userEmail);
         mAddressLine1EditText.setText(userAddressLine1);
         mAddressLine2EditText.setText(userAddressLine2);
         mPostCodeEditText.setText(userPostCode);
-        mNameOfUserTextView.setText(userFirstName + " " + userLastName);
+        mNameOfUserTextView.setText(userName);
         mDateOfBirthTextView.setText(userDOB);
         mMobileNumberTextView.setText(userID);
 
@@ -444,8 +430,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             try {
                 mGetProfileInfoResponse = gson.fromJson(resultList.get(2), GetProfileInfoResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    userFirstName = mGetProfileInfoResponse.getFirstName();
-                    userLastName = mGetProfileInfoResponse.getLastName();
+                    userName = mGetProfileInfoResponse.getName();
                     userEmail = mGetProfileInfoResponse.getEmail();
                     userAddressLine1 = mGetProfileInfoResponse.getAddressLine1();
                     userAddressLine2 = mGetProfileInfoResponse.getAddressLine2();
@@ -455,6 +440,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                     userCity = mGetProfileInfoResponse.getCity();
                     userDistrict = mGetProfileInfoResponse.getDistrict();
                     emailVerificationStatus = mGetProfileInfoResponse.getEmailVerificationStatus();
+                    userCountry = mGetProfileInfoResponse.getCountry();
                     if (emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)
                         mEmailVerify.setImageResource(R.drawable.ic_verified_user_black_24dp);
                     else if (emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)

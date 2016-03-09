@@ -183,13 +183,6 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
         mPasswordView.setError(null);
 
         String name = mBusinessHolderFullNameView.getText().toString().trim();
-        String lastName = name.substring(name.lastIndexOf(" ") + 1);
-
-        String firstName = "";
-        if (name.split(" ").length > 1) {
-            String names[] = name.split(" ");
-            firstName = names[0];
-        } else firstName = lastName;
 
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mPasswordBusiness = mPasswordView.getText().toString().trim();
@@ -198,8 +191,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
         SignupOrLoginActivity.mMobileNumberBusiness = "+880" + mMobileNumberView.getText().toString().trim();  // TODO: change Bangladesh
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
         SignupOrLoginActivity.mBirthdayBusinessHolder = mBirthdayEditText.getText().toString().trim();
-        SignupOrLoginActivity.mFirstNameBusiness = firstName;
-        SignupOrLoginActivity.mLastNameBusiness = lastName;
+        SignupOrLoginActivity.mNameBusiness = name;
         SignupOrLoginActivity.mAddressLine1Business = mBusinessAddressLine1.getText().toString().trim();
         SignupOrLoginActivity.mAddressLine2Business = mBusinessAddressLine2.getText().toString().trim();
         SignupOrLoginActivity.mPostcodeBusiness = mBusinessAddressPostCode.getText().toString().trim();

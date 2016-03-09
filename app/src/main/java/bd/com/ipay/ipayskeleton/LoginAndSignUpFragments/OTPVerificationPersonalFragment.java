@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -175,7 +174,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             mProgressDialog.show();
             SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
                     Constants.MOBILE_ANDROID + mDeviceID,
-                    SignupOrLoginActivity.mFirstName, SignupOrLoginActivity.mLastName,
+                    SignupOrLoginActivity.mName,
                     SignupOrLoginActivity.mBirthday, Utilities.md5(SignupOrLoginActivity.mPassword),
                     SignupOrLoginActivity.mGender, otp, promoCode,
                     Constants.PERSONAL_ACCOUNT_TYPE);
@@ -233,8 +232,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                         pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).commit();
                         pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPassword).commit();
-                        pref.edit().putString(Constants.FIRST_NAME, SignupOrLoginActivity.mFirstName).commit();
-                        pref.edit().putString(Constants.LAST_NAME, SignupOrLoginActivity.mLastName).commit();
+                        pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mName).commit();
                         pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthday).commit();
                         pref.edit().putString(Constants.GENDER, SignupOrLoginActivity.mGender).commit();
                         pref.edit().putString(Constants.USERCOUNTRY, "Bangladesh").commit();   // TODO
@@ -320,7 +318,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         Firebase newUserRef = rootRef.child(SignupOrLoginActivity.mMobileNumber);
                         UserPersonal mUserPersonal = new UserPersonal(SignupOrLoginActivity.mMobileNumber,
                                 Constants.MOBILE_ANDROID + mDeviceID,
-                                SignupOrLoginActivity.mFirstName, SignupOrLoginActivity.mLastName,
+                                SignupOrLoginActivity.mName,
                                 SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword, SignupOrLoginActivity.mGender);
                         newUserRef.setValue(mUserPersonal);
 

@@ -74,31 +74,16 @@
                 android:layout_marginTop="@dimen/activity_horizontal_margin">
 
                 <EditText
-                    android:id="@+id/first_name"
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/first_name"
+                    android:hint="@string/name"
                     android:inputType="textPersonName"
                     android:maxLines="1"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/last_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/last_name"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
