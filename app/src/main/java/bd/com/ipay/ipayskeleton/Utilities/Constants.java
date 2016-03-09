@@ -18,7 +18,6 @@ public class Constants {
     public static final String NAME = "NAME";
     public static final String BIRTHDAY = "BIRTHDAY";
     public static final String GENDER = "GENDER";
-    public static final String LAST_NAME = "LAST_NAME";
     public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public static final String BOUNDARY = "iPayBoundary";
     public static final String MOBILE_ANDROID = "mobile-android-";
