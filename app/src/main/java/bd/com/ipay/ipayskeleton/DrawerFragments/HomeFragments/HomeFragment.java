@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
     private NewsFeedAdapter mNewsFeedAdapter;
     private List<News> newsFeedResponsesList;
     private ImageView refreshBalanceButton;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+//    private SwipeRefreshLayout mSwipeRefreshLayout;
 //    private RecyclerView.LayoutManager mNewsFeedLayoutManager;
 
     private View mSendMoneyButtonView;
@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
         mProgressDialog = new ProgressDialog(getActivity());
 //        mNewsFeedRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+//        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
@@ -176,16 +176,16 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
             getTransactionHistory();
         }
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    pageCount = 0;
-                    newsFeedResponsesList.clear();
-                    getNewsFeed();
-                }
-            }
-        });
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if (Utilities.isConnectionAvailable(getActivity())) {
+//                    pageCount = 0;
+//                    newsFeedResponsesList.clear();
+//                    getNewsFeed();
+//                }
+//            }
+//        });
 
         // Add to trusted device?
         if (UUID == null) {
@@ -347,7 +347,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
             mProgressDialog.dismiss();
             mRefreshBalanceTask = null;
             mGetNewsFeedTask = null;
-            mSwipeRefreshLayout.setRefreshing(false);
+//            mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
 
@@ -414,7 +414,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
             } else if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.news_feed_get_failed, Toast.LENGTH_LONG).show();
 
-            mSwipeRefreshLayout.setRefreshing(false);
+//            mSwipeRefreshLayout.setRefreshing(false);
             mGetNewsFeedTask = null;
 
         } else if (resultList.get(0).equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
