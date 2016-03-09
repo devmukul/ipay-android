@@ -244,7 +244,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        Log.i("Report", result);
         if (resultList.get(0).equals(Constants.COMMAND_LOG_IN)) {
             try {
                 if (resultList.size() > 2) {

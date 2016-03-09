@@ -182,7 +182,8 @@
             android:id="@+id/layout_transaction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
@@ -209,7 +210,8 @@
                 android:textStyle="bold"
                 android:textSize="12sp"
                 android:text="@string/show_all_transactions"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

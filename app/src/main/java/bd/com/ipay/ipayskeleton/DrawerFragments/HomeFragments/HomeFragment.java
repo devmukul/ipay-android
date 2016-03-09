@@ -94,6 +94,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
 
     private Button mShowAllTransactionButton;
 
+    private View transactionView;
     private String[] transactionHistoryTypes;
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
@@ -142,6 +143,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
         mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
 
+        transactionView = v.findViewById(R.id.layout_transaction);
         transactionHistoryTypes = getResources().getStringArray(R.array.transaction_types);
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
         mShowAllTransactionButton = (Button) v.findViewById(R.id.button_show_all_transactions);
@@ -376,9 +378,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG).show();
+            } else if (getActivity() != null) {
+                Toast.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG).show();
+            }
 
             refreshBalanceButton.clearAnimation();
             mRefreshBalanceTask = null;
@@ -448,17 +450,23 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
 
                     try {
                         mTransactionHistoryResponse = gson.fromJson(resultList.get(2), TransactionHistoryResponse.class);
-
                         // Show only last 5 transactions
                         userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
                                 0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
+
                         int transactionHistoryRowHeight =
-                                (int) (getResources().getDimension(R.dimen.list_item_transaction_history_height)
-                                        );
+                                (int) (getResources().getDimension(R.dimen.list_item_transaction_history_height));
                         mTransactionHistoryRecyclerView.getLayoutParams().height =
                                 transactionHistoryRowHeight * userTransactionHistoryClasses.size();
 
-                        mTransactionHistoryAdapter.notifyDataSetChanged();
+                        if (!userTransactionHistoryClasses.isEmpty()) {
+                            transactionView.setVisibility(View.VISIBLE);
+                            mTransactionHistoryAdapter.notifyDataSetChanged();
+
+                            if (mTransactionHistoryResponse.getTransactions().size() > userTransactionHistoryClasses.size()) {
+                                mShowAllTransactionButton.setVisibility(View.VISIBLE);
+                            }
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
