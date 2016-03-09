@@ -553,16 +553,16 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode != Activity.RESULT_CANCELED) {
+        if (resultCode == Activity.RESULT_OK) {
             try {
-                if (requestCode == ACTION_PICK_PROFILE_PICTURE && resultCode != 0) {
-                    if (intent != null) {
-
+                if (requestCode == ACTION_PICK_PROFILE_PICTURE) {
+                    if (intent != null && intent.getData() != null) {
                         mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
                         mProgressDialog.show();
 
                         Uri selectedImageUri = intent.getData();
                         String selectedOImagePath = Utilities.getFilePath(getActivity(), selectedImageUri);
+
                         mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
                                 selectedOImagePath, getActivity());
                         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;

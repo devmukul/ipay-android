@@ -53,7 +53,7 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         if (Constants.DEBUG) {
-            Log.i("uri", mUri);
+            Log.w("uri", mUri);
         }
 
         if (Utilities.isConnectionAvailable(mContext))
@@ -109,9 +109,9 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(final String result) {
         if (Constants.DEBUG) {
             if (result == null)
-                Log.e("Result", null);
+                Log.e("Result", "NULL");
             else
-                Log.i("Result", result);
+                Log.w("Result", result);
         }
 
         if (result != null) {
