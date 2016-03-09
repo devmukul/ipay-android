@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -193,13 +193,13 @@
                 android:textStyle="bold" />
 
             <android.support.v7.widget.RecyclerView
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
                 android:id="@+id/list_transaction_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/white"
                 android:fillViewport="true"
-                android:background="@android:color/white" />
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
 
             <Button
                 android:id="@+id/button_show_all_transactions"
@@ -207,11 +207,11 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 android:gravity="center"
-                android:textStyle="bold"
-                android:textSize="12sp"
                 android:text="@string/show_all_transactions"
                 android:textColor="@color/colorPrimary"
-                android:visibility="gone"/>
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -219,20 +219,20 @@
             android:id="@+id/swipeStack"
             android:layout_width="wrap_content"
             android:layout_height="260dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="4dp"
             app:animation_duration="500"
             app:stack_rotation="0" />
 
 
         <!--<android.support.v4.widget.SwipeRefreshLayout-->
-            <!--android:id="@+id/swipe_refresh_layout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
+        <!--android:id="@+id/swipe_refresh_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
-            <!--<android.support.v7.widget.RecyclerView-->
-                <!--android:id="@+id/list_recent_activity_logs"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent" />-->
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/list_recent_activity_logs"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
         <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
     </LinearLayout>
