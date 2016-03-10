@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,11 +55,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mSelectType = (Spinner) v.findViewById(R.id.recharge_type);
         mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
 
-        String userMobileNumber = pref.getString(Constants.USERID, "");
-        mMobileNumberEditText.setText(ContactEngine.trimPrefix(userMobileNumber));
-        mMobileNumberEditText.setEnabled(false);
-        mMobileNumberEditText.setFocusable(false);
-
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.recharging_balance));
 
@@ -77,7 +73,27 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             }
         });
 
+        String userMobileNumber = pref.getString(Constants.USERID, "");
+        setPhoneNumber(userMobileNumber);
+
         return v;
+    }
+
+    private void setPhoneNumber(String phoneNumber) {
+        phoneNumber = ContactEngine.trimPrefix(phoneNumber);
+        mMobileNumberEditText.setText(phoneNumber);
+
+        mMobileNumberEditText.setEnabled(false);
+        mMobileNumberEditText.setFocusable(false);
+
+        final String[] OPERATOR_PREFIXES = {"17", "18", "16", "19", "15"};
+        for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
+            if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
+                mSelectOperator.setSelection(i);
+                break;
+            }
+        }
+        mSelectOperator.setEnabled(false);
     }
 
     private void attemptTopUp() {
