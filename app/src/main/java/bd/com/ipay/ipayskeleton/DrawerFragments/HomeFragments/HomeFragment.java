@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Activities.CashInActivity;
 import bd.com.ipay.ipayskeleton.Activities.CashOutActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -88,8 +89,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
 //    private RecyclerView.LayoutManager mNewsFeedLayoutManager;
 
     private View mSendMoneyButtonView;
+    private View mRequestMoneyView;
     private View mMakePaymentButtonView;
-    private View mMobileRechargeView;
 
     private Button mAddMoneyButton;
     private Button mWithdrawMoneyButton;
@@ -142,8 +143,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
             makePaymentLabel.setText(getString(R.string.create_invoice));
 
         mSendMoneyButtonView = v.findViewById(R.id.layout_send_money);
+        mRequestMoneyView = v.findViewById(R.id.layout_request_money);
         mMakePaymentButtonView = v.findViewById(R.id.layout_make_payment);
-        mMobileRechargeView = v.findViewById(R.id.layout_topup);
         swipeStack = (SwipeStack) v.findViewById(R.id.swipeStack);
 
         balanceView = (TextView) v.findViewById(R.id.balance);
@@ -226,10 +227,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
             }
         });
 
-        mMobileRechargeView.setOnClickListener(new View.OnClickListener() {
+        mRequestMoneyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
                 startActivity(intent);
             }
         });

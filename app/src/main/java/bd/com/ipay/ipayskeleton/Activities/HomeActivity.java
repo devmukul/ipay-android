@@ -237,9 +237,9 @@ public class HomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_support) {
 
-        } else if (id == R.id.nav_request_money) {
+        } else if (id == R.id.nav_topup) {
 
-            Intent intent = new Intent(HomeActivity.this, RequestMoneyActivity.class);
+            Intent intent = new Intent(HomeActivity.this, TopUpActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_event) {

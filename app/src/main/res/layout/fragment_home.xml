@@ -45,6 +45,28 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/layout_request_money"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:id="@+id/button_request_money"
+                        style="@style/HomeImageButtonStyle"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/make_payment" />
+
+                    <TextView
+                        style="@style/HomeImageTextViewStyle"
+                        android:layout_below="@+id/button_request_money"
+                        android:text="@string/request_money" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/layout_make_payment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -57,35 +79,13 @@
                         style="@style/HomeImageButtonStyle"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/make_payment" />
+                        android:src="@drawable/mobile_recharge" />
 
                     <TextView
                         android:id="@+id/textview_make_payment"
                         style="@style/HomeImageTextViewStyle"
                         android:layout_below="@+id/button_make_payment"
                         android:text="@string/make_payment" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/layout_topup"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.33"
-                    android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <ImageView
-                        android:id="@+id/button_topup"
-                        style="@style/HomeImageButtonStyle"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/mobile_recharge" />
-
-                    <TextView
-                        style="@style/HomeImageTextViewStyle"
-                        android:layout_below="@+id/button_topup"
-                        android:text="@string/topup" />
 
                 </RelativeLayout>
 
