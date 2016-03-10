@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Set;
 
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 
 public class ContactEngine {
@@ -958,6 +959,16 @@ public class ContactEngine {
         if (number.length() == 14 && number.startsWith("+880"))
             return true;
         return false;
+    }
+
+    /**
+     * Trim +880 (if exists) from the mobile number
+     */
+    public static String trimPrefix(String number) {
+        number = number.trim();
+        return number.substring(
+                Math.max(0, number.length() - 10),
+                number.length());
     }
 
     public static class CustomContactData {

@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class LoginFragment extends Fragment implements HttpResponseListener {
@@ -95,9 +96,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         if (SignupOrLoginActivity.mMobileNumber != null) {
             // Delete +880 from the prefix
-            String mobileNumberWithoutPrefix = SignupOrLoginActivity.mMobileNumber.substring(
-                    Math.max(0, SignupOrLoginActivity.mMobileNumber.length() - 10),
-                    SignupOrLoginActivity.mMobileNumber.length());
+            String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(
+                    SignupOrLoginActivity.mMobileNumber);
             mUserNameLoginView.setText(mobileNumberWithoutPrefix);
         }
 

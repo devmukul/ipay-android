@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
 public class MobileTopupFragment extends Fragment implements HttpResponseListener {
 
@@ -52,6 +53,11 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mSelectOperator = (Spinner) v.findViewById(R.id.operator_list_spinner);
         mSelectType = (Spinner) v.findViewById(R.id.recharge_type);
         mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
+
+        String userMobileNumber = pref.getString(Constants.USERID, "");
+        mMobileNumberEditText.setText(ContactEngine.trimPrefix(userMobileNumber));
+        mMobileNumberEditText.setEnabled(false);
+        mMobileNumberEditText.setFocusable(false);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.recharging_balance));
@@ -82,11 +88,11 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         boolean cancel = false;
         View focusView = null;
 
-        if (mMobileNumberEditText.getText().toString().trim().length() != 10) {
-            mMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
-            focusView = mMobileNumberEditText;
-            cancel = true;
-        }
+//        if (mMobileNumberEditText.getText().toString().trim().length() != 10) {
+//            mMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
+//            focusView = mMobileNumberEditText;
+//            cancel = true;
+//        }
 
         if (mAmountEditText.getText().toString().trim().length() == 0) {
             mAmountEditText.setError(getString(R.string.please_enter_amount));
