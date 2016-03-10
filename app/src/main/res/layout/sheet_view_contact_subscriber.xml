@@ -18,6 +18,22 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/send_money"
+            style="@style/SheetButton"
+            android:drawableLeft="@drawable/ic_home_black_24dp"
+            android:id="@+id/button_send_money" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/request_money"
+            style="@style/SheetButton"
+            android:drawableLeft="@drawable/ic_transfer_within_a_station_black_24dp"
+            android:id="@+id/button_request_money" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/ask_for_recommendation"
             style="@style/SheetButton"
             android:drawableLeft="@drawable/ic_fingerprint_black_24dp"

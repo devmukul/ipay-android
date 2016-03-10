@@ -59,6 +59,11 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         buttonRequest = (Button) v.findViewById(R.id.button_request_money);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
+
+        if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+            mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+        }
+
         mTitleEditText = (EditText) v.findViewById(R.id.title_request);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -170,7 +175,13 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
                     mRequestMoneyResponse = gson.fromJson(resultList.get(2), RequestMoneyResponse.class);
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        ((RequestMoneyActivity) getActivity()).switchToRequestsFragment();
+                        // If new request page was directly launched, then no need to go back to the
+                        // request fragment, just finish the activity
+                        if (getActivity().getIntent().getBooleanExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, false)) {
+                            getActivity().finish();
+                        } else {
+                            ((RequestMoneyActivity) getActivity()).switchToRequestsFragment();
+                        }
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                     } else {

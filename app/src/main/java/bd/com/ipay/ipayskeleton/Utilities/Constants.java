@@ -16,6 +16,7 @@ public class Constants {
     public static final String LOGGEDIN = "LOGGEDIN";
     public static final String PASSWORD = "PASSWORD";
     public static final String NAME = "NAME";
+    public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
     public static final String GENDER = "GENDER";
     public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";

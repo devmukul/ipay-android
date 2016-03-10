@@ -14,6 +14,12 @@ public class RequestMoneyActivity extends AppCompatActivity {
     private FloatingActionButton mFabRequestMoney;
     private boolean switchedToPendingList = true;
 
+    /**
+     * If this value is set in the intent extras,
+     * you would be taken directly to the new request page
+     */
+    public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,13 +33,19 @@ public class RequestMoneyActivity extends AppCompatActivity {
             }
         });
 
-        switchToRequestsFragment();
+        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
+            switchToRequestMoneyFragment();
+        else
+            switchToRequestsFragment();
     }
 
     @Override
     public void onBackPressed() {
-        if (switchedToPendingList) super.onBackPressed();
-        else {
+        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
+            finish();
+        } else if (switchedToPendingList) {
+            super.onBackPressed();
+        } else {
             switchToRequestsFragment();
         }
     }

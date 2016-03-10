@@ -74,6 +74,10 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         buttonSelectFromContacts = (Button) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
 
+        if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+            mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+        }
+
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
 

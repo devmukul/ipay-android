@@ -2,9 +2,9 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
 import android.app.ProgressDialog;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -96,6 +98,8 @@ public class ContactsFragment extends Fragment implements
     private View mSheetViewSubscriber;
 
     private Button mInviteButton;
+    private Button mSendMoneyButton;
+    private Button mRequestMoneyButton;
     private Button mAskForRecommendationButton;
 
     private final int[] COLORS = {
@@ -172,6 +176,33 @@ public class ContactsFragment extends Fragment implements
 
         mSheetViewSubscriber = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_subscriber, null);
+        mSendMoneyButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_send_money);
+        mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
+                intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
+                startActivity(intent);
+
+                if (mBottomSheetLayout.isSheetShowing()) {
+                    mBottomSheetLayout.dismissSheet();
+                }
+            }
+        });
+        mRequestMoneyButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_request_money);
+        mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
+                intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
+                intent.putExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, true);
+                startActivity(intent);
+
+                if (mBottomSheetLayout.isSheetShowing()) {
+                    mBottomSheetLayout.dismissSheet();
+                }
+            }
+        });
         mAskForRecommendationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_recommendation);
         mAskForRecommendationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -566,7 +597,6 @@ public class ContactsFragment extends Fragment implements
                 if (name.startsWith("+") && name.length() > 1)
                     mPortraitTxt.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
                 else mPortraitTxt.setText(String.valueOf(name.charAt(0)).toUpperCase());
-
 
 
                 if (randomColor == 0)
