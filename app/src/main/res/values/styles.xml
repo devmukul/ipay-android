@@ -18,13 +18,12 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="HomeImageButtonStyle">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_marginTop">4dp</item>
-        <item name="android:padding">8dp</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:background">@drawable/background_home_button</item>
+        <!--<item name="android:background">@drawable/background_home_button</item>-->
     </style>
 
     <style name="HomeImageTextViewStyle">

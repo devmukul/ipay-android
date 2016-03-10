@@ -35,7 +35,7 @@
                         style="@style/HomeImageButtonStyle"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_home_black_36dp" />
+                        android:src="@drawable/send_money" />
 
                     <TextView
                         style="@style/HomeImageTextViewStyle"
@@ -57,7 +57,7 @@
                         style="@style/HomeImageButtonStyle"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_account_circle_black_36dp" />
+                        android:src="@drawable/make_payment" />
 
                     <TextView
                         android:id="@+id/textview_make_payment"
@@ -80,7 +80,7 @@
                         style="@style/HomeImageButtonStyle"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_face_black_36dp" />
+                        android:src="@drawable/mobile_recharge" />
 
                     <TextView
                         style="@style/HomeImageTextViewStyle"
