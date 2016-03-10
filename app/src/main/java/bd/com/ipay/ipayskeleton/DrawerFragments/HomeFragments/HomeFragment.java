@@ -766,53 +766,55 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
             private TextView mTransactionType;
             private TextView mTransactionDescription;
             private TextView mTime;
-            private TextView mOtherUserName;
+//            private TextView mOtherUserName;
+            private TextView mPurposeView;
             private RoundedImageView mPortrait;
             private TextView mAmountTextView;
             private ImageView statusView;
 
             public TransactionHistoryViewHolder(final View itemView) {
                 super(itemView);
-                Log.w("View", itemView.getHeight() + " " + itemView.getMeasuredHeight());
 
                 mItemView = itemView;
 
                 mTransactionType = (TextView) itemView.findViewById(R.id.transaction_type);
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
-                mOtherUserName = (TextView) itemView.findViewById(R.id.otherUserName);
+//                mOtherUserName = (TextView) itemView.findViewById(R.id.otherUserName);
                 mTime = (TextView) itemView.findViewById(R.id.time);
+                mPurposeView = (TextView) itemView.findViewById(R.id.purpose);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
             }
 
             public void bindView(int pos) {
-                int transactionType = userTransactionHistoryClasses.get(pos).getTransactionType();
+                double amount = userTransactionHistoryClasses.get(pos).getAmount(userName);
+
                 int index = 0;
-                if (transactionType == Constants.TRANSACTION_TYPE_DEBIT) {
+                if (amount >= 0) {
                     index = 0;
-                } else if (transactionType == Constants.TRANSACTION_TYPE_CREDIT) {
+                } else {
                     index = 1;
                 }
                 String type = transactionHistoryTypes[index];
-                String description = userTransactionHistoryClasses.get(pos).getPurpose();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a")
-                        .format(userTransactionHistoryClasses.get(pos).getTime());
+                String description = userTransactionHistoryClasses.get(pos).getDescription(userName);
+                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
                 mTransactionType.setText(type);
 
                 // Handle debit credit
-                if (userTransactionHistoryClasses.get(pos).getTransactionType() == Constants.TRANSACTION_TYPE_DEBIT)
-                    mAmountTextView.setText("+" + userTransactionHistoryClasses.get(pos).getEffectiveAmount());
+                if (amount > 0)
+                    mAmountTextView.setText("+" + String.format("%.2f", amount));
                 else
-                    mAmountTextView.setText("-" + userTransactionHistoryClasses.get(pos).getEffectiveAmount());
+                    mAmountTextView.setText(String.format("%.2f", amount));
 
-                if (userTransactionHistoryClasses.get(pos).getOtherUserName() != null)
-                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherUserName());
-                else
-                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getReceiverInfo());
+//                if (userTransactionHistoryClasses.get(pos).getOtherUserName() != null)
+//                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherUserName());
+//                else
+//                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getReceiverInfo());
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
+                mPurposeView.setText(userTransactionHistoryClasses.get(pos).getPurpose());
 
                 if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -827,7 +829,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setVisibility(View.VISIBLE);
-
                 }
 
                 //TODO: remove this when pro pic came

@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,6 +43,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private String mMobileNumber;
+
     private int historyPageCount = 0;
     private boolean hasNext = false;
 
@@ -48,6 +52,10 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_transaction_history, container, false);
         getActivity().setTitle(R.string.transaction_history);
+
+        SharedPreferences pref = getActivity()
+                .getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        mMobileNumber = pref.getString(Constants.USERID, "");
 
         transactionHistoryTypes = getResources().getStringArray(R.array.transaction_types);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -153,7 +161,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             private TextView mTransactionType;
             private TextView mTransactionDescription;
             private TextView mTime;
-            private TextView mOtherUserName;
+//            private TextView mOtherUserName;
+            private TextView mPurposeView;
             private TextView loadMoreTextView;
             private RoundedImageView mPortrait;
             private TextView mAmountTextView;
@@ -164,8 +173,9 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
                 mTransactionType = (TextView) itemView.findViewById(R.id.transaction_type);
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
-                mOtherUserName = (TextView) itemView.findViewById(R.id.otherUserName);
+//                mOtherUserName = (TextView) itemView.findViewById(R.id.otherUserName);
                 mTime = (TextView) itemView.findViewById(R.id.time);
+                mPurposeView = (TextView) itemView.findViewById(R.id.purpose);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
@@ -173,31 +183,33 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             }
 
             public void bindView(int pos) {
-                int transactionType = userTransactionHistoryClasses.get(pos).getTransactionType();
+                double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
+
                 int index = 0;
-                if (transactionType == Constants.TRANSACTION_TYPE_DEBIT) {
+                if (amount >= 0) {
                     index = 0;
-                } else if (transactionType == Constants.TRANSACTION_TYPE_CREDIT) {
+                } else {
                     index = 1;
                 }
                 String type = transactionHistoryTypes[index];
-                String description = userTransactionHistoryClasses.get(pos).getPurpose();
+                String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
                 mTransactionType.setText(type);
 
                 // Handle debit credit
-                if (userTransactionHistoryClasses.get(pos).getTransactionType() == Constants.TRANSACTION_TYPE_DEBIT)
-                    mAmountTextView.setText("+" + userTransactionHistoryClasses.get(pos).getEffectiveAmount());
+                if (amount > 0)
+                    mAmountTextView.setText("+" + String.format("%.2f", amount));
                 else
-                    mAmountTextView.setText("-" + userTransactionHistoryClasses.get(pos).getEffectiveAmount());
+                    mAmountTextView.setText(String.format("%.2f", amount));
 
-                if (userTransactionHistoryClasses.get(pos).getOtherUserName() != null)
-                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherUserName());
-                else
-                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getReceiverInfo());
+//                if (userTransactionHistoryClasses.get(pos).getOtherUserName() != null)
+//                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherUserName());
+//                else
+//                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getReceiverInfo());
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
+                mPurposeView.setText(userTransactionHistoryClasses.get(pos).getPurpose());
 
                 if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -212,7 +224,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setVisibility(View.VISIBLE);
-
                 }
 
 

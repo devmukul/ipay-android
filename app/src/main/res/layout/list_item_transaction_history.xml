@@ -8,8 +8,8 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/portrait"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:scaleType="centerCrop"
@@ -20,6 +20,7 @@
 
     <TextView
         android:id="@+id/otherUserName"
+        android:visibility="gone"
         style="@style/TextStylePrimaryMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,12 +36,33 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/amount"
+        android:id="@+id/activity_description"
         style="@style/TextStylePrimarySmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/otherUserName"
+        android:layout_toRightOf="@+id/portrait"
+        android:text="Description"
+        android:gravity="left" />
+
+    <TextView
+        android:id="@+id/purpose"
+        style="@style/TextStyleSecondarySmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_description"
+        android:layout_toRightOf="@+id/portrait"
+        android:text="purpose"
+        android:gravity="left" />
+
+    <TextView
+        android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="100" />
+        android:text="Time"
+        android:textSize="12sp"
+        android:layout_below="@+id/purpose"
+        android:layout_toRightOf="@+id/portrait" />
 
     <ImageView
         android:id="@+id/status"
@@ -48,21 +70,15 @@
         android:layout_height="15dp"
         android:layout_marginRight="@dimen/value10"
         android:layout_toLeftOf="@+id/amount"
-        android:src="@drawable/ic_error" />
+        android:src="@drawable/ic_error"
+        android:layout_alignBottom="@+id/amount" />
 
     <TextView
-        android:id="@+id/activity_description"
+        android:id="@+id/amount"
         style="@style/TextStylePrimarySmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/otherUserName"
-        android:layout_toRightOf="@+id/portrait"
-        android:gravity="left" />
-
-    <TextView
-        android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_description"
-        android:layout_toRightOf="@+id/portrait" />
+        android:layout_alignParentRight="true"
+        android:layout_alignBaseline="@+id/time"
+        android:text="100" />
 </RelativeLayout>

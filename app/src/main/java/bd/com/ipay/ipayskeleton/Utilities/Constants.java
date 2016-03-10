@@ -279,5 +279,14 @@ public class Constants {
     public static final int EVENT_PARTICIPANT_TYPE_ANYONE = 0;
     public static final int EVENT_PARTICIPANT_TYPE_FROM_LIST = 3;
 
+    public static final int TRANSACTION_HISTORY_OPENING_BALANCE = 1001;
+    public static final int TRANSACTION_HISTORY_SEND_MONEY = 1;
+    public static final int TRANSACTION_HISTORY_REQUEST_MONEY = 6001;
+    public static final int TRANSACTION_HISTORY_ADD_MONEY = 3001;
+    public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY = 3002;
+    public static final int TRANSACTION_HISTORY_TOPUP = 2001;
+    public static final int TRANSACTION_HISTORY_PAYMENT = 6002;
+    public static final int TRANSACTION_HISTORY_EDUCATION = 8001;
+
     public static final boolean DEBUG = true;
 }
