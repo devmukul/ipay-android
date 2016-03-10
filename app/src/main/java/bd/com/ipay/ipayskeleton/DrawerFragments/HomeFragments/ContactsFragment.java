@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Handler;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
@@ -166,11 +167,11 @@ public class ContactsFragment extends Fragment implements
         mInviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendInvite(mSelectedNumber);
-
                 if (mBottomSheetLayout.isSheetShowing()) {
                     mBottomSheetLayout.dismissSheet();
                 }
+
+                sendInvite(mSelectedNumber);
             }
         });
 
@@ -229,11 +230,16 @@ public class ContactsFragment extends Fragment implements
     }
 
     private void sendInvite(String phoneNumber) {
-        if (mGetInviteInfoResponse == null) {
+        if (mGetInviteInfoResponse == null || mGetInviteInfoResponse.invitees == null) {
             Toast.makeText(getActivity(), R.string.failed_sending_invitation,
                     Toast.LENGTH_LONG).show();
+
             getInviteInfo();
-        } else if (mGetInviteInfoResponse.invitees.size() >= mGetInviteInfoResponse.totalLimit) {
+            return;
+        }
+
+        int numberOfInvitees = mGetInviteInfoResponse.invitees.size();
+        if (numberOfInvitees >= mGetInviteInfoResponse.totalLimit) {
             Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
                     Toast.LENGTH_LONG).show();
         } else if (mGetInviteInfoResponse.invitees.contains(phoneNumber)) {
