@@ -15,7 +15,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_transaction_history"
         app:riv_border_color="@color/colorPrimary"
-        app:riv_border_width="1dip"
         app:riv_corner_radius="50dip"
         app:riv_oval="false" />
 

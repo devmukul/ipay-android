@@ -8,7 +8,7 @@
             android:title="@string/home" />
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:icon="@drawable/ic_drawer_profile"
             android:title="@string/profile" />
         <item
             android:id="@+id/nav_notification"
@@ -17,43 +17,38 @@
             android:visible="false" />
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings_black_24dp"
+            android:icon="@drawable/ic_drawer_settings"
             android:title="@string/account_settings" />
         <item
             android:id="@+id/nav_user_activity"
-            android:icon="@drawable/ic_favorite_white_24dp"
+            android:icon="@drawable/ic_drawer_activity"
             android:title="@string/activity_log" />
+        <item
+            android:id="@+id/nav_support"
+            android:icon="@drawable/ic_face_black_24dp"
+            android:title="@string/support"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_bank_account"
+            android:icon="@drawable/ic_drawer_bank"
+            android:title="@string/link_bank_account" />
+        <item
+            android:id="@+id/nav_request_money"
+            android:icon="@drawable/ic_drawer_request_money"
+            android:title="@string/request_money" />
+        <item
+            android:id="@+id/nav_request_recommendation"
+            android:icon="@drawable/ic_drawer_recommendation"
+            android:title="@string/recommendations" />
+        <item
+            android:id="@+id/nav_event"
+            android:icon="@drawable/ic_event_black_24dp"
+            android:title="@string/events"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_drawer_logout"
+            android:title="@string/logout" />
     </group>
-
-    <item android:title="@string/app_name">
-        <menu>
-            <item
-                android:id="@+id/nav_support"
-                android:icon="@drawable/ic_face_black_24dp"
-                android:title="@string/support"
-                android:visible="false" />
-            <item
-                android:id="@+id/nav_bank_account"
-                android:icon="@drawable/ic_account_balance_black_24dp"
-                android:title="@string/link_bank_account" />
-            <item
-                android:id="@+id/nav_request_money"
-                android:icon="@drawable/ic_transfer_within_a_station_black_24dp"
-                android:title="@string/request_money" />
-            <item
-                android:id="@+id/nav_request_recommendation"
-                android:icon="@drawable/ic_fingerprint_black_24dp"
-                android:title="@string/request_recommendation" />
-            <item
-                android:id="@+id/nav_event"
-                android:icon="@drawable/ic_event_black_24dp"
-                android:title="@string/events"
-                android:visible="false" />
-            <item
-                android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_power_settings_new_black_24dp"
-                android:title="@string/logout" />
-        </menu>
-    </item>
 
 </menu>
