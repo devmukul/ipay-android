@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -209,23 +210,24 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
 
             final CharSequence[] numbers = getNameAndPhoneList(data.getData());
             int size = numbers.length;
-            if (size < 1)
+            if (size < 1) {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.account_type_business,
+                    Toast.makeText(getActivity(), R.string.no_contact_selected,
                             Toast.LENGTH_LONG).show();
-                else if (size == 1) {
-                    mMobileNumberEditText.setText(numbers[0].toString().replaceAll("\\D", ""));
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getString(R.string.pick_a_number));
-                    builder.setItems(numbers, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mMobileNumberEditText.setText(numbers[which]);
-                        }
-                    });
-                    builder.show();
-                }
+            }
+            else if (size == 1) {
+                mMobileNumberEditText.setText(numbers[0].toString().replaceAll("\\D", ""));
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getString(R.string.pick_a_number));
+                builder.setItems(numbers, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mMobileNumberEditText.setText(numbers[which]);
+                    }
+                });
+                builder.show();
+            }
         } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
