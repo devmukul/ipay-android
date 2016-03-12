@@ -16,6 +16,7 @@
     <dimen name="value25">25.0dip</dimen>
     <dimen name="value30">30.0dip</dimen>
     <dimen name="value10">10.0dip</dimen>
+    <dimen name="value2">2dp</dimen>
     <dimen name="value5">5.0dip</dimen>
     <dimen name="spacing_xsmall">2dp</dimen>
     <dimen name="spacing_medium">8dp</dimen>

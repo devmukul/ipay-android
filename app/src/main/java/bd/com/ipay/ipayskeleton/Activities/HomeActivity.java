@@ -143,8 +143,6 @@ public class HomeActivity extends AppCompatActivity
         super.onResume();
         getProfileInfo();
         // TODO: refresh balance in the navigation drawer here
-        // TODO: check if the replace fragment crashes sometimes or not
-//        getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
     }
 
     @Override

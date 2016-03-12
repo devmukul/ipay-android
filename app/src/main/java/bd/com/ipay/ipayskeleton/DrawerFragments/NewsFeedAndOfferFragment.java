@@ -151,7 +151,6 @@ public class NewsFeedAndOfferFragment extends Fragment implements HttpResponseLi
             ImageView mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
             TextView mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
             TextView mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
-            Button mmButtonReadMore = (Button) itemView.findViewById(R.id.read_more);
 
             final long newsID = newsFeedResponsesList.get(pos).getId();
             final String description = newsFeedResponsesList.get(pos).getDescription();

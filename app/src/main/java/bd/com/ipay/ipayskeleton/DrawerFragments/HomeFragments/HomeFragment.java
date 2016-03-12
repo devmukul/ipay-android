@@ -14,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +40,6 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -59,7 +58,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import link.fls.swipestack.SwipeStack;
 
-public class HomeFragment extends Fragment implements HttpResponseListener, SwipeStack.SwipeStackListener {
+public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private RefreshBalanceResponse mRefreshBalanceResponse;
@@ -79,35 +78,28 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
     private String userID;
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
-    //    private RecyclerView mNewsFeedRecyclerView;
     private NewsFeedAdapter mNewsFeedAdapter;
     public static List<News> newsFeedResponsesList;
     private int itemsRemoved = 0;
 
     private ImageView refreshBalanceButton;
 //    private SwipeRefreshLayout mSwipeRefreshLayout;
-//    private RecyclerView.LayoutManager mNewsFeedLayoutManager;
 
-    private View mSendMoneyButtonView;
-    private View mRequestMoneyView;
-    private View mMakePaymentButtonView;
+    private RelativeLayout mSendMoneyButtonView;
+    private RelativeLayout mRequestMoneyView;
+    private RelativeLayout mMakePaymentButtonView;
 
     private Button mAddMoneyButton;
     private Button mWithdrawMoneyButton;
 
-    private Button mShowAllTransactionButton;
-
-    private View transactionView;
     private String[] transactionHistoryTypes;
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
 
-    private SwipeStack swipeStack;
-
     private int pageCount = 0;
-    private boolean hasNext = false;
+    private boolean hasNextNews = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,10 +134,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
         else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
             makePaymentLabel.setText(getString(R.string.create_invoice));
 
-        mSendMoneyButtonView = v.findViewById(R.id.layout_send_money);
-        mRequestMoneyView = v.findViewById(R.id.layout_request_money);
-        mMakePaymentButtonView = v.findViewById(R.id.layout_make_payment);
-        swipeStack = (SwipeStack) v.findViewById(R.id.swipeStack);
+        mSendMoneyButtonView = (RelativeLayout) v.findViewById(R.id.layout_send_money);
+        mRequestMoneyView = (RelativeLayout) v.findViewById(R.id.layout_request_money);
+        mMakePaymentButtonView = (RelativeLayout) v.findViewById(R.id.layout_make_payment);
 
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
@@ -156,24 +147,15 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
         mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
 
-        transactionView = v.findViewById(R.id.layout_transaction);
         transactionHistoryTypes = getResources().getStringArray(R.array.transaction_types);
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
-        mShowAllTransactionButton = (Button) v.findViewById(R.id.button_show_all_transactions);
 
 
-//        mNewsFeedLayoutManager = new LinearLayoutManager(getActivity());
         mNewsFeedAdapter = new NewsFeedAdapter();
-        swipeStack.setAdapter(mNewsFeedAdapter);
-        swipeStack.setListener(this);
-//        mNewsFeedRecyclerView.setLayoutManager(mNewsFeedLayoutManager);
-//        mNewsFeedRecyclerView.setAdapter(mNewsFeedAdapter);
-
         mTransactionHistoryLayoutManager = new LinearLayoutManager(getActivity());
         mTransactionHistoryAdapter = new TransactionHistoryAdapter();
         mTransactionHistoryRecyclerView.setLayoutManager(mTransactionHistoryLayoutManager);
         mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
-        mTransactionHistoryRecyclerView.setNestedScrollingEnabled(false);
 
         refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +172,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
 
             // Check if the news feed is already cleared or not
             if (!HomeActivity.newsFeedLoadedOnce) getNewsFeed();
-            else if (newsFeedResponsesList.size() == 0) swipeStack.setVisibility(View.GONE);
 
             getTransactionHistory();
         }
@@ -211,6 +192,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
             showAlertDialogueForAddTrustedDevice();
         }
 
+        setButtonActions();
+
+        return v;
+    }
+
+    private void setButtonActions() {
         mSendMoneyButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,17 +237,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                 startActivity(intent);
             }
         });
-
-        mShowAllTransactionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new TransactionHistoryFragment()).commit();
-                ((HomeActivity) getActivity()).switchedToHomeFragment = false;
-            }
-        });
-
-        return v;
     }
 
     private void refreshBalance() {
@@ -345,21 +321,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
     }
 
     @Override
-    public void onViewSwipedToLeft(int position) {
-        itemsRemoved++;
-    }
-
-    @Override
-    public void onViewSwipedToRight(int position) {
-        itemsRemoved++;
-    }
-
-    @Override
-    public void onStackEmpty() {
-        swipeStack.setVisibility(View.GONE);
-    }
-
-    @Override
     public void httpResponseReceiver(String result) {
 
         if (result == null) {
@@ -420,8 +381,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                         }
 
                         HomeActivity.newsFeedLoadedOnce = true;
-                        hasNext = mGetNewsFeedResponse.isHasNext();
+                        hasNextNews = mGetNewsFeedResponse.isHasNext();
                         mNewsFeedAdapter.notifyDataSetChanged();
+                        mTransactionHistoryAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -474,19 +436,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                         userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
                                 0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
 
-                        int transactionHistoryRowHeight =
-                                (int) (getResources().getDimension(R.dimen.list_item_transaction_history_height));
-                        mTransactionHistoryRecyclerView.getLayoutParams().height =
-                                transactionHistoryRowHeight * userTransactionHistoryClasses.size();
+                        mTransactionHistoryAdapter.notifyDataSetChanged();
 
-                        if (!userTransactionHistoryClasses.isEmpty()) {
-                            transactionView.setVisibility(View.VISIBLE);
-                            mTransactionHistoryAdapter.notifyDataSetChanged();
-
-                            if (mTransactionHistoryResponse.getTransactions().size() > userTransactionHistoryClasses.size()) {
-                                mShowAllTransactionButton.setVisibility(View.VISIBLE);
-                            }
-                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
@@ -532,11 +483,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
         public NewsFeedAdapter() {
         }
 
-        public void removeFromQueue() {
-            newsFeedResponsesList.remove(0);
-            notifyDataSetChanged();
-        }
-
         @Override
         public int getCount() {
             if (newsFeedResponsesList != null)
@@ -561,7 +507,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
             ImageView mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
             TextView mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
             TextView mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
-            Button mmButtonReadMore = (Button) itemView.findViewById(R.id.read_more);
 
             final long newsID = newsFeedResponsesList.get(pos).getId();
             final String description = newsFeedResponsesList.get(pos).getDescription();
@@ -583,202 +528,45 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
         }
     }
 
-//    public class NewsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-//
-//        private static final int FOOTER_VIEW = 1;
-//
-//        public NewsFeedAdapter() {
-//        }
-//
-//        public class ViewHolder extends RecyclerView.ViewHolder {
-//            private ImageView mNewsImage;
-//            private TextView mNewsHeadLine;
-//            private TextView mNewsSubDescription;
-//            private TextView loadMoreTextView;
-//            private Button mmButtonReadMore;
-//
-//            public ViewHolder(final View itemView) {
-//                super(itemView);
-//
-//                mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
-//                mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
-//                mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
-//                mmButtonReadMore = (Button) itemView.findViewById(R.id.read_more);
-//                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-//            }
-//
-//            public void bindView(int pos) {
-//
-//                final long newsID = newsFeedResponsesList.get(pos).getId();
-//                final String description = newsFeedResponsesList.get(pos).getDescription();
-//                final String title = newsFeedResponsesList.get(pos).getTitle();
-//                final String subDescription = newsFeedResponsesList.get(pos).getSubDescription();
-//                final String imageUrl = newsFeedResponsesList.get(pos).getImageUrl();
-//                final String imageUrlThumbnail = newsFeedResponsesList.get(pos).getImageThumbnailUrl();
-//
-//                if (title != null) mNewsHeadLine.setText(title);
-//                if (subDescription != null) mNewsSubDescription.setText(subDescription);
-//
-//                if (imageUrl != null) Glide.with(getActivity())
-//                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
-//                        .crossFade()
-//                        .placeholder(R.drawable.dummy)
-//                        .into(mNewsImage);
-//
-//                mmButtonReadMore.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        final Intent intent = new Intent(getActivity(), DetailsNewsActivity.class);
-//
-//                        if (title != null)
-//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_TITLE, title);
-//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_TITLE, "");
-//
-//                        if (description != null)
-//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_DESCRIPTION, description);
-//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_DESCRIPTION, "");
-//
-//                        if (subDescription != null)
-//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_SUB_DESCRIPTION, subDescription);
-//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_SUB_DESCRIPTION, "");
-//
-//                        if (imageUrl != null)
-//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_FULL, Constants.BASE_URL_IMAGE_SERVER + imageUrl);
-//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_FULL, "");
-//
-//                        if (imageUrlThumbnail != null)
-//                            intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_THUMBNAIL, Constants.BASE_URL_IMAGE_SERVER + imageUrlThumbnail);
-//                        else intent.putExtra(DetailsNewsActivity.EXTRA_PARAM_IMAGE_THUMBNAIL, "");
-//
-//                        Pair<View, String> p1 = Pair.create((View) mNewsImage, getString(R.string.transition_image));
-//                        Pair<View, String> p2 = Pair.create((View) mNewsHeadLine, getString(R.string.transition_title));
-//                        Pair<View, String> p3 = Pair.create((View) mNewsSubDescription, getString(R.string.transition_sub_title));
-//
-//                        ActivityOptionsCompat options = ActivityOptionsCompat.
-//                                makeSceneTransitionAnimation(getActivity(), p1, p2, p3);
-//
-//                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//                            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-//                        } else startActivity(intent);
-//
-//                    }
-//                });
-//            }
-//
-//            public void bindViewFooter(int pos) {
-//                if (hasNext) loadMoreTextView.setText(R.string.load_more);
-//                else loadMoreTextView.setText(R.string.no_more_results);
-//            }
-//        }
-//
-//        public class FooterViewHolder extends ViewHolder {
-//            public FooterViewHolder(View itemView) {
-//                super(itemView);
-//                itemView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (hasNext) {
-//                            pageCount = pageCount + 1;
-//                            getNewsFeed();
-//                        }
-//                    }
-//                });
-//
-//                TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-//                if (hasNext) loadMoreTextView.setText(R.string.load_more);
-//                else loadMoreTextView.setText(R.string.no_more_results);
-//            }
-//        }
-//
-//        // Now define the viewholder for Normal list item
-//        public class NormalViewHolder extends ViewHolder {
-//            public NormalViewHolder(View itemView) {
-//                super(itemView);
-//
-//                itemView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        // Do whatever you want on clicking the normal items
-//                    }
-//                });
-//            }
-//        }
-//
-//        @Override
-//        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//
-//            View v;
-//
-//            if (viewType == FOOTER_VIEW) {
-//                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
-//
-//                FooterViewHolder vh = new FooterViewHolder(v);
-//
-//                return vh;
-//            }
-//
-//            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_news_feed, parent, false);
-//
-//            NormalViewHolder vh = new NormalViewHolder(v);
-//
-//            return vh;
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-//            try {
-//                if (holder instanceof NormalViewHolder) {
-//                    NormalViewHolder vh = (NormalViewHolder) holder;
-//                    vh.bindView(position);
-//                } else if (holder instanceof FooterViewHolder) {
-//                    FooterViewHolder vh = (FooterViewHolder) holder;
-//                    vh.bindViewFooter(position);
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            if (newsFeedResponsesList != null)
-//                return newsFeedResponsesList.size() + 1;
-//            else return 0;
-//        }
-//
-//        @Override
-//        public int getItemViewType(int position) {
-//
-//            if (position == newsFeedResponsesList.size()) {
-//                // This is where we'll add footer.
-//                return FOOTER_VIEW;
-//            }
-//
-//            return super.getItemViewType(position);
-//        }
-//    }
+    private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final int FOOTER_VIEW = 1;
+        private static final int HEADER_VIEW = 2;
 
-        public class TransactionHistoryViewHolder extends RecyclerView.ViewHolder {
+        public class TransactionHistoryViewHolder extends RecyclerView.ViewHolder implements SwipeStack.SwipeStackListener {
             private View mItemView;
 
-            private TextView mTransactionType;
             private TextView mTransactionDescription;
             private TextView mTime;
-//            private TextView mOtherUserName;
             private TextView mPurposeView;
             private RoundedImageView mPortrait;
             private TextView mAmountTextView;
             private ImageView statusView;
+            private TextView whatNewTextViewHeader;
+
+            private SwipeStack swipeStack;
+
+            @Override
+            public void onViewSwipedToLeft(int position) {
+                itemsRemoved++;
+            }
+
+            @Override
+            public void onViewSwipedToRight(int position) {
+                itemsRemoved++;
+            }
+
+            @Override
+            public void onStackEmpty() {
+                swipeStack.setVisibility(View.GONE);
+                whatNewTextViewHeader.setVisibility(View.GONE);
+            }
 
             public TransactionHistoryViewHolder(final View itemView) {
                 super(itemView);
 
                 mItemView = itemView;
 
-                mTransactionType = (TextView) itemView.findViewById(R.id.transaction_type);
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
 //                mOtherUserName = (TextView) itemView.findViewById(R.id.otherUserName);
                 mTime = (TextView) itemView.findViewById(R.id.time);
@@ -786,9 +574,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+
+                // Views for news feed
+                swipeStack = (SwipeStack) itemView.findViewById(R.id.swipeStack);
+                whatNewTextViewHeader = (TextView) itemView.findViewById(R.id.whats_new_text);
             }
 
             public void bindView(int pos) {
+
+                // Decrease pos by 1 as there is a header view now.
+                pos = pos - 1;
+
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(userName);
 
                 int index = 0;
@@ -800,18 +596,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                 String type = transactionHistoryTypes[index];
                 String description = userTransactionHistoryClasses.get(pos).getDescription(userName);
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
-                mTransactionType.setText(type);
 
                 // Handle debit credit
                 if (amount > 0)
                     mAmountTextView.setText("+" + String.format("%.2f", amount));
                 else
                     mAmountTextView.setText(String.format("%.2f", amount));
-
-//                if (userTransactionHistoryClasses.get(pos).getOtherUserName() != null)
-//                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherUserName());
-//                else
-//                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getReceiverInfo());
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
@@ -838,15 +628,58 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
                         .into(mPortrait);
             }
 
+            public void bindViewFooter(int pos) {
+                if (newsFeedResponsesList.size() == 0) {
+                    swipeStack.setVisibility(View.GONE);
+                    whatNewTextViewHeader.setVisibility(View.GONE);
+                } else {
+                    swipeStack.setAdapter(mNewsFeedAdapter);
+                    swipeStack.setListener(this);
+                }
+            }
+
             public View getItemView() {
                 return mItemView;
             }
         }
 
+        public class HeaderViewHolder extends TransactionHistoryViewHolder {
+            public HeaderViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        public class FooterViewHolder extends TransactionHistoryViewHolder {
+            public FooterViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        // Now define the viewholder for Normal list item
+        public class NormalViewHolder extends TransactionHistoryViewHolder {
+            public NormalViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
-            TransactionHistoryViewHolder vh = new TransactionHistoryViewHolder(v);
+
+            View v;
+
+            if (viewType == FOOTER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_footer_news_feed_swipestack, parent, false);
+                FooterViewHolder vh = new FooterViewHolder(v);
+                return vh;
+
+            } else if (viewType == HEADER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_header_transaction_histories, parent, false);
+                HeaderViewHolder vh = new HeaderViewHolder(v);
+                return vh;
+            }
+
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
+            NormalViewHolder vh = new NormalViewHolder(v);
 
             return vh;
         }
@@ -854,8 +687,15 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             try {
-                TransactionHistoryViewHolder vh = (TransactionHistoryViewHolder) holder;
-                vh.bindView(position);
+                if (holder instanceof NormalViewHolder) {
+                    NormalViewHolder vh = (NormalViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof FooterViewHolder) {
+                    FooterViewHolder vh = (FooterViewHolder) holder;
+                    vh.bindViewFooter(position);
+                } else if (holder instanceof HeaderViewHolder) {
+                    HeaderViewHolder vh = (HeaderViewHolder) holder;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -863,13 +703,26 @@ public class HomeFragment extends Fragment implements HttpResponseListener, Swip
 
         @Override
         public int getItemCount() {
-            if (userTransactionHistoryClasses != null)
-                return userTransactionHistoryClasses.size();
+            if (userTransactionHistoryClasses != null && newsFeedResponsesList != null)
+                return userTransactionHistoryClasses.size() + 2;
+            else if (userTransactionHistoryClasses != null && newsFeedResponsesList == null)
+                return userTransactionHistoryClasses.size() + 1;
+            else if (userTransactionHistoryClasses == null && newsFeedResponsesList != null)
+                return 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
+
+            if (userTransactionHistoryClasses == null && newsFeedResponsesList != null) {
+                return FOOTER_VIEW;
+            } else if (position == userTransactionHistoryClasses.size() + 1) {
+                return FOOTER_VIEW;
+            } else if (position == 0) {
+                return HEADER_VIEW;
+            }
+
             return super.getItemViewType(position);
         }
     }
