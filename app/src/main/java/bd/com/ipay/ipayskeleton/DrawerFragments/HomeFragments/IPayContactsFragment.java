@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class IPayContactsFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, HttpResponseListener {
+        LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener, HttpResponseListener {
 
     private static final int CONTACTS_QUERY_LOADER = 0;
 
@@ -65,6 +66,10 @@ public class IPayContactsFragment extends Fragment implements
     // So saving these in these two variables.
     private String mSelectedName;
     private String mSelectedNumber;
+
+    // Contacts will be filtered base on this field.
+    // It will be populated when the user types in the search bar.
+    private String mQuery = "";
 
     private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
     private AskForRecommendationResponse mAskForRecommendationResponse;
@@ -227,17 +232,29 @@ public class IPayContactsFragment extends Fragment implements
     }
 
     @Override
+    public boolean onQueryTextSubmit(String query) {
+        mQuery = query;
+        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mQuery = newText;
+        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
+
+        return true;
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new SQLiteCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
                 Cursor cursor = null;
                 try {
-                    try {
-                        cursor = DataHelper.getInstance(getActivity()).getSubscribers();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    cursor = DataHelper.getInstance(getActivity()).searchSubscribers(mQuery);
 
                     if (cursor != null) {
                         cursor.getCount();

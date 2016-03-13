@@ -80,8 +80,9 @@ public class AllContactsFragment extends Fragment implements
     private String mSelectedName;
     private String mSelectedNumber;
 
-    // Filter contacts based on this field
-    private String mFilterConstraint;
+    // Contacts will be filtered base on this field.
+    // It will be populated when the user types in the search bar.
+    private String mQuery = "";
 
     private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private GetInviteInfoResponse mGetInviteInfoResponse;
@@ -325,6 +326,22 @@ public class AllContactsFragment extends Fragment implements
     }
 
     @Override
+    public boolean onQueryTextSubmit(String query) {
+        mQuery = query;
+        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mQuery = newText;
+        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
+
+        return true;
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         try {
             Cursor cursor = DataHelper.getInstance(getActivity()).getSubscribers();
@@ -365,7 +382,7 @@ public class AllContactsFragment extends Fragment implements
         final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
-        String[] selectionArgs = {mFilterConstraint};
+        String[] selectionArgs = {mQuery};
 
         return new CursorLoader(
                 getActivity(),
@@ -469,16 +486,6 @@ public class AllContactsFragment extends Fragment implements
             mGetInviteInfoTask = null;
         }
 
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
     }
 
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

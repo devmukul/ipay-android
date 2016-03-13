@@ -70,6 +70,27 @@ public class DataHelper {
         return cursor;
     }
 
+    public Cursor searchSubscribers(String query) {
+        Cursor cursor = null;
+
+        try {
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
+            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
+
+            cursor = db.rawQuery("SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS
+                    + " WHERE " + DBConstants.KEY_NAME + " LIKE %?%", new String[]{query});
+
+            if (cursor != null) {
+                cursor.getCount();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cursor;
+    }
+
     public boolean checkIfStringFieldExists(String tableName,
                                             String DBField, String fieldValue) {
         SQLiteDatabase db = null;
