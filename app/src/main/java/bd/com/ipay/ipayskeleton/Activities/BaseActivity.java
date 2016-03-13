@@ -21,6 +21,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -85,6 +87,26 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         stopDisconnectTimer();
     }
 
+    public void refreshToken() {
+        if (HomeActivity.mRefreshTokenAsyncTask != null) {
+            HomeActivity.mRefreshTokenAsyncTask.cancel(true);
+            HomeActivity.mRefreshTokenAsyncTask = null;
+        }
+
+        GetRefreshTokenRequest mGetRefreshTokenRequest = new GetRefreshTokenRequest(HomeActivity.iPayRefreshToken);
+        Gson gson = new Gson();
+        String json = gson.toJson(mGetRefreshTokenRequest);
+        HomeActivity.mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_TOKEN,
+                Constants.BASE_URL_POST_MM + Constants.URL_GET_REFRESH_TOKEN, json, context);
+        HomeActivity.mRefreshTokenAsyncTask.mHttpResponseListener = this;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            HomeActivity.mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            HomeActivity.mRefreshTokenAsyncTask.execute((Void) null);
+        }
+    }
+
     private void attemptLogout() {
         if (mLogoutTask != null) {
             return;
@@ -118,7 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         if (result == null) {
             mProgressDialog.dismiss();
             mLogoutTask = null;
-            Toast.makeText(context, R.string.logout_failed, Toast.LENGTH_LONG).show();
+            HomeActivity.mRefreshTokenAsyncTask = null;
             return;
         }
 
@@ -147,6 +169,36 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
 
             mProgressDialog.dismiss();
             mLogoutTask = null;
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_REFRESH_TOKEN)) {
+
+            try {
+                if (resultList.size() > 2) {
+                    HomeActivity.mGetRefreshTokenResponse = gson.fromJson(resultList.get(2), GetRefreshTokenResponse.class);
+
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+
+                    } else {
+                        Toast.makeText(context, HomeActivity.mGetRefreshTokenResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        finish();
+                        Intent intent = new Intent(context, SignupOrLoginActivity.class);
+                        startActivity(intent);
+                    }
+                } else {
+                    Toast.makeText(context, R.string.please_login_again, Toast.LENGTH_LONG).show();
+                    finish();
+                    Intent intent = new Intent(context, SignupOrLoginActivity.class);
+                    startActivity(intent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(context, R.string.please_login_again, Toast.LENGTH_LONG).show();
+                finish();
+                Intent intent = new Intent(context, SignupOrLoginActivity.class);
+                startActivity(intent);
+            }
+
+            HomeActivity.mRefreshTokenAsyncTask = null;
 
         }
     }

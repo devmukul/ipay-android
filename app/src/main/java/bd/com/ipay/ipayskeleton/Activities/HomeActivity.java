@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -50,6 +51,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -61,6 +63,9 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
+
+    public static HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
+    public static GetRefreshTokenResponse mGetRefreshTokenResponse;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
@@ -76,7 +81,10 @@ public class HomeActivity extends BaseActivity
     private NavigationView mNavigationView;
 
     public static String iPayToken = "";
+    public static String iPayRefreshToken = "";
     public static boolean newsFeedLoadedOnce = false;
+    public static CountDownTimer tokenTimer;
+    public static long iPayTokenTimeInMs = 60000;  // By default this is one minute
 
     public boolean switchedToHomeFragment = true;
 
@@ -92,6 +100,17 @@ public class HomeActivity extends BaseActivity
         mProgressDialog.setMessage(getString(R.string.progress_dialog_refreshing));
         profilePictures = new HashSet<>();
         Firebase.setAndroidContext(this);
+
+        // Initialize token timer
+        tokenTimer = new CountDownTimer(iPayTokenTimeInMs, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                refreshToken();
+            }
+        }.start();
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 

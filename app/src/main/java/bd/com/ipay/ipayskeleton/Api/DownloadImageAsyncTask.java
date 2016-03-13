@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.Header;
@@ -69,10 +70,15 @@ public class DownloadImageAsyncTask extends AsyncTask<Void, Void, String> {
                 for (Header header : headers) {
                     if (header.getName().equals(Constants.TOKEN)) {
                         HomeActivity.iPayToken = header.getValue();
-                        break;
-                    } else if (header.getName().equals(Constants.NEW_TOKEN)) {
-                        HomeActivity.iPayToken = header.getValue();
-                        break;
+                        HomeActivity.iPayTokenTimeInMs = Utilities.getTimeFromBase64Token(HomeActivity.iPayToken);
+
+                        if (HomeActivity.tokenTimer != null) {
+                            HomeActivity.tokenTimer.cancel();
+                            HomeActivity.tokenTimer.start();
+                        }
+                    } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
+                        HomeActivity.iPayRefreshToken = header.getValue();
+                        Log.d(Constants.REFRESH_TOKEN, HomeActivity.iPayRefreshToken);
                     }
                 }
             }

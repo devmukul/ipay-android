@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -76,10 +77,15 @@ public class DownloadProfilePictureGetAsyncTask extends AsyncTask<Void, Void, St
                 for (Header header : headers) {
                     if (header.getName().equals(Constants.TOKEN)) {
                         HomeActivity.iPayToken = header.getValue();
-                        break;
-                    } else if (header.getName().equals(Constants.NEW_TOKEN)) {
-                        HomeActivity.iPayToken = header.getValue();
-                        break;
+                        HomeActivity.iPayTokenTimeInMs = Utilities.getTimeFromBase64Token(HomeActivity.iPayToken);
+
+                        if (HomeActivity.tokenTimer != null) {
+                            HomeActivity.tokenTimer.cancel();
+                            HomeActivity.tokenTimer.start();
+                        }
+                    } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
+                        HomeActivity.iPayRefreshToken = header.getValue();
+                        Log.d(Constants.REFRESH_TOKEN, HomeActivity.iPayRefreshToken);
                     }
                 }
             }

@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -18,15 +20,21 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
 
 public class Utilities {
 
@@ -153,6 +161,29 @@ public class Utilities {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static long getTimeFromBase64Token(String base64) {
+
+        long timeForTokenExpiration = 0;
+
+        // Token divided in three parts. Middle portion of the token contains expiration time
+        String[] tokensArray = base64.split("\\.");
+        base64 = tokensArray[1];
+        byte[] data = Base64.decode(base64, Base64.DEFAULT);
+        try {
+            String parsedToken = new String(data, "UTF-8");
+            Log.d(Constants.PARSED_TOKEN, Constants.PARSED_TOKEN + parsedToken);
+            Gson gson = new Gson();
+            TokenParserClass mTokenParserClass = gson.fromJson(parsedToken, TokenParserClass.class);
+
+            // Returns time is second. Multiply by 1000 to get the time in milli-seconds
+            timeForTokenExpiration = (mTokenParserClass.getExp() - mTokenParserClass.getIat()) * 1000;
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return timeForTokenExpiration;
     }
 
     public static String getFilePath(Context context, Uri uri) {

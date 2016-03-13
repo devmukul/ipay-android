@@ -7,7 +7,7 @@ public class Constants {
     public static final String GENDER_MALE = "M";
     public static final String GENDER_FEMALE = "F";
     public static final String TOKEN = "token";
-    public static final String NEW_TOKEN = "New-Token";
+    public static final String REFRESH_TOKEN = "refresh-token";
     public static final String USERNAME = "USERNAME";
     public static final String EMAIL = "EMAIL";
     public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
@@ -57,7 +57,7 @@ public class Constants {
     // Server Type 1 -> dev server
     // Server Type 2 -> staging server
     // Server Type 3 -> release server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -160,6 +160,7 @@ public class Constants {
     public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
     public static final String URL_GET_INVITE_INFO = "settings/invitations";
     public static final String URL_SEND_INVITE = "settings/invitations";
+    public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
 
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
@@ -178,6 +179,7 @@ public class Constants {
     public static final int BANK_ACCOUNT_STATUS_DELETED = 2;
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
+    public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
     public static final String COMMAND_SIGN_UP = "COMMAND_SIGN_UP";
     public static final String COMMAND_SIGN_UP_BUSINESS = "COMMAND_SIGN_UP_BUSINESS";
     public static final String COMMAND_LOG_IN = "COMMAND_LOG_IN";
@@ -291,5 +293,7 @@ public class Constants {
     public static final String POST_REQUEST = "POST_RESULT: ";
     public static final String GET_REQUEST = "GET_RESULT: ";
     public static final String GET_URL = "GET_URL: ";
+
+    public static final String PARSED_TOKEN = "Parsed Token: ";
 
 }

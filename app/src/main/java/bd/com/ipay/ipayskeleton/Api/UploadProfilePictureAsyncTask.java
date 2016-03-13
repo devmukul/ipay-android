@@ -82,7 +82,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, String>
             HttpPost post = new HttpPost(Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_PICTURE);
 
             if (HomeActivity.iPayToken.length() > 0)
-                post.setHeader("token", HomeActivity.iPayToken);
+                post.setHeader(Constants.TOKEN, HomeActivity.iPayToken);
             MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,
                     Constants.BOUNDARY, Charset.defaultCharset());
 
