@@ -444,14 +444,12 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
                 message = getString(R.string.server_down);
             }
 
-            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_ACCEPTED)) {
+            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
             } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST)) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
-
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
