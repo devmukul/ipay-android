@@ -9,10 +9,14 @@ import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -95,6 +99,12 @@ public class IPayContactsFragment extends Fragment implements
             R.color.background_yellow,
             R.color.background_azure
     };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -221,6 +231,20 @@ public class IPayContactsFragment extends Fragment implements
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.contact, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
     }
@@ -233,16 +257,13 @@ public class IPayContactsFragment extends Fragment implements
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        mQuery = query;
-        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
-
-        return true;
+        return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         mQuery = newText;
-        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
+        getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
         return true;
     }

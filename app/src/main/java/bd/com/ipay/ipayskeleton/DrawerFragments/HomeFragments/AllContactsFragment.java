@@ -16,6 +16,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -118,6 +119,12 @@ public class AllContactsFragment extends Fragment implements
     };
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -194,7 +201,6 @@ public class AllContactsFragment extends Fragment implements
         });
 
         mRecyclerView.setAdapter(mAdapter);
-        setHasOptionsMenu(true);
         getInviteInfo();
 
         return v;
@@ -327,16 +333,13 @@ public class AllContactsFragment extends Fragment implements
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        mQuery = query;
-        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
-
-        return true;
+        return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         mQuery = newText;
-        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
+        getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
         return true;
     }
@@ -378,24 +381,25 @@ public class AllContactsFragment extends Fragment implements
         }
         final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1"
                 + " AND " + ContactsContract.Contacts.DISPLAY_NAME
-                + " LIKE %?%";
+                + " LIKE '%" + mQuery + "%'";
+        Log.e("Query", selection);
         final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
-        String[] selectionArgs = {mQuery};
 
         return new CursorLoader(
                 getActivity(),
                 queryUri,
                 projection,
                 selection,
-                selectionArgs,
+                null,
                 order
         );
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.e("Count", data.getCount() + "");
         mAdapter.swapCursor(data);
     }
 
