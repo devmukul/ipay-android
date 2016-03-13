@@ -39,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragment;
@@ -156,7 +156,7 @@ public class HomeActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_contacts:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new ContactsFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new ContactsHolderFragment()).commit();
                 switchedToHomeFragment = false;
                 return true;
             case R.id.action_transaction:
