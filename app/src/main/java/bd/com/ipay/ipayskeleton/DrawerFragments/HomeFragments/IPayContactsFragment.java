@@ -168,7 +168,6 @@ public class IPayContactsFragment extends Fragment implements
         });
 
         mRecyclerView.setAdapter(miPayAdapter);
-        setHasOptionsMenu(true);
 
         return v;
     }
@@ -258,7 +257,7 @@ public class IPayContactsFragment extends Fragment implements
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        return true;
     }
 
     @Override

@@ -121,7 +121,7 @@ public class AllContactsFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -333,7 +333,7 @@ public class AllContactsFragment extends Fragment implements
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        return true;
     }
 
     @Override
