@@ -288,7 +288,8 @@ public class Constants {
 
     public static final boolean DEBUG = true;
     public static final String RESULT = "Result";
-    public static final String POST_REQUEST = "POST_REQUEST";
-    public static final String GET_URL = "POST_REQUEST";
+    public static final String POST_REQUEST = "POST_RESULT: ";
+    public static final String GET_REQUEST = "GET_RESULT: ";
+    public static final String GET_URL = "GET_URL: ";
 
 }

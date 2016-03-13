@@ -59,7 +59,7 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
         if (Utilities.isConnectionAvailable(mContext))
             mHttpResponse = makeRequest(mUri);
         else
-            Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
 
         InputStream inputStream = null;
         String result = null;
@@ -109,9 +109,9 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(final String result) {
         if (Constants.DEBUG) {
             if (result == null)
-                Log.e("Result", "NULL");
+                Log.e(Constants.RESULT, "NULL");
             else
-                Log.w("Result", result);
+                Log.w(Constants.RESULT, Constants.GET_REQUEST + result);
         }
 
         if (result != null) {
