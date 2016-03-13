@@ -12,9 +12,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -55,7 +60,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
 public class AllContactsFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, HttpResponseListener {
+        LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener, HttpResponseListener {
 
     private static final int CONTACTS_QUERY_LOADER = 0;
 
@@ -74,6 +79,9 @@ public class AllContactsFragment extends Fragment implements
     // So saving these in these two variables.
     private String mSelectedName;
     private String mSelectedNumber;
+
+    // Filter contacts based on this field
+    private String mFilterConstraint;
 
     private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private GetInviteInfoResponse mGetInviteInfoResponse;
@@ -185,9 +193,24 @@ public class AllContactsFragment extends Fragment implements
         });
 
         mRecyclerView.setAdapter(mAdapter);
+        setHasOptionsMenu(true);
         getInviteInfo();
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.contact, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     private void getInviteInfo() {
@@ -336,20 +359,22 @@ public class AllContactsFragment extends Fragment implements
                     ContactsContract.Contacts.DISPLAY_NAME,
                     ContactsContract.Contacts.PHOTO_ID};
         }
-        final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1";
+        final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1"
+                + " AND " + ContactsContract.Contacts.DISPLAY_NAME
+                + " LIKE %?%";
         final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
 
-                Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
-                String[] selectionArgs = null;
+        Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
+        String[] selectionArgs = {mFilterConstraint};
 
-                return new CursorLoader(
-                        getActivity(),
-                        queryUri,
-                        projection,
-                        selection,
-                        null,
-                        order
-                );
+        return new CursorLoader(
+                getActivity(),
+                queryUri,
+                projection,
+                selection,
+                selectionArgs,
+                order
+        );
     }
 
     @Override
@@ -444,6 +469,16 @@ public class AllContactsFragment extends Fragment implements
             mGetInviteInfoTask = null;
         }
 
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
