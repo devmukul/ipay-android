@@ -53,7 +53,7 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         if (Constants.DEBUG) {
-            Log.w("uri", mUri);
+            Log.w(Constants.GET_URL, mUri);
         }
 
         if (Utilities.isConnectionAvailable(mContext))
@@ -123,7 +123,7 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
                     try {
                         Gson gson = new Gson();
                         message = gson.fromJson(resultList.get(2), LoginResponse.class).getMessage();
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

@@ -114,9 +114,9 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(final String result) {
         if (Constants.DEBUG) {
             if (result == null)
-                Log.e("Result", "NULL");
+                Log.e(Constants.RESULT, "NULL");
             else
-                Log.w("Result", result);
+                Log.w(Constants.RESULT, Constants.POST_REQUEST + result);
         }
 
         if (result != null) {
