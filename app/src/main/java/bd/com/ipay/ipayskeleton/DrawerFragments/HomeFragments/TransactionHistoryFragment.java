@@ -158,10 +158,9 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mTransactionType;
             private TextView mTransactionDescription;
             private TextView mTime;
-//            private TextView mOtherUserName;
+            //            private TextView mOtherUserName;
             private TextView mPurposeView;
             private TextView loadMoreTextView;
             private RoundedImageView mPortrait;
@@ -171,7 +170,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                mTransactionType = (TextView) itemView.findViewById(R.id.transaction_type);
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
 //                mOtherUserName = (TextView) itemView.findViewById(R.id.otherUserName);
                 mTime = (TextView) itemView.findViewById(R.id.time);
@@ -194,7 +192,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 String type = transactionHistoryTypes[index];
                 String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
-                mTransactionType.setText(type);
 
                 // Handle debit credit
                 if (amount > 0)

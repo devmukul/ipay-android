@@ -75,8 +75,7 @@ public class Constants {
             BASE_URL_GET_EM_PORT = 8085;
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://10.10.10.10:8085/";
-        }
-        else if (SERVER_TYPE == 2) {
+        } else if (SERVER_TYPE == 2) {
             BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
 
             BASE_URL_GET_MM = "10.15.10.10";
@@ -91,8 +90,7 @@ public class Constants {
             BASE_URL_GET_EM_PORT = 8080;
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://10.15.10.10:8080/";
-        }
-        else {
+        } else {
             BASE_URL_POST_MM = "http://10.20.10.10:8080/mmweb/";
 
             BASE_URL_GET_MM = "10.20.10.10";
@@ -289,4 +287,8 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_EDUCATION = 8001;
 
     public static final boolean DEBUG = true;
+    public static final String RESULT = "Result";
+    public static final String POST_REQUEST = "POST_REQUEST";
+    public static final String GET_URL = "POST_REQUEST";
+
 }
