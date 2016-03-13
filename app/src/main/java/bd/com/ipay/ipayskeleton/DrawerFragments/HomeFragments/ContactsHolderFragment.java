@@ -63,6 +63,8 @@ public class ContactsHolderFragment extends Fragment {
     private TextView allContactsTab;
     private TextView iPayContactsTab;
 
+    private Fragment mSelectedFragment;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,14 +97,23 @@ public class ContactsHolderFragment extends Fragment {
     public void loadIPayContacts() {
         iPayContactsTab.setBackgroundResource(R.drawable.contacts_tab_selected_background);
         allContactsTab.setBackgroundResource(android.R.color.transparent);
+        mSelectedFragment = new IPayContactsFragment();
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.contact_list_container, new IPayContactsFragment()).commit();
+                .replace(R.id.contact_list_container, mSelectedFragment).commit();
     }
 
     public void loadAllContacts() {
         allContactsTab.setBackgroundResource(R.drawable.contacts_tab_selected_background);
         iPayContactsTab.setBackgroundResource(android.R.color.transparent);
+        mSelectedFragment = new AllContactsFragment();
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.contact_list_container, new AllContactsFragment()).commit();
+                .replace(R.id.contact_list_container, mSelectedFragment).commit();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (mSelectedFragment != null)
+            mSelectedFragment.setMenuVisibility(false);
     }
 }

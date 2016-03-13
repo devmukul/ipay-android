@@ -5,11 +5,13 @@
         android:id="@+id/action_contacts"
         android:icon="@drawable/ic_contacts_white_24dp"
         android:title="@string/action_contacts"
+        android:orderInCategory="10"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_transaction"
         android:icon="@drawable/ic_history_white_24dp"
         android:title="@string/action_transaction_history"
+        android:orderInCategory="11"
         app:showAsAction="always" />
 </menu>

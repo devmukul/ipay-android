@@ -168,6 +168,7 @@ public class IPayContactsFragment extends Fragment implements
         });
 
         mRecyclerView.setAdapter(miPayAdapter);
+        setHasOptionsMenu(true);
 
         return v;
     }
