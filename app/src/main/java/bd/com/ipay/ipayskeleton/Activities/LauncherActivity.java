@@ -37,7 +37,9 @@ public class LauncherActivity extends Activity {
 //            pref.edit().putString(Constants.NAME, "Samsil").commit();
 //            pref.edit().putString(Constants.BIRTHDAY, "31-11-1987").commit();
 //            pref.edit().putString(Constants.GENDER, "M").commit();
-            i = new Intent(LauncherActivity.this, HomeActivity.class);
+//            i = new Intent(LauncherActivity.this, HomeActivity.class);
+
+
             startActivity(i);
             finish();
         }
