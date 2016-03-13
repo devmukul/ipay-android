@@ -1,28 +1,27 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments;
 
 import android.app.ProgressDialog;
-import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,39 +37,32 @@ import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
-public class AllContactsFragment extends Fragment implements
+public class IPayContactsFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener, HttpResponseListener {
 
     private static final int CONTACTS_QUERY_LOADER = 0;
 
     private RecyclerView mRecyclerView;
-    private ContactListAdapter mAdapter;
+    private SubscriberListAdapter miPayAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private File dir;
 
-    //    private HashMap<String, String> subscriber = new HashMap<>();
     private boolean digitSectionViewAdded = false;
     private HashMap<String, String> subscriber = new HashMap<>();
 
@@ -85,21 +77,13 @@ public class AllContactsFragment extends Fragment implements
     // It will be populated when the user types in the search bar.
     private String mQuery = "";
 
-    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
-    private GetInviteInfoResponse mGetInviteInfoResponse;
-
     private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
     private AskForRecommendationResponse mAskForRecommendationResponse;
 
-    private HttpRequestPostAsyncTask mSendInviteTask = null;
-    private SendInviteResponse mSendInviteResponse;
-
     private ProgressDialog mProgressDialog;
 
-    private View mSheetViewNonSubscriber;
     private View mSheetViewSubscriber;
 
-    private Button mInviteButton;
     private Button mSendMoneyButton;
     private Button mRequestMoneyButton;
     private Button mAskForRecommendationButton;
@@ -134,8 +118,7 @@ public class AllContactsFragment extends Fragment implements
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ContactListAdapter();
-        mRecyclerView.setAdapter(mAdapter);
+        miPayAdapter = new SubscriberListAdapter();
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -144,20 +127,6 @@ public class AllContactsFragment extends Fragment implements
         if (!dir.exists()) dir.mkdir();
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
-
-        mSheetViewNonSubscriber = getActivity().getLayoutInflater()
-                .inflate(R.layout.sheet_view_contact_non_subscriber, null);
-        mInviteButton = (Button) mSheetViewNonSubscriber.findViewById(R.id.button_invite);
-        mInviteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBottomSheetLayout.isSheetShowing()) {
-                    mBottomSheetLayout.dismissSheet();
-                }
-
-                sendInvite(mSelectedNumber);
-            }
-        });
 
         mSheetViewSubscriber = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_subscriber, null);
@@ -200,64 +169,9 @@ public class AllContactsFragment extends Fragment implements
             }
         });
 
-        mRecyclerView.setAdapter(mAdapter);
-        getInviteInfo();
+        mRecyclerView.setAdapter(miPayAdapter);
 
         return v;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.contact, menu);
-
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void getInviteInfo() {
-        if (mGetInviteInfoTask == null) {
-            mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
-                    new GetInviteInfoRequestBuilder().getGeneratedUri(), getActivity(), this);
-            mGetInviteInfoTask.execute();
-        }
-    }
-
-    private void sendInvite(String phoneNumber) {
-        if (mGetInviteInfoResponse == null || mGetInviteInfoResponse.invitees == null) {
-            Toast.makeText(getActivity(), R.string.failed_sending_invitation,
-                    Toast.LENGTH_LONG).show();
-
-            getInviteInfo();
-            return;
-        }
-
-        int numberOfInvitees = mGetInviteInfoResponse.invitees.size();
-        if (numberOfInvitees >= mGetInviteInfoResponse.totalLimit) {
-            Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
-                    Toast.LENGTH_LONG).show();
-        } else if (mGetInviteInfoResponse.invitees.contains(phoneNumber)) {
-            Toast.makeText(getActivity(), R.string.invitation_already_sent,
-                    Toast.LENGTH_LONG).show();
-        } else {
-            mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
-            mProgressDialog.show();
-
-            List<String> invitees = new ArrayList<>();
-            invitees.add(phoneNumber);
-
-            SendInviteRequest sendInviteRequest = new SendInviteRequest(invitees);
-            Gson gson = new Gson();
-            String json = gson.toJson(sendInviteRequest);
-            mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                    Constants.BASE_URL_POST_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
-            mSendInviteTask.execute();
-        }
     }
 
     private void sendRecommendationRequest(String mobileNumber) {
@@ -303,8 +217,7 @@ public class AllContactsFragment extends Fragment implements
                     })
                     .centerCrop()
                     .into(contactImage);
-        }
-        else {
+        } else {
             contactImage.setBackgroundResource(backgroundColor);
             setPlaceHolderImage(contactImage, backgroundColor);
         }
@@ -319,10 +232,22 @@ public class AllContactsFragment extends Fragment implements
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.contact, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -346,74 +271,54 @@ public class AllContactsFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        try {
-            Cursor cursor = DataHelper.getInstance(getActivity()).getSubscribers();
+        return new SQLiteCursorLoader(getActivity()) {
+            @Override
+            public Cursor loadInBackground() {
+                Cursor cursor = null;
+                try {
+                    cursor = DataHelper.getInstance(getActivity()).searchSubscribers(mQuery);
 
-            if (cursor != null) {
-                cursor.getCount();
-                if (cursor.moveToFirst()) {
-                    do {
-                        String mobileNumber = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER));
-                        String name = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_NAME));
-                        subscriber.put(mobileNumber, name);
-                    } while (cursor.moveToNext());
+                    if (cursor != null) {
+                        cursor.getCount();
+                        if (cursor.moveToFirst()) {
+                            do {
+                                String mobileNumber = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER));
+                                String name = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_NAME));
+                                subscriber.put(mobileNumber, name);
+                            } while (cursor.moveToNext());
+                        }
+
+                        cursor.moveToFirst();
+                    }
+
+                    if (cursor != null) {
+                        cursor.getCount();
+                        this.registerContentObserver(cursor, DBConstants.DB_TABLE_SUBSCRIBERS_URI);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+                return cursor;
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        final String[] projection;
-
-        if (android.os.Build.VERSION.SDK_INT > 10) {
-            projection = new String[]{
-                    ContactsContract.Contacts._ID,
-                    ContactsContract.Contacts.LOOKUP_KEY,
-                    ContactsContract.Contacts.DISPLAY_NAME,
-                    ContactsContract.Contacts.PHOTO_URI};
-        } else {
-            projection = new String[]{
-                    ContactsContract.Contacts._ID,
-                    ContactsContract.Contacts.LOOKUP_KEY,
-                    ContactsContract.Contacts.DISPLAY_NAME,
-                    ContactsContract.Contacts.PHOTO_ID};
-        }
-        final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1"
-                + " AND " + ContactsContract.Contacts.DISPLAY_NAME
-                + " LIKE '%" + mQuery + "%'";
-        Log.e("Query", selection);
-        final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
-
-        Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
-
-        return new CursorLoader(
-                getActivity(),
-                queryUri,
-                projection,
-                selection,
-                null,
-                order
-        );
+        };
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.e("Count", data.getCount() + "");
-        mAdapter.swapCursor(data);
+        miPayAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
+        miPayAdapter.swapCursor(null);
     }
 
     @Override
     public void httpResponseReceiver(String result) {
         if (result == null) {
             mProgressDialog.dismiss();
-            mGetInviteInfoTask = null;
-            mSendInviteTask = null;
 
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT).show();
@@ -424,35 +329,7 @@ public class AllContactsFragment extends Fragment implements
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_SEND_INVITE)) {
-            try {
-                if (resultList.size() > 2) {
-                    mSendInviteResponse = gson.fromJson(resultList.get(2), SendInviteResponse.class);
-
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
-                        }
-
-                        mGetInviteInfoResponse.invitees.add(mSelectedNumber);
-                        getInviteInfo();
-                    } else if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            mProgressDialog.dismiss();
-            mSendInviteTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
+        if (resultList.get(0).equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
             try {
 
                 if (resultList.size() > 2) {
@@ -478,21 +355,10 @@ public class AllContactsFragment extends Fragment implements
             mProgressDialog.dismiss();
             mAskForRecommendationTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
-            try {
-                if (resultList.size() > 2)
-                    mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mGetInviteInfoTask = null;
         }
-
     }
 
-    public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public class SubscriberListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int EMPTY_VIEW = 10;
         private static final int SECTION_VIEW = 20;
@@ -509,8 +375,6 @@ public class AllContactsFragment extends Fragment implements
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private View itemView;
-
             private TextView mPortraitTxt;
             private TextView mName;
             private RoundedImageView mPortrait;
@@ -518,8 +382,6 @@ public class AllContactsFragment extends Fragment implements
 
             public ViewHolder(View itemView) {
                 super(itemView);
-
-                this.itemView = itemView;
 
                 mPortraitTxt = (TextView) itemView.findViewById(R.id.portraitTxt);
                 mName = (TextView) itemView.findViewById(R.id.name);
@@ -534,52 +396,41 @@ public class AllContactsFragment extends Fragment implements
                 }
 
                 mCursor.moveToPosition(getAdapterPosition());
-                int index = mCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+                int index = mCursor.getColumnIndex(DBConstants.KEY_NAME);
                 final String name = mCursor.getString(index);
                 mName.setText(name);
 
-                index = mCursor.getColumnIndex(ContactsContract.Contacts._ID);
-                final long contactId = mCursor.getLong(index);
-
-                String number = ContactEngine.getContactNumberFromId(getActivity(), contactId);
-
-                if (number != null) {
-                    number = ContactEngine.convertToInternationalFormat(number);
-                    if (subscriber != null && subscriber.containsKey(number)) {
-                        isSubscriber.setVisibility(View.VISIBLE);
-                    } else {
-                        isSubscriber.setVisibility(View.GONE);
-                    }
-                } else isSubscriber.setVisibility(View.GONE);
+                index = mCursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
+                final String mobileNumber = mCursor.getString(index);
 
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;
 
-                Uri photoUri = null;
-                if (android.os.Build.VERSION.SDK_INT > 10) {
-                    String photoPath = mCursor.getString(mCursor
-                            .getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
-                    if (photoPath != null)
-                        photoUri = Uri.parse(photoPath);
-                } else {
-                    String photoID = mCursor.getString(mCursor
-                            .getColumnIndex(ContactsContract.Contacts.PHOTO_ID));
-                    if (photoID != null) {
-                        photoUri = ContentUris.withAppendedId(
-                                ContactsContract.Data.CONTENT_URI,
-                                Long.parseLong(photoID));
-                    }
-                }
+                isSubscriber.setVisibility(View.VISIBLE);
 
-                // The Number needs to be accessed within the anonymous inner class,
-                // so making it final
-                final String contactNumber = number;
-                final String imageUrl = (photoUri == null? null : photoUri.toString());
+                final String imageUrl;
+
+                // Set profile pic
+                File file = new File(dir, mobileNumber.replaceAll("[^0-9]", "") + ".jpg");
+                if (file.exists()) {
+                    imageUrl = file.getAbsolutePath();
+                    Glide.with(getActivity())
+                            .load(imageUrl)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)     // Skip the cache. Load from disk each time
+                            .into(mPortrait);
+                } else {
+                    imageUrl = null;
+                    Glide.with(getActivity())
+                            .load(android.R.color.transparent)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)     // Skip the cache. Load from disk each time
+                            .into(mPortrait);
+                }
 
                 if (name.startsWith("+") && name.length() > 1)
                     mPortraitTxt.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
                 else mPortraitTxt.setText(String.valueOf(name.charAt(0)).toUpperCase());
-
 
                 if (randomColor == 0)
                     mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle);
@@ -604,41 +455,30 @@ public class AllContactsFragment extends Fragment implements
                 else
                     mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_azure);
 
-                if (photoUri != null) Glide.with(AllContactsFragment.this)
-                        .load(photoUri.toString())
-                        .crossFade()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(mPortrait);
-                else Glide.with(AllContactsFragment.this)
-                        .load(android.R.color.transparent)
-                        .crossFade()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(mPortrait);
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mSelectedNumber = contactNumber;
-                        mSelectedName = name;
 
-                        // Only show the invite option for non-subscribers
-                        if (subscriber == null || !subscriber.containsKey(contactNumber)) {
-                            mBottomSheetLayout.showWithSheetView(mSheetViewNonSubscriber);
-                            setContactInformation(mSheetViewNonSubscriber, mSelectedName,
-                                    mSelectedNumber, imageUrl, COLORS[randomColor]);
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
 
-                        } else {
-                            mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
-                            setContactInformation(mSheetViewSubscriber, mSelectedName,
-                                    mSelectedNumber, imageUrl, COLORS[randomColor]);
-                        }
+                        // Add a delay to hide keyboard and then open up the bottomsheet
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mSelectedNumber = mobileNumber;
+                                mSelectedName = name;
 
-                        // Show the sheet in the expanded view
-                        mBottomSheetLayout.expandSheet();
+                                setContactInformation(mSheetViewSubscriber, mSelectedName,
+                                        mSelectedNumber, imageUrl, COLORS[randomColor]);
+                                mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
+                            }
+                        }, 100);
                     }
+
                 });
             }
-
         }
 
         public class SectionViewHolder extends ViewHolder {
@@ -654,7 +494,7 @@ public class AllContactsFragment extends Fragment implements
                 super.bindView();
 
                 mCursor.moveToPosition(getAdapterPosition());
-                int index = mCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+                int index = mCursor.getColumnIndex(DBConstants.KEY_NAME);
                 String name = mCursor.getString(index);
 
                 if (name.startsWith("+") || (name.charAt(0) >= '0' && name.charAt(0) <= '9')) {
@@ -729,7 +569,7 @@ public class AllContactsFragment extends Fragment implements
 
             mCursor.moveToPosition(position);
 
-            int index = mCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+            int index = mCursor.getColumnIndex(DBConstants.KEY_NAME);
             String name = mCursor.getString(index);
 
             String previous = null;
@@ -740,7 +580,8 @@ public class AllContactsFragment extends Fragment implements
 
             if (previous == null) {
                 return SECTION_VIEW;
-            } else if (!String.valueOf(name.charAt(0)).toUpperCase().contains(String.valueOf(previous.charAt(0)).toUpperCase())) {
+            } else if (!String.valueOf(name.charAt(0)).toUpperCase().
+                    contains(String.valueOf(previous.charAt(0)).toUpperCase())) {
                 if (name.startsWith("+")) {
                     if (!digitSectionViewAdded) return SECTION_VIEW;
                 } else if (name.charAt(0) >= '0' && name.charAt(0) <= '9') {

@@ -18,7 +18,7 @@
             android:padding="3dp">
 
             <TextView
-                android:id="@+id/ipay_contacts_tab"
+                android:id="@+id/all_contacts_tab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -27,12 +27,12 @@
                 android:gravity="center"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                android:text="@string/ipay_contacts"
+                android:text="@string/all_contacts"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/all_contacts_tab"
+                android:id="@+id/ipay_contacts_tab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -40,7 +40,7 @@
                 android:gravity="center"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                android:text="@string/all_contacts"
+                android:text="@string/ipay_contacts"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
@@ -48,10 +48,10 @@
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/contact_list_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/contacts_filter_linear_layout"/>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/contactsViewPager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/contacts_filter_linear_layout" />
 
 </RelativeLayout>
