@@ -357,6 +357,7 @@
     <string name="show_all_transactions">SHOW ALL TRANSACTIONS</string>
     <string name="successful_sign_up">Sign up successful. Please log in now.</string>
     <string name="recommendations">Recommendations</string>
+    <string name="identification">Identification</string>
 
     <string-array name="account_types">
         <item>Personal</item>

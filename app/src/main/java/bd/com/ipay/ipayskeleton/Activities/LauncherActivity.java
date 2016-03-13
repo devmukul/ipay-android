@@ -1,13 +1,13 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class LauncherActivity extends Activity {
+public class LauncherActivity extends BaseActivity {
 
     public static boolean isLoggedIn = false;
 
@@ -45,5 +45,10 @@ public class LauncherActivity extends Activity {
         }
 
         finish();
+    }
+
+    @Override
+    public Context setContext() {
+        return LauncherActivity.this;
     }
 }

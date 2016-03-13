@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,7 @@ import bd.com.ipay.ipayskeleton.EventFragments.CreateNewEventFragment;
 import bd.com.ipay.ipayskeleton.EventFragments.EventFragments;
 import bd.com.ipay.ipayskeleton.R;
 
-public class EventActivity extends AppCompatActivity {
+public class EventActivity extends BaseActivity {
 
     private FloatingActionButton mFabCreateNewEvent;
     private boolean switchedToEventFragments = true;
@@ -50,6 +51,11 @@ public class EventActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new CreateNewEventFragment()).commit();
         mFabCreateNewEvent.setVisibility(View.GONE);
         switchedToEventFragments = false;
+    }
+
+    @Override
+    public Context setContext() {
+        return EventActivity.this;
     }
 }
 

@@ -185,7 +185,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             SignupRequestBusiness mSignupModel = new SignupRequestBusiness(SignupOrLoginActivity.mMobileNumberBusiness,
                     Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mNameBusiness, SignupOrLoginActivity.mAccountType,
                     SignupOrLoginActivity.mBirthdayBusinessHolder,
-                    Utilities.md5(SignupOrLoginActivity.mPasswordBusiness), "M", otp,
+                    SignupOrLoginActivity.mPasswordBusiness, "M", otp,
                     SignupOrLoginActivity.mBusinessName, SignupOrLoginActivity.mTypeofBusiness,
                     SignupOrLoginActivity.mEmailBusiness, SignupOrLoginActivity.mEmailBusiness,
                     SignupOrLoginActivity.mMobileNumberBusiness, mBusinessAddress, mBusinessHolderAddress, promoCode);
@@ -205,7 +205,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         }
 
         mProgressDialog.show();
-        LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin),
+        LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
                 Constants.MOBILE_ANDROID + mDeviceID, null, null, null);
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);

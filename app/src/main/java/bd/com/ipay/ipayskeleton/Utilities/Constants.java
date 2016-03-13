@@ -61,20 +61,20 @@ public class Constants {
 
     static {
         if (SERVER_TYPE == 1) {
-            BASE_URL_POST_MM = "http://10.10.10.10:8085/";
+            BASE_URL_POST_MM = "http://10.20.10.10:8085/";
 
-            BASE_URL_GET_MM = "10.10.10.10";
+            BASE_URL_GET_MM = "10.20.10.10";
             BASE_URL_GET_MM_PORT = 8085;
             BASE_URL_GET_MM_PATH = "";
 
-            BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
+            BASE_URL_IMAGE_SERVER = "http://10.20.10.10";
 
-            BASE_URL_SM = "http://10.10.10.10:8085/";
+            BASE_URL_SM = "http://10.20.10.10:8085/";
 
-            BASE_URL_GET_EM = "10.10.10.10";
+            BASE_URL_GET_EM = "10.20.10.10";
             BASE_URL_GET_EM_PORT = 8085;
             BASE_URL_GET_EM_PATH = "";
-            BASE_URL_POST_EM = "http://10.10.10.10:8085/";
+            BASE_URL_POST_EM = "http://10.20.10.10:8085/";
         } else if (SERVER_TYPE == 2) {
             BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
 

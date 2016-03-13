@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Customview.PagerIndicator;
 
-public class TourActivity extends AppCompatActivity implements View.OnClickListener {
+public class TourActivity extends BaseActivity implements View.OnClickListener {
 
     private ViewPager tourPager;
     private TourPagerAdapter mAdapter;
@@ -70,7 +71,7 @@ public class TourActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
@@ -157,5 +158,10 @@ public class TourActivity extends AppCompatActivity implements View.OnClickListe
         public int getCount() {
             return fragments.size();
         }
+    }
+
+    @Override
+    public Context setContext() {
+        return TourActivity.this;
     }
 }
