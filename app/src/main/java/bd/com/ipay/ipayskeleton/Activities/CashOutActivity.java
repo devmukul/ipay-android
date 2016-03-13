@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.WithdrawMoneyFragments.CashOutFragment;
 
-public class CashOutActivity extends AppCompatActivity {
+public class CashOutActivity extends BaseActivity {
 
     private SharedPreferences pref;
 
@@ -23,6 +24,11 @@ public class CashOutActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new CashOutFragment()).commit();
 
+    }
+
+    @Override
+    public Context setContext() {
+        return CashOutActivity.this;
     }
 }
 

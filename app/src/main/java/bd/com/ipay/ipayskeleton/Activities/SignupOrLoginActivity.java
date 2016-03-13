@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
-import bd.com.ipay.ipayskeleton.ForgotPasswordFragments.OTPVerificationForgotPasswordFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationPersonalFragment;

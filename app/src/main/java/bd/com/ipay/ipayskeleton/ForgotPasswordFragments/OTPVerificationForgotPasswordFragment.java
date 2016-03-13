@@ -129,7 +129,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
             mProgressDialog.setMessage(getString(R.string.progress_dialog_saving_new_pass));
             mProgressDialog.show();
             String otp = mOTPEditText.getText().toString().trim();
-            String newPassword = Utilities.md5(mNewPasswordEditText.getText().toString().trim());
+            String newPassword = mNewPasswordEditText.getText().toString().trim();
 
             ForgetPassOTPConfirmationRequest mForgetPassOTPConfirmationRequest = new ForgetPassOTPConfirmationRequest
                     (SignupOrLoginActivity.mMobileNumber, Constants.MOBILE_ANDROID + mDeviceID, otp, newPassword);

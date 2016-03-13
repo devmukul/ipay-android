@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.RequestMoneyFragments.RequestFragments;
 import bd.com.ipay.ipayskeleton.RequestMoneyFragments.RequestMoneyFragment;
 
-public class RequestMoneyActivity extends AppCompatActivity {
+public class RequestMoneyActivity extends BaseActivity {
 
     private FloatingActionButton mFabRequestMoney;
     private boolean switchedToPendingList = true;
@@ -62,6 +63,11 @@ public class RequestMoneyActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
         mFabRequestMoney.setVisibility(View.GONE);
         switchedToPendingList = false;
+    }
+
+    @Override
+    public Context setContext() {
+        return RequestMoneyActivity.this;
     }
 }
 

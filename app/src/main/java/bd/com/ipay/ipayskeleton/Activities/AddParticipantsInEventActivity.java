@@ -1,16 +1,12 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-import bd.com.ipay.ipayskeleton.AddMoneyFragments.CashInFragment;
 import bd.com.ipay.ipayskeleton.AddParticipantsFragments.SelectParticipantsFromListFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class AddParticipantsInEventActivity extends AppCompatActivity {
+public class AddParticipantsInEventActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +16,11 @@ public class AddParticipantsInEventActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new SelectParticipantsFromListFragment()).commit();
 
+    }
+
+    @Override
+    public Context setContext() {
+        return AddParticipantsInEventActivity.this;
     }
 }
 

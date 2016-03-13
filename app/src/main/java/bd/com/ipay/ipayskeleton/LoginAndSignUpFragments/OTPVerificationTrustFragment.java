@@ -97,7 +97,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             String otp = mOTPEditText.getText().toString().trim();
 
             mProgressDialog.show();
-            LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin),
+            LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
                     Constants.MOBILE_ANDROID + mDeviceID, null, otp, null);
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);

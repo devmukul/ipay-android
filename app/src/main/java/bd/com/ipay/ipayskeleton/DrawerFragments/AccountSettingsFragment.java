@@ -154,7 +154,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.setMessage(getString(R.string.saving_pin));
             mProgressDialog.show();
-            SetPinRequest mSetPinRequest = new SetPinRequest(Utilities.md5(password), pin);
+            SetPinRequest mSetPinRequest = new SetPinRequest(password, pin);
             Gson gson = new Gson();
             String json = gson.toJson(mSetPinRequest);
             mSavePINTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PIN,
@@ -198,8 +198,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.setMessage(getString(R.string.change_password_progress));
             mProgressDialog.show();
-            ChangePasswordRequest mChangePasswordRequest = new ChangePasswordRequest(Utilities.md5(password),
-                    Utilities.md5(newPassword));
+            ChangePasswordRequest mChangePasswordRequest = new ChangePasswordRequest(password, newPassword);
             Gson gson = new Gson();
             String json = gson.toJson(mChangePasswordRequest);
             mChangePasswordTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,

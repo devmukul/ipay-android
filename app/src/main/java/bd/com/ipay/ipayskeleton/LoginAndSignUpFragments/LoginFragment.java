@@ -214,7 +214,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             }
 
             // TODO: in otp verification personal business
-            LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, Utilities.md5(mPasswordLogin),
+            LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
                     Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null);
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);

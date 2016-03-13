@@ -37,9 +37,9 @@
             android:icon="@drawable/ic_drawer_request_money"
             android:title="@string/topup" />
         <item
-            android:id="@+id/nav_request_recommendation"
+            android:id="@+id/nav_identification"
             android:icon="@drawable/ic_drawer_recommendation"
-            android:title="@string/recommendations" />
+            android:title="@string/identification" />
         <item
             android:id="@+id/nav_event"
             android:icon="@drawable/ic_event_black_24dp"

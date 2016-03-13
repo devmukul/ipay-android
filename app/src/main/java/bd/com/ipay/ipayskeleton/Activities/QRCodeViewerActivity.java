@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -16,7 +17,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Contents;
 import bd.com.ipay.ipayskeleton.Utilities.QRCodeEncoder;
 
-public class QRCodeViewerActivity extends Activity {
+public class QRCodeViewerActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,5 +52,10 @@ public class QRCodeViewerActivity extends Activity {
         } catch (WriterException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Context setContext() {
+        return QRCodeViewerActivity.this;
     }
 }

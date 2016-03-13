@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -54,7 +55,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class HomeActivity extends AppCompatActivity
+public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener,
         ProfileFragment.ProfilePictureChangeListener {
 
@@ -139,7 +140,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         getProfileInfo();
         // TODO: refresh balance in the navigation drawer here
@@ -250,7 +251,7 @@ public class HomeActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountSettingsFragment()).commit();
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_request_recommendation) {
+        } else if (id == R.id.nav_identification) {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new RecommendationRequestsFragment()).commit();
             switchedToHomeFragment = false;
@@ -393,5 +394,10 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onProfilePictureChange(String imageUrl) {
         setProfilePicture(imageUrl);
+    }
+
+    @Override
+    public Context setContext() {
+        return HomeActivity.this;
     }
 }

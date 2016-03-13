@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class SendMoneyActivity extends AppCompatActivity {
+public class SendMoneyActivity extends BaseActivity {
 
     private SharedPreferences pref;
     private Boolean switchedToAccountSelection = false;
@@ -23,6 +24,11 @@ public class SendMoneyActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new SendMoneyFragment()).commit();
 
+    }
+
+    @Override
+    public Context setContext() {
+        return SendMoneyActivity.this;
     }
 }
 
