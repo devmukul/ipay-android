@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
@@ -183,8 +184,8 @@ public class HomeActivity extends BaseActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new ContactsHolderFragment()).commit();
                 switchedToHomeFragment = false;
                 return true;
-            case R.id.action_transaction:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
+            case R.id.action_notification:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new NotificationFragment()).commit();
                 switchedToHomeFragment = false;
                 return true;
 
@@ -249,7 +250,10 @@ public class HomeActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ProfileFragment()).commit();
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_notification) {
+        } else if (id == R.id.nav_transaction_history) {
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_bank_account) {
 

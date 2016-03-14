@@ -10,7 +10,7 @@
         android:layout_marginBottom="@dimen/value5"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/value10"
-        android:text="@string/transaction_history"
+        android:text="@string/notification"
         android:textStyle="bold" />
 
     <android.support.v4.widget.SwipeRefreshLayout

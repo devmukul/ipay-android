@@ -369,6 +369,7 @@
     <string name="filter_payment">Payment</string>
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
+    <string name="action_notifications">Notifications</string>
 
     <string-array name="account_types">
         <item>Personal</item>
