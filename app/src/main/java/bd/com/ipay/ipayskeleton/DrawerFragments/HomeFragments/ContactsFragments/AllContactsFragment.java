@@ -18,6 +18,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -76,7 +77,6 @@ public class AllContactsFragment extends Fragment implements
     private HashMap<String, String> subscriber = new HashMap<>();
 
     private BottomSheetLayout mBottomSheetLayout;
-    private SearchView mSearchView;
 
     // When a contact item is clicked, we need to access its name and number from the sheet view.
     // So saving these in these two variables.
@@ -176,7 +176,7 @@ public class AllContactsFragment extends Fragment implements
                 }
             }
         });
-        
+
         mRequestMoneyButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_request_money);
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,8 +214,15 @@ public class AllContactsFragment extends Fragment implements
         inflater.inflate(R.menu.contact, menu);
 
         final MenuItem item = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(item);
-        mSearchView.setOnQueryTextListener(this);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBottomSheetLayout.isSheetShowing())
+                    mBottomSheetLayout.dismissSheet();
+            }
+        });
     }
 
     @Override
@@ -323,14 +330,8 @@ public class AllContactsFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter.notifyDataSetChanged();
-    }
 
-    @Override
-    public void onDetach() {
-        closeSearchView();
-        setMenuVisibility(false);
-        super.onDetach();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -350,6 +351,12 @@ public class AllContactsFragment extends Fragment implements
         getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
         return true;
+    }
+
+    @Override
+    public void onDetach() {
+        setMenuVisibility(false);
+        super.onDetach();
     }
 
     @Override
@@ -390,6 +397,7 @@ public class AllContactsFragment extends Fragment implements
         final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1"
                 + " AND " + ContactsContract.Contacts.DISPLAY_NAME
                 + " LIKE '%" + mQuery + "%'";
+        Log.e("Query", selection);
         final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
@@ -406,6 +414,7 @@ public class AllContactsFragment extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.e("Count", data.getCount() + "");
         mAdapter.swapCursor(data);
     }
 
@@ -772,10 +781,5 @@ public class AllContactsFragment extends Fragment implements
             mCursor = cursor;
             notifyDataSetChanged();
         }
-    }
-
-    private void closeSearchView() {
-        if (mSearchView != null && !mSearchView.isIconified())
-            mSearchView.setIconified(true);
     }
 }
