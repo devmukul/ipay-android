@@ -584,12 +584,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(userName);
 
-                int index = 0;
-                if (amount >= 0) {
-                    index = 0;
-                } else {
-                    index = 1;
-                }
                 String description = userTransactionHistoryClasses.get(pos).getDescription(userName);
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
 

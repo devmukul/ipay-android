@@ -1,12 +1,15 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,9 +29,14 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -54,12 +63,14 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     private LinearLayout eventFilterLayout;
     private LinearLayout dateFilterLayout;
 
-    private CheckBox mChangeProfileCheckBox;
-    private CheckBox mSystemEventCheckBox;
-    private CheckBox mSecurityChangeCheckBox;
-    private CheckBox mVerificationCheckBox;
-    private CheckBox mMoneySentCheckBox;
-    private CheckBox mMoneyReceivedCheckBox;
+    private CheckBox mFilterOpeningBalance;
+    private CheckBox mFilterSendMoney;
+    private CheckBox mFilterRequestMoney;
+    private CheckBox mFilterAddMoney;
+    private CheckBox mFilterWithdrawMoney;
+    private CheckBox mFilterTopUp;
+    private CheckBox mFilterPayment;
+    private CheckBox mFilterEducation;
     private Button mClearEventFilterButton;
 
     private EditText mFromDateEditText;
@@ -71,13 +82,15 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
     private int historyPageCount = 0;
     private Integer type = null;
-    private String fromDate = null;
-    private String toDate = null;
+    private Calendar fromDate = null;
+    private Calendar toDate = null;
     private int mYear;
     private int mMonth;
     private int mDay;
 
     private boolean hasNext = false;
+
+    private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,10 +142,60 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
         mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
 
+        eventFilterLayout = (LinearLayout) v.findViewById(R.id.event_filters_layout);
+        dateFilterLayout = (LinearLayout) v.findViewById(R.id.date_filter_layout);
+        mClearEventFilterButton = (Button) v.findViewById(R.id.button_clear_filter_event);
+
+        mFilterOpeningBalance = (CheckBox) v.findViewById(R.id.filter_opening_balance);
+        mFilterSendMoney = (CheckBox) v.findViewById(R.id.filter_send_money);
+        mFilterRequestMoney = (CheckBox) v.findViewById(R.id.filter_request_money);
+        mFilterAddMoney = (CheckBox) v.findViewById(R.id.filter_add_money);
+        mFilterWithdrawMoney = (CheckBox) v.findViewById(R.id.filter_withdraw_money);
+        mFilterTopUp = (CheckBox) v.findViewById(R.id.filter_top_up);
+        mFilterPayment = (CheckBox) v.findViewById(R.id.filter_payment);
+        mFilterEducation = (CheckBox) v.findViewById(R.id.filter_education);
+
+        mCheckBoxTypeMap = new HashMap<>();
+        mCheckBoxTypeMap.put(mFilterOpeningBalance, Constants.TRANSACTION_HISTORY_OPENING_BALANCE);
+        mCheckBoxTypeMap.put(mFilterSendMoney, Constants.TRANSACTION_HISTORY_SEND_MONEY);
+        mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
+        mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
+        mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
+        mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
+        mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_PAYMENT);
+        mCheckBoxTypeMap.put(mFilterEducation, Constants.TRANSACTION_HISTORY_EDUCATION);
+
+        mFromDateEditText = (EditText) v.findViewById(R.id.fromEditText);
+        mToDateEditText = (EditText) v.findViewById(R.id.toEditText);
+        mFromDatePicker = (ImageView) v.findViewById(R.id.fromDatePicker);
+        mToDatePicker = (ImageView) v.findViewById(R.id.toDatePicker);
+        clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
+        filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
+
         // Refresh balance each time home page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
             getTransactionHistory();
         }
+
+        setActionsForEventTypeFilter();
+        setActionsForDateFilter();
+
+        // Handle back press action when action mode is on.
+        v.setFocusableInTouchMode(true);
+        v.requestFocus();
+        v.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (dateFilterLayout.getVisibility() == View.VISIBLE)
+                        dateFilterLayout.setVisibility(View.GONE);
+                    else if (eventFilterLayout.getVisibility() == View.VISIBLE)
+                        eventFilterLayout.setVisibility(View.GONE);
+                    else return false;
+                }
+                return true;
+            }
+        });
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -149,18 +212,192 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         return v;
     }
 
+    private void refreshTransactionHistory() {
+        historyPageCount = 0;
+        if (userTransactionHistoryClasses != null) userTransactionHistoryClasses.clear();
+        getTransactionHistory();
+    }
+
+    private void setActionsForDateFilter() {
+
+        clearDateFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dateFilterLayout.setVisibility(View.GONE);
+                fromDate = null;
+                toDate = null;
+                mFromDateEditText.setText("");
+                mToDateEditText.setText("");
+                refreshTransactionHistory();
+            }
+        });
+
+        filterByDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dateFilterLayout.setVisibility(View.GONE);
+                refreshTransactionHistory();
+            }
+        });
+
+        mFromDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                final Date fromDateStart;
+                try {
+                    fromDateStart = sdf.parse(Constants.STARTING_DATE_OF_IPAY);
+
+                    DatePickerDialog dpd = new DatePickerDialog(getActivity(), mFromDateSetListener, Constants.STARTING_YEAR
+                            , Constants.STARTING_MONTH, Constants.STARTING_DATE);
+                    dpd.getDatePicker().setMinDate(fromDateStart.getTime());
+                    dpd.show();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        mToDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                final Date fromDate;
+                try {
+                    fromDate = sdf.parse(mFromDateEditText.getText().toString().trim());
+
+                    DatePickerDialog dpd = new DatePickerDialog(getActivity(), mToDateSetListener, Constants.STARTING_YEAR
+                            , Constants.STARTING_MONTH, Constants.STARTING_DATE);
+                    dpd.getDatePicker().setMinDate(fromDate.getTime());
+                    dpd.show();
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    private void setActionsForEventTypeFilter() {
+
+        mClearEventFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                type = null;
+                for (CheckBox eventFilter : mCheckBoxTypeMap.keySet()) {
+                    eventFilter.setChecked(false);
+                }
+
+                refreshTransactionHistory();
+                eventFilterLayout.setVisibility(View.GONE);
+            }
+        });
+
+        /**
+         * Add OnClickListener for all checkboxes
+         */
+        for (final CheckBox eventFilter : mCheckBoxTypeMap.keySet()) {
+            eventFilter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (eventFilter.isChecked()) {
+                        type = mCheckBoxTypeMap.get(eventFilter);
+                    }
+                    else {
+                        type = null;
+                    }
+
+                    /**
+                     * Un-check all checkboxes other than this one
+                     */
+                    for (final CheckBox otherEventFilter : mCheckBoxTypeMap.keySet()) {
+                        if (otherEventFilter != eventFilter) {
+                            otherEventFilter.setChecked(false);
+                        }
+                    }
+
+                    refreshTransactionHistory();
+                    eventFilterLayout.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+    private DatePickerDialog.OnDateSetListener mFromDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    mYear = year;
+                    mMonth = monthOfYear + 1;
+                    mDay = dayOfMonth;
+
+                    fromDate = Calendar.getInstance();
+                    fromDate.clear();
+                    fromDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    fromDate.set(Calendar.MONTH, monthOfYear);
+                    fromDate.set(Calendar.YEAR, year);
+
+                    String fromDatePicker, fromMonthPicker, fromYearPicker;
+                    if (mDay < 10) fromDatePicker = "0" + mDay;
+                    else fromDatePicker = mDay + "";
+                    if (mMonth < 10) fromMonthPicker = "0" + mMonth;
+                    else fromMonthPicker = mMonth + "";
+                    fromYearPicker = mYear + "";
+
+                    mFromDateEditText.setText(fromDatePicker + "/" + fromMonthPicker + "/" + fromYearPicker);
+                }
+            };
+
+    private DatePickerDialog.OnDateSetListener mToDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    mYear = year;
+                    mMonth = monthOfYear + 1;
+                    mDay = dayOfMonth;
+
+                    toDate = Calendar.getInstance();
+                    toDate.clear();
+                    toDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    toDate.set(Calendar.MONTH, monthOfYear);
+                    toDate.set(Calendar.YEAR, year);
+                    toDate.add(Calendar.DATE, 1);
+
+                    String toDatePicker, toMonthPicker, toYearPicker;
+                    if (mDay < 10) toDatePicker = "0" + mDay;
+                    else toDatePicker = mDay + "";
+                    if (mMonth < 10) toMonthPicker = "0" + mMonth;
+                    else toMonthPicker = mMonth + "";
+                    toYearPicker = mYear + "";
+
+                    mToDateEditText.setText(toDatePicker + "/" + toMonthPicker + "/" + toYearPicker);
+                }
+            };
+
     private void getTransactionHistory() {
         if (mTransactionHistoryTask != null) {
             return;
         }
 
-        TransactionHistoryRequest mTransactionHistoryRequest = new TransactionHistoryRequest(null, historyPageCount);
+        TransactionHistoryRequest mTransactionHistoryRequest;
+        if (fromDate != null && toDate != null) {
+            mTransactionHistoryRequest = new TransactionHistoryRequest(
+                    type, historyPageCount, fromDate.getTimeInMillis(), toDate.getTimeInMillis());
+        }
+        else {
+            mTransactionHistoryRequest = new TransactionHistoryRequest(type, historyPageCount);
+        }
+
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
-        mTransactionHistoryTask.execute((Void) null);
+        mTransactionHistoryTask.execute();
     }
 
     @Override
@@ -246,12 +483,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             public void bindView(int pos) {
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
 
-                int index = 0;
-                if (amount >= 0) {
-                    index = 0;
-                } else {
-                    index = 1;
-                }
                 String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
 
