@@ -52,7 +52,7 @@
                     style="@style/HomeImageButtonStyle"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/make_payment" />
+                    android:src="@drawable/request_money" />
 
                 <TextView
                     style="@style/HomeImageTextViewStyle"
@@ -74,7 +74,7 @@
                     style="@style/HomeImageButtonStyle"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/mobile_recharge" />
+                    android:src="@drawable/make_payment" />
 
                 <TextView
                     android:id="@+id/textview_make_payment"

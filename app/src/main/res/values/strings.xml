@@ -360,6 +360,14 @@
     <string name="recommendations">Recommendations</string>
     <string name="identification">Identification</string>
     <string name="action_search">Search</string>
+    <string name="filter_send_money">Send Money</string>
+    <string name="filter_request_money">Request Money</string>
+    <string name="filter_add_money">Add Money</string>
+    <string name="filter_withdraw_money">Withdraw Money</string>
+    <string name="filter_top_up">Top Up</string>
+    <string name="filter_payment">Payment</string>
+    <string name="filter_opening_balance">Opening Balance</string>
+    <string name="filter_education">Education</string>
 
     <string-array name="account_types">
         <item>Personal</item>
@@ -440,11 +448,6 @@
         <item>Verification</item>
         <item>System Event</item>
         <item>Credentials Change</item>
-    </string-array>
-
-    <string-array name="transaction_types">
-        <item>Received</item>
-        <item>Sent</item>
     </string-array>
 
     <string-array name="event_status_type">

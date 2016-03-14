@@ -34,11 +34,11 @@
             android:title="@string/link_bank_account" />
         <item
             android:id="@+id/nav_topup"
-            android:icon="@drawable/ic_drawer_request_money"
+            android:icon="@drawable/ic_drawer_topup"
             android:title="@string/topup" />
         <item
             android:id="@+id/nav_identification"
-            android:icon="@drawable/ic_drawer_recommendation"
+            android:icon="@drawable/ic_drawer_identification"
             android:title="@string/identification" />
         <item
             android:id="@+id/nav_event"

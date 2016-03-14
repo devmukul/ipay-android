@@ -92,7 +92,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private Button mAddMoneyButton;
     private Button mWithdrawMoneyButton;
 
-    private String[] transactionHistoryTypes;
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
     private RecyclerView mTransactionHistoryRecyclerView;
@@ -147,9 +146,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
 
-        transactionHistoryTypes = getResources().getStringArray(R.array.transaction_types);
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
-
 
         mNewsFeedAdapter = new NewsFeedAdapter();
         mTransactionHistoryLayoutManager = new LinearLayoutManager(getActivity());
@@ -593,7 +590,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 } else {
                     index = 1;
                 }
-                String type = transactionHistoryTypes[index];
                 String description = userTransactionHistoryClasses.get(pos).getDescription(userName);
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
 

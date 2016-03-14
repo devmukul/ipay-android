@@ -8,9 +8,16 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +43,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
-    private String[] transactionHistoryTypes;
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -45,8 +51,66 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
     private String mMobileNumber;
 
+    private LinearLayout eventFilterLayout;
+    private LinearLayout dateFilterLayout;
+
+    private CheckBox mChangeProfileCheckBox;
+    private CheckBox mSystemEventCheckBox;
+    private CheckBox mSecurityChangeCheckBox;
+    private CheckBox mVerificationCheckBox;
+    private CheckBox mMoneySentCheckBox;
+    private CheckBox mMoneyReceivedCheckBox;
+    private Button mClearEventFilterButton;
+
+    private EditText mFromDateEditText;
+    private EditText mToDateEditText;
+    private ImageView mFromDatePicker;
+    private ImageView mToDatePicker;
+    private Button clearDateFilterButton;
+    private Button filterByDateButton;
+
     private int historyPageCount = 0;
+    private Integer type = null;
+    private String fromDate = null;
+    private String toDate = null;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+
     private boolean hasNext = false;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.activity_transaction_history, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_filter_by_date:
+                if (eventFilterLayout.getVisibility() == View.VISIBLE)
+                    eventFilterLayout.setVisibility(View.GONE);
+                dateFilterLayout.setVisibility(View.VISIBLE);
+                Utilities.setLayoutAnim_slideDown(dateFilterLayout, getActivity());
+                return true;
+            case R.id.action_filter_by_event:
+                if (dateFilterLayout.getVisibility() == View.VISIBLE)
+                    dateFilterLayout.setVisibility(View.GONE);
+                eventFilterLayout.setVisibility(View.VISIBLE);
+                Utilities.setLayoutAnim_slideDown(eventFilterLayout, getActivity());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +121,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 .getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mMobileNumber = pref.getString(Constants.USERID, "");
 
-        transactionHistoryTypes = getResources().getStringArray(R.array.transaction_types);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
 
@@ -189,7 +252,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 } else {
                     index = 1;
                 }
-                String type = transactionHistoryTypes[index];
                 String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
 

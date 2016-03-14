@@ -52,7 +52,7 @@ public class TransactionHistoryClass {
                 return "Money transfer from " + receiverInfo;
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                 return "Money transfer to " + receiverInfo;
-            case (Constants.TRANSACTION_HISTORY_TOPUP):
+            case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return "Mobile TopUp to " + receiverInfo;
             case (Constants.TRANSACTION_HISTORY_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber))
@@ -85,7 +85,7 @@ public class TransactionHistoryClass {
                 return +effectiveAmount;
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                 return -originatingAmount;
-            case (Constants.TRANSACTION_HISTORY_TOPUP):
+            case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return -originatingAmount;
             case (Constants.TRANSACTION_HISTORY_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber))
@@ -118,108 +118,4 @@ public class TransactionHistoryClass {
     public long getTime() {
         return time;
     }
-
-//    const processTransactionLists = (transactions = []) => {
-//        const LENGTH = transactions.length;
-//        let temp = [];
-//        if (LENGTH > 0) {
-//            const {TransactionServiceID} = AppSettings;
-//            const {mobileNumber} = $localStorage;
-//            let transaction={}, service, time, item={};
-//
-//            for (let i = 0; i < LENGTH; i++) {
-//                transaction = transactions[i];
-//                service = TransactionServiceID[transaction.serviceID];
-//                time = $filter('date')(transaction.time, 'MMM d, y - h:mm a');
-//                switch (service) {
-//                    case "OPENING_BALANCE":
-//                        temp.push({
-//                                time,
-//                                description: 'Opening Balance from iPay',
-//                            amount: transaction.effectiveAmount,
-//                            status: getStatus(transaction.statusCode),
-//                            currencyFilter: '+ Tk. '
-//                        });
-//                        break;
-//                    case "SEND_MONEY":
-//                        item = {
-//                                time,
-//                                status: getStatus(transaction.statusCode)
-//                        };
-//                        if (transaction.originatingMobileNumber === mobileNumber) {
-//                            item.description = `Money send to ${transaction.receiverInfo}`;
-//                            item.amount = transaction.originatingAmount;
-//                            item.currencyFilter = '- Tk. ';
-//                        } else if (transaction.receiverInfo === mobileNumber) {
-//                            item.description = `Money received from ${transaction.originatingMobileNumber}`;
-//                            item.amount = transaction.effectiveAmount;
-//                            item.currencyFilter = '+ Tk. ';
-//                        } else {
-//                            item.description = `No information available ...`;
-//                            item.amount = 0;
-//                            item.currencyFilter = 'Tk. ';
-//                        }
-//                        temp.push(item);
-//                        break;
-//                    case "ADD_MONEY":
-//                        temp.push({
-//                                time,
-//                                description: `Money transfer from ${transaction.receiverInfo} to iPay`,
-//                    amount: transaction.effectiveAmount,
-//                            status: getStatus(transaction.statusCode),
-//                            currencyFilter: '+ Tk. '
-//                    });
-//                    break;
-//                    case "WITHDRAW_MONEY":
-//                        temp.push({
-//                                time,
-//                                description: `Money transfer from iPay to ${transaction.receiverInfo}`,
-//                    amount: transaction.originatingAmount,
-//                            status: getStatus(transaction.statusCode),
-//                            currencyFilter: '- Tk. '
-//                    });
-//                    break;
-//                    case "TOPUP":
-//                        temp.push({
-//                                time,
-//                                description: `Mobile Top Up to ${transaction.receiverInfo}`,
-//                    amount: transaction.originatingAmount,
-//                            status: getStatus(transaction.statusCode),
-//                            currencyFilter: '- Tk. '
-//                    });
-//                    break;
-//                    case "PAYMENT":
-//                        item = {
-//                                time,
-//                                status: getStatus(transaction.statusCode)
-//                        };
-//                        if (transaction.originatingMobileNumber === mobileNumber) {
-//                            item.description = `Payment send to ${transaction.receiverInfo}`;
-//                            item.amount = transaction.originatingAmount;
-//                            item.currencyFilter = '- Tk. ';
-//                        } else if (transaction.receiverInfo === mobileNumber) {
-//                            item.description = `Payment received from ${transaction.originatingMobileNumber}`;
-//                            item.amount = transaction.effectiveAmount;
-//                            item.currencyFilter = '+ Tk. ';
-//                        } else {
-//                            item.description = `No information available ...`;
-//                            item.amount = 0;
-//                            item.currencyFilter = 'Tk. ';
-//                        }
-//                        temp.push(item);
-//                        break;
-//                    default:
-//                        temp.push({
-//                                time,
-//                                description: `No information available ...`,
-//                        amount: 0,
-//                                status: getStatus(transaction.statusCode),
-//                            currencyFilter: 'Tk. '
-//                        });
-//                        break;
-//                }
-//            }
-//        }
-//        return temp || [];
-//    };
 }

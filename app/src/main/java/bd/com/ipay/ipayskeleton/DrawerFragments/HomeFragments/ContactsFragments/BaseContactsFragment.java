@@ -94,8 +94,6 @@ public abstract class BaseContactsFragment extends Fragment implements
         if (mBottomSheetLayout != null)
             setUpBottomSheet();
 
-        Log.e("On Create View", "Called");
-
         return v;
     }
 
@@ -177,8 +175,6 @@ public abstract class BaseContactsFragment extends Fragment implements
     }
 
     private void setUpBottomSheet() {
-        Log.e("Activity", getActivity() + "");
-
         mSheetViewNonSubscriber = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_non_subscriber, null);
         Button mInviteButton = (Button) mSheetViewNonSubscriber.findViewById(R.id.button_invite);
