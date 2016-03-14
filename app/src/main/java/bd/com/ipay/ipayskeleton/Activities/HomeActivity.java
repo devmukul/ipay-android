@@ -87,6 +87,8 @@ public class HomeActivity extends BaseActivity
 
     public boolean switchedToHomeFragment = true;
 
+    private Menu mMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,11 +170,14 @@ public class HomeActivity extends BaseActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home, menu);
+        this.mMenu = menu;
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        invalidateOptionsMenu();
+
         switch (item.getItemId()) {
             case R.id.action_contacts:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new ContactsHolderFragment()).commit();
@@ -190,6 +195,8 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
+        invalidateOptionsMenu();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -227,6 +234,8 @@ public class HomeActivity extends BaseActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        invalidateOptionsMenu();
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -418,4 +427,5 @@ public class HomeActivity extends BaseActivity
     public Context setContext() {
         return HomeActivity.this;
     }
+
 }

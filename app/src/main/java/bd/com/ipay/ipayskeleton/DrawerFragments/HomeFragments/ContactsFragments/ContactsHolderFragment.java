@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,6 +28,8 @@ public class ContactsHolderFragment extends Fragment implements View.OnClickList
     private TextView iPayTab;
 
     private BottomSheetLayout mBottomSheetLayout;
+
+    private Menu mMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,6 @@ public class ContactsHolderFragment extends Fragment implements View.OnClickList
         setTab();
         viewPager.setCurrentItem(selectedTab);
     }
-
 
     private void setTab() {
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -146,4 +149,6 @@ public class ContactsHolderFragment extends Fragment implements View.OnClickList
                 break;
         }
     }
+
+
 }

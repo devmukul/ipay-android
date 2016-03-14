@@ -591,4 +591,5 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     public interface ProfilePictureChangeListener {
         void onProfilePictureChange(String imageUrl);
     }
+
 }

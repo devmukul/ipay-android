@@ -101,8 +101,8 @@ public abstract class BaseContactsFragment extends Fragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.contact, menu);
 
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
@@ -111,12 +111,10 @@ public abstract class BaseContactsFragment extends Fragment implements
                     mBottomSheetLayout.dismissSheet();
             }
         });
-    }
 
-    @Override
-    public void onDetach() {
-        setMenuVisibility(false);
-        super.onDetach();
+        final MenuItem contactMenu = menu.findItem(R.id.action_contacts);
+        if (contactMenu != null)
+            contactMenu.setVisible(false);
     }
 
     /**

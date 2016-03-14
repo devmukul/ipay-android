@@ -92,6 +92,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
+    private Menu mMenu;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +105,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         super.onCreateOptionsMenu(menu, inflater);
         MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.activity_transaction_history, menu);
+        menu.findItem(R.id.action_transaction).setVisible(false);
+        mMenu = menu;
     }
 
     @Override
