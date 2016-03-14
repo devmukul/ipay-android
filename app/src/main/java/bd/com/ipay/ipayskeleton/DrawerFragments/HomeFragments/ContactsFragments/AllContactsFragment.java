@@ -1,124 +1,49 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments;
 
-import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
-public class AllContactsFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener, HttpResponseListener {
-
-    private static final int CONTACTS_QUERY_LOADER = 0;
+public class AllContactsFragment extends BaseContactsFragment {
 
     private RecyclerView mRecyclerView;
     private ContactListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private File dir;
+
+    // Contacts will be filtered base on this field.
+    // It will be populated when the user types in the search bar.
+    protected String mQuery = "";
+
+    protected static final int CONTACTS_QUERY_LOADER = 0;
 
     private boolean digitSectionViewAdded = false;
     private HashMap<String, String> subscriber = new HashMap<>();
 
-    private BottomSheetLayout mBottomSheetLayout;
-
-    // When a contact item is clicked, we need to access its name and number from the sheet view.
-    // So saving these in these two variables.
-    private String mSelectedName;
-    private String mSelectedNumber;
-
-    // Contacts will be filtered base on this field.
-    // It will be populated when the user types in the search bar.
-    private String mQuery = "";
-
-    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
-    private GetInviteInfoResponse mGetInviteInfoResponse;
-
-    private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
-    private AskForRecommendationResponse mAskForRecommendationResponse;
-
-    private HttpRequestPostAsyncTask mSendInviteTask = null;
-    private SendInviteResponse mSendInviteResponse;
-
-    private ProgressDialog mProgressDialog;
-
-    private View mSheetViewNonSubscriber;
-    private View mSheetViewSubscriber;
-
-    private Button mInviteButton;
-    private Button mSendMoneyButton;
-    private Button mRequestMoneyButton;
-    private Button mAskForRecommendationButton;
-
-    private final int[] COLORS = {
-            R.color.background_default,
-            R.color.background_blue,
-            R.color.background_bright_pink,
-            R.color.background_cyan,
-            R.color.background_magenta,
-            R.color.background_orange,
-            R.color.background_red,
-            R.color.background_spring_green,
-            R.color.background_violet,
-            R.color.background_yellow,
-            R.color.background_azure
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,9 +54,8 @@ public class AllContactsFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_contacts, container, false);
-        mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
+
+        View v = super.onCreateView(inflater, container, savedInstanceState);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -139,192 +63,11 @@ public class AllContactsFragment extends Fragment implements
         mAdapter = new ContactListAdapter();
         mRecyclerView.setAdapter(mAdapter);
 
-        mProgressDialog = new ProgressDialog(getActivity());
-
-        dir = new File(Environment.getExternalStorageDirectory().getPath()
-                + Constants.PICTURE_FOLDER);
-        if (!dir.exists()) dir.mkdir();
-
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
 
-        mSheetViewNonSubscriber = getActivity().getLayoutInflater()
-                .inflate(R.layout.sheet_view_contact_non_subscriber, null);
-        mInviteButton = (Button) mSheetViewNonSubscriber.findViewById(R.id.button_invite);
-        mInviteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBottomSheetLayout.isSheetShowing()) {
-                    mBottomSheetLayout.dismissSheet();
-                }
-
-                sendInvite(mSelectedNumber);
-            }
-        });
-
-        mSheetViewSubscriber = getActivity().getLayoutInflater()
-                .inflate(R.layout.sheet_view_contact_subscriber, null);
-        mSendMoneyButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_send_money);
-        mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
-                intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
-                startActivity(intent);
-
-                if (mBottomSheetLayout.isSheetShowing()) {
-                    mBottomSheetLayout.dismissSheet();
-                }
-            }
-        });
-
-        mRequestMoneyButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_request_money);
-        mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
-                intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
-                intent.putExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, true);
-                startActivity(intent);
-
-                if (mBottomSheetLayout.isSheetShowing()) {
-                    mBottomSheetLayout.dismissSheet();
-                }
-            }
-        });
-        mAskForRecommendationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_recommendation);
-        mAskForRecommendationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendRecommendationRequest(mSelectedNumber);
-
-                if (mBottomSheetLayout.isSheetShowing()) {
-                    mBottomSheetLayout.dismissSheet();
-                }
-            }
-        });
-
         mRecyclerView.setAdapter(mAdapter);
-        getInviteInfo();
 
         return v;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.contact, menu);
-
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBottomSheetLayout.isSheetShowing())
-                    mBottomSheetLayout.dismissSheet();
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void getInviteInfo() {
-        if (mGetInviteInfoTask == null) {
-            mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
-                    new GetInviteInfoRequestBuilder().getGeneratedUri(), getActivity(), this);
-            mGetInviteInfoTask.execute();
-        }
-    }
-
-    private void sendInvite(String phoneNumber) {
-        if (mGetInviteInfoResponse == null || mGetInviteInfoResponse.invitees == null) {
-            Toast.makeText(getActivity(), R.string.failed_sending_invitation,
-                    Toast.LENGTH_LONG).show();
-
-            getInviteInfo();
-            return;
-        }
-
-        int numberOfInvitees = mGetInviteInfoResponse.invitees.size();
-        if (numberOfInvitees >= mGetInviteInfoResponse.totalLimit) {
-            Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
-                    Toast.LENGTH_LONG).show();
-        } else if (mGetInviteInfoResponse.invitees.contains(phoneNumber)) {
-            Toast.makeText(getActivity(), R.string.invitation_already_sent,
-                    Toast.LENGTH_LONG).show();
-        } else {
-            mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
-            mProgressDialog.show();
-
-            List<String> invitees = new ArrayList<>();
-            invitees.add(phoneNumber);
-
-            SendInviteRequest sendInviteRequest = new SendInviteRequest(invitees);
-            Gson gson = new Gson();
-            String json = gson.toJson(sendInviteRequest);
-            mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                    Constants.BASE_URL_POST_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
-            mSendInviteTask.execute();
-        }
-    }
-
-    private void sendRecommendationRequest(String mobileNumber) {
-        if (mAskForRecommendationTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_recommendation));
-        mProgressDialog.show();
-        AskForRecommendationRequest mAskForRecommendationRequest =
-                new AskForRecommendationRequest(mobileNumber);
-        Gson gson = new Gson();
-        String json = gson.toJson(mAskForRecommendationRequest);
-        mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
-                Constants.BASE_URL_POST_MM + Constants.URL_ASK_FOR_RECOMMENDATION, json, getActivity());
-        mAskForRecommendationTask.mHttpResponseListener = this;
-        mAskForRecommendationTask.execute((Void) null);
-    }
-
-    private void setContactInformation(View v, String contactName, String contactNumber,
-                                       String imageUrl, final int backgroundColor) {
-        final TextView contactNameView = (TextView) v.findViewById(R.id.textview_contact_name);
-        final ImageView contactImage = (ImageView) v.findViewById(R.id.image_contact);
-
-        contactImage.setBackgroundResource(backgroundColor);
-        contactNameView.setText(contactName);
-
-        if (imageUrl != null && !imageUrl.equals("")) {
-            Glide.with(getActivity())
-                    .load(imageUrl)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            setPlaceHolderImage(contactImage, backgroundColor);
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model,
-                                                       Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
-                    .centerCrop()
-                    .into(contactImage);
-        } else {
-            contactImage.setBackgroundResource(backgroundColor);
-            setPlaceHolderImage(contactImage, backgroundColor);
-        }
-    }
-
-    private void setPlaceHolderImage(ImageView contactImage, int backgroundColor) {
-        contactImage.setBackgroundResource(backgroundColor);
-        Glide.with(getActivity())
-                .load(R.drawable.people)
-                .fitCenter()
-                .into(contactImage);
     }
 
     @Override
@@ -332,17 +75,6 @@ public class AllContactsFragment extends Fragment implements
         super.onResume();
 
         mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onDestroyView() {
-        getLoaderManager().destroyLoader(CONTACTS_QUERY_LOADER);
-        super.onDestroy();
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return true;
     }
 
     @Override
@@ -354,9 +86,9 @@ public class AllContactsFragment extends Fragment implements
     }
 
     @Override
-    public void onDetach() {
-        setMenuVisibility(false);
-        super.onDetach();
+    public void onDestroyView() {
+        getLoaderManager().destroyLoader(CONTACTS_QUERY_LOADER);
+        super.onDestroy();
     }
 
     @Override
@@ -397,7 +129,6 @@ public class AllContactsFragment extends Fragment implements
         final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1"
                 + " AND " + ContactsContract.Contacts.DISPLAY_NAME
                 + " LIKE '%" + mQuery + "%'";
-        Log.e("Query", selection);
         final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
@@ -414,96 +145,12 @@ public class AllContactsFragment extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.e("Count", data.getCount() + "");
         mAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
-    }
-
-    @Override
-    public void httpResponseReceiver(String result) {
-        if (result == null) {
-            mProgressDialog.dismiss();
-            mGetInviteInfoTask = null;
-            mSendInviteTask = null;
-
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT).show();
-
-            return;
-        }
-
-        List<String> resultList = Arrays.asList(result.split(";"));
-        Gson gson = new Gson();
-
-        if (resultList.get(0).equals(Constants.COMMAND_SEND_INVITE)) {
-            try {
-                if (resultList.size() > 2) {
-                    mSendInviteResponse = gson.fromJson(resultList.get(2), SendInviteResponse.class);
-
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
-                        }
-
-                        mGetInviteInfoResponse.invitees.add(mSelectedNumber);
-                        getInviteInfo();
-                    } else if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            mProgressDialog.dismiss();
-            mSendInviteTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
-            try {
-
-                if (resultList.size() > 2) {
-                    mAskForRecommendationResponse = gson.fromJson(resultList.get(2), AskForRecommendationResponse.class);
-
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
-                        }
-                    } else if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mAskForRecommendationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            mProgressDialog.dismiss();
-            mAskForRecommendationTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
-            try {
-                if (resultList.size() > 2)
-                    mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mGetInviteInfoTask = null;
-        }
     }
 
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
