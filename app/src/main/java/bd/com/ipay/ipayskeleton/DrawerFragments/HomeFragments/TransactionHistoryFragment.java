@@ -454,7 +454,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         }
     }
 
-    public class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
 
@@ -464,7 +464,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         public class ViewHolder extends RecyclerView.ViewHolder {
             private TextView mTransactionDescription;
             private TextView mTime;
-            //            private TextView mOtherUserName;
             private TextView mPurposeView;
             private TextView loadMoreTextView;
             private RoundedImageView mPortrait;
@@ -475,7 +474,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 super(itemView);
 
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
-//                mOtherUserName = (TextView) itemView.findViewById(R.id.otherUserName);
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mPurposeView = (TextView) itemView.findViewById(R.id.purpose);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
@@ -495,11 +493,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                     mAmountTextView.setText("+" + String.format("%.2f", amount));
                 else
                     mAmountTextView.setText(String.format("%.2f", amount));
-
-//                if (userTransactionHistoryClasses.get(pos).getOtherUserName() != null)
-//                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getOtherUserName());
-//                else
-//                    mOtherUserName.setText(userTransactionHistoryClasses.get(pos).getReceiverInfo());
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);

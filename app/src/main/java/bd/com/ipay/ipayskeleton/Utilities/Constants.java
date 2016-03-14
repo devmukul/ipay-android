@@ -134,6 +134,7 @@ public class Constants {
     public static final String URL_LOG_OUT = "signout";
     public static final String URL_USER_ACTIVITY = "report/activities";
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
+    public static final String URL_GET_NOTIFICATIONS = "requests/received";
     public static final String URL_REQUEST_MONEY = "requestmoney";
     public static final String URL_PENDING_PAYMENT_REQUEST_RECEIVED = "payment/received";
     public static final String URL_PENDING_PAYMENT_REQUEST_SENT = "payment/sent";
@@ -192,6 +193,7 @@ public class Constants {
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
     public static final String COMMAND_GET_USER_ACTIVITIES = "COMMAND_GET_USER_ACTIVITIES";
     public static final String COMMAND_GET_TRANSACTION_HISTORY = "COMMAND_GET_TRANSACTION_HISTORY";
+    public static final String COMMAND_GET_NOTIFICATIONS = "COMMAND_GET_NOTIFICATIONS";
     public static final String COMMAND_ADD_TRUSTED_DEVICE = "COMMAND_ADD_TRUSTED_DEVICE";
     public static final String COMMAND_GET_PENDING_REQUESTS_OTHERS = "COMMAND_GET_PENDING_REQUESTS_OTHERS";
     public static final String COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED = "COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED";
@@ -287,6 +289,10 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_TOP_UP = 2001;
     public static final int TRANSACTION_HISTORY_PAYMENT = 6002;
     public static final int TRANSACTION_HISTORY_EDUCATION = 8001;
+
+    public static final int SERVICE_ID_REQUEST_MONEY = 6001;
+    public static final int SERVICE_ID_REQUEST_INVOICE = 6003;
+    public static final int SERVICE_ID_RECOMMENDATION_REQUEST = 1002;
 
     public static final boolean DEBUG = true;
     public static final String RESULT = "Result";

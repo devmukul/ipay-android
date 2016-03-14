@@ -274,6 +274,7 @@
     <string name="no_internet_connection">No internet connection. Please check your connection.</string>
     <string name="balance_update_failed">Could not update balance. Please try again later</string>
     <string name="fetch_info_failed">Failed to fetch information</string>
+    <string name="fetch_notification_failed">Failed to fetch notifications.</string>
     <string name="fetch_participants_failed">Failed to fetch participants list</string>
     <string name="user_activity_get_failed">Could not fetch user activities</string>
     <string name="news_feed_get_failed">Could not fetch news feed</string>
