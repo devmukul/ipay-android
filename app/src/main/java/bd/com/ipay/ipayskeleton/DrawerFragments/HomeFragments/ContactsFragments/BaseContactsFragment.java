@@ -280,10 +280,7 @@ public abstract class BaseContactsFragment extends Fragment implements
             mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
             mProgressDialog.show();
 
-            List<String> invitees = new ArrayList<>();
-            invitees.add(phoneNumber);
-
-            SendInviteRequest sendInviteRequest = new SendInviteRequest(invitees);
+            SendInviteRequest sendInviteRequest = new SendInviteRequest(phoneNumber);
             Gson gson = new Gson();
             String json = gson.toJson(sendInviteRequest);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
