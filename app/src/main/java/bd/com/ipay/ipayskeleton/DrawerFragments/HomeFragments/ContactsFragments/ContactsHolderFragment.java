@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.flipboard.bottomsheet.BottomSheetLayout;
+
 import bd.com.ipay.ipayskeleton.R;
 
 public class ContactsHolderFragment extends Fragment implements View.OnClickListener {
@@ -22,6 +24,8 @@ public class ContactsHolderFragment extends Fragment implements View.OnClickList
     private FragmentStatePagerAdapter adapter;
     private TextView allTab;
     private TextView iPayTab;
+
+    private BottomSheetLayout mBottomSheetLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,11 +52,12 @@ public class ContactsHolderFragment extends Fragment implements View.OnClickList
         iPayTab = (TextView) v.findViewById(R.id.ipay_contacts_tab);
         iPayTab.setOnClickListener(this);
 
+        mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
+
         return v;
     }
 
     private void setUpViewPager() {
-
         adapter = new PendingListPageAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
 
@@ -107,10 +112,14 @@ public class ContactsHolderFragment extends Fragment implements View.OnClickList
             Fragment fragment;
             switch (pos) {
                 case 0:
-                    fragment = new AllContactsFragment();
+                    AllContactsFragment allContactsFragment = new AllContactsFragment();
+                    allContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+                    fragment = allContactsFragment;
                     break;
                 case 1:
-                    fragment = new IPayContactsFragment();
+                    IPayContactsFragment iPayContactsFragment = new IPayContactsFragment();
+                    iPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+                    fragment = iPayContactsFragment;
                     break;
                 default:
                     fragment = new Fragment();

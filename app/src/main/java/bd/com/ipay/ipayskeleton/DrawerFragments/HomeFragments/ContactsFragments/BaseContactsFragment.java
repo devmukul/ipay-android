@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -88,10 +89,12 @@ public abstract class BaseContactsFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
-
-        mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
         mProgressDialog = new ProgressDialog(getActivity());
-        setUpBottomSheet(v);
+
+        if (mBottomSheetLayout != null)
+            setUpBottomSheet();
+
+        Log.e("On Create View", "Called");
 
         return v;
     }
@@ -124,7 +127,7 @@ public abstract class BaseContactsFragment extends Fragment implements
     protected void setContactInformationInSheet(String contactName, String contactNumber,
                                                 String imageUrl, final int backgroundColor) {
         if (selectedBottomSheetView == null)
-            return;;
+            return;
 
         final TextView contactNameView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_contact_name);
         final ImageView contactImage = (ImageView) selectedBottomSheetView.findViewById(R.id.image_contact);
@@ -169,8 +172,12 @@ public abstract class BaseContactsFragment extends Fragment implements
         return true;
     }
 
-    protected void setUpBottomSheet(View rootView) {
-        mBottomSheetLayout = (BottomSheetLayout) rootView.findViewById(R.id.bottom_sheet);
+    public void setBottomSheetLayout(BottomSheetLayout bottomSheetLayout) {
+        this.mBottomSheetLayout = bottomSheetLayout;
+    }
+
+    private void setUpBottomSheet() {
+        Log.e("Activity", getActivity() + "");
 
         mSheetViewNonSubscriber = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_non_subscriber, null);
@@ -374,12 +381,18 @@ public abstract class BaseContactsFragment extends Fragment implements
     }
 
     protected void showSubscriberSheet() {
+        if (mBottomSheetLayout == null)
+            return;
+
         selectedBottomSheetView = mSheetViewSubscriber;
         mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
         mBottomSheetLayout.expandSheet();
     }
 
     protected void showNonSubscriberSheet() {
+        if (mBottomSheetLayout == null)
+            return;
+
         selectedBottomSheetView = mSheetViewNonSubscriber;
         mBottomSheetLayout.showWithSheetView(mSheetViewNonSubscriber);
         mBottomSheetLayout.expandSheet();

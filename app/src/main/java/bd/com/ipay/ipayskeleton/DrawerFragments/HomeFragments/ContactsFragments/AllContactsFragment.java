@@ -363,7 +363,6 @@ public class AllContactsFragment extends BaseContactsFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             try {
 
-
                 if (holder instanceof SectionViewHolder) {
                     SectionViewHolder vh = (SectionViewHolder) holder;
                     vh.bindView();
