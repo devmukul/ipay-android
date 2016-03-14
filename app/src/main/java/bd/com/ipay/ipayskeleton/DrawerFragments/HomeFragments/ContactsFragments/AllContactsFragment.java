@@ -279,9 +279,8 @@ public class AllContactsFragment extends BaseContactsFragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        mSelectedNumber = contactNumber;
-                        mSelectedName = name;
+                        setSelectedName(name);
+                        setSelectedNumber(contactNumber);
 
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
@@ -291,20 +290,16 @@ public class AllContactsFragment extends BaseContactsFragment {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                // Do something after 5s = 5000ms
+
                                 if (subscriber == null || !subscriber.containsKey(contactNumber)) {
-                                    mBottomSheetLayout.showWithSheetView(mSheetViewNonSubscriber);
-                                    setContactInformation(mSheetViewNonSubscriber, mSelectedName,
-                                            mSelectedNumber, imageUrl, COLORS[randomColor]);
-
+                                    showNonSubscriberSheet();
+                                    setContactInformationInSheet(name,
+                                            contactNumber, imageUrl, COLORS[randomColor]);
                                 } else {
-                                    mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
-                                    setContactInformation(mSheetViewSubscriber, mSelectedName,
-                                            mSelectedNumber, imageUrl, COLORS[randomColor]);
+                                    showSubscriberSheet();
+                                    setContactInformationInSheet(name,
+                                            contactNumber, imageUrl, COLORS[randomColor]);
                                 }
-
-                                // Show the sheet in the expanded view
-                                mBottomSheetLayout.expandSheet();
                             }
                         }, 100);
                     }

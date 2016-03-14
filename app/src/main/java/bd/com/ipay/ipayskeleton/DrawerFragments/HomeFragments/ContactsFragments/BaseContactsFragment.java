@@ -49,7 +49,7 @@ public abstract class BaseContactsFragment extends Fragment implements
         SearchView.OnQueryTextListener,
         HttpResponseListener {
 
-    protected BottomSheetLayout mBottomSheetLayout;
+    private BottomSheetLayout mBottomSheetLayout;
 
     protected final int[] COLORS = {
             R.color.background_default,
@@ -67,11 +67,12 @@ public abstract class BaseContactsFragment extends Fragment implements
 
     // When a contact item is clicked, we need to access its name and number from the sheet view.
     // So saving these in these two variables.
-    protected String mSelectedName;
-    protected String mSelectedNumber;
+    private String mSelectedName;
+    private String mSelectedNumber;
 
-    protected View mSheetViewNonSubscriber;
-    protected View mSheetViewSubscriber;
+    private View mSheetViewNonSubscriber;
+    private View mSheetViewSubscriber;
+    private View selectedBottomSheetView;
 
     private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private GetInviteInfoResponse mGetInviteInfoResponse;
@@ -117,10 +118,16 @@ public abstract class BaseContactsFragment extends Fragment implements
         super.onDetach();
     }
 
-    protected void setContactInformation(View v, String contactName, String contactNumber,
-                                         String imageUrl, final int backgroundColor) {
-        final TextView contactNameView = (TextView) v.findViewById(R.id.textview_contact_name);
-        final ImageView contactImage = (ImageView) v.findViewById(R.id.image_contact);
+    /**
+     * Must be called after show(Non)SubscriberSheet
+     */
+    protected void setContactInformationInSheet(String contactName, String contactNumber,
+                                                String imageUrl, final int backgroundColor) {
+        if (selectedBottomSheetView == null)
+            return;;
+
+        final TextView contactNameView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_contact_name);
+        final ImageView contactImage = (ImageView) selectedBottomSheetView.findViewById(R.id.image_contact);
 
         contactImage.setBackgroundResource(backgroundColor);
         contactNameView.setText(contactName);
@@ -364,5 +371,25 @@ public abstract class BaseContactsFragment extends Fragment implements
 
             mGetInviteInfoTask = null;
         }
+    }
+
+    protected void showSubscriberSheet() {
+        selectedBottomSheetView = mSheetViewSubscriber;
+        mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
+        mBottomSheetLayout.expandSheet();
+    }
+
+    protected void showNonSubscriberSheet() {
+        selectedBottomSheetView = mSheetViewNonSubscriber;
+        mBottomSheetLayout.showWithSheetView(mSheetViewNonSubscriber);
+        mBottomSheetLayout.expandSheet();
+    }
+
+    protected void setSelectedName(String name) {
+        this.mSelectedName = name;
+    }
+
+    protected void setSelectedNumber(String contactNumber) {
+        this.mSelectedNumber = contactNumber;
     }
 }

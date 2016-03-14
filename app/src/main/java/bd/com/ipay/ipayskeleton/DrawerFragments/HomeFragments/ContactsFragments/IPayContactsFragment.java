@@ -242,6 +242,8 @@ public class IPayContactsFragment extends BaseContactsFragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        setSelectedName(name);
+                        setSelectedNumber(mobileNumber);
 
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
@@ -251,12 +253,10 @@ public class IPayContactsFragment extends BaseContactsFragment {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                mSelectedNumber = mobileNumber;
-                                mSelectedName = name;
 
-                                setContactInformation(mSheetViewSubscriber, mSelectedName,
-                                        mSelectedNumber, imageUrl, COLORS[randomColor]);
-                                mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
+                                showSubscriberSheet();
+                                setContactInformationInSheet(name,
+                                        mobileNumber, imageUrl, COLORS[randomColor]);
                             }
                         }, 100);
                     }
