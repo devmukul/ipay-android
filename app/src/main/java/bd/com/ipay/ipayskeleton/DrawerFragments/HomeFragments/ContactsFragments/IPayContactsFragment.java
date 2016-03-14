@@ -67,6 +67,7 @@ public class IPayContactsFragment extends Fragment implements
     private HashMap<String, String> subscriber = new HashMap<>();
 
     private BottomSheetLayout mBottomSheetLayout;
+    private SearchView mSearchView;
 
     // When a contact item is clicked, we need to access its name and number from the sheet view.
     // So saving these in these two variables.
@@ -236,8 +237,8 @@ public class IPayContactsFragment extends Fragment implements
         inflater.inflate(R.menu.contact, menu);
 
         final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(this);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(item);
+        mSearchView.setOnQueryTextListener(this);
     }
 
     @Override
@@ -248,6 +249,13 @@ public class IPayContactsFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onDetach() {
+        closeSearchView();
+        setMenuVisibility(false);
+        super.onDetach();
     }
 
     @Override
@@ -597,5 +605,10 @@ public class IPayContactsFragment extends Fragment implements
             mCursor = cursor;
             notifyDataSetChanged();
         }
+    }
+
+    private void closeSearchView() {
+        if (mSearchView != null && !mSearchView.isIconified())
+            mSearchView.setIconified(true);
     }
 }
