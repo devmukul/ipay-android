@@ -129,6 +129,7 @@ public class HomeActivity extends BaseActivity
         mMobileNumberView.setText(mUserID);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Get FireBase Token
         // TODO: Handle multiple entry in firebase database
         // TODO: Later, we'll update the firebase database periodically
         if (!pref.contains(Constants.FIRST_LAUNCH)) {

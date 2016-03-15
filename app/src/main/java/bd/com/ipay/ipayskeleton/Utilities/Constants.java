@@ -141,7 +141,7 @@ public class Constants {
     public static final String URL_PENDING_REQUEST_MONEY_TO_ME = "requestmoney/received";
     public static final String URL_PENDING_REQUEST_MONEY_FROM_ME = "requestmoney/sent";
     public static final String URL_REQUEST_MONEY_ACCEPT = "requestmoney/accept";
-    public static final String URL_REQUEST_REJECT = "requestmoney/reject";
+    public static final String URL_REQUEST_MONEY_REJECT = "requestmoney/reject";
     public static final String URL_REQUEST_CANCEL = "requestmoney/cancel";
     public static final String URL_PAYMENT_REQUEST_ACCEPT = "payment/accept";
     public static final String URL_PAYMENT_REQUEST_REJECT = "payment/reject";
@@ -162,6 +162,8 @@ public class Constants {
     public static final String URL_GET_INVITE_INFO = "settings/invitations";
     public static final String URL_SEND_INVITE = "settings/invitations";
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
+    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
+    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
 
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";

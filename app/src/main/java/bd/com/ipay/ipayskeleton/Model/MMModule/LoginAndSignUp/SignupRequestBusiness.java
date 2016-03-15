@@ -7,7 +7,7 @@ public class SignupRequestBusiness {
     public String name;
     public int accountType;
     public String dob;
-    public String passwordHash;
+    public String password;
     public String gender;
     public String otp;
     public String businessName;
@@ -21,7 +21,7 @@ public class SignupRequestBusiness {
 
     public SignupRequestBusiness(String mobileNumber, String deviceId,
                                  String name, int accountType, String dob,
-                                 String passwordHash, String gender, String otp, String businessName,
+                                 String password, String gender, String otp, String businessName,
                                  String businessType, String businessEmail, String personalEmail,
                                  String personalMobileNumber, AddressClass personalAddress,
                                  AddressClass businessAddress, String promoCode) {
@@ -30,7 +30,7 @@ public class SignupRequestBusiness {
         this.name = name;
         this.accountType = accountType;
         this.dob = dob;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.gender = gender;
         this.otp = otp;
         this.businessName = businessName;

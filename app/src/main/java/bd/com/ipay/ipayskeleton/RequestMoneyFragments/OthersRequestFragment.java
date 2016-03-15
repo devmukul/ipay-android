@@ -126,7 +126,7 @@ public class OthersRequestFragment extends Fragment implements HttpResponseListe
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REQUEST_REJECT, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY_REJECT, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.execute((Void) null);
     }

@@ -56,9 +56,9 @@ public class NotificationClass {
         String customDescription = "";
 
         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
-            customDescription = getOriginatorProfile().getUserName() + " requested " + amount + "Tk.";
+            customDescription = getOriginatorProfile().getUserName() + " requested " + amount + " Tk.";
         } else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) {
-            customDescription = description + ": " + getOriginatorProfile().getUserName() + " sent an invoice of " + amount + "Tk.";
+            customDescription = description + ": " + getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
         }
 
         return customDescription;

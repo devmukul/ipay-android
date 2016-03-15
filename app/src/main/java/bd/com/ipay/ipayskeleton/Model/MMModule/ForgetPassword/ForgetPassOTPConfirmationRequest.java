@@ -5,12 +5,12 @@ public class ForgetPassOTPConfirmationRequest {
     private String mobileNumber;
     private String deviceId;
     private String otp;
-    private String newPasswordHash;
+    private String newPassword;
 
-    public ForgetPassOTPConfirmationRequest(String mobileNumber, String deviceId, String otp, String newPasswordHash) {
+    public ForgetPassOTPConfirmationRequest(String mobileNumber, String deviceId, String otp, String newPassword) {
         this.mobileNumber = mobileNumber;
         this.deviceId = deviceId;
         this.otp = otp;
-        this.newPasswordHash = newPasswordHash;
+        this.newPassword = newPassword;
     }
 }

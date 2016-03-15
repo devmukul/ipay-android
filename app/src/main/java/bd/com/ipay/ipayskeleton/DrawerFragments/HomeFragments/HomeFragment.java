@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -83,12 +84,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private int itemsRemoved = 0;
 
     private ImageView refreshBalanceButton;
-//    private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private RelativeLayout mSendMoneyButtonView;
     private RelativeLayout mRequestMoneyView;
     private RelativeLayout mMakePaymentButtonView;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private Button mAddMoneyButton;
     private Button mWithdrawMoneyButton;
 
@@ -97,8 +97,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
 
-    private int pageCount = 0;
-    private boolean hasNextNews = false;
+    private final int pageCount = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,12 +135,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mSendMoneyButtonView = (RelativeLayout) v.findViewById(R.id.layout_send_money);
         mRequestMoneyView = (RelativeLayout) v.findViewById(R.id.layout_request_money);
         mMakePaymentButtonView = (RelativeLayout) v.findViewById(R.id.layout_make_payment);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
-//        mNewsFeedRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
-//        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
@@ -173,16 +171,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             getTransactionHistory();
         }
 
-//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                if (Utilities.isConnectionAvailable(getActivity())) {
-//                    pageCount = 0;
-//                    newsFeedResponsesList.clear();
-//                    getNewsFeed();
-//                }
-//            }
-//        });
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    getTransactionHistory();
+                }
+            }
+        });
 
         // Add to trusted device?
         if (UUID == null) {
@@ -308,7 +304,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
-        TransactionHistoryRequest mTransactionHistoryRequest = new TransactionHistoryRequest(null, 0);
+        TransactionHistoryRequest mTransactionHistoryRequest = new TransactionHistoryRequest(null, pageCount);
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
@@ -324,7 +320,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.dismiss();
             mRefreshBalanceTask = null;
             mGetNewsFeedTask = null;
-//            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
 
@@ -378,7 +374,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         }
 
                         HomeActivity.newsFeedLoadedOnce = true;
-                        hasNextNews = mGetNewsFeedResponse.isHasNext();
+                        // TODO: Handle news feed hasNext in future
                         mNewsFeedAdapter.notifyDataSetChanged();
                         mTransactionHistoryAdapter.notifyDataSetChanged();
 
@@ -395,7 +391,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             } else if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.news_feed_get_failed, Toast.LENGTH_LONG).show();
 
-//            mSwipeRefreshLayout.setRefreshing(false);
             mGetNewsFeedTask = null;
 
         } else if (resultList.get(0).equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
@@ -429,10 +424,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                     try {
                         mTransactionHistoryResponse = gson.fromJson(resultList.get(2), TransactionHistoryResponse.class);
+
                         // Show only last 5 transactions
                         userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
                                 0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
 
+                        if (userTransactionHistoryClasses.size() == 0)
+                            userTransactionHistoryClasses = null;
                         mTransactionHistoryAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
@@ -448,6 +446,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             } else if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
 
+            mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
         }
     }
@@ -565,7 +564,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 mItemView = itemView;
 
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
-//                mOtherUserName = (TextView) itemView.findViewById(R.id.otherUserName);
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mPurposeView = (TextView) itemView.findViewById(R.id.purpose);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);

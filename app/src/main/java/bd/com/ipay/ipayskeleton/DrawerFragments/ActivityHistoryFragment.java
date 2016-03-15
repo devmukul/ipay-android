@@ -507,7 +507,6 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mTransactionType;
             private RoundedImageView mPortrait;
             private TextView mTransactionDescription;
             private TextView mTime;
@@ -516,7 +515,6 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                mTransactionType = (TextView) itemView.findViewById(R.id.transaction_type);
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
@@ -527,7 +525,6 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
                 String type = activityLogTypes[userActivityResponsesList.get(pos).getType()];
                 String description = userActivityResponsesList.get(pos).getDescription();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userActivityResponsesList.get(pos).getTime());
-                mTransactionType.setText(type);
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
 
