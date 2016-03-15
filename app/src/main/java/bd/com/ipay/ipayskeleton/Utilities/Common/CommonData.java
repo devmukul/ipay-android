@@ -1,8 +1,5 @@
-package bd.com.ipay.ipayskeleton.Utilities;
+package bd.com.ipay.ipayskeleton.Utilities.Common;
 
-import android.util.Log;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +16,8 @@ public class CommonData {
     private static List<BusinessType> businessTypes;
     private static Map<Long, BusinessType> businessTypeMap;
 
-    private static List<Thana> thanas;
-    private static List<District> districts;
+    private static Map<Integer, Thana> thanas;
+    private static Map<Integer, District> districts;
 
     public static List<Bank> getAvailableBanks() {
         return availableBanks;
@@ -82,65 +79,19 @@ public class CommonData {
         }
     }
 
-
-    public static List<Thana> getThanas() {
+    public static Map<Integer, Thana> getThanas() {
         return thanas;
     }
 
-    public static boolean isThanasLoaded() {
-        return thanas != null && !thanas.isEmpty();
-    }
-
-    public static String[] getThanaNames() {
-        String[] thanaNames = new String[thanas.size()];
-        for (int i = 0; i < thanas.size(); i++) {
-            thanaNames[i] = thanas.get(i).getName();
-        }
-
-        return thanaNames;
-    }
-
-    public static void setThanas(List<Thana> thanas) {
+    public static void setThanas(Map<Integer, Thana> thanas) {
         CommonData.thanas = thanas;
     }
 
-    public static String[] getThanaNamesWithNoSelection() {
-        String[] thanaNames = getThanaNames();
-        String[] thanaNamesWithNoSelection = new String[thanaNames.length + 1];
-        thanaNamesWithNoSelection[0] = "No Selection";
-        System.arraycopy(thanaNames, 0, thanaNamesWithNoSelection, 1, thanaNames.length);
-        return thanaNamesWithNoSelection;
-    }
-
-
-
-
-    public static List<District> getDistricts() {
+    public static Map<Integer, District> getDistricts() {
         return districts;
     }
 
-    public static boolean isDistrictLoaded() {
-        return districts != null && !districts.isEmpty();
-    }
-
-    public static String[] getDistrictNames() {
-        String[] districtNames = new String[districts.size()];
-        for (int i = 0; i < districts.size(); i++) {
-            districtNames[i] = districts.get(i).getName();
-        }
-
-        return districtNames;
-    }
-
-    public static String[] getDistrictNamesWithNoSelection() {
-        String[] districtNames = getDistrictNames();
-        String[] districtNamesWithNoSelection = new String[districtNames.length + 1];
-        districtNamesWithNoSelection[0] = "No Selection";
-        System.arraycopy(districtNames, 0, districtNamesWithNoSelection, 1, districtNames.length);
-        return districtNamesWithNoSelection;
-    }
-
-    public static void setDistricts(List<District> districts) {
+    public static void setDistricts(Map<Integer, District> districts) {
         CommonData.districts = districts;
     }
 }

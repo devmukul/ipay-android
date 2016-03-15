@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import bd.com.ipay.ipayskeleton.Api.GetDistrictAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GetThanaAsyncTask;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationPersonalFragment;
@@ -72,6 +74,12 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         if (getIntent().hasExtra(MESSAGE)) {
             Toast.makeText(this, getIntent().getStringExtra(MESSAGE), Toast.LENGTH_LONG).show();
         }
+
+//        GetDistrictAsyncTask getDistrictAsyncTask = new GetDistrictAsyncTask(this);
+//        getDistrictAsyncTask.execute();
+
+//        GetThanaAsyncTask getThanaAsyncTask = new GetThanaAsyncTask(this);
+//        getThanaAsyncTask.execute();
     }
 
     public void switchToPersonalSignUpFragment() {

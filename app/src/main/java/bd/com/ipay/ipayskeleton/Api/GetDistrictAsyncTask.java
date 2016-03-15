@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -12,10 +10,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
-import bd.com.ipay.ipayskeleton.Utilities.CommonData;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 /**
@@ -37,12 +32,15 @@ public class GetDistrictAsyncTask extends HttpRequestGetAsyncTask {
                     GetDistrictResponse getDistrictResponse = gson.fromJson(resultArr[2],
                             GetDistrictResponse.class);
                     List<District> districts = getDistrictResponse.getDistricts();
-                    StringBuilder xml = new StringBuilder();
+                    StringBuilder ids = new StringBuilder();
+                    StringBuilder names = new StringBuilder();
                     for (District district : districts) {
-                        xml.append("<item>" + district.getName() + "</item>");
+                        ids.append(district.getId() + ", ");
+                        names.append("\"" + district.getName() + "\", ");
                     }
 
-                    Log.i("Districts", xml.toString());
+                    Log.i("District Ids", ids.toString());
+                    Log.i("District Names", names.toString());
                 } catch(Exception e) {
                     e.printStackTrace();
                 }

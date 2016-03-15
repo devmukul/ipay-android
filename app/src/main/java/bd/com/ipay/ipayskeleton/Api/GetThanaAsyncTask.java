@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -12,7 +10,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
-import bd.com.ipay.ipayskeleton.Utilities.CommonData;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 /**
@@ -35,12 +33,15 @@ public class GetThanaAsyncTask extends HttpRequestGetAsyncTask {
                             GetThanaResponse.class);
 
                     List<Thana> thanas = getThanaResponse.getThanas();
-                    StringBuilder xml = new StringBuilder();
+                    StringBuilder ids = new StringBuilder();
+                    StringBuilder names = new StringBuilder();
                     for (Thana thana : thanas) {
-                        xml.append("<item>" + thana.getName() + "</item>");
+                        ids.append(thana.getId() + ", ");
+                        names.append("\"" + thana.getName() + "\", ");
                     }
 
-                    Log.i("Thanas", xml.toString());
+                    Log.i("Thana Ids", ids.toString());
+                    Log.i("Thana Names", names.toString());
                 } catch(Exception e) {
                     e.printStackTrace();
                 }

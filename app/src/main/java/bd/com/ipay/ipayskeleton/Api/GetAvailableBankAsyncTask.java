@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -10,7 +9,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetAvailableBankResponse;
-import bd.com.ipay.ipayskeleton.Utilities.CommonData;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 /**

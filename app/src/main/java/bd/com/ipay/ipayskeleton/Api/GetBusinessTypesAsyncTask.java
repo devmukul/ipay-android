@@ -9,7 +9,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessTypeRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetBusinessTypeResponse;
-import bd.com.ipay.ipayskeleton.Utilities.CommonData;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 /**
