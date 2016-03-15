@@ -18,7 +18,9 @@
         android:id="@+id/swipeStack"
         android:layout_width="wrap_content"
         android:layout_height="260dp"
+        app:allowed_swipe_directions="only_left"
         app:animation_duration="500"
-        app:stack_rotation="0" />
+        app:stack_rotation="0"
+        app:stack_spacing="@dimen/value5" />
 
 </LinearLayout>
