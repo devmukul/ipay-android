@@ -34,7 +34,6 @@
                 android:layout_marginTop="@dimen/value5"
                 android:gravity="left"
                 android:text="News title"
-                android:textStyle="bold"
                 android:transitionName="@string/transition_title" />
 
             <TextView
@@ -48,7 +47,8 @@
                 android:gravity="left"
                 android:text="sample news sub descirption"
                 android:textStyle="bold"
-                android:transitionName="@string/transition_sub_title" />
+                android:transitionName="@string/transition_sub_title"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
