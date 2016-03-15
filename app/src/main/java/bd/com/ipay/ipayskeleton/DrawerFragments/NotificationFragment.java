@@ -1,9 +1,12 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,9 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.File;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +45,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationFragment extends Fragment implements HttpResponseListener {
+
+    private final int ACCEPT = 0;
+    private final int REJECT = 1;
+    private final int MARK_SPAM = 2;
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetNotificationsResponse mGetNotificationsResponse;
@@ -130,7 +140,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT_REQUEST_REJECT, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectPaymentTask.mHttpResponseListener = this;
         mRejectPaymentTask.execute((Void) null);
     }
@@ -148,7 +158,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT_REQUEST_ACCEPT, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptPaymentTask.mHttpResponseListener = this;
         mAcceptPaymentTask.execute((Void) null);
     }
@@ -165,7 +175,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REQUEST_REJECT, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.execute((Void) null);
     }
@@ -182,7 +192,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY_ACCEPT, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptRequestTask.mHttpResponseListener = this;
         mAcceptRequestTask.execute((Void) null);
     }
@@ -381,6 +391,53 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         }
     }
 
+    private void showAlertDialogue(final Long id, String description, final Long serviceID, String imageUrl, final int action) {
+        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.dialog_notification_action_confirm, null);
+        alertDialogue.setView(dialogLayout);
+
+        TextView title = (TextView) dialogLayout.findViewById(R.id.title);
+        TextView msg = (TextView) dialogLayout.findViewById(R.id.message);
+        RoundedImageView mPortrait = (RoundedImageView) dialogLayout.findViewById(R.id.portrait);
+
+        title.setText(R.string.confirm_query);
+        msg.setText(description);
+
+        Glide.with(getActivity())
+                .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                .crossFade()
+                .error(R.drawable.ic_person)
+                .transform(new CircleTransform(getActivity()))
+                .into(mPortrait);
+
+        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (action == ACCEPT) {
+                    if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) acceptRequestMoney(id);
+                    else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE)
+                        acceptPaymentRequest(id);
+                }
+
+                if (action == REJECT) {
+                    if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) rejectRequestMoney(id);
+                    else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE)
+                        rejectPaymentRequest(id);
+                }
+            }
+        });
+
+        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+
+        alertDialogue.show();
+    }
+
     private class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
@@ -418,10 +475,12 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
             public void bindView(int pos) {
 
                 final String imageUrl = notificationList.get(pos).getOriginatorProfile().getUserProfilePicture();
+                final String name = notificationList.get(pos).originatorProfile.getUserName();
                 final String description = notificationList.get(pos).getDescription();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(notificationList.get(pos).getRequestTime());
                 final String title = notificationList.get(pos).getTitle();
                 final Long id = notificationList.get(pos).getId();
+                final BigDecimal amount = notificationList.get(pos).getAmount();
                 final Long serviceID = notificationList.get(pos).getServiceID();
 
                 mDescription.setText(description);
@@ -452,18 +511,22 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                 acceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) acceptRequestMoney(id);
-                        else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE)
-                            acceptPaymentRequest(id);
+                        String customDescription = "";
+                        if (serviceID != Constants.SERVICE_ID_RECOMMENDATION_REQUEST) {
+                            customDescription = "You're going to send " + amount + " Tk. to " + name;
+                            showAlertDialogue(id, customDescription, serviceID, imageUrl, ACCEPT);
+                        }
                     }
                 });
 
                 rejectButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) rejectRequestMoney(id);
-                        else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE)
-                            rejectPaymentRequest(id);
+                        String customDescription = "";
+                        if (serviceID != Constants.SERVICE_ID_RECOMMENDATION_REQUEST) {
+                            customDescription = "You're going to cancel the request for " + amount + " Tk. from " + name;
+                            showAlertDialogue(id, customDescription, serviceID, imageUrl, REJECT);
+                        }
                     }
                 });
 
