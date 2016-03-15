@@ -69,7 +69,7 @@
                 style="@style/ProfileCardLayoutStyle">
 
                 <TextView
-                    android:id="@+id/textView_basic_info"
+                    android:id="@+id/textview_basic_info"
                     android:text="Basic Info"
                     android:layout_toLeftOf="@+id/button_edit_basic_info"
                     style="@style/ProfileHeadingStyle"/>
@@ -80,24 +80,24 @@
                     android:layout_height="wrap_content"
                     style="@style/ProfileButtonStyle"
                     android:layout_alignParentTop="true"
-                    android:layout_alignBaseline="@+id/textView_basic_info"
+                    android:layout_alignBaseline="@+id/textview_basic_info"
                     android:text="EDIT" />
 
                 <TextView
-                    android:id="@+id/textView_email_label"
+                    android:id="@+id/textview_email_label"
                     style="@style/ProfileLabelStyle"
                     android:layout_toLeftOf="@+id/textview_email"
-                    android:layout_below="@+id/textView_basic_info"
+                    android:layout_below="@+id/textview_basic_info"
                     android:text="Email" />
 
                 <TextView
                     android:id="@+id/textview_email"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textView_basic_info"
+                    android:layout_below="@+id/textview_basic_info"
                     android:text="rafikamal93@gmail.com"/>
 
                 <TextView
-                    android:id="@+id/textView_date_of_birth_label"
+                    android:id="@+id/textview_date_of_birth_label"
                     style="@style/ProfileLabelStyle"
                     android:layout_toLeftOf="@+id/textview_date_of_birth"
                     android:layout_below="@+id/textview_email"
@@ -110,7 +110,7 @@
                     android:text="02/06/1993"/>
 
                 <TextView
-                    android:id="@+id/textView_fathers_name_label"
+                    android:id="@+id/textview_fathers_name_label"
                     style="@style/ProfileLabelStyle"
                     android:layout_toLeftOf="@+id/textview_fathers_name"
                     android:layout_below="@+id/textview_date_of_birth"
@@ -123,7 +123,7 @@
                     android:text="Md. Kamal Uddin Sardar"/>
 
                 <TextView
-                    android:id="@+id/textView_mothers_name_label"
+                    android:id="@+id/textview_mothers_name_label"
                     style="@style/ProfileLabelStyle"
                     android:layout_toLeftOf="@+id/textview_mothers_name"
                     android:layout_below="@+id/textview_fathers_name"
@@ -136,7 +136,7 @@
                     android:text="Akhi Noor Chowdhury"/>
 
                 <TextView
-                    android:id="@+id/textView_spouse_name_label"
+                    android:id="@+id/textview_spouse_name_label"
                     style="@style/ProfileLabelStyle"
                     android:layout_toLeftOf="@+id/textview_spouse_name"
                     android:layout_below="@+id/textview_mothers_name"
@@ -149,7 +149,7 @@
                     android:text="N/A"/>
 
                 <TextView
-                    android:id="@+id/textView_occupation_label"
+                    android:id="@+id/textview_occupation_label"
                     style="@style/ProfileLabelStyle"
                     android:layout_toLeftOf="@+id/textview_occupation"
                     android:layout_below="@+id/textview_spouse_name"
@@ -162,7 +162,7 @@
                     android:text="Software Engineer"/>
 
                 <TextView
-                    android:id="@+id/textView_gender_label"
+                    android:id="@+id/textview_gender_label"
                     style="@style/ProfileLabelStyle"
                     android:layout_toLeftOf="@+id/textview_gender"
                     android:layout_below="@+id/textview_occupation"
@@ -187,16 +187,16 @@
                 style="@style/ProfileCardLayoutStyle">
 
                 <TextView
-                    android:id="@+id/textView_address"
+                    android:id="@+id/textview_address"
                     android:text="Address"
                     style="@style/ProfileHeadingStyle"/>
 
 
                 <!-- Present Address -->
                 <TextView
-                    android:id="@+id/textView_present_address_label"
+                    android:id="@+id/textview_present_address_label"
                     android:text="Present Address"
-                    android:layout_below="@+id/textView_address"
+                    android:layout_below="@+id/textview_address"
                     android:layout_toLeftOf="@+id/button_edit_present_address"
                     style="@style/ProfileAddressHeaderStyle"/>
 
@@ -205,22 +205,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/ProfileButtonStyle"
-                    android:layout_alignBaseline="@+id/textView_present_address_label"
+                    android:layout_alignBaseline="@+id/textview_present_address_label"
                     android:text="EDIT"
-                    android:layout_below="@+id/textView_address" />
+                    android:layout_below="@+id/textview_address" />
 
                 <TextView
-                    android:id="@+id/textView_present_address"
+                    android:id="@+id/textview_present_address"
                     style="@style/ProfileAddressTextStyle"
-                    android:layout_below="@id/textView_present_address_label"
+                    android:layout_below="@id/textview_present_address_label"
                     android:text="330 Ahsanulla Hall\nBUET\nPolash, Dhaka\nBangladesh"/>
 
 
                 <!-- Permanent Address -->
                 <TextView
-                    android:id="@+id/textView_permanent_address_label"
-                    android:text="Permenant Address"
-                    android:layout_below="@+id/textView_present_address"
+                    android:id="@+id/textview_permanent_address_label"
+                    android:text="Permanent Address"
+                    android:layout_below="@+id/textview_present_address"
                     android:layout_toLeftOf="@+id/button_edit_permanent_address"
                     style="@style/ProfileAddressHeaderStyle"/>
 
@@ -229,22 +229,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/ProfileButtonStyle"
-                    android:layout_alignBaseline="@+id/textView_permanent_address_label"
+                    android:layout_alignBaseline="@+id/textview_permanent_address_label"
                     android:text="ADD"
-                    android:layout_below="@+id/textView_present_address" />
+                    android:layout_below="@+id/textview_present_address" />
 
                 <TextView
-                    android:id="@+id/textView_permanent_address"
+                    android:id="@+id/textview_permanent_address"
                     style="@style/ProfileAddressTextStyle"
-                    android:layout_below="@id/textView_permanent_address_label"
+                    android:layout_below="@id/textview_permanent_address_label"
                     android:text=""/>
 
 
                 <!-- Office Address -->
                 <TextView
-                    android:id="@+id/textView_office_address_label"
+                    android:id="@+id/textview_office_address_label"
                     android:text="Office Address"
-                    android:layout_below="@+id/textView_permanent_address"
+                    android:layout_below="@+id/textview_permanent_address"
                     android:layout_toLeftOf="@+id/button_edit_office_address"
                     style="@style/ProfileAddressHeaderStyle"/>
 
@@ -253,14 +253,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/ProfileButtonStyle"
-                    android:layout_alignBaseline="@+id/textView_office_address_label"
+                    android:layout_alignBaseline="@+id/textview_office_address_label"
                     android:text="EDIT"
-                    android:layout_below="@+id/textView_permanent_address" />
+                    android:layout_below="@+id/textview_permanent_address" />
 
                 <TextView
-                    android:id="@+id/textView_office_address"
+                    android:id="@+id/textview_office_address"
                     style="@style/ProfileAddressTextStyle"
-                    android:layout_below="@id/textView_office_address_label"
+                    android:layout_below="@id/textview_office_address_label"
                     android:text="Test"/>
 
             </RelativeLayout>
@@ -277,16 +277,16 @@
                 style="@style/ProfileCardLayoutStyle">
 
                 <TextView
-                    android:id="@+id/textView_documents"
+                    android:id="@+id/textview_documents"
                     android:text="Documents"
                     style="@style/ProfileHeadingStyle"/>
 
                 <TextView
-                    android:id="@+id/textView_document_count"
+                    android:id="@+id/textview_document_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_below="@id/textView_documents"
+                    android:layout_below="@id/textview_documents"
                     android:text="You have submitted 3 documents"/>
 
                 <Button
@@ -301,7 +301,7 @@
                     android:padding="4dp"
                     android:layout_marginTop="16dp"
                     android:textStyle="bold"
-                    android:layout_below="@+id/textView_document_count" />
+                    android:layout_below="@+id/textview_document_count" />
 
             </RelativeLayout>
 

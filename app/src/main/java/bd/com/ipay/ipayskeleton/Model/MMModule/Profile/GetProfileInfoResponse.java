@@ -5,25 +5,28 @@ import java.util.Set;
 
 public class GetProfileInfoResponse {
 
+    public String message;
     public String mobileNumber;
     public String name;
     public String gender;
     public String dob;
-
-    public String country;
     public String email;
-    public String NIDNumber;
     public String occupation;
-    public String addressLine1;
-    public String addressLine2;
-    public String city;
-    public String district;
-    public String postalCode;
     public int emailVerificationStatus;
+    public int accountType;
+    public String verificationStatus;
+    public int verifiedByCount;
+    public String father;
+    public String mother;
+    public String spouse;
 
     public Set<UserProfilePictureClass> profilePictures = new HashSet<>();
 
     public GetProfileInfoResponse() {
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public String getMobileNumber() {
@@ -42,47 +45,43 @@ public class GetProfileInfoResponse {
         return dob;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public String getNIDNumber() {
-        return NIDNumber;
     }
 
     public String getOccupation() {
         return occupation;
     }
 
-    public String getAddressLine1() {
-        return addressLine1;
+    public int getEmailVerificationStatus() {
+        return emailVerificationStatus;
     }
 
-    public String getAddressLine2() {
-        return addressLine2;
+    public int getAccountType() {
+        return accountType;
     }
 
-    public String getCity() {
-        return city;
+    public String getVerificationStatus() {
+        return verificationStatus;
     }
 
-    public String getDistrict() {
-        return district;
+    public int getVerifiedByCount() {
+        return verifiedByCount;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public String getFather() {
+        return father;
+    }
+
+    public String getMother() {
+        return mother;
+    }
+
+    public String getSpouse() {
+        return spouse;
     }
 
     public Set<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
-    }
-
-    public int getEmailVerificationStatus() {
-        return emailVerificationStatus;
     }
 }

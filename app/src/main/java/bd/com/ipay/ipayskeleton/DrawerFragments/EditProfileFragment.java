@@ -240,7 +240,7 @@ public class EditProfileFragment extends Fragment implements HttpResponseListene
 
         mProgressDialog.setMessage(getString(R.string.fetching_profile_information));
         mProgressDialog.show();
-        GetProfileInfoRequest mGetProfileInfoRequest = new GetProfileInfoRequest(userID);
+        GetProfileInfoRequest mGetProfileInfoRequest = new GetProfileInfoRequest();
         Gson gson = new Gson();
         String json = gson.toJson(mGetProfileInfoRequest);
         mGetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
@@ -430,21 +430,21 @@ public class EditProfileFragment extends Fragment implements HttpResponseListene
             try {
                 mGetProfileInfoResponse = gson.fromJson(resultList.get(2), GetProfileInfoResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    userName = mGetProfileInfoResponse.getName();
-                    userEmail = mGetProfileInfoResponse.getEmail();
-                    userAddressLine1 = mGetProfileInfoResponse.getAddressLine1();
-                    userAddressLine2 = mGetProfileInfoResponse.getAddressLine2();
-                    userNID = mGetProfileInfoResponse.getNIDNumber();
-                    userOccupation = mGetProfileInfoResponse.getOccupation();
-                    userPostCode = mGetProfileInfoResponse.getPostalCode();
-                    userCity = mGetProfileInfoResponse.getCity();
-                    userDistrict = mGetProfileInfoResponse.getDistrict();
-                    emailVerificationStatus = mGetProfileInfoResponse.getEmailVerificationStatus();
-                    userCountry = mGetProfileInfoResponse.getCountry();
-                    if (emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)
-                        mEmailVerify.setImageResource(R.drawable.ic_verified_user_black_24dp);
-                    else if (emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)
-                        mEmailVerify.setImageResource(R.drawable.ic_sync_problem_black_24dp);
+//                    userName = mGetProfileInfoResponse.getName();
+//                    userEmail = mGetProfileInfoResponse.getEmail();
+//                    userAddressLine1 = mGetProfileInfoResponse.getAddressLine1();
+//                    userAddressLine2 = mGetProfileInfoResponse.getAddressLine2();
+//                    userNID = mGetProfileInfoResponse.getNIDNumber();
+//                    userOccupation = mGetProfileInfoResponse.getOccupation();
+//                    userPostCode = mGetProfileInfoResponse.getPostalCode();
+//                    userCity = mGetProfileInfoResponse.getCity();
+//                    userDistrict = mGetProfileInfoResponse.getDistrict();
+//                    emailVerificationStatus = mGetProfileInfoResponse.getEmailVerificationStatus();
+//                    userCountry = mGetProfileInfoResponse.getCountry();
+//                    if (emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)
+//                        mEmailVerify.setImageResource(R.drawable.ic_verified_user_black_24dp);
+//                    else if (emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)
+//                        mEmailVerify.setImageResource(R.drawable.ic_sync_problem_black_24dp);
 
                     // Set profile pictures now
                     profilePictures = mGetProfileInfoResponse.getProfilePictures();
