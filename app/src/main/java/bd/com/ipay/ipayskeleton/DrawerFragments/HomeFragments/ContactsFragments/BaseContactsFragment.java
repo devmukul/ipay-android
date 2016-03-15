@@ -90,6 +90,7 @@ public abstract class BaseContactsFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
+        getActivity().setTitle(R.string.contacts);
 
         if (mBottomSheetLayout != null)
             setUpBottomSheet();

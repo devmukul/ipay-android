@@ -21,7 +21,6 @@
                 android:layout_marginRight="@dimen/activity_vertical_margin_card"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_transaction_history"
-                android:visibility="gone"
                 app:riv_border_color="@color/colorPrimary"
                 app:riv_corner_radius="50dip"
                 app:riv_oval="false" />
@@ -33,7 +32,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/portrait"
-                android:text="dsadsads"
                 android:textStyle="bold" />
 
             <TextView
@@ -42,8 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title"
-                android:layout_toRightOf="@+id/portrait"
-                android:text="dsads" />
+                android:layout_toRightOf="@+id/portrait" />
 
             <TextView
                 android:id="@+id/time"
@@ -51,8 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/description"
-                android:layout_toRightOf="@+id/portrait"
-                android:text="dasdsa" />
+                android:layout_toRightOf="@+id/portrait" />
 
             <LinearLayout
                 android:id="@+id/options_layout"
@@ -61,7 +57,7 @@
                 android:layout_below="@+id/time"
                 android:layout_marginTop="@dimen/value10"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <View
                     android:layout_width="match_parent"
@@ -80,7 +76,7 @@
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:padding="@dimen/value5"
-                        android:text="@string/verify"
+                        android:text="@string/accept"
                         android:textSize="12sp" />
 
                     <View

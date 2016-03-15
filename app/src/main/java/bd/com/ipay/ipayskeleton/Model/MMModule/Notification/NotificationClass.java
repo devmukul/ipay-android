@@ -7,13 +7,13 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class NotificationClass {
 
     public Long id;
-    public String senderMobileNumber;
-    public String receiverMobileNumber;
     public BigDecimal amount;
     public Long requestTime;
     public String title;
     public Long serviceID;
     public String description;
+    public UserProfile originatorProfile;
+    public UserProfile receiverProfile;
 
     public NotificationClass() {
     }
@@ -22,13 +22,6 @@ public class NotificationClass {
         return id;
     }
 
-    public String getSenderMobileNumber() {
-        return senderMobileNumber;
-    }
-
-    public String getReceiverMobileNumber() {
-        return receiverMobileNumber;
-    }
 
     public BigDecimal getAmount() {
         return amount;
@@ -46,6 +39,14 @@ public class NotificationClass {
         else return title;
     }
 
+    public UserProfile getOriginatorProfile() {
+        return originatorProfile;
+    }
+
+    public UserProfile getReceiverProfile() {
+        return receiverProfile;
+    }
+
     public Long getServiceID() {
         return serviceID;
     }
@@ -55,9 +56,9 @@ public class NotificationClass {
         String customDescription = "";
 
         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
-            customDescription = senderMobileNumber + " requested " + amount + "Tk.";
+            customDescription = getOriginatorProfile().getUserName() + " requested " + amount + "Tk.";
         } else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) {
-            customDescription = description + ": " + senderMobileNumber + " sent an invoice of " + amount + "Tk.";
+            customDescription = description + ": " + getOriginatorProfile().getUserName() + " sent an invoice of " + amount + "Tk.";
         }
 
         return customDescription;

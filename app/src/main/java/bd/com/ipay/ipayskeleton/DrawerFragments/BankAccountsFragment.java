@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,7 +25,10 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
@@ -331,6 +335,9 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                             mListUserBankClasses.addAll(tempBankClasses);
                         }
 
+                        // Sort bank list by active banks to come first
+                        sortBankList();
+
                         if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
                             mEmptyListTextView.setVisibility(View.GONE);
                         else mEmptyListTextView.setVisibility(View.VISIBLE);
@@ -438,6 +445,16 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         }
     }
 
+    private void sortBankList() {
+        Collections.sort(mListUserBankClasses, new Comparator<UserBankClass>() {
+            @Override
+            public int compare(UserBankClass lhs, UserBankClass rhs) {
+                if (lhs.getAccountStatus() == Constants.BANK_ACCOUNT_STATUS_ACTIVE) return -1;
+                else return +1;
+            }
+        });
+    }
+
     public class BankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public BankListAdapter() {
@@ -451,6 +468,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             private LinearLayout optionsLayout;
             private Button enableDisableButton;
             private Button removeButton;
+            private CardView mBankCard;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -462,6 +480,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 enableDisableButton = (Button) itemView.findViewById(R.id.enable_disable_button);
                 removeButton = (Button) itemView.findViewById(R.id.remove_button);
+                mBankCard = (CardView) itemView.findViewById(R.id.bank_account_card);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -476,7 +495,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
             public void bindView(int pos) {
 
-                final long bankAccoutID = mListUserBankClasses.get(pos).getBankAccountId();
+                final long bankAccountID = mListUserBankClasses.get(pos).getBankAccountId();
                 final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();
 
                 long bankId = mListUserBankClasses.get(pos).getBankId();
@@ -488,8 +507,11 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
                 if (bankStatus == Constants.BANK_ACCOUNT_STATUS_ACTIVE) {
                     enableDisableButton.setText(R.string.disable);
+
                 } else if (bankStatus == Constants.BANK_ACCOUNT_STATUS_INACTIVE) {
                     enableDisableButton.setText(R.string.enable);
+                    mBankCard.setBackgroundColor(getResources().getColor(R.color.home_background));
+
                 } else {
                     enableDisableButton.setText(R.string.enable);
                     enableDisableButton.setEnabled(false);
@@ -510,9 +532,9 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (bankStatus == Constants.BANK_ACCOUNT_STATUS_ACTIVE) {
-                                            attemptDisableBank(bankAccoutID);
+                                            attemptDisableBank(bankAccountID);
                                         } else if (bankStatus == Constants.BANK_ACCOUNT_STATUS_INACTIVE) {
-                                            attemptEnableBank(bankAccoutID);
+                                            attemptEnableBank(bankAccountID);
                                         }
                                     }
                                 })
@@ -534,7 +556,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (Utilities.isConnectionAvailable(getActivity())) {
-                                            attemptRemoveBank(bankAccoutID);
+                                            attemptRemoveBank(bankAccountID);
                                         }
                                     }
                                 })

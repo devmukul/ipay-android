@@ -66,6 +66,7 @@
     <string name="forgot_password"><u>Forgot your password?</u></string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="accept">Accept</string>
     <string name="add_new_participant">Add new participant</string>
     <string name="remove_this_account_query">Remove this account from your bank list?</string>
     <string name="accept_money_request_confirm">Are you sure you want to accept this request for sending money?</string>
@@ -159,6 +160,7 @@
     <string name="select_birth_date">Select your birthday</string>
     <string name="please_select_your_birthday">Please select your birthday.</string>
     <string name="signup_failed">Sign up failed. Please try again later.</string>
+    <string name="signup_successful">Sign up successful. Welcome to iPay</string>
     <string name="login_failed_different_user">Login failed. Please check your login ID.</string>
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
