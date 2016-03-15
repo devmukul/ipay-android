@@ -35,6 +35,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseBusines
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
+import bd.com.ipay.ipayskeleton.Utilities.Common.DistrictList;
+import bd.com.ipay.ipayskeleton.Utilities.Common.ThanaList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -125,13 +127,13 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
         // Enable hyperlinked
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
-        ArrayAdapter<CharSequence> mAdapterBusinessCity = ArrayAdapter.createFromResource(getActivity(),
-                R.array.city, android.R.layout.simple_dropdown_item_1line);
+        ArrayAdapter<CharSequence> mAdapterBusinessCity = new ArrayAdapter<CharSequence>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, ThanaList.thanaNames);
         mBusinessCity.setAdapter(mAdapterBusinessCity);
         mBusinessHolderCity.setAdapter(mAdapterBusinessCity);
 
-        ArrayAdapter<CharSequence> mAdapterDistrict = ArrayAdapter.createFromResource(getActivity(),
-                R.array.district, android.R.layout.simple_dropdown_item_1line);
+        ArrayAdapter<CharSequence> mAdapterDistrict = new ArrayAdapter<CharSequence>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, DistrictList.districtNames);
         mBusinessDistrict.setAdapter(mAdapterDistrict);
         mBusinessHolderDistrict.setAdapter(mAdapterDistrict);
 

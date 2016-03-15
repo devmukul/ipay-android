@@ -47,6 +47,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Verification.EmailVerificationReq
 import bd.com.ipay.ipayskeleton.Model.MMModule.Verification.EmailVerificationResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
+import bd.com.ipay.ipayskeleton.Utilities.Common.DistrictList;
+import bd.com.ipay.ipayskeleton.Utilities.Common.ThanaList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -158,12 +160,12 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                 R.array.occupations, android.R.layout.simple_dropdown_item_1line);
         mOccupationSpinner.setAdapter(mAdapterOccupation);
 
-        ArrayAdapter<CharSequence> mAdapterCity = ArrayAdapter.createFromResource(getActivity(),
-                R.array.city, android.R.layout.simple_dropdown_item_1line);
+        ArrayAdapter<CharSequence> mAdapterCity = new ArrayAdapter<CharSequence>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, ThanaList.thanaNames);
         mCitySpinner.setAdapter(mAdapterCity);
 
-        ArrayAdapter<CharSequence> mAdapterDistrict = ArrayAdapter.createFromResource(getActivity(),
-                R.array.district, android.R.layout.simple_dropdown_item_1line);
+        ArrayAdapter<CharSequence> mAdapterDistrict = new ArrayAdapter<CharSequence>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, DistrictList.districtNames);
         mDistrictSpinner.setAdapter(mAdapterDistrict);
 
         mEmailVerify.setOnClickListener(new View.OnClickListener() {
@@ -359,7 +361,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 //        if (userCountry != null && userCountry.length() > 0)
 //            pref.edit().putString(Constants.USERCOUNTRY, userCountry).commit();
 
-        String[] cityArray = getResources().getStringArray(R.array.city);
+        String[] cityArray = ThanaList.thanaNames;
         for (int i = 0; i < cityArray.length; i++) {
             if (cityArray[i].equals(userCity)) {
                 mCitySpinner.setSelection(i);
@@ -367,7 +369,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             }
         }
 
-        String[] districtArray = getResources().getStringArray(R.array.district);
+        String[] districtArray = DistrictList.districtNames;
         for (int i = 0; i < districtArray.length; i++) {
             if (districtArray[i].equals(userDistrict)) {
                 mDistrictSpinner.setSelection(i);

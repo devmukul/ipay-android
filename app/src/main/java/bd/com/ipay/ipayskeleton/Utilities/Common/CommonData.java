@@ -16,9 +16,6 @@ public class CommonData {
     private static List<BusinessType> businessTypes;
     private static Map<Long, BusinessType> businessTypeMap;
 
-    private static Map<Integer, Thana> thanas;
-    private static Map<Integer, District> districts;
-
     public static List<Bank> getAvailableBanks() {
         return availableBanks;
     }
@@ -77,21 +74,5 @@ public class CommonData {
         for (BusinessType businessType: businessTypes) {
             businessTypeMap.put(businessType.getId(), businessType);
         }
-    }
-
-    public static Map<Integer, Thana> getThanas() {
-        return thanas;
-    }
-
-    public static void setThanas(Map<Integer, Thana> thanas) {
-        CommonData.thanas = thanas;
-    }
-
-    public static Map<Integer, District> getDistricts() {
-        return districts;
-    }
-
-    public static void setDistricts(Map<Integer, District> districts) {
-        CommonData.districts = districts;
     }
 }

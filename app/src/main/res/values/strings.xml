@@ -414,30 +414,6 @@
         <item>Private Service</item>
     </string-array>
 
-    <string-array name="district">
-        <item>Select One</item>
-        <item>Dhaka</item>
-        <item>Barisal</item>
-        <item>Khulna</item>
-        <item>Jessore</item>
-        <item>Bhola</item>
-        <item>Sylhet</item>
-    </string-array>
-
-    <string-array name="city">
-        <item>Select One</item>
-        <item>Lalbagh</item>
-        <item>Gulshan</item>
-        <item>Barisal Sadar</item>
-        <item>Mohakhali</item>
-        <item>Gornadi</item>
-        <item>Mongla</item>
-        <item>Bhola Sadar</item>
-        <item>Sylhet Sadar Thana</item>
-        <item>Potuakhali</item>
-        <item>Kathalbagan</item>
-    </string-array>
-
     <string-array name="default_bank_account_types">
         <item>Current</item>
         <item>Savings</item>
