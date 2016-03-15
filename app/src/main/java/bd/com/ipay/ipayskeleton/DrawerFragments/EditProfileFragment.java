@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,7 +32,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
@@ -52,7 +50,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.ThanaList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ProfileFragment extends Fragment implements HttpResponseListener {
+public class EditProfileFragment extends Fragment implements HttpResponseListener {
 
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
     private final int ACTION_VERIFY_EMAIL = 1;
@@ -122,65 +120,65 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.profile);
 
-//        profilePictures = new HashSet<>();
-//
-//        userID = pref.getString(Constants.USERID, "");
-//        userGender = pref.getString(Constants.GENDER, "");
-//        userDOB = pref.getString(Constants.BIRTHDAY, "");
-//        userCountry = pref.getString(Constants.USERCOUNTRY, "");
-//
-//        mNameEditText = (EditText) v.findViewById(R.id.name);
-//        mEmailEditText = (EditText) v.findViewById(R.id.email);
-//        mAddressLine1EditText = (EditText) v.findViewById(R.id.address_line_1);
-//        mAddressLine2EditText = (EditText) v.findViewById(R.id.address_line_2);
-//        mNIDEditText = (EditText) v.findViewById(R.id.nid);
-//        mPostCodeEditText = (EditText) v.findViewById(R.id.postcode);
-//
-//        mNameOfUserTextView = (TextView) v.findViewById(R.id.name_text);
-//        mMobileNumberTextView = (TextView) v.findViewById(R.id.mobile_number_text);
-//        mDateOfBirthTextView = (TextView) v.findViewById(R.id.dob_text);
-//
-//        mProfilePicture = (RoundedImageView) v.findViewById(R.id.profile_picture);
-//        mOccupationSpinner = (Spinner) v.findViewById(R.id.occupation);
-//        mCitySpinner = (Spinner) v.findViewById(R.id.city);
-//        mDistrictSpinner = (Spinner) v.findViewById(R.id.district);
-//        mEmailVerify = (ImageView) v.findViewById(R.id.email_verification_status);
-//
-//        mProgressDialog = new ProgressDialog(getActivity());
-//
-//        mProfilePicture.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivityForResult(new Intent(Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), ACTION_PICK_PROFILE_PICTURE);
-//            }
-//        });
-//
-//        ArrayAdapter<CharSequence> mAdapterOccupation = ArrayAdapter.createFromResource(getActivity(),
-//                R.array.occupations, android.R.layout.simple_dropdown_item_1line);
-//        mOccupationSpinner.setAdapter(mAdapterOccupation);
-//
-//        ArrayAdapter<CharSequence> mAdapterCity = new ArrayAdapter<CharSequence>(getActivity(),
-//                android.R.layout.simple_dropdown_item_1line, ThanaList.thanaNames);
-//        mCitySpinner.setAdapter(mAdapterCity);
-//
-//        ArrayAdapter<CharSequence> mAdapterDistrict = new ArrayAdapter<CharSequence>(getActivity(),
-//                android.R.layout.simple_dropdown_item_1line, DistrictList.districtNames);
-//        mDistrictSpinner.setAdapter(mAdapterDistrict);
-//
-//        mEmailVerify.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String email = mEmailEditText.getText().toString().trim();
-//                if (email.length() > 0 && emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_NOT_VERIFIED) {
-//                    showAlertDialogue(getString(R.string.alert_verify_email), ACTION_VERIFY_EMAIL);
-//                }
-//            }
-//        });
-//
-//        setProfilePicture("");
-//        getProfileInfo();
-//        disableAllEdits();
+        profilePictures = new HashSet<>();
+
+        userID = pref.getString(Constants.USERID, "");
+        userGender = pref.getString(Constants.GENDER, "");
+        userDOB = pref.getString(Constants.BIRTHDAY, "");
+        userCountry = pref.getString(Constants.USERCOUNTRY, "");
+
+        mNameEditText = (EditText) v.findViewById(R.id.name);
+        mEmailEditText = (EditText) v.findViewById(R.id.email);
+        mAddressLine1EditText = (EditText) v.findViewById(R.id.address_line_1);
+        mAddressLine2EditText = (EditText) v.findViewById(R.id.address_line_2);
+        mNIDEditText = (EditText) v.findViewById(R.id.nid);
+        mPostCodeEditText = (EditText) v.findViewById(R.id.postcode);
+
+        mNameOfUserTextView = (TextView) v.findViewById(R.id.name_text);
+        mMobileNumberTextView = (TextView) v.findViewById(R.id.mobile_number_text);
+        mDateOfBirthTextView = (TextView) v.findViewById(R.id.dob_text);
+
+        mProfilePicture = (RoundedImageView) v.findViewById(R.id.profile_picture);
+        mOccupationSpinner = (Spinner) v.findViewById(R.id.occupation);
+        mCitySpinner = (Spinner) v.findViewById(R.id.city);
+        mDistrictSpinner = (Spinner) v.findViewById(R.id.district);
+        mEmailVerify = (ImageView) v.findViewById(R.id.email_verification_status);
+
+        mProgressDialog = new ProgressDialog(getActivity());
+
+        mProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), ACTION_PICK_PROFILE_PICTURE);
+            }
+        });
+
+        ArrayAdapter<CharSequence> mAdapterOccupation = ArrayAdapter.createFromResource(getActivity(),
+                R.array.occupations, android.R.layout.simple_dropdown_item_1line);
+        mOccupationSpinner.setAdapter(mAdapterOccupation);
+
+        ArrayAdapter<CharSequence> mAdapterCity = new ArrayAdapter<CharSequence>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, ThanaList.thanaNames);
+        mCitySpinner.setAdapter(mAdapterCity);
+
+        ArrayAdapter<CharSequence> mAdapterDistrict = new ArrayAdapter<CharSequence>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, DistrictList.districtNames);
+        mDistrictSpinner.setAdapter(mAdapterDistrict);
+
+        mEmailVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = mEmailEditText.getText().toString().trim();
+                if (email.length() > 0 && emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_NOT_VERIFIED) {
+                    showAlertDialogue(getString(R.string.alert_verify_email), ACTION_VERIFY_EMAIL);
+                }
+            }
+        });
+
+        setProfilePicture("");
+        getProfileInfo();
+        disableAllEdits();
 
         return v;
     }

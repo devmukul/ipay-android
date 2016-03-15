@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="6dp">
 
-    <ScrollView
-        android:id="@+id/profile_info_form"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+
+        <!-- Topper -->
+        <android.support.v7.widget.CardView
+            style="@style/ProfileCardStyle"
+            app:cardElevation="4dp">
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin">
+                style="@style/ProfileCardLayoutStyle">
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/profile_picture"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="14dp"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_person"
@@ -33,218 +36,276 @@
                     app:riv_corner_radius="75dip"
                     app:riv_oval="false" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textview_name"
+                    android:layout_below="@+id/profile_picture"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/profile_picture"
-                    android:orientation="vertical">
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="@android:color/black"
+                    android:text="Rafi Kamal"/>
 
-                    <TextView
-                        android:id="@+id/name_text"
-                        style="@style/TextStylePrimaryLarge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_vertical_margin"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/mobile_number_text"
-                        style="@style/TextStylePrimaryMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/name_text"
-                        android:layout_marginLeft="@dimen/activity_vertical_margin" />
-
-                    <TextView
-                        android:id="@+id/dob_text"
-                        style="@style/TextStylePrimaryMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/mobile_number_text"
-                        android:layout_marginLeft="@dimen/activity_vertical_margin"
-                        android:visibility="gone" />
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textview_name"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:text="+8801939373436"/>
             </RelativeLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
-
-                <EditText
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/name"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
+        </android.support.v7.widget.CardView>
 
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <!-- Basic Info -->
+        <android.support.v7.widget.CardView
+            style="@style/ProfileCardStyle"
+            app:cardElevation="4dp">
 
-                <EditText
-                    android:id="@+id/nid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/nid_number"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+            <RelativeLayout
+                style="@style/ProfileCardLayoutStyle">
 
-            </android.support.design.widget.TextInputLayout>
+                <TextView
+                    android:id="@+id/textView_basic_info"
+                    android:text="Basic Info"
+                    android:layout_toLeftOf="@+id/button_edit_basic_info"
+                    style="@style/ProfileHeadingStyle"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <EditText
-                        android:id="@+id/email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/prompt_email"
-                        android:imeOptions="actionUnspecified"
-                        android:inputType="textWebEmailAddress"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/email_verification_status"
+                <Button
+                    android:id="@+id/button_edit_basic_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:clickable="true"
-                    android:padding="@dimen/value5"
-                    android:src="@drawable/ic_warning_black_24dp"
-                    android:tint="@color/colorPrimary" />
-            </LinearLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/address_line_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/address_line_1"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPostalAddress"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/address_line_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/address_line_2"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPostalAddress"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                    style="@style/ProfileButtonStyle"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignBaseline="@+id/textView_basic_info"
+                    android:text="EDIT" />
 
                 <TextView
-                    style="@style/TextStylePrimarySmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="@string/city" />
-
-                <Spinner
-                    android:id="@+id/city"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                    android:id="@+id/textView_email_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_email"
+                    android:layout_below="@+id/textView_basic_info"
+                    android:text="Email" />
 
                 <TextView
-                    style="@style/TextStylePrimarySmall"
-                    android:layout_width="0dp"
+                    android:id="@+id/textview_email"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textView_basic_info"
+                    android:text="rafikamal93@gmail.com"/>
+
+                <TextView
+                    android:id="@+id/textView_date_of_birth_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_date_of_birth"
+                    android:layout_below="@+id/textview_email"
+                    android:text="Date of Birth" />
+
+                <TextView
+                    android:id="@+id/textview_date_of_birth"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_email"
+                    android:text="02/06/1993"/>
+
+                <TextView
+                    android:id="@+id/textView_fathers_name_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_fathers_name"
+                    android:layout_below="@+id/textview_date_of_birth"
+                    android:text="Father's Name" />
+
+                <TextView
+                    android:id="@+id/textview_fathers_name"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_date_of_birth"
+                    android:text="Md. Kamal Uddin Sardar"/>
+
+                <TextView
+                    android:id="@+id/textView_mothers_name_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_mothers_name"
+                    android:layout_below="@+id/textview_fathers_name"
+                    android:text="Mother's Name" />
+
+                <TextView
+                    android:id="@+id/textview_mothers_name"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_fathers_name"
+                    android:text="Akhi Noor Chowdhury"/>
+
+                <TextView
+                    android:id="@+id/textView_spouse_name_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_spouse_name"
+                    android:layout_below="@+id/textview_mothers_name"
+                    android:text="Spouse's Name" />
+
+                <TextView
+                    android:id="@+id/textview_spouse_name"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_mothers_name"
+                    android:text="N/A"/>
+
+                <TextView
+                    android:id="@+id/textView_occupation_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_occupation"
+                    android:layout_below="@+id/textview_spouse_name"
+                    android:text="Occupation" />
+
+                <TextView
+                    android:id="@+id/textview_occupation"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_spouse_name"
+                    android:text="Software Engineer"/>
+
+                <TextView
+                    android:id="@+id/textView_gender_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_gender"
+                    android:layout_below="@+id/textview_occupation"
+                    android:text="Gender" />
+
+                <TextView
+                    android:id="@+id/textview_gender"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_occupation"
+                    android:text="Male"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+
+
+        <!-- Address -->
+        <android.support.v7.widget.CardView
+            style="@style/ProfileCardStyle"
+            app:cardElevation="4dp">
+
+            <RelativeLayout
+                style="@style/ProfileCardLayoutStyle">
+
+                <TextView
+                    android:id="@+id/textView_address"
+                    android:text="Address"
+                    style="@style/ProfileHeadingStyle"/>
+
+
+                <!-- Present Address -->
+                <TextView
+                    android:id="@+id/textView_present_address_label"
+                    android:text="Present Address"
+                    android:layout_below="@+id/textView_address"
+                    android:layout_toLeftOf="@+id/button_edit_present_address"
+                    style="@style/ProfileAddressHeaderStyle"/>
+
+                <Button
+                    android:id="@+id/button_edit_present_address"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="@string/district" />
+                    style="@style/ProfileButtonStyle"
+                    android:layout_alignBaseline="@+id/textView_present_address_label"
+                    android:text="EDIT"
+                    android:layout_below="@+id/textView_address" />
 
-                <Spinner
-                    android:id="@+id/district"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/textView_present_address"
+                    style="@style/ProfileAddressTextStyle"
+                    android:layout_below="@id/textView_present_address_label"
+                    android:text="330 Ahsanulla Hall\nBUET\nPolash, Dhaka\nBangladesh"/>
+
+
+                <!-- Permanent Address -->
+                <TextView
+                    android:id="@+id/textView_permanent_address_label"
+                    android:text="Permenant Address"
+                    android:layout_below="@+id/textView_present_address"
+                    android:layout_toLeftOf="@+id/button_edit_permanent_address"
+                    style="@style/ProfileAddressHeaderStyle"/>
+
+                <Button
+                    android:id="@+id/button_edit_permanent_address"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-            </LinearLayout>
+                    style="@style/ProfileButtonStyle"
+                    android:layout_alignBaseline="@+id/textView_permanent_address_label"
+                    android:text="ADD"
+                    android:layout_below="@+id/textView_present_address" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/textView_permanent_address"
+                    style="@style/ProfileAddressTextStyle"
+                    android:layout_below="@id/textView_permanent_address_label"
+                    android:text=""/>
 
-                <EditText
-                    android:id="@+id/postcode"
+
+                <!-- Office Address -->
+                <TextView
+                    android:id="@+id/textView_office_address_label"
+                    android:text="Office Address"
+                    android:layout_below="@+id/textView_permanent_address"
+                    android:layout_toLeftOf="@+id/button_edit_office_address"
+                    style="@style/ProfileAddressHeaderStyle"/>
+
+                <Button
+                    android:id="@+id/button_edit_office_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/ProfileButtonStyle"
+                    android:layout_alignBaseline="@+id/textView_office_address_label"
+                    android:text="EDIT"
+                    android:layout_below="@+id/textView_permanent_address" />
+
+                <TextView
+                    android:id="@+id/textView_office_address"
+                    style="@style/ProfileAddressTextStyle"
+                    android:layout_below="@id/textView_office_address_label"
+                    android:text="Test"/>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <!-- Documents -->
+        <android.support.v7.widget.CardView
+            style="@style/ProfileCardStyle"
+            app:cardElevation="4dp">
+
+            <RelativeLayout
+                style="@style/ProfileCardLayoutStyle">
+
+                <TextView
+                    android:id="@+id/textView_documents"
+                    android:text="Documents"
+                    style="@style/ProfileHeadingStyle"/>
+
+                <TextView
+                    android:id="@+id/textView_document_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/postcode"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@id/textView_documents"
+                    android:text="You have submitted 3 documents"/>
 
-            </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextStylePrimarySmall"
-                    android:layout_width="0dp"
+                <Button
+                    android:id="@+id/button_upload_documents"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="@string/occupation" />
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/background_white_button"
+                    android:text="UPLOAD DOCUMENTS"
+                    android:minHeight="0dp"
+                    android:padding="4dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/textView_document_count" />
 
-                <Spinner
-                    android:id="@+id/occupation"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-            </LinearLayout>
+            </RelativeLayout>
 
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+</ScrollView>
