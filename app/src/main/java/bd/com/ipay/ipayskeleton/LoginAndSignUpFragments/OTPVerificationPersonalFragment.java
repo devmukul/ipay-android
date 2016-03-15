@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -27,7 +26,6 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.FireBase.UserPersonal;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonalSignup;
@@ -312,15 +310,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String message = mLoginResponseModel.getMessage();
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
-                        Firebase rootRef = new Firebase(Constants.PATH_TO_IPAY_USERS);
-                        Firebase newUserRef = rootRef.child(SignupOrLoginActivity.mMobileNumber);
-                        UserPersonal mUserPersonal = new UserPersonal(SignupOrLoginActivity.mMobileNumber,
-                                Constants.MOBILE_ANDROID + mDeviceID,
-                                SignupOrLoginActivity.mName,
-                                SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword, SignupOrLoginActivity.mGender);
-                        newUserRef.setValue(mUserPersonal);
+                        Toast.makeText(getActivity(), R.string.signup_successful, Toast.LENGTH_LONG).show();
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                     } else {
                         if (getActivity() != null)

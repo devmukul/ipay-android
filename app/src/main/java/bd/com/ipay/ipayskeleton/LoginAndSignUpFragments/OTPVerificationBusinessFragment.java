@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -27,7 +26,6 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.FireBase.UserPersonal;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
@@ -299,14 +297,9 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             String message = mLoginResponseModel.getMessage();
 
             if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
-                Firebase rootRef = new Firebase(Constants.PATH_TO_IPAY_USERS);
-                Firebase newUserRef = rootRef.child(SignupOrLoginActivity.mMobileNumberBusiness);
-                UserPersonal mUserPersonal = new UserPersonal(SignupOrLoginActivity.mMobileNumberBusiness, Constants.MOBILE_ANDROID + mDeviceID,
-                        SignupOrLoginActivity.mNameBusiness,
-                        SignupOrLoginActivity.mBirthdayBusinessHolder, SignupOrLoginActivity.mPasswordBusiness, "M");
-                newUserRef.setValue(mUserPersonal);
+                Toast.makeText(getActivity(), R.string.signup_successful, Toast.LENGTH_LONG).show();
+                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
             } else {
                 if (getActivity() != null)

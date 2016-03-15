@@ -496,7 +496,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
             public void bindView(int pos) {
 
-                final long bankAccoutID = mListUserBankClasses.get(pos).getBankAccountId();
+                final long bankAccountID = mListUserBankClasses.get(pos).getBankAccountId();
                 final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();
 
                 long bankId = mListUserBankClasses.get(pos).getBankId();
@@ -533,9 +533,9 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (bankStatus == Constants.BANK_ACCOUNT_STATUS_ACTIVE) {
-                                            attemptDisableBank(bankAccoutID);
+                                            attemptDisableBank(bankAccountID);
                                         } else if (bankStatus == Constants.BANK_ACCOUNT_STATUS_INACTIVE) {
-                                            attemptEnableBank(bankAccoutID);
+                                            attemptEnableBank(bankAccountID);
                                         }
                                     }
                                 })
@@ -557,7 +557,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (Utilities.isConnectionAvailable(getActivity())) {
-                                            attemptRemoveBank(bankAccoutID);
+                                            attemptRemoveBank(bankAccountID);
                                         }
                                     }
                                 })

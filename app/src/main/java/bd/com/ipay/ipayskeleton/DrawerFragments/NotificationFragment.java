@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -33,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -415,6 +417,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
 
             public void bindView(int pos) {
 
+                final String imageUrl = notificationList.get(pos).getOriginatorProfile().getUserProfilePicture();
                 final String description = notificationList.get(pos).getDescription();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(notificationList.get(pos).getRequestTime());
                 final String title = notificationList.get(pos).getTitle();
@@ -424,6 +427,13 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                 mDescription.setText(description);
                 mTime.setText(time);
                 mTitle.setText(title);
+
+                Glide.with(getActivity())
+                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .crossFade()
+                        .error(R.drawable.ic_person)
+                        .transform(new CircleTransform(getActivity()))
+                        .into(mPortrait);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -463,8 +473,6 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                         // TODO
                     }
                 });
-
-                //TODO: Show profile picture in mPortrait
 
             }
 
