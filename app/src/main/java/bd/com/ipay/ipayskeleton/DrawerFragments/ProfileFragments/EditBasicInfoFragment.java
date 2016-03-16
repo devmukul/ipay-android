@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -160,6 +161,17 @@ public class EditBasicInfoFragment extends Fragment {
     }
 
     private void setProfileInformation() {
+        if (ProfileFragment.mProfilePictures.size() > 0) {
+
+            String imageUrl = "";
+            for (Iterator<UserProfilePictureClass> it = ProfileFragment.mProfilePictures.iterator(); it.hasNext(); ) {
+                UserProfilePictureClass userProfilePictureClass = it.next();
+                imageUrl = userProfilePictureClass.getUrl();
+                break;
+            }
+            setProfilePicture(imageUrl);
+        }
+
         mNameEditText.setText(ProfileFragment.mName);
         mEmailEditText.setText(ProfileFragment.mEmailAddress);
         mFathersNameEditText.setText(ProfileFragment.mFathersName);
@@ -209,8 +221,11 @@ public class EditBasicInfoFragment extends Fragment {
     private void setProfilePicture(String url) {
         try {
             if (!url.equals("")) {
+                if (!url.startsWith("content:"))
+                    url = Constants.BASE_URL_IMAGE_SERVER + url;
+
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + url)
+                        .load(url)
                         .crossFade()
                         .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))
@@ -236,6 +251,10 @@ public class EditBasicInfoFragment extends Fragment {
             try {
                 if (requestCode == ACTION_PICK_PROFILE_PICTURE) {
                     if (intent != null && intent.getData() != null) {
+                        setProfilePicture(intent.getData().toString());
+                        ProfileFragment.mProfilePictures.clear();
+                        ProfileFragment.mProfilePictures.add(new UserProfilePictureClass(
+                                intent.getData().toString(), ""));
                         ((EditProfileActivity) getActivity()).updateProfilePicture(intent.getData());
                     } else {
                         if (getActivity() != null)

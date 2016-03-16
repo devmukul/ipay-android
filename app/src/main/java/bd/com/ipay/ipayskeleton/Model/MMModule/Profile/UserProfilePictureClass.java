@@ -5,6 +5,10 @@ public class UserProfilePictureClass {
     private String url;
     private String quality;
 
+    public UserProfilePictureClass(String url, String quality) {
+        this.url = url;
+        this.quality = quality;
+    }
 
     public String getUrl() {
         return url;

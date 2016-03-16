@@ -34,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserAddressRequestBuilder
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
+import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileFragment extends Fragment implements HttpResponseListener {
@@ -200,7 +201,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mMothersNameView.setText(mMothersName);
         mSpouseNameView.setText(mSpouseName);
         mOccupationView.setText(mOccupation);
-        mGenderView.setText(mGender);
+        if (GenderList.genderCodeToNameMap.containsKey(mGender))
+            mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
 
         if (mPresentAddress != null) {
             mPresentAddressView.setText(mPresentAddress.toString());
@@ -250,8 +252,11 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private void setProfilePicture(String url) {
         try {
             if (!url.equals("")) {
+                if (!url.startsWith("content:"))
+                    url = Constants.BASE_URL_IMAGE_SERVER + url;
+
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + url)
+                        .load(url)
                         .crossFade()
                         .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))
