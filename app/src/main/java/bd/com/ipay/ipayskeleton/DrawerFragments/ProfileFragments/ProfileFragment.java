@@ -29,6 +29,9 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserAddressResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetIdentificationDocumentResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocument;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocumentsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserAddressRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
@@ -44,6 +47,9 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetUserAddressTask = null;
     private GetUserAddressResponse mGetUserAddressResponse = null;
+
+    private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
+    private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
 
     private ProgressDialog mProgressDialog;
 
@@ -71,7 +77,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private Button mOfficeAddressEditButton;
     private Button mUploadDocumentsButton;
 
-
     private SharedPreferences pref;
 
     public static String mName = "";
@@ -89,6 +94,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     public static AddressClass mPresentAddress;
     public static AddressClass mPermanentAddress;
     public static AddressClass mOfficeAddress;
+
+    public static List<IdentificationDocument> mIdentificationDocuments;
 
 
     @Override
@@ -170,6 +177,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         setProfilePicture("");
         getProfileInfo();
         getUserAddress();
+        getIdentificationDocuments();
 
         return v;
     }
@@ -216,6 +224,14 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             mOfficeAddressView.setText(mOfficeAddress.toString());
             mOfficeAddressEditButton.setText(R.string.action_edit);
         }
+
+        int numberOfDocumentsSubmitted = 0;
+        if (mIdentificationDocuments != null)
+            numberOfDocumentsSubmitted = mIdentificationDocuments.size();
+
+        mDocumentCountView.setText(getString(R.string.you_have_uploaded)
+                + numberOfDocumentsSubmitted + getString(R.string.documents));
+
     }
 
     public void editProfile(int targetTab) {
@@ -249,6 +265,17 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mGetUserAddressTask.execute();
     }
 
+    private void getIdentificationDocuments() {
+        if (mGetIdentificationDocumentsTask != null) {
+            return;
+        }
+
+        mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
+                new IdentificationDocumentsRequestBuilder().getGeneratedUri(), getActivity());
+        mGetIdentificationDocumentsTask.mHttpResponseListener = this;
+        mGetIdentificationDocumentsTask.execute();
+    }
+
     private void setProfilePicture(String url) {
         try {
             if (!url.equals("")) {
@@ -279,6 +306,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
             mGetUserAddressTask = null;
+            mGetIdentificationDocumentsTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -349,9 +377,28 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
             mGetUserAddressTask = null;
         }
+        else if (resultList.get(0).equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
+            try {
+                mIdentificationDocumentResponse = gson.fromJson(resultList.get(2), GetIdentificationDocumentResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mIdentificationDocuments = mIdentificationDocumentResponse.getDocuments();
+
+                    setProfileInformation();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+            }
+
+            mGetIdentificationDocumentsTask = null;
+        }
 
 
-        if (mGetProfileInfoTask == null && mGetUserAddressTask == null) {
+        if (mGetProfileInfoTask == null && mGetUserAddressTask == null && mGetIdentificationDocumentsTask == null) {
             mProgressDialog.dismiss();
         }
     }

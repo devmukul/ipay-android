@@ -400,6 +400,8 @@
     <string name="tin_number">Tax Identification Number</string>
     <string name="upload_successful">Upload successful</string>
     <string name="uploaded">Uploaded</string>
+    <string name="documents">" documents"</string>
+    <string name="you_have_uploaded">"You have uploaded "</string>
 
     <string-array name="account_types">
         <item>Personal</item>
