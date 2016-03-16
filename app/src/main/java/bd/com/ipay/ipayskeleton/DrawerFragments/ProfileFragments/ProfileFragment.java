@@ -229,8 +229,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         if (mIdentificationDocuments != null)
             numberOfDocumentsSubmitted = mIdentificationDocuments.size();
 
-        mDocumentCountView.setText(getString(R.string.you_have_uploaded)
-                + numberOfDocumentsSubmitted + getString(R.string.documents));
+        mDocumentCountView.setText(getString(R.string.you_have_submitted) + " "
+                + numberOfDocumentsSubmitted + " " + getString(R.string.documents));
 
     }
 

@@ -20,6 +20,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -101,6 +102,22 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 selectProfilePicture(ACTION_PICK_TIN, mTinUploadButton, mTinNumber);
             }
         });
+        
+        for (IdentificationDocument identificationDocument : ProfileFragment.mIdentificationDocuments) {
+            String documentType = identificationDocument.getDocumentType();
+            if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID))
+                mNationalIdUploadButton.setText(getString(R.string.uploaded));
+            else if (documentType.equals(Constants.DOCUMENT_TYPE_PASSPORT))
+                mPassportUploadButton.setText(getString(R.string.uploaded));
+            else if (documentType.equals(Constants.DOCUMENT_TYPE_DRIVING_LICENSE))
+                mDrivingLicenseUploadButton.setText(getString(R.string.uploaded));
+            else if (documentType.equals(Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE))
+                mBirthCertificateUploadButton.setText(getString(R.string.uploaded));
+            else if (documentType.equals(Constants.DOCUMENT_TYPE_TIN))
+                mTinUploadButton.setText(getString(R.string.uploaded));
+        }
+
+        
 
         return v;
     }
