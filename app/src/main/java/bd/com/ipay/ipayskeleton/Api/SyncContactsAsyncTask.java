@@ -61,9 +61,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
 
                     for (int i = 0; i < userFriends.size(); i++) {
 
-                        Gson gson = new Gson();
-                        String json = gson.toJson(userFriends.get(i));
-
                         ref.child(Constants.FIREBASE_CONTACT_LIST).child(authData.getUid()).
                                 child(Constants.FIREBASE_DIRTY).child(userFriends.get(i).getPhoneNumber())
                                 .setValue(userFriends.get(i));
@@ -85,25 +82,27 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
                 // Wait until the auth is not processed
             }
 
-            // Update request to server
-            UpdateRequestToServer mUpdateRequestToServer = new UpdateRequestToServer();
-            if (Utilities.isConnectionAvailable(mContext))
-                mHttpResponse = makeRequest(mUpdateRequestToServer.getGeneratedUri());
-            else
-                Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            if (isReturnedFromServer == AUTH_SUCCESS) {
+                // Update request to server
+                UpdateRequestToServer mUpdateRequestToServer = new UpdateRequestToServer();
+                if (Utilities.isConnectionAvailable(mContext))
+                    mHttpResponse = makeRequest(mUpdateRequestToServer.getGeneratedUri());
+                else
+                    Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
 
-            try {
-                String status = mHttpResponse.getStatusLine().getStatusCode() + "";
+                try {
+                    String status = mHttpResponse.getStatusLine().getStatusCode() + "";
 
-                if (status.equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    updateSuccess = true;
-                } else if (mContext != null)
-                    Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_contacts));
-            } catch (Exception e) {
-                e.printStackTrace();
+                    if (status.equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        updateSuccess = true;
+                    } else if (mContext != null)
+                        Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_contacts));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (updateSuccess) return Constants.SUCCESS;
             }
-
-            if (updateSuccess) return Constants.SUCCESS;
 
         } catch (Exception e) {
             e.printStackTrace();
