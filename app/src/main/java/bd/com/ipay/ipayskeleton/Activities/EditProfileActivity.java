@@ -89,7 +89,8 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
             mProgressDialog.setMessage(getString(R.string.saving_profile_information));
             mProgressDialog.show();
             SetProfileInfoRequest mSetProfileInfoRequest = new SetProfileInfoRequest(
-                    ProfileFragment.mName, ProfileFragment.mGender, ProfileFragment.mDateOfBirth,
+                    ProfileFragment.mMobileNumber, ProfileFragment.mName,
+                    ProfileFragment.mGender, ProfileFragment.mDateOfBirth,
                     ProfileFragment.mEmailAddress, ProfileFragment.mOccupation, ProfileFragment.mFathersName,
                     ProfileFragment.mMothersName, ProfileFragment.mSpouseName);
 
