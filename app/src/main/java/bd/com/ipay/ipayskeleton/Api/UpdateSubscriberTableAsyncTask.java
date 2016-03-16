@@ -119,10 +119,6 @@ public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, Stri
             // Authenticate users with a custom Firebase token
             ref.authWithCustomToken(HomeActivity.fireBaseToken, authResultHandler);
 
-            while (isReturnedFromServer == AUTH_IN_PROGRESS) {
-                // Wait until the auth is not processed
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

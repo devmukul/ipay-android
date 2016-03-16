@@ -5,14 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.ContactsContract;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -27,7 +25,6 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Model.FireBase.FriendNodeToUpload;
 import bd.com.ipay.ipayskeleton.Model.FireBase.UpdateRequestToServer;
 import bd.com.ipay.ipayskeleton.Model.FireBase.UserInfoToUpload;
-import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -41,7 +38,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
     private Context mContext;
     private Firebase ref;
     private HttpResponse mHttpResponse;
-    private boolean updateSuccess = false;
 
     public SyncContactsAsyncTask(Context mContext) {
         this.mContext = mContext;
@@ -66,6 +62,13 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
                                 .setValue(userFriends.get(i));
                     }
 
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendUpdateRequest();
+                        }
+                    }).start();
+
                     isReturnedFromServer = AUTH_SUCCESS;
                 }
 
@@ -78,32 +81,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
             // Authenticate users with a custom Firebase token
             ref.authWithCustomToken(HomeActivity.fireBaseToken, authResultHandler);
 
-            while (isReturnedFromServer == AUTH_IN_PROGRESS) {
-                // Wait until the auth is not processed
-            }
-
-            if (isReturnedFromServer == AUTH_SUCCESS) {
-                // Update request to server
-                UpdateRequestToServer mUpdateRequestToServer = new UpdateRequestToServer();
-                if (Utilities.isConnectionAvailable(mContext))
-                    mHttpResponse = makeRequest(mUpdateRequestToServer.getGeneratedUri());
-                else
-                    Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-
-                try {
-                    String status = mHttpResponse.getStatusLine().getStatusCode() + "";
-
-                    if (status.equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        updateSuccess = true;
-                    } else if (mContext != null)
-                        Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_contacts));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                if (updateSuccess) return Constants.SUCCESS;
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,18 +90,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-
-        if (result.equals(Constants.SUCCESS)) {
-            if (mContext != null) {
-                // Update subscriber table
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    new UpdateSubscriberTableAsyncTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    new UpdateSubscriberTableAsyncTask(mContext).execute();
-                }
-            } else
-                Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_table));
-        } else Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_table));
     }
 
     @Override
@@ -191,5 +156,29 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
         cur.close();
 
         return userFriends;
+    }
+
+    private void sendUpdateRequest() {
+        UpdateRequestToServer mUpdateRequestToServer = new UpdateRequestToServer();
+        if (Utilities.isConnectionAvailable(mContext))
+            mHttpResponse = makeRequest(mUpdateRequestToServer.getGeneratedUri());
+
+        try {
+            String status = mHttpResponse.getStatusLine().getStatusCode() + "";
+
+            if (status.equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (mContext != null) {
+                    // Update subscriber table
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        new UpdateSubscriberTableAsyncTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    } else {
+                        new UpdateSubscriberTableAsyncTask(mContext).execute();
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -142,7 +142,6 @@ public class HomeActivity extends BaseActivity
         setProfilePicture("");
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
-        // TODO: get userinfo here and set
         getProfileInfo();
         if (Constants.DEBUG) {
             Log.w("Token", HomeActivity.iPayToken);
