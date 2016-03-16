@@ -17,7 +17,7 @@
             <TextView
                 android:id="@+id/label_national_id"
                 style="@style/DocumentUploadLabel"
-                android:text="National ID" />
+                android:text="@string/national_id" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_national_id"
@@ -31,7 +31,7 @@
                     android:id="@+id/edit_text_national_id"
                     style="@style/DocumentUploadEditText"
                     android:layout_below="@+id/label_national_id"
-                    android:hint="National ID Number"
+                    android:hint="@string/national_id_number"
                     android:inputType="number"
                     android:singleLine="true" />
 
@@ -41,7 +41,7 @@
                 android:id="@+id/button_national_id"
                 style="@style/DocumentUploadButton"
                 android:layout_alignBottom="@+id/text_input_national_id"
-                android:text="UPLOAD" />
+                android:text="@string/upload" />
         </RelativeLayout>
 
 
@@ -54,7 +54,7 @@
             <TextView
                 android:id="@+id/label_passport"
                 style="@style/DocumentUploadLabel"
-                android:text="Passport" />
+                android:text="@string/passport" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_passport"
@@ -68,7 +68,7 @@
                     android:id="@+id/edit_text_passport"
                     style="@style/DocumentUploadEditText"
                     android:layout_below="@+id/label_passport"
-                    android:hint="Passport Number"
+                    android:hint="@string/passport_number"
                     android:inputType="text" />
 
             </android.support.design.widget.TextInputLayout>
@@ -77,7 +77,7 @@
                 android:id="@+id/button_passport"
                 style="@style/DocumentUploadButton"
                 android:layout_alignBottom="@+id/text_input_passport"
-                android:text="UPLOAD" />
+                android:text="@string/upload" />
         </RelativeLayout>
 
 
@@ -90,7 +90,7 @@
             <TextView
                 android:id="@+id/label_driving_license"
                 style="@style/DocumentUploadLabel"
-                android:text="Driving Lincense" />
+                android:text="@string/driving_license" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_driving_license"
@@ -104,7 +104,7 @@
                     android:id="@+id/edit_text_driving_license"
                     style="@style/DocumentUploadEditText"
                     android:layout_below="@+id/label_driving_license"
-                    android:hint="Driving License Number"
+                    android:hint="@string/driving_lincense_number"
                     android:inputType="text" />
 
             </android.support.design.widget.TextInputLayout>
@@ -113,7 +113,7 @@
                 android:id="@+id/button_driving_license"
                 style="@style/DocumentUploadButton"
                 android:layout_alignBottom="@+id/text_input_driving_license"
-                android:text="UPLOAD" />
+                android:text="@string/upload" />
         </RelativeLayout>
 
 
@@ -126,7 +126,7 @@
             <TextView
                 android:id="@+id/label_birth_certificate"
                 style="@style/DocumentUploadLabel"
-                android:text="Birth Certificate" />
+                android:text="@string/birth_certificate" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_birth_certificate"
@@ -140,7 +140,7 @@
                     android:id="@+id/edit_text_birth_certificate"
                     style="@style/DocumentUploadEditText"
                     android:layout_below="@+id/label_birth_certificate"
-                    android:hint="Birth Certificate Number"
+                    android:hint="@string/birth_certificate_number"
                     android:inputType="text" />
 
             </android.support.design.widget.TextInputLayout>
@@ -149,7 +149,7 @@
                 android:id="@+id/button_birth_certificate"
                 style="@style/DocumentUploadButton"
                 android:layout_alignBottom="@+id/text_input_birth_certificate"
-                android:text="UPLOAD" />
+                android:text="@string/upload" />
         </RelativeLayout>
 
 
@@ -162,7 +162,7 @@
             <TextView
                 android:id="@+id/label_tin"
                 style="@style/DocumentUploadLabel"
-                android:text="TIN" />
+                android:text="@string/tin" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_tin"
@@ -176,7 +176,7 @@
                     android:id="@+id/edit_text_tin"
                     style="@style/DocumentUploadEditText"
                     android:layout_below="@+id/label_tin"
-                    android:hint="Tax Identification Number"
+                    android:hint="@string/tin_number"
                     android:inputType="text" />
 
             </android.support.design.widget.TextInputLayout>
@@ -185,7 +185,7 @@
                 android:id="@+id/button_tin"
                 style="@style/DocumentUploadButton"
                 android:layout_alignBottom="@+id/text_input_tin"
-                android:text="UPLOAD" />
+                android:text="@string/upload" />
         </RelativeLayout>
 
     </LinearLayout>

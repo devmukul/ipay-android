@@ -134,6 +134,7 @@
     <string name="no">No</string>
     <string name="get_started">Get Started</string>
     <string name="could_not_load_image">Could not load image</string>
+    <string name="could_not_load_document">Could not load document</string>
     <string name="could_not_sync_contact">Could not sync contacts.</string>
     <string name="could_not_sign_out">Could not signed out properly</string>
     <string name="could_not_reject_money_request">Could not reject the request. Please try again later.</string>
@@ -384,6 +385,17 @@
     <string name="profile_basic_info">Basic Info</string>
     <string name="profile_address">Address</string>
     <string name="profile_documents">Documents</string>
+    <string name="national_id">National ID</string>
+    <string name="national_id_number">National ID Number</string>
+    <string name="passport">Passport</string>
+    <string name="passport_number">Passport Number</string>
+    <string name="upload">UPLOAD</string>
+    <string name="driving_license">Driving Lincense</string>
+    <string name="driving_lincense_number">Driving License Number</string>
+    <string name="birth_certificate">Birth Certificate</string>
+    <string name="birth_certificate_number">Birth Certificate Number</string>
+    <string name="tin">TIN</string>
+    <string name="tin_number">Tax Identification Number</string>
 
     <string-array name="account_types">
         <item>Personal</item>

@@ -131,6 +131,8 @@ public class Constants {
     public static final String URL_CHANGE_PASSWORD = "settings/password/change";
     public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
     public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address";
+    public static final String URL_GET_DOCUMENTS = "/user/identification/documents";
+    public static final String URL_UPLOAD_DOCUMENTS = "/user/identification/documents";
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
     public static final String URL_SET_USER_ADDRESS_REQUEST = "user/profile/address";
     public static final String URL_LOG_OUT = "signout";
@@ -239,6 +241,11 @@ public class Constants {
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
     public static final String COMMAND_EVENT_CATEGORIES = "COMMAND_EVENT_CATEGORIES";
     public static final String COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND = "COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND";
+    public static final String COMMAND_UPLOAD_NATIONAL_ID = "COMMAND_UPLOAD_NATIONAL_ID";
+    public static final String COMMAND_UPLOAD_PASSPORT = "COMMAND_UPLOAD_PASSPORT";
+    public static final String COMMAND_UPLOAD_DRIVING_LICENSE = "COMMAND_UPLOAD_DRIVING_LICENSE";
+    public static final String COMMAND_UPLOAD_BIRTH_CERTIFICATE = "COMMAND_UPLOAD_BIRTH_CERTIFICATE";
+    public static final String COMMAND_UPLOAD_TIN = "COMMAND_UPLOAD_TIN";
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";
@@ -313,5 +320,14 @@ public class Constants {
     public static final String SUCCESS = "SUCCESS";
     public static final String FAIL = "FAIL";
     public static final String iPay_USER = "iPay_USER";
+
+    public static final String DOCUMENT_TYPE_NATIONAL_ID = "national_id";
+    public static final String DOCUMENT_TYPE_PASSPORT = "passport";
+    public static final String DOCUMENT_TYPE_DRIVING_LICENSE = "driving_license";
+    public static final String DOCUMENT_TYPE_BIRTH_CERTIFICATE = "birth_certificate";
+    public static final String DOCUMENT_TYPE_TIN = "tin";
+
+    public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
+    public static final String DOCUMENT_TYPE = "documentType";
 
 }
