@@ -40,12 +40,11 @@ import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditBasicInfoFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditUserAddressFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.NotificationFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.ProfileFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenRequestBuilder;
@@ -138,7 +137,7 @@ public class HomeActivity extends BaseActivity
         // Get FireBase Token
         if (!contactsSyncedOnce) getFireBaseToken();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new ProfileFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
 
         setProfilePicture("");
         // Load the list of available banks, which will be accessed from multiple activities
