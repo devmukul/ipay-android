@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,13 +24,13 @@ import java.util.List;
 import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserAddressRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserAddressResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserAddressRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
@@ -41,12 +38,11 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mGetProfileInfoTask = null;
+    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
 
-    private HttpRequestPostAsyncTask mGetUserAddressTask = null;
+    private HttpRequestGetAsyncTask mGetUserAddressTask = null;
     private GetUserAddressResponse mGetUserAddressResponse = null;
-
 
     private ProgressDialog mProgressDialog;
 
@@ -77,21 +73,21 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     private SharedPreferences pref;
 
-    private String mName = "";
-    private String mMobileNumber = "";
-    private Set<UserProfilePictureClass> mProfilePictures;
+    public static String mName = "";
+    public static String mMobileNumber = "";
+    public static Set<UserProfilePictureClass> mProfilePictures;
 
-    private String mEmailAddress = "";
-    private String mDateOfBirth = "";
-    private String mFathersName = "";
-    private String mMothersName = "";
-    private String mSpouseName = "";
-    private String mOccupation = "";
-    private String mGender = "";
+    public static String mEmailAddress = "";
+    public static String mDateOfBirth = "";
+    public static String mFathersName = "";
+    public static String mMothersName = "";
+    public static String mSpouseName = "";
+    public static String mOccupation = "";
+    public static String mGender = "";
 
-    private AddressClass mPresentAddress;
-    private AddressClass mPermanentAddress;
-    private AddressClass mOfficeAddress;
+    public static AddressClass mPresentAddress;
+    public static AddressClass mPermanentAddress;
+    public static AddressClass mOfficeAddress;
 
 
     @Override
@@ -177,6 +173,12 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setProfileInformation();
+    }
+
     private void setProfileInformation() {
         if (mProfilePictures.size() > 0) {
 
@@ -220,23 +222,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         startActivity(intent);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.profile, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_edit:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void getProfileInfo() {
         if (mGetProfileInfoTask != null) {
             return;
@@ -245,11 +230,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mProgressDialog.setMessage(getString(R.string.fetching_profile_information));
         mProgressDialog.show();
 
-        GetProfileInfoRequest mGetProfileInfoRequest = new GetProfileInfoRequest();
-        Gson gson = new Gson();
-        String json = gson.toJson(mGetProfileInfoRequest);
-        mGetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_POST_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, json, getActivity());
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                new ProfileInfoRequestBuilder().getGeneratedUri(), getActivity());
         mGetProfileInfoTask.mHttpResponseListener = this;
         mGetProfileInfoTask.execute();
     }
@@ -259,12 +241,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
-        GetUserAddressRequest getUserAddressRequest = new GetUserAddressRequest();
-        Gson gson = new Gson();
-        String json = gson.toJson(getUserAddressRequest);
-
-        mGetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
-                Constants.BASE_URL_POST_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, json, getActivity());
+        mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
+                new UserAddressRequestBuilder().getGeneratedUri(), getActivity());
         mGetUserAddressTask.mHttpResponseListener = this;
         mGetUserAddressTask.execute();
     }

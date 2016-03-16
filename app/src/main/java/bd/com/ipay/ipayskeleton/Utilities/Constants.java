@@ -129,9 +129,10 @@ public class Constants {
     public static final String URL_EMAIL_VERIFICATION = "settings/email/verification";
     public static final String URL_SET_PIN = "settings/pin/change";
     public static final String URL_CHANGE_PASSWORD = "settings/password/change";
-    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile/get";
-    public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address/get";
-    public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile/set";
+    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
+    public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address";
+    public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
+    public static final String URL_SET_USER_ADDRESS_REQUEST = "user/profile/address";
     public static final String URL_LOG_OUT = "signout";
     public static final String URL_USER_ACTIVITY = "report/activities";
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";

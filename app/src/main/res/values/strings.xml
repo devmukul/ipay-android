@@ -375,7 +375,7 @@
 
     <string name="action_add">ADD</string>
     <string name="action_edit">EDIT</string>
-    <string name="title_activity_edit_profile">Edit Profile</string>
+    <string name="edit_profile">Edit Profile</string>
     <string name="profile_basic_info">Basic Info</string>
     <string name="profile_address">Address</string>
     <string name="profile_documents">Documents</string>

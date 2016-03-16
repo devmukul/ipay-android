@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+
     <ScrollView
         android:id="@+id/profile_info_form"
         android:layout_width="match_parent"
@@ -27,6 +28,7 @@
                     android:layout_height="100dp"
                     android:clickable="true"
                     android:scaleType="centerCrop"
+                    android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_person"
                     app:riv_border_color="@color/colorPrimary"
                     app:riv_border_width="1dip"
@@ -85,22 +87,6 @@
             </android.support.design.widget.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/nid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/nid_number"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -139,10 +125,10 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/address_line_1"
+                    android:id="@+id/fathers_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/address_line_1"
+                    android:hint="Father's Name"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPostalAddress"
                     android:maxLines="1"
@@ -155,10 +141,10 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/address_line_2"
+                    android:id="@+id/mothers_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/address_line_2"
+                    android:hint="Mother's Name"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPostalAddress"
                     android:maxLines="1"
@@ -166,59 +152,17 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextStylePrimarySmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="@string/city" />
-
-                <Spinner
-                    android:id="@+id/city"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextStylePrimarySmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="@string/district" />
-
-                <Spinner
-                    android:id="@+id/district"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-            </LinearLayout>
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/postcode"
+                    android:id="@+id/spouse_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/postcode"
+                    android:hint="Spouse's Name"
                     android:imeOptions="actionUnspecified"
-                    android:inputType="number"
+                    android:inputType="textPostalAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -243,6 +187,64 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextStylePrimarySmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:text="@string/gender" />
+
+                <Spinner
+                    android:id="@+id/gender"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/birthdayEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/birthday_dd_mm_yy"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="date"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/myDatePickerButton"
+                    style="@style/ButtonStyleAccentSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:padding="@dimen/value5"
+                    android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
             </LinearLayout>
 
         </LinearLayout>

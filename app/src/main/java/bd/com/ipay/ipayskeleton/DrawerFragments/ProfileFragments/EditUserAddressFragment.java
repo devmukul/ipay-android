@@ -32,10 +32,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoResponse;
@@ -159,7 +159,7 @@ public class EditUserAddressFragment extends Fragment implements HttpResponseLis
 //        mOccupationSpinner.setAdapter(mAdapterOccupation);
 //
 //        ArrayAdapter<CharSequence> mAdapterCity = new ArrayAdapter<CharSequence>(getActivity(),
-//                android.R.layout.simple_dropdown_item_1line, ThanaList.thanaNames);
+//                android.R.layout.simple_dropdown_item_1line, ThanaList.genderNames);
 //        mCitySpinner.setAdapter(mAdapterCity);
 //
 //        ArrayAdapter<CharSequence> mAdapterDistrict = new ArrayAdapter<CharSequence>(getActivity(),
@@ -183,6 +183,7 @@ public class EditUserAddressFragment extends Fragment implements HttpResponseLis
         return v;
     }
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -193,23 +194,11 @@ public class EditUserAddressFragment extends Fragment implements HttpResponseLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_edit:
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    if (isEditEnabled) {
-
-                        if (mSetProfileInfoTask == null) {
-                            disableAllEdits();
-                            item.setIcon(getResources().getDrawable(R.drawable.ic_edit_white_24dp));
-                            saveProfileInfo();
-                        }
-
-                    } else {
-                        enableAllEdits();
-                        item.setIcon(getResources().getDrawable(R.drawable.ic_save_white_24dp));
-                    }
-                } else if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-                return true;
+            case R.id.action_save:
+//                boolean isInputValid = verifyUserInputs();
+//                if (isInputValid) {
+//                    ((EditProfileActivity) getActivity()).saveProfile();
+//                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -230,23 +219,6 @@ public class EditUserAddressFragment extends Fragment implements HttpResponseLis
                 Constants.BASE_URL_POST_MM + Constants.URL_EMAIL_VERIFICATION, json, getActivity());
         mEmailVerificationAsyncTask.mHttpResponseListener = this;
         mEmailVerificationAsyncTask.execute((Void) null);
-
-    }
-
-    private void getProfileInfo() {
-        if (mGetProfileInfoTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.fetching_profile_information));
-        mProgressDialog.show();
-        GetProfileInfoRequest mGetProfileInfoRequest = new GetProfileInfoRequest();
-        Gson gson = new Gson();
-        String json = gson.toJson(mGetProfileInfoRequest);
-        mGetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_POST_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, json, getActivity());
-        mGetProfileInfoTask.mHttpResponseListener = this;
-        mGetProfileInfoTask.execute((Void) null);
 
     }
 
@@ -289,15 +261,15 @@ public class EditUserAddressFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.setMessage(getString(R.string.saving_profile_information));
             mProgressDialog.show();
-            SetProfileInfoRequest mSetProfileInfoRequest = new SetProfileInfoRequest(userID, userName,
-                    userGender, userDOB, userCountry, userEmail, userNID, userOccupation, userAddressLine1,
-                    userAddressLine2, userCity, userDistrict, userPostCode);
-            Gson gson = new Gson();
-            String json = gson.toJson(mSetProfileInfoRequest);
-            mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
-                    Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, json, getActivity());
-            mSetProfileInfoTask.mHttpResponseListener = this;
-            mSetProfileInfoTask.execute((Void) null);
+//            SetProfileInfoRequest mSetProfileInfoRequest = new SetProfileInfoRequest(userID, userName,
+//                    userGender, userDOB, userCountry, userEmail, userNID, userOccupation, userAddressLine1,
+//                    userAddressLine2, userCity, userDistrict, userPostCode);
+//            Gson gson = new Gson();
+//            String json = gson.toJson(mSetProfileInfoRequest);
+//            mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
+//                    Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, json, getActivity());
+//            mSetProfileInfoTask.mHttpResponseListener = this;
+//            mSetProfileInfoTask.execute((Void) null);
         }
     }
 
@@ -499,7 +471,6 @@ public class EditUserAddressFragment extends Fragment implements HttpResponseLis
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     profilePictureUpdated = true;
-                    getProfileInfo();
 
                 } else {
                     if (getActivity() != null)

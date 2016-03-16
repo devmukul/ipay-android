@@ -125,10 +125,10 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.EditProfileActivity"
-            android:label="@string/title_activity_edit_profile"
+            android:label="@string/edit_profile"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
     </application>
 
 </manifest>
