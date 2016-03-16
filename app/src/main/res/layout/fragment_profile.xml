@@ -70,7 +70,7 @@
 
                 <TextView
                     android:id="@+id/textview_basic_info"
-                    android:text="Basic Info"
+                    android:text="@string/profile_basic_info"
                     android:layout_toLeftOf="@+id/button_edit_basic_info"
                     style="@style/ProfileHeadingStyle"/>
 
@@ -181,7 +181,7 @@
 
                 <TextView
                     android:id="@+id/textview_address"
-                    android:text="Address"
+                    android:text="@string/profile_address"
                     style="@style/ProfileHeadingStyle"/>
 
 
@@ -269,7 +269,7 @@
 
                 <TextView
                     android:id="@+id/textview_documents"
-                    android:text="Documents"
+                    android:text="@string/profile_documents"
                     style="@style/ProfileHeadingStyle"/>
 
                 <TextView

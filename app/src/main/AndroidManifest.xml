@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="bd.com.ipay.ipayskeleton.Utilities.MyApplication"
+        android:name=".Utilities.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon_ipay"
         android:label="@string/app_name"
@@ -31,110 +31,101 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".Activities.BaseActivity" />
-
         <activity
             android:name=".Activities.HomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
-
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.DetailsNewsActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.SendMoneyActivity"
             android:label="@string/send_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.MakePaymentActivity"
             android:label="@string/payment"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.ForgotPasswordActivity"
             android:label="@string/password_recovery"
             android:parentActivityName=".Activities.SignupOrLoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.CashInActivity"
             android:label="@string/add_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.TopUpActivity"
             android:label="@string/topup"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.CashOutActivity"
             android:label="@string/withdraw_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.RequestMoneyActivity"
             android:label="@string/request_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"></activity>
-
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.EventActivity"
             android:label="@string/events"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"></activity>
-
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.AddParticipantsInEventActivity"
             android:label="@string/add_participants"
             android:parentActivityName=".Activities.EventActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"></activity>
-
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.SignupOrLoginActivity"
             android:label="@string/sign_up_with_ipay"
             android:screenOrientation="portrait"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
-
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.TourActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.QRCodeViewerActivity"
             android:label="@string/request_money"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".Activities.EditProfileActivity"
+            android:label="@string/title_activity_edit_profile"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>

@@ -372,8 +372,13 @@
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
     <string name="action_notifications">Notifications</string>
+
     <string name="action_add">ADD</string>
     <string name="action_edit">EDIT</string>
+    <string name="title_activity_edit_profile">Edit Profile</string>
+    <string name="profile_basic_info">Basic Info</string>
+    <string name="profile_address">Address</string>
+    <string name="profile_documents">Documents</string>
 
     <string-array name="account_types">
         <item>Personal</item>

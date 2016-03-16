@@ -1,7 +1,8 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
@@ -131,6 +133,37 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mOfficeAddressEditButton = (Button) v.findViewById(R.id.button_edit_office_address);
         mUploadDocumentsButton = (Button) v.findViewById(R.id.button_upload_documents);
 
+        mBasicInfoEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProfile(EditProfileActivity.TARGET_TAB_BASIC_INFO);
+            }
+        });
+        mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProfile(EditProfileActivity.TARGET_TAB_USER_ADDRESS);
+            }
+        });
+        mPermanentAddressEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProfile(EditProfileActivity.TARGET_TAB_USER_ADDRESS);
+            }
+        });
+        mOfficeAddressEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProfile(EditProfileActivity.TARGET_TAB_USER_ADDRESS);
+            }
+        });
+        mUploadDocumentsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProfile(EditProfileActivity.TARGET_TAB_UPLOAD_DOCUMENTS);
+            }
+        });
+
         mMobileNumber = pref.getString(Constants.USERID, "");
         mGender = pref.getString(Constants.GENDER, "");
         mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
@@ -179,6 +212,12 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             mOfficeAddressView.setText(mOfficeAddress.toString());
             mOfficeAddressEditButton.setText(R.string.action_edit);
         }
+    }
+
+    public void editProfile(int targetTab) {
+        Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+        intent.putExtra(EditProfileActivity.TARGET_TAB, targetTab);
+        startActivity(intent);
     }
 
     @Override
