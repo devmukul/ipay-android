@@ -231,6 +231,7 @@
     <string name="adding_trusted_device">Setting your device as trusted.</string>
     <string name="alert_verify_email">We are going to send an email in your email account.</string>
     <string name="uploading_profile_picture">Uploading profile picture</string>
+    <string name="uploading">Uploading</string>
     <string name="submitting_request_money">Submitting your request for money</string>
     <string name="failed_request_money">Money request failed</string>
     <string name="failed_to_fetch_categories">Failed to fetch event categories</string>
@@ -276,6 +277,7 @@
     <string name="sign_up_with_ipay">Sign up with iPay</string>
     <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
     <string name="please_fill_up_the_following">Please fill up the following information</string>
+    <string name="please_enter_document_number">Please enter the document number</string>
     <string name="send_money_failed">Money sending failed. Please try again.</string>
     <string name="send_money_failed_due_to_server_down">Money sending failed. No response from server. Please try again later.</string>
     <string name="send_money_query_failed">Could not authenticate receiver</string>
@@ -390,12 +392,14 @@
     <string name="passport">Passport</string>
     <string name="passport_number">Passport Number</string>
     <string name="upload">UPLOAD</string>
-    <string name="driving_license">Driving Lincense</string>
-    <string name="driving_lincense_number">Driving License Number</string>
+    <string name="driving_license">Driving License</string>
+    <string name="driving_license_number">Driving License Number</string>
     <string name="birth_certificate">Birth Certificate</string>
     <string name="birth_certificate_number">Birth Certificate Number</string>
     <string name="tin">TIN</string>
     <string name="tin_number">Tax Identification Number</string>
+    <string name="upload_successful">Upload successful</string>
+    <string name="uploaded">Uploaded</string>
 
     <string-array name="account_types">
         <item>Personal</item>

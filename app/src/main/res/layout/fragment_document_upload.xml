@@ -104,7 +104,7 @@
                     android:id="@+id/edit_text_driving_license"
                     style="@style/DocumentUploadEditText"
                     android:layout_below="@+id/label_driving_license"
-                    android:hint="@string/driving_lincense_number"
+                    android:hint="@string/driving_license_number"
                     android:inputType="text" />
 
             </android.support.design.widget.TextInputLayout>

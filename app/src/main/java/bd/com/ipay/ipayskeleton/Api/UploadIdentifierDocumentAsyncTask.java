@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Api;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -12,6 +13,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
@@ -95,23 +97,29 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Str
                     Constants.BOUNDARY, Charset.defaultCharset());
 
             entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
+            entity.addPart(Constants.DOCUMENT_ID_NUMBER, new StringBody(documentIdNumber));
+            entity.addPart(Constants.DOCUMENT_TYPE, new StringBody(documentType));
             post.setEntity(entity);
 
             post.setHeader("Accept", "application/json");
             post.setHeader("Content-Type", "multipart/form-data; boundary=" + Constants.BOUNDARY);
 
-            HttpParams httpParams = new BasicHttpParams();
-            httpParams.setParameter(Constants.DOCUMENT_ID_NUMBER, documentIdNumber);
-            httpParams.setParameter(Constants.DOCUMENT_TYPE, documentType);
-            post.setParams(httpParams);
+//            HttpParams httpParams = new BasicHttpParams();
+//            httpParams.setParameter(Constants.DOCUMENT_ID_NUMBER, documentIdNumber);
+//            httpParams.setParameter(Constants.DOCUMENT_TYPE, documentType);
+//            post.setParams(httpParams);
 
             HttpResponse response = client.execute(post);
             HttpEntity httpEntity = response.getEntity();
+
+            Log.e("POST", post.toString());
 
             int status = response.getStatusLine().getStatusCode();
             String result = null;
 
             result = API_COMMAND + ";" + status + ";" + EntityUtils.toString(httpEntity);
+
+            Log.e("Result", result);
 
             return result;
 
