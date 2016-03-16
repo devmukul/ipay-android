@@ -32,10 +32,8 @@ public class NotificationClass {
     }
 
     public String getTitle() {
-        String customTitle = "";
-
-        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return title;
-        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return "Money requested";
+        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Invoice received";
+        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return title;
         else return title;
     }
 

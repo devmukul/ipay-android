@@ -123,8 +123,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         userName = pref.getString(Constants.USERNAME, "");
         userID = pref.getString(Constants.USERID, "");
 
-        if (pref.contains(userID))
-            UUID = pref.getString(userID, null);
+        if (pref.contains(Constants.UUID))
+            UUID = pref.getString(UUID, null);
 
         TextView makePaymentLabel = (TextView) v.findViewById(R.id.textview_make_payment);
         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
@@ -180,9 +180,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        // Add to trusted device?
+        // TODO: Place this in HomeActivity
+        // Add to trusted device
         if (UUID == null) {
-            showAlertDialogueForAddTrustedDevice();
+            if (Utilities.isConnectionAvailable(getActivity()))
+                addToTrustedDeviceList();
         }
 
         setButtonActions();
@@ -262,10 +264,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         String mDeviceID = telephonyManager.getDeviceId();
         String mDeveiceName = android.os.Build.MANUFACTURER + "-" + android.os.Build.PRODUCT + " -" + Build.MODEL;
-
-
-        mProgressDialog.setMessage(getString(R.string.adding_trusted_device));
-        mProgressDialog.show();
 
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeveiceName, Constants.MOBILE_ANDROID + mDeviceID);
         Gson gson = new Gson();
@@ -402,7 +400,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 try {
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
-                        pref.edit().putString(userID, UUID).commit();
+                        pref.edit().putString(Constants.UUID, UUID).commit();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -416,8 +414,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             } else if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
 
-            mProgressDialog.dismiss();
             mAddTrustedDeviceTask = null;
+
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
             if (resultList.size() > 2) {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -449,29 +447,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
         }
-    }
-
-    private void showAlertDialogueForAddTrustedDevice() {
-
-        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
-
-        alertDialogue.setTitle(R.string.confirm_add_to_trusted_title);
-        alertDialogue.setMessage(R.string.confirm_add_to_trusted_msg);
-
-        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if (Utilities.isConnectionAvailable(getActivity()))
-                    addToTrustedDeviceList();
-            }
-        });
-
-        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-            }
-        });
-
-        alertDialogue.show();
     }
 
     public class NewsFeedAdapter extends BaseAdapter {

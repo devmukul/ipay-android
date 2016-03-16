@@ -209,11 +209,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.show();
 
             String UUID = null;
-            if (pref.contains(mUserNameLogin)) {
-                UUID = pref.getString(mUserNameLogin, null);
+            if (pref.contains(Constants.UUID)) {
+                UUID = pref.getString(Constants.UUID, null);
             }
 
-            // TODO: in otp verification personal business
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
                     Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null);
             Gson gson = new Gson();

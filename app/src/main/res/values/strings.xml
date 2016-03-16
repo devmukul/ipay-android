@@ -318,6 +318,7 @@
     <string name="filter_sent_money">Money Sent</string>
     <string name="filter_system_event">System Events</string>
     <string name="filter">Filter</string>
+    <string name="verification">Verification</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_event">Filter by event</string>
     <string name="filter_verification">Verification Events</string>

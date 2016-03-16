@@ -221,7 +221,6 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private TextView mSenderNumber;
-            private TextView mAmount;
             private TextView mTime;
             private TextView mDescription;
             private ImageView mCancel;
@@ -231,7 +230,6 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
                 super(itemView);
 
                 mSenderNumber = (TextView) itemView.findViewById(R.id.request_number);
-                mAmount = (TextView) itemView.findViewById(R.id.amount);
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mDescription = (TextView) itemView.findViewById(R.id.description);
                 mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
@@ -243,7 +241,6 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
                 String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                mAmount.setText(pendingMoneyRequestClasses.get(pos).getAmount() + " Tk.");
                 mTime.setText(time);
                 mSenderNumber.setText(pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName());
                 mDescription.setText(pendingMoneyRequestClasses.get(pos).getDescription());

@@ -2,11 +2,11 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment;
 
 public class GetPendingPaymentsRequest {
 
-    public String mobileNumber;
     public int page;
+    public int serviceID;
 
-    public GetPendingPaymentsRequest(String mobileNumber, int page) {
-        this.mobileNumber = mobileNumber;
+    public GetPendingPaymentsRequest(int page, int serviceID) {
         this.page = page;
+        this.serviceID = serviceID;
     }
 }

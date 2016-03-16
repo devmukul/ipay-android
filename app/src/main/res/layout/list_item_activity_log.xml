@@ -5,17 +5,14 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/value5"
     android:background="@android:color/white"
-    android:paddingBottom="@dimen/value10"
-    android:paddingLeft="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/value10">
+    android:padding="@dimen/activity_horizontal_margin_card">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/portrait"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_face_black_24dp"
         app:riv_border_color="@color/colorPrimary"
