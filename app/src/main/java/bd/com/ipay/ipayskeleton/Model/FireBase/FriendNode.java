@@ -1,12 +1,11 @@
 package bd.com.ipay.ipayskeleton.Model.FireBase;
 
 public class FriendNode {
-    public String phoneNumber;
-    public UserInfo info;
 
-    public FriendNode(String phoneNumber, UserInfo info) {
-        this.phoneNumber = phoneNumber;
-        this.info = info;
+    public UserInfo info;
+    public String phoneNumber;
+
+    public FriendNode() {
     }
 
     public String getPhoneNumber() {

@@ -21,10 +21,13 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, String> {
 
+    private final int AUTH_IN_PROGRESS = 0;
+    private final int AUTH_SUCCESS = 1;
+    private final int AUTH_FAILED = 2;
+    private int isReturnedFromServer = AUTH_IN_PROGRESS;
+
     private Context mContext;
-    private boolean isAuthFailed = false;
     private Firebase ref;
-    private AuthData authDataFireBase;
 
     public HttpResponseListener mHttpResponseListener;
 
@@ -42,74 +45,82 @@ public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, Stri
             Firebase.AuthResultHandler authResultHandler = new Firebase.AuthResultHandler() {
                 @Override
                 public void onAuthenticated(AuthData authData) {
-                    authDataFireBase = authData;
+
+                    ref.child(Constants.FIREBASE_CONTACT_LIST).child(authData.getUid()).
+                            child(Constants.FIREBASE_SYNCED).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+
+                                for (DataSnapshot friendNodeSnapshot : dataSnapshot.getChildren()) {
+
+                                    final FriendNode mFriendNode = friendNodeSnapshot.getValue(FriendNode.class);
+
+                                    if (mFriendNode.getInfo().isFriend()) {
+                                        SubscriberEntry mSubscriberEntry = new SubscriberEntry(
+                                                mFriendNode.phoneNumber, mFriendNode.info.getName());
+
+                                        boolean exists = DataHelper.getInstance(mContext).
+                                                checkIfStringFieldExists(DBConstants.DB_TABLE_SUBSCRIBERS,
+                                                        DBConstants.KEY_MOBILE_NUMBER, mSubscriberEntry.getMobileNumber());
+
+                                        if (!exists) {
+
+                                            DataHelper.getInstance(mContext).createSubscribers(mSubscriberEntry);
+
+                                            // Download profile picture for new user
+                                            GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
+                                            String uri = mGetUserInfoRequestBuilder.getGeneratedUri();
+                                            new DownloadProfilePictureGetAsyncTask(Constants.COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND, uri,
+                                                    mSubscriberEntry.getMobileNumber(), mContext)
+                                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                            Log.d(Constants.iPay_USER, mSubscriberEntry.getMobileNumber());
+
+                                        } else {
+
+                                            // TODO: Since we do not have any API to check the changes of profile pictures
+                                            // TODO: We need to download the profile pictures each time we login in the application
+                                            // TODO: to see the updates of profile picture changes
+                                            // TODO: WE'LL REMOVE THIS ELSE PART as soon as we get the API for the updates in profile pictures.
+
+                                            GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
+                                            String uri = mGetUserInfoRequestBuilder.getGeneratedUri();
+                                            new DownloadProfilePictureGetAsyncTask(Constants.COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND, uri,
+                                                    mSubscriberEntry.getMobileNumber(), mContext)
+                                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                            Log.d(Constants.iPay_USER, mSubscriberEntry.getMobileNumber());
+
+                                        }
+
+                                    }
+                                }
+
+                                HomeActivity.contactsSyncedOnce = true;
+
+                            } else
+                                Log.d(Constants.ApplicationTag, mContext.getString(R.string.no_contacts_in_firebase));
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+
+                    isReturnedFromServer = AUTH_SUCCESS;
                 }
 
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
-                    isAuthFailed = true;
+                    isReturnedFromServer = AUTH_FAILED;
                 }
             };
 
             // Authenticate users with a custom Firebase token
             ref.authWithCustomToken(HomeActivity.fireBaseToken, authResultHandler);
 
-            if (!isAuthFailed) {
-                ref.child(Constants.FIREBASE_CONTACT_LIST).child(authDataFireBase.getUid()).
-                        child(Constants.FIREBASE_SYNCED).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-
-                            for (DataSnapshot friendNodeSnapshot : dataSnapshot.getChildren()) {
-
-                                final FriendNode mFriendNode = friendNodeSnapshot.getValue(FriendNode.class);
-                                SubscriberEntry mSubscriberEntry = new SubscriberEntry(
-                                        mFriendNode.phoneNumber, mFriendNode.info.getName());
-
-                                boolean exists = DataHelper.getInstance(mContext).
-                                        checkIfStringFieldExists(DBConstants.DB_TABLE_SUBSCRIBERS,
-                                                DBConstants.KEY_MOBILE_NUMBER, mSubscriberEntry.getMobileNumber());
-
-                                if (!exists) {
-
-                                    DataHelper.getInstance(mContext).createSubscribers(mSubscriberEntry);
-
-                                    // Download profile picture for new user
-                                    GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
-                                    String uri = mGetUserInfoRequestBuilder.getGeneratedUri();
-                                    new DownloadProfilePictureGetAsyncTask(Constants.COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND, uri,
-                                            mSubscriberEntry.getMobileNumber(), mContext)
-                                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                    Log.d(Constants.iPay_USER, mSubscriberEntry.getMobileNumber());
-
-                                } else {
-
-                                    // TODO: Since we do not have any API to check the changes of profile pictures
-                                    // TODO: We need to download the profile pictures each time we login in the application
-                                    // TODO: to see the updates of profile picture changes
-                                    // TODO: WE'LL REMOVE THIS ELSE PART as soon as we get the API for the updates in profile pictures.
-
-                                    GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
-                                    String uri = mGetUserInfoRequestBuilder.getGeneratedUri();
-                                    new DownloadProfilePictureGetAsyncTask(Constants.COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND, uri,
-                                            mSubscriberEntry.getMobileNumber(), mContext)
-                                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                    Log.d(Constants.iPay_USER, mSubscriberEntry.getMobileNumber());
-
-                                }
-
-                            }
-
-                        } else
-                            Log.d(Constants.ApplicationTag, mContext.getString(R.string.no_contacts_in_firebase));
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
+            while (isReturnedFromServer == AUTH_IN_PROGRESS) {
+                // Wait until the auth is not processed
             }
 
         } catch (Exception e) {

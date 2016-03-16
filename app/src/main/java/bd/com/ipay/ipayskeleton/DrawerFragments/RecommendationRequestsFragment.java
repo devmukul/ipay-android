@@ -248,7 +248,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_PENDING)) {
+                        if (recommendationStatus.equalsIgnoreCase(Constants.RECOMMENDATION_STATUS_PENDING)) {
                             if (optionsLayout.getVisibility() == View.VISIBLE)
                                 optionsLayout.setVisibility(View.GONE);
                             else optionsLayout.setVisibility(View.VISIBLE);
@@ -259,7 +259,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
                 verifyButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_PENDING))
+                        if (recommendationStatus.equalsIgnoreCase(Constants.RECOMMENDATION_STATUS_PENDING))
                             new AlertDialog.Builder(getActivity())
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -279,7 +279,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
                 rejectButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_PENDING))
+                        if (recommendationStatus.equalsIgnoreCase(Constants.RECOMMENDATION_STATUS_PENDING))
                             new AlertDialog.Builder(getActivity())
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -299,7 +299,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
                 markAsSpamButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_PENDING))
+                        if (recommendationStatus.equalsIgnoreCase(Constants.RECOMMENDATION_STATUS_PENDING))
                             new AlertDialog.Builder(getActivity())
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
