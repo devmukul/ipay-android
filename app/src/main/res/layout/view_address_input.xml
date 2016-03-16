@@ -13,10 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/prompt_business_addr_line1"
-            android:imeActionId="@+id/login"
-            android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionUnspecified"
-            android:inputType="textPersonName"
+            android:inputType="textPostalAddress"
             android:maxLines="1"
             android:singleLine="true" />
 
@@ -31,10 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/prompt_business_addr_line2"
-            android:imeActionId="@+id/login"
-            android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionUnspecified"
-            android:inputType="textPersonName"
+            android:inputType="textPostalAddress"
             android:maxLines="1"
             android:singleLine="true" />
 

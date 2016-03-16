@@ -278,7 +278,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_below="@id/textview_documents"
-                    android:text="You have submitted 3 documents"/>
+                    android:text="You have submitted 0 documents"/>
 
                 <Button
                     android:id="@+id/button_upload_documents"
