@@ -103,6 +103,30 @@
         <item name="android:textColor">@color/colorTextPrimary</item>
     </style>
 
+    <style name="AddressHeaderStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="AddressSpinnerLabelStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+
+    <style name="AddressCheckboxLabelStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">4dp</item>
+    </style>
+
 
     <style name="MenuLabelsStyle">
         <item name="android:background">@drawable/fab_label_background</item>

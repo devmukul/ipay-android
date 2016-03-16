@@ -47,11 +47,10 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStylePrimarySmall"
+            style="@style/AddressSpinnerLabelStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
             android:text="@string/thana" />
 
         <Spinner
@@ -68,11 +67,10 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStylePrimarySmall"
+            style="@style/AddressSpinnerLabelStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
             android:text="@string/district" />
 
         <Spinner
@@ -106,11 +104,10 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextStylePrimarySmall"
+            style="@style/AddressSpinnerLabelStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
             android:text="@string/country" />
 
         <Spinner

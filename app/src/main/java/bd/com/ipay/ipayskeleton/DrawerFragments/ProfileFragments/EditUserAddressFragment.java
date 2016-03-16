@@ -8,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
@@ -18,6 +20,8 @@ public class EditUserAddressFragment extends Fragment {
     private AddressInputView mPresentAddressView;
     private AddressInputView mPermanentAddressView;
     private AddressInputView mOfficeAddressView;
+
+    private CheckBox mPermanentAddressCheckBox;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,16 @@ public class EditUserAddressFragment extends Fragment {
         mPresentAddressView = (AddressInputView) v.findViewById(R.id.present_address);
         mPermanentAddressView = (AddressInputView) v.findViewById(R.id.permanent_address);
         mOfficeAddressView = (AddressInputView) v.findViewById(R.id.office_address);
+
+        mPermanentAddressCheckBox = (CheckBox) v.findViewById(R.id.checkbox_permanent_address);
+        mPermanentAddressCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mPermanentAddressView.setInformation(mPresentAddressView.getInformation());
+                }
+            }
+        });
 
         mPresentAddressView.setInformation(ProfileFragment.mPresentAddress);
         mPermanentAddressView.setInformation(ProfileFragment.mPermanentAddress);
