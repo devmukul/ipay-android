@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.UserManager;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
@@ -51,65 +50,63 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
 
-//        try {
-//            final ArrayList<FriendNodeToUpload> userFriends = getAllContacts();
-//            ref = new Firebase(Constants.PATH_TO_FIREBASE_DATABASE);
-//
-//
-//            // Create a handler to handle the result of the authentication
-//            Firebase.AuthResultHandler authResultHandler = new Firebase.AuthResultHandler() {
-//                @Override
-//                public void onAuthenticated(AuthData authData) {
-//
-//                    for (int i = 0; i < userFriends.size(); i++) {
-//
-//                        Gson gson = new Gson();
-//                        String json = gson.toJson(userFriends.get(i));
-//
-//                        ref.child(Constants.FIREBASE_CONTACT_LIST).child(authData.getUid()).
-//                                child(Constants.FIREBASE_DIRTY).child(userFriends.get(i).getPhoneNumber())
-//                                .setValue(userFriends.get(i));
-//                    }
-//
-//                    isReturnedFromServer = AUTH_SUCCESS;
-//                }
-//
-//                @Override
-//                public void onAuthenticationError(FirebaseError firebaseError) {
-//                    isReturnedFromServer = AUTH_FAILED;
-//                }
-//            };
-//
-//            // Authenticate users with a custom Firebase token
-//            ref.authWithCustomToken(HomeActivity.fireBaseToken, authResultHandler);
-//
-//            while (isReturnedFromServer == AUTH_IN_PROGRESS) {
-//                // Wait until the auth is not processed
-//            }
-//
-//            // Update request to server
-//            UpdateRequestToServer mUpdateRequestToServer = new UpdateRequestToServer();
-//            if (Utilities.isConnectionAvailable(mContext))
-//                mHttpResponse = makeRequest(mUpdateRequestToServer.getGeneratedUri());
-//            else
-//                Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-//
-//            try {
-//                String status = mHttpResponse.getStatusLine().getStatusCode() + "";
-//
-//                if (status.equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-//                    updateSuccess = true;
-//                } else if (mContext != null)
-//                    Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_contacts));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//            if (updateSuccess) return Constants.SUCCESS;
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            final ArrayList<FriendNodeToUpload> userFriends = getAllContacts();
+            ref = new Firebase(Constants.PATH_TO_FIREBASE_DATABASE);
+
+            // Create a handler to handle the result of the authentication
+            Firebase.AuthResultHandler authResultHandler = new Firebase.AuthResultHandler() {
+                @Override
+                public void onAuthenticated(AuthData authData) {
+
+                    for (int i = 0; i < userFriends.size(); i++) {
+
+                        ref.child(Constants.FIREBASE_CONTACT_LIST).child(authData.getUid()).
+                                child(Constants.FIREBASE_DIRTY).child(userFriends.get(i).getPhoneNumber())
+                                .setValue(userFriends.get(i));
+                    }
+
+                    isReturnedFromServer = AUTH_SUCCESS;
+                }
+
+                @Override
+                public void onAuthenticationError(FirebaseError firebaseError) {
+                    isReturnedFromServer = AUTH_FAILED;
+                }
+            };
+
+            // Authenticate users with a custom Firebase token
+            ref.authWithCustomToken(HomeActivity.fireBaseToken, authResultHandler);
+
+            while (isReturnedFromServer == AUTH_IN_PROGRESS) {
+                // Wait until the auth is not processed
+            }
+
+            if (isReturnedFromServer == AUTH_SUCCESS) {
+                // Update request to server
+                UpdateRequestToServer mUpdateRequestToServer = new UpdateRequestToServer();
+                if (Utilities.isConnectionAvailable(mContext))
+                    mHttpResponse = makeRequest(mUpdateRequestToServer.getGeneratedUri());
+                else
+                    Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+
+                try {
+                    String status = mHttpResponse.getStatusLine().getStatusCode() + "";
+
+                    if (status.equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        updateSuccess = true;
+                    } else if (mContext != null)
+                        Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_contacts));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (updateSuccess) return Constants.SUCCESS;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return Constants.FAIL;
     }
