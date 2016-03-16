@@ -382,7 +382,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/acc_holders_business_addr_line1"
+                        android:id="@+id/address_line1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_business_addr_line1"
@@ -400,7 +400,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/acc_holders_business_addr_line2"
+                        android:id="@+id/address_line2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_business_addr_line2"
