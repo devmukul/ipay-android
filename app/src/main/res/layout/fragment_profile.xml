@@ -81,7 +81,7 @@
                     style="@style/ProfileButtonStyle"
                     android:layout_alignParentTop="true"
                     android:layout_alignBaseline="@+id/textview_basic_info"
-                    android:text="EDIT" />
+                    android:text="@string/action_edit" />
 
                 <TextView
                     android:id="@+id/textview_email_label"
@@ -93,8 +93,7 @@
                 <TextView
                     android:id="@+id/textview_email"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_basic_info"
-                    android:text="rafikamal93@gmail.com"/>
+                    android:layout_below="@+id/textview_basic_info" />
 
                 <TextView
                     android:id="@+id/textview_date_of_birth_label"
@@ -106,8 +105,7 @@
                 <TextView
                     android:id="@+id/textview_date_of_birth"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_email"
-                    android:text="02/06/1993"/>
+                    android:layout_below="@+id/textview_email" />
 
                 <TextView
                     android:id="@+id/textview_fathers_name_label"
@@ -119,8 +117,7 @@
                 <TextView
                     android:id="@+id/textview_fathers_name"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_date_of_birth"
-                    android:text="Md. Kamal Uddin Sardar"/>
+                    android:layout_below="@+id/textview_date_of_birth" />
 
                 <TextView
                     android:id="@+id/textview_mothers_name_label"
@@ -132,8 +129,7 @@
                 <TextView
                     android:id="@+id/textview_mothers_name"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_fathers_name"
-                    android:text="Akhi Noor Chowdhury"/>
+                    android:layout_below="@+id/textview_fathers_name" />
 
                 <TextView
                     android:id="@+id/textview_spouse_name_label"
@@ -145,8 +141,7 @@
                 <TextView
                     android:id="@+id/textview_spouse_name"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_mothers_name"
-                    android:text="N/A"/>
+                    android:layout_below="@+id/textview_mothers_name" />
 
                 <TextView
                     android:id="@+id/textview_occupation_label"
@@ -158,8 +153,7 @@
                 <TextView
                     android:id="@+id/textview_occupation"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_spouse_name"
-                    android:text="Software Engineer"/>
+                    android:layout_below="@+id/textview_spouse_name" />
 
                 <TextView
                     android:id="@+id/textview_gender_label"
@@ -171,8 +165,7 @@
                 <TextView
                     android:id="@+id/textview_gender"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_occupation"
-                    android:text="Male"/>
+                    android:layout_below="@+id/textview_occupation" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
@@ -206,14 +199,13 @@
                     android:layout_height="wrap_content"
                     style="@style/ProfileButtonStyle"
                     android:layout_alignBaseline="@+id/textview_present_address_label"
-                    android:text="EDIT"
+                    android:text="@string/action_add"
                     android:layout_below="@+id/textview_address" />
 
                 <TextView
                     android:id="@+id/textview_present_address"
                     style="@style/ProfileAddressTextStyle"
-                    android:layout_below="@id/textview_present_address_label"
-                    android:text="330 Ahsanulla Hall\nBUET\nPolash, Dhaka\nBangladesh"/>
+                    android:layout_below="@id/textview_present_address_label" />
 
 
                 <!-- Permanent Address -->
@@ -230,7 +222,7 @@
                     android:layout_height="wrap_content"
                     style="@style/ProfileButtonStyle"
                     android:layout_alignBaseline="@+id/textview_permanent_address_label"
-                    android:text="ADD"
+                    android:text="@string/action_add"
                     android:layout_below="@+id/textview_present_address" />
 
                 <TextView
@@ -254,14 +246,13 @@
                     android:layout_height="wrap_content"
                     style="@style/ProfileButtonStyle"
                     android:layout_alignBaseline="@+id/textview_office_address_label"
-                    android:text="EDIT"
+                    android:text="@string/action_add"
                     android:layout_below="@+id/textview_permanent_address" />
 
                 <TextView
                     android:id="@+id/textview_office_address"
                     style="@style/ProfileAddressTextStyle"
-                    android:layout_below="@id/textview_office_address_label"
-                    android:text="Test"/>
+                    android:layout_below="@id/textview_office_address_label" />
 
             </RelativeLayout>
 

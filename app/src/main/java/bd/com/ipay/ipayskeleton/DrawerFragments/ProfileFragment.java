@@ -27,8 +27,11 @@ import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserAddressRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
@@ -38,6 +41,10 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
+
+    private HttpRequestPostAsyncTask mGetUserAddressTask = null;
+    private GetUserAddressResponse mGetUserAddressResponse = null;
+
 
     private ProgressDialog mProgressDialog;
 
@@ -65,9 +72,25 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private Button mOfficeAddressEditButton;
     private Button mUploadDocumentsButton;
 
-    private Set<UserProfilePictureClass> profilePictures;
 
     private SharedPreferences pref;
+
+    private String mName = "";
+    private String mMobileNumber = "";
+    private Set<UserProfilePictureClass> mProfilePictures;
+
+    private String mEmailAddress = "";
+    private String mDateOfBirth = "";
+    private String mFathersName = "";
+    private String mMothersName = "";
+    private String mSpouseName = "";
+    private String mOccupation = "";
+    private String mGender = "";
+
+    private AddressClass mPresentAddress;
+    private AddressClass mPermanentAddress;
+    private AddressClass mOfficeAddress;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +105,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.profile);
 
-        profilePictures = new HashSet<>();
+        mProfilePictures = new HashSet<>();
 
         mProfilePicture = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -103,21 +126,59 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mDocumentCountView = (TextView) v.findViewById(R.id.textview_document_count);
 
         mBasicInfoEditButton = (Button) v.findViewById(R.id.button_edit_basic_info);
-        mPresentAddressView = (Button) v.findViewById(R.id.button_edit_present_address);
-        mPermanentAddressView = (Button) v.findViewById(R.id.button_edit_permanent_address);
+        mPresentAddressEditButton = (Button) v.findViewById(R.id.button_edit_present_address);
+        mPermanentAddressEditButton = (Button) v.findViewById(R.id.button_edit_permanent_address);
         mOfficeAddressEditButton = (Button) v.findViewById(R.id.button_edit_office_address);
         mUploadDocumentsButton = (Button) v.findViewById(R.id.button_upload_documents);
 
-        mMobileNumberView.setText(pref.getString(Constants.USERID, ""));
-        mGenderView.setText(pref.getString(Constants.GENDER, ""));
-        mDateOfBirthView.setText(pref.getString(Constants.BIRTHDAY, ""));
+        mMobileNumber = pref.getString(Constants.USERID, "");
+        mGender = pref.getString(Constants.GENDER, "");
+        mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
 
         mProgressDialog = new ProgressDialog(getActivity());
 
         setProfilePicture("");
         getProfileInfo();
+        getUserAddress();
 
         return v;
+    }
+
+    private void setProfileInformation() {
+        if (mProfilePictures.size() > 0) {
+
+            String imageUrl = "";
+            for (Iterator<UserProfilePictureClass> it = mProfilePictures.iterator(); it.hasNext(); ) {
+                UserProfilePictureClass userProfilePictureClass = it.next();
+                imageUrl = userProfilePictureClass.getUrl();
+                break;
+            }
+            setProfilePicture(imageUrl);
+        }
+        mMobileNumberView.setText(mMobileNumber);
+        mNameView.setText(mName);
+
+        mEmailAddressView.setText(mEmailAddress);
+        mGenderView.setText(mGender);
+        mDateOfBirthView.setText(mDateOfBirth);
+        mFathersNameView.setText(mFathersName);
+        mMothersNameView.setText(mMothersName);
+        mSpouseNameView.setText(mSpouseName);
+        mOccupationView.setText(mOccupation);
+        mGenderView.setText(mGender);
+
+        if (mPresentAddress != null) {
+            mPresentAddressView.setText(mPresentAddress.toString());
+            mPresentAddressEditButton.setText(R.string.action_edit);
+        }
+        if (mPermanentAddress != null) {
+            mPermanentAddressView.setText(mPermanentAddress.toString());
+            mPermanentAddressEditButton.setText(R.string.action_edit);
+        }
+        if (mOfficeAddress != null) {
+            mOfficeAddressView.setText(mOfficeAddress.toString());
+            mOfficeAddressEditButton.setText(R.string.action_edit);
+        }
     }
 
     @Override
@@ -154,18 +215,19 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mGetProfileInfoTask.execute();
     }
 
-    private void setProfileInformation() {
-        if (profilePictures.size() > 0) {
-
-            String imageUrl = "";
-            for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
-                UserProfilePictureClass userProfilePictureClass = it.next();
-                imageUrl = userProfilePictureClass.getUrl();
-                break;
-            }
-            setProfilePicture(imageUrl);
+    private void getUserAddress() {
+        if (mGetUserAddressTask != null) {
+            return;
         }
 
+        GetUserAddressRequest getUserAddressRequest = new GetUserAddressRequest();
+        Gson gson = new Gson();
+        String json = gson.toJson(getUserAddressRequest);
+
+        mGetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
+                Constants.BASE_URL_POST_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, json, getActivity());
+        mGetUserAddressTask.mHttpResponseListener = this;
+        mGetUserAddressTask.execute();
     }
 
     private void setProfilePicture(String url) {
@@ -194,6 +256,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         if (result == null) {
             mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
+            mGetUserAddressTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -209,32 +272,63 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                 mGetProfileInfoResponse = gson.fromJson(resultList.get(2), GetProfileInfoResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     if (mGetProfileInfoResponse.getName() != null)
-                        mNameView.setText(mGetProfileInfoResponse.getName());
+                        mName = mGetProfileInfoResponse.getName();
                     if (mGetProfileInfoResponse.getMobileNumber() != null)
-                        mMobileNumberView.setText(mGetProfileInfoResponse.getMobileNumber());
+                        mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
                     if (mGetProfileInfoResponse.getEmail() != null)
-                        mEmailAddressView.setText(mGetProfileInfoResponse.getEmail());
+                        mEmailAddress = mGetProfileInfoResponse.getEmail();
                     if (mGetProfileInfoResponse.getFather() != null)
-                        mFathersNameView.setText(mGetProfileInfoResponse.getFather());
+                        mFathersName = mGetProfileInfoResponse.getFather();
                     if (mGetProfileInfoResponse.getMother() != null)
-                        mMothersNameView.setText(mGetProfileInfoResponse.getMother());
+                        mMothersName = mGetProfileInfoResponse.getMother();
                     if (mGetProfileInfoResponse.getSpouse() != null)
-                        mSpouseNameView.setText(mGetProfileInfoResponse.getSpouse());
+                        mSpouseName = mGetProfileInfoResponse.getSpouse();
                     if (mGetProfileInfoResponse.getOccupation() != null)
-                        mOccupationView.setText(mGetProfileInfoResponse.getOccupation());
+                        mOccupation = mGetProfileInfoResponse.getOccupation();
                     if (mGetProfileInfoResponse.getGender() != null)
-                        mGenderView.setText(mGetProfileInfoResponse.getGender());
+                        mGender = mGetProfileInfoResponse.getGender();
+
+                    mProfilePictures = mGetProfileInfoResponse.getProfilePictures();
+
+                    setProfileInformation();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
             }
 
-            mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
+        }
+        else if (resultList.get(0).equals(Constants.COMMAND_GET_USER_ADDRESS_REQUEST)) {
+            try {
+                mGetUserAddressResponse = gson.fromJson(resultList.get(2), GetUserAddressResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mPresentAddress = mGetUserAddressResponse.getPresentAddress();
+                    mPermanentAddress = mGetUserAddressResponse.getPermanentAddress();
+                    mOfficeAddress = mGetUserAddressResponse.getOfficeAddress();
 
+                    setProfileInformation();
+                }
+                else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+            }
+
+            mGetUserAddressTask = null;
+        }
+
+
+        if (mGetProfileInfoTask == null && mGetUserAddressTask == null) {
+            mProgressDialog.dismiss();
         }
     }
 

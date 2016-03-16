@@ -130,6 +130,7 @@ public class Constants {
     public static final String URL_SET_PIN = "settings/pin/change";
     public static final String URL_CHANGE_PASSWORD = "settings/password/change";
     public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile/get";
+    public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address/get";
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile/set";
     public static final String URL_LOG_OUT = "signout";
     public static final String URL_USER_ACTIVITY = "report/activities";
@@ -221,6 +222,7 @@ public class Constants {
     public static final String COMMAND_SET_PIN = "COMMAND_SET_PIN";
     public static final String COMMAND_CHANGE_PASSWORD = "COMMAND_CHANGE_PASSWORD";
     public static final String COMMAND_GET_PROFILE_INFO_REQUEST = "COMMAND_GET_PROFILE_INFO_REQUEST";
+    public static final String COMMAND_GET_USER_ADDRESS_REQUEST = "COMMAND_GET_USER_ADDRESS_REQUEST";
     public static final String COMMAND_EMAIL_VERIFICATION_REQUEST = "COMMAND_EMAIL_VERIFICATION_REQUEST";
     public static final String COMMAND_SET_PROFILE_INFO_REQUEST = "COMMAND_SET_PROFILE_INFO_REQUEST";
     public static final String COMMAND_GET_BANK_LIST = "COMMAND_GET_BANK_LIST";
