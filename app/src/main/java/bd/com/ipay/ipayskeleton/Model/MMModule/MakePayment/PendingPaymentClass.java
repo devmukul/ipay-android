@@ -1,24 +1,30 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment;
 
+import java.math.BigDecimal;
+
+import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.UserProfile;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+
 public class PendingPaymentClass {
 
     public Long id;
-    public String senderMobileNumber;
-    public String receiverMobileNumber;
-    public double amount;
+    public BigDecimal amount;
     public Long requestTime;
     public String title;
+    public Long serviceID;
     public String description;
+    public UserProfile originatorProfile;
+    public UserProfile receiverProfile;
+
+    public PendingPaymentClass() {
+    }
 
     public Long getId() {
         return id;
     }
 
-    public String getSenderMobileNumber() {
-        return senderMobileNumber;
-    }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -27,14 +33,33 @@ public class PendingPaymentClass {
     }
 
     public String getTitle() {
-        return title;
+        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Invoice received";
+        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return title;
+        else return title;
+    }
+
+    public UserProfile getOriginatorProfile() {
+        return originatorProfile;
+    }
+
+    public UserProfile getReceiverProfile() {
+        return receiverProfile;
+    }
+
+    public Long getServiceID() {
+        return serviceID;
     }
 
     public String getDescription() {
-        return description;
-    }
 
-    public String getReceiverMobileNumber() {
-        return receiverMobileNumber;
+        String customDescription = "";
+
+        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
+            customDescription = getOriginatorProfile().getUserName() + " requested " + amount + " Tk.";
+        } else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) {
+            customDescription = description + ": " + getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
+        }
+
+        return customDescription;
     }
 }

@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOr
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -103,11 +104,11 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
             return;
         }
 
-        GetPendingPaymentsRequest mGetPendingPaymentsRequest = new GetPendingPaymentsRequest(null, historyPageCount);
+        GetPendingPaymentsRequest mGetPendingPaymentsRequest = new GetPendingPaymentsRequest(historyPageCount, Constants.SERVICE_ID_REQUEST_INVOICE);
         Gson gson = new Gson();
         String json = gson.toJson(mGetPendingPaymentsRequest);
         mPendingInvoicesTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT,
-                Constants.BASE_URL_SM + Constants.URL_PENDING_PAYMENT_REQUEST_SENT, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity());
         mPendingInvoicesTask.mHttpResponseListener = this;
         mPendingInvoicesTask.execute((Void) null);
     }
@@ -124,7 +125,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mCancelPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT_REQUEST_CANCEL, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mCancelPaymentRequestTask.mHttpResponseListener = this;
         mCancelPaymentRequestTask.execute((Void) null);
     }
@@ -220,7 +221,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private TextView mSenderNumber;
-            private TextView mAmount;
+            private TextView mDescription;
             private TextView mTime;
             private TextView mTitleOfProduct;
             private ImageView mCancel;
@@ -230,7 +231,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 super(itemView);
 
                 mSenderNumber = (TextView) itemView.findViewById(R.id.request_number);
-                mAmount = (TextView) itemView.findViewById(R.id.amount);
+                mDescription = (TextView) itemView.findViewById(R.id.description);
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mTitleOfProduct = (TextView) itemView.findViewById(R.id.description);
                 mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
@@ -240,10 +241,11 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
             public void bindView(int pos) {
 
                 final long id = pendingPaymentClasses.get(pos).getId();
+                String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(pendingPaymentClasses.get(pos).getRequestTime());
-                mAmount.setText(pendingPaymentClasses.get(pos).getAmount() + " BDT");
+                mDescription.setText(pendingPaymentClasses.get(pos).getDescription());
                 mTime.setText(time);
-                mSenderNumber.setText(pendingPaymentClasses.get(pos).getReceiverMobileNumber());
+                mSenderNumber.setText(pendingPaymentClasses.get(pos).getReceiverProfile().getUserName());
                 mTitleOfProduct.setText(pendingPaymentClasses.get(pos).getTitle());
 
                 mCancel.setOnClickListener(new View.OnClickListener() {
@@ -253,12 +255,11 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                     }
                 });
 
-                // TODO: profile pic fetch change hobe
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + "/image/"
-                                + pendingPaymentClasses.get(pos).getReceiverMobileNumber().replaceAll("[^0-9]", "")
-                                + ".jpg")
-                        .placeholder(R.drawable.ic_face_black_24dp)
+                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .crossFade()
+                        .error(R.drawable.ic_person)
+                        .transform(new CircleTransform(getActivity()))
                         .into(mPortrait);
 
             }
