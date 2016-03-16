@@ -166,6 +166,8 @@ public class Constants {
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
+    public static final String URL_GET_FIREBASE_TOKEN = "friend/firebasetoken";
+    public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
 
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
@@ -231,6 +233,7 @@ public class Constants {
     public static final String COMMAND_ADD_MONEY = "COMMAND_ADD_MONEY";
     public static final String COMMAND_RECOMMEND_ACTION = "COMMAND_RECOMMEND_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
+    public static final String COMMAND_GET_FIREBASE_TOKEN = "COMMAND_GET_FIREBASE_TOKEN";
     public static final String COMMAND_GET_NEWS_FEED = "COMMAND_GET_NEWS_FEED";
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
     public static final String COMMAND_EVENT_CATEGORIES = "COMMAND_EVENT_CATEGORIES";
@@ -247,10 +250,10 @@ public class Constants {
     public static final String COMMAND_SEND_INVITE = "COMMAND_SEND_INVITE";
 
     // FireBase
-    public static final String PATH_TO_IPAY_USERS = "https://ipay-com-test.firebaseio.com/data/iPay-users/";
-    public static final String PATH_TO_USER_CONTACTS = "https://ipay-com-test.firebaseio.com/data/users-contacts/";
-    public static final String IPAY_USERS_PRIMARY_KEY_MOBILE_NUMBER = "mobileNumber/";
-    public static final String IPAY_USER_CONTACTS_PRIMARY_KEY_MOBILE_NUMBER = "mobileNumber/";
+    public static final String PATH_TO_FIREBASE_DATABASE = "https://testingipay.firebaseio.com/";
+    public static final String FIREBASE_CONTACT_LIST = "ContactList";
+    public static final String FIREBASE_DIRTY = "dirty";
+    public static final String FIREBASE_SYNCED = "synced";
 
     public static final int TRANSACTION_TYPE_TOP_UP_REQUEST = 4097;
     public static final int TRANSACTION_TYPE_TOP_UP_RESPONSE = 4098;
@@ -306,5 +309,8 @@ public class Constants {
     public static final String GET_URL = "GET_URL: ";
 
     public static final String PARSED_TOKEN = "Parsed Token: ";
+    public static final String SUCCESS = "SUCCESS";
+    public static final String FAIL = "FAIL";
+    public static final String iPay_USER = "iPay_USER";
 
 }

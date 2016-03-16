@@ -1,34 +1,28 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
+package bd.com.ipay.ipayskeleton.Model.FireBase;
 
 import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class GetUserInfoRequestBuilder {
+public class GetFireBaseTokenRequestBuilder {
 
-    private final String PARAM_LOGIN_ID = "loginId";
-
-    private String loginId;
     private String generatedUri;
 
-    public GetUserInfoRequestBuilder(String loginId) {
-        this.loginId = URLEncoder.encode(loginId);
-        generateUri(loginId);
+    public GetFireBaseTokenRequestBuilder() {
+        generateUri();
     }
 
-    private void generateUri(String loginId) {
+    private void generateUri() {
 
         try {
             URI uri = new URIBuilder()
                     .setScheme(Constants.SCHEME)
                     .setHost(Constants.BASE_URL_GET_MM)
                     .setPort(Constants.BASE_URL_GET_MM_PORT)
-                    .setPath(Constants.BASE_URL_GET_MM_PATH + "/" + Constants.URL_GET_USER_INFO)
-                    .addParameter(PARAM_LOGIN_ID, loginId)
+                    .setPath(Constants.BASE_URL_GET_MM_PATH + "/" + Constants.URL_GET_FIREBASE_TOKEN)
                     .build();
             setGeneratedUri(uri.toString());
         } catch (URISyntaxException e) {
