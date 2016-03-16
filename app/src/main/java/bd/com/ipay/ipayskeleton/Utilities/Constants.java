@@ -44,8 +44,7 @@ public class Constants {
 
     // Service Module (SM)
     public static final String BASE_URL_SM;
-
-
+    
     // Event Management (EM) Module
     public static final String BASE_URL_GET_EM;
     public static final int BASE_URL_GET_EM_PORT;
@@ -61,20 +60,20 @@ public class Constants {
 
     static {
         if (SERVER_TYPE == 1) {
-            BASE_URL_POST_MM = "http://10.10.10.10:8085/";
+            BASE_URL_POST_MM = "http://10.10.10.10:8085/api/v1/";
 
             BASE_URL_GET_MM = "10.10.10.10";
             BASE_URL_GET_MM_PORT = 8085;
-            BASE_URL_GET_MM_PATH = "";
+            BASE_URL_GET_MM_PATH = "/api/v1/";
 
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 
-            BASE_URL_SM = "http://10.10.10.10:8085/";
+            BASE_URL_SM = "http://10.10.10.10:8085/api/v1/";
 
             BASE_URL_GET_EM = "10.10.10.10";
             BASE_URL_GET_EM_PORT = 8085;
             BASE_URL_GET_EM_PATH = "";
-            BASE_URL_POST_EM = "http://10.10.10.10:8085/";
+            BASE_URL_POST_EM = "http://10.10.10.10:8085/api/v1/";
         } else if (SERVER_TYPE == 2) {
             BASE_URL_POST_MM = "http://10.15.10.10:8080/mmweb/";
 
@@ -135,14 +134,17 @@ public class Constants {
     public static final String URL_USER_ACTIVITY = "report/activities";
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
     public static final String URL_GET_NOTIFICATIONS = "requests/received";
+    public static final String URL_GET_SENT_REQUESTS = "requests/sent";
+    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
+    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_REQUEST_MONEY = "requestmoney";
     public static final String URL_PENDING_PAYMENT_REQUEST_RECEIVED = "payment/received";
     public static final String URL_PENDING_PAYMENT_REQUEST_SENT = "payment/sent";
-    public static final String URL_PENDING_REQUEST_MONEY_TO_ME = "requestmoney/received";
-    public static final String URL_PENDING_REQUEST_MONEY_FROM_ME = "requestmoney/sent";
-    public static final String URL_REQUEST_MONEY_ACCEPT = "requestmoney/accept";
-    public static final String URL_REQUEST_MONEY_REJECT = "requestmoney/reject";
-    public static final String URL_REQUEST_CANCEL = "requestmoney/cancel";
+    //    public static final String URL_PENDING_REQUEST_MONEY_TO_ME = "requestmoney/received";
+//    public static final String URL_PENDING_REQUEST_MONEY_FROM_ME = "requestmoney/sent";
+//    public static final String URL_REQUEST_MONEY_ACCEPT = "requestmoney/accept";
+//    public static final String URL_REQUEST_MONEY_REJECT = "requestmoney/reject";
+//    public static final String URL_REQUEST_CANCEL = "requestmoney/cancel";
     public static final String URL_PAYMENT_REQUEST_ACCEPT = "payment/accept";
     public static final String URL_PAYMENT_REQUEST_REJECT = "payment/reject";
     public static final String URL_PAYMENT_REQUEST_CANCEL = "payment/cancel";
@@ -162,8 +164,6 @@ public class Constants {
     public static final String URL_GET_INVITE_INFO = "settings/invitations";
     public static final String URL_SEND_INVITE = "settings/invitations";
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
-    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
-    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_GET_FIREBASE_TOKEN = "friend/firebasetoken";
     public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
 

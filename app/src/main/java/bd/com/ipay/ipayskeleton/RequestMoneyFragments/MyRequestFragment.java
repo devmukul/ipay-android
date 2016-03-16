@@ -25,12 +25,13 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequestResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.PendingMoneyRequestClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -48,7 +49,7 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
     private RecyclerView mPendingListRecyclerView;
     private PendingListAdapter mOtherRequestsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<PendingMoneyRequestClass> pendingMoneyRequestClasses;
+    private List<RequestsSentClass> pendingMoneyRequestClasses;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private int historyPageCount = 0;
@@ -103,11 +104,11 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
             return;
         }
 
-        GetPendingRequest mUserActivityRequest = new GetPendingRequest(null, historyPageCount);
+        GetPendingMoneyRequest mUserActivityRequest = new GetPendingMoneyRequest(historyPageCount, Constants.SERVICE_ID_REQUEST_MONEY);
         Gson gson = new Gson();
         String json = gson.toJson(mUserActivityRequest);
         mPendingRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_REQUESTS_ME,
-                Constants.BASE_URL_SM + Constants.URL_PENDING_REQUEST_MONEY_FROM_ME, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity());
         mPendingRequestTask.mHttpResponseListener = this;
         mPendingRequestTask.execute((Void) null);
     }
@@ -124,7 +125,7 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mCancelRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REQUEST_CANCEL, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mCancelRequestTask.mHttpResponseListener = this;
         mCancelRequestTask.execute((Void) null);
     }
@@ -153,10 +154,10 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
                         mGetPendingRequestResponse = gson.fromJson(resultList.get(2), GetPendingRequestResponse.class);
 
                         if (pendingMoneyRequestClasses == null) {
-                            pendingMoneyRequestClasses = mGetPendingRequestResponse.getRequests();
+                            pendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
                         } else {
-                            List<PendingMoneyRequestClass> tempPendingMoneyRequestClasses;
-                            tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getRequests();
+                            List<RequestsSentClass> tempPendingMoneyRequestClasses;
+                            tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
                             pendingMoneyRequestClasses.addAll(tempPendingMoneyRequestClasses);
                         }
 
@@ -241,9 +242,10 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
-                mAmount.setText(pendingMoneyRequestClasses.get(pos).getAmount() + " BDT");
+                String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
+                mAmount.setText(pendingMoneyRequestClasses.get(pos).getAmount() + " Tk.");
                 mTime.setText(time);
-                mSenderNumber.setText(pendingMoneyRequestClasses.get(pos).getReceiverMobileNumber());
+                mSenderNumber.setText(pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName());
                 mDescription.setText(pendingMoneyRequestClasses.get(pos).getDescription());
 
                 mCancel.setOnClickListener(new View.OnClickListener() {
@@ -253,12 +255,11 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
                     }
                 });
 
-                // TODO: profile pic fetch change hobe
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + "/image/"
-                                + pendingMoneyRequestClasses.get(pos).getReceiverMobileNumber().replaceAll("[^0-9]", "")
-                                + ".jpg")
-                        .placeholder(R.drawable.ic_face_black_24dp)
+                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .crossFade()
+                        .error(R.drawable.ic_person)
+                        .transform(new CircleTransform(getActivity()))
                         .into(mPortrait);
 
             }

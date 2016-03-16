@@ -27,7 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.GetAllParticipantsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses.Participant;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingMoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -139,7 +139,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
             return;
         }
 
-        GetPendingRequest mUserActivityRequest = new GetPendingRequest(null, pageCount);
+        GetPendingMoneyRequest mUserActivityRequest = new GetPendingMoneyRequest(pageCount, 1); //TODO: Change this request
         Gson gson = new Gson();
         String json = gson.toJson(mUserActivityRequest);
         mGetAllParticipantsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_ALL_PARTICIPANTS_LIST,

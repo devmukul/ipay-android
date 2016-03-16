@@ -3,11 +3,10 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.RequestMoneyFragments.RequestFragments;
+import bd.com.ipay.ipayskeleton.RequestMoneyFragments.MyRequestFragment;
 import bd.com.ipay.ipayskeleton.RequestMoneyFragments.RequestMoneyFragment;
 
 public class RequestMoneyActivity extends BaseActivity {
@@ -37,7 +36,7 @@ public class RequestMoneyActivity extends BaseActivity {
         if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
             switchToRequestMoneyFragment();
         else
-            switchToRequestsFragment();
+            switchToMyRequestsFragment();
     }
 
     @Override
@@ -47,13 +46,13 @@ public class RequestMoneyActivity extends BaseActivity {
         } else if (switchedToPendingList) {
             super.onBackPressed();
         } else {
-            switchToRequestsFragment();
+            switchToMyRequestsFragment();
         }
     }
 
-    public void switchToRequestsFragment() {
+    public void switchToMyRequestsFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new RequestFragments()).commit();
+                .replace(R.id.fragment_container, new MyRequestFragment()).commit();
         mFabRequestMoney.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
