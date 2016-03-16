@@ -20,12 +20,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, String> {
-
-    private final int AUTH_IN_PROGRESS = 0;
-    private final int AUTH_SUCCESS = 1;
-    private final int AUTH_FAILED = 2;
-    private int isReturnedFromServer = AUTH_IN_PROGRESS;
-
+    
     private Context mContext;
     private Firebase ref;
 
@@ -107,12 +102,10 @@ public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, Stri
                         }
                     });
 
-                    isReturnedFromServer = AUTH_SUCCESS;
                 }
 
                 @Override
                 public void onAuthenticationError(FirebaseError firebaseError) {
-                    isReturnedFromServer = AUTH_FAILED;
                 }
             };
 
