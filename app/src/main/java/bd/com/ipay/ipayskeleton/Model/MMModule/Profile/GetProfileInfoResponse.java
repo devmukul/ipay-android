@@ -41,7 +41,7 @@ public class GetProfileInfoResponse {
         return gender;
     }
 
-    public String getDob() {
+    public String getDateOfBirth() {
         return dob;
     }
 

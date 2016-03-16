@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditUserAddressFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.HomeFragment;
@@ -62,7 +63,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener,
-        EditUserAddressFragment.ProfilePictureChangeListener {
+        EditBasicInfoFragment.ProfilePictureChangeListener {
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;

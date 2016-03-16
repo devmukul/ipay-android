@@ -144,10 +144,15 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mContext.startActivity(intent);
 
-            } else
-                mHttpResponseListener.httpResponseReceiver(result);
+            } else {
+                if (mHttpResponseListener != null)
+                    mHttpResponseListener.httpResponseReceiver(result);
+            }
 
-        } else mHttpResponseListener.httpResponseReceiver(null);
+        } else {
+            if (mHttpResponseListener != null)
+                mHttpResponseListener.httpResponseReceiver(null);
+        }
 
     }
 

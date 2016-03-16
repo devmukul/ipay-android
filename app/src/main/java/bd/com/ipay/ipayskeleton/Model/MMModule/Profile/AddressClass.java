@@ -18,6 +18,28 @@ public class AddressClass {
 
     }
 
+    public AddressClass(String addressLine1, String addressLine2, String country,
+                        int district, int thana, String postalCode) {
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.country = country;
+        this.district = district;
+        this.thana = thana;
+        this.postalCode = postalCode;
+    }
+
+
+    public AddressClass(String addressLine1, String addressLine2, String country,
+                        String district, String thana, String postalCode) {
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.country = CountryList.countryNameToCountryCodeMap.get(country);
+        this.district = DistrictList.districtNameToIdMap.get(district);
+        this.thana = ThanaList.thanaNameToIdMap.get(thana);
+        this.postalCode = postalCode;
+    }
+
+
     public String getAddressLine1() {
         return addressLine1;
     }

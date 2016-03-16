@@ -105,7 +105,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
         mBusinessType = (Spinner) v.findViewById(R.id.business_type);
         mBusinessAddressLine1 = (EditText) v.findViewById(R.id.business_addr_line1);
         mBusinessAddressLine2 = (EditText) v.findViewById(R.id.business_addr_line2);
-        mBusinessCity = (Spinner) v.findViewById(R.id.city);
+        mBusinessCity = (Spinner) v.findViewById(R.id.thana);
         mBusinessDistrict = (Spinner) v.findViewById(R.id.district);
 
         mBusinessHolderAddressPostCode = (EditText) v.findViewById(R.id.acc_holders_postcode);

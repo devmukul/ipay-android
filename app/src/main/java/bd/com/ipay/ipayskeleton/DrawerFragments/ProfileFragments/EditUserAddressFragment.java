@@ -1,111 +1,23 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfilePictureResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Verification.EmailVerificationRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Verification.EmailVerificationResponse;
+import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
-import bd.com.ipay.ipayskeleton.Utilities.Common.DistrictList;
-import bd.com.ipay.ipayskeleton.Utilities.Common.ThanaList;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditUserAddressFragment extends Fragment implements HttpResponseListener {
+public class EditUserAddressFragment extends Fragment {
 
-    private final int ACTION_PICK_PROFILE_PICTURE = 100;
-    private final int ACTION_VERIFY_EMAIL = 1;
-
-    private HttpRequestPostAsyncTask mGetProfileInfoTask = null;
-    private GetProfileInfoResponse mGetProfileInfoResponse;
-
-    private HttpRequestPostAsyncTask mEmailVerificationAsyncTask = null;
-    private EmailVerificationResponse mEmailVerificationResponse;
-
-    private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
-    private SetProfileInfoResponse mSetProfileInfoResponse;
-
-    private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask;
-    private SetProfilePictureResponse mSetProfilePictureResponse;
-
-    private EditText mNameEditText;
-    private EditText mEmailEditText;
-    private EditText mAddressLine1EditText;
-    private EditText mAddressLine2EditText;
-    private EditText mNIDEditText;
-    private EditText mPostCodeEditText;
-    private TextView mNameOfUserTextView;
-    private TextView mDateOfBirthTextView;
-    private TextView mMobileNumberTextView;
-    private ImageView mEmailVerify;
-    private RoundedImageView mProfilePicture;
-    private ProgressDialog mProgressDialog;
-
-    private String userName;
-    private String userEmail;
-    private String userOccupation;
-    private String userNID;
-    private String userAddressLine1;
-    private String userAddressLine2;
-    private String userPostCode;
-    private String userCity;
-    private String userDistrict;
-    private Set<UserProfilePictureClass> profilePictures;
-
-    private boolean isEditEnabled = false;
-    private SharedPreferences pref;
-
-    private String userID;
-    private String userGender;
-    private String userDOB;
-    private String userCountry;
-
-    private Spinner mOccupationSpinner;
-    private Spinner mCitySpinner;
-    private Spinner mDistrictSpinner;
-
-    private int emailVerificationStatus;
-
-    private boolean profilePictureUpdated = false;
+    private AddressInputView mPresentAddressView;
+    private AddressInputView mPermanentAddressView;
+    private AddressInputView mOfficeAddressView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,68 +29,14 @@ public class EditUserAddressFragment extends Fragment implements HttpResponseLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_edit_user_address, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        getActivity().setTitle(R.string.profile);
 
-//        profilePictures = new HashSet<>();
-//
-//        userID = pref.getString(Constants.USERID, "");
-//        userGender = pref.getString(Constants.GENDER, "");
-//        userDOB = pref.getString(Constants.BIRTHDAY, "");
-//        userCountry = pref.getString(Constants.USERCOUNTRY, "");
-//
-//        mNameEditText = (EditText) v.findViewById(R.id.name);
-//        mEmailEditText = (EditText) v.findViewById(R.id.email);
-//        mAddressLine1EditText = (EditText) v.findViewById(R.id.address_line_1);
-//        mAddressLine2EditText = (EditText) v.findViewById(R.id.address_line_2);
-//        mNIDEditText = (EditText) v.findViewById(R.id.nid);
-//        mPostCodeEditText = (EditText) v.findViewById(R.id.postcode);
-//
-//        mNameOfUserTextView = (TextView) v.findViewById(R.id.name_text);
-//        mMobileNumberTextView = (TextView) v.findViewById(R.id.mobile_number_text);
-//        mDateOfBirthTextView = (TextView) v.findViewById(R.id.dob_text);
-//
-//        mProfilePicture = (RoundedImageView) v.findViewById(R.id.profile_picture);
-//        mOccupationSpinner = (Spinner) v.findViewById(R.id.occupation);
-//        mCitySpinner = (Spinner) v.findViewById(R.id.city);
-//        mDistrictSpinner = (Spinner) v.findViewById(R.id.district);
-//        mEmailVerify = (ImageView) v.findViewById(R.id.email_verification_status);
-//
-//        mProgressDialog = new ProgressDialog(getActivity());
-//
-//        mProfilePicture.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivityForResult(new Intent(Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), ACTION_PICK_PROFILE_PICTURE);
-//            }
-//        });
-//
-//        ArrayAdapter<CharSequence> mAdapterOccupation = ArrayAdapter.createFromResource(getActivity(),
-//                R.array.occupations, android.R.layout.simple_dropdown_item_1line);
-//        mOccupationSpinner.setAdapter(mAdapterOccupation);
-//
-//        ArrayAdapter<CharSequence> mAdapterCity = new ArrayAdapter<CharSequence>(getActivity(),
-//                android.R.layout.simple_dropdown_item_1line, ThanaList.genderNames);
-//        mCitySpinner.setAdapter(mAdapterCity);
-//
-//        ArrayAdapter<CharSequence> mAdapterDistrict = new ArrayAdapter<CharSequence>(getActivity(),
-//                android.R.layout.simple_dropdown_item_1line, DistrictList.districtNames);
-//        mDistrictSpinner.setAdapter(mAdapterDistrict);
-//
-//        mEmailVerify.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String email = mEmailEditText.getText().toString().trim();
-//                if (email.length() > 0 && emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_NOT_VERIFIED) {
-//                    showAlertDialogue(getString(R.string.alert_verify_email), ACTION_VERIFY_EMAIL);
-//                }
-//            }
-//        });
-//
-//        setProfilePicture("");
-//        getProfileInfo();
-//        disableAllEdits();
+        mPresentAddressView = (AddressInputView) v.findViewById(R.id.present_address);
+        mPermanentAddressView = (AddressInputView) v.findViewById(R.id.permanent_address);
+        mOfficeAddressView = (AddressInputView) v.findViewById(R.id.office_address);
+
+        mPresentAddressView.setInformation(ProfileFragment.mPresentAddress);
+        mPermanentAddressView.setInformation(ProfileFragment.mPermanentAddress);
+        mOfficeAddressView.setInformation(ProfileFragment.mOfficeAddress);
 
         return v;
     }
@@ -195,372 +53,25 @@ public class EditUserAddressFragment extends Fragment implements HttpResponseLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-//                boolean isInputValid = verifyUserInputs();
-//                if (isInputValid) {
-//                    ((EditProfileActivity) getActivity()).saveProfile();
-//                }
+                boolean isInputValid = verifyUserInputs();
+                if (isInputValid) {
+                    ((EditProfileActivity) getActivity()).saveProfile();
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void verifyEmail() {
-        if (mEmailVerificationAsyncTask != null) {
-            return;
+    private boolean verifyUserInputs() {
+        if (mPresentAddressView.verifyUserInputs() && mPermanentAddressView.verifyUserInputs() && mOfficeAddressView.verifyUserInputs()) {
+            ProfileFragment.mPresentAddress = mPresentAddressView.getInformation();
+            ProfileFragment.mPermanentAddress = mPermanentAddressView.getInformation();
+            ProfileFragment.mOfficeAddress = mOfficeAddressView.getInformation();
+
+            return true;
         }
-
-        mProgressDialog.setMessage(getString(R.string.sending_email_to_your_email_account));
-        mProgressDialog.show();
-        String email = mEmailEditText.getText().toString().trim();
-        EmailVerificationRequest mEmailVerificationRequest = new EmailVerificationRequest(email);
-        Gson gson = new Gson();
-        String json = gson.toJson(mEmailVerificationRequest);
-        mEmailVerificationAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_VERIFICATION_REQUEST,
-                Constants.BASE_URL_POST_MM + Constants.URL_EMAIL_VERIFICATION, json, getActivity());
-        mEmailVerificationAsyncTask.mHttpResponseListener = this;
-        mEmailVerificationAsyncTask.execute((Void) null);
-
-    }
-
-    private void saveProfileInfo() {
-        if (mSetProfileInfoTask != null) {
-            return;
-        }
-
-        boolean cancel = false;
-        View focusView = null;
-
-        if (mNameEditText.getText().toString().trim().length() == 0) {
-            mNameEditText.setError(getString(R.string.error_invalid_first_name));
-            focusView = mNameEditText;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-
-            userName = mNameEditText.getText().toString().trim();
-            userNID = mNIDEditText.getText().toString().trim();
-            userEmail = mEmailEditText.getText().toString().trim();
-            userAddressLine1 = mAddressLine1EditText.getText().toString().trim();
-            userAddressLine2 = mAddressLine2EditText.getText().toString().trim();
-            userPostCode = mPostCodeEditText.getText().toString().trim();
-            userCity = "";
-            userDistrict = "";
-            userOccupation = "";
-
-            if (mCitySpinner.getSelectedItemPosition() != 0)
-                userCity = mCitySpinner.getSelectedItem().toString();
-            if (mDistrictSpinner.getSelectedItemPosition() != 0)
-                userDistrict = mDistrictSpinner.getSelectedItem().toString();
-            if (mOccupationSpinner.getSelectedItemPosition() != 0)
-                userOccupation = mOccupationSpinner.getSelectedItem().toString();
-
-            mProgressDialog.setMessage(getString(R.string.saving_profile_information));
-            mProgressDialog.show();
-//            SetProfileInfoRequest mSetProfileInfoRequest = new SetProfileInfoRequest(userID, userName,
-//                    userGender, userDOB, userCountry, userEmail, userNID, userOccupation, userAddressLine1,
-//                    userAddressLine2, userCity, userDistrict, userPostCode);
-//            Gson gson = new Gson();
-//            String json = gson.toJson(mSetProfileInfoRequest);
-//            mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
-//                    Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, json, getActivity());
-//            mSetProfileInfoTask.mHttpResponseListener = this;
-//            mSetProfileInfoTask.execute((Void) null);
+        else {
+            return false;
         }
     }
-
-    private void disableAllEdits() {
-        isEditEnabled = false;
-
-        mNameEditText.setEnabled(false);
-        mEmailEditText.setEnabled(false);
-        mAddressLine1EditText.setEnabled(false);
-        mAddressLine2EditText.setEnabled(false);
-        mPostCodeEditText.setEnabled(false);
-        mNIDEditText.setEnabled(false);
-        mOccupationSpinner.setEnabled(false);
-        mDistrictSpinner.setEnabled(false);
-        mCitySpinner.setEnabled(false);
-    }
-
-    private void enableAllEdits() {
-        isEditEnabled = true;
-
-        mNameEditText.setEnabled(true);
-        mEmailEditText.setEnabled(true);
-        mAddressLine1EditText.setEnabled(true);
-        mAddressLine2EditText.setEnabled(true);
-        mPostCodeEditText.setEnabled(true);
-        mNIDEditText.setEnabled(true);
-        mOccupationSpinner.setEnabled(true);
-        mDistrictSpinner.setEnabled(true);
-        mCitySpinner.setEnabled(true);
-    }
-
-    private void setProfileInformation() {
-        mNameEditText.setText(userName);
-        mNIDEditText.setText(userNID);
-        mEmailEditText.setText(userEmail);
-        mAddressLine1EditText.setText(userAddressLine1);
-        mAddressLine2EditText.setText(userAddressLine2);
-        mPostCodeEditText.setText(userPostCode);
-        mNameOfUserTextView.setText(userName);
-        mDateOfBirthTextView.setText(userDOB);
-        mMobileNumberTextView.setText(userID);
-
-        if (profilePictures.size() > 0) {
-
-            String imageUrl = "";
-            for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
-                UserProfilePictureClass userProfilePictureClass = it.next();
-                imageUrl = userProfilePictureClass.getUrl();
-                break;
-            }
-            setProfilePicture(imageUrl);
-        }
-
-        // Update preferences
-        // TODO: Date doesn't save in proper format in database
-//        if (userDOB.length() > 0) pref.edit().putString(Constants.BIRTHDAY, userDOB).commit();
-//        if (userGender.length() > 0) pref.edit().putString(Constants.GENDER, userGender).commit();
-//        if (userID.length() > 0) pref.edit().putString(Constants.USERID, userID).commit();
-//        if (userCountry != null && userCountry.length() > 0)
-//            pref.edit().putString(Constants.USERCOUNTRY, userCountry).commit();
-
-        String[] cityArray = ThanaList.thanaNames;
-        for (int i = 0; i < cityArray.length; i++) {
-            if (cityArray[i].equals(userCity)) {
-                mCitySpinner.setSelection(i);
-                break;
-            }
-        }
-
-        String[] districtArray = DistrictList.districtNames;
-        for (int i = 0; i < districtArray.length; i++) {
-            if (districtArray[i].equals(userDistrict)) {
-                mDistrictSpinner.setSelection(i);
-                break;
-            }
-        }
-
-        String[] occupationArray = getResources().getStringArray(R.array.occupations);
-        for (int i = 0; i < occupationArray.length; i++) {
-            if (occupationArray[i].equals(userOccupation)) {
-                mOccupationSpinner.setSelection(i);
-                break;
-            }
-        }
-    }
-
-    private void setProfilePicture(String url) {
-        try {
-            if (!url.equals("")) {
-                Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + url)
-                        .crossFade()
-                        .error(R.drawable.ic_person)
-                        .transform(new CircleTransform(getActivity()))
-                        .into(mProfilePicture);
-                if (profilePictureUpdated) {
-                    ProfilePictureChangeListener listener = (ProfilePictureChangeListener) getActivity();
-                    listener.onProfilePictureChange(url);
-                }
-            } else {
-                Glide.with(getActivity())
-                        .load(R.drawable.ic_person)
-                        .crossFade()
-                        .into(mProfilePicture);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void httpResponseReceiver(String result) {
-        if (result == null) {
-            mProgressDialog.dismiss();
-            mGetProfileInfoTask = null;
-            mSetProfileInfoTask = null;
-            mEmailVerificationAsyncTask = null;
-            mUploadProfilePictureAsyncTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-
-        List<String> resultList = Arrays.asList(result.split(";"));
-        Gson gson = new Gson();
-
-        if (resultList.get(0).equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
-
-            try {
-                mGetProfileInfoResponse = gson.fromJson(resultList.get(2), GetProfileInfoResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-//                    userName = mGetProfileInfoResponse.getName();
-//                    userEmail = mGetProfileInfoResponse.getEmail();
-//                    userAddressLine1 = mGetProfileInfoResponse.getAddressLine1();
-//                    userAddressLine2 = mGetProfileInfoResponse.getAddressLine2();
-//                    userNID = mGetProfileInfoResponse.getNIDNumber();
-//                    userOccupation = mGetProfileInfoResponse.getOccupation();
-//                    userPostCode = mGetProfileInfoResponse.getPostalCode();
-//                    userCity = mGetProfileInfoResponse.getCity();
-//                    userDistrict = mGetProfileInfoResponse.getDistrict();
-//                    emailVerificationStatus = mGetProfileInfoResponse.getEmailVerificationStatus();
-//                    userCountry = mGetProfileInfoResponse.getCountry();
-//                    if (emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)
-//                        mEmailVerify.setImageResource(R.drawable.ic_verified_user_black_24dp);
-//                    else if (emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)
-//                        mEmailVerify.setImageResource(R.drawable.ic_sync_problem_black_24dp);
-
-                    // Set profile pictures now
-                    profilePictures = mGetProfileInfoResponse.getProfilePictures();
-
-                    // TODO: Date doesn't save in proper format in database
-                    if (userDOB.length() == 0) {
-                        userDOB = mGetProfileInfoResponse.getDob();
-                        pref.edit().putString(Constants.BIRTHDAY, userDOB);
-                    }
-//                userID = mGetProfileInfoResponse.getMobileNumber();
-//                userGender = mGetProfileInfoResponse.getGender();
-//                userCountry = mGetProfileInfoResponse.getCountry();
-
-                    setProfileInformation();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mProgressDialog.dismiss();
-            mGetProfileInfoTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)) {
-
-            try {
-                mSetProfileInfoResponse = gson.fromJson(resultList.get(2), SetProfileInfoResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    setProfileInformation();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
-            }
-
-            mProgressDialog.dismiss();
-            mSetProfileInfoTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
-            try {
-                mSetProfilePictureResponse = gson.fromJson(resultList.get(2), SetProfilePictureResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                    profilePictureUpdated = true;
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_picture_get_failed, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_picture_get_failed, Toast.LENGTH_SHORT).show();
-            }
-
-            mProgressDialog.dismiss();
-            mUploadProfilePictureAsyncTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_EMAIL_VERIFICATION_REQUEST)) {
-
-            try {
-                mEmailVerificationResponse = gson.fromJson(resultList.get(2), EmailVerificationResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mEmailVerificationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
-            }
-
-            mProgressDialog.dismiss();
-            mEmailVerificationAsyncTask = null;
-
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode == Activity.RESULT_OK) {
-            try {
-                if (requestCode == ACTION_PICK_PROFILE_PICTURE) {
-                    if (intent != null && intent.getData() != null) {
-                        mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
-                        mProgressDialog.show();
-
-                        Uri selectedImageUri = intent.getData();
-                        String selectedOImagePath = Utilities.getFilePath(getActivity(), selectedImageUri);
-
-                        mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
-                                selectedOImagePath, getActivity());
-                        mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
-                        mUploadProfilePictureAsyncTask.execute();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    R.string.could_not_load_image,
-                                    Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void showAlertDialogue(String msg, final int action) {
-        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
-        alertDialogue.setMessage(msg);
-
-        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-                if (action == ACTION_VERIFY_EMAIL)
-                    verifyEmail();
-
-            }
-        });
-
-        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-            }
-        });
-
-        alertDialogue.show();
-    }
-
-    public interface ProfilePictureChangeListener {
-        void onProfilePictureChange(String imageUrl);
-    }
-
 }

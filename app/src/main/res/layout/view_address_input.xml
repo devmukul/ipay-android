@@ -52,10 +52,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="left"
-            android:text="@string/city" />
+            android:text="@string/thana" />
 
         <Spinner
-            android:id="@+id/city"
+            android:id="@+id/thana"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2" />

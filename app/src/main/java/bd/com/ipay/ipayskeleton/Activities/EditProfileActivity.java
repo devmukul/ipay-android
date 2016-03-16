@@ -4,16 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -28,10 +24,11 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.DocumentUploadF
 import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditUserAddressFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.ProfileFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfilePictureResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetUserAddressRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Verification.EmailVerificationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Verification.EmailVerificationResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -55,6 +52,9 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
     private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
     private SetProfileInfoResponse mSetProfileInfoResponse;
+
+    private HttpRequestPostAsyncTask mSetUserAddressTask = null;
+    private SetUserAddressResponse mSetUserAddressResponse;
 
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask;
     private SetProfilePictureResponse mSetProfilePictureResponse;
@@ -88,18 +88,27 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
             }
             mProgressDialog.setMessage(getString(R.string.saving_profile_information));
             mProgressDialog.show();
-            SetProfileInfoRequest mSetProfileInfoRequest = new SetProfileInfoRequest(
+
+            SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(
                     ProfileFragment.mMobileNumber, ProfileFragment.mName,
                     ProfileFragment.mGender, ProfileFragment.mDateOfBirth,
                     ProfileFragment.mEmailAddress, ProfileFragment.mOccupation, ProfileFragment.mFathersName,
                     ProfileFragment.mMothersName, ProfileFragment.mSpouseName);
 
             Gson gson = new Gson();
-            String json = gson.toJson(mSetProfileInfoRequest);
+            String profileInfoJson = gson.toJson(setProfileInfoRequest);
             mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
-                    Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, json, this);
+                    Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, this);
             mSetProfileInfoTask.mHttpResponseListener = this;
             mSetProfileInfoTask.execute();
+
+            SetUserAddressRequest userAddressRequest = new SetUserAddressRequest(
+                    ProfileFragment.mPresentAddress, ProfileFragment.mPermanentAddress, ProfileFragment.mOfficeAddress);
+            String addressJson = gson.toJson(userAddressRequest, SetUserAddressRequest.class);
+            mSetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_USER_ADDRESS_REQUEST,
+                    Constants.BASE_URL_POST_MM + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, this);
+            mSetUserAddressTask.mHttpResponseListener = this;
+            mSetUserAddressTask.execute();
         }
         else {
             Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -164,9 +173,23 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
                 Toast.makeText(EditProfileActivity.this, R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
             }
 
-            mProgressDialog.dismiss();
             mSetProfileInfoTask = null;
-            finish();
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_SET_USER_ADDRESS_REQUEST)) {
+
+            try {
+                mSetUserAddressResponse = gson.fromJson(resultList.get(2), SetUserAddressResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+//                    Toast.makeText(EditProfileActivity.this, mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(EditProfileActivity.this, R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(EditProfileActivity.this, R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+            }
+
+            mSetUserAddressTask = null;
 
         } else if (resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
             try {
@@ -200,7 +223,11 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
             mProgressDialog.dismiss();
             mEmailVerificationAsyncTask = null;
+        }
 
+        if (mSetProfileInfoTask == null && mSetUserAddressTask == null) {
+            mProgressDialog.dismiss();
+            finish();
         }
     }
 

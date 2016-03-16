@@ -299,6 +299,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                         mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
                     if (mGetProfileInfoResponse.getEmail() != null)
                         mEmailAddress = mGetProfileInfoResponse.getEmail();
+                    if (mGetProfileInfoResponse.getDateOfBirth() != null)
+                        mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
                     if (mGetProfileInfoResponse.getFather() != null)
                         mFathersName = mGetProfileInfoResponse.getFather();
                     if (mGetProfileInfoResponse.getMother() != null)

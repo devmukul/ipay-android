@@ -39,7 +39,7 @@
     <string name="invalid_address_line_2">Please enter Address Line 2</string>
 
     <string name="invalid_business_name">Enter a business name</string>
-    <string name="city">City</string>
+    <string name="thana">Thana</string>
     <string name="invalid_city">Please select a City</string>
     <string name="district">District</string>
     <string name="invalid_district">Please select a District</string>
