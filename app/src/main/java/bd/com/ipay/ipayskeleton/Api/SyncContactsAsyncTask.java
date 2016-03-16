@@ -1,34 +1,42 @@
 package bd.com.ipay.ipayskeleton.Api;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.firebase.client.DataSnapshot;
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-import com.google.gson.Gson;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.SubscriberEntry;
-import bd.com.ipay.ipayskeleton.Model.FireBase.UserFriend;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfilePictureRequest;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Model.FireBase.FriendNode;
+import bd.com.ipay.ipayskeleton.Model.FireBase.UpdateRequestToServer;
+import bd.com.ipay.ipayskeleton.Model.FireBase.UserInfo;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
 
     private Context mContext;
+    private boolean isAuthFailed = false;
+    private Firebase ref;
+    private AuthData authDataFireBase;
+    private HttpResponse mHttpResponse;
 
     public SyncContactsAsyncTask(Context mContext) {
         this.mContext = mContext;
@@ -38,113 +46,72 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
 
         try {
+            ArrayList<FriendNode> userFriends = getAllContacts();
+            ref = new Firebase(Constants.PATH_TO_FIREBASE_DATABASE);
 
-            // Add my contacts in Firebase database in user-contacts table
-            SharedPreferences pref = mContext.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-            final String mUserID = pref.getString(Constants.USERID, "");
+            // Create a handler to handle the result of the authentication
+            Firebase.AuthResultHandler authResultHandler = new Firebase.AuthResultHandler() {
+                @Override
+                public void onAuthenticated(AuthData authData) {
+                    authDataFireBase = authData;
+                }
 
-            ArrayList<UserFriend> userFriends = getAllContacts();
-            final HashMap<String, UserFriend> temp = new HashMap<>();
+                @Override
+                public void onAuthenticationError(FirebaseError firebaseError) {
+                    isAuthFailed = true;
+                }
+            };
 
-            for (int i = 0; i < userFriends.size(); i++) {
-                temp.put(userFriends.get(i).getMobileNumber(), userFriends.get(i));
+            // Authenticate users with a custom Firebase token
+            ref.authWithCustomToken(HomeActivity.fireBaseToken, authResultHandler);
+
+            if (!isAuthFailed) {
+                for (int i = 0; i < userFriends.size(); i++) {
+                    ref.child(Constants.FIREBASE_CONTACT_LIST).child(authDataFireBase.getUid()).
+                            child(Constants.FIREBASE_DIRTY).child(userFriends.get(i).getPhoneNumber())
+                            .setValue(userFriends.get(i));
+                }
+
+                // Update request to server
+                UpdateRequestToServer mUpdateRequestToServer = new UpdateRequestToServer();
+                if (Utilities.isConnectionAvailable(mContext))
+                    mHttpResponse = makeRequest(mUpdateRequestToServer.getGeneratedUri());
+                else
+                    Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+
+                try {
+                    String status = mHttpResponse.getStatusLine().getStatusCode() + "";
+
+                    if (status.equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        return Constants.SUCCESS;
+                    } else if (mContext != null)
+                        Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_contacts));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
-            final Firebase userContactsRootRef = new Firebase(Constants.PATH_TO_USER_CONTACTS);
-            final Firebase newUserRef = userContactsRootRef.child(mUserID);
-            newUserRef.setValue(temp);
-
-            newUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot newUserContactSnapshot : dataSnapshot.getChildren()) {
-                        final UserFriend mContactOfNewUser = newUserContactSnapshot.getValue(UserFriend.class);
-
-                        userContactsRootRef.child(mContactOfNewUser.getMobileNumber())
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                        if (dataSnapshot.exists()) {
-                                            mContactOfNewUser.setIsFriend(true);
-
-                                            // Set friend to this user
-                                            newUserRef.child(mContactOfNewUser.getMobileNumber())
-                                                    .setValue(mContactOfNewUser);
-
-                                            // Create a database entry
-                                            SubscriberEntry mSubscriberEntry = new SubscriberEntry(
-                                                    mContactOfNewUser.getMobileNumber()
-                                                    , mContactOfNewUser.getName());
-
-                                            boolean exists = DataHelper.getInstance(mContext).
-                                                    checkIfStringFieldExists(DBConstants.DB_TABLE_SUBSCRIBERS,
-                                                            DBConstants.KEY_MOBILE_NUMBER, mSubscriberEntry.getMobileNumber());
-                                            if (!exists) {
-                                                DataHelper.getInstance(mContext).createSubscribers(mSubscriberEntry);
-                                                Log.d("ipay users:", mSubscriberEntry.getMobileNumber());
-                                            }
-
-                                            // TODO: remove this profile pic download ..
-//                                            GetProfilePictureRequest mGetProfilePictureRequest = new GetProfilePictureRequest(mSubscriberEntry.getMobileNumber());
-                                            GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
-                                            String uri = mGetUserInfoRequestBuilder.getGeneratedUri();
-                                            new DownloadProfilePictureGetAsyncTask(Constants.COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND, uri,
-                                                    mSubscriberEntry.getMobileNumber(), mContext)
-                                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-                                            // Set friend for the other user
-                                            userContactsRootRef.child(mContactOfNewUser.getMobileNumber()).child(mUserID)
-                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                                            if (dataSnapshot.exists()) {
-
-                                                                UserFriend updateUser = dataSnapshot.getValue(UserFriend.class);
-                                                                updateUser.setIsFriend(true);
-
-                                                                // Update user
-                                                                userContactsRootRef.
-                                                                        child(mContactOfNewUser.getMobileNumber())
-                                                                        .child(mUserID)
-                                                                        .setValue(updateUser);
-                                                            }
-
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(FirebaseError firebaseError) {
-
-                                                        }
-                                                    });
-
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(FirebaseError firebaseError) {
-
-                                    }
-                                });
-                    }
-                }
-
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-
-                }
-            });
-
-            pref.edit().putBoolean(Constants.FIRST_LAUNCH, true).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "Successful";
+        return Constants.FAIL;
     }
 
     @Override
     protected void onPostExecute(String result) {
+
+        if (result.equals(Constants.SUCCESS)) {
+            if (mContext != null) {
+                // Update subscriber table
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    new UpdateSubscriberTableAsyncTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    new UpdateSubscriberTableAsyncTask(mContext).execute();
+                }
+            } else
+                Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_table));
+        } else Log.d(Constants.ApplicationTag, mContext.getString(R.string.could_not_update_table));
     }
 
     @Override
@@ -155,9 +122,26 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
     protected void onProgressUpdate(Void... values) {
     }
 
-    private ArrayList<UserFriend> getAllContacts() {
+    public static HttpResponse makeRequest(String uri) {
+        try {
+            HttpGet httpGet = new HttpGet(uri);
 
-        ArrayList<UserFriend> userFriends = new ArrayList<UserFriend>();
+            if (HomeActivity.iPayToken.length() > 0)
+                httpGet.setHeader("token", HomeActivity.iPayToken);
+            return new DefaultHttpClient().execute(httpGet);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private ArrayList<FriendNode> getAllContacts() {
+
+        ArrayList<FriendNode> userFriends = new ArrayList<FriendNode>();
 
         ContentResolver cr = mContext.getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
@@ -183,7 +167,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
                         else if (phoneNo.length() == 13) phoneNo = "+" + phoneNo;
                         else continue;
 
-                        userFriends.add(new UserFriend(phoneNo, name.replaceAll("[^a-zA-Z0-9]+", " ")));
+                        UserInfo mUserInfo = new UserInfo(name.replaceAll("[^a-zA-Z0-9]+", " "), false);
+                        userFriends.add(new FriendNode(phoneNo, mUserInfo));
                     }
                     pCur.close();
                 }

@@ -56,6 +56,9 @@
     <string name="empty_recommendation_request_list">No recommendation requests available.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
+    <string name="could_not_update_contacts">Could not update the contact list</string>
+    <string name="no_contacts_in_firebase">No contacts found in Firebase</string>
+    <string name="could_not_update_table">Could not update the subscriber table</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
     <string name="error_promo_code_empty">Please enter the promo code</string>
     <string name="error_invalid_first_name">Please enter name</string>
@@ -92,6 +95,7 @@
     <string name="to_date">To (dd/mm/yyyy)</string>
     <string name="from_date">From (dd/mm/yyyy)</string>
     <string name="request_failed">Request failed.</string>
+    <string name="loading">Please wait. Loading... </string>
     <string name="load_more">Load more...</string>
     <string name="balance_placeholder">Balance: Tk.  </string>
     <string name="no_more_results">No more results to show</string>
@@ -130,6 +134,7 @@
     <string name="no">No</string>
     <string name="get_started">Get Started</string>
     <string name="could_not_load_image">Could not load image</string>
+    <string name="could_not_sync_contact">Could not sync contacts.</string>
     <string name="could_not_sign_out">Could not signed out properly</string>
     <string name="could_not_reject_money_request">Could not reject the request. Please try again later.</string>
     <string name="could_not_cancel_money_request">Could not cancel the request. Please try again later.</string>
