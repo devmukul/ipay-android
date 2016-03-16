@@ -4,9 +4,7 @@ public class UserInfo {
     public String name;
     public boolean isFriend;
 
-    public UserInfo(String name, boolean isFriend) {
-        this.name = name;
-        this.isFriend = isFriend;
+    public UserInfo() {
     }
 
     public String getName() {

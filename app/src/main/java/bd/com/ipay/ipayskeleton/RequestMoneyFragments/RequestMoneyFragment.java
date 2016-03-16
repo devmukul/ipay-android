@@ -181,7 +181,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
                         if (getActivity().getIntent().getBooleanExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, false)) {
                             getActivity().finish();
                         } else {
-                            ((RequestMoneyActivity) getActivity()).switchToRequestsFragment();
+                            ((RequestMoneyActivity) getActivity()).switchToMyRequestsFragment();
                         }
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -214,8 +214,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_contact_selected,
                             Toast.LENGTH_LONG).show();
-            }
-            else if (size == 1) {
+            } else if (size == 1) {
                 mMobileNumberEditText.setText(numbers[0].toString().replaceAll("\\D", ""));
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
