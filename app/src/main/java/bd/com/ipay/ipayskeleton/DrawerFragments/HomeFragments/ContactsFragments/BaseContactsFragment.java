@@ -116,6 +116,7 @@ public abstract class BaseContactsFragment extends Fragment implements
         final MenuItem contactMenu = menu.findItem(R.id.action_contacts);
         if (contactMenu != null)
             contactMenu.setVisible(false);
+        getActivity().setTitle(getString(R.string.contacts));
     }
 
     /**

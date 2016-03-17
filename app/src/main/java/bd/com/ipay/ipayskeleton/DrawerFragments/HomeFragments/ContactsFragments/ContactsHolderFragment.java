@@ -29,8 +29,6 @@ public class ContactsHolderFragment extends Fragment implements View.OnClickList
 
     private BottomSheetLayout mBottomSheetLayout;
 
-    private Menu mMenu;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +46,9 @@ public class ContactsHolderFragment extends Fragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        getActivity().setTitle(getString(R.string.profile));
+
         View v = inflater.inflate(R.layout.fragment_contact_holder, container, false);
         viewPager = (ViewPager) v.findViewById(R.id.contactsViewPager);
 
