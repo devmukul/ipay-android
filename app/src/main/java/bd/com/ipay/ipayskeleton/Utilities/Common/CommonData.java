@@ -6,15 +6,14 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
 
 public class CommonData {
     private static List<Bank> availableBanks;
     private static Map<Long, Bank> availableBanksMap;
 
     private static List<BusinessType> businessTypes;
-    private static Map<Long, BusinessType> businessTypeMap;
+    private static Map<Long, BusinessType> businessIdToTypeMap;
+    private static Map<String, Long> businessNameToIdMap;
 
     public static List<Bank> getAvailableBanks() {
         return availableBanks;
@@ -64,15 +63,21 @@ public class CommonData {
         return businessTypes;
     }
 
+    public static Long getBusinessTypeId(String businessName) {
+        return businessNameToIdMap.get(businessName);
+    }
+
     public static BusinessType getBusinessTypeById(long id) {
-        return businessTypeMap.get(id);
+        return businessIdToTypeMap.get(id);
     }
 
     public static void setBusinessTypes(List<BusinessType> businessTypes) {
         CommonData.businessTypes = businessTypes;
-        businessTypeMap = new HashMap<>();
+        businessIdToTypeMap = new HashMap<>();
+        businessNameToIdMap = new HashMap<>();
         for (BusinessType businessType: businessTypes) {
-            businessTypeMap.put(businessType.getId(), businessType);
+            businessIdToTypeMap.put(businessType.getId(), businessType);
+            businessNameToIdMap.put(businessType.getName(), businessType.getId());
         }
     }
 }

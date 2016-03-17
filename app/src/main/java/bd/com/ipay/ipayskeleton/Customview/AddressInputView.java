@@ -77,19 +77,23 @@ public class AddressInputView extends FrameLayout {
         if (address.getPostalCode() != null)
             mPostalCodeField.setText(address.getPostalCode());
 
+        int thanaPosition = 0;
         for (int i = 0; i < ThanaList.thanaIds.length; i++) {
             if (address.getThanaCode() == ThanaList.thanaIds[i]) {
-                mThanaSelection.setSelection(i);
+                thanaPosition = i;
                 break;
             }
         }
+        mThanaSelection.setSelection(thanaPosition);
 
+        int districtPosition = 0;
         for (int i = 0; i < DistrictList.districtIds.length; i++) {
             if (address.getDistrictCode() == DistrictList.districtIds[i]) {
-                mDistrictSelection.setSelection(i);
+                districtPosition = i;
                 break;
             }
         }
+        mDistrictSelection.setSelection(districtPosition);
 
         String countryCode = address.getCountryCode();
         if (countryCode == null)
@@ -100,6 +104,10 @@ public class AddressInputView extends FrameLayout {
                 break;
             }
         }
+    }
+
+    public void resetInformation() {
+        setInformation(new AddressClass());
     }
 
     public boolean verifyUserInputs() {

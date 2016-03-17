@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp;
 
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
+
 public class SignupRequestBusiness {
 
     public String mobileNumber;
@@ -11,7 +13,7 @@ public class SignupRequestBusiness {
     public String gender;
     public String otp;
     public String businessName;
-    public String businessType;
+    public long businessType;
     public String businessEmail;
     public String personalEmail;
     public String personalMobileNumber;
@@ -22,7 +24,7 @@ public class SignupRequestBusiness {
     public SignupRequestBusiness(String mobileNumber, String deviceId,
                                  String name, int accountType, String dob,
                                  String password, String gender, String otp, String businessName,
-                                 String businessType, String businessEmail, String personalEmail,
+                                 long businessType, String businessEmail, String personalEmail,
                                  String personalMobileNumber, AddressClass personalAddress,
                                  AddressClass businessAddress, String promoCode) {
         this.mobileNumber = mobileNumber;

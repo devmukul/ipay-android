@@ -403,6 +403,7 @@
     <string name="uploaded">Uploaded</string>
     <string name="documents"> documents</string>
     <string name="you_have_submitted">You have submitted </string>
+    <string name="personal_mobile_number">Personal Mobile Number</string>
 
     <string-array name="account_types">
         <item>Personal</item>

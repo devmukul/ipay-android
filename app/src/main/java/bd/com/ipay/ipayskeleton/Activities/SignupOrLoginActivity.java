@@ -9,8 +9,6 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
-import bd.com.ipay.ipayskeleton.Api.GetDistrictAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GetThanaAsyncTask;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationPersonalFragment;
@@ -18,6 +16,7 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationTrustFrag
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupPersonalFragment;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -38,20 +37,12 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mBusinessName;
     public static String mMobileNumberBusiness;
     public static String mEmailBusiness;
-    public static String mAddressLine1Business;
-    public static String mAddressLine2Business;
-    public static String mPostcodeBusiness;
-    public static String mCountryBusiness;
-    public static String mCityBusiness;
-    public static String mDistrictBusiness;
     public static String mBirthdayBusinessHolder;
-    public static String mAddressLine1BusinessHolder;
-    public static String mAddressLine2BusinessHolder;
-    public static String mCityBusinessHolder;
-    public static String mDistrictBusinessHolder;
-    public static String mCountryBusinessHolder;
-    public static String mPostcodeBusinessHolder;
-    public static String mTypeofBusiness;
+    public static String mMobileNumberPersonal;
+    public static long mTypeofBusiness;
+
+    public static AddressClass mAddressBusiness;
+    public static AddressClass mAddressBusinessHolder;
 
     public static final String MESSAGE = "message";
 

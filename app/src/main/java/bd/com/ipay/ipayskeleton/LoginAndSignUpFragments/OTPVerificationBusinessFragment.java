@@ -26,7 +26,6 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestBusinessSignup;
@@ -172,13 +171,6 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         } else {
             mProgressDialog.show();
 
-            AddressClass mBusinessAddress = new AddressClass(SignupOrLoginActivity.mAddressLine1Business,
-                    SignupOrLoginActivity.mAddressLine2Business, SignupOrLoginActivity.mCityBusiness, SignupOrLoginActivity.mDistrictBusiness,
-                    SignupOrLoginActivity.mPostcodeBusiness, SignupOrLoginActivity.mCountryBusiness);
-
-            AddressClass mBusinessHolderAddress = new AddressClass(SignupOrLoginActivity.mAddressLine1Business,
-                    SignupOrLoginActivity.mAddressLine2Business, SignupOrLoginActivity.mCityBusiness, SignupOrLoginActivity.mDistrictBusiness,
-                    SignupOrLoginActivity.mPostcodeBusiness, SignupOrLoginActivity.mCountryBusiness);
 
             SignupRequestBusiness mSignupModel = new SignupRequestBusiness(SignupOrLoginActivity.mMobileNumberBusiness,
                     Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mNameBusiness, SignupOrLoginActivity.mAccountType,
@@ -186,7 +178,8 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     SignupOrLoginActivity.mPasswordBusiness, "M", otp,
                     SignupOrLoginActivity.mBusinessName, SignupOrLoginActivity.mTypeofBusiness,
                     SignupOrLoginActivity.mEmailBusiness, SignupOrLoginActivity.mEmailBusiness,
-                    SignupOrLoginActivity.mMobileNumberBusiness, mBusinessAddress, mBusinessHolderAddress, promoCode);
+                    SignupOrLoginActivity.mMobileNumberPersonal, SignupOrLoginActivity.mAddressBusiness,
+                    SignupOrLoginActivity.mAddressBusinessHolder, promoCode);
             Gson gson = new Gson();
             String json = gson.toJson(mSignupModel);
             mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_BUSINESS,
@@ -241,16 +234,19 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                 pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mNameBusiness).commit();
                 pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder).commit();
                 pref.edit().putString(Constants.GENDER, "M").commit();
-                pref.edit().putString(Constants.USERCOUNTRY, SignupOrLoginActivity.mCountryBusiness).commit();   // TODO
                 pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE).commit();
                 pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
+
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();
 
                 // TODO: Do not remove this. Can be used later
                 // Request a login immediately after sign up
 //                attemptLogin(SignupOrLoginActivity.mMobileNumberBusiness, SignupOrLoginActivity.mPasswordBusiness);
 
                 // TODO: For now, switch to login fragment after a successful sign up
-                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
+                            ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
+
 
             } else {
                 if (getActivity() != null)
