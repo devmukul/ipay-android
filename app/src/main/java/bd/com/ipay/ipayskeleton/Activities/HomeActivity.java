@@ -191,7 +191,7 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        invalidateOptionsMenu();
+        invalidateOptionsMenu();
 
         switch (item.getItemId()) {
             case R.id.action_contacts:
