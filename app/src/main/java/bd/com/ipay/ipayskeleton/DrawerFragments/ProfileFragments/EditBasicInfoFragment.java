@@ -1,11 +1,13 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -45,6 +48,8 @@ public class EditBasicInfoFragment extends Fragment {
     private Spinner mOccupationSpinner;
     private Spinner mGenderSpinner;
 
+    private ImageView mDatePickerButton;
+
     private RoundedImageView mProfilePicture;
     private Set<UserProfilePictureClass> profilePictures;
 
@@ -74,6 +79,8 @@ public class EditBasicInfoFragment extends Fragment {
         mSpouseNameEditText = (EditText) v.findViewById(R.id.spouse_name);
         mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
 
+        mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
+
         mOccupationSpinner = (Spinner) v.findViewById(R.id.occupation);
         mGenderSpinner = (Spinner) v.findViewById(R.id.gender);
         mEmailVerify = (ImageView) v.findViewById(R.id.email_verification_status);
@@ -101,6 +108,15 @@ public class EditBasicInfoFragment extends Fragment {
                 if (email.length() > 0 && emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_NOT_VERIFIED) {
                     showAlertDialogue(getString(R.string.alert_verify_email));
                 }
+            }
+        });
+
+        final DatePickerDialog dialog = new DatePickerDialog(
+                getActivity(), mDateSetListener, 1990, 0, 1);
+        mDatePickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
             }
         });
 
@@ -244,6 +260,16 @@ public class EditBasicInfoFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    private DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    mDateOfBirthEditText.setText(
+                            String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year));
+                }
+            };
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {

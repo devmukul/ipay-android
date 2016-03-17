@@ -90,12 +90,12 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
         // Enable hyperlinked
         mTermsCondtions.setMovementMethod(LinkMovementMethod.getInstance());
 
+        final DatePickerDialog dialog = new DatePickerDialog(
+                getActivity(), mDateSetListener, 1990, 0, 1);
         mDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(getActivity(),
-                        mDateSetListener,
-                        1990, 0, 1).show();
+                dialog.show();
             }
         });
         mMaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
