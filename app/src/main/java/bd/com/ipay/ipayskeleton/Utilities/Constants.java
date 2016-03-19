@@ -275,7 +275,15 @@ public class Constants {
     public static final String COMMAND_SEND_INVITE = "COMMAND_SEND_INVITE";
 
     // FireBase
-    public static final String PATH_TO_FIREBASE_DATABASE = "https://testingipay.firebaseio.com/";
+    public static final String PATH_TO_FIREBASE_DATABASE;
+    static {
+        if (SERVER_TYPE == 2)
+            PATH_TO_FIREBASE_DATABASE = "https://ipaybdstage.firebaseio.com/";
+        else if (SERVER_TYPE == 3)
+            PATH_TO_FIREBASE_DATABASE = "https://ipaybd.firebaseio.com/";
+        else
+            PATH_TO_FIREBASE_DATABASE = "https://testingipay.firebaseio.com/";
+    }
     public static final String FIREBASE_CONTACT_LIST = "ContactList";
     public static final String FIREBASE_DIRTY = "dirty";
     public static final String FIREBASE_SYNCED = "synced";
