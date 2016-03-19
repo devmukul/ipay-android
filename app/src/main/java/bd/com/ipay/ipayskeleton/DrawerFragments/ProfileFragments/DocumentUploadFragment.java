@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocument;
@@ -42,6 +42,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
     private Button mClickedButton;
     private String mDocumentNumber;
+    private String mDocumentType;
 
     private ProgressDialog mProgressDialog;
 
@@ -157,33 +158,32 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
                         String command = null;
                         String text = null;
-                        String documentType = null;
 
                         switch (requestCode) {
                             case ACTION_PICK_NATIONAL_ID:
                                 command = Constants.COMMAND_UPLOAD_NATIONAL_ID;
                                 text = getString(R.string.national_id);
-                                documentType = Constants.DOCUMENT_TYPE_NATIONAL_ID;
+                                mDocumentType = Constants.DOCUMENT_TYPE_NATIONAL_ID;
                                 break;
                             case ACTION_PICK_PASSPORT:
                                 command = Constants.COMMAND_UPLOAD_PASSPORT;
                                 text = getString(R.string.passport);
-                                documentType = Constants.DOCUMENT_TYPE_PASSPORT;
+                                mDocumentType = Constants.DOCUMENT_TYPE_PASSPORT;
                                 break;
                             case ACTION_PICK_DRIVING_LICENSE:
                                 command = Constants.COMMAND_UPLOAD_DRIVING_LICENSE;
                                 text = getString(R.string.driving_license);
-                                documentType = Constants.DOCUMENT_TYPE_DRIVING_LICENSE;
+                                mDocumentType = Constants.DOCUMENT_TYPE_DRIVING_LICENSE;
                                 break;
                             case ACTION_PICK_BIRTH_CERTIFICATE:
                                 command = Constants.COMMAND_UPLOAD_BIRTH_CERTIFICATE;
                                 text = getString(R.string.birth_certificate);
-                                documentType = Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE;
+                                mDocumentType = Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE;
                                 break;
                             case ACTION_PICK_TIN:
                                 command = Constants.COMMAND_UPLOAD_TIN;
                                 text = getString(R.string.tin);
-                                documentType = Constants.DOCUMENT_TYPE_TIN;
+                                mDocumentType = Constants.DOCUMENT_TYPE_TIN;
                                 break;
                         }
 
@@ -193,7 +193,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         String selectedOImagePath = Utilities.getFilePath(getActivity(), intent.getData());
 
                         mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                                command, selectedOImagePath, getActivity(), mDocumentNumber, documentType);
+                                command, selectedOImagePath, getActivity(), mDocumentNumber, mDocumentType);
                         mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
                         mUploadIdentifierDocumentAsyncTask.execute();
 
@@ -223,10 +223,24 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         Gson gson = new Gson();
         try {
             mUploadDocumentResponse = gson.fromJson(resultList.get(2), UploadDocumentResponse.class);
+
             if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                 if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.upload_successful, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
+
+                boolean documentTypeExisted = false;
+                for (int i = 0; i < ProfileFragment.mIdentificationDocuments.size(); i++) {
+                    if (ProfileFragment.mIdentificationDocuments.get(i).documentType.equals(mDocumentType)) {
+                        documentTypeExisted = true;
+                        ProfileFragment.mIdentificationDocuments.get(i).setDocumentIdNumber(mDocumentNumber);
+                    }
+                }
+                if (!documentTypeExisted) {
+                    ProfileFragment.mIdentificationDocuments.add(
+                            new IdentificationDocument(mDocumentType, mDocumentNumber));
+                }
+
                 if (mClickedButton != null) {
                     mClickedButton.setText(R.string.uploaded);
                 }

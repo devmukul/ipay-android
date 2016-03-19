@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -95,8 +96,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     public static AddressClass mPermanentAddress;
     public static AddressClass mOfficeAddress;
 
-    public static List<IdentificationDocument> mIdentificationDocuments;
-
+    public static List<IdentificationDocument> mIdentificationDocuments = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -225,9 +225,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             mOfficeAddressEditButton.setText(R.string.action_edit);
         }
 
-        int numberOfDocumentsSubmitted = 0;
-        if (mIdentificationDocuments != null)
-            numberOfDocumentsSubmitted = mIdentificationDocuments.size();
+        int numberOfDocumentsSubmitted = mIdentificationDocuments.size();
 
         mDocumentCountView.setText(getString(R.string.you_have_submitted) + " "
                 + numberOfDocumentsSubmitted + " " + getString(R.string.documents));
