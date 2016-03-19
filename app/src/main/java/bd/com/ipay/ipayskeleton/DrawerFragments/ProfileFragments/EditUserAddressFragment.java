@@ -52,31 +52,38 @@ public class EditUserAddressFragment extends Fragment {
         mPermanentAddressView.setInformation(ProfileFragment.mPermanentAddress);
         mOfficeAddressView.setInformation(ProfileFragment.mOfficeAddress);
 
+        // We just have set information in the address input views, so the edit flag is set.
+        // But we are interested only in edits made by the users, so clear the flags first.
+        // Flags will be set again when user changes any of the fields.
+        mPresentAddressView.clearEditFlag();
+        mPermanentAddressView.clearEditFlag();
+        mOfficeAddressView.clearEditFlag();
+
         return v;
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.profile, menu);
+        inflater.inflate(R.menu.profile, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
-                boolean isInputValid = verifyUserInputs();
-                if (isInputValid) {
-                    ((EditProfileActivity) getActivity()).saveProfile();
-                }
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_save) {
+            ((EditProfileActivity) getActivity()).attemptSaveProfile();
+            return true;
+        }
+        else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
-    private boolean verifyUserInputs() {
+    public boolean isEdited() {
+        return mPresentAddressView.isEdited() || mPermanentAddressView.isEdited() || mOfficeAddressView.isEdited();
+    }
+
+    public boolean verifyUserInputs() {
         if (mPresentAddressView.verifyUserInputs() && mPermanentAddressView.verifyUserInputs() && mOfficeAddressView.verifyUserInputs()) {
             ProfileFragment.mPresentAddress = mPresentAddressView.getInformation();
             ProfileFragment.mPermanentAddress = mPermanentAddressView.getInformation();

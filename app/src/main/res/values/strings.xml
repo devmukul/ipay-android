@@ -113,6 +113,7 @@
     <string name="read_mode">Read More</string>
     <string name="all_contacts">All</string>
     <string name="save">Save</string>
+    <string name="discard">Discard</string>
     <string name="ipay_contacts">iPay</string>
     <string name="my_requests">My Requests</string>
     <string name="invoices_sent">Sent Invoices</string>
@@ -404,6 +405,7 @@
     <string name="documents"> documents</string>
     <string name="you_have_submitted">You have submitted </string>
     <string name="personal_mobile_number">Personal Mobile Number</string>
+    <string name="confirmation_save_changes">Save changes?</string>
 
     <string-array name="account_types">
         <item>Personal</item>

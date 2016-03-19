@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -9,7 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -59,6 +62,9 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask;
     private SetProfilePictureResponse mSetProfilePictureResponse;
 
+    private EditBasicInfoFragment mBasicInfoFragment;
+    private EditUserAddressFragment mUserAddressFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,35 +86,51 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         mProgressDialog = new ProgressDialog(this);
     }
 
-    public void saveProfile() {
+    public void attemptSaveProfile() {
+        boolean basicInfoEdited = (mBasicInfoFragment != null && mBasicInfoFragment.isEdited());
+        boolean addressEdited = (mUserAddressFragment != null && mUserAddressFragment.isEdited());
+
+        if (!basicInfoEdited && !addressEdited) {
+            finish();
+            return;
+        }
+
         if (Utilities.isConnectionAvailable(this)) {
-
-            if (mSetProfileInfoTask != null) {
-                return;
-            }
             mProgressDialog.setMessage(getString(R.string.saving_profile_information));
-            mProgressDialog.show();
-
-            SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(
-                    ProfileFragment.mMobileNumber, ProfileFragment.mName,
-                    ProfileFragment.mGender, ProfileFragment.mDateOfBirth,
-                    ProfileFragment.mEmailAddress, ProfileFragment.mOccupation, ProfileFragment.mFathersName,
-                    ProfileFragment.mMothersName, ProfileFragment.mSpouseName);
 
             Gson gson = new Gson();
-            String profileInfoJson = gson.toJson(setProfileInfoRequest);
-            mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
-                    Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, this);
-            mSetProfileInfoTask.mHttpResponseListener = this;
-            mSetProfileInfoTask.execute();
+            if (mSetProfileInfoTask == null) {
+                if (basicInfoEdited && mBasicInfoFragment.verifyUserInputs()) {
+                    mProgressDialog.show();
 
-            SetUserAddressRequest userAddressRequest = new SetUserAddressRequest(
-                    ProfileFragment.mPresentAddress, ProfileFragment.mPermanentAddress, ProfileFragment.mOfficeAddress);
-            String addressJson = gson.toJson(userAddressRequest, SetUserAddressRequest.class);
-            mSetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_USER_ADDRESS_REQUEST,
-                    Constants.BASE_URL_POST_MM + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, this);
-            mSetUserAddressTask.mHttpResponseListener = this;
-            mSetUserAddressTask.execute();
+                    SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(
+                            ProfileFragment.mMobileNumber, ProfileFragment.mName,
+                            ProfileFragment.mGender, ProfileFragment.mDateOfBirth,
+                            ProfileFragment.mEmailAddress, ProfileFragment.mOccupation, ProfileFragment.mFathersName,
+                            ProfileFragment.mMothersName, ProfileFragment.mSpouseName);
+
+                    String profileInfoJson = gson.toJson(setProfileInfoRequest);
+                    mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
+                            Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, this);
+                    mSetProfileInfoTask.mHttpResponseListener = this;
+                    mSetProfileInfoTask.execute();
+                }
+            }
+
+            if (mSetUserAddressTask == null) {
+                if (addressEdited && mUserAddressFragment.verifyUserInputs()) {
+                    mProgressDialog.show();
+
+                    SetUserAddressRequest userAddressRequest = new SetUserAddressRequest(
+                            ProfileFragment.mPresentAddress, ProfileFragment.mPermanentAddress, ProfileFragment.mOfficeAddress);
+
+                    String addressJson = gson.toJson(userAddressRequest, SetUserAddressRequest.class);
+                    mSetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_USER_ADDRESS_REQUEST,
+                            Constants.BASE_URL_POST_MM + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, this);
+                    mSetUserAddressTask.mHttpResponseListener = this;
+                    mSetUserAddressTask.execute();
+                }
+            }
         }
         else {
             Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -231,6 +253,36 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        boolean basicInfoEdited = (mBasicInfoFragment != null && mBasicInfoFragment.isEdited());
+        boolean addressEdited = (mUserAddressFragment != null && mUserAddressFragment.isEdited());
+
+        if (basicInfoEdited || addressEdited) {
+            showExitConfirmationDialog();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+    private void showExitConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.confirmation_save_changes))
+                .setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        attemptSaveProfile();
+                    }
+                })
+                .setNegativeButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .show();
+    }
 
     public class EditProfileFragmentAdapter extends FragmentPagerAdapter {
         final int PAGE_COUNT = 3;
@@ -252,12 +304,19 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0)
-                return new EditBasicInfoFragment();
-            else if (position == 1)
-                return new EditUserAddressFragment();
-            else if (position == 2)
+            if (position == 0) {
+                if (mBasicInfoFragment == null)
+                    mBasicInfoFragment = new EditBasicInfoFragment();
+                return mBasicInfoFragment;
+            }
+            else if (position == 1) {
+                if (mUserAddressFragment == null)
+                    mUserAddressFragment = new EditUserAddressFragment();
+                return mUserAddressFragment;
+            }
+            else if (position == 2) {
                 return new DocumentUploadFragment();
+            }
             else
                 return new Fragment();
         }
