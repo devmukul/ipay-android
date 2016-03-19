@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +121,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.app_name);
 
-        userName = pref.getString(Constants.USERNAME, "");
         userID = pref.getString(Constants.USERID, "");
 
         if (pref.contains(Constants.UUID))
@@ -555,9 +555,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
-                double amount = userTransactionHistoryClasses.get(pos).getAmount(userName);
+                double amount = userTransactionHistoryClasses.get(pos).getAmount(userID);
 
-                String description = userTransactionHistoryClasses.get(pos).getDescription(userName);
+                String description = userTransactionHistoryClasses.get(pos).getDescription(userID);
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
 
                 // Handle debit credit
