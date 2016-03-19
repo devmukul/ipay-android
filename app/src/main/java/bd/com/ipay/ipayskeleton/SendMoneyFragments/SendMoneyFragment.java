@@ -120,10 +120,9 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
             final CharSequence[] numbers = getNameAndPhoneList(data.getData());
             int size = numbers.length;
-            if (size < 1)
-                Toast.makeText(getActivity(), R.string.account_type_business,
-                        Toast.LENGTH_LONG).show();
-            else if (size == 1) {
+            if (size < 1) {
+                Toast.makeText(getActivity(), R.string.no_numbers_found, Toast.LENGTH_LONG).show();
+            } else if (size == 1) {
                 mMobileNumberEditText.setText("+" + numbers[0].toString().replaceAll("\\D", ""));
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
