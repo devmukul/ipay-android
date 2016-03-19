@@ -57,6 +57,7 @@ public class Constants {
     // Server Type 1 -> dev server
     // Server Type 2 -> staging server
     // Server Type 3 -> release server
+    // Server Type 4 -> local server
     public static final int SERVER_TYPE = 1;
 
     static {
@@ -90,7 +91,7 @@ public class Constants {
             BASE_URL_GET_EM_PORT = 8080;
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://10.15.10.10:8080/";
-        } else {
+        } else if (SERVER_TYPE == 3) {
             BASE_URL_POST_MM = "http://10.20.10.10:8085/";
 
             BASE_URL_GET_MM = "10.20.10.10";
@@ -105,6 +106,21 @@ public class Constants {
             BASE_URL_GET_EM_PORT = 8085;
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://10.20.10.10:8085/";
+        } else {
+            BASE_URL_POST_MM = "http://192.168.1.106:8085/";
+
+            BASE_URL_GET_MM = "192.168.1.106";
+            BASE_URL_GET_MM_PORT = 8085;
+            BASE_URL_GET_MM_PATH = "";
+
+            BASE_URL_IMAGE_SERVER = "http://10.20.10.10";
+
+            BASE_URL_SM = "http://192.168.1.106:8085/";
+
+            BASE_URL_GET_EM = "192.168.1.106";
+            BASE_URL_GET_EM_PORT = 8085;
+            BASE_URL_GET_EM_PATH = "";
+            BASE_URL_POST_EM = "http://192.168.1.106:8085/";
         }
     }
 
