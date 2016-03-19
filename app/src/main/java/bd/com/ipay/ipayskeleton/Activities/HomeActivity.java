@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -95,6 +94,8 @@ public class HomeActivity extends BaseActivity
     public static CountDownTimer tokenTimer;
     public static long iPayTokenTimeInMs = 60000;  // By default this is one minute
 
+    public boolean switchedToHomeFragment = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,11 +137,12 @@ public class HomeActivity extends BaseActivity
         // Get FireBase Token
         if (!contactsSyncedOnce) getFireBaseToken();
 
-        switchToHomeFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
 
         setProfilePicture("");
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
+        // TODO: get userinfo here and set
         getProfileInfo();
         if (Constants.DEBUG) {
             Log.w("Token", HomeActivity.iPayToken);
@@ -161,49 +163,32 @@ public class HomeActivity extends BaseActivity
         return true;
     }
 
-    private void setFragment(Fragment fragment) {
-        getSupportFragmentManager().popBackStack();
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, fragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    public void switchToHomeFragment() {
-        mNavigationView.getMenu().getItem(0).setChecked(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        }
-        else {
-            invalidateOptionsMenu();
-            super.onBackPressed();
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        invalidateOptionsMenu();
-
         switch (item.getItemId()) {
             case R.id.action_contacts:
-                setFragment(new ContactsHolderFragment());
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new ContactsHolderFragment()).commit();
+                switchedToHomeFragment = false;
                 return true;
             case R.id.action_notification:
-                setFragment(new NotificationFragment());
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new NotificationFragment()).commit();
+                switchedToHomeFragment = false;
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (!switchedToHomeFragment)
+            switchToHomeFragment();
+        else
+            super.onBackPressed();
     }
 
     private void setProfilePicture(String imageUrl) {
@@ -225,33 +210,42 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    public void switchToHomeFragment() {
+        mNavigationView.getMenu().getItem(0).setChecked(true);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
+        switchedToHomeFragment = true;
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        invalidateOptionsMenu();
-
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
 
-            switchToHomeFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
+            switchedToHomeFragment = true;
 
         } else if (id == R.id.nav_profile) {
 
-            setFragment(new ProfileFragment());
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ProfileFragment()).commit();
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_transaction_history) {
 
-            setFragment(new TransactionHistoryFragment());
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_bank_account) {
 
-            setFragment(new BankAccountsFragment());
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new BankAccountsFragment()).commit();
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_user_activity) {
 
-            setFragment(new ActivityHistoryFragment());
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ActivityHistoryFragment()).commit();
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_support) {
 
@@ -267,11 +261,13 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_settings) {
 
-            setFragment(new AccountSettingsFragment());
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountSettingsFragment()).commit();
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_identification) {
 
-            setFragment(new RecommendationRequestsFragment());
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new RecommendationRequestsFragment()).commit();
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_logout) {
 

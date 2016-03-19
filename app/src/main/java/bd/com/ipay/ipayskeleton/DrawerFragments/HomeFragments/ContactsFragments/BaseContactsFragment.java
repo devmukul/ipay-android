@@ -85,6 +85,13 @@ public abstract class BaseContactsFragment extends Fragment implements
     private AskForRecommendationResponse mAskForRecommendationResponse;
 
     private ProgressDialog mProgressDialog;
+    private Menu mMenu;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,6 +107,7 @@ public abstract class BaseContactsFragment extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.contact, menu);
 
         final MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -117,6 +125,12 @@ public abstract class BaseContactsFragment extends Fragment implements
         if (contactMenu != null)
             contactMenu.setVisible(false);
         getActivity().setTitle(getString(R.string.contacts));
+    }
+
+    @Override
+    public void onPause() {
+        setHasOptionsMenu(false);
+        super.onPause();
     }
 
     /**

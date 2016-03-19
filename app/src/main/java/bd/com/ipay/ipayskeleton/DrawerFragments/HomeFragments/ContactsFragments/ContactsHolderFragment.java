@@ -30,11 +30,6 @@ public class ContactsHolderFragment extends Fragment implements View.OnClickList
     private BottomSheetLayout mBottomSheetLayout;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         setUpViewPager();

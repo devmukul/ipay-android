@@ -44,13 +44,6 @@ public class AllContactsFragment extends BaseContactsFragment {
     private boolean digitSectionViewAdded = false;
     private HashMap<String, String> subscriber = new HashMap<>();
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
