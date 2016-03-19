@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -245,7 +244,9 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
             mEmailVerificationAsyncTask = null;
         }
 
-        if (mSetProfileInfoTask == null && mSetUserAddressTask == null) {
+        if ((resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST) ||
+                    resultList.get(0).equals(Constants.COMMAND_SET_USER_ADDRESS_REQUEST))
+                && mSetProfileInfoTask == null && mSetUserAddressTask == null) {
             mProgressDialog.dismiss();
             finish();
         }
