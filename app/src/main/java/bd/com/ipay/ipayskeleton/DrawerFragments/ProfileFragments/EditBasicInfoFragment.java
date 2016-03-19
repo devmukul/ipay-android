@@ -9,14 +9,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -57,7 +55,6 @@ public class EditBasicInfoFragment extends Fragment {
 
     private int emailVerificationStatus;
     private boolean profilePictureUpdated = false;
-    private boolean edited = false;
 
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
 
@@ -87,9 +84,6 @@ public class EditBasicInfoFragment extends Fragment {
         mOccupationSpinner = (Spinner) v.findViewById(R.id.occupation);
         mGenderSpinner = (Spinner) v.findViewById(R.id.gender);
         mEmailVerify = (ImageView) v.findViewById(R.id.email_verification_status);
-
-        mOccupationSpinner.setOnItemSelectedListener(mItemSelectedListener);
-        mGenderSpinner.setOnItemSelectedListener(mItemSelectedListener);
 
         mProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,16 +122,6 @@ public class EditBasicInfoFragment extends Fragment {
 
         setProfilePicture("");
         setProfileInformation();
-
-        // Set edited = true when any of the field changes.
-        // This must be done after populating the fields from ProfileFragment data,
-        // otherwise edit flag will already be set.
-        mNameEditText.addTextChangedListener(mTextWatcher);
-        mEmailEditText.addTextChangedListener(mTextWatcher);
-        mFathersNameEditText.addTextChangedListener(mTextWatcher);
-        mMothersNameEditText.addTextChangedListener(mTextWatcher);
-        mSpouseNameEditText.addTextChangedListener(mTextWatcher);
-        mDateOfBirthEditText.addTextChangedListener(mTextWatcher);
 
         return v;
     }
@@ -328,37 +312,8 @@ public class EditBasicInfoFragment extends Fragment {
         alertDialogue.show();
     }
 
-    public boolean isEdited() {
-        return edited;
-    }
-
     public interface ProfilePictureChangeListener {
         void onProfilePictureChange(String imageUrl);
     }
 
-    private TextWatcher mTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int cou
-            Log.e("Edited", "Basic Info ET");nt) {
-            edited = true;
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {};
-    };
-
-    private AdapterView.OnItemSelectedListener mItemSelectedListener = new AdapterView.OnItemSelectedListene
-        boolean count = false;r() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long
-            Log.e("Edited", "Basic Info AV");id) {
-            edited = true;
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {}
-    };
 }

@@ -62,6 +62,9 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask;
     private SetProfilePictureResponse mSetProfilePictureResponse;
 
+    private boolean mBasicInfoEdited = false;
+    private boolean mUserAddressEdited = false;
+
     private EditBasicInfoFragment mBasicInfoFragment;
     private EditUserAddressFragment mUserAddressFragment;
 
@@ -72,35 +75,28 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new EditProfileFragmentAdapter(getSupportFragmentManager(), this));
+        viewPager.addOnPageChangeListener(mOnPageChangeListener);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        if (getIntent().hasExtra(TARGET_TAB)) {
-            int targetTabPosition = getIntent().getIntExtra(TARGET_TAB, 0);
-            TabLayout.Tab targetTab = tabLayout.getTabAt(targetTabPosition);
-            if (targetTab != null)
-                    targetTab.select();
-        }
+        int targetTabPosition = getIntent().getIntExtra(TARGET_TAB, 0);
+        TabLayout.Tab targetTab = tabLayout.getTabAt(targetTabPosition);
+        if (targetTab != null)
+                targetTab.select();
+        // On page selected doesn't get called for the first page, so call it manually
+        mOnPageChangeListener.onPageSelected(targetTabPosition);
 
         mProgressDialog = new ProgressDialog(this);
     }
 
     public void attemptSaveProfile() {
-        boolean basicInfoEdited = (mBasicInfoFragment != null && mBasicInfoFragment.isEdited());
-        boolean addressEdited = (mUserAddressFragment != null && mUserAddressFragment.isEdited());
-
-        if (!basicInfoEdited && !addressEdited) {
-            finish();
-            return;
-        }
-
         if (Utilities.isConnectionAvailable(this)) {
             mProgressDialog.setMessage(getString(R.string.saving_profile_information));
 
             Gson gson = new Gson();
-            if (mSetProfileInfoTask == null) {
-                if (basicInfoEdited && mBasicInfoFragment.verifyUserInputs()) {
+            if (mBasicInfoEdited && mSetProfileInfoTask == null) {
+                if (mBasicInfoFragment != null && mBasicInfoFragment.verifyUserInputs()) {
                     mProgressDialog.show();
 
                     SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(
@@ -117,8 +113,8 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
                 }
             }
 
-            if (mSetUserAddressTask == null) {
-                if (addressEdited && mUserAddressFragment.verifyUserInputs()) {
+            if (mUserAddressEdited && mSetUserAddressTask == null) {
+                if (mUserAddressFragment != null && mUserAddressFragment.verifyUserInputs()) {
                     mProgressDialog.show();
 
                     SetUserAddressRequest userAddressRequest = new SetUserAddressRequest(
@@ -187,6 +183,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
                 mSetProfileInfoResponse = gson.fromJson(resultList.get(2), SetProfileInfoResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     Toast.makeText(EditProfileActivity.this, mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    mBasicInfoEdited = false;
                 } else {
                     Toast.makeText(EditProfileActivity.this, R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
                 }
@@ -202,6 +199,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
             try {
                 mSetUserAddressResponse = gson.fromJson(resultList.get(2), SetUserAddressResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mUserAddressEdited = false;
 //                    Toast.makeText(EditProfileActivity.this, mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(EditProfileActivity.this, R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
@@ -255,10 +253,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
     @Override
     public void onBackPressed() {
-        boolean basicInfoEdited = (mBasicInfoFragment != null && mBasicInfoFragment.isEdited());
-        boolean addressEdited = (mUserAddressFragment != null && mUserAddressFragment.isEdited());
-
-        if (basicInfoEdited || addressEdited) {
+        if (mBasicInfoEdited || mUserAddressEdited) {
             showExitConfirmationDialog();
         }
         else {
@@ -326,4 +321,20 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
             return tabTitles[position];
         }
     }
+
+    private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+        @Override
+        public void onPageSelected(int position) {
+            if (position == 0)
+                mBasicInfoEdited = true;
+            else if (position == 1)
+                mUserAddressEdited = true;
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {}
+    };
 }

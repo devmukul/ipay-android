@@ -28,8 +28,6 @@ public class AddressInputView extends FrameLayout {
     private Spinner mCountrySelection;
     private EditText mPostalCodeField;
 
-    private boolean edited;
-
     public AddressInputView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context);
@@ -56,13 +54,6 @@ public class AddressInputView extends FrameLayout {
         mDistrictSelection = (Spinner) v.findViewById(R.id.district);
         mCountrySelection = (Spinner) v.findViewById(R.id.country);
         mPostalCodeField = (EditText) v.findViewById(R.id.postcode);
-
-        mAddressLine1Field.addTextChangedListener(mTextWatcher);
-        mAddressLine2Field.addTextChangedListener(mTextWatcher);
-        mPostalCodeField.addTextChangedListener(mTextWatcher);
-        mThanaSelection.setOnItemSelectedListener(mItemSelectedListener);
-        mDistrictSelection.setOnItemSelectedListener(mItemSelectedListener);
-        mCountrySelection.setOnItemSelectedListener(mItemSelectedListener);
 
         ArrayAdapter<CharSequence> mAdapterBusinessCity = new ArrayAdapter<CharSequence>(context,
                 android.R.layout.simple_dropdown_item_1line, ThanaList.thanaNames);
@@ -166,37 +157,4 @@ public class AddressInputView extends FrameLayout {
                 district, thana, postalCode);
         return addressClass;
     }
-
-    public boolean isEdited() {
-        return edited;
-    }
-
-    public void clearEditFlag() {
-        edited = false;
-    }
-
-    private TextWatcher mTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            Log.e("Edited", "Address Input ET");
-            edited = true;
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {};
-    };
-
-    private AdapterView.OnItemSelectedListener mItemSelectedListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Log.e("Edited", "Address Input AV");
-            edited = true;
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {}
-    };
 }
