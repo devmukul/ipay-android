@@ -164,7 +164,10 @@ public class EditBasicInfoFragment extends Fragment {
             ProfileFragment.mFathersName = mFathersNameEditText.getText().toString().trim();
             ProfileFragment.mMothersName = mMothersNameEditText.getText().toString().trim();
             ProfileFragment.mSpouseName = mSpouseNameEditText.getText().toString().trim();
-            ProfileFragment.mOccupation = mOccupationSpinner.getSelectedItem().toString();
+            if (mOccupationSpinner.getSelectedItemPosition() != 0)
+                ProfileFragment.mOccupation = mOccupationSpinner.getSelectedItem().toString();
+            else
+                ProfileFragment.mOccupation = null;
             ProfileFragment.mGender = GenderList.genderNameToCodeMap.get(
                     mGenderSpinner.getSelectedItem().toString());
 

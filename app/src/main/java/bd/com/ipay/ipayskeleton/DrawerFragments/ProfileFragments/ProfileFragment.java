@@ -208,7 +208,10 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mFathersNameView.setText(mFathersName);
         mMothersNameView.setText(mMothersName);
         mSpouseNameView.setText(mSpouseName);
-        mOccupationView.setText(mOccupation);
+        if (mOccupation != null)
+            mOccupationView.setText(mOccupation);
+        else
+            mOccupationView.setText("");
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
 
