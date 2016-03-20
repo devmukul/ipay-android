@@ -13,12 +13,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,10 +66,12 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private GetIntroducerListResponse mGetIntroducerListResponse = null;
 
     private ProgressDialog mProgressDialog;
+    private ScrollView mScrollView;
 
     private RoundedImageView mProfilePicture;
     private TextView mNameView;
     private TextView mMobileNumberView;
+    private TextView mVerificationStatusView;
 
     private TextView mEmailAddressView;
     private TextView mDateOfBirthView;
@@ -89,7 +94,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private Button mUploadDocumentsButton;
 
     private ListView mIntroducerListView;
-    private ArrayAdapter<Introducer> mIntroducerAdapter;
+    private IntroducerListAdapter mIntroducerAdapter;
 
     private SharedPreferences pref;
 
@@ -104,6 +109,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     public static String mSpouseName = "";
     public static String mOccupation = "";
     public static String mGender = "";
+    public static String mVerificationStatus = "";
 
     public static AddressClass mPresentAddress;
     public static AddressClass mPermanentAddress;
@@ -127,9 +133,12 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         mProfilePictures = new HashSet<>();
 
+        mScrollView = (ScrollView) v.findViewById(R.id.scrollview);
+
         mProfilePicture = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
 
         mEmailAddressView = (TextView) v.findViewById(R.id.textview_email);
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_date_of_birth);
@@ -152,6 +161,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mUploadDocumentsButton = (Button) v.findViewById(R.id.button_upload_documents);
 
         mIntroducerListView = (ListView) v.findViewById(R.id.list_introducers);
+        mIntroducerAdapter = new IntroducerListAdapter(getActivity(), new ArrayList<Introducer>());
+        mIntroducerListView.setAdapter(mIntroducerAdapter);
 
         mBasicInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +201,10 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         mProgressDialog = new ProgressDialog(getActivity());
 
+        // Without these, the listview will gain focus as soon as data loading is finished
+        mScrollView.setFocusableInTouchMode(true);
+        mScrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+
         setProfilePicture("");
         getProfileInfo();
         getUserAddress();
@@ -225,12 +240,22 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mFathersNameView.setText(mFathersName);
         mMothersNameView.setText(mMothersName);
         mSpouseNameView.setText(mSpouseName);
+
         if (mOccupation != null)
             mOccupationView.setText(mOccupation);
         else
             mOccupationView.setText("");
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
+
+        if (mVerificationStatus != null && mVerificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+            mVerificationStatusView.setBackgroundResource(R.drawable.background_verified);
+            mVerificationStatusView.setText(R.string.verified);
+        }
+        else {
+            mVerificationStatusView.setBackgroundResource(R.drawable.background_not_verified);
+            mVerificationStatusView.setText(R.string.not_verified);
+        }
 
         if (mPresentAddress != null) {
             mPresentAddressView.setText(mPresentAddress.toString());
@@ -365,6 +390,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                     if (mGetProfileInfoResponse.getGender() != null)
                         mGender = mGetProfileInfoResponse.getGender();
 
+                    mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
                     mProfilePictures = mGetProfileInfoResponse.getProfilePictures();
 
                     setProfileInformation();
@@ -426,9 +452,10 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                 mGetIntroducerListResponse = gson.fromJson(resultList.get(2), GetIntroducerListResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     mIntrdoucers = mGetIntroducerListResponse.getIntroducers();
-                    mIntroducerAdapter = new IntroducerListAdapter(getActivity(), mIntrdoucers);
-                    mIntroducerListView.setAdapter(mIntroducerAdapter);
+                    mIntroducerAdapter.setIntroducers(mIntrdoucers);
+                    mIntroducerAdapter.notifyDataSetChanged();
                     Utilities.setUpNonScrollableListView(mIntroducerListView);
+//                    mIntroducerAdapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -440,6 +467,13 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         if (mGetProfileInfoTask == null && mGetUserAddressTask == null && mGetIdentificationDocumentsTask == null) {
             mProgressDialog.dismiss();
+
+//            mScrollView.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mScrollView.smoothScrollTo(0, 0);
+//                }
+//            });
         }
     }
 
@@ -450,6 +484,11 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         public IntroducerListAdapter(Context context, List<Introducer> objects) {
             super(context, 0, objects);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        public void setIntroducers(List<Introducer> introducers) {
+            clear();
+            addAll(introducers);
         }
 
         @Override

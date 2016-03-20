@@ -408,6 +408,8 @@
     <string name="personal_mobile_number">Personal Mobile Number</string>
     <string name="confirmation_save_changes">Save changes?</string>
     <string name="no_numbers_found">No numbers found</string>
+    <string name="verified">Verified</string>
+    <string name="not_verified">Not Verified</string>
 
     <string-array name="account_types">
         <item>Personal</item>

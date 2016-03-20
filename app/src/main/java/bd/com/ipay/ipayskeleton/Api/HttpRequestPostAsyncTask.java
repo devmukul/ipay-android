@@ -41,6 +41,8 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
     private String API_COMMAND;
     private HttpResponse mHttpResponse;
 
+    boolean error = false;
+
     public HttpRequestPostAsyncTask(String API_COMMAND, String mUri, String mJsonString,
                                     Context mContext, HttpResponseListener listener) {
         this.API_COMMAND = API_COMMAND;
@@ -63,8 +65,10 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
 
         if (Utilities.isConnectionAvailable(mContext))
             mHttpResponse = makeRequest(mUri, mJsonString);
-        else
-            Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
+        else {
+            error = true;
+            return null;
+        }
 
         InputStream inputStream = null;
         String result = null;
@@ -117,6 +121,11 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(final String result) {
+        if (error) {
+            Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (Constants.DEBUG) {
             if (result == null)
                 Log.e(Constants.RESULT, "NULL");

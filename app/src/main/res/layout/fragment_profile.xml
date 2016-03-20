@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -55,6 +56,20 @@
                     android:textSize="20sp"
                     android:gravity="center"
                     android:text="+8801939373436"/>
+
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/textview_verification_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textview_mobile_number"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/background_not_verified"
+                    android:layout_centerHorizontal="true"
+                    android:textStyle="bold"
+                    android:text="Verified"/>
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
@@ -317,6 +332,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="4dp"
+                    android:focusable="false"
                     android:layout_below="@+id/textview_introducers"/>
             </RelativeLayout>
 
