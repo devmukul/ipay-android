@@ -234,7 +234,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
 
                 if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_PENDING)) {
                     mRecommendationStatus.setImageResource(R.drawable.ic_sync_problem_black_24dp);
-                } else if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_VERIFIED)) {
+                } else if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_APPROVED)) {
                     mRecommendationStatus.setImageResource(R.drawable.ic_verified_user_black_24dp);
                 } else if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_SPAM)) {
                     mRecommendationStatus.setImageResource(R.drawable.ic_error_black_24dp);
@@ -264,7 +264,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            attemptRecommendAction(requestID, Constants.RECOMMENDATION_STATUS_VERIFIED);
+                                            attemptRecommendAction(requestID, Constants.RECOMMENDATION_STATUS_APPROVED);
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

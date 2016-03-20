@@ -106,20 +106,20 @@ public class Constants {
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://10.20.10.10:8085/";
         } else {
-            BASE_URL_POST_MM = "http://192.168.1.106:8085/";
+            BASE_URL_POST_MM = "http://192.168.1.130:8085/api/v1/";
 
-            BASE_URL_GET_MM = "192.168.1.106";
+            BASE_URL_GET_MM = "192.168.1.130";
             BASE_URL_GET_MM_PORT = 8085;
-            BASE_URL_GET_MM_PATH = "";
+            BASE_URL_GET_MM_PATH = "/api/v1/";
 
             BASE_URL_IMAGE_SERVER = "http://10.20.10.10";
 
-            BASE_URL_SM = "http://192.168.1.106:8085/";
+            BASE_URL_SM = "http://192.168.1.130:8085/api/v1/";
 
-            BASE_URL_GET_EM = "192.168.1.106";
+            BASE_URL_GET_EM = "192.168.1.130";
             BASE_URL_GET_EM_PORT = 8085;
             BASE_URL_GET_EM_PATH = "";
-            BASE_URL_POST_EM = "http://192.168.1.106:8085/";
+            BASE_URL_POST_EM = "http://192.168.1.130:8085/api/v1/";
         }
     }
 
@@ -316,10 +316,10 @@ public class Constants {
     public static final int EVENT_STATUS_ACTIVE = 1;
     public static final int EVENT_STATUS_INACTIVE = 2;
 
-    public static final String RECOMMENDATION_STATUS_PENDING = "pending";
-    public static final String RECOMMENDATION_STATUS_REJECTED = "cancel";
-    public static final String RECOMMENDATION_STATUS_VERIFIED = "accept";
-    public static final String RECOMMENDATION_STATUS_SPAM = "spam";
+    public static final String RECOMMENDATION_STATUS_PENDING = "PENDING";
+    public static final String RECOMMENDATION_STATUS_REJECTED = "REJECTED";
+    public static final String RECOMMENDATION_STATUS_APPROVED = "APPROVED";
+    public static final String RECOMMENDATION_STATUS_SPAM = "MARKED_SPAM";
 
     public static final int EVENT_PARTICIPANT_TYPE_ANYONE = 0;
     public static final int EVENT_PARTICIPANT_TYPE_FROM_LIST = 3;
