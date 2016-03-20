@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,7 +10,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +31,14 @@ import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetIntroducerListRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetIdentificationDocumentResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocumentsRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserAddressRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
@@ -40,6 +46,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ProfileFragment extends Fragment implements HttpResponseListener {
 
@@ -51,6 +58,9 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
     private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
+
+    private HttpRequestGetAsyncTask mGetIntroducerListTask = null;
+    private GetIntroducerListResponse mGetIntroducerListResponse = null;
 
     private ProgressDialog mProgressDialog;
 
@@ -78,6 +88,9 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private Button mOfficeAddressEditButton;
     private Button mUploadDocumentsButton;
 
+    private ListView mIntroducerListView;
+    private ArrayAdapter<Introducer> mIntroducerAdapter;
+
     private SharedPreferences pref;
 
     public static String mName = "";
@@ -97,6 +110,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     public static AddressClass mOfficeAddress;
 
     public static List<IdentificationDocument> mIdentificationDocuments = new ArrayList<>();
+    public static List<Introducer> mIntrdoucers = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,6 +150,8 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mPermanentAddressEditButton = (Button) v.findViewById(R.id.button_edit_permanent_address);
         mOfficeAddressEditButton = (Button) v.findViewById(R.id.button_edit_office_address);
         mUploadDocumentsButton = (Button) v.findViewById(R.id.button_upload_documents);
+
+        mIntroducerListView = (ListView) v.findViewById(R.id.list_introducers);
 
         mBasicInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,6 +194,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         getProfileInfo();
         getUserAddress();
         getIdentificationDocuments();
+        getIntroducerList();
 
         return v;
     }
@@ -250,8 +267,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mProgressDialog.show();
 
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                new ProfileInfoRequestBuilder().getGeneratedUri(), getActivity());
-        mGetProfileInfoTask.mHttpResponseListener = this;
+                new ProfileInfoRequestBuilder().getGeneratedUri(), getActivity(), this);
         mGetProfileInfoTask.execute();
     }
 
@@ -261,8 +277,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         }
 
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
-                new UserAddressRequestBuilder().getGeneratedUri(), getActivity());
-        mGetUserAddressTask.mHttpResponseListener = this;
+                new UserAddressRequestBuilder().getGeneratedUri(), getActivity(), this);
         mGetUserAddressTask.execute();
     }
 
@@ -272,9 +287,18 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         }
 
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
-                new IdentificationDocumentsRequestBuilder().getGeneratedUri(), getActivity());
-        mGetIdentificationDocumentsTask.mHttpResponseListener = this;
+                new IdentificationDocumentsRequestBuilder().getGeneratedUri(), getActivity(), this);
         mGetIdentificationDocumentsTask.execute();
+    }
+
+    private void getIntroducerList() {
+        if (mGetIntroducerListTask != null) {
+            return;
+        }
+
+        mGetIntroducerListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
+                new GetIntroducerListRequestBuilder().getGeneratedUri(), getActivity(), this);
+        mGetIntroducerListTask.execute();
     }
 
     private void setProfilePicture(String url) {
@@ -397,6 +421,21 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
             mGetIdentificationDocumentsTask = null;
         }
+        else if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCER_LIST)) {
+            try {
+                mGetIntroducerListResponse = gson.fromJson(resultList.get(2), GetIntroducerListResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mIntrdoucers = mGetIntroducerListResponse.getIntroducers();
+                    mIntroducerAdapter = new IntroducerListAdapter(getActivity(), mIntrdoucers);
+                    mIntroducerListView.setAdapter(mIntroducerAdapter);
+                    Utilities.setUpNonScrollableListView(mIntroducerListView);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), "Failed to fetch introducer list", Toast.LENGTH_SHORT).show();
+            }
+        }
 
 
         if (mGetProfileInfoTask == null && mGetUserAddressTask == null && mGetIdentificationDocumentsTask == null) {
@@ -404,4 +443,30 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         }
     }
 
+    public class IntroducerListAdapter extends ArrayAdapter<Introducer> {
+
+        private LayoutInflater inflater;
+
+        public IntroducerListAdapter(Context context, List<Introducer> objects) {
+            super(context, 0, objects);
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Introducer introducer = getItem(position);
+
+            View view = convertView;
+            if (view == null)
+                view = inflater.inflate(R.layout.list_item_introducer, null);
+
+            TextView nameView = (TextView) view.findViewById(R.id.textview_name);
+            TextView mobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
+
+            nameView.setText(introducer.getName());
+            mobileNumberView.setText(introducer.getMobileNumber());
+
+            return view;
+        }
+    }
 }

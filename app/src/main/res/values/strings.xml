@@ -389,6 +389,7 @@
     <string name="profile_basic_info">Basic Info</string>
     <string name="profile_address">Address</string>
     <string name="profile_documents">Documents</string>
+    <string name="profile_introducers">Introducers</string>
     <string name="national_id">National ID</string>
     <string name="national_id_number">National ID Number</string>
     <string name="passport">Passport</string>

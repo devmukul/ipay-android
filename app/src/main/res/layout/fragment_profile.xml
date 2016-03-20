@@ -296,6 +296,31 @@
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
+
+
+
+        <!-- Introducers -->
+        <android.support.v7.widget.CardView
+            style="@style/ProfileCardStyle"
+            app:cardElevation="4dp">
+
+            <RelativeLayout
+                style="@style/ProfileCardLayoutStyle">
+
+                <TextView
+                    android:id="@+id/textview_introducers"
+                    android:text="@string/profile_introducers"
+                    style="@style/ProfileHeadingStyle"/>
+
+                <ListView
+                    android:id="@+id/list_introducers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+                    android:layout_below="@+id/textview_introducers"/>
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 </ScrollView>

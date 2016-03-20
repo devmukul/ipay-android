@@ -147,6 +147,7 @@ public class Constants {
     public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
     public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address";
     public static final String URL_GET_DOCUMENTS = "user/identification/documents";
+    public static final String URL_GET_INTRODUCER_LIST = "kyc/introducerList";
     public static final String URL_UPLOAD_DOCUMENTS = "/user/identification/documents";
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
     public static final String URL_SET_USER_ADDRESS_REQUEST = "user/profile/address";
@@ -245,6 +246,7 @@ public class Constants {
     public static final String COMMAND_GET_PROFILE_INFO_REQUEST = "COMMAND_GET_PROFILE_INFO_REQUEST";
     public static final String COMMAND_GET_USER_ADDRESS_REQUEST = "COMMAND_GET_USER_ADDRESS_REQUEST";
     public static final String COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST = "COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST";
+    public static final String COMMAND_GET_INTRODUCER_LIST = "COMMAND_GET_INTRODUCER_LIST";
     public static final String COMMAND_EMAIL_VERIFICATION_REQUEST = "COMMAND_EMAIL_VERIFICATION_REQUEST";
     public static final String COMMAND_SET_PROFILE_INFO_REQUEST = "COMMAND_SET_PROFILE_INFO_REQUEST";
     public static final String COMMAND_SET_USER_ADDRESS_REQUEST = "COMMAND_SET_USER_ADDRESS_REQUEST";
