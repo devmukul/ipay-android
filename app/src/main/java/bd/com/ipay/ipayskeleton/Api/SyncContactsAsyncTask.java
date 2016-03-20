@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
@@ -20,6 +21,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Model.FireBase.FriendNodeToUpload;
@@ -35,6 +37,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
     private final int AUTH_FAILED = 2;
     private int isReturnedFromServer = AUTH_IN_PROGRESS;
 
+    private AtomicInteger count;
+
     private Context mContext;
     private Firebase ref;
     private HttpResponse mHttpResponse;
@@ -46,8 +50,10 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
 
+
         try {
             final ArrayList<FriendNodeToUpload> userFriends = getAllContacts();
+            count = new AtomicInteger(userFriends.size());
             ref = new Firebase(Constants.PATH_TO_FIREBASE_DATABASE);
 
             // Create a handler to handle the result of the authentication
@@ -56,18 +62,25 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
                 public void onAuthenticated(AuthData authData) {
 
                     for (int i = 0; i < userFriends.size(); i++) {
-
                         ref.child(Constants.FIREBASE_CONTACT_LIST).child(authData.getUid()).
                                 child(Constants.FIREBASE_DIRTY).child(userFriends.get(i).getPhoneNumber())
-                                .setValue(userFriends.get(i));
+                                .setValue(userFriends.get(i), new Firebase.CompletionListener() {
+                                    @Override
+                                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                        int currentCount = count.decrementAndGet();
+                                        if (currentCount == 0) {
+                                            new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    sendUpdateRequest();
+                                                }
+                                            }).start();
+                                        }
+
+                                    }
+                                });
                     }
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            sendUpdateRequest();
-                        }
-                    }).start();
 
                     isReturnedFromServer = AUTH_SUCCESS;
                 }
