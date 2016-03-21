@@ -73,9 +73,15 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     private TextView mEmailAddressView;
     private TextView mDateOfBirthView;
+
     private TextView mFathersNameView;
     private TextView mMothersNameView;
     private TextView mSpouseNameView;
+
+    private TextView mFathersMobileNumberView;
+    private TextView mMothersMobileNumberView;
+    private TextView mSpouseMobileNumberView;
+
     private TextView mOccupationView;
     private TextView mGenderView;
 
@@ -102,9 +108,15 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     public static String mEmailAddress = "";
     public static String mDateOfBirth = "";
+
     public static String mFathersName = "";
     public static String mMothersName = "";
     public static String mSpouseName = "";
+
+    public static String mFathersMobileNumber = "";
+    public static String mMothersMobileNumber = "";
+    public static String mSpouseMobileNumber = "";
+
     public static String mOccupation = "";
     public static String mGender = "";
     public static String mVerificationStatus = "";
@@ -140,9 +152,15 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         mEmailAddressView = (TextView) v.findViewById(R.id.textview_email);
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_date_of_birth);
+
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
         mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
         mSpouseNameView = (TextView) v.findViewById(R.id.textview_spouse_name);
+
+        mFathersMobileNumberView = (TextView) v.findViewById(R.id.textview_fathers_mobile_number);
+        mMothersMobileNumberView = (TextView) v.findViewById(R.id.textview_mothers_mobile_number);
+        mSpouseMobileNumberView = (TextView) v.findViewById(R.id.textview_spouse_mobile_number);
+
         mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
         mGenderView = (TextView) v.findViewById(R.id.textview_gender);
 
@@ -235,9 +253,14 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mEmailAddressView.setText(mEmailAddress);
         mGenderView.setText(mGender);
         mDateOfBirthView.setText(mDateOfBirth);
+
         mFathersNameView.setText(mFathersName);
         mMothersNameView.setText(mMothersName);
         mSpouseNameView.setText(mSpouseName);
+
+        mFathersMobileNumberView.setText(mFathersMobileNumber);
+        mMothersMobileNumberView.setText(mMothersMobileNumber);
+        mSpouseMobileNumberView.setText(mSpouseMobileNumber);
 
         if (mOccupation != null)
             mOccupationView.setText(mOccupation);
@@ -377,16 +400,26 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                         mEmailAddress = mGetProfileInfoResponse.getEmail();
                     if (mGetProfileInfoResponse.getDateOfBirth() != null)
                         mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
+
                     if (mGetProfileInfoResponse.getFather() != null)
                         mFathersName = mGetProfileInfoResponse.getFather();
                     if (mGetProfileInfoResponse.getMother() != null)
                         mMothersName = mGetProfileInfoResponse.getMother();
                     if (mGetProfileInfoResponse.getSpouse() != null)
                         mSpouseName = mGetProfileInfoResponse.getSpouse();
+
+                    if (mGetProfileInfoResponse.getFatherMobileNumber() != null)
+                        mFathersMobileNumber = mGetProfileInfoResponse.getFatherMobileNumber();
+                    if (mGetProfileInfoResponse.getMotherMobileNumber() != null)
+                        mMothersMobileNumber = mGetProfileInfoResponse.getMotherMobileNumber();
+                    if (mGetProfileInfoResponse.getSpouseMobileNumber() != null)
+                        mSpouseMobileNumber = mGetProfileInfoResponse.getSpouseMobileNumber();
+
                     if (mGetProfileInfoResponse.getOccupation() != null)
                         mOccupation = mGetProfileInfoResponse.getOccupation();
                     if (mGetProfileInfoResponse.getGender() != null)
                         mGender = mGetProfileInfoResponse.getGender();
+
 
                     mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
                     mProfilePictures = mGetProfileInfoResponse.getProfilePictures();

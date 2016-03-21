@@ -41,9 +41,15 @@ public class EditBasicInfoFragment extends Fragment {
     private EditText mNameEditText;
     private EditText mEmailEditText;
     private ImageView mEmailVerify;
+
     private EditText mFathersNameEditText;
     private EditText mMothersNameEditText;
     private EditText mSpouseNameEditText;
+
+    private EditText mFathersMobileNumberEditText;
+    private EditText mMothersMobileNumberEditText;
+    private EditText mSpouseMobileNumberEditText;
+
     private EditText mDateOfBirthEditText;
     private Spinner mOccupationSpinner;
     private Spinner mGenderSpinner;
@@ -74,9 +80,15 @@ public class EditBasicInfoFragment extends Fragment {
         mProfilePicture = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mNameEditText = (EditText) v.findViewById(R.id.name);
         mEmailEditText = (EditText) v.findViewById(R.id.email);
+
         mFathersNameEditText = (EditText) v.findViewById(R.id.fathers_name);
         mMothersNameEditText = (EditText) v.findViewById(R.id.mothers_name);
         mSpouseNameEditText = (EditText) v.findViewById(R.id.spouse_name);
+
+        mFathersMobileNumberEditText = (EditText) v.findViewById(R.id.fathers_mobile_number);
+        mMothersMobileNumberEditText = (EditText) v.findViewById(R.id.mothers_mobile_number);
+        mSpouseMobileNumberEditText = (EditText) v.findViewById(R.id.spouse_mobile_number);
+
         mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
 
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
@@ -161,9 +173,15 @@ public class EditBasicInfoFragment extends Fragment {
             ProfileFragment.mEmailAddress = mEmailEditText.getText().toString().trim();
             ProfileFragment.mName = mNameEditText.getText().toString().trim();
             ProfileFragment.mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
+
             ProfileFragment.mFathersName = mFathersNameEditText.getText().toString().trim();
             ProfileFragment.mMothersName = mMothersNameEditText.getText().toString().trim();
             ProfileFragment.mSpouseName = mSpouseNameEditText.getText().toString().trim();
+
+            ProfileFragment.mFathersMobileNumber = mFathersMobileNumberEditText.getText().toString().trim();
+            ProfileFragment.mMothersMobileNumber = mMothersMobileNumberEditText.getText().toString().trim();
+            ProfileFragment.mSpouseMobileNumber = mSpouseMobileNumberEditText.getText().toString().trim();
+
             if (mOccupationSpinner.getSelectedItemPosition() != 0)
                 ProfileFragment.mOccupation = mOccupationSpinner.getSelectedItem().toString();
             else
@@ -189,9 +207,15 @@ public class EditBasicInfoFragment extends Fragment {
 
         mNameEditText.setText(ProfileFragment.mName);
         mEmailEditText.setText(ProfileFragment.mEmailAddress);
+
         mFathersNameEditText.setText(ProfileFragment.mFathersName);
         mMothersNameEditText.setText(ProfileFragment.mMothersName);
         mSpouseNameEditText.setText(ProfileFragment.mSpouseName);
+
+        mFathersMobileNumberEditText.setText(ProfileFragment.mFathersMobileNumber);
+        mMothersMobileNumberEditText.setText(ProfileFragment.mMothersMobileNumber);
+        mSpouseMobileNumberEditText.setText(ProfileFragment.mSpouseMobileNumber);
+
         mDateOfBirthEditText.setText(ProfileFragment.mDateOfBirth);
 
         String[] occupationArray = getResources().getStringArray(R.array.occupations);

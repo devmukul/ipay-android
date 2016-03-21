@@ -19,6 +19,9 @@ public class GetProfileInfoResponse {
     public String father;
     public String mother;
     public String spouse;
+    public String fatherMobileNumber;
+    public String motherMobileNumber;
+    public String spouseMobileNumber;
 
     public Set<UserProfilePictureClass> profilePictures = new HashSet<>();
 
@@ -83,5 +86,17 @@ public class GetProfileInfoResponse {
 
     public Set<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
+    }
+
+    public String getFatherMobileNumber() {
+        return fatherMobileNumber;
+    }
+
+    public String getMotherMobileNumber() {
+        return motherMobileNumber;
+    }
+
+    public String getSpouseMobileNumber() {
+        return spouseMobileNumber;
     }
 }

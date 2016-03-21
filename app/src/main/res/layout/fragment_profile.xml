@@ -121,6 +121,8 @@
                     style="@style/ProfileTextStyle"
                     android:layout_below="@+id/textview_email" />
 
+
+                <!-- Relative names -->
                 <TextView
                     android:id="@+id/textview_fathers_name_label"
                     style="@style/ProfileLabelStyle"
@@ -157,17 +159,57 @@
                     style="@style/ProfileTextStyle"
                     android:layout_below="@+id/textview_mothers_name" />
 
+
+                <!-- Relative mobile number -->
+                <TextView
+                    android:id="@+id/textview_fathers_mobile_number_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_fathers_mobile_number"
+                    android:layout_below="@+id/textview_spouse_name"
+                    android:text="Father's Mobile Number" />
+
+                <TextView
+                    android:id="@+id/textview_fathers_mobile_number"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_spouse_name" />
+
+                <TextView
+                    android:id="@+id/textview_mothers_mobile_number_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_mothers_mobile_number"
+                    android:layout_below="@+id/textview_fathers_mobile_number"
+                    android:text="Mother's Mobile Number" />
+
+                <TextView
+                    android:id="@+id/textview_mothers_mobile_number"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_fathers_mobile_number" />
+
+                <TextView
+                    android:id="@+id/textview_spouse_mobile_number_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_toLeftOf="@+id/textview_spouse_mobile_number"
+                    android:layout_below="@+id/textview_mothers_mobile_number"
+                    android:text="Spouse's Mobile Number" />
+
+                <TextView
+                    android:id="@+id/textview_spouse_mobile_number"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_mothers_mobile_number" />
+
+
+                <!-- Spinners -->
                 <TextView
                     android:id="@+id/textview_occupation_label"
                     style="@style/ProfileLabelStyle"
                     android:layout_toLeftOf="@+id/textview_occupation"
-                    android:layout_below="@+id/textview_spouse_name"
+                    android:layout_below="@+id/textview_spouse_mobile_number"
                     android:text="Occupation" />
 
                 <TextView
                     android:id="@+id/textview_occupation"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_spouse_name" />
+                    android:layout_below="@+id/textview_spouse_mobile_number" />
 
                 <TextView
                     android:id="@+id/textview_gender_label"

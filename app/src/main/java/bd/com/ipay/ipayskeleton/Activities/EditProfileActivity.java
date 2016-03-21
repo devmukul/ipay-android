@@ -118,7 +118,8 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
                             ProfileFragment.mMobileNumber, ProfileFragment.mName,
                             ProfileFragment.mGender, ProfileFragment.mDateOfBirth,
                             ProfileFragment.mEmailAddress, ProfileFragment.mOccupation, ProfileFragment.mFathersName,
-                            ProfileFragment.mMothersName, ProfileFragment.mSpouseName);
+                            ProfileFragment.mMothersName, ProfileFragment.mSpouseName,
+                            ProfileFragment.mFathersMobileNumber, ProfileFragment.mMothersMobileNumber, ProfileFragment.mSpouseMobileNumber);
 
                     String profileInfoJson = gson.toJson(setProfileInfoRequest);
                     mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
