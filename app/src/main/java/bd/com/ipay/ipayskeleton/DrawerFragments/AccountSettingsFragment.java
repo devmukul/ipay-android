@@ -2,8 +2,10 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDevicesRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -47,6 +51,9 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
     private HttpRequestGetAsyncTask mGetTrustedDeviceTask = null;
     private GetTrustedDeviceResponse mGetTrustedDeviceResponse = null;
+
+    private HttpRequestPostAsyncTask mRemoveTrustedDeviceTask = null;
+    private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
 
     private EditText mEnterPINEditText;
     private EditText mEnterPasswordEditText;
@@ -272,6 +279,40 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         mGetTrustedDeviceTask.execute();
     }
 
+    private void showTrustedDeviceRemoveConfirmationDialog(final long id, String name) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog
+                .setMessage(getString(R.string.confirmation_remove_trusted_device))
+                .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeTrustedDevice(id);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+    }
+
+    private void removeTrustedDevice(long id) {
+        if (mRemoveTrustedDeviceTask != null)
+            return;;
+
+        mProgressDialog.setMessage("Removing device from your trusted device list");
+        mProgressDialog.show();
+
+        RemoveTrustedDeviceRequest removeTrustedDeviceRequest = new RemoveTrustedDeviceRequest(id);
+        Gson gson = new Gson();
+        String json = gson.toJson(removeTrustedDeviceRequest);
+
+        mRemoveTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_DEVICE,
+                Constants.BASE_URL_POST_MM + Constants.URL_REMOVE_TRUSTED_DEVICE, json, getActivity(), this);
+        mRemoveTrustedDeviceTask.execute();
+    }
+
     @Override
     public void httpResponseReceiver(String result) {
 
@@ -358,6 +399,36 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.dismiss();
             mGetTrustedDeviceTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_REMOVE_TRUSTED_DEVICE)) {
+
+            if (resultList.size() > 2) {
+                try {
+                    mRemoveTrustedDeviceResponse = gson.fromJson(resultList.get(2), RemoveTrustedDeviceResponse.class);
+
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.success_device_removed, Toast.LENGTH_LONG).show();
+                        }
+
+                        mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
+                        mProgressDialog.show();
+
+                        loadTrustedDeviceList();
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            mProgressDialog.cancel();
+            mRemoveTrustedDeviceTask = null;
         }
     }
 
@@ -372,7 +443,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            TrustedDevice trustedDevice = getItem(position);
+            final TrustedDevice trustedDevice = getItem(position);
 
             View view = convertView;
             if (view == null)
@@ -387,7 +458,8 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    showTrustedDeviceRemoveConfirmationDialog(
+                            trustedDevice.getId(), trustedDevice.getDeviceName());
                 }
             });
 
