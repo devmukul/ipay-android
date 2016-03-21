@@ -58,5 +58,36 @@
                 android:layout_below="@+id/set_pin_header" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider" />
+
+
+        <include
+            android:id="@+id/trusted_devices"
+            layout="@layout/view_trusted_devices_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/trusted_devices_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <include
+                layout="@layout/view_trusted_devices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_trusted_devices_header" />
+        </LinearLayout>
+
     </LinearLayout>
+
+
+
 </ScrollView>

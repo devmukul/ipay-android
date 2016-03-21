@@ -181,6 +181,12 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
 
             if (status.equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                 if (mContext != null) {
+                    // Delay for letting server update the contact list
+                    try {
+                        Thread.sleep(50000);
+                    } catch (Exception e) {
+
+                    }
                     // Update subscriber table
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                         new UpdateSubscriberTableAsyncTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

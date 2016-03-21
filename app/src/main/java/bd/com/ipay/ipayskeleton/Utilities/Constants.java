@@ -57,7 +57,7 @@ public class Constants {
     // Server Type 2 -> staging server
     // Server Type 3 -> release server
     // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 4;
+    public static final int SERVER_TYPE = 2;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -133,6 +133,8 @@ public class Constants {
     public static final String URL_RECOMMEND_ACTION = "kyc/verifyRequest";
     public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
     public static final String URL_ADD_TRUSTED_DEVICE = "settings/device/add";
+    public static final String URL_GET_TRUSTED_DEVICES = "settings/devices";
+    public static final String URL_REMOVE_TRUSTED_DEVICE = "settings/device/remove";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
     public static final String URL_SEND_MONEY = "transaction/send";
     public static final String URL_SEND_MONEY_QUERY = "transaction/send/query";
@@ -220,6 +222,8 @@ public class Constants {
     public static final String COMMAND_GET_TRANSACTION_HISTORY = "COMMAND_GET_TRANSACTION_HISTORY";
     public static final String COMMAND_GET_NOTIFICATIONS = "COMMAND_GET_NOTIFICATIONS";
     public static final String COMMAND_ADD_TRUSTED_DEVICE = "COMMAND_ADD_TRUSTED_DEVICE";
+    public static final String COMMAND_GET_TRUSTED_DEVICES = "COMMAND_GET_TRUSTED_DEVICES";
+    public static final String COMMAND_REMOVE_TRUSTED_DEVICE = "COMMAND_REMOVE_TRUSTED_DEVICE";
     public static final String COMMAND_GET_PENDING_REQUESTS_OTHERS = "COMMAND_GET_PENDING_REQUESTS_OTHERS";
     public static final String COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED = "COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED";
     public static final String COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT = "COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT";

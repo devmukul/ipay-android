@@ -1,15 +1,19 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -18,12 +22,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDevicesRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -36,19 +45,32 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private HttpRequestPostAsyncTask mChangePasswordTask = null;
     private ChangePasswordResponse mChangePasswordResponse;
 
+    private HttpRequestGetAsyncTask mGetTrustedDeviceTask = null;
+    private GetTrustedDeviceResponse mGetTrustedDeviceResponse = null;
+
     private EditText mEnterPINEditText;
     private EditText mEnterPasswordEditText;
+
     private View setPINHeader;
     private View changePasswordHeader;
+    private View trustedDevicesHeader;
+
     private Button setPINButton;
     private ImageView setPinArrow;
     private ImageView changePassArrow;
+    private ImageView trustedDevicesArrow;
+
     private LinearLayout mPINChangeLayout;
     private LinearLayout mPassChangeLayout;
+    private LinearLayout mTrustedDevicesLayout;
+
     private Button changePasswordButton;
     private EditText mEnterCurrentPasswordEditText;
     private EditText mEnterNewPasswordEditText;
     private EditText mEnterConfirmNewPasswordEditText;
+
+    private ListView mTrustedDevicesListView;
+    private TrustedDeviceAdapter mTrustedDeviceAdapter;
 
     private ProgressDialog mProgressDialog;
 
@@ -69,16 +91,23 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         mEnterCurrentPasswordEditText = (EditText) v.findViewById(R.id.current_password);
         mEnterNewPasswordEditText = (EditText) v.findViewById(R.id.new_password);
         mEnterConfirmNewPasswordEditText = (EditText) v.findViewById(R.id.confirm_new_password);
+
         changePasswordButton = (Button) v.findViewById(R.id.save_pass);
+        setPINButton = (Button) v.findViewById(R.id.save_pin);
 
         setPINHeader = v.findViewById(R.id.set_pin_header);
         changePasswordHeader = v.findViewById(R.id.change_password);
-        setPINButton = (Button) v.findViewById(R.id.save_pin);
-        setPinArrow = (ImageView) v.findViewById(R.id.change_pin_arrow);
+        trustedDevicesHeader = v.findViewById(R.id.trusted_devices);
+
         changePassArrow = (ImageView) v.findViewById(R.id.change_pass_arrow);
+        setPinArrow = (ImageView) v.findViewById(R.id.change_pin_arrow);
+        trustedDevicesArrow = (ImageView) v.findViewById(R.id.trusted_device_arrow);
+
         mPINChangeLayout = (LinearLayout) v.findViewById(R.id.pin_change_layout);
         mPassChangeLayout = (LinearLayout) v.findViewById(R.id.pass_change_layout);
+        mTrustedDevicesLayout = (LinearLayout) v.findViewById(R.id.trusted_devices_layout);
 
+        mTrustedDevicesListView = (ListView) v.findViewById(R.id.list_trusted_devices);
         mProgressDialog = new ProgressDialog(getActivity());
 
         setPINHeader.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +138,29 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             }
         });
 
+        trustedDevicesHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTrustedDevicesLayout.getVisibility() == View.VISIBLE) {
+                    mTrustedDevicesLayout.setVisibility(View.GONE);
+                    trustedDevicesArrow.setImageResource(R.drawable.ic_arrow_drop_down_black_24dp);
+                } else {
+                    mTrustedDevicesLayout.setVisibility(View.VISIBLE);
+                    Utilities.setLayoutAnim_slideDown(mTrustedDevicesLayout, getActivity());
+                    trustedDevicesArrow.setImageResource(R.drawable.ic_arrow_drop_up_black_24dp);
+
+
+                    // We are trying to load the trusted device list in the background when the users enters
+                    // the settings page. When the user click on the down arrow, if the loading task is still
+                    // running we need to inform him/her that we are still loading the list.
+                    if (mGetTrustedDeviceTask != null) {
+                        mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
+                        mProgressDialog.show();
+                    }
+                }
+            }
+        });
+
         setPINButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +174,8 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
                 attemptChangePassword();
             }
         });
+
+        loadTrustedDeviceList();
 
         return v;
     }
@@ -208,6 +262,16 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         }
     }
 
+    private void loadTrustedDeviceList() {
+        if (mGetTrustedDeviceTask != null) {
+            return;
+        }
+
+        mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
+                new GetTrustedDevicesRequestBuilder().getGeneratedUri(), getActivity(), this);
+        mGetTrustedDeviceTask.execute();
+    }
+
     @Override
     public void httpResponseReceiver(String result) {
 
@@ -270,6 +334,64 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.dismiss();
             mChangePasswordTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
+
+            if (resultList.size() > 2) {
+                try {
+                    mGetTrustedDeviceResponse = gson.fromJson(resultList.get(2), GetTrustedDeviceResponse.class);
+
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mGetTrustedDeviceResponse.getDevices());
+                        mTrustedDevicesListView.setAdapter(mTrustedDeviceAdapter);
+                        Utilities.setUpNonScrollableListView(mTrustedDevicesListView);
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            mProgressDialog.dismiss();
+            mGetTrustedDeviceTask = null;
+        }
+    }
+
+    public class TrustedDeviceAdapter extends ArrayAdapter<TrustedDevice> {
+
+        private LayoutInflater inflater;
+
+        public TrustedDeviceAdapter(Context context, List<TrustedDevice> objects) {
+            super(context, 0, objects);
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TrustedDevice trustedDevice = getItem(position);
+
+            View view = convertView;
+            if (view == null)
+                view = inflater.inflate(R.layout.list_item_trsuted_device, null);
+
+            TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
+            TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);
+            Button removeButton = (Button) view.findViewById(R.id.button_remove);
+
+            deviceNameView.setText(trustedDevice.getDeviceName());
+            grantTimeView.setText(trustedDevice.getCreatedTimeString());
+            removeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            return view;
         }
     }
 }
