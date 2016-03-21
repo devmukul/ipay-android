@@ -63,6 +63,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
     private ProgressDialog mProgressDialog;
 
+    private SharedPreferences pref;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -92,7 +94,13 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) sendMoneyQuery();
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    // For now, we are directly sending the money without going through any send money query
+                    // sendMoneyQuery();
+                    if (verifyUserInputs()) {
+                        showSendMoneyConfirmationDialog();
+                    }
+                }
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -104,6 +112,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 initiateScan();
             }
         });
+
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         return v;
     }
@@ -212,18 +222,30 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             return;
         }
 
-        // Reset errors.
+        String amount = mAmountEditText.getText().toString().trim();
+        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+        String description = mDescriptionEditText.getText().toString().trim();
+        String senderMobileNumber = pref.getString(Constants.USERID, "");
+
+        mProgressDialog.show();
+        SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(
+                senderMobileNumber, ContactEngine.convertToInternationalFormat(mobileNumber), amount, description);
+        Gson gson = new Gson();
+        String json = gson.toJson(mSendMoneyRequest);
+        mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity());
+        mSendMoneyTask.mHttpResponseListener = this;
+        mSendMoneyTask.execute((Void) null);
+    }
+
+    private boolean verifyUserInputs() {
         mAmountEditText.setError(null);
         mMobileNumberEditText.setError(null);
 
         boolean cancel = false;
         View focusView = null;
 
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        String amount = mAmountEditText.getText().toString().trim();
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-        String description = mDescriptionEditText.getText().toString().trim();
-        String senderMobileNumber = pref.getString(Constants.USERID, "");
 
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;
@@ -237,22 +259,10 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
+            return false;
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-
-            mProgressDialog.show();
-            SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(
-                    senderMobileNumber, ContactEngine.convertToInternationalFormat(mobileNumber), amount, description);
-            Gson gson = new Gson();
-            String json = gson.toJson(mSendMoneyRequest);
-            mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
-                    Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity());
-            mSendMoneyTask.mHttpResponseListener = this;
-            mSendMoneyTask.execute((Void) null);
+            return true;
         }
     }
 
@@ -261,37 +271,12 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             return;
         }
 
-        // Reset errors.
-        mAmountEditText.setError(null);
-        mMobileNumberEditText.setError(null);
 
-        boolean cancel = false;
-        View focusView = null;
-
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        String amount = mAmountEditText.getText().toString().trim();
-        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-        String description = mDescriptionEditText.getText().toString().trim();
-        String senderMobileNumber = pref.getString(Constants.USERID, "");
-
-        if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
-            focusView = mAmountEditText;
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            cancel = true;
-        }
-        if (!ContactEngine.isValidNumber(mobileNumber)) {
-            focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+        if (verifyUserInputs()) {
+            String amount = mAmountEditText.getText().toString().trim();
+            String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+            String description = mDescriptionEditText.getText().toString().trim();
+            String senderMobileNumber = pref.getString(Constants.USERID, "");
 
             mProgressDialog.show();
             SendMoneyQueryRequest mSendMoneyQueryRequest = new SendMoneyQueryRequest(
@@ -305,7 +290,10 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         }
     }
 
-    private void showAlertDialogue(String receiver, double amount) {
+    private void showSendMoneyConfirmationDialog() {
+        String receiver = mMobileNumberEditText.getText().toString().trim();
+        String amount = mAmountEditText.getText().toString().trim();
+
         AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -411,7 +399,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                     double amount = mSendMoneyQueryResponse.getAmount();
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_ACCEPTED)) {
-                        showAlertDialogue(receiver, amount);
+//                        showSendMoneyConfirmationDialog(receiver, amount);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.send_money_query_failed, Toast.LENGTH_SHORT).show();
