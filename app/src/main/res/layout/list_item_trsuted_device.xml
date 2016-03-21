@@ -10,6 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:singleLine="true"
+        android:textSize="16sp"
         style="?android:attr/textAppearanceMedium"
         android:text="Symphony-V60 -V60"/>
 
@@ -21,7 +23,7 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/textview_device_name"
         style="?android:attr/textAppearanceSmall"
-        android:paddingTop="6dp"
+        android:textSize="12sp"
         android:text="Mar 19, 2016 - 6:46 PM"/>
 
     <Button
