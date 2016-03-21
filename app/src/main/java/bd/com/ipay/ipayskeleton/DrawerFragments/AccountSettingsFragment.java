@@ -48,7 +48,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private Button changePasswordButton;
     private EditText mEnterCurrentPasswordEditText;
     private EditText mEnterNewPasswordEditText;
-    private EditText mEnterConfrimNewPasswordEditText;
+    private EditText mEnterConfirmNewPasswordEditText;
 
     private ProgressDialog mProgressDialog;
 
@@ -68,7 +68,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
         mEnterCurrentPasswordEditText = (EditText) v.findViewById(R.id.current_password);
         mEnterNewPasswordEditText = (EditText) v.findViewById(R.id.new_password);
-        mEnterConfrimNewPasswordEditText = (EditText) v.findViewById(R.id.confirm_new_password);
+        mEnterConfirmNewPasswordEditText = (EditText) v.findViewById(R.id.confirm_new_password);
         changePasswordButton = (Button) v.findViewById(R.id.save_pass);
 
         setPINHeader = v.findViewById(R.id.set_pin_header);
@@ -180,11 +180,11 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             Toast.makeText(getActivity(), R.string.error_invalid_password, Toast.LENGTH_LONG).show();
             focusView = mEnterNewPasswordEditText;
             cancel = true;
-        } else if (mEnterConfrimNewPasswordEditText.getText().toString().length() < 5
-                || !(mEnterConfrimNewPasswordEditText.getText().toString()
-                .equals(mEnterConfrimNewPasswordEditText.getText().toString()))) {
+        } else if (mEnterConfirmNewPasswordEditText.getText().toString().length() < 5
+                || !(mEnterConfirmNewPasswordEditText.getText().toString()
+                .equals(mEnterConfirmNewPasswordEditText.getText().toString()))) {
             Toast.makeText(getActivity(), R.string.confirm_password_not_matched, Toast.LENGTH_LONG).show();
-            focusView = mEnterConfrimNewPasswordEditText;
+            focusView = mEnterConfirmNewPasswordEditText;
             cancel = true;
         }
 
