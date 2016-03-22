@@ -50,7 +50,7 @@
         android:background="@color/colorDivider"
         android:layout_marginRight="6dp"
         android:layout_toRightOf="@+id/contact_portrait_view"
-        android:layout_toLeftOf="@+id/is_subscriber"/>
+        android:layout_alignRight="@+id/is_subscriber"/>
 
 
     <ImageView

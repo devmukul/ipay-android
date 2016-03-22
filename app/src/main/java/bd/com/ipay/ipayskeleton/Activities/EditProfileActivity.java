@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -72,6 +73,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_edit_profile);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -90,8 +92,12 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
         mProgressDialog = new ProgressDialog(this);
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(0);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

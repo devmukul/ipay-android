@@ -6,6 +6,7 @@
     <color name="colorPrimaryLight_transparent">#CFCAE9</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorDivider">#DDDDDD</color>
+    <color name="colorLightGray">#E5E5E5</color>
     <color name="colorTextPrimary">#FF000000</color>
     <color name="colorTextSecondary">#B3000000</color>
     <color name="colorBlackTransparent">#70000000</color>

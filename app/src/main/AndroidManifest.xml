@@ -127,7 +127,7 @@
             android:name=".Activities.EditProfileActivity"
             android:label="@string/edit_profile"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
     </application>
 
