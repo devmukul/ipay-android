@@ -83,7 +83,6 @@ public abstract class BaseContactsFragment extends Fragment implements
     private AskForRecommendationResponse mAskForRecommendationResponse;
 
     private ProgressDialog mProgressDialog;
-    private Menu mMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

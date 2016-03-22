@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="16dp"
-        android:layout_marginLeft="24dp"/>
+        android:layout_marginLeft="8dp"/>
 
     <TextView
         android:id="@+id/name"
@@ -57,7 +57,7 @@
         android:id="@+id/is_subscriber"
         android:layout_width="26dp"
         android:layout_height="26dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginRight="8dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_ipay_user" />
