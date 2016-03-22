@@ -16,6 +16,9 @@
     <string name="type_of_business">Type of Business</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_password_short">This password is too short</string>
+    <string name="error_invalid_password_alphabet">Password should contain an alphabet</string>
+    <string name="error_invalid_password_numeric">Password should contain a number</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
@@ -89,7 +92,7 @@
     <string name="disable">Disable</string>
     <string name="reject">Reject</string>
     <string name="remove">Remove</string>
-    <string name="mark_as_spam">Mark as spam</string>
+    <string name="mark_as_spam">Spam</string>
     <string name="to">To</string>
     <string name="from">From</string>
     <string name="to_date">To (dd/mm/yyyy)</string>

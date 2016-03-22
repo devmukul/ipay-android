@@ -114,8 +114,9 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
             cancel = true;
         }
 
-        if (mNewPasswordEditText.getText().toString().trim().length() < 5) {
-            mNewPasswordEditText.setError(getString(R.string.error_invalid_password));
+        String passwordValidationMsg = Utilities.isPasswordValid(mNewPasswordEditText.getText().toString().trim());
+        if (passwordValidationMsg.length() > 0) {
+            mNewPasswordEditText.setError(passwordValidationMsg);
             focusView = mNewPasswordEditText;
             cancel = true;
         }

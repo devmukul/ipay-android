@@ -189,8 +189,9 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(SignupOrLoginActivity.mPasswordBusiness)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        String passwordValidationMsg = Utilities.isPasswordValid(SignupOrLoginActivity.mPasswordBusiness);
+        if (passwordValidationMsg.length() > 0) {
+            mPasswordView.setError(passwordValidationMsg);
             focusView = mPasswordView;
             cancel = true;
 
@@ -209,7 +210,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
             focusView = mBusinessNameView;
             cancel = true;
 
-        } else if (!isEmailValid(SignupOrLoginActivity.mEmailBusiness)) {
+        } else if (!Utilities.isValidEmail(SignupOrLoginActivity.mEmailBusiness)) {
             mBusinessEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mBusinessEmailView;
             cancel = true;
@@ -263,14 +264,6 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
             mRequestOTPTask.mHttpResponseListener = this;
             mRequestOTPTask.execute((Void) null);
         }
-    }
-
-    private boolean isPasswordValid(String password) {
-        return password.length() > 4;
-    }
-
-    private boolean isEmailValid(String email) {
-        return email.length() > 0 && email.contains("@") && email.contains(".");
     }
 
     private void setAccountHolderAddress() {
@@ -350,24 +343,24 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
 
     GetBusinessTypesAsyncTask.BusinessTypeLoadListener businessTypeLoadListener =
             new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
-        @Override
-        public void onLoadSuccess(List<BusinessType> businessTypes) {
-            ArrayAdapter<String> businessTypeAdapter = new ArrayAdapter<>(getActivity(),
-                    android.R.layout.simple_dropdown_item_1line,
-                    CommonData.getBusinessTypeNames());
-            mBusinessType.setAdapter(businessTypeAdapter);
-            mProgressDialog.dismiss();
-        }
+                @Override
+                public void onLoadSuccess(List<BusinessType> businessTypes) {
+                    ArrayAdapter<String> businessTypeAdapter = new ArrayAdapter<>(getActivity(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            CommonData.getBusinessTypeNames());
+                    mBusinessType.setAdapter(businessTypeAdapter);
+                    mProgressDialog.dismiss();
+                }
 
-        @Override
-        public void onLoadFailed() {
-            if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.error_loading_data, Toast.LENGTH_SHORT).show();
-                getActivity().finish();
-                mProgressDialog.dismiss();
-            }
-        }
-    };
+                @Override
+                public void onLoadFailed() {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.error_loading_data, Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
+                        mProgressDialog.dismiss();
+                    }
+                }
+            };
 }
 
 
