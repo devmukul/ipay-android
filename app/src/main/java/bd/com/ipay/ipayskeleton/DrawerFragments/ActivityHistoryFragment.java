@@ -529,27 +529,27 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
                 mTime.setText(time);
 
                 // Set icon for activity type
-                if (userActivityResponsesList.get(pos).getType() == 0) {
+                if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_PROFILE) {
                     Glide.with(getActivity())
                             .load(R.drawable.ic_face_black_24dp)
                             .into(mPortrait);
-                } else if (userActivityResponsesList.get(pos).getType() == 1) {
+                } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_IN) {
                     Glide.with(getActivity())
                             .load(R.drawable.ic_activity_cash_in)
                             .into(mPortrait);
-                } else if (userActivityResponsesList.get(pos).getType() == 2) {
+                } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_OUT) {
                     Glide.with(getActivity())
                             .load(R.drawable.ic_cash_activity)
                             .into(mPortrait);
-                } else if (userActivityResponsesList.get(pos).getType() == 3) {
+                } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_VERIFICATION) {
                     Glide.with(getActivity())
                             .load(R.drawable.ic_system_activity)
                             .into(mPortrait);
-                } else if (userActivityResponsesList.get(pos).getType() == 4) {
+                } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     Glide.with(getActivity())
                             .load(R.drawable.ic_settings)
                             .into(mPortrait);
-                } else if (userActivityResponsesList.get(pos).getType() == 5) {
+                } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
                     Glide.with(getActivity())
                             .load(R.drawable.ic_face_black_24dp)
                             .into(mPortrait);

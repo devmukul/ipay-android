@@ -183,7 +183,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
                 if (mContext != null) {
                     // Delay for letting server update the contact list
                     try {
-                        Thread.sleep(50000);
+                        Thread.sleep(10000);
                     } catch (Exception e) {
 
                     }
