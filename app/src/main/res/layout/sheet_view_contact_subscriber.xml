@@ -21,7 +21,7 @@
             style="@style/SheetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_home_black_24dp"
+            android:drawableLeft="@drawable/ic_action_send_money"
             android:text="@string/send_money" />
 
         <Button
@@ -29,16 +29,16 @@
             style="@style/SheetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_transfer_within_a_station_black_24dp"
+            android:drawableLeft="@drawable/ic_action_receive_money"
             android:text="@string/request_money" />
 
         <Button
-            android:id="@+id/button_ask_for_recommendation"
+            android:id="@+id/button_ask_for_introduction"
             style="@style/SheetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_fingerprint_black_24dp"
-            android:text="@string/ask_for_recommendation" />
+            android:drawableLeft="@drawable/ic_action_ask_for_introduction"
+            android:text="@string/ask_for_introduction" />
 
     </LinearLayout>
 

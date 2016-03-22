@@ -14,19 +14,19 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="46dp"
+            android:layout_height="56dp"
             android:layout_gravity="bottom"
             android:background="@color/colorBlackTransparent" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textSize="28sp"
-            android:textStyle="bold"
+            android:padding="12dp"
+            android:textSize="26sp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white"
             android:layout_gravity="bottom|left"
+            android:text="Rafi Kamal"
             android:id="@+id/textview_contact_name" />
     </FrameLayout>
 </LinearLayout>

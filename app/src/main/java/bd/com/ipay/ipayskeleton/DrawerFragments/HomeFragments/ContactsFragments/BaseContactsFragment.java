@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +26,6 @@ import com.bumptech.glide.request.target.Target;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -234,7 +232,7 @@ public abstract class BaseContactsFragment extends Fragment implements
                 }
             }
         });
-        Button mAskForRecommendationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_recommendation);
+        Button mAskForRecommendationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_introduction);
         mAskForRecommendationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
