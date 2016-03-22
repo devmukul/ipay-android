@@ -162,8 +162,9 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(SignupOrLoginActivity.mPassword) && !isPasswordValid(SignupOrLoginActivity.mPassword)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        String passwordValidationMsg = Utilities.isPasswordValid(SignupOrLoginActivity.mPassword);
+        if (passwordValidationMsg.length() > 0) {
+            mPasswordView.setError(passwordValidationMsg);
             focusView = mPasswordView;
             cancel = true;
         }
@@ -227,10 +228,6 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             mRequestOTPTask.mHttpResponseListener = this;
             mRequestOTPTask.execute((Void) null);
         }
-    }
-
-    private boolean isPasswordValid(String password) {
-        return password.length() > 4;
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener =

@@ -36,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.R;
 
 public class Utilities {
 
@@ -251,6 +252,20 @@ public class Utilities {
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
+    }
+
+    public static String isPasswordValid(String password) {
+        // Return empty string if the password is valid
+        if (password.length() < 7) return "This password is too short";
+        if (!password.matches(".*[a-zA-Z]+.*")) return "Password should contain an alphabet";
+        if (!password.matches(".*[0-9]+.*")) return "Password should contain a number";
+        return "";
+    }
+
+    public static boolean isValidEmail(String email) {
+        Pattern emailPattern = Pattern.compile("[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+");
+        Matcher m = emailPattern.matcher(email);
+        return !m.matches();
     }
 
 }

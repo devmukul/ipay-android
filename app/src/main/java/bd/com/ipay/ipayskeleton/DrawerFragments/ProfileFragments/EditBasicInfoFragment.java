@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBasicInfoFragment extends Fragment {
 
@@ -149,8 +150,7 @@ public class EditBasicInfoFragment extends Fragment {
         if (item.getItemId() == R.id.action_save) {
             ((EditProfileActivity) getActivity()).attemptSaveProfile();
             return true;
-        }
-        else {
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -163,13 +163,16 @@ public class EditBasicInfoFragment extends Fragment {
             mNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameEditText;
             cancel = true;
+        } else if (Utilities.isValidEmail(mEmailEditText.getText().toString().trim())) {
+            mEmailEditText.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailEditText;
+            cancel = true;
         }
 
         if (cancel) {
             focusView.requestFocus();
             return false;
-        }
-        else {
+        } else {
             ProfileFragment.mEmailAddress = mEmailEditText.getText().toString().trim();
             ProfileFragment.mName = mNameEditText.getText().toString().trim();
             ProfileFragment.mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
@@ -326,7 +329,7 @@ public class EditBasicInfoFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 String emailAddress = mEmailEditText.getText().toString().trim();
                 ProfileFragment.mEmailAddress = emailAddress;
-                        ((EditProfileActivity) getActivity()).verifyEmail(emailAddress);
+                ((EditProfileActivity) getActivity()).verifyEmail(emailAddress);
             }
         });
 

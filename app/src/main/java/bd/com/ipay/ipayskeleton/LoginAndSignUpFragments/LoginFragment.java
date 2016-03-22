@@ -179,8 +179,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(mPasswordLogin) && !isPasswordValid(mPasswordLogin)) {
-            mPasswordLoginView.setError(getString(R.string.error_invalid_password));
+        String passwordValidationMsg = Utilities.isPasswordValid(mPasswordLogin);
+        if (passwordValidationMsg.length() > 0) {
+            mPasswordLoginView.setError(passwordValidationMsg);
             focusView = mPasswordLoginView;
             cancel = true;
         }
@@ -222,10 +223,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mLoginTask.mHttpResponseListener = this;
             mLoginTask.execute((Void) null);
         }
-    }
-
-    private boolean isPasswordValid(String password) {
-        return password.length() > 4;
     }
 
     @Override

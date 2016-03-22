@@ -233,14 +233,18 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         boolean cancel = false;
         View focusView = null;
 
+        String passwordValidationMsg = Utilities.isPasswordValid(mEnterNewPasswordEditText.getText().toString().trim());
+
         if (mEnterCurrentPasswordEditText.getText().toString().length() < 5) {
             Toast.makeText(getActivity(), R.string.error_invalid_password, Toast.LENGTH_LONG).show();
             focusView = mEnterCurrentPasswordEditText;
             cancel = true;
-        } else if (mEnterNewPasswordEditText.getText().toString().length() < 5) {
-            Toast.makeText(getActivity(), R.string.error_invalid_password, Toast.LENGTH_LONG).show();
+
+        } else if (passwordValidationMsg.length() > 0) {
+            Toast.makeText(getActivity(), passwordValidationMsg, Toast.LENGTH_LONG).show();
             focusView = mEnterNewPasswordEditText;
             cancel = true;
+
         } else if (mEnterConfirmNewPasswordEditText.getText().toString().length() < 5
                 || !(mEnterConfirmNewPasswordEditText.getText().toString()
                 .equals(mEnterConfirmNewPasswordEditText.getText().toString()))) {
@@ -299,7 +303,8 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
     private void removeTrustedDevice(long id) {
         if (mRemoveTrustedDeviceTask != null)
-            return;;
+            return;
+        ;
 
         mProgressDialog.setMessage("Removing device from your trusted device list");
         mProgressDialog.show();
