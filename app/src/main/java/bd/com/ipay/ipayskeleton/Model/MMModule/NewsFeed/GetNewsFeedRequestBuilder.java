@@ -23,7 +23,7 @@ public class GetNewsFeedRequestBuilder {
 
         try {
             URI uri = new URIBuilder()
-                    .setScheme("http")
+                    .setScheme(Constants.SCHEME)
                     .setHost(Constants.BASE_URL_GET_MM)
                     .setPort(Constants.BASE_URL_GET_MM_PORT)
                     .setPath(Constants.BASE_URL_GET_MM_PATH + "/" + Constants.URL_GET_NEWS_FEED)
