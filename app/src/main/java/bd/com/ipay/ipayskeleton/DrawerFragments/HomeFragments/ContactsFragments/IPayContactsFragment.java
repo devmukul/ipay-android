@@ -68,6 +68,9 @@ public class IPayContactsFragment extends BaseContactsFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        mQuery = "";
+        miPayAdapter.notifyDataSetChanged();
     }
 
     @Override

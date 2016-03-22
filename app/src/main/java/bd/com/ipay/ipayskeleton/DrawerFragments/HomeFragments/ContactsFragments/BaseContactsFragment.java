@@ -125,9 +125,9 @@ public abstract class BaseContactsFragment extends Fragment implements
     }
 
     @Override
-    public void onPause() {
+    public void onDetach() {
         setHasOptionsMenu(false);
-        super.onPause();
+        super.onDetach();
     }
 
     /**

@@ -66,6 +66,7 @@ public class AllContactsFragment extends BaseContactsFragment {
     public void onResume() {
         super.onResume();
 
+        mQuery = "";
         mAdapter.notifyDataSetChanged();
     }
 
