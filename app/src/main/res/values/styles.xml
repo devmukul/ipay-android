@@ -40,6 +40,7 @@
         <item name="android:padding">8dp</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Profile -->
