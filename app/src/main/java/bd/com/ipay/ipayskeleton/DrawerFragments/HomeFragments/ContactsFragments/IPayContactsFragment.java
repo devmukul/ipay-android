@@ -37,7 +37,6 @@ public class IPayContactsFragment extends BaseContactsFragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private File dir;
 
-    private boolean digitSectionViewAdded = false;
     private HashMap<String, String> subscriber = new HashMap<>();
 
     // Contacts will be filtered base on this field.
@@ -139,7 +138,6 @@ public class IPayContactsFragment extends BaseContactsFragment {
     public class SubscriberListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int EMPTY_VIEW = 10;
-        private static final int SECTION_VIEW = 20;
 
         private Cursor mCursor;
 
@@ -258,31 +256,6 @@ public class IPayContactsFragment extends BaseContactsFragment {
             }
         }
 
-        public class SectionViewHolder extends ViewHolder {
-            private TextView mSectionTitle;
-
-            public SectionViewHolder(View itemView) {
-                super(itemView);
-                mSectionTitle = (TextView) itemView.findViewById(R.id.sectionTitle);
-            }
-
-            @Override
-            public void bindView() {
-                super.bindView();
-
-                mCursor.moveToPosition(getAdapterPosition());
-                int index = mCursor.getColumnIndex(DBConstants.KEY_NAME);
-                String name = mCursor.getString(index);
-
-                if (name.startsWith("+") || (name.charAt(0) >= '0' && name.charAt(0) <= '9')) {
-                    mSectionTitle.setText("#");
-                    digitSectionViewAdded = true;
-                } else {
-                    mSectionTitle.setText(String.valueOf(name.charAt(0)).toUpperCase());
-                }
-            }
-        }
-
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -292,12 +265,6 @@ public class IPayContactsFragment extends BaseContactsFragment {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
 
                 EmptyViewHolder vh = new EmptyViewHolder(v);
-
-                return vh;
-            } else if (viewType == SECTION_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_section_item_contact, parent, false);
-
-                SectionViewHolder vh = new SectionViewHolder(v);
 
                 return vh;
             }
@@ -312,12 +279,7 @@ public class IPayContactsFragment extends BaseContactsFragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             try {
-
-
-                if (holder instanceof SectionViewHolder) {
-                    SectionViewHolder vh = (SectionViewHolder) holder;
-                    vh.bindView();
-                } else if (holder instanceof ViewHolder) {
+                if (holder instanceof ViewHolder) {
                     ViewHolder vh = (ViewHolder) holder;
                     vh.bindView();
                 } else if (holder instanceof EmptyViewHolder) {
@@ -345,27 +307,6 @@ public class IPayContactsFragment extends BaseContactsFragment {
             else if (mCursor.getCount() == 0) return EMPTY_VIEW;
 
             mCursor.moveToPosition(position);
-
-            int index = mCursor.getColumnIndex(DBConstants.KEY_NAME);
-            String name = mCursor.getString(index);
-
-            String previous = null;
-            mCursor.moveToPrevious();
-            if (!mCursor.isBeforeFirst()) {
-                previous = mCursor.getString(index);
-            }
-
-            if (previous == null) {
-                return SECTION_VIEW;
-            } else if (!String.valueOf(name.charAt(0)).toUpperCase().
-                    contains(String.valueOf(previous.charAt(0)).toUpperCase())) {
-                if (name.startsWith("+")) {
-                    if (!digitSectionViewAdded) return SECTION_VIEW;
-                } else if (name.charAt(0) >= '0' && name.charAt(0) <= '9') {
-                    if (!digitSectionViewAdded) return SECTION_VIEW;
-                } else
-                    return SECTION_VIEW;
-            }
 
             return super.getItemViewType(position);
         }
