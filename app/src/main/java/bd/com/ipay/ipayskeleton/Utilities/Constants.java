@@ -76,20 +76,20 @@ public class Constants {
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://10.10.10.10:8085/api/v1/";
         } else if (SERVER_TYPE == 2) {
-            BASE_URL_POST_MM = "http://10.10.40.10:8085/api/v1/";
+            BASE_URL_POST_MM = "http://stage.ipay.com.bd:8085/api/v1/";
 
-            BASE_URL_GET_MM = "10.10.40.10";
+            BASE_URL_GET_MM = "stage.ipay.com.bd";
             BASE_URL_GET_MM_PORT = 8085;
             BASE_URL_GET_MM_PATH = "/api/v1/";
 
-            BASE_URL_IMAGE_SERVER = "https://www.ipay.com.bd/";
+            BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd/";
 
-            BASE_URL_SM = "http://10.10.40.10:8085/api/v1/";
+            BASE_URL_SM = "http://stage.ipay.com.bd:8085/api/v1/";
 
-            BASE_URL_GET_EM = "10.10.40.10";
+            BASE_URL_GET_EM = "http://stage.ipay.com.bd";
             BASE_URL_GET_EM_PORT = 8085;
             BASE_URL_GET_EM_PATH = "";
-            BASE_URL_POST_EM = "http://10.10.40.10:8085/api/v1/";
+            BASE_URL_POST_EM = "http://stage.ipay.com.bd:8085/api/v1/";
         } else if (SERVER_TYPE == 3) {
             BASE_URL_POST_MM = "http://10.20.10.10:8085/";
 

@@ -28,6 +28,9 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
         this.mHttpResponseListener = new HttpResponseListener() {
                 @Override
                 public void httpResponseReceiver(String result) {
+                if (result == null)
+                    return;
+
                 try {
                     String[] resultArr = result.split(";");
                     Gson gson = new Gson();
