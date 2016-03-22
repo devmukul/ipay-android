@@ -62,6 +62,7 @@
         <item name="tabGravity">fill</item>
         <item name="tabMode">fixed</item>
         <item name="tabTextAppearance">@style/TabTextStyle</item>
+        <item name="tabIndicatorHeight">3dp</item>
     </style>
 
     <style name="TabTextStyle" parent="TextAppearance.AppCompat.Button">
