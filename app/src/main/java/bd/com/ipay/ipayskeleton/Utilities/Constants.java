@@ -51,7 +51,7 @@ public class Constants {
     public static final String BASE_URL_GET_EM_PATH;
     public static final String BASE_URL_POST_EM;
 
-    public static final String SCHEME = "http";
+    public static final String SCHEME;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> staging server
@@ -61,6 +61,8 @@ public class Constants {
 
     static {
         if (SERVER_TYPE == 1) {
+            SCHEME = "http";
+
             BASE_URL_POST_MM = "http://10.10.10.10:8085/api/v1/";
 
             BASE_URL_GET_MM = "10.10.10.10";
@@ -76,6 +78,8 @@ public class Constants {
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://10.10.10.10:8085/api/v1/";
         } else if (SERVER_TYPE == 2) {
+            SCHEME = "http";
+
             BASE_URL_POST_MM = "http://stage.ipay.com.bd:8085/api/v1/";
 
             BASE_URL_GET_MM = "stage.ipay.com.bd";
@@ -91,6 +95,8 @@ public class Constants {
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://stage.ipay.com.bd:8085/api/v1/";
         } else if (SERVER_TYPE == 3) {
+            SCHEME = "https";
+
             BASE_URL_POST_MM = "https://www.ipay.com.bd/api/v1/";
 
             BASE_URL_GET_MM = "www.ipay.com.bd";
@@ -106,6 +112,8 @@ public class Constants {
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "https://www.ipay.com.bd/api/v1/";
         } else {
+            SCHEME = "http";
+
             BASE_URL_POST_MM = "http://192.168.1.105:8085/api/v1/";
 
             BASE_URL_GET_MM = "192.168.1.105";
