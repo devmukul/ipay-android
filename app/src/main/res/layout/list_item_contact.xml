@@ -1,36 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:orientation="horizontal"
-    android:paddingBottom="8dp"
-    android:paddingTop="8dp">
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/sectionTitle"
+        style="@style/TextStylePrimaryLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:gravity="center" />
 
     <include
+        android:id="@+id/contact_portrait_view"
         layout="@layout/contact_portrait_view"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="68dp"
-        android:layout_marginRight="16dp" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/sectionTitle"
+        android:layout_marginRight="14dp" />
 
     <TextView
         android:id="@+id/name"
         style="@style/TextStylePrimaryMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:gravity="left|center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/contact_portrait_view"
+        android:layout_toLeftOf="@+id/is_subscriber"
+        android:gravity="left"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:paddingTop="14dp"
+        android:paddingBottom="2dp"
         android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/mobile_number"
+        android:layout_below="@+id/name"
+        style="@style/TextStyleSecondaryMedium"
+        android:layout_toRightOf="@+id/contact_portrait_view"
+        android:layout_toLeftOf="@+id/is_subscriber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:gravity="left"
+        android:paddingBottom="14dp"
+        android:singleLine="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/mobile_number"
+        android:background="@color/colorDivider"
+        android:layout_toRightOf="@+id/contact_portrait_view"
+        android:layout_toLeftOf="@+id/is_subscriber"/>
+
 
     <ImageView
         android:id="@+id/is_subscriber"
         android:layout_width="26dp"
         android:layout_height="26dp"
-        android:layout_gravity="center_vertical|right"
         android:layout_marginRight="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
         android:src="@drawable/ic_ipay_user" />
 
-</LinearLayout>
+</RelativeLayout>

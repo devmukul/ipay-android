@@ -92,6 +92,8 @@ public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, Stri
 
                                 HomeActivity.contactsSyncedOnce = true;
 
+                                Log.w("Firebase", "Contact sync finished");
+
                             } else
                                 Log.d(Constants.ApplicationTag, mContext.getString(R.string.no_contacts_in_firebase));
                         }

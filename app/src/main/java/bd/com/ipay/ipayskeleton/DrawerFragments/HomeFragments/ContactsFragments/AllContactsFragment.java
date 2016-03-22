@@ -165,9 +165,10 @@ public class AllContactsFragment extends BaseContactsFragment {
         public class ViewHolder extends RecyclerView.ViewHolder {
             private View itemView;
 
-            private TextView mPortraitTxt;
-            private TextView mName;
+            private TextView mPortraitTextView;
+            private TextView mNameView;
             private RoundedImageView mPortrait;
+            private TextView mMobileNumberView;
             private ImageView isSubscriber;
 
             public ViewHolder(View itemView) {
@@ -175,8 +176,9 @@ public class AllContactsFragment extends BaseContactsFragment {
 
                 this.itemView = itemView;
 
-                mPortraitTxt = (TextView) itemView.findViewById(R.id.portraitTxt);
-                mName = (TextView) itemView.findViewById(R.id.name);
+                mPortraitTextView = (TextView) itemView.findViewById(R.id.portraitTxt);
+                mNameView = (TextView) itemView.findViewById(R.id.name);
+                mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 isSubscriber = (ImageView) itemView.findViewById(R.id.is_subscriber);
             }
@@ -190,21 +192,22 @@ public class AllContactsFragment extends BaseContactsFragment {
                 mCursor.moveToPosition(getAdapterPosition());
                 int index = mCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
                 final String name = mCursor.getString(index);
-                mName.setText(name);
+                mNameView.setText(name);
 
                 index = mCursor.getColumnIndex(ContactsContract.Contacts._ID);
                 final long contactId = mCursor.getLong(index);
 
                 String number = ContactEngine.getContactNumberFromId(getActivity(), contactId);
+                mMobileNumberView.setText(number);
 
                 if (number != null) {
                     number = ContactEngine.convertToInternationalFormat(number);
                     if (subscriber != null && subscriber.containsKey(number)) {
                         isSubscriber.setVisibility(View.VISIBLE);
                     } else {
-                        isSubscriber.setVisibility(View.GONE);
+                        isSubscriber.setVisibility(View.INVISIBLE);
                     }
-                } else isSubscriber.setVisibility(View.GONE);
+                } else isSubscriber.setVisibility(View.INVISIBLE);
 
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;
@@ -231,32 +234,32 @@ public class AllContactsFragment extends BaseContactsFragment {
                 final String imageUrl = (photoUri == null ? null : photoUri.toString());
 
                 if (name.startsWith("+") && name.length() > 1)
-                    mPortraitTxt.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
-                else mPortraitTxt.setText(String.valueOf(name.charAt(0)).toUpperCase());
+                    mPortraitTextView.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
+                else mPortraitTextView.setText(String.valueOf(name.charAt(0)).toUpperCase());
 
 
                 if (randomColor == 0)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle);
                 else if (randomColor == 1)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_blue);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_blue);
                 else if (randomColor == 2)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_brightpink);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_brightpink);
                 else if (randomColor == 3)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_cyan);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_cyan);
                 else if (randomColor == 4)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_megenta);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_megenta);
                 else if (randomColor == 5)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_orange);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_orange);
                 else if (randomColor == 6)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_red);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_red);
                 else if (randomColor == 7)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_springgreen);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_springgreen);
                 else if (randomColor == 8)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_violet);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_violet);
                 else if (randomColor == 9)
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_yellow);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_yellow);
                 else
-                    mPortraitTxt.setBackgroundResource(R.drawable.background_portrait_circle_azure);
+                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_azure);
 
                 if (photoUri != null) Glide.with(AllContactsFragment.this)
                         .load(photoUri.toString())

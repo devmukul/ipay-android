@@ -69,6 +69,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
                                     public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                                         int currentCount = count.decrementAndGet();
                                         if (currentCount == 0) {
+                                            Log.w("Firebase", "Sending update request to server");
                                             new Thread(new Runnable() {
                                                 @Override
                                                 public void run() {
