@@ -55,7 +55,7 @@ public class Constants {
 
     // Server Type 1 -> dev server
     // Server Type 2 -> staging server
-    // Server Type 3 -> release server
+    // Server Type 3 -> live server
     // Server Type 4 -> local server
     public static final int SERVER_TYPE = 2;
 

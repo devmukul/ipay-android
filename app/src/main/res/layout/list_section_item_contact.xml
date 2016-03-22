@@ -35,10 +35,10 @@
 
     <ImageView
         android:id="@+id/is_subscriber"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="20dp"
-        android:src="@drawable/ic_face_black_24dp" />
+        android:src="@drawable/ic_ipay_user" />
 
 </LinearLayout>

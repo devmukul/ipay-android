@@ -17,21 +17,20 @@
 
     <TextView
         android:id="@+id/name"
+        style="@style/TextStylePrimaryMedium"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:gravity="left|center_vertical"
-        android:singleLine="true"
-        android:textColor="#AA000000"
-        android:textSize="18dp" />
+        android:singleLine="true" />
 
     <ImageView
         android:id="@+id/is_subscriber"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="20dp"
-        android:src="@drawable/ic_face_black_24dp" />
+        android:src="@drawable/ic_ipay_user" />
 
 </LinearLayout>
