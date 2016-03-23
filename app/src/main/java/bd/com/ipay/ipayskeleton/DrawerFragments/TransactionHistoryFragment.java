@@ -1,14 +1,14 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -306,8 +306,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 public void onClick(View v) {
                     if (eventFilter.isChecked()) {
                         type = mCheckBoxTypeMap.get(eventFilter);
-                    }
-                    else {
+                    } else {
                         type = null;
                     }
 
@@ -387,8 +386,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         if (fromDate != null && toDate != null) {
             mTransactionHistoryRequest = new TransactionHistoryRequest(
                     type, historyPageCount, fromDate.getTimeInMillis(), toDate.getTimeInMillis());
-        }
-        else {
+        } else {
             mTransactionHistoryRequest = new TransactionHistoryRequest(type, historyPageCount);
         }
 
@@ -460,7 +458,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         public class ViewHolder extends RecyclerView.ViewHolder {
             private TextView mTransactionDescription;
             private TextView mTime;
-            private TextView mPurposeView;
             private TextView loadMoreTextView;
             private RoundedImageView mPortrait;
             private TextView mAmountTextView;
@@ -471,7 +468,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
                 mTime = (TextView) itemView.findViewById(R.id.time);
-                mPurposeView = (TextView) itemView.findViewById(R.id.purpose);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
@@ -492,7 +488,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
-                mPurposeView.setText(userTransactionHistoryClasses.get(pos).getPurpose());
 
                 if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -501,8 +496,10 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
                 } else if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
-                    mAmountTextView.setTextColor(getResources().getColor(R.color.colorDivider));
-                    statusView.setVisibility(View.GONE);
+                    mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
+                    statusView.setColorFilter(Color.GRAY);
+                    statusView.setImageResource(R.drawable.ic_cached_black_24dp);
+                    statusView.setVisibility(View.VISIBLE);
 
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));

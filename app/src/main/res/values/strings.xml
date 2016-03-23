@@ -101,6 +101,7 @@
     <string name="loading">Please wait. Loading... </string>
     <string name="load_more">Load more...</string>
     <string name="balance_placeholder">Balance: Tk.  </string>
+    <string name="balance_placeholder_not_available">Balance: Tk. --.--</string>
     <string name="no_more_results">No more results to show</string>
     <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
     <string name="confirm_query">Are you sure?</string>

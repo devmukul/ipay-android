@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -206,8 +207,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         if (item.getItemId() == R.id.action_save) {
             ((EditProfileActivity) getActivity()).attemptSaveProfile();
             return true;
-        }
-        else {
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -529,7 +529,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             private TextView mTransactionDescription;
             private TextView mTime;
-            private TextView mPurposeView;
             private RoundedImageView mPortrait;
             private TextView mAmountTextView;
             private ImageView statusView;
@@ -560,7 +559,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
                 mTime = (TextView) itemView.findViewById(R.id.time);
-                mPurposeView = (TextView) itemView.findViewById(R.id.purpose);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
@@ -588,7 +586,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
-                mPurposeView.setText(userTransactionHistoryClasses.get(pos).getPurpose());
 
                 if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -597,8 +594,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 } else if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
-                    mAmountTextView.setTextColor(getResources().getColor(R.color.colorDivider));
-                    statusView.setVisibility(View.GONE);
+                    mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
+                    statusView.setColorFilter(Color.GRAY);
+                    statusView.setImageResource(R.drawable.ic_cached_black_24dp);
+                    statusView.setVisibility(View.VISIBLE);
 
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));

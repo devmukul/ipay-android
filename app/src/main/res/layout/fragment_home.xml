@@ -115,7 +115,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/refresh_balance_button"
-                    android:text="Balance: Tk. 0.00"
+                    android:text="@string/balance_placeholder_not_available"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -137,7 +137,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="1dp"
                     android:background="@color/colorDivider" />
 
                 <LinearLayout
@@ -151,10 +151,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/add_money" />
+                        android:text="@string/add_money"
+                        android:textColor="@color/colorPrimary" />
 
                     <View
-                        android:layout_width="1px"
+                        android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:background="@color/colorDivider" />
 
@@ -164,7 +165,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/withdraw_money" />
+                        android:text="@string/withdraw_money"
+                        android:textColor="@color/colorPrimary" />
                 </LinearLayout>
             </LinearLayout>
 
