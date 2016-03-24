@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

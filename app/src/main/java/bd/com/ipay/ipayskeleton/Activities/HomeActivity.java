@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -40,13 +41,11 @@ import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments.ContactsHolderFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.HomeFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.NotificationFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditBasicInfoFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.ProfileFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.DashBoardFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.ProfileFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
@@ -102,6 +101,8 @@ public class HomeActivity extends BaseActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setLogo(R.mipmap.icon_ipay);
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = pref.getString(Constants.USERID, "");
         mProgressDialog = new ProgressDialog(HomeActivity.this);
@@ -137,7 +138,7 @@ public class HomeActivity extends BaseActivity
         // Get FireBase Token
         if (!contactsSyncedOnce) getFireBaseToken();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
+        switchToDashBoard();
 
         setProfilePicture("");
         // Load the list of available banks, which will be accessed from multiple activities
@@ -150,34 +151,33 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getProfileInfo();
-        // TODO: refresh balance in the navigation drawer here
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.home, menu);
+        inflater.inflate(R.menu.home_activity, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_contacts:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new ContactsHolderFragment()).commit();
+            case R.id.action_profile:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new ProfileFragment()).commit();
                 switchedToHomeFragment = false;
                 return true;
-            case R.id.action_notification:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new NotificationFragment()).commit();
+            case R.id.action_transaction_history:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
                 switchedToHomeFragment = false;
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getProfileInfo();
+        // TODO: refresh balance in the navigation drawer here
     }
 
     @Override
@@ -186,7 +186,7 @@ public class HomeActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (!switchedToHomeFragment)
-            switchToHomeFragment();
+            switchToDashBoard();
         else
             super.onBackPressed();
     }
@@ -210,32 +210,34 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    public void switchToHomeFragment() {
+    public void switchToDashBoard() {
         mNavigationView.getMenu().getItem(0).setChecked(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
         switchedToHomeFragment = true;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(final MenuItem item) {
         // Handle navigation view item clicks here.
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                gotoDrawerItem(item);
+            }
+        }, 250);
+        return true;
+    }
+
+    private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
-            switchedToHomeFragment = true;
-
-        } else if (id == R.id.nav_profile) {
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ProfileFragment()).commit();
-            switchedToHomeFragment = false;
-
-        } else if (id == R.id.nav_transaction_history) {
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
-            switchedToHomeFragment = false;
+            switchToDashBoard();
 
         } else if (id == R.id.nav_bank_account) {
 
@@ -277,12 +279,7 @@ public class HomeActivity extends BaseActivity
                 Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
                 startActivity(intent);
             }
-
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     private void attemptLogout() {

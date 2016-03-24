@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -167,15 +168,11 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
                         // TODO: Save transaction in database
-                        //if(getActivity() != null)Toast.makeText(getActivity(), mTopupResponse.getStatusDescription(), Toast.LENGTH_LONG).show();
-                        //((HomeActivity) getActivity()).switchToHomeFragment();
                         getActivity().finish();
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
                     } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         // TODO: Save transaction in database
-                        //if(getActivity() != null)Toast.makeText(getActivity(), mTopupResponse.getStatusDescription(), Toast.LENGTH_LONG).show();
-//                        ((HomeActivity) getActivity()).switchToHomeFragment();
                         getActivity().finish();
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();

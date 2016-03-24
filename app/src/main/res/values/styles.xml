@@ -53,8 +53,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-    
-    
+
     <!-- Tab -->
     <style name="TabStyle" parent="Widget.Design.TabLayout">
         <item name="tabSelectedTextColor">@android:color/white</item>
@@ -65,11 +64,27 @@
         <item name="tabIndicatorHeight">3dp</item>
     </style>
 
+    <style name="TabStyleDashBoard" parent="Widget.Design.TabLayout">
+        <item name="tabSelectedTextColor">@android:color/white</item>
+        <item name="tabBackground">@color/colorPrimary</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabTextAppearance">@style/TextAppearanceForDashBoard</item>
+        <item name="tabIndicatorHeight">3dp</item>
+    </style>
+
     <style name="TabTextStyle" parent="TextAppearance.AppCompat.Button">
         <item name="android:textColor">@color/colorLightGray</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="TextAppearanceForDashBoard" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/colorLightGray</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
 
     <!-- Profile -->
     <style name="ProfileButtonStyle">
@@ -155,7 +170,7 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginLeft">4dp</item>
     </style>
-    
+
     <!-- Document Upload -->
     <style name="DocumentUploadLabel">
         <item name="android:textSize">18sp</item>
@@ -228,6 +243,12 @@
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@color/colorTextSecondary</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TextStyleWhiteSmallBold" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">12.0sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextStylePrimaryMedium" parent="@android:style/Widget.TextView">

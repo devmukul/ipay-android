@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -25,10 +27,10 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.DocumentUploadFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditBasicInfoFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.EditUserAddressFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments.ProfileFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.DocumentUploadFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditUserAddressFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.ProfileFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfilePictureResponse;
@@ -50,8 +52,6 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
     private ProgressDialog mProgressDialog;
 
-    private final int ACTION_VERIFY_EMAIL = 1;
-
     private HttpRequestPostAsyncTask mEmailVerificationAsyncTask = null;
     private EmailVerificationResponse mEmailVerificationResponse;
 
@@ -69,6 +69,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
     private EditBasicInfoFragment mBasicInfoFragment;
     private EditUserAddressFragment mUserAddressFragment;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
         setContentView(R.layout.activity_edit_profile);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new EditProfileFragmentAdapter(getSupportFragmentManager(), this));
         viewPager.addOnPageChangeListener(mOnPageChangeListener);
 
@@ -86,7 +87,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         int targetTabPosition = getIntent().getIntExtra(TARGET_TAB, 0);
         TabLayout.Tab targetTab = tabLayout.getTabAt(targetTabPosition);
         if (targetTab != null)
-                targetTab.select();
+            targetTab.select();
         // On page selected doesn't get called for the first page, so call it manually
         mOnPageChangeListener.onPageSelected(targetTabPosition);
 
@@ -105,14 +106,26 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
-        }
-        else {
+        } else if (item.getItemId() == R.id.action_save) {
+            attemptSaveProfile();
+            return true;
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
 
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.profile, menu);
+    }
+
     public void attemptSaveProfile() {
+
+        // Hide input keyboard while saving
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
+
         if (Utilities.isConnectionAvailable(this)) {
+
             mProgressDialog.setMessage(getString(R.string.saving_profile_information));
 
             Gson gson = new Gson();
@@ -149,12 +162,11 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
                     mSetUserAddressTask.execute();
                 }
             }
-        }
-        else {
+        } else {
             Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
         }
     }
-    
+
     public void updateProfilePicture(Uri selectedImageUri) {
         mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
         mProgressDialog.show();
@@ -164,7 +176,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
                 selectedOImagePath, EditProfileActivity.this);
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
-        mUploadProfilePictureAsyncTask.execute();   
+        mUploadProfilePictureAsyncTask.execute();
     }
 
     public void verifyEmail(String emailAddress) {
@@ -268,7 +280,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         }
 
         if ((resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST) ||
-                    resultList.get(0).equals(Constants.COMMAND_SET_USER_ADDRESS_REQUEST))
+                resultList.get(0).equals(Constants.COMMAND_SET_USER_ADDRESS_REQUEST))
                 && mSetProfileInfoTask == null && mSetUserAddressTask == null) {
             mProgressDialog.dismiss();
             finish();
@@ -279,8 +291,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
     public void onBackPressed() {
         if (mBasicInfoEdited || mUserAddressEdited) {
             showExitConfirmationDialog();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -309,7 +320,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
         public EditProfileFragmentAdapter(FragmentManager fm, Context context) {
             super(fm);
-            tabTitles = new String[] {
+            tabTitles = new String[]{
                     getString(R.string.profile_basic_info),
                     getString(R.string.profile_address),
                     getString(R.string.profile_documents)
@@ -327,16 +338,13 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
                 if (mBasicInfoFragment == null)
                     mBasicInfoFragment = new EditBasicInfoFragment();
                 return mBasicInfoFragment;
-            }
-            else if (position == 1) {
+            } else if (position == 1) {
                 if (mUserAddressFragment == null)
                     mUserAddressFragment = new EditUserAddressFragment();
                 return mUserAddressFragment;
-            }
-            else if (position == 2) {
+            } else if (position == 2) {
                 return new DocumentUploadFragment();
-            }
-            else
+            } else
                 return new Fragment();
         }
 
@@ -348,7 +356,8 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
     private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
 
         @Override
         public void onPageSelected(int position) {
@@ -359,6 +368,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         }
 
         @Override
-        public void onPageScrollStateChanged(int state) {}
+        public void onPageScrollStateChanged(int state) {
+        }
     };
 }

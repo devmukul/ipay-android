@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -12,15 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -42,7 +37,6 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.CashInActivity;
 import bd.com.ipay.ipayskeleton.Activities.CashOutActivity;
-import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
@@ -108,6 +102,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -124,7 +119,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        getActivity().setTitle(R.string.app_name);
 
         userID = pref.getString(Constants.USERID, "");
 
@@ -166,7 +160,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        // Refresh balance each time home page appears
+        // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
             refreshBalance();
 
@@ -198,18 +192,16 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.profile, menu);
+    public void onResume() {
+        super.onResume();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            ((EditProfileActivity) getActivity()).attemptSaveProfile();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (menu.findItem(R.id.action_search_contacts) != null)
+            menu.findItem(R.id.action_search_contacts).setVisible(false);
     }
 
     private void setButtonActions() {
@@ -590,18 +582,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
-                    statusView.setVisibility(View.GONE);
+                    statusView.setColorFilter(Color.GREEN);
+                    statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
 
                 } else if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_cached_black_24dp);
-                    statusView.setVisibility(View.VISIBLE);
 
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
-                    statusView.setVisibility(View.VISIBLE);
                 }
 
                 //TODO: remove this when pro pic came

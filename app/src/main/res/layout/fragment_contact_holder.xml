@@ -4,23 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/sliding_tabs"
-            android:layout_width="match_parent"
+        <Switch
+            android:id="@+id/switch_contacts"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/TabStyle" />
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+            android:showText="true"
+            android:switchTextAppearance="@style/TextStyleWhiteSmallBold"
+            android:textOff="@string/all_contacts"
+            android:textOn="@string/ipay_contacts"
+            android:thumb="@drawable/switch_selector_contacts"
+            android:track="@drawable/switch_track_contacts" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
+        <FrameLayout
+            android:id="@+id/fragment_container_contacts"
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:background="@android:color/white" />
+            android:layout_height="match_parent"
+            android:layout_below="@+id/switch_contacts">
 
-    </LinearLayout>
+        </FrameLayout>
+
+    </RelativeLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

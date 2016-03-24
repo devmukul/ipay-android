@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -103,6 +103,10 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         super.onCreateOptionsMenu(menu, inflater);
         MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.activity_transaction_history, menu);
+
+        // Remove search action of contacts
+        if (menu.findItem(R.id.action_search_contacts) != null)
+            menu.findItem(R.id.action_search_contacts).setVisible(false);
     }
 
     @Override
@@ -492,18 +496,17 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
-                    statusView.setVisibility(View.GONE);
+                    statusView.setColorFilter(Color.GREEN);
+                    statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
 
                 } else if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_cached_black_24dp);
-                    statusView.setVisibility(View.VISIBLE);
 
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
-                    statusView.setVisibility(View.VISIBLE);
                 }
 
 

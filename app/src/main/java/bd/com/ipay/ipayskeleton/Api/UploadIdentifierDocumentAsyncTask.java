@@ -104,11 +104,6 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Str
             post.setHeader("Accept", "application/json");
             post.setHeader("Content-Type", "multipart/form-data; boundary=" + Constants.BOUNDARY);
 
-//            HttpParams httpParams = new BasicHttpParams();
-//            httpParams.setParameter(Constants.DOCUMENT_ID_NUMBER, documentIdNumber);
-//            httpParams.setParameter(Constants.DOCUMENT_TYPE, documentType);
-//            post.setParams(httpParams);
-
             HttpResponse response = client.execute(post);
             HttpEntity httpEntity = response.getEntity();
 

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments.ProfileFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -132,6 +134,13 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (menu.findItem(R.id.action_search_contacts) != null)
+            menu.findItem(R.id.action_search_contacts).setVisible(false);
     }
 
     @Override
@@ -272,8 +281,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         if (mVerificationStatus != null && mVerificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
             mVerificationStatusView.setBackgroundResource(R.drawable.background_verified);
             mVerificationStatusView.setText(R.string.verified);
-        }
-        else {
+        } else {
             mVerificationStatusView.setBackgroundResource(R.drawable.background_not_verified);
             mVerificationStatusView.setText(R.string.not_verified);
         }
@@ -359,8 +367,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                         .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))
                         .into(mProfilePicture);
-                }
-            else {
+            } else {
                 Glide.with(getActivity())
                         .load(R.drawable.ic_person)
                         .crossFade()
@@ -436,8 +443,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             }
 
             mGetProfileInfoTask = null;
-        }
-        else if (resultList.get(0).equals(Constants.COMMAND_GET_USER_ADDRESS_REQUEST)) {
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_USER_ADDRESS_REQUEST)) {
             try {
                 mGetUserAddressResponse = gson.fromJson(resultList.get(2), GetUserAddressResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -446,8 +452,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                     mOfficeAddress = mGetUserAddressResponse.getOfficeAddress();
 
                     setProfileInformation();
-                }
-                else {
+                } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
                 }
@@ -458,8 +463,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             }
 
             mGetUserAddressTask = null;
-        }
-        else if (resultList.get(0).equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
             try {
                 mIdentificationDocumentResponse = gson.fromJson(resultList.get(2), GetIdentificationDocumentResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -477,8 +481,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
             }
 
             mGetIdentificationDocumentsTask = null;
-        }
-        else if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCER_LIST)) {
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCER_LIST)) {
             try {
                 mGetIntroducerListResponse = gson.fromJson(resultList.get(2), GetIntroducerListResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {

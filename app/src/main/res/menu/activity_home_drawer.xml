@@ -7,14 +7,6 @@
             android:icon="@drawable/ic_drawer_home"
             android:title="@string/home" />
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_drawer_profile"
-            android:title="@string/profile" />
-        <item
-            android:id="@+id/nav_transaction_history"
-            android:icon="@drawable/ic_drawer_transaction_history"
-            android:title="@string/transaction_history" />
-        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_drawer_settings"
             android:title="@string/account_settings" />

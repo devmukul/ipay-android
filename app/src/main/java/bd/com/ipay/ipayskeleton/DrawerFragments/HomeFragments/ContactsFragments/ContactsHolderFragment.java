@@ -1,86 +1,105 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.google.gson.Gson;
 
+import java.util.Arrays;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class ContactsHolderFragment extends Fragment {
+public class ContactsHolderFragment extends Fragment implements HttpResponseListener {
+
+    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
+    public static GetInviteInfoResponse mGetInviteInfoResponse;
 
     private BottomSheetLayout mBottomSheetLayout;
+    private IPayContactsFragment iPayContactsFragment;
+    private AllContactsFragment allContactsFragment;
+    private Switch mContactSwitch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        getActivity().setTitle(getString(R.string.profile));
-
         View v = inflater.inflate(R.layout.fragment_contact_holder, container, false);
-
-        ViewPager viewPager = (ViewPager) v.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new ContactListTabAdapter(getChildFragmentManager()));
-
-        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
         mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
+        mContactSwitch = (Switch) v.findViewById(R.id.switch_contacts);
+
+        iPayContactsFragment = new IPayContactsFragment();
+        allContactsFragment = new AllContactsFragment();
+        iPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+        allContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+
+        mContactSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    switchToiPayContacts();
+                else switchToAllContacts();
+            }
+        });
+
+        getInviteInfo();
+        switchToAllContacts();
 
         return v;
     }
 
-    private class ContactListTabAdapter extends FragmentPagerAdapter {
-
-        private String[] tabTitles;
-        public ContactListTabAdapter(FragmentManager fm) {
-            super(fm);
-            tabTitles = new String[] {
-                getString(R.string.ipay_contacts),
-                getString(R.string.all_contacts)
-            };
-        }
-
-        @Override
-        public Fragment getItem(int pos) {
-            Fragment fragment;
-            switch (pos) {
-                case 0:
-                    IPayContactsFragment iPayContactsFragment = new IPayContactsFragment();
-                    iPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-                    fragment = iPayContactsFragment;
-                    break;
-                case 1:
-                    AllContactsFragment allContactsFragment = new AllContactsFragment();
-                    allContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-                    fragment = allContactsFragment;
-                    break;
-                default:
-                    fragment = new Fragment();
-            }
-
-            return fragment;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return tabTitles[position];
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
+    private void getInviteInfo() {
+        if (mGetInviteInfoTask == null) {
+            mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
+                    new GetInviteInfoRequestBuilder().getGeneratedUri(), getActivity(), this);
+            mGetInviteInfoTask.execute();
         }
     }
 
+    private void switchToAllContacts() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, allContactsFragment).commit();
+            }
+        }, 300);
+    }
+
+    private void switchToiPayContacts() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, iPayContactsFragment).commit();
+            }
+        }, 300);
+    }
+
+    @Override
+    public void httpResponseReceiver(String result) {
+
+        List<String> resultList = Arrays.asList(result.split(";"));
+        Gson gson = new Gson();
+
+        if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
+            try {
+                if (resultList.size() > 2)
+                    ContactsHolderFragment.mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mGetInviteInfoTask = null;
+        }
+    }
 }

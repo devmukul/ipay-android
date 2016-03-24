@@ -57,7 +57,7 @@ public class Constants {
     // Server Type 2 -> staging server
     // Server Type 3 -> live server
     // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -77,6 +77,7 @@ public class Constants {
             BASE_URL_GET_EM_PORT = 8085;
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://10.10.10.10:8085/api/v1/";
+
         } else if (SERVER_TYPE == 2) {
             SCHEME = "http";
 
@@ -94,6 +95,7 @@ public class Constants {
             BASE_URL_GET_EM_PORT = 8085;
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "http://stage.ipay.com.bd:8085/api/v1/";
+
         } else if (SERVER_TYPE == 3) {
             SCHEME = "https";
 
@@ -111,6 +113,7 @@ public class Constants {
             BASE_URL_GET_EM_PORT = 80;
             BASE_URL_GET_EM_PATH = "";
             BASE_URL_POST_EM = "https://www.ipay.com.bd/api/v1/";
+
         } else {
             SCHEME = "http";
 

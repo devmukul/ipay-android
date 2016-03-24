@@ -31,13 +31,10 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -73,9 +70,6 @@ public abstract class BaseContactsFragment extends Fragment implements
     private View mSheetViewSubscriber;
     private View selectedBottomSheetView;
 
-    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
-    private GetInviteInfoResponse mGetInviteInfoResponse;
-
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
 
@@ -91,43 +85,55 @@ public abstract class BaseContactsFragment extends Fragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_contacts, container, false);
-        mProgressDialog = new ProgressDialog(getActivity());
-        getActivity().setTitle(R.string.contacts);
-
-        if (mBottomSheetLayout != null)
-            setUpBottomSheet();
-
-        return v;
+    public void onResume() {
+        super.onResume();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.contact, menu);
 
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final MenuItem searchItem = menu.findItem(R.id.action_search_contacts);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setItemsVisibility(menu, searchItem, false);
+                searchView.requestFocus();
                 if (mBottomSheetLayout != null && mBottomSheetLayout.isSheetShowing())
                     mBottomSheetLayout.dismissSheet();
             }
         });
 
-        final MenuItem contactMenu = menu.findItem(R.id.action_contacts);
-        if (contactMenu != null)
-            contactMenu.setVisible(false);
-        getActivity().setTitle(getString(R.string.contacts));
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                searchView.setQuery("", true);
+                setItemsVisibility(menu, searchItem, true);
+                return false;
+            }
+        });
+    }
+
+    private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
+        for (int i = 0; i < menu.size(); ++i) {
+            MenuItem item = menu.getItem(i);
+            if (item != null && item != exception) item.setVisible(visible);
+        }
     }
 
     @Override
-    public void onDetach() {
-        setHasOptionsMenu(false);
-        super.onDetach();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_contacts, container, false);
+        mProgressDialog = new ProgressDialog(getActivity());
+
+        if (mBottomSheetLayout != null)
+            setUpBottomSheet();
+
+        return v;
     }
 
     /**
@@ -242,8 +248,6 @@ public abstract class BaseContactsFragment extends Fragment implements
                 }
             }
         });
-
-        getInviteInfo();
     }
 
     protected void sendRecommendationRequest(String mobileNumber) {
@@ -263,28 +267,18 @@ public abstract class BaseContactsFragment extends Fragment implements
         mAskForRecommendationTask.execute((Void) null);
     }
 
-    private void getInviteInfo() {
-        if (mGetInviteInfoTask == null) {
-            mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
-                    new GetInviteInfoRequestBuilder().getGeneratedUri(), getActivity(), this);
-            mGetInviteInfoTask.execute();
-        }
-    }
-
     private void sendInvite(String phoneNumber) {
-        if (mGetInviteInfoResponse == null || mGetInviteInfoResponse.invitees == null) {
+        if (ContactsHolderFragment.mGetInviteInfoResponse == null || ContactsHolderFragment.mGetInviteInfoResponse.invitees == null) {
             Toast.makeText(getActivity(), R.string.failed_sending_invitation,
                     Toast.LENGTH_LONG).show();
-
-            getInviteInfo();
             return;
         }
 
-        int numberOfInvitees = mGetInviteInfoResponse.invitees.size();
-        if (numberOfInvitees >= mGetInviteInfoResponse.totalLimit) {
+        int numberOfInvitees = ContactsHolderFragment.mGetInviteInfoResponse.invitees.size();
+        if (numberOfInvitees >= ContactsHolderFragment.mGetInviteInfoResponse.totalLimit) {
             Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
                     Toast.LENGTH_LONG).show();
-        } else if (mGetInviteInfoResponse.invitees.contains(phoneNumber)) {
+        } else if (ContactsHolderFragment.mGetInviteInfoResponse.invitees.contains(phoneNumber)) {
             Toast.makeText(getActivity(), R.string.invitation_already_sent,
                     Toast.LENGTH_LONG).show();
         } else {
@@ -305,7 +299,6 @@ public abstract class BaseContactsFragment extends Fragment implements
     public void httpResponseReceiver(String result) {
         if (result == null) {
             mProgressDialog.dismiss();
-            mGetInviteInfoTask = null;
             mSendInviteTask = null;
 
             if (getActivity() != null)
@@ -327,8 +320,8 @@ public abstract class BaseContactsFragment extends Fragment implements
                             Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
                         }
 
-                        mGetInviteInfoResponse.invitees.add(mSelectedNumber);
-                        getInviteInfo();
+                        ContactsHolderFragment.mGetInviteInfoResponse.invitees.add(mSelectedNumber);
+
                     } else if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -370,17 +363,6 @@ public abstract class BaseContactsFragment extends Fragment implements
 
             mProgressDialog.dismiss();
             mAskForRecommendationTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
-            try {
-                if (resultList.size() > 2)
-                    mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mGetInviteInfoTask = null;
         }
     }
 
