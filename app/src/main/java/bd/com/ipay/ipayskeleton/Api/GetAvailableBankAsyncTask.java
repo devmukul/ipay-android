@@ -13,7 +13,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 /**
- * Asynchronously loads all supported bank accounts supported by our systems.
+ * Asynchronously loads all supported banks supported by our systems.
  * Loaded bank accounts are saved into {@link CommonData}.
  *
  * If you want to do something with the result after loading the bank list, pass

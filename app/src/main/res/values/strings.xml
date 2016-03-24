@@ -149,8 +149,8 @@
     <string name="progress_dialog_send_for_recommendation">Sending recommendation request...</string>
     <string name="progress_dialog_saving_new_pass">Saving new password...</string>
     <string name="no_linked_bank_found">No linked bank account found</string>
-    <string name="please_link_a_bank_for_cash_in">Please link your bank account with iPay to add money from your bank account</string>
-    <string name="please_link_a_bank_for_cash_out">Please link your bank account with iPay to withdraw money from iPay to your bank account</string>
+    <string name="please_link_a_bank_for_cash_in">Please link your bank account with iPay to add money from your bank account. You can use this feature once your linked bank account gets verified!</string>
+    <string name="please_link_a_bank_for_cash_out">Please link your bank account with iPay to withdraw money from iPay to your bank account. You can use this feature once your linked bank account gets verified!</string>
     <string name="progress_dialog_add_money_in_progress">Request submitting for add money</string>
     <string name="progress_dialog_withdraw_money_in_progress">Request submitting for money withdrawal</string>
     <string name="progress_dialog_text_sending_money">Sending money in progress. Please wait...</string>
@@ -245,6 +245,7 @@
     <string name="failed_remove_bank">Failed to remove this bank from your iPay account. Please try again later.</string>
     <string name="failed_disable_bank">Failed to disable this bank. Please try again later.</string>
     <string name="failed_enable_bank">Failed to enable this bank. Please try again later.</string>
+    <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
     <string name="account_number">Account Number</string>
     <string name="scan_my_qr">iPay Me</string>
     <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>
@@ -310,6 +311,7 @@
     <string name="support">Support</string>
     <string name="link_bank_account">Link a Bank</string>
     <string name="bank_accounts">Bank Accounts</string>
+    <string name="bank_branch">Select Branch</string>
     <string name="logout">Log out</string>
     <string name="topup">Mobile Recharge</string>
     <string name="transaction_history">Transaction History</string>

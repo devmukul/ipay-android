@@ -44,7 +44,7 @@ public class Constants {
 
     // Service Module (SM)
     public static final String BASE_URL_SM;
-    
+
     // Event Management (EM) Module
     public static final String BASE_URL_GET_EM;
     public static final int BASE_URL_GET_EM_PORT;
@@ -57,7 +57,7 @@ public class Constants {
     // Server Type 2 -> staging server
     // Server Type 3 -> live server
     // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = 2;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -172,7 +172,7 @@ public class Constants {
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_REQUEST_MONEY = "requestmoney";
-//    public static final String URL_PENDING_PAYMENT_REQUEST_RECEIVED = "payment/received";
+    //    public static final String URL_PENDING_PAYMENT_REQUEST_RECEIVED = "payment/received";
 //    public static final String URL_PENDING_PAYMENT_REQUEST_SENT = "payment/sent";
     //    public static final String URL_PENDING_REQUEST_MONEY_TO_ME = "requestmoney/received";
 //    public static final String URL_PENDING_REQUEST_MONEY_FROM_ME = "requestmoney/sent";
@@ -211,8 +211,8 @@ public class Constants {
 
     public static final int PERSONAL_ACCOUNT_TYPE = 1;
     public static final int BUSINESS_ACCOUNT_TYPE = 2;
-    public static final int BANK_ACCOUNT_STATUS_VERIFIED = 1;
-    public static final int BANK_ACCOUNT_STATUS_NOT_VERIFIED = 0;
+    public static final String BANK_ACCOUNT_STATUS_VERIFIED = "VERIFIED";
+    public static final String BANK_ACCOUNT_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
     public static final int BANK_ACCOUNT_STATUS_ACTIVE = 0;
     public static final int BANK_ACCOUNT_STATUS_INACTIVE = 1;
     public static final int BANK_ACCOUNT_STATUS_DELETED = 2;
@@ -286,6 +286,7 @@ public class Constants {
     public static final String COMMAND_GET_BUSINESS_TYPE_LIST = "COMMAND_GET_BUSINESS_TYPE_LIST";
     public static final String COMMAND_GET_THANA_LIST = "COMMAND_GET_THANA_LIST";
     public static final String COMMAND_GET_DISTRICT_LIST = "COMMAND_GET_DISTRICT_LIST";
+    public static final String COMMAND_GET_BANK_BRANCH_LIST = "COMMAND_GET_BANK_BRANCH_LIST";
 
     // Invite
     public static final String COMMAND_GET_INVITE_INFO = "COMMAND_GET_INVITE_INFO";
@@ -293,6 +294,7 @@ public class Constants {
 
     // FireBase
     public static final String PATH_TO_FIREBASE_DATABASE;
+
     static {
         if (SERVER_TYPE == 2 || SERVER_TYPE == 3)
             PATH_TO_FIREBASE_DATABASE = "https://ipaybdstage.firebaseio.com/";
@@ -301,6 +303,7 @@ public class Constants {
         else
             PATH_TO_FIREBASE_DATABASE = "https://testingipay.firebaseio.com/";
     }
+
     public static final String FIREBASE_CONTACT_LIST = "ContactList";
     public static final String FIREBASE_DIRTY = "dirty";
     public static final String FIREBASE_SYNCED = "synced";

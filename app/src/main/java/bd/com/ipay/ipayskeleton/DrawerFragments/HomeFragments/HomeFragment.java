@@ -35,8 +35,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.CashInActivity;
-import bd.com.ipay.ipayskeleton.Activities.CashOutActivity;
+import bd.com.ipay.ipayskeleton.Activities.AddMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
@@ -232,7 +232,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CashInActivity.class);
+                Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
                 startActivity(intent);
             }
         });
@@ -240,7 +240,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CashOutActivity.class);
+                Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
                 startActivity(intent);
             }
         });

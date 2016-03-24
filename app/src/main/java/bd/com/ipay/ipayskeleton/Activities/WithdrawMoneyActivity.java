@@ -4,30 +4,29 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-import bd.com.ipay.ipayskeleton.AddMoneyFragments.CashInFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.WithdrawMoneyFragments.WithdrawMoneyFragment;
 
-public class CashInActivity extends BaseActivity {
+public class WithdrawMoneyActivity extends BaseActivity {
 
     private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cash_in);
+        setContentView(R.layout.activity_cash_out);
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new CashInFragment()).commit();
+                .add(R.id.fragment_container, new WithdrawMoneyFragment()).commit();
 
     }
 
     @Override
     public Context setContext() {
-        return CashInActivity.this;
+        return WithdrawMoneyActivity.this;
     }
 }
 

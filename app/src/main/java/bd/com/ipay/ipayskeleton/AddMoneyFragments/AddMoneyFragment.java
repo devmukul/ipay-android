@@ -1,8 +1,10 @@
-package bd.com.ipay.ipayskeleton.WithdrawMoneyFragments;
+package bd.com.ipay.ipayskeleton.AddMoneyFragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -24,8 +26,8 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
@@ -35,15 +37,15 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class CashOutFragment extends Fragment implements HttpResponseListener {
+public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mCashOutTask = null;
-    private WithdrawMoneyResponse mWithdrawMoneyResponse;
+    private HttpRequestPostAsyncTask mCashInTask = null;
+    private AddMoneyResponse mAddMoneyResponse;
 
     private HttpRequestPostAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
 
-    private Button buttonWithdrawMoney;
+    private Button buttonAddMoney;
     private EditText mBankAccountNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
@@ -59,11 +61,11 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_cash_out, container, false);
+        View v = inflater.inflate(R.layout.fragment_add_money, container, false);
         mBankAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        buttonWithdrawMoney = (Button) v.findViewById(R.id.button_cash_out);
+        buttonAddMoney = (Button) v.findViewById(R.id.button_cash_in);
         mBankPicker = (ImageView) v.findViewById(R.id.accountPicker);
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
 
@@ -77,17 +79,16 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
         // then load user bank details. Otherwise directly load the bank list.
         if (CommonData.isAvailableBankListLoaded()) {
             getBankList();
-        }
-        else {
+        } else {
             attemptRefreshAvailableBankNames();
         }
 
-        buttonWithdrawMoney.setOnClickListener(new View.OnClickListener() {
+        buttonAddMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     showAlertDialogue();
-                } else if (getActivity() != null)
+                } else
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
@@ -122,7 +123,9 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
         mProgressDialog.show();
         mGetAvailableBankAsyncTask.execute();
-    };
+    }
+
+    ;
 
     private void getBankList() {
         if (mGetBankTask != null) {
@@ -137,11 +140,16 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
         mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
                 Constants.BASE_URL_POST_MM + Constants.URL_GET_BANK, json, getActivity());
         mGetBankTask.mHttpResponseListener = this;
-        mGetBankTask.execute((Void) null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mGetBankTask.execute((Void) null);
+        }
     }
 
-    private void attemptWithdrawMoney(String amount, String accountNumber, String description) {
-        if (mCashOutTask != null) {
+    private void attemptAddMoney(String amount, String accountNumber, String description) {
+        if (mCashInTask != null) {
             return;
         }
 
@@ -154,14 +162,18 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
         mProgressDialog.show();
         long bankAccountId = mListUserBankClasses.get(selectedBankPosition).getBankAccountId();
 
-        WithdrawMoneyRequest mWithdrawMoneyRequest = new WithdrawMoneyRequest(bankAccountId,
-                Double.parseDouble(amount), description);
+        AddMoneyRequest mAddMoneyRequest = new AddMoneyRequest(bankAccountId, Double.parseDouble(amount), description);
         Gson gson = new Gson();
-        String json = gson.toJson(mWithdrawMoneyRequest);
-        mCashOutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, json, getActivity());
-        mCashOutTask.mHttpResponseListener = this;
-        mCashOutTask.execute((Void) null);
+        String json = gson.toJson(mAddMoneyRequest);
+        mCashInTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, json, getActivity());
+        mCashInTask.mHttpResponseListener = this;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mCashInTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mCashInTask.execute((Void) null);
+        }
 
     }
 
@@ -196,13 +208,13 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
 
             AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
             alertDialogue.setTitle(R.string.confirm_add_money);
-            alertDialogue.setMessage("You're going to withdraw " + amount + " BDT from iPay to your Account Number: "
-                    + accountNumber
+            alertDialogue.setMessage("You're going to add " + amount + " BDT from Account Number: " + accountNumber
+                    + " in your iPay account."
                     + "\nDo you want to continue?");
 
             alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    attemptWithdrawMoney(amount, accountNumber, description);
+                    attemptAddMoney(amount, accountNumber, description);
                 }
             });
 
@@ -272,7 +284,7 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
         if (result == null) {
             mProgressDialog.show();
             mGetBankTask = null;
-            mCashOutTask = null;
+            mCashInTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -281,44 +293,64 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_WITHDRAW_MONEY)) {
+        if (resultList.get(0).equals(Constants.COMMAND_ADD_MONEY)) {
 
             if (resultList.size() > 2) {
                 try {
-                    mWithdrawMoneyResponse = gson.fromJson(resultList.get(2), WithdrawMoneyResponse.class);
-                    String message = mWithdrawMoneyResponse.getMessage();
+                    mAddMoneyResponse = gson.fromJson(resultList.get(2), AddMoneyResponse.class);
+                    String message = mAddMoneyResponse.getMessage();
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        // Return to HomeActivity
+                        // Exit the Add money activity and return to HomeActivity
                         getActivity().finish();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
                 }
+
             } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
 
             mProgressDialog.dismiss();
-            mCashOutTask = null;
+            mCashInTask = null;
 
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_BANK_LIST)) {
             if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
 
                 if (resultList.size() > 2) {
-
                     try {
                         mBankListResponse = gson.fromJson(resultList.get(2), GetBankListResponse.class);
 
-                        mListUserBankClasses = mBankListResponse.getBanks();
+                        // TODO This is a hack. Consider removing this later.
+                        //
+                        // It might be possible that for some bank ids added earlier
+                        // (on the era of the hardcoded bank list), corresponding bank names
+                        // cannot be found. Filter those ids first to prevent crash.
+                        List<UserBankClass> allBanks = mBankListResponse.getBanks();
+                        mListUserBankClasses = new ArrayList<>();
+                        for (UserBankClass bank : allBanks) {
+                            if (CommonData.getBankById(bank.getBankAccountId()) != null) {
+                                mListUserBankClasses.add(bank);
+                            }
+                        }
 
                         if (mListUserBankClasses == null) {
                             mBankPicker.setEnabled(false);
-                            buttonWithdrawMoney.setEnabled(false);
+                            buttonAddMoney.setEnabled(false);
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
+                            mLinkABankNoteTextView.setVisibility(View.VISIBLE);
+
+                        } else if (mListUserBankClasses.size() == 0) {
+                            mBankPicker.setEnabled(false);
+                            buttonAddMoney.setEnabled(false);
                             if (getActivity() != null)
                                 Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
                             mLinkABankNoteTextView.setVisibility(View.VISIBLE);
@@ -326,21 +358,22 @@ public class CashOutFragment extends Fragment implements HttpResponseListener {
                         } else {
                             mLinkABankNoteTextView.setVisibility(View.GONE);
                             for (int i = 0; i < mListUserBankClasses.size(); i++) {
-                                long bankId = mListUserBankClasses.get(i).getBankId();
-                                Bank bank = CommonData.getBankById(bankId);
-                                mUserBankNameList.add(bank.getName());
+                                mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
                                 mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
                             }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                     }
 
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
-            }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
 
             mProgressDialog.dismiss();
             mGetBankTask = null;

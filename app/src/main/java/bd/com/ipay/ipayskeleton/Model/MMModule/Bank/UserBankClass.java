@@ -2,24 +2,29 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Bank;
 
 public class UserBankClass {
     public long bankAccountId;
-    public long bankId;
-    public long accountId;
+    public long bankBranchId;
     public int accountType;
     public String accountName;
     public String accountNumber;
     public Integer accountStatus;
-    public Integer verificationStatus;
+    public String verificationStatus;
+    public String bankName;
+    public String branchName;
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
 
     public long getBankAccountId() {
         return bankAccountId;
     }
 
-    public long getBankId() {
-        return bankId;
-    }
-
-    public long getAccountId() {
-        return accountId;
+    public long getBankBranchId() {
+        return bankBranchId;
     }
 
     public int getAccountType() {
@@ -38,7 +43,7 @@ public class UserBankClass {
         return accountStatus;
     }
 
-    public Integer getVerificationStatus() {
+    public String getVerificationStatus() {
         return verificationStatus;
     }
 }

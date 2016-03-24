@@ -544,7 +544,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
                 // Set icon for activity type
                 if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_PROFILE) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_face_black_24dp)
+                            .load(R.drawable.ic_activity_profile_change)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_IN) {
                     Glide.with(getActivity())
@@ -552,19 +552,19 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_OUT) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_cash_activity)
+                            .load(R.drawable.ic_activity_cash_out)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_VERIFICATION) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_system_activity)
+                            .load(R.drawable.ic_activity_verification)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_settings)
+                            .load(R.drawable.ic_activity_system_event)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_face_black_24dp)
+                            .load(R.drawable.ic_activity_security_changes)
                             .into(mPortrait);
                 }
             }

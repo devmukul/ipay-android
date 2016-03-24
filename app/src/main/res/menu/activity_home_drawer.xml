@@ -16,7 +16,7 @@
             android:title="@string/activity_log" />
         <item
             android:id="@+id/nav_support"
-            android:icon="@drawable/ic_face_black_24dp"
+            android:icon="@drawable/ic_drawer_transaction_history"
             android:title="@string/support"
             android:visible="false" />
         <item

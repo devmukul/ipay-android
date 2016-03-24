@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
 
-import android.location.Address;
-
 import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
 import bd.com.ipay.ipayskeleton.Utilities.Common.DistrictList;
 import bd.com.ipay.ipayskeleton.Utilities.Common.ThanaList;

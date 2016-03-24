@@ -14,7 +14,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 /**
- * Asynchronously loads all supported thanas supported by our systems.
+ * Asynchronously loads all supported districts supported by our systems.
  * Loaded bank accounts are saved into {@link CommonData}.
  */
 public class GetDistrictAsyncTask extends HttpRequestGetAsyncTask {

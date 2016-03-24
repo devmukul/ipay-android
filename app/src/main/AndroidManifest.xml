@@ -63,7 +63,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.CashInActivity"
+            android:name=".Activities.AddMoneyActivity"
             android:label="@string/add_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
@@ -77,7 +77,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.CashOutActivity"
+            android:name=".Activities.WithdrawMoneyActivity"
             android:label="@string/withdraw_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
