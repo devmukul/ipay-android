@@ -33,9 +33,9 @@ public class LauncherActivity extends BaseActivity {
             i = new Intent(LauncherActivity.this, SignupOrLoginActivity.class);
             // Test
             // TODO: remove for test
-//            pref.edit().putString(Constants.USERID, "+8801672191819").commit();
-//            pref.edit().putString(Constants.NAME, "Samsil").commit();
-//            pref.edit().putString(Constants.BIRTHDAY, "31-11-1987").commit();
+//            pref.edit().putString(Constants.USERID, "+8801782182129").commit();
+//            pref.edit().putString(Constants.NAME, "Reaz Murshed").commit();
+//            pref.edit().putString(Constants.BIRTHDAY, "01-09-1989").commit();
 //            pref.edit().putString(Constants.GENDER, "M").commit();
 //            i = new Intent(LauncherActivity.this, HomeActivity.class);
 

@@ -102,7 +102,7 @@ public class HomeActivity extends BaseActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setLogo(R.mipmap.icon_ipay);
+        toolbar.setLogo(R.drawable.logo_ipay);
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = pref.getString(Constants.USERID, "");
         mProgressDialog = new ProgressDialog(HomeActivity.this);

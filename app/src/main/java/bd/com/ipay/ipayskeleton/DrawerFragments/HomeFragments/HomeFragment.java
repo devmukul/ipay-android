@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -36,11 +35,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -57,7 +56,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceR
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import link.fls.swipestack.SwipeStack;
 
 public class HomeFragment extends Fragment implements HttpResponseListener {
 
@@ -74,14 +72,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
     private SharedPreferences pref;
-    private String userName;
     private String UUID;
     private String userID;
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
-    private NewsFeedAdapter mNewsFeedAdapter;
     public static List<News> newsFeedResponsesList;
-    private int itemsRemoved = 0;
 
     private ImageView refreshBalanceButton;
     private RelativeLayout mSendMoneyButtonView;
@@ -108,11 +103,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     @Override
     public void onPause() {
         super.onPause();
-        if (itemsRemoved > 0) {
-            for (int i = 0; i < itemsRemoved; i++) newsFeedResponsesList.remove(0);
-            if (mNewsFeedAdapter != null) mNewsFeedAdapter.notifyDataSetChanged();
-            itemsRemoved = 0;
-        }
     }
 
     @Override
@@ -145,7 +135,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
 
-        mNewsFeedAdapter = new NewsFeedAdapter();
         mTransactionHistoryLayoutManager = new LinearLayoutManager(getActivity());
         mTransactionHistoryAdapter = new TransactionHistoryAdapter();
         mTransactionHistoryRecyclerView.setLayoutManager(mTransactionHistoryLayoutManager);
@@ -385,7 +374,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                         HomeActivity.newsFeedLoadedOnce = true;
                         // TODO: Handle news feed hasNext in future
-                        mNewsFeedAdapter.notifyDataSetChanged();
                         mTransactionHistoryAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
@@ -461,62 +449,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
     }
 
-    public class NewsFeedAdapter extends BaseAdapter {
-
-        public NewsFeedAdapter() {
-        }
-
-        @Override
-        public int getCount() {
-            if (newsFeedResponsesList != null)
-                return newsFeedResponsesList.size();
-            else return 0;
-        }
-
-        @Override
-        public News getItem(int position) {
-            return newsFeedResponsesList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int pos, View itemView, ViewGroup parent) {
-
-            itemView = getActivity().getLayoutInflater().inflate(R.layout.list_item_news_feed, parent, false);
-            ImageView mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
-            TextView mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
-            TextView mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
-
-            final long newsID = newsFeedResponsesList.get(pos).getId();
-            final String description = newsFeedResponsesList.get(pos).getDescription();
-            final String title = newsFeedResponsesList.get(pos).getTitle();
-            final String subDescription = newsFeedResponsesList.get(pos).getSubDescription();
-            final String imageUrl = newsFeedResponsesList.get(pos).getImageUrl();
-            final String imageUrlThumbnail = newsFeedResponsesList.get(pos).getImageThumbnailUrl();
-
-            if (title != null) mNewsHeadLine.setText(title);
-            if (subDescription != null) mNewsSubDescription.setText(subDescription);
-
-            if (imageUrl != null) Glide.with(getActivity())
-                    .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
-                    .crossFade()
-                    .placeholder(R.drawable.dummy)
-                    .into(mNewsImage);
-
-            return itemView;
-        }
-    }
-
     private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private static final int FOOTER_VIEW = 1;
-        private static final int HEADER_VIEW = 2;
+        private static final int HEADER_VIEW = 1;
+        private static final int WHATS_NEW_VIEW = 2;
+        private static final int NEWS_FEED_ITEM_VIEW = 3;
 
-        public class TransactionHistoryViewHolder extends RecyclerView.ViewHolder implements SwipeStack.SwipeStackListener {
+        public class TransactionHistoryViewHolder extends RecyclerView.ViewHolder {
             private View mItemView;
 
             private TextView mTransactionDescription;
@@ -524,25 +463,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             private RoundedImageView mPortrait;
             private TextView mAmountTextView;
             private ImageView statusView;
-            private TextView whatNewTextViewHeader;
 
-            private SwipeStack swipeStack;
-
-            @Override
-            public void onViewSwipedToLeft(int position) {
-                itemsRemoved++;
-            }
-
-            @Override
-            public void onViewSwipedToRight(int position) {
-                itemsRemoved++;
-            }
-
-            @Override
-            public void onStackEmpty() {
-                swipeStack.setVisibility(View.GONE);
-                whatNewTextViewHeader.setVisibility(View.GONE);
-            }
+            private ImageView mNewsImage;
+            private TextView mNewsHeadLine;
+            private TextView mNewsSubDescription;
+            private TextView mNewsShortDescription;
 
             public TransactionHistoryViewHolder(final View itemView) {
                 super(itemView);
@@ -555,9 +480,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 statusView = (ImageView) itemView.findViewById(R.id.status);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
 
-                // Views for news feed
-                swipeStack = (SwipeStack) itemView.findViewById(R.id.swipeStack);
-                whatNewTextViewHeader = (TextView) itemView.findViewById(R.id.whats_new_text);
+                mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
+                mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
+                mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
+                mNewsShortDescription = (TextView) itemView.findViewById(R.id.short_desc);
             }
 
             public void bindView(int pos) {
@@ -601,14 +527,30 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         .into(mPortrait);
             }
 
-            public void bindViewFooter(int pos) {
-                if (newsFeedResponsesList.size() == 0) {
-                    swipeStack.setVisibility(View.GONE);
-                    whatNewTextViewHeader.setVisibility(View.GONE);
-                } else {
-                    swipeStack.setAdapter(mNewsFeedAdapter);
-                    swipeStack.setListener(this);
+            public void bindViewNewsFeed(int pos) {
+
+                if (userTransactionHistoryClasses == null) pos = pos - 1;
+                else {
+                    if (userTransactionHistoryClasses.size() == 0) pos = pos - 1;
+                    else pos = pos - userTransactionHistoryClasses.size() - 2;
                 }
+
+                final long newsID = newsFeedResponsesList.get(pos).getId();
+                final String description = newsFeedResponsesList.get(pos).getDescription();
+                final String title = newsFeedResponsesList.get(pos).getTitle();
+                final String subDescription = newsFeedResponsesList.get(pos).getSubDescription();
+                final String imageUrl = newsFeedResponsesList.get(pos).getImageUrl();
+                final String imageUrlThumbnail = newsFeedResponsesList.get(pos).getImageThumbnailUrl();
+
+                if (title != null) mNewsHeadLine.setText(title);
+                if (subDescription != null) mNewsSubDescription.setText(subDescription);
+                if (description != null) mNewsShortDescription.setText(description);
+
+                if (imageUrl != null) Glide.with(getActivity())
+                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .crossFade()
+                        .placeholder(R.drawable.dummy)
+                        .into(mNewsImage);
             }
 
             public View getItemView() {
@@ -622,8 +564,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         }
 
-        public class FooterViewHolder extends TransactionHistoryViewHolder {
-            public FooterViewHolder(View itemView) {
+        public class WhatsNewViewHolder extends TransactionHistoryViewHolder {
+            public WhatsNewViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        public class NewsFeedViewHolder extends TransactionHistoryViewHolder {
+            public NewsFeedViewHolder(View itemView) {
                 super(itemView);
             }
         }
@@ -640,14 +588,19 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             View v;
 
-            if (viewType == FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_footer_news_feed_swipestack, parent, false);
-                FooterViewHolder vh = new FooterViewHolder(v);
+            if (viewType == WHATS_NEW_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_whats_new, parent, false);
+                WhatsNewViewHolder vh = new WhatsNewViewHolder(v);
                 return vh;
 
             } else if (viewType == HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_header_transaction_histories, parent, false);
                 HeaderViewHolder vh = new HeaderViewHolder(v);
+                return vh;
+
+            } else if (viewType == NEWS_FEED_ITEM_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_news_feed, parent, false);
+                NewsFeedViewHolder vh = new NewsFeedViewHolder(v);
                 return vh;
             }
 
@@ -663,11 +616,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 if (holder instanceof NormalViewHolder) {
                     NormalViewHolder vh = (NormalViewHolder) holder;
                     vh.bindView(position);
-                } else if (holder instanceof FooterViewHolder) {
-                    FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindViewFooter(position);
+                } else if (holder instanceof WhatsNewViewHolder) {
+                    WhatsNewViewHolder vh = (WhatsNewViewHolder) holder;
                 } else if (holder instanceof HeaderViewHolder) {
                     HeaderViewHolder vh = (HeaderViewHolder) holder;
+                } else if (holder instanceof NewsFeedViewHolder) {
+                    NewsFeedViewHolder vh = (NewsFeedViewHolder) holder;
+                    vh.bindViewNewsFeed(position);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -676,24 +631,51 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         @Override
         public int getItemCount() {
-            if (userTransactionHistoryClasses != null && newsFeedResponsesList != null)
-                return userTransactionHistoryClasses.size() + 2;
-            else if (userTransactionHistoryClasses != null && newsFeedResponsesList == null)
-                return userTransactionHistoryClasses.size() + 1;
-            else if (userTransactionHistoryClasses == null && newsFeedResponsesList != null)
-                return 1;
+
+            int transactionHistoryListSize = 0;
+            int newsFeedListSize = 0;
+
+            if (userTransactionHistoryClasses == null && newsFeedResponsesList == null) return 0;
+
+            if (userTransactionHistoryClasses != null)
+                transactionHistoryListSize = userTransactionHistoryClasses.size();
+            if (newsFeedResponsesList != null) newsFeedListSize = newsFeedResponsesList.size();
+
+            if (transactionHistoryListSize > 0 && newsFeedListSize > 0)
+                return 1 + transactionHistoryListSize + 1 + newsFeedListSize;   // Header, transaction histories, whats new header , news feed list
+            else if (transactionHistoryListSize > 0 && newsFeedListSize == 0)
+                return 1 + transactionHistoryListSize;                          // Header, transaction histories
+            else if (transactionHistoryListSize == 0 && newsFeedListSize > 0)
+                return 1 + newsFeedListSize;                                    // whats new header , news feed list
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
 
-            if (userTransactionHistoryClasses == null && newsFeedResponsesList != null) {
-                return FOOTER_VIEW;
-            } else if (position == userTransactionHistoryClasses.size() + 1) {
-                return FOOTER_VIEW;
-            } else if (position == 0) {
-                return HEADER_VIEW;
+            int transactionHistoryListSize = 0;
+            int newsFeedListSize = 0;
+
+            if (userTransactionHistoryClasses == null && newsFeedResponsesList == null)
+                return super.getItemViewType(position);
+
+            if (userTransactionHistoryClasses != null)
+                transactionHistoryListSize = userTransactionHistoryClasses.size();
+            if (newsFeedResponsesList != null) newsFeedListSize = newsFeedResponsesList.size();
+
+            if (transactionHistoryListSize > 0 && newsFeedListSize > 0) {
+                if (position == 0) return HEADER_VIEW;
+                else if (position == transactionHistoryListSize + 1) return WHATS_NEW_VIEW;
+                else if (position > transactionHistoryListSize + 1) return NEWS_FEED_ITEM_VIEW;
+                else return super.getItemViewType(position);
+
+            } else if (transactionHistoryListSize > 0 && newsFeedListSize == 0) {
+                if (position == 0) return HEADER_VIEW;
+                else return super.getItemViewType(position);
+
+            } else if (transactionHistoryListSize == 0 && newsFeedListSize > 0) {
+                if (position == 0) return WHATS_NEW_VIEW;
+                else return NEWS_FEED_ITEM_VIEW;
             }
 
             return super.getItemViewType(position);
