@@ -87,7 +87,7 @@ public class Constants {
             BASE_URL_GET_MM_PORT = 8085;
             BASE_URL_GET_MM_PATH = "/api/v1/";
 
-            BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd/";
+            BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
 
             BASE_URL_SM = "http://stage.ipay.com.bd:8085/api/v1/";
 
@@ -105,7 +105,7 @@ public class Constants {
             BASE_URL_GET_MM_PORT = 80;
             BASE_URL_GET_MM_PATH = "/api/v1/";
 
-            BASE_URL_IMAGE_SERVER = "https://www.ipay.com.bd/";
+            BASE_URL_IMAGE_SERVER = "https://www.ipay.com.bd";
 
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/";
 

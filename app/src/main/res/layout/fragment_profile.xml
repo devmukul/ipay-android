@@ -4,6 +4,8 @@
     android:id="@+id/scrollview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:padding="6dp">
 
@@ -12,23 +14,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <!-- Topper -->
         <android.support.v7.widget.CardView
             style="@style/ProfileCardStyle"
             app:cardElevation="4dp">
 
-            <RelativeLayout
-                style="@style/ProfileCardLayoutStyle">
+            <requestFocus />
+
+            <RelativeLayout style="@style/ProfileCardLayoutStyle">
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/profile_picture"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
                     android:layout_marginBottom="12dp"
+                    android:layout_marginTop="14dp"
                     android:clickable="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_person"
@@ -39,36 +41,36 @@
 
                 <TextView
                     android:id="@+id/textview_name"
-                    android:layout_below="@+id/profile_picture"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
+                    android:layout_below="@+id/profile_picture"
                     android:gravity="center"
+                    android:text=""
                     android:textColor="@android:color/black"
-                    android:text=""/>
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textview_mobile_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textview_name"
-                    android:textSize="20sp"
                     android:gravity="center"
-                    android:text=""/>
+                    android:text=""
+                    android:textSize="20sp" />
 
                 <TextView
-                    android:layout_marginTop="8dp"
                     android:id="@+id/textview_verification_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textview_mobile_number"
-                    android:textSize="14sp"
-                    android:gravity="center"
-                    android:textColor="@android:color/white"
                     android:layout_centerHorizontal="true"
-                    android:textStyle="bold"
-                    android:text="Verified"/>
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="Verified"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
@@ -79,29 +81,28 @@
             style="@style/ProfileCardStyle"
             app:cardElevation="4dp">
 
-            <RelativeLayout
-                style="@style/ProfileCardLayoutStyle">
+            <RelativeLayout style="@style/ProfileCardLayoutStyle">
 
                 <TextView
                     android:id="@+id/textview_basic_info"
-                    android:text="@string/profile_basic_info"
+                    style="@style/ProfileHeadingStyle"
                     android:layout_toLeftOf="@+id/button_edit_basic_info"
-                    style="@style/ProfileHeadingStyle"/>
+                    android:text="@string/profile_basic_info" />
 
                 <Button
                     android:id="@+id/button_edit_basic_info"
+                    style="@style/ProfileButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/ProfileButtonStyle"
-                    android:layout_alignParentTop="true"
                     android:layout_alignBaseline="@+id/textview_basic_info"
+                    android:layout_alignParentTop="true"
                     android:text="@string/action_edit" />
 
                 <TextView
                     android:id="@+id/textview_email_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_email"
                     android:layout_below="@+id/textview_basic_info"
+                    android:layout_toLeftOf="@+id/textview_email"
                     android:text="Email" />
 
                 <TextView
@@ -112,8 +113,8 @@
                 <TextView
                     android:id="@+id/textview_date_of_birth_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_date_of_birth"
                     android:layout_below="@+id/textview_email"
+                    android:layout_toLeftOf="@+id/textview_date_of_birth"
                     android:text="Date of Birth" />
 
                 <TextView
@@ -121,13 +122,12 @@
                     style="@style/ProfileTextStyle"
                     android:layout_below="@+id/textview_email" />
 
-
                 <!-- Relative names -->
                 <TextView
                     android:id="@+id/textview_fathers_name_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_fathers_name"
                     android:layout_below="@+id/textview_date_of_birth"
+                    android:layout_toLeftOf="@+id/textview_fathers_name"
                     android:text="Father's Name" />
 
                 <TextView
@@ -138,8 +138,8 @@
                 <TextView
                     android:id="@+id/textview_mothers_name_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_mothers_name"
                     android:layout_below="@+id/textview_fathers_name"
+                    android:layout_toLeftOf="@+id/textview_mothers_name"
                     android:text="Mother's Name" />
 
                 <TextView
@@ -150,8 +150,8 @@
                 <TextView
                     android:id="@+id/textview_spouse_name_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_spouse_name"
                     android:layout_below="@+id/textview_mothers_name"
+                    android:layout_toLeftOf="@+id/textview_spouse_name"
                     android:text="Spouse's Name" />
 
                 <TextView
@@ -164,8 +164,8 @@
                 <TextView
                     android:id="@+id/textview_fathers_mobile_number_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_fathers_mobile_number"
                     android:layout_below="@+id/textview_spouse_name"
+                    android:layout_toLeftOf="@+id/textview_fathers_mobile_number"
                     android:text="Father's Mobile Number" />
 
                 <TextView
@@ -176,8 +176,8 @@
                 <TextView
                     android:id="@+id/textview_mothers_mobile_number_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_mothers_mobile_number"
                     android:layout_below="@+id/textview_fathers_mobile_number"
+                    android:layout_toLeftOf="@+id/textview_mothers_mobile_number"
                     android:text="Mother's Mobile Number" />
 
                 <TextView
@@ -188,8 +188,8 @@
                 <TextView
                     android:id="@+id/textview_spouse_mobile_number_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_spouse_mobile_number"
                     android:layout_below="@+id/textview_mothers_mobile_number"
+                    android:layout_toLeftOf="@+id/textview_spouse_mobile_number"
                     android:text="Spouse's Mobile Number" />
 
                 <TextView
@@ -202,8 +202,8 @@
                 <TextView
                     android:id="@+id/textview_occupation_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_occupation"
                     android:layout_below="@+id/textview_spouse_mobile_number"
+                    android:layout_toLeftOf="@+id/textview_occupation"
                     android:text="Occupation" />
 
                 <TextView
@@ -214,8 +214,8 @@
                 <TextView
                     android:id="@+id/textview_gender_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_toLeftOf="@+id/textview_gender"
                     android:layout_below="@+id/textview_occupation"
+                    android:layout_toLeftOf="@+id/textview_gender"
                     android:text="Gender" />
 
                 <TextView
@@ -225,38 +225,35 @@
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
-
-
         <!-- Address -->
         <android.support.v7.widget.CardView
             style="@style/ProfileCardStyle"
             app:cardElevation="4dp">
 
-            <RelativeLayout
-                style="@style/ProfileCardLayoutStyle">
+            <RelativeLayout style="@style/ProfileCardLayoutStyle">
 
                 <TextView
                     android:id="@+id/textview_address"
-                    android:text="@string/profile_address"
-                    style="@style/ProfileHeadingStyle"/>
+                    style="@style/ProfileHeadingStyle"
+                    android:text="@string/profile_address" />
 
 
                 <!-- Present Address -->
                 <TextView
                     android:id="@+id/textview_present_address_label"
-                    android:text="Present Address"
+                    style="@style/ProfileAddressHeaderStyle"
                     android:layout_below="@+id/textview_address"
                     android:layout_toLeftOf="@+id/button_edit_present_address"
-                    style="@style/ProfileAddressHeaderStyle"/>
+                    android:text="Present Address" />
 
                 <Button
                     android:id="@+id/button_edit_present_address"
+                    style="@style/ProfileButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/ProfileButtonStyle"
                     android:layout_alignBaseline="@+id/textview_present_address_label"
-                    android:text="@string/action_add"
-                    android:layout_below="@+id/textview_address" />
+                    android:layout_below="@+id/textview_address"
+                    android:text="@string/action_add" />
 
                 <TextView
                     android:id="@+id/textview_present_address"
@@ -267,43 +264,43 @@
                 <!-- Permanent Address -->
                 <TextView
                     android:id="@+id/textview_permanent_address_label"
-                    android:text="Permanent Address"
+                    style="@style/ProfileAddressHeaderStyle"
                     android:layout_below="@+id/textview_present_address"
                     android:layout_toLeftOf="@+id/button_edit_permanent_address"
-                    style="@style/ProfileAddressHeaderStyle"/>
+                    android:text="Permanent Address" />
 
                 <Button
                     android:id="@+id/button_edit_permanent_address"
+                    style="@style/ProfileButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/ProfileButtonStyle"
                     android:layout_alignBaseline="@+id/textview_permanent_address_label"
-                    android:text="@string/action_add"
-                    android:layout_below="@+id/textview_present_address" />
+                    android:layout_below="@+id/textview_present_address"
+                    android:text="@string/action_add" />
 
                 <TextView
                     android:id="@+id/textview_permanent_address"
                     style="@style/ProfileAddressTextStyle"
                     android:layout_below="@id/textview_permanent_address_label"
-                    android:text=""/>
+                    android:text="" />
 
 
                 <!-- Office Address -->
                 <TextView
                     android:id="@+id/textview_office_address_label"
-                    android:text="Office Address"
+                    style="@style/ProfileAddressHeaderStyle"
                     android:layout_below="@+id/textview_permanent_address"
                     android:layout_toLeftOf="@+id/button_edit_office_address"
-                    style="@style/ProfileAddressHeaderStyle"/>
+                    android:text="Office Address" />
 
                 <Button
                     android:id="@+id/button_edit_office_address"
+                    style="@style/ProfileButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/ProfileButtonStyle"
                     android:layout_alignBaseline="@+id/textview_office_address_label"
-                    android:text="@string/action_add"
-                    android:layout_below="@+id/textview_permanent_address" />
+                    android:layout_below="@+id/textview_permanent_address"
+                    android:text="@string/action_add" />
 
                 <TextView
                     android:id="@+id/textview_office_address"
@@ -314,45 +311,42 @@
 
         </android.support.v7.widget.CardView>
 
-
         <!-- Documents -->
         <android.support.v7.widget.CardView
             style="@style/ProfileCardStyle"
             app:cardElevation="4dp">
 
-            <RelativeLayout
-                style="@style/ProfileCardLayoutStyle">
+            <RelativeLayout style="@style/ProfileCardLayoutStyle">
 
                 <TextView
                     android:id="@+id/textview_documents"
-                    android:text="@string/profile_documents"
-                    style="@style/ProfileHeadingStyle"/>
+                    style="@style/ProfileHeadingStyle"
+                    android:text="@string/profile_documents" />
 
                 <TextView
                     android:id="@+id/textview_document_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_below="@id/textview_documents"/>
+                    android:layout_below="@id/textview_documents"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <Button
                     android:id="@+id/button_upload_documents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/textview_document_count"
                     android:layout_centerHorizontal="true"
-                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="16dp"
                     android:background="@drawable/background_white_button"
-                    android:text="UPLOAD DOCUMENTS"
                     android:minHeight="0dp"
                     android:padding="4dp"
-                    android:layout_marginTop="16dp"
-                    android:textStyle="bold"
-                    android:layout_below="@+id/textview_document_count" />
+                    android:text="@string/upload_documents"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
-
 
 
         <!-- Introducers -->
@@ -360,22 +354,20 @@
             style="@style/ProfileCardStyle"
             app:cardElevation="4dp">
 
-            <RelativeLayout
-                style="@style/ProfileCardLayoutStyle">
+            <RelativeLayout style="@style/ProfileCardLayoutStyle">
 
                 <TextView
                     android:id="@+id/textview_introducers"
-                    android:text="@string/profile_introducers"
-                    style="@style/ProfileHeadingStyle"/>
+                    style="@style/ProfileHeadingStyle"
+                    android:text="@string/profile_introducers" />
 
                 <ListView
                     android:id="@+id/list_introducers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_below="@+id/textview_introducers"
                     android:layout_marginBottom="4dp"
-                    android:focusable="false"
-                    android:layout_below="@+id/textview_introducers"/>
+                    android:layout_marginTop="4dp" />
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>

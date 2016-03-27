@@ -226,10 +226,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        // Without these, the listview will gain focus as soon as data loading is finished
-        mScrollView.setFocusableInTouchMode(true);
-        mScrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-
         setProfilePicture("");
         getProfileInfo();
         getUserAddress();
@@ -487,9 +483,13 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     mIntrdoucers = mGetIntroducerListResponse.getIntroducers();
                     mIntroducerAdapter.setIntroducers(mIntrdoucers);
+
+                    mScrollView.setEnabled(false);
+                    mIntroducerListView.setFocusable(false);
                     mIntroducerAdapter.notifyDataSetChanged();
-                    Utilities.setUpNonScrollableListView(mIntroducerListView);
-//                    mIntroducerAdapter.notifyDataSetChanged();
+                    // Force scroll to the top of the scroll view.
+                    // Because, when the list view gets loaded it focuses the list view automatically at the bottom of this page.
+                    mScrollView.smoothScrollTo(0, 0);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
