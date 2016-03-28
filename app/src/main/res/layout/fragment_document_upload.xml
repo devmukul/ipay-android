@@ -19,6 +19,12 @@
                 style="@style/DocumentUploadLabel"
                 android:text="@string/national_id" />
 
+            <TextView
+                android:id="@+id/verification_status_nid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_national_id"
                 android:layout_width="match_parent"
@@ -56,6 +62,12 @@
                 style="@style/DocumentUploadLabel"
                 android:text="@string/passport" />
 
+            <TextView
+                android:id="@+id/verification_status_passport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_passport"
                 android:layout_width="match_parent"
@@ -91,6 +103,12 @@
                 android:id="@+id/label_driving_license"
                 style="@style/DocumentUploadLabel"
                 android:text="@string/driving_license" />
+
+            <TextView
+                android:id="@+id/verification_status_driving_license"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_driving_license"
@@ -128,6 +146,12 @@
                 style="@style/DocumentUploadLabel"
                 android:text="@string/birth_certificate" />
 
+            <TextView
+                android:id="@+id/verification_status_birth_certificate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_birth_certificate"
                 android:layout_width="match_parent"
@@ -163,6 +187,12 @@
                 android:id="@+id/label_tin"
                 style="@style/DocumentUploadLabel"
                 android:text="@string/tin" />
+
+            <TextView
+                android:id="@+id/verification_status_tin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_tin"

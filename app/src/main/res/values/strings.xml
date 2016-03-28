@@ -150,6 +150,7 @@
     <string name="progress_dialog_send_for_recommendation">Sending recommendation request...</string>
     <string name="progress_dialog_saving_new_pass">Saving new password...</string>
     <string name="no_linked_bank_found">No linked bank account found</string>
+    <string name="verification_in_progress">Verification in progress</string>
     <string name="please_link_a_bank_for_cash_in">Please link your bank account with iPay to add money from your bank account. You can use this feature once your linked bank account gets verified!</string>
     <string name="please_link_a_bank_for_cash_out">Please link your bank account with iPay to withdraw money from iPay to your bank account. You can use this feature once your linked bank account gets verified!</string>
     <string name="progress_dialog_add_money_in_progress">Request submitting for add money</string>
@@ -410,7 +411,7 @@
     <string name="tin">TIN</string>
     <string name="tin_number">Tax Identification Number</string>
     <string name="upload_successful">Upload successful</string>
-    <string name="uploaded">Uploaded</string>
+    <string name="upload_again">Upload again</string>
     <string name="documents"> documents</string>
     <string name="you_have_submitted">You have submitted </string>
     <string name="personal_mobile_number">Personal Mobile Number</string>

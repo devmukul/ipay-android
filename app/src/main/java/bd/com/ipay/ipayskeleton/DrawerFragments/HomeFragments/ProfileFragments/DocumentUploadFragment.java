@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -43,6 +44,12 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
     private String mDocumentNumber;
     private String mDocumentType;
 
+    private TextView mVerificationStatusNID;
+    private TextView mVerificationStatusPassport;
+    private TextView mVerificationStatusBirthCertificate;
+    private TextView mVerificationStatusTIN;
+    private TextView mVerificationStatusDrivingLicense;
+
     private ProgressDialog mProgressDialog;
 
     private UploadIdentifierDocumentAsyncTask mUploadIdentifierDocumentAsyncTask;
@@ -63,6 +70,12 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         mDrivingLicenseNumber = (EditText) v.findViewById(R.id.edit_text_driving_license);
         mBirthCertificateNumber = (EditText) v.findViewById(R.id.edit_text_birth_certificate);
         mTinNumber = (EditText) v.findViewById(R.id.edit_text_tin);
+
+        mVerificationStatusBirthCertificate = (TextView) v.findViewById(R.id.verification_status_birth_certificate);
+        mVerificationStatusDrivingLicense = (TextView) v.findViewById(R.id.verification_status_driving_license);
+        mVerificationStatusTIN = (TextView) v.findViewById(R.id.verification_status_tin);
+        mVerificationStatusPassport = (TextView) v.findViewById(R.id.verification_status_passport);
+        mVerificationStatusNID = (TextView) v.findViewById(R.id.verification_status_nid);
 
         mNationalIdUploadButton = (Button) v.findViewById(R.id.button_national_id);
         mPassportUploadButton = (Button) v.findViewById(R.id.button_passport);
@@ -102,22 +115,68 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 selectProfilePicture(ACTION_PICK_TIN, mTinUploadButton, mTinNumber);
             }
         });
-        
+
         for (IdentificationDocument identificationDocument : ProfileFragment.mIdentificationDocuments) {
             String documentType = identificationDocument.getDocumentType();
-            if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID))
-                mNationalIdUploadButton.setText(getString(R.string.uploaded));
-            else if (documentType.equals(Constants.DOCUMENT_TYPE_PASSPORT))
-                mPassportUploadButton.setText(getString(R.string.uploaded));
-            else if (documentType.equals(Constants.DOCUMENT_TYPE_DRIVING_LICENSE))
-                mDrivingLicenseUploadButton.setText(getString(R.string.uploaded));
-            else if (documentType.equals(Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE))
-                mBirthCertificateUploadButton.setText(getString(R.string.uploaded));
-            else if (documentType.equals(Constants.DOCUMENT_TYPE_TIN))
-                mTinUploadButton.setText(getString(R.string.uploaded));
+            String verificationStatus = identificationDocument.getDocumentVerificationStatus();
+
+            if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID)) {
+                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                    mNationalIdUploadButton.setVisibility(View.GONE);
+                    mNationalIdNumber.setVisibility(View.GONE);
+                    mVerificationStatusNID.setTextColor(getResources().getColor(R.color.bottle_green));
+                    mVerificationStatusNID.setText(getString(R.string.verified));
+                } else {
+                    mNationalIdUploadButton.setText(getString(R.string.upload_again));
+                    mVerificationStatusNID.setText(getString(R.string.verification_in_progress));
+                }
+
+            } else if (documentType.equals(Constants.DOCUMENT_TYPE_PASSPORT)) {
+                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                    mPassportUploadButton.setVisibility(View.GONE);
+                    mPassportNumber.setVisibility(View.GONE);
+                    mVerificationStatusPassport.setTextColor(getResources().getColor(R.color.bottle_green));
+                    mVerificationStatusPassport.setText(getString(R.string.verified));
+                } else {
+                    mPassportUploadButton.setText(getString(R.string.upload_again));
+                    mVerificationStatusPassport.setText(getString(R.string.verification_in_progress));
+                }
+
+            } else if (documentType.equals(Constants.DOCUMENT_TYPE_DRIVING_LICENSE)) {
+                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                    mDrivingLicenseUploadButton.setVisibility(View.GONE);
+                    mDrivingLicenseNumber.setVisibility(View.GONE);
+                    mVerificationStatusDrivingLicense.setTextColor(getResources().getColor(R.color.bottle_green));
+                    mVerificationStatusDrivingLicense.setText(getString(R.string.verified));
+                } else {
+                    mDrivingLicenseUploadButton.setText(getString(R.string.upload_again));
+                    mVerificationStatusDrivingLicense.setText(getString(R.string.verification_in_progress));
+                }
+
+            } else if (documentType.equals(Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE)) {
+                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                    mBirthCertificateUploadButton.setVisibility(View.GONE);
+                    mBirthCertificateNumber.setVisibility(View.GONE);
+                    mVerificationStatusBirthCertificate.setTextColor(getResources().getColor(R.color.bottle_green));
+                    mVerificationStatusBirthCertificate.setText(getString(R.string.verified));
+                } else {
+                    mBirthCertificateUploadButton.setText(getString(R.string.upload_again));
+                    mVerificationStatusBirthCertificate.setText(getString(R.string.verification_in_progress));
+                }
+
+            } else if (documentType.equals(Constants.DOCUMENT_TYPE_TIN)) {
+                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                    mTinUploadButton.setVisibility(View.GONE);
+                    mTinNumber.setVisibility(View.GONE);
+                    mVerificationStatusTIN.setTextColor(getResources().getColor(R.color.bottle_green));
+                    mVerificationStatusTIN.setText(getString(R.string.verified));
+                } else {
+                    mTinUploadButton.setText(getString(R.string.upload_again));
+                    mVerificationStatusTIN.setText(getString(R.string.verification_in_progress));
+                }
+            }
         }
 
-        
 
         return v;
     }
@@ -126,8 +185,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         if (numberEditText.getText().toString().isEmpty()) {
             numberEditText.setError(getString(R.string.please_enter_document_number));
             numberEditText.requestFocus();
-        }
-        else {
+        } else {
             mNationalIdNumber.setError(null);
             mPassportNumber.setError(null);
             mDrivingLicenseNumber.setError(null);
@@ -235,13 +293,14 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         ProfileFragment.mIdentificationDocuments.get(i).setDocumentIdNumber(mDocumentNumber);
                     }
                 }
+
                 if (!documentTypeExisted) {
                     ProfileFragment.mIdentificationDocuments.add(
                             new IdentificationDocument(mDocumentType, mDocumentNumber));
                 }
 
                 if (mClickedButton != null) {
-                    mClickedButton.setText(R.string.uploaded);
+                    mClickedButton.setText(R.string.upload_again);
                 }
             } else {
                 if (getActivity() != null)

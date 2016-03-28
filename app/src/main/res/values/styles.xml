@@ -210,7 +210,7 @@
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/button_style</item>
+        <item name="android:background">@drawable/background_button_primary</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
@@ -219,7 +219,7 @@
         <item name="android:textSize">18.0sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/button_style</item>
+        <item name="android:background">@drawable/background_button_primary</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
@@ -228,7 +228,7 @@
         <item name="android:textSize">22.0sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/button_style</item>
+        <item name="android:background">@drawable/background_button_primary</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
@@ -279,7 +279,7 @@
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@color/colorTextSecondary</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/button_style_secondary</item>
+        <item name="android:background">@drawable/background_button_secondary</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
@@ -288,7 +288,7 @@
         <item name="android:textSize">18.0sp</item>
         <item name="android:textColor">@color/colorTextSecondary</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/button_style_secondary</item>
+        <item name="android:background">@drawable/background_button_secondary</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
@@ -297,7 +297,7 @@
         <item name="android:textSize">22.0sp</item>
         <item name="android:textColor">@color/colorTextSecondary</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/button_style_secondary</item>
+        <item name="android:background">@drawable/background_button_secondary</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
@@ -306,7 +306,7 @@
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/button_style_accent</item>
+        <item name="android:background">@drawable/background_button_accent</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
@@ -315,7 +315,7 @@
         <item name="android:textSize">18.0sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/button_style_accent</item>
+        <item name="android:background">@drawable/background_button_accent</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
@@ -324,7 +324,7 @@
         <item name="android:textSize">22.0sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/button_style_accent</item>
+        <item name="android:background">@drawable/background_button_accent</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
