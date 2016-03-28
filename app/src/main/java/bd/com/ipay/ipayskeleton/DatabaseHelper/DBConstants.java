@@ -14,6 +14,9 @@ public class DBConstants {
     public static final Uri DB_TABLE_SUBSCRIBERS_URI = Uri
             .parse("sqlite://" + Constants.ApplicationPackage + "/" + DB_TABLE_SUBSCRIBERS);
 
+    // Subscriber table
     public static final String KEY_MOBILE_NUMBER = "mobile_number";
     public static final String KEY_NAME = "name";
+    public static final String KEY_ACCOUNT_TYPE = "account_type";
+    public static final String KEY_PROFILE_PICTURE = "profile_picture";
 }

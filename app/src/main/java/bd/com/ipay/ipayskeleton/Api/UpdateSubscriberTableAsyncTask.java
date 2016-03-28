@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, String> {
-    
+
     private Context mContext;
     private Firebase ref;
 
@@ -53,7 +53,8 @@ public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, Stri
 
                                     if (mFriendNode.getInfo().isFriend()) {
                                         SubscriberEntry mSubscriberEntry = new SubscriberEntry(
-                                                mFriendNode.phoneNumber, mFriendNode.info.getName());
+                                                mFriendNode.phoneNumber, mFriendNode.info.getName(),
+                                                mFriendNode.info.getAccountType(), mFriendNode.info.getProfilePictureUrl());
 
                                         boolean exists = DataHelper.getInstance(mContext).
                                                 checkIfStringFieldExists(DBConstants.DB_TABLE_SUBSCRIBERS,
@@ -64,12 +65,18 @@ public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, Stri
                                             DataHelper.getInstance(mContext).createSubscribers(mSubscriberEntry);
 
                                             // Download profile picture for new user
-                                            GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
-                                            String uri = mGetUserInfoRequestBuilder.getGeneratedUri();
-                                            new DownloadProfilePictureGetAsyncTask(Constants.COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND, uri,
-                                                    mSubscriberEntry.getMobileNumber(), mContext)
-                                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                            Log.d(Constants.iPay_USER, mSubscriberEntry.getMobileNumber());
+//                                            GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
+//                                            String uri = mGetUserInfoRequestBuilder.getGeneratedUri();
+//                                            new DownloadProfilePictureGetAsyncTask(Constants.COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND, uri,
+//                                                    mSubscriberEntry.getMobileNumber(), mContext)
+//                                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                                            Log.d(Constants.iPay_USER, mSubscriberEntry.getMobileNumber());
+
+                                            if (mSubscriberEntry.getProfilePicture() != null &&
+                                                    mSubscriberEntry.getProfilePicture().length() > 0)
+                                                new DownloadProfilePictureFromUrlAsyncTask(mSubscriberEntry.getProfilePicture(),
+                                                        mSubscriberEntry.getMobileNumber())
+                                                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                                         } else {
 
@@ -78,12 +85,18 @@ public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, Stri
                                             // TODO: to see the updates of profile picture changes
                                             // TODO: WE'LL REMOVE THIS ELSE PART as soon as we get the API for the updates in profile pictures.
 
-                                            GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
-                                            String uri = mGetUserInfoRequestBuilder.getGeneratedUri();
-                                            new DownloadProfilePictureGetAsyncTask(Constants.COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND, uri,
-                                                    mSubscriberEntry.getMobileNumber(), mContext)
-                                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                            Log.d(Constants.iPay_USER, mSubscriberEntry.getMobileNumber());
+//                                            GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mSubscriberEntry.getMobileNumber());
+//                                            String uri = mGetUserInfoRequestBuilder.getGeneratedUri();
+//                                            new DownloadProfilePictureGetAsyncTask(Constants.COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND, uri,
+//                                                    mSubscriberEntry.getMobileNumber(), mContext)
+//                                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                                            Log.d(Constants.iPay_USER, mSubscriberEntry.getMobileNumber());
+
+                                            if (mSubscriberEntry.getProfilePicture() != null &&
+                                                    mSubscriberEntry.getProfilePicture().length() > 0)
+                                                new DownloadProfilePictureFromUrlAsyncTask(mSubscriberEntry.getProfilePicture(),
+                                                        mSubscriberEntry.getMobileNumber())
+                                                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                                         }
 

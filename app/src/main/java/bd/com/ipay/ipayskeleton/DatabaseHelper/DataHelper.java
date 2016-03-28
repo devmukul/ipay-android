@@ -41,6 +41,9 @@ public class DataHelper {
             ContentValues values = new ContentValues();
             values.put(DBConstants.KEY_MOBILE_NUMBER, mSubscriberEntry.getMobileNumber());
             values.put(DBConstants.KEY_NAME, mSubscriberEntry.getName());
+            values.put(DBConstants.KEY_ACCOUNT_TYPE, mSubscriberEntry.getAccountType());
+            values.put(DBConstants.KEY_PROFILE_PICTURE, mSubscriberEntry.getProfilePicture());
+
             db = dOpenHelper.getWritableDatabase();
             db.insert(DBConstants.DB_TABLE_SUBSCRIBERS, null, values);
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
