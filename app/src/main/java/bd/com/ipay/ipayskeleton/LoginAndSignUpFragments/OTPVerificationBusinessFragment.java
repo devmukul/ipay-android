@@ -187,17 +187,16 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             mSignUpTask.mHttpResponseListener = this;
             mSignUpTask.execute((Void) null);
         }
-
     }
 
-    private void attemptLogin(String mUserNameLogin, String mPasswordLogin) {
+    private void attemptLogin(String mUserNameLogin, String mPasswordLogin, String otp) {
         if (mLoginTask != null) {
             return;
         }
 
         mProgressDialog.show();
         LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                Constants.MOBILE_ANDROID + mDeviceID, null, null, null);
+                Constants.MOBILE_ANDROID + mDeviceID, null, otp, null);
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
         mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
@@ -226,6 +225,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
             mSignupResponseBusiness = gson.fromJson(resultList.get(2), SignupResponseBusiness.class);
             String message = mSignupResponseBusiness.getMessage();
+            String otp = mSignupResponseBusiness.getOtp();
 
             if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                 SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
@@ -240,12 +240,11 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();
 
-                // TODO: Do not remove this. Can be used later
                 // Request a login immediately after sign up
-//                attemptLogin(SignupOrLoginActivity.mMobileNumberBusiness, SignupOrLoginActivity.mPasswordBusiness);
+                attemptLogin(SignupOrLoginActivity.mMobileNumberBusiness, SignupOrLoginActivity.mPasswordBusiness, otp);
 
-                // TODO: For now, switch to login fragment after a successful sign up
-                            ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
+                // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
+//                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
 
             } else {

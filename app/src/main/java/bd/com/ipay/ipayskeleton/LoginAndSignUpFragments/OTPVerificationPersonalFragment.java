@@ -186,14 +186,14 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
     }
 
-    private void attemptLogin(String mUserNameLogin, String mPasswordLogin) {
+    private void attemptLogin(String mUserNameLogin, String mPasswordLogin, String otp) {
         if (mLoginTask != null) {
             return;
         }
 
         mProgressDialog.show();
         LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                Constants.MOBILE_ANDROID + mDeviceID, null, null, null);
+                Constants.MOBILE_ANDROID + mDeviceID, null, otp, null);
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
         mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
@@ -225,6 +225,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                 try {
                     mSignupResponseModel = gson.fromJson(resultList.get(2), SignupResponsePersonal.class);
                     String message = mSignupResponseModel.getMessage();
+                    String otp = mSignupResponseModel.getOtp();
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
@@ -238,12 +239,11 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
 
                         // Request a login immediately after sign up
-                        // TODO: can be used later. Do not delete
-//                        if (Utilities.isConnectionAvailable(getActivity()))
-//                            attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword);
+                        if (Utilities.isConnectionAvailable(getActivity()))
+                            attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword, otp);
 
-                        // TODO: For now, switch to login fragment after a successful sign up
-                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
+                        // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
+//                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
                     } else {
                         if (getActivity() != null)
