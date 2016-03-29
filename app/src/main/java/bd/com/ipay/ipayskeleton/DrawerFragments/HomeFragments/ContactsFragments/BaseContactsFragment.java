@@ -237,6 +237,7 @@ public abstract class BaseContactsFragment extends Fragment implements
                 }
             }
         });
+
         Button mAskForRecommendationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_introduction);
         mAskForRecommendationButton.setOnClickListener(new View.OnClickListener() {
             @Override

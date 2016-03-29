@@ -21,7 +21,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         db.execSQL("create table if not exists "
                 + DBConstants.DB_TABLE_SUBSCRIBERS
                 + "(_id integer primary key autoincrement, mobile_number text not null, "
-                + "name text, account_type integer default 1, profile_picture text)");
+                + "name text, account_type integer default 1, profile_picture text, verification_status integer default 0)");
 
     }
 

@@ -182,6 +182,10 @@ public class IPayContactsFragment extends BaseContactsFragment {
                 final String mobileNumber = mCursor.getString(index);
                 mMobileNumberView.setText(mobileNumber);
 
+                // TODO
+                index = mCursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
+                final int verificationStatus = mCursor.getInt(index);
+
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;
 

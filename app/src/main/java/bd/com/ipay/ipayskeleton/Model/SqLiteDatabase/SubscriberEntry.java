@@ -24,12 +24,12 @@ public class SubscriberEntry {
         return name;
     }
 
-    public int getAccountType() {
-        return accountType;
-    }
-
     public int getIsVerified() {
         return isVerified;
+    }
+
+    public int getAccountType() {
+        return accountType;
     }
 
     public String getProfilePicture() {

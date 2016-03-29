@@ -10,10 +10,10 @@
         layout="@layout/contact_portrait_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="8dp"/>
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp" />
 
     <TextView
         android:id="@+id/name"
@@ -21,45 +21,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/contact_portrait_view"
         android:layout_toLeftOf="@+id/is_subscriber"
+        android:layout_toRightOf="@+id/contact_portrait_view"
         android:gravity="left"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:paddingTop="14dp"
         android:paddingBottom="2dp"
-        android:singleLine="true" />
+        android:paddingTop="14dp"
+        android:singleLine="true"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/mobile_number"
-        android:layout_below="@+id/name"
         style="@style/TextStyleSecondaryMedium"
-        android:layout_toRightOf="@+id/contact_portrait_view"
-        android:layout_toLeftOf="@+id/is_subscriber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:layout_below="@+id/name"
+        android:layout_toLeftOf="@+id/is_subscriber"
+        android:layout_toRightOf="@+id/contact_portrait_view"
         android:gravity="left"
         android:paddingBottom="14dp"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textSize="15sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_alignRight="@+id/is_subscriber"
         android:layout_below="@+id/mobile_number"
-        android:background="@color/colorDivider"
         android:layout_marginRight="6dp"
         android:layout_toRightOf="@+id/contact_portrait_view"
-        android:layout_alignRight="@+id/is_subscriber"/>
+        android:background="@color/colorDivider" />
 
 
     <ImageView
         android:id="@+id/is_subscriber"
         android:layout_width="26dp"
         android:layout_height="26dp"
-        android:layout_marginRight="8dp"
-        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
         android:src="@drawable/ic_ipay_user" />
 
 </RelativeLayout>
