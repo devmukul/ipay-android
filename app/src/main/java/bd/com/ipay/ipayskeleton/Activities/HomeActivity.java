@@ -93,7 +93,7 @@ public class HomeActivity extends BaseActivity
     public static CountDownTimer tokenTimer;
     public static long iPayTokenTimeInMs = 60000;  // By default this is one minute
 
-    public boolean switchedToHomeFragment = true;
+    public static boolean switchedToHomeFragment = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

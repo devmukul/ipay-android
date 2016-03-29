@@ -24,10 +24,18 @@ public class GetServiceChargeResponse {
     }
 
     public BigDecimal getServiceCharge(BigDecimal amount) {
-        BigDecimal calculatedServiceCharge = getPerTransactionFlatFee().add(((getPerTransactionVeriableCharge().multiply(amount))).divide(new BigDecimal(100)));
-        if (getMaxTransactionFee().compareTo(calculatedServiceCharge) > 0)
-            return calculatedServiceCharge;
-        else return getMaxTransactionFee();
+        try {
+            BigDecimal calculatedServiceCharge = getPerTransactionFlatFee().add(((getPerTransactionVeriableCharge().multiply(amount))).divide(new BigDecimal(100)));
+
+            if (getMaxTransactionFee() == null) return calculatedServiceCharge;
+            else if (getMaxTransactionFee().compareTo(calculatedServiceCharge) > 0)
+                return calculatedServiceCharge;
+            else return getMaxTransactionFee();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new BigDecimal(-1);
+        }
     }
 
     public String getServiceChargeDescription(BigDecimal amount) {

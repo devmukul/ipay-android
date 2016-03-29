@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -81,7 +82,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private ImageView refreshBalanceButton;
     private RelativeLayout mSendMoneyButtonView;
     private RelativeLayout mRequestMoneyView;
-    private RelativeLayout mMakePaymentButtonView;
+    private RelativeLayout mCreateInvoiceOrMobileRechargeButtonView;
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private Button mAddMoneyButton;
@@ -115,15 +116,15 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         if (pref.contains(Constants.UUID))
             UUID = pref.getString(UUID, null);
 
-        TextView makePaymentLabel = (TextView) v.findViewById(R.id.textview_make_payment);
+        TextView makePaymentOrRechargeLabel = (TextView) v.findViewById(R.id.textview_make_payment_or_recharge);
         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
-            makePaymentLabel.setText(getString(R.string.make_payment));
+            makePaymentOrRechargeLabel.setText(getString(R.string.topup));
         else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
-            makePaymentLabel.setText(getString(R.string.create_invoice));
+            makePaymentOrRechargeLabel.setText(getString(R.string.create_invoice));
 
         mSendMoneyButtonView = (RelativeLayout) v.findViewById(R.id.layout_send_money);
         mRequestMoneyView = (RelativeLayout) v.findViewById(R.id.layout_request_money);
-        mMakePaymentButtonView = (RelativeLayout) v.findViewById(R.id.layout_make_payment);
+        mCreateInvoiceOrMobileRechargeButtonView = (RelativeLayout) v.findViewById(R.id.layout_create_invoice_or_mobile_recharge);
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         balanceView = (TextView) v.findViewById(R.id.balance);
@@ -202,11 +203,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        mMakePaymentButtonView.setOnClickListener(new View.OnClickListener() {
+        mCreateInvoiceOrMobileRechargeButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MakePaymentActivity.class);
-                startActivity(intent);
+                Intent intent;
+                if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
+                    intent = new Intent(getActivity(), TopUpActivity.class);
+                    startActivity(intent);
+                } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+                    intent = new Intent(getActivity(), MakePaymentActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 

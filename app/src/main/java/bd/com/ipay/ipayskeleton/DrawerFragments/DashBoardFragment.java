@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments.IPayContactsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.HomeFragment;
@@ -54,10 +55,13 @@ public class DashBoardFragment extends Fragment {
         public Fragment getItem(int pos) {
             switch (pos) {
                 case 0:
+                    HomeActivity.switchedToHomeFragment = true;
                     return new HomeFragment();
                 case 1:
+                    HomeActivity.switchedToHomeFragment = false;
                     return new ContactsHolderFragment();
                 case 2:
+                    HomeActivity.switchedToHomeFragment = false;
                     return new NotificationFragment();
                 default:
                     return new Fragment();

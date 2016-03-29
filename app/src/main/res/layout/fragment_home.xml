@@ -62,7 +62,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/layout_make_payment"
+                android:id="@+id/layout_create_invoice_or_mobile_recharge"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.34"
@@ -77,10 +77,10 @@
                     android:src="@drawable/make_payment" />
 
                 <TextView
-                    android:id="@+id/textview_make_payment"
+                    android:id="@+id/textview_make_payment_or_recharge"
                     style="@style/HomeImageTextViewStyle"
                     android:layout_below="@+id/button_make_payment"
-                    android:text="@string/make_payment" />
+                    android:text="@string/topup" />
 
             </RelativeLayout>
 
