@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="@dimen/activity_horizontal_margin_card">
 
         <Button
             android:id="@+id/button_send_money"
@@ -39,6 +39,11 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_action_ask_for_introduction"
             android:text="@string/ask_for_introduction" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white" />
 
     </LinearLayout>
 

@@ -7,12 +7,20 @@
     android:orientation="vertical"
     android:padding="@dimen/activity_vertical_margin">
 
+    <!--<TextView-->
+    <!--style="@style/TextStylePrimarySmall"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="@dimen/activity_horizontal_margin"-->
+    <!--android:text="@string/select_account_type" />-->
+
+    <!-- Remove the TextView later-->
     <TextView
+        style="@style/TextStylePrimarySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:text="@string/select_account_type"
-        style="@style/TextStylePrimarySmall" />
+        android:text="@string/sign_up_with_ipay" />
 
     <Button
         android:id="@+id/button_account_type_personal"
@@ -26,23 +34,24 @@
         android:id="@+id/button_account_type_business"
         style="@style/ButtonStyleMedium"
         android:layout_width="match_parent"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:layout_height="wrap_content"
-        android:text="@string/account_type_business" />
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:text="@string/account_type_business"
+        android:visibility="gone" />
 
     <TextView
+        style="@style/TextStylePrimarySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:text="@string/have_an_existing_account"
-        style="@style/TextStylePrimarySmall" />
+        android:text="@string/have_an_existing_account" />
 
     <Button
         android:id="@+id/login_with_existing_account"
         style="@style/ButtonStyleMedium"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:text="@string/login_with_existing_account" />
 
 </LinearLayout>

@@ -41,7 +41,7 @@ public class AllContactsFragment extends BaseContactsFragment {
 
     protected static final int CONTACTS_QUERY_LOADER = 0;
 
-    private HashMap<String, String> subscriber = new HashMap<>();
+    private HashMap<String, Integer> subscriber = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,7 +95,8 @@ public class AllContactsFragment extends BaseContactsFragment {
                     do {
                         String mobileNumber = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER));
                         String name = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_NAME));
-                        subscriber.put(mobileNumber, name);
+                        int status = cursor.getInt(cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS));
+                        subscriber.put(mobileNumber, status);
                     } while (cursor.moveToNext());
                 }
             }
@@ -291,7 +292,7 @@ public class AllContactsFragment extends BaseContactsFragment {
                                     setContactInformationInSheet(name,
                                             contactNumber, imageUrl, COLORS[randomColor]);
                                 } else {
-                                    showSubscriberSheet();
+                                    showSubscriberSheet(subscriber.get(contactNumber));
                                     setContactInformationInSheet(name,
                                             contactNumber, imageUrl, COLORS[randomColor]);
                                 }

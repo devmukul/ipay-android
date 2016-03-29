@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/image_contact"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/image_contact" />
+            android:layout_height="200dp" />
 
         <View
             android:layout_width="fill_parent"
@@ -19,14 +20,14 @@
             android:background="@color/colorBlackTransparent" />
 
         <TextView
+            android:id="@+id/textview_contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
             android:padding="12dp"
-            android:textSize="26sp"
+            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white"
-            android:layout_gravity="bottom|left"
-            android:text="Rafi Kamal"
-            android:id="@+id/textview_contact_name" />
+            android:textSize="26sp" />
     </FrameLayout>
 </LinearLayout>

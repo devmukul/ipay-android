@@ -89,19 +89,23 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     @Override
     public void httpResponseReceiver(String result) {
 
-        List<String> resultList = Arrays.asList(result.split(";"));
-        Gson gson = new Gson();
+        try {
+            List<String> resultList = Arrays.asList(result.split(";"));
+            Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
-            try {
-                if (resultList.size() > 2)
-                    ContactsHolderFragment.mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
+            if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
+                try {
+                    if (resultList.size() > 2)
+                        ContactsHolderFragment.mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                mGetInviteInfoTask = null;
             }
-
-            mGetInviteInfoTask = null;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

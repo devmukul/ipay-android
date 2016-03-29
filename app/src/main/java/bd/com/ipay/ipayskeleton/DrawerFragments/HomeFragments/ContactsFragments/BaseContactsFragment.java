@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.AskForRecommendationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteRequest;
@@ -367,11 +368,20 @@ public abstract class BaseContactsFragment extends Fragment implements
         }
     }
 
-    protected void showSubscriberSheet() {
+    protected void showSubscriberSheet(int verificationStatus) {
         if (mBottomSheetLayout == null)
             return;
 
         selectedBottomSheetView = mSheetViewSubscriber;
+
+        // TODO: Show a green tick for the verified users
+        Button askForConfirmationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_introduction);
+        if (verificationStatus == DBConstants.NOT_VERIFIED_USER) {
+            if (askForConfirmationButton != null) askForConfirmationButton.setVisibility(View.GONE);
+
+        } else if (askForConfirmationButton != null)
+            askForConfirmationButton.setVisibility(View.VISIBLE);
+
         mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
         mBottomSheetLayout.expandSheet();
     }
