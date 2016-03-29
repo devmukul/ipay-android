@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments;
+package bd.com.ipay.ipayskeleton.ServicesFragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -203,7 +203,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
             if (mGetServiceChargeResponse != null) {
                 if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) > 0)
-                    serviceChargeDescription = "You'll be charged " + mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)) + " Tk. for this transaction.";
+                    serviceChargeDescription = "You'll be charged " + mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)) + " Tk. from your iPay account for this recharge.";
                 else if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) == 0)
                     serviceChargeDescription = getString(R.string.no_extra_charges);
                 else {
@@ -216,7 +216,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 return;
             }
 
-        
+
             AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
             alertDialogue.setTitle(R.string.confirm_add_money);
             alertDialogue.setMessage("You're going to recharge your mobile with " + amount + " Tk. from your iPay account."

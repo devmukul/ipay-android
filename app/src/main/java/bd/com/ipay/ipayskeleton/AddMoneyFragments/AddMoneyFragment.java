@@ -326,7 +326,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                         builderInner.show();
                     }
                 });
-        
+
         builderSingle.show();
     }
 

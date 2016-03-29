@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -327,7 +328,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
         if (mGetServiceChargeResponse != null) {
             if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) > 0)
-                serviceChargeDescription = "You'll be charged " + mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)) + " Tk. for this transaction.";
+                serviceChargeDescription = "The receiver be charged " + mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)) + " Tk. for this transaction.";
             else if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) == 0)
                 serviceChargeDescription = getString(R.string.no_extra_charges);
             else {
@@ -371,9 +372,9 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         } else {
             try {
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + "/image/"
-                                + receiver.replaceAll("[^0-9]", "")
-                                + ".jpg")
+                        .load(R.drawable.ic_person)
+                        .crossFade()
+                        .transform(new CircleTransform(getActivity()))
                         .into(image);
             } catch (Exception e) {
                 e.printStackTrace();
