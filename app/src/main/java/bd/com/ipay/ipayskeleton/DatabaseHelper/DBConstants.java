@@ -19,4 +19,6 @@ public class DBConstants {
     public static final String KEY_NAME = "name";
     public static final String KEY_ACCOUNT_TYPE = "account_type";
     public static final String KEY_PROFILE_PICTURE = "profile_picture";
+    public static final int VERIFIED_USER = 1;
+    public static final int NOT_VERIFIED_USER = 0;
 }

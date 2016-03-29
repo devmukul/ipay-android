@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.MakePaymentFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,17 +21,21 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -42,6 +48,9 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
 
     private HttpRequestPostAsyncTask mPendingPaymentsRequestTask = null;
     private GetPendingPaymentsResponse mGetPendingPaymentsResponse;
+
+    private HttpRequestPostAsyncTask mServiceChargeTask = null;
+    private GetServiceChargeResponse mGetServiceChargeResponse;
 
     private HttpRequestPostAsyncTask mRejectPaymentTask = null;
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
@@ -68,7 +77,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         mPendingListRecyclerView.setLayoutManager(mLayoutManager);
         mPendingListRecyclerView.setAdapter(mPaymentRequestsReceivedAdapter);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
@@ -76,6 +85,11 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
                 }
             }
         });
+
+        if (Utilities.isConnectionAvailable(getActivity()))
+            attemptGetServiceCharge();
+        else
+            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
 
         return v;
     }
@@ -86,6 +100,26 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         if (Utilities.isConnectionAvailable(getActivity())) {
             getPendingPaymentRequests();
         }
+    }
+
+    private void attemptGetServiceCharge() {
+        if (mServiceChargeTask != null) {
+            return;
+        }
+
+        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
+        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
+        int accountClass = Constants.DEFAULT_USER_CLASS;
+
+        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.show();
+        GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(Constants.SERVICE_ID_MAKE_PAYMENT, accountType, accountClass);
+        Gson gson = new Gson();
+        String json = gson.toJson(mServiceChargeRequest);
+        mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
+                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
+        mServiceChargeTask.mHttpResponseListener = this;
+        mServiceChargeTask.execute((Void) null);
     }
 
     private void refreshPendingPaymentList() {
@@ -149,6 +183,52 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
                 Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptPaymentTask.mHttpResponseListener = this;
         mAcceptPaymentTask.execute((Void) null);
+    }
+
+    private void showAlertDialogue(String msg, final int action, final long id, BigDecimal amount) {
+        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+        alertDialogue.setTitle(R.string.confirm_query);
+
+        String serviceChargeDescription = "";
+
+        if (mGetServiceChargeResponse != null) {
+            if (mGetServiceChargeResponse.getServiceCharge(amount).compareTo(new BigDecimal(0)) > 0)
+                serviceChargeDescription = "You'll be charged " + mGetServiceChargeResponse.getServiceCharge(amount) + " Tk. for this transaction.";
+            else if (mGetServiceChargeResponse.getServiceCharge(amount).compareTo(new BigDecimal(0)) == 0)
+                serviceChargeDescription = getString(R.string.no_extra_charges);
+            else {
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        } else {
+            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (action == ACTION_ACCEPT_REQUEST) msg = serviceChargeDescription + "\n" + msg;
+        alertDialogue.setMessage(msg);
+
+        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (action == ACTION_ACCEPT_REQUEST) {
+
+                    acceptPaymentRequest(id);
+
+                } else if (action == ACTION_REJECT_REQUEST) {
+
+                    rejectPaymentRequest(id);
+                }
+            }
+        });
+
+        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+
+        alertDialogue.show();
     }
 
     @Override
@@ -265,6 +345,26 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
 
             mProgressDialog.dismiss();
             mAcceptPaymentTask = null;
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
+            if (resultList.size() > 2) {
+                try {
+                    mGetServiceChargeResponse = gson.fromJson(resultList.get(2), GetServiceChargeResponse.class);
+
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        // Do nothing
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+
+            mProgressDialog.dismiss();
+            mServiceChargeTask = null;
         }
     }
 
@@ -299,6 +399,8 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
                 final long id = pendingPaymentRequestClasses.get(pos).getId();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(pendingPaymentRequestClasses.get(pos).getRequestTime());
                 String imageUrl = pendingPaymentRequestClasses.get(pos).getOriginatorProfile().getUserProfilePicture();
+                final BigDecimal amount = pendingPaymentRequestClasses.get(pos).getAmount();
+
                 mDescription.setText(pendingPaymentRequestClasses.get(pos).getDescription());
                 mTime.setText(time);
                 mSenderNumber.setText(pendingPaymentRequestClasses.get(pos).getOriginatorProfile().getUserName());
@@ -307,14 +409,14 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
                 mAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showAlertDialogue(getString(R.string.accept_money_request_confirm), ACTION_ACCEPT_REQUEST, id);
+                        showAlertDialogue(getString(R.string.accept_money_request_confirm), ACTION_ACCEPT_REQUEST, id, amount);
                     }
                 });
 
                 mCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showAlertDialogue(getString(R.string.reject_money_request_confirm), ACTION_REJECT_REQUEST, id);
+                        showAlertDialogue(getString(R.string.reject_money_request_confirm), ACTION_REJECT_REQUEST, id, amount);
                     }
                 });
 
@@ -362,32 +464,5 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         public int getItemViewType(int position) {
             return super.getItemViewType(position);
         }
-    }
-
-    private void showAlertDialogue(String msg, final int action, final long id) {
-        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
-        alertDialogue.setTitle(R.string.confirm_query);
-        alertDialogue.setMessage(msg);
-
-        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if (action == ACTION_ACCEPT_REQUEST) {
-
-                    acceptPaymentRequest(id);
-
-                } else if (action == ACTION_REJECT_REQUEST) {
-
-                    rejectPaymentRequest(id);
-                }
-            }
-        });
-
-        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-            }
-        });
-
-        alertDialogue.show();
     }
 }

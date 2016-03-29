@@ -54,7 +54,8 @@ public class UpdateSubscriberTableAsyncTask extends AsyncTask<String, Void, Stri
                                     if (mFriendNode.getInfo().isFriend()) {
                                         SubscriberEntry mSubscriberEntry = new SubscriberEntry(
                                                 mFriendNode.phoneNumber, mFriendNode.info.getName(),
-                                                mFriendNode.info.getAccountType(), mFriendNode.info.getProfilePictureUrl());
+                                                mFriendNode.info.getAccountType(), mFriendNode.info.getProfilePictureUrl(),
+                                                mFriendNode.info.isVerified() ? DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
 
                                         boolean exists = DataHelper.getInstance(mContext).
                                                 checkIfStringFieldExists(DBConstants.DB_TABLE_SUBSCRIBERS,

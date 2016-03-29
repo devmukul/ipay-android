@@ -6,12 +6,14 @@ public class SubscriberEntry {
     private String name;
     private int accountType;
     private String profilePicture;
+    private int isVerified;
 
-    public SubscriberEntry(String mobileNumber, String name, int accountType, String profilePicture) {
+    public SubscriberEntry(String mobileNumber, String name, int accountType, String profilePicture, int isVerified) {
         this.mobileNumber = mobileNumber;
         this.name = name;
         this.accountType = accountType;
         this.profilePicture = profilePicture;
+        this.isVerified = isVerified;
     }
 
     public String getMobileNumber() {
@@ -24,6 +26,10 @@ public class SubscriberEntry {
 
     public int getAccountType() {
         return accountType;
+    }
+
+    public int getIsVerified() {
+        return isVerified;
     }
 
     public String getProfilePicture() {

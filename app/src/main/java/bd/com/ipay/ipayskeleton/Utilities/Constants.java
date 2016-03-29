@@ -30,6 +30,7 @@ public class Constants {
     public static final int STARTING_DATE = 01;
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
+    public static final int DEFAULT_USER_CLASS = 1;
 
     // Member Management (MM) Module
     // For POST Requests
@@ -58,6 +59,7 @@ public class Constants {
     // Server Type 3 -> live server
     // Server Type 4 -> local server
     public static final int SERVER_TYPE = 2;
+    public static final boolean DEBUG = true;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -172,19 +174,8 @@ public class Constants {
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_REQUEST_MONEY = "requestmoney";
-    //    public static final String URL_PENDING_PAYMENT_REQUEST_RECEIVED = "payment/received";
-//    public static final String URL_PENDING_PAYMENT_REQUEST_SENT = "payment/sent";
-    //    public static final String URL_PENDING_REQUEST_MONEY_TO_ME = "requestmoney/received";
-//    public static final String URL_PENDING_REQUEST_MONEY_FROM_ME = "requestmoney/sent";
-//    public static final String URL_REQUEST_MONEY_ACCEPT = "requestmoney/accept";
-//    public static final String URL_REQUEST_MONEY_REJECT = "requestmoney/reject";
-//    public static final String URL_REQUEST_CANCEL = "requestmoney/cancel";
-//    public static final String URL_PAYMENT_REQUEST_ACCEPT = "payment/accept";
-//    public static final String URL_PAYMENT_REQUEST_REJECT = "payment/reject";
-//    public static final String URL_PAYMENT_REQUEST_CANCEL = "payment/cancel";
     public static final String URL_PAYMENT_CREATE_INVOICE = "payment/invoice";
     public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/set";
-    public static final String URL_DOWNLOAD_PROFILE_PICTURE_FRIEND = "user/profile/profilepicture/download/friend";
     public static final String URL_ADD_A_BANK = "bank/add";
     public static final String URL_REMOVE_A_BANK = "bank/remove";
     public static final String URL_DISABLE_A_BANK = "bank/disable";
@@ -200,6 +191,7 @@ public class Constants {
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
     public static final String URL_GET_FIREBASE_TOKEN = "friend/firebasetoken";
     public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
+    public static final String URL_SERVICE_CHARGE = "feecharge";
 
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
@@ -227,6 +219,7 @@ public class Constants {
     public static final String COMMAND_FORGET_PASSWORD_CONFIRM_OTP = "COMMAND_FORGET_PASSWORD_CONFIRM_OTP";
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
+    public static final String COMMAND_GET_SERVICE_CHARGE = "COMMAND_GET_SERVICE_CHARGE";
     public static final String COMMAND_SEND_MONEY_QUERY = "COMMAND_SEND_MONEY_QUERY";
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
     public static final String COMMAND_GET_USER_ACTIVITIES = "COMMAND_GET_USER_ACTIVITIES";
@@ -354,8 +347,14 @@ public class Constants {
     public static final int SERVICE_ID_REQUEST_MONEY = 6001;
     public static final int SERVICE_ID_REQUEST_INVOICE = 6003;
     public static final int SERVICE_ID_RECOMMENDATION_REQUEST = 1002;
+    public static final int SERVICE_ID_OPENING_BALANCE = 1001;
+    public static final int SERVICE_ID_SEND_MONEY = 1;
+    public static final int SERVICE_ID_ADD_MONEY = 3001;
+    public static final int SERVICE_ID_WITHDRAW_MONEY = 3002;
+    public static final int SERVICE_ID_TOP_UP = 2001;
+    public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
+    public static final int SERVICE_ID_EDUCATION = 8001;
 
-    public static final boolean DEBUG = true;
     public static final String RESULT = "Result";
     public static final String POST_REQUEST = "POST_RESULT: ";
     public static final String GET_REQUEST = "GET_RESULT: ";

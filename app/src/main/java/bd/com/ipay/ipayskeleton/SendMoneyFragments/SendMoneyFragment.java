@@ -29,6 +29,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +40,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyQueryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyQueryResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -50,6 +53,9 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
     private HttpRequestPostAsyncTask mSendMoneyTask = null;
     private SendMoneyResponse mSendMoneyResponse;
+
+    private HttpRequestPostAsyncTask mServiceChargeTask = null;
+    private GetServiceChargeResponse mGetServiceChargeResponse;
 
     private HttpRequestPostAsyncTask mSendMoneyQueryTask = null;
     private SendMoneyQueryResponse mSendMoneyQueryResponse;
@@ -81,7 +87,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         }
 
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,8 +105,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                     if (verifyUserInputs()) {
                         showSendMoneyConfirmationDialog();
                     }
-                }
-                else if (getActivity() != null)
+                } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
@@ -114,6 +118,11 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         });
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+
+        if (Utilities.isConnectionAvailable(getActivity()))
+            attemptGetServiceCharge();
+        else
+            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
 
         return v;
     }
@@ -217,6 +226,25 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         return numbers;
     }
 
+    private void attemptGetServiceCharge() {
+        if (mServiceChargeTask != null) {
+            return;
+        }
+
+        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
+        int accountClass = Constants.DEFAULT_USER_CLASS;
+
+        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.show();
+        GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(Constants.SERVICE_ID_SEND_MONEY, accountType, accountClass);
+        Gson gson = new Gson();
+        String json = gson.toJson(mServiceChargeRequest);
+        mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
+                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
+        mServiceChargeTask.mHttpResponseListener = this;
+        mServiceChargeTask.execute((Void) null);
+    }
+
     private void attemptSendMoney() {
         if (mSendMoneyTask != null) {
             return;
@@ -227,6 +255,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         String description = mDescriptionEditText.getText().toString().trim();
         String senderMobileNumber = pref.getString(Constants.USERID, "");
 
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
         mProgressDialog.show();
         SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(
                 senderMobileNumber, ContactEngine.convertToInternationalFormat(mobileNumber), amount, description);
@@ -278,6 +307,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             String description = mDescriptionEditText.getText().toString().trim();
             String senderMobileNumber = pref.getString(Constants.USERID, "");
 
+            mProgressDialog.setMessage(getString(R.string.validating));
             mProgressDialog.show();
             SendMoneyQueryRequest mSendMoneyQueryRequest = new SendMoneyQueryRequest(
                     senderMobileNumber, ContactEngine.convertToInternationalFormat(mobileNumber), amount);
@@ -293,6 +323,22 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     private void showSendMoneyConfirmationDialog() {
         String receiver = mMobileNumberEditText.getText().toString().trim();
         String amount = mAmountEditText.getText().toString().trim();
+        String serviceChargeDescription = "";
+
+        if (mGetServiceChargeResponse != null) {
+            if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) > 0)
+                serviceChargeDescription = "You'll be charged " + mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)) + " Tk. for this transaction.";
+            else if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) == 0)
+                serviceChargeDescription = getString(R.string.no_extra_charges);
+            else {
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        } else {
+            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
 
@@ -305,8 +351,9 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         RoundedImageView image = (RoundedImageView) dialogLayout.findViewById(R.id.portrait);
 
         title.setText(R.string.confirm_query);
-        msg.setText("You're going to send " + amount + " BDT to " + receiver
-                + "\n Do you want to continue?");
+        msg.setText("You're going to send " + amount + " Tk. to " + receiver
+                + "\n" + serviceChargeDescription
+                + "\nDo you want to continue?");
 
         File file = new File(Environment.getExternalStorageDirectory().getPath()
                 + Constants.PICTURE_FOLDER + receiver.replaceAll("[^0-9]", "") + ".jpg");
@@ -412,6 +459,26 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
             mProgressDialog.dismiss();
             mSendMoneyQueryTask = null;
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
+            if (resultList.size() > 2) {
+                try {
+                    mGetServiceChargeResponse = gson.fromJson(resultList.get(2), GetServiceChargeResponse.class);
+
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        // Do nothing
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+
+            mProgressDialog.dismiss();
+            mServiceChargeTask = null;
         }
     }
 }

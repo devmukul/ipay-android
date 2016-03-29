@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -37,6 +36,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityResponse;
@@ -54,7 +54,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
     private ActivityLogAdapter mActivityLogAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<UserActivityClass> userActivityResponsesList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private LinearLayout eventFilterLayout;
     private LinearLayout dateFilterLayout;
@@ -137,7 +137,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
 
         activityLogTypes = getResources().getStringArray(R.array.activity_log_types);
         mActivityLogRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         mActivityLogAdapter = new ActivityLogAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -161,7 +161,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {

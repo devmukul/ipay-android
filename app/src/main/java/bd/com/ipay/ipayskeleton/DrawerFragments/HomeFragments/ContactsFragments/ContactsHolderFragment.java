@@ -67,21 +67,23 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private void switchToAllContacts() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, allContactsFragment).commit();
-            }
-        }, 300);
+        if (getActivity() != null)
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, allContactsFragment).commit();
+                }
+            }, 300);
     }
 
     private void switchToiPayContacts() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, iPayContactsFragment).commit();
-            }
-        }, 300);
+        if (getActivity() != null)
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, iPayContactsFragment).commit();
+                }
+            }, 300);
     }
 
     @Override

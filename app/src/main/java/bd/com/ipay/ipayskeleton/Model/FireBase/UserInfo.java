@@ -5,6 +5,7 @@ public class UserInfo {
     public boolean isFriend;
     public int accountType;
     public String profilePictureUrl;
+    public boolean isVerified;
 
     public UserInfo() {
     }
@@ -15,6 +16,10 @@ public class UserInfo {
 
     public boolean isFriend() {
         return isFriend;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
     }
 
     public int getAccountType() {

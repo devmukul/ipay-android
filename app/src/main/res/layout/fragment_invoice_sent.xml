@@ -20,7 +20,7 @@
 
     </RelativeLayout>
 
-    <bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -29,6 +29,6 @@
             android:id="@+id/list_invoice_sent"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

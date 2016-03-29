@@ -167,6 +167,7 @@
     <string name="progress_dialog_sending_invite">Sending invitation...</string>
     <string name="progress_dialog_fetching_business_types">Loading business types..</string>
     <string name="invalid_account_number">Please enter a valid account number</string>
+    <string name="validating">Validating your request...</string>
     <string name="progress_dialog_rejecting">Rejecting request...</string>
     <string name="progress_dialog_accepted">Accepting request...</string>
     <string name="progress_dialog_signing_out">Signing out...</string>
@@ -305,6 +306,8 @@
     <string name="change_password_success">Password changed successfully...</string>
     <string name="enter_current_pass">Enter current password</string>
     <string name="server_down">Can not process your request right now. Please try again later</string>
+    <string name="service_not_available">Service is not available right now. Please try again later</string>
+    <string name="no_extra_charges">There are no extra charges for this transaction!</string>
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="withdraw_money_failed">Could not submit request for money withdrawal</string>
     <string name="home">Home</string>
