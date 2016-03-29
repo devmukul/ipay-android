@@ -204,8 +204,14 @@ public class AllContactsFragment extends BaseContactsFragment {
                     number = ContactEngine.convertToInternationalFormat(number);
                     if (subscriber != null && subscriber.containsKey(number)) {
                         isSubscriber.setVisibility(View.VISIBLE);
+                        // TODO
+//                        if (subscriber.get(number) == DBConstants.VERIFIED_USER)
+//                            mNameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_circle_black_24dp, 0);
+//                        else
+//                            mNameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     } else {
                         isSubscriber.setVisibility(View.INVISIBLE);
+//                        mNameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     }
                 } else isSubscriber.setVisibility(View.INVISIBLE);
 
