@@ -7,6 +7,10 @@
             android:icon="@drawable/ic_drawer_home"
             android:title="@string/home" />
         <item
+            android:id="@+id/nav_bank_account"
+            android:icon="@drawable/ic_drawer_bank"
+            android:title="@string/link_bank_account" />
+        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_drawer_settings"
             android:title="@string/account_settings" />
@@ -19,10 +23,6 @@
             android:icon="@drawable/ic_drawer_transaction_history"
             android:title="@string/support"
             android:visible="false" />
-        <item
-            android:id="@+id/nav_bank_account"
-            android:icon="@drawable/ic_drawer_bank"
-            android:title="@string/link_bank_account" />
         <item
             android:id="@+id/nav_topup"
             android:icon="@drawable/ic_drawer_topup"

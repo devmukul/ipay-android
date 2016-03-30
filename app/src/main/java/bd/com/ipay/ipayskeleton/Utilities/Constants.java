@@ -58,7 +58,7 @@ public class Constants {
     // Server Type 2 -> staging server
     // Server Type 3 -> live server
     // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = 2;
     public static final boolean DEBUG = true;
 
     static {
@@ -104,7 +104,7 @@ public class Constants {
             BASE_URL_POST_MM = "https://www.ipay.com.bd/api/v1/";
 
             BASE_URL_GET_MM = "www.ipay.com.bd";
-            BASE_URL_GET_MM_PORT = 80;
+            BASE_URL_GET_MM_PORT = 443;
             BASE_URL_GET_MM_PATH = "/api/v1/";
 
             BASE_URL_IMAGE_SERVER = "https://www.ipay.com.bd";

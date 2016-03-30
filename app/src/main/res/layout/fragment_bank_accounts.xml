@@ -4,10 +4,21 @@
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin">
 
+    <Button
+        android:id="@+id/button_add_bank"
+        style="@style/ButtonStyleLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/add_a_bank"
+        android:textSize="@dimen/text_size_medium"
+        android:textStyle="bold" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_bank"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/button_add_bank"
         android:layout_marginTop="@dimen/value5"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/activity_horizontal_margin_double" />
@@ -19,16 +30,5 @@
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:text="@string/empty_bank_account_list" />
-
-    <Button
-        android:id="@+id/button_add_bank"
-        style="@style/ButtonStyleDialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/add_a_bank"
-        android:textSize="@dimen/text_size_medium"
-        android:textStyle="bold" />
 
 </RelativeLayout>

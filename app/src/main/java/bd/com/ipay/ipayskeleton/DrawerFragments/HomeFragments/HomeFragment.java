@@ -402,9 +402,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             if (resultList.size() > 2) {
 
-                mAddToTrustedDeviceResponse = gson.fromJson(resultList.get(2), AddToTrustedDeviceResponse.class);
-
                 try {
+                    mAddToTrustedDeviceResponse = gson.fromJson(resultList.get(2), AddToTrustedDeviceResponse.class);
+
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         pref.edit().putString(Constants.UUID, UUID).commit();

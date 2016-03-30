@@ -7,7 +7,7 @@ public class SetProfileInfoRequest {
     public String gender;
     public String dob;
     public String email;
-    public String occupation;
+    public int occupation;
     public String father;
     public String mother;
     public String spouse;
@@ -16,7 +16,7 @@ public class SetProfileInfoRequest {
     public String spouseMobileNumber;
 
     public SetProfileInfoRequest(String mobileNumber, String name, String gender, String dob,
-                                 String email, String occupation, String father, String mother,
+                                 String email, int occupation, String father, String mother,
                                  String spouse, String fatherMobileNumber,
                                  String motherMobileNumber, String spouseMobileNumber) {
         this.mobileNumber = mobileNumber;

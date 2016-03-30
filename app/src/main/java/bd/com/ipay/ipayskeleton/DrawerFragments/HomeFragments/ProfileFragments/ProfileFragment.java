@@ -119,7 +119,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     public static String mMothersMobileNumber = "";
     public static String mSpouseMobileNumber = "";
 
-    public static String mOccupation = "";
+    public static int mOccupation = 0;
     public static String mGender = "";
     public static String mVerificationStatus = "";
 
@@ -267,10 +267,12 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mMothersMobileNumberView.setText(mMothersMobileNumber);
         mSpouseMobileNumberView.setText(mSpouseMobileNumber);
 
-        if (mOccupation != null)
-            mOccupationView.setText(mOccupation);
-        else
-            mOccupationView.setText("");
+        if (mOccupation == 0) mOccupationView.setText("");
+        else {
+            String[] occupationArray = getResources().getStringArray(R.array.occupations);
+            mOccupationView.setText(occupationArray[mOccupation]);
+        }
+
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
 
@@ -418,12 +420,10 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                     if (mGetProfileInfoResponse.getSpouseMobileNumber() != null)
                         mSpouseMobileNumber = mGetProfileInfoResponse.getSpouseMobileNumber();
 
-                    if (mGetProfileInfoResponse.getOccupation() != null)
-                        mOccupation = mGetProfileInfoResponse.getOccupation();
                     if (mGetProfileInfoResponse.getGender() != null)
                         mGender = mGetProfileInfoResponse.getGender();
 
-
+                    mOccupation = mGetProfileInfoResponse.getOccupation();
                     mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
                     mProfilePictures = mGetProfileInfoResponse.getProfilePictures();
 

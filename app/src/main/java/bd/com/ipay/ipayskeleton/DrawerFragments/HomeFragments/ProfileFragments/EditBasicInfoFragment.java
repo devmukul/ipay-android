@@ -182,11 +182,9 @@ public class EditBasicInfoFragment extends Fragment {
             ProfileFragment.mFathersMobileNumber = mFathersMobileNumberEditText.getText().toString().trim();
             ProfileFragment.mMothersMobileNumber = mMothersMobileNumberEditText.getText().toString().trim();
             ProfileFragment.mSpouseMobileNumber = mSpouseMobileNumberEditText.getText().toString().trim();
+            
+            ProfileFragment.mOccupation = mOccupationSpinner.getSelectedItemPosition();
 
-            if (mOccupationSpinner.getSelectedItemPosition() != 0)
-                ProfileFragment.mOccupation = mOccupationSpinner.getSelectedItem().toString();
-            else
-                ProfileFragment.mOccupation = null;
             ProfileFragment.mGender = GenderList.genderNameToCodeMap.get(
                     mGenderSpinner.getSelectedItem().toString());
 
@@ -219,13 +217,8 @@ public class EditBasicInfoFragment extends Fragment {
 
         mDateOfBirthEditText.setText(ProfileFragment.mDateOfBirth);
 
-        String[] occupationArray = getResources().getStringArray(R.array.occupations);
-        for (int i = 0; i < occupationArray.length; i++) {
-            if (occupationArray[i].equals(ProfileFragment.mOccupation)) {
-                mOccupationSpinner.setSelection(i);
-                break;
-            }
-        }
+        // Set occupation spinner value
+        mOccupationSpinner.setSelection(ProfileFragment.mOccupation);
 
         String[] genderArray = GenderList.genderNames;
         for (int i = 0; i < genderArray.length; i++) {

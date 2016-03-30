@@ -11,7 +11,7 @@ public class GetProfileInfoResponse {
     public String gender;
     public String dob;
     public String email;
-    public String occupation;
+    public int occupation;
     public int emailVerificationStatus;
     public int accountType;
     public String verificationStatus;
@@ -52,7 +52,7 @@ public class GetProfileInfoResponse {
         return email;
     }
 
-    public String getOccupation() {
+    public int getOccupation() {
         return occupation;
     }
 
