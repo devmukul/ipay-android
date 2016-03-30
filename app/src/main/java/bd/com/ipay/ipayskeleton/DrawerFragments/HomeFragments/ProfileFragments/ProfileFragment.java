@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,7 +67,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private GetIntroducerListResponse mGetIntroducerListResponse = null;
 
     private ProgressDialog mProgressDialog;
-    private ScrollView mScrollView;
+    private NestedScrollView mScrollView;
 
     private RoundedImageView mProfilePicture;
     private TextView mNameView;
@@ -152,7 +153,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         mProfilePictures = new HashSet<>();
 
-        mScrollView = (ScrollView) v.findViewById(R.id.scrollview);
+        mScrollView = (NestedScrollView) v.findViewById(R.id.scrollview);
 
         mProfilePicture = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
