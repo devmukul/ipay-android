@@ -12,8 +12,16 @@
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
         android:layout_marginRight="16dp" />
+
+    <ImageView
+        android:id="@+id/verification_status"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+        android:src="@drawable/ic_verified"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/name"
@@ -21,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/verification_status"
+        android:layout_toLeftOf="@+id/is_subscriber"
         android:layout_toRightOf="@+id/contact_portrait_view"
         android:gravity="left"
         android:paddingBottom="2dp"
@@ -29,16 +37,6 @@
         android:singleLine="true"
         android:textSize="16sp"
         android:textStyle="bold" />
-
-    <ImageView
-        android:id="@+id/verification_status"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:layout_toLeftOf="@+id/is_subscriber"
-        android:src="@drawable/ic_check_circle_black_24dp"
-        android:tint="@color/bottle_green"
-        android:visibility="gone" />
 
     <TextView
         android:id="@+id/mobile_number"
@@ -70,7 +68,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-        android:src="@drawable/ic_ipay_user" />
+        android:src="@drawable/ic_ipay_user"
+        android:visibility="gone" />
 
 </RelativeLayout>

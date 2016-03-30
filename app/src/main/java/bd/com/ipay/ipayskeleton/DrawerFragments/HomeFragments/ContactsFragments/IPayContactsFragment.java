@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments
 
 import android.content.Context;
 import android.database.Cursor;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -157,6 +159,7 @@ public class IPayContactsFragment extends BaseContactsFragment {
             private TextView mNameView;
             private TextView mMobileNumberView;
             private RoundedImageView mPortrait;
+            private ImageView mVerificationStatus;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -165,6 +168,7 @@ public class IPayContactsFragment extends BaseContactsFragment {
                 mNameView = (TextView) itemView.findViewById(R.id.name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mVerificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
             }
 
             public void bindView() {
@@ -184,6 +188,9 @@ public class IPayContactsFragment extends BaseContactsFragment {
 
                 index = mCursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
                 final int verificationStatus = mCursor.getInt(index);
+                if (verificationStatus == DBConstants.VERIFIED_USER)
+                    mVerificationStatus.setVisibility(View.VISIBLE);
+                else mVerificationStatus.setVisibility(View.GONE);
 
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;

@@ -170,6 +170,7 @@ public class AllContactsFragment extends BaseContactsFragment {
             private RoundedImageView mPortrait;
             private TextView mMobileNumberView;
             private ImageView isSubscriber;
+            private ImageView mVerificationStatus;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -181,6 +182,7 @@ public class AllContactsFragment extends BaseContactsFragment {
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 isSubscriber = (ImageView) itemView.findViewById(R.id.is_subscriber);
+                mVerificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
             }
 
             public void bindView() {
@@ -202,18 +204,23 @@ public class AllContactsFragment extends BaseContactsFragment {
 
                 if (number != null) {
                     number = ContactEngine.convertToInternationalFormat(number);
-                    if (subscriber != null && subscriber.containsKey(number)) {
+
+                    // Set subscription status
+                    if (subscriber != null && subscriber.containsKey(number))
                         isSubscriber.setVisibility(View.VISIBLE);
-                        // TODO
-//                        if (subscriber.get(number) == DBConstants.VERIFIED_USER)
-//                            mNameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_circle_black_24dp, 0);
-//                        else
-//                            mNameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                    } else {
-                        isSubscriber.setVisibility(View.INVISIBLE);
-//                        mNameView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                    }
-                } else isSubscriber.setVisibility(View.INVISIBLE);
+                    else
+                        isSubscriber.setVisibility(View.GONE);
+
+                    // Set verification status
+                    if (subscriber != null && subscriber.containsKey(number) && subscriber.get(number) == DBConstants.VERIFIED_USER)
+                        mVerificationStatus.setVisibility(View.VISIBLE);
+                    else
+                        mVerificationStatus.setVisibility(View.GONE);
+
+                } else {
+                    isSubscriber.setVisibility(View.GONE);
+                    mVerificationStatus.setVisibility(View.GONE);
+                }
 
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;
