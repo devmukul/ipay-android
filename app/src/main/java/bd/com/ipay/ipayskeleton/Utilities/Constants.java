@@ -58,7 +58,7 @@ public class Constants {
     // Server Type 2 -> staging server
     // Server Type 3 -> live server
     // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 3;
     public static final boolean DEBUG = true;
 
     static {
@@ -289,7 +289,7 @@ public class Constants {
     public static final String PATH_TO_FIREBASE_DATABASE;
 
     static {
-        if (SERVER_TYPE == 2 || SERVER_TYPE == 3)
+        if (SERVER_TYPE == 2)
             PATH_TO_FIREBASE_DATABASE = "https://ipaybdstage.firebaseio.com/";
         else if (SERVER_TYPE == 3)
             PATH_TO_FIREBASE_DATABASE = "https://ipaybd.firebaseio.com/";

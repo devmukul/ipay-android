@@ -253,8 +253,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                     } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_ACCEPTED)) {
-                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
+//                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+//                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
 
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
@@ -262,6 +262,14 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         // First time login from this device. Verify OTP for secure login
                         ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
+                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
+
+                        // OTP has not been expired yet
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        // First time login from this device. Verify OTP for secure login
+                        ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                     } else {
                         if (getActivity() != null)
