@@ -41,12 +41,13 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/amount"
+                android:id="@+id/mobile_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="@string/enter_amount"
-                android:inputType="numberDecimal"
+                android:hint="@string/enter_mobile_number"
+                android:inputType="phone"
+                android:maxLength="14"
                 android:maxLines="1"
                 android:singleLine="true" />
 
@@ -89,13 +90,12 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/mobile_number"
+                android:id="@+id/amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="@string/enter_mobile_number"
-                android:inputType="phone"
-                android:maxLength="14"
+                android:hint="@string/enter_amount"
+                android:inputType="numberDecimal"
                 android:maxLines="1"
                 android:singleLine="true" />
 
