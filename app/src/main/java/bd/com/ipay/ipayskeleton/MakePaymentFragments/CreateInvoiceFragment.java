@@ -18,6 +18,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,13 +28,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.MakePaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.CreateInvoiceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.CreateInvoiceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateInvoiceFragment extends Fragment implements HttpResponseListener {
@@ -74,7 +77,7 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
         buttonCreateInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) attemptRequestMoney();
+                if (Utilities.isConnectionAvailable(getActivity())) attemptSendInvoice();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -83,7 +86,7 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
         return v;
     }
 
-    private void attemptRequestMoney() {
+    private void attemptSendInvoice() {
         if (mCreateInvoiceTask != null) {
             return;
         }
@@ -127,6 +130,8 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
             focusView.requestFocus();
         } else {
 
+            // Format the number
+            receiver = ContactEngine.formatMobileNumberBD(receiver);
 
             mProgressDialog.setMessage(getString(R.string.requesting_money));
             mProgressDialog.show();
@@ -195,14 +200,24 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
                     Toast.makeText(getActivity(), R.string.account_type_business,
                             Toast.LENGTH_LONG).show();
                 else if (size == 1) {
-                    mMobileNumberEditText.setText(numbers[0].toString().replaceAll("\\D", ""));
+
+                    // Format the number
+                    String bdNumberStr = numbers[0].toString();
+                    bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
+                    mMobileNumberEditText.setText(bdNumberStr);
+
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(getString(R.string.pick_a_number));
                     builder.setItems(numbers, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mMobileNumberEditText.setText(numbers[which]);
+
+                            // Format the number
+                            String bdNumberStr = numbers[which].toString();
+                            bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
+                            mMobileNumberEditText.setText(bdNumberStr);
+
                         }
                     });
                     builder.show();

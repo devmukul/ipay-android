@@ -25,6 +25,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
@@ -287,6 +290,9 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
             focusView.requestFocus();
         } else {
 
+            // Format the number
+            receiver = ContactEngine.formatMobileNumberBD(receiver);
+
             mProgressDialog.setMessage(getString(R.string.requesting_money));
             mProgressDialog.show();
             RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(receiver, Double.parseDouble(amount)
@@ -380,14 +386,24 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
                     Toast.makeText(getActivity(), R.string.no_contact_selected,
                             Toast.LENGTH_LONG).show();
             } else if (size == 1) {
-                mMobileNumberEditText.setText(numbers[0].toString().replaceAll("\\D", ""));
+
+                // Format the number
+                String bdNumberStr = numbers[0].toString();
+                bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
+                mMobileNumberEditText.setText(bdNumberStr);
+
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.pick_a_number));
                 builder.setItems(numbers, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mMobileNumberEditText.setText(numbers[which]);
+
+                        // Format the number
+                        String bdNumberStr = numbers[which].toString();
+                        bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
+                        mMobileNumberEditText.setText(bdNumberStr);
+
                     }
                 });
                 builder.show();

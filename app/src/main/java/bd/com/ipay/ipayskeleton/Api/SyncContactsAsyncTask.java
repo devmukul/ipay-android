@@ -82,7 +82,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
                                 });
                     }
 
-
                     isReturnedFromServer = AUTH_SUCCESS;
                 }
 

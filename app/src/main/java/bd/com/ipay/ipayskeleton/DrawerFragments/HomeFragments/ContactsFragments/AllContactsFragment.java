@@ -203,7 +203,7 @@ public class AllContactsFragment extends BaseContactsFragment {
                 mMobileNumberView.setText(number);
 
                 if (number != null) {
-                    number = ContactEngine.convertToInternationalFormat(number);
+                    number = ContactEngine.formatMobileNumberBD(number);
 
                     // Set subscription status
                     if (subscriber != null && subscriber.containsKey(number))

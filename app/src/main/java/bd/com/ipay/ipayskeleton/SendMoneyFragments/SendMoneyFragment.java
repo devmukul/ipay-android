@@ -24,6 +24,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -44,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeReq
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -143,14 +147,21 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             if (size < 1) {
                 Toast.makeText(getActivity(), R.string.no_numbers_found, Toast.LENGTH_LONG).show();
             } else if (size == 1) {
-                mMobileNumberEditText.setText("+" + numbers[0].toString().replaceAll("\\D", ""));
+                // Format the number selected
+                String bdNumberStr = numbers[0].toString();
+                bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
+                mMobileNumberEditText.setText(bdNumberStr);
+
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.pick_a_number));
                 builder.setItems(numbers, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mMobileNumberEditText.setText(numbers[which]);
+                        // Format the number selected
+                        String bdNumberStr = numbers[which].toString();
+                        bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
+                        mMobileNumberEditText.setText(bdNumberStr);
                     }
                 });
                 builder.show();
@@ -259,7 +270,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
         mProgressDialog.show();
         SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(
-                senderMobileNumber, ContactEngine.convertToInternationalFormat(mobileNumber), amount, description);
+                senderMobileNumber, ContactEngine.formatMobileNumberBD(mobileNumber), amount, description);
         Gson gson = new Gson();
         String json = gson.toJson(mSendMoneyRequest);
         mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
@@ -311,7 +322,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             mProgressDialog.setMessage(getString(R.string.validating));
             mProgressDialog.show();
             SendMoneyQueryRequest mSendMoneyQueryRequest = new SendMoneyQueryRequest(
-                    senderMobileNumber, ContactEngine.convertToInternationalFormat(mobileNumber), amount);
+                    senderMobileNumber, ContactEngine.formatMobileNumberBD(mobileNumber), amount);
             Gson gson = new Gson();
             String json = gson.toJson(mSendMoneyQueryRequest);
             mSendMoneyQueryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY_QUERY,

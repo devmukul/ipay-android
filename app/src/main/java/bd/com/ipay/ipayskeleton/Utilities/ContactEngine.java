@@ -20,6 +20,10 @@ import android.provider.ContactsContract.RawContacts;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -926,28 +930,22 @@ public class ContactEngine {
         return cursor;
     }
 
-    /**
-     * Converts a bangladeshi phone number to corresponding international format.
-     * E.g. converts 019111111111 to +88019111111111.
-     *
-     * You might want to call {@link ContactEngine#isValidNumber(String)} before making this call.
-     */
-    public static String convertToInternationalFormat(String number) {
-        if (number == null)
-            return null;
+    public static String formatMobileNumberBD(String bdNumber) {
 
-        number = number.trim();
+        String bdNumberStr = bdNumber;
+        Phonenumber.PhoneNumber bdNumberProto = null;
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
-        if (number.length() == 14 && number.startsWith("+880"))
-            return number;
+        try {
+            bdNumberProto = phoneUtil.parse(bdNumberStr, "BD"); // We have a mapping for country code vs country ISO code in the CountryList class
+        } catch (NumberParseException e) {
+            System.err.println("NumberParseException was thrown: " + e.toString());
+        }
 
-        number = number.replaceAll("[^0-9]", "");
-        if (number.length() == 11)
-            return "+88" + number;
-        else if (number.length() == 13)
-            return "+" + number;
-        else
-            return number;
+        if (bdNumberProto != null)
+            bdNumberStr = phoneUtil.format(bdNumberProto, PhoneNumberUtil.PhoneNumberFormat.E164);
+
+        return bdNumberStr;
     }
 
     public static boolean isValidNumber(String number) {
