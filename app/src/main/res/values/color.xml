@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#1ac1e8</color>
     <color name="colorPrimaryLighter">#20748d</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorTabPrimary">#1694b5</color>
     <color name="colorDivider">#DDDDDD</color>
     <color name="colorLightGray">#E5E5E5</color>
     <color name="colorTextPrimary">#FF000000</color>

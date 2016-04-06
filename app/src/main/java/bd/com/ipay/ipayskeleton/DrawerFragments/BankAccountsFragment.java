@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -59,6 +61,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class BankAccountsFragment extends Fragment implements HttpResponseListener {
 
@@ -569,6 +572,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             private LinearLayout optionsLayout;
             private Button enableDisableButton;
             private Button removeButton;
+            private Button verifyButton;
+            private View verifyDivider;
             private CardView mBankCard;
 
             public ViewHolder(final View itemView) {
@@ -581,17 +586,9 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 enableDisableButton = (Button) itemView.findViewById(R.id.enable_disable_button);
                 removeButton = (Button) itemView.findViewById(R.id.remove_button);
+                verifyButton = (Button) itemView.findViewById(R.id.verify_button);
+                verifyDivider = (View) itemView.findViewById(R.id.verify_divider);
                 mBankCard = (CardView) itemView.findViewById(R.id.bank_account_card);
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (optionsLayout.getVisibility() == View.VISIBLE)
-                            optionsLayout.setVisibility(View.GONE);
-                        else optionsLayout.setVisibility(View.VISIBLE);
-
-                    }
-                });
             }
 
             public void bindView(int pos) {
@@ -620,10 +617,19 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     mBankCard.setBackgroundColor(getResources().getColor(R.color.home_background));
                 }
 
-                if (mListUserBankClasses.get(pos).getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED))
-                    mBankVerifiedStatus.setVisibility(View.VISIBLE);
-                else if (mListUserBankClasses.get(pos).getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED))
-                    mBankVerifiedStatus.setVisibility(View.GONE);
+                if (mListUserBankClasses.get(pos).getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
+                    verifyDivider.setVisibility(View.GONE);
+                    verifyButton.setVisibility(View.GONE);
+
+                } else if (mListUserBankClasses.get(pos).getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_error_black_24dp);
+                    mBankVerifiedStatus.setColorFilter(Color.RED);
+
+                } else {
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_sync_problem_black_24dp);
+                    mBankVerifiedStatus.setColorFilter(Color.YELLOW);
+                }
 
                 enableDisableButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -666,6 +672,23 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                                         // Do nothing
                                     }
                                 })
+                                .show();
+                    }
+                });
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (optionsLayout.getVisibility() == View.VISIBLE)
+                            optionsLayout.setVisibility(View.GONE);
+                        else optionsLayout.setVisibility(View.VISIBLE);
+
+                        new MaterialShowcaseView.Builder(getActivity())
+                                .setTarget(verifyButton)
+                                .setDismissText(R.string.got_it)
+                                .setContentText(Html.fromHtml(getString(R.string.bank_verification_help_html)))
+                                .setDelay(100) // optional but starting animations immediately in onCreate can make them choppy
+                                .singleUse(bankAccountID + "6") // provide a unique ID used to ensure it is only shown once
                                 .show();
                     }
                 });

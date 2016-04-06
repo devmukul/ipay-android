@@ -505,9 +505,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 // Handle debit credit
                 if (amount > 0)
-                    mAmountTextView.setText("+" + String.format("%.2f", amount));
+                    mAmountTextView.setText("+" + String.format("%.2f", amount) + " Tk."); // TODO: Currency will be set later. Put it as a constant now.
                 else
-                    mAmountTextView.setText(String.format("%.2f", amount));
+                    mAmountTextView.setText(String.format("%.2f", amount) + " Tk.");   // TODO: Set taka unicode character, remove + for credit
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);

@@ -204,6 +204,7 @@ public class Constants {
     public static final int PERSONAL_ACCOUNT_TYPE = 1;
     public static final int BUSINESS_ACCOUNT_TYPE = 2;
     public static final String BANK_ACCOUNT_STATUS_VERIFIED = "VERIFIED";
+    public static final String BANK_ACCOUNT_STATUS_PENDING = "PENDING";
     public static final String BANK_ACCOUNT_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
     public static final int BANK_ACCOUNT_STATUS_ACTIVE = 0;
     public static final int BANK_ACCOUNT_STATUS_INACTIVE = 1;

@@ -118,6 +118,9 @@
     <string name="read_mode">Read More</string>
     <string name="all_contacts">All</string>
     <string name="save">Save</string>
+    <string name="got_it">GOT IT</string>
+    <string name="bank_verification_help">We sent some money in your bank account.\nPlease click Verify and then enter the amount we sent in your bank account to complete the verification process.</string>
+    <string name="bank_verification_help_html"><![CDATA[<b><small>We sent some money in your bank account.</small></b>\n<small>Please click</small> <big><b>Verify</b></big> <small>and then enter the amount we sent in your bank account to complete the verification process.</small>]]></string>
     <string name="discard">Discard</string>
     <string name="ipay_contacts">iPay</string>
     <string name="my_requests">My Requests</string>
@@ -197,6 +200,8 @@
     <string name="resend">Resend</string>
     <string name="not_implemented">Not implemented yet.</string>
     <string name="send_money">Send Money</string>
+    <string name="continue_send_money">Continue</string>
+    <string name="continue_mobile_recharge">Continue</string>
     <string name="send_invoice">Send Invoice</string>
     <string name="payment">Payment</string>
     <string name="password_recovery">Password Recovery</string>
@@ -271,6 +276,7 @@
     <string name="event_location">Event location</string>
     <string name="enter_vat">VAT in BDT</string>
     <string name="description">Add a purpose (Optional)</string>
+    <string name="send_money_description">Write a note (Optional)</string>
     <string name="description_mandatory">Add a purpose</string>
     <string name="description_event">Event description</string>
     <string name="item_description">Item description</string>

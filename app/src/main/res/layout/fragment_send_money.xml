@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="@string/description"
+                android:hint="@string/send_money_description"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -96,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/send_money" />
+            android:text="@string/continue_send_money" />
 
     </LinearLayout>
 </ScrollView>

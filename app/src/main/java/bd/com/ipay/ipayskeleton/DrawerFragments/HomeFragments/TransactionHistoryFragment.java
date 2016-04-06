@@ -486,9 +486,9 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
                 // Handle debit credit
                 if (amount > 0)
-                    mAmountTextView.setText("+" + String.format("%.2f", amount));
+                    mAmountTextView.setText("+" + String.format("%.2f", amount) + " Tk."); // TODO: Set currency later, remove + for credit
                 else
-                    mAmountTextView.setText(String.format("%.2f", amount));
+                    mAmountTextView.setText(String.format("%.2f", amount) + " Tk.");     // TODO: Set taka unicode character
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);

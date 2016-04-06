@@ -392,7 +392,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             }
         }
 
-        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+        alertDialogue.setPositiveButton(R.string.send_money, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 attemptSendMoney();
             }

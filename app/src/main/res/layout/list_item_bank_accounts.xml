@@ -12,14 +12,20 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_vertical_margin_card">
+            android:paddingBottom="@dimen/activity_horizontal_margin_card"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingTop="@dimen/activity_horizontal_margin_card">
 
             <TextView
                 android:id="@+id/bank_name"
                 style="@style/TextStylePrimaryMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/bank_account_verify_status"
+                android:gravity="left"
+                android:singleLine="true" />
 
             <TextView
                 android:id="@+id/bank_branch_name"
@@ -40,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_done_black_24dp" />
+                android:padding="@dimen/activity_horizontal_margin" />
 
             <LinearLayout
                 android:id="@+id/options_layout"
@@ -84,6 +90,22 @@
                         android:background="@android:color/transparent"
                         android:padding="@dimen/value5"
                         android:text="@string/remove"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:id="@+id/verify_divider"
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorDivider" />
+
+                    <Button
+                        android:id="@+id/verify_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:padding="@dimen/value5"
+                        android:text="@string/verify"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
