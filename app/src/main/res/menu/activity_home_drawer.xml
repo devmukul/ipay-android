@@ -13,7 +13,7 @@
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_drawer_settings"
-            android:title="@string/account_settings" />
+            android:title="@string/settings" />
         <item
             android:id="@+id/nav_user_activity"
             android:icon="@drawable/ic_drawer_activity"
