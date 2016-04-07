@@ -73,22 +73,26 @@ public class ImagePicker {
                                             Intent imageReturnedIntent) {
         Log.e(TAG, "getImageFromResult, resultCode: " + resultCode);
 //        Bitmap bm = null;
-        File imageFile = getTempFile(context);
         Uri selectedImage = null;
-        if (resultCode == Activity.RESULT_OK) {
-            boolean isCamera = (imageReturnedIntent == null ||
-                    imageReturnedIntent.getData() == null  ||
-                    imageReturnedIntent.getData().toString().contains(imageFile.toString()));
-            if (isCamera) {     /** CAMERA **/
-                selectedImage = Uri.fromFile(imageFile);
-            } else {            /** ALBUM **/
-                selectedImage = Uri.parse(Utilities.getFilePath(context, imageReturnedIntent.getData()));
-            }
-            Log.e(TAG, "selectedImage: " + selectedImage.getPath());
+        try {
+            File imageFile = getTempFile(context);
+            if (resultCode == Activity.RESULT_OK) {
+                boolean isCamera = (imageReturnedIntent == null ||
+                        imageReturnedIntent.getData() == null ||
+                        imageReturnedIntent.getData().toString().contains(imageFile.toString()));
+                if (isCamera) {     /** CAMERA **/
+                    selectedImage = Uri.fromFile(imageFile);
+                } else {            /** ALBUM **/
+                    selectedImage = Uri.parse(Utilities.getFilePath(context, imageReturnedIntent.getData()));
+                }
+                Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
-//            bm = getImageResized(context, selectedImage);
-//            int rotation = getRotation(context, selectedImage, isCamera);
-//            bm = rotate(bm, rotation);
+                //            bm = getImageResized(context, selectedImage);
+                //            int rotation = getRotation(context, selectedImage, isCamera);
+                //            bm = rotate(bm, rotation);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return selectedImage;
     }

@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,7 +25,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.Utilities.ImagePicker;
 
 public class DocumentUploadFragment extends Fragment implements HttpResponseListener {
 
@@ -88,31 +89,31 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         mNationalIdUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectProfilePicture(ACTION_PICK_NATIONAL_ID, mNationalIdUploadButton, mNationalIdNumber);
+                selectDocument(ACTION_PICK_NATIONAL_ID, mNationalIdUploadButton, mNationalIdNumber);
             }
         });
         mPassportUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectProfilePicture(ACTION_PICK_PASSPORT, mPassportUploadButton, mPassportNumber);
+                selectDocument(ACTION_PICK_PASSPORT, mPassportUploadButton, mPassportNumber);
             }
         });
         mDrivingLicenseUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectProfilePicture(ACTION_PICK_DRIVING_LICENSE, mDrivingLicenseUploadButton, mDrivingLicenseNumber);
+                selectDocument(ACTION_PICK_DRIVING_LICENSE, mDrivingLicenseUploadButton, mDrivingLicenseNumber);
             }
         });
         mBirthCertificateUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectProfilePicture(ACTION_PICK_BIRTH_CERTIFICATE, mBirthCertificateUploadButton, mBirthCertificateNumber);
+                selectDocument(ACTION_PICK_BIRTH_CERTIFICATE, mBirthCertificateUploadButton, mBirthCertificateNumber);
             }
         });
         mTinUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectProfilePicture(ACTION_PICK_TIN, mTinUploadButton, mTinNumber);
+                selectDocument(ACTION_PICK_TIN, mTinUploadButton, mTinNumber);
             }
         });
 
@@ -181,7 +182,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         return v;
     }
 
-    private void selectProfilePicture(int requestCode, Button uploadButton, EditText numberEditText) {
+    private void selectDocument(int requestCode, Button uploadButton, EditText numberEditText) {
         if (numberEditText.getText().toString().isEmpty()) {
             numberEditText.setError(getString(R.string.please_enter_document_number));
             numberEditText.requestFocus();
@@ -192,8 +193,9 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
             mBirthCertificateUploadButton.setError(null);
             mTinUploadButton.setError(null);
 
-            startActivityForResult(new Intent(Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), requestCode);
+            Intent imagePickerIntent = ImagePicker.getPickImageIntent(getActivity());
+            startActivityForResult(imagePickerIntent, requestCode);
+
             mDocumentNumber = numberEditText.getText().toString().trim();
             mClickedButton = uploadButton;
         }
@@ -201,15 +203,20 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == ACTION_PICK_NATIONAL_ID ||
-                    requestCode == ACTION_PICK_PASSPORT ||
-                    requestCode == ACTION_PICK_DRIVING_LICENSE ||
-                    requestCode == ACTION_PICK_BIRTH_CERTIFICATE ||
-                    requestCode == ACTION_PICK_TIN) {
-
-                try {
-                    if (intent != null && intent.getData() != null) {
+        switch (requestCode) {
+            case ACTION_PICK_NATIONAL_ID:
+            case ACTION_PICK_PASSPORT:
+            case ACTION_PICK_DRIVING_LICENSE:
+            case ACTION_PICK_BIRTH_CERTIFICATE:
+            case ACTION_PICK_TIN:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = ImagePicker.getImageFromResult(getActivity(), resultCode, intent);
+                    if (uri == null) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(),
+                                    R.string.could_not_load_document,
+                                    Toast.LENGTH_SHORT).show();
+                    } else {
                         if (mUploadIdentifierDocumentAsyncTask != null)
                             return;
 
@@ -247,23 +254,18 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         mProgressDialog.setMessage(getString(R.string.uploading) + " " + text);
                         mProgressDialog.show();
 
-                        String selectedOImagePath = Utilities.getFilePath(getActivity(), intent.getData());
+                        String selectedOImagePath = uri.getPath();
 
                         mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                                 command, selectedOImagePath, getActivity(), mDocumentNumber, mDocumentType);
                         mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
                         mUploadIdentifierDocumentAsyncTask.execute();
 
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity().getApplicationContext(),
-                                    R.string.could_not_load_document,
-                                    Toast.LENGTH_SHORT).show();
                     }
-                } catch (Throwable e) {
-                    e.printStackTrace();
                 }
-            }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, intent);
         }
     }
 
