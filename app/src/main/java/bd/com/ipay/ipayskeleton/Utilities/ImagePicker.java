@@ -4,25 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
-import android.content.res.AssetFileDescriptor;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import bd.com.ipay.ipayskeleton.R;
 
@@ -31,30 +21,54 @@ import bd.com.ipay.ipayskeleton.R;
  */
 public class ImagePicker {
 
-    private static final int DEFAULT_MIN_WIDTH_QUALITY = 400;        // min pixels
-    private static final String TAG = "ImagePicker";
-    private static final String TEMP_IMAGE_NAME = "tempImage";
+//    private static final int DEFAULT_MIN_WIDTH_QUALITY = 400;        // min pixels
+    private static final String TAG = "Picker";
+    private static final String TEMP_DOCUMENT_NAME = "temp_document";
 
-    public static int minWidthQuality = DEFAULT_MIN_WIDTH_QUALITY;
+//    public static int minWidthQuality = DEFAULT_MIN_WIDTH_QUALITY;
 
 
-    public static Intent getPickImageIntent(Context context) {
-        Intent chooserIntent = null;
+    public static Intent getPickImageIntent(Context context, String chooserTitle) {
 
         Set<Intent> intentList = new LinkedHashSet<>();
 
         Intent pickIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePhotoIntent.putExtra("return-data", true);
         takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
+
         intentList = addIntentsToList(context, intentList, pickIntent);
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
+
+        return getChooserIntent(intentList, chooserTitle);
+    }
+
+    public static Intent getPickImageOrPdfIntent(Context context, String chooserTitle) {
+
+        Set<Intent> intentList = new LinkedHashSet<>();
+
+        Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        pickIntent.setType("image/*|application/pdf");
+
+        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takePhotoIntent.putExtra("return-data", true);
+        takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
+
+        intentList = addIntentsToList(context, intentList, pickIntent);
+        intentList = addIntentsToList(context, intentList, takePhotoIntent);
+
+        return getChooserIntent(intentList, chooserTitle);
+    }
+
+    private static Intent getChooserIntent(Set<Intent> intentList, String chooserTitle) {
+        Intent chooserIntent = null;
 
         if (intentList.size() > 0) {
             Intent intent = intentList.iterator().next();
             intentList.remove(intent);
-            chooserIntent = Intent.createChooser(intent, context.getString(R.string.select_an_image));
+            chooserIntent = Intent.createChooser(intent, chooserTitle);
             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(new Parcelable[]{}));
         }
 
@@ -74,21 +88,25 @@ public class ImagePicker {
     }
 
 
-    public static Uri getImageFromResult(Context context, int resultCode,
-                                            Intent imageReturnedIntent) {
-        Log.e(TAG, "getImageFromResult, resultCode: " + resultCode);
+    public static Uri getDocumentFromResult(Context context, int resultCode,
+                                            Intent returnedIntent) {
+        Log.e(TAG, "getDocumentFromResult, resultCode: " + resultCode);
 //        Bitmap bm = null;
         Uri selectedImage = null;
         try {
-            File imageFile = getTempFile(context);
+            File documentFile = getTempFile(context);
             if (resultCode == Activity.RESULT_OK) {
-                boolean isCamera = (imageReturnedIntent == null ||
-                        imageReturnedIntent.getData() == null ||
-                        imageReturnedIntent.getData().toString().contains(imageFile.toString()));
+                boolean isCamera = (returnedIntent == null ||
+                        returnedIntent.getData() == null ||
+                        returnedIntent.getData().toString().contains(documentFile.toString()));
+
+                Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
                 if (isCamera) {     /** CAMERA **/
-                    selectedImage = Uri.fromFile(imageFile);
+                    selectedImage = Uri.fromFile(documentFile);
+                } else if (returnedIntent.getData().toString().startsWith("file://")) {
+                    selectedImage = Uri.parse(returnedIntent.getData().toString());
                 } else {            /** ALBUM **/
-                    selectedImage = Uri.parse(Utilities.getFilePath(context, imageReturnedIntent.getData()));
+                    selectedImage = Uri.parse(Utilities.getFilePath(context, returnedIntent.getData()));
                 }
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
@@ -104,9 +122,9 @@ public class ImagePicker {
 
 
     private static File getTempFile(Context context) {
-        File imageFile = new File(context.getExternalCacheDir(), TEMP_IMAGE_NAME);
-        imageFile.getParentFile().mkdirs();
-        return imageFile;
+        File documentFile = new File(context.getExternalCacheDir(), TEMP_DOCUMENT_NAME);
+        documentFile.getParentFile().mkdirs();
+        return documentFile;
     }
 
 //    private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {

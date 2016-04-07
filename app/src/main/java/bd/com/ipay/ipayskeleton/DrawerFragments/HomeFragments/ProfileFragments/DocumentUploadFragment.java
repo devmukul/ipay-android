@@ -193,7 +193,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
             mBirthCertificateUploadButton.setError(null);
             mTinUploadButton.setError(null);
 
-            Intent imagePickerIntent = ImagePicker.getPickImageIntent(getActivity());
+            Intent imagePickerIntent = ImagePicker.getPickImageOrPdfIntent(getActivity(), getString(R.string.select_a_document));
             startActivityForResult(imagePickerIntent, requestCode);
 
             mDocumentNumber = numberEditText.getText().toString().trim();
@@ -210,7 +210,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
             case ACTION_PICK_BIRTH_CERTIFICATE:
             case ACTION_PICK_TIN:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = ImagePicker.getImageFromResult(getActivity(), resultCode, intent);
+                    Uri uri = ImagePicker.getDocumentFromResult(getActivity(), resultCode, intent);
                     if (uri == null) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(),
