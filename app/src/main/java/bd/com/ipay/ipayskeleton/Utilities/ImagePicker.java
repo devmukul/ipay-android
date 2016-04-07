@@ -18,7 +18,11 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import bd.com.ipay.ipayskeleton.R;
 
@@ -37,7 +41,7 @@ public class ImagePicker {
     public static Intent getPickImageIntent(Context context) {
         Intent chooserIntent = null;
 
-        List<Intent> intentList = new ArrayList<>();
+        Set<Intent> intentList = new LinkedHashSet<>();
 
         Intent pickIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -48,15 +52,16 @@ public class ImagePicker {
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
 
         if (intentList.size() > 0) {
-            chooserIntent = Intent.createChooser(intentList.remove(intentList.size() - 1),
-                    context.getString(R.string.select_an_image));
+            Intent intent = intentList.iterator().next();
+            intentList.remove(intent);
+            chooserIntent = Intent.createChooser(intent, context.getString(R.string.select_an_image));
             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(new Parcelable[]{}));
         }
 
         return chooserIntent;
     }
 
-    private static List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
+    private static Set<Intent> addIntentsToList(Context context, Set<Intent> list, Intent intent) {
         List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : resInfo) {
             String packageName = resolveInfo.activityInfo.packageName;
