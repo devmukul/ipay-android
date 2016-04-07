@@ -433,6 +433,7 @@
     <string name="failed_loading_trusted_devices">Failed to load trusted device list</string>
     <string name="success_device_removed">Device removed successfully</string>
     <string name="confirmation_remove_trusted_device">Are you sure you want to remove this device from trusted device list?</string>
+    <string name="select_an_image">Select an Image</string>
 
     <string-array name="account_types">
         <item>Personal</item>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -33,6 +34,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ImagePicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBasicInfoFragment extends Fragment {
@@ -99,8 +101,10 @@ public class EditBasicInfoFragment extends Fragment {
         mProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), ACTION_PICK_PROFILE_PICTURE);
+//                startActivityForResult(new Intent(Intent.ACTION_PICK,
+//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), ACTION_PICK_PROFILE_PICTURE);
+                Intent imageChooserIntent = ImagePicker.getPickImageIntent(getActivity());
+                startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
             }
         });
 
@@ -290,25 +294,27 @@ public class EditBasicInfoFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode == Activity.RESULT_OK) {
-            try {
-                if (requestCode == ACTION_PICK_PROFILE_PICTURE) {
-                    if (intent != null && intent.getData() != null) {
-                        setProfilePicture(intent.getData().toString());
-                        ProfileFragment.mProfilePictures.clear();
-                        ProfileFragment.mProfilePictures.add(new UserProfilePictureClass(
-                                intent.getData().toString(), ""));
-                        ((EditProfileActivity) getActivity()).updateProfilePicture(intent.getData());
-                    } else {
+        switch (requestCode) {
+            case ACTION_PICK_PROFILE_PICTURE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = ImagePicker.getImageFromResult(getActivity(), resultCode, intent);
+                    if (uri == null) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity().getApplicationContext(),
+                            Toast.makeText(getActivity(),
                                     R.string.could_not_load_image,
                                     Toast.LENGTH_SHORT).show();
+                    } else {
+                        setProfilePicture(uri.toString());
+                        ProfileFragment.mProfilePictures.clear();
+                        ProfileFragment.mProfilePictures.add(new UserProfilePictureClass(
+                                uri.toString(), ""));
+                        ((EditProfileActivity) getActivity()).updateProfilePicture(uri);
                     }
+
                 }
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, intent);
         }
     }
 

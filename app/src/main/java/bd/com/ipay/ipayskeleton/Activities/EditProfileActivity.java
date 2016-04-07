@@ -171,7 +171,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
         mProgressDialog.show();
 
-        String selectedOImagePath = Utilities.getFilePath(EditProfileActivity.this, selectedImageUri);
+        String selectedOImagePath = selectedImageUri.getPath();
 
         mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
                 selectedOImagePath, EditProfileActivity.this);
