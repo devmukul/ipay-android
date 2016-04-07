@@ -53,6 +53,10 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankAccountRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankAccountResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranchRequestBuilder;
@@ -73,6 +77,12 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
     private HttpRequestPostAsyncTask mRemoveBankAccountTask = null;
     private RemoveBankAccountResponse mRemoveBankAccountResponse;
+
+    private HttpRequestPostAsyncTask mSendForVerificationTask = null;
+    private VerifyBankAccountResponse mVerifyBankAccountResponse;
+
+    private HttpRequestPostAsyncTask mSendForVerificationWithAmountTask = null;
+    private VerifyBankWithAmountResponse mVerifyBankWithAmountResponse;
 
     private HttpRequestPostAsyncTask mEnableBankAccountTask = null;
     private EnableBankAccountResponse mEnableBankAccountResponse;
@@ -196,7 +206,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private void addBankAccountDialogue() {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_a_bank)
-                .customView(R.layout.dialogue_add_bank_account, true)
+                .customView(R.layout.dialog_add_bank_account, true)
                 .positiveText(R.string.add)
                 .negativeText(R.string.cancel)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -292,6 +302,48 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mAddBankTask.execute((Void) null);
     }
 
+    private void attemptSendForVerification(Long userBankID) {
+        if (userBankID == 0) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.sending_for_verification));
+        mProgressDialog.show();
+        VerifyBankAccountRequest mVerifyBankAccountRequest = new VerifyBankAccountRequest(userBankID);
+        Gson gson = new Gson();
+        String json = gson.toJson(mVerifyBankAccountRequest);
+        mSendForVerificationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_FOR_VERIFICATION_BANK,
+                Constants.BASE_URL_POST_MM + Constants.URL_SEND_FOR_VERIFICATION_BANK, json, getActivity());
+        mSendForVerificationTask.mHttpResponseListener = this;
+        mSendForVerificationTask.execute((Void) null);
+    }
+
+    private void attemptVerificationWithAmount(Long userBankID, double amount) {
+        if (userBankID == 0) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (amount <= 0) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.please_enter_amount, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.sending_for_verification_with_amount));
+        mProgressDialog.show();
+        VerifyBankWithAmountRequest mVerifyBankWithAmountRequest = new VerifyBankWithAmountRequest(userBankID, amount);
+        Gson gson = new Gson();
+        String json = gson.toJson(mVerifyBankWithAmountRequest);
+        mSendForVerificationWithAmountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_VERIFICATION_BANK_WITH_AMOUNT,
+                Constants.BASE_URL_POST_MM + Constants.URL_BANK_VERIFICATION_WITH_AMOUNT, json, getActivity());
+        mSendForVerificationWithAmountTask.mHttpResponseListener = this;
+        mSendForVerificationWithAmountTask.execute((Void) null);
+    }
+
     private void attemptRemoveBank(long bankAccountID) {
         if (bankAccountID == 0) {
             if (getActivity() != null)
@@ -355,6 +407,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             mRemoveBankAccountTask = null;
             mEnableBankAccountTask = null;
             mDisableBankAccountTask = null;
+            mSendForVerificationTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -377,6 +430,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                             mListUserBankClasses.clear();
                         mListUserBankClasses = null;
                         getBankList();
+
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.failed_add_bank, Toast.LENGTH_SHORT).show();
@@ -442,6 +496,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                             mListUserBankClasses.clear();
                         mListUserBankClasses = null;
                         getBankList();
+
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mRemoveBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -471,6 +526,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                             mListUserBankClasses.clear();
                         mListUserBankClasses = null;
                         getBankList();
+
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mDisableBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -500,6 +556,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                             mListUserBankClasses.clear();
                         mListUserBankClasses = null;
                         getBankList();
+
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mEnableBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -545,6 +602,66 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
             mProgressDialog.dismiss();
             mGetBankBranchesTask = null;
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_SEND_FOR_VERIFICATION_BANK)) {
+
+            if (resultList.size() > 2) {
+                try {
+                    mVerifyBankAccountResponse = gson.fromJson(resultList.get(2), VerifyBankAccountResponse.class);
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        // Refresh bank list
+                        if (mListUserBankClasses != null)
+                            mListUserBankClasses.clear();
+                        mListUserBankClasses = null;
+                        getBankList();
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.failed_to_send_for_bank_verification, Toast.LENGTH_LONG).show();
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.failed_to_send_for_bank_verification, Toast.LENGTH_LONG).show();
+
+            mProgressDialog.dismiss();
+            mSendForVerificationTask = null;
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_VERIFICATION_BANK_WITH_AMOUNT)) {
+
+            if (resultList.size() > 2) {
+                try {
+                    mVerifyBankWithAmountResponse = gson.fromJson(resultList.get(2), VerifyBankWithAmountResponse.class);
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        // Refresh bank list
+                        if (mListUserBankClasses != null)
+                            mListUserBankClasses.clear();
+                        mListUserBankClasses = null;
+                        getBankList();
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.failed_to_bank_verification, Toast.LENGTH_LONG).show();
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.failed_to_bank_verification, Toast.LENGTH_LONG).show();
+
+            mProgressDialog.dismiss();
+            mSendForVerificationWithAmountTask = null;
 
         }
     }
@@ -597,6 +714,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();
                 String bankName = mListUserBankClasses.get(pos).getBankName();
                 String branchName = mListUserBankClasses.get(pos).getBranchName();
+                final String verificationStatus = mListUserBankClasses.get(pos).getVerificationStatus();
                 mBankAccountNumber.setText(mListUserBankClasses.get(pos).getAccountNumber());
                 mBankName.setText(bankName);
                 mBranchName.setText(branchName);
@@ -617,18 +735,18 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     mBankCard.setBackgroundColor(getResources().getColor(R.color.home_background));
                 }
 
-                if (mListUserBankClasses.get(pos).getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+                if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
                     mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
                     verifyDivider.setVisibility(View.GONE);
                     verifyButton.setVisibility(View.GONE);
 
-                } else if (mListUserBankClasses.get(pos).getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
+                } else if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
                     mBankVerifiedStatus.setImageResource(R.drawable.ic_error_black_24dp);
                     mBankVerifiedStatus.setColorFilter(Color.RED);
 
                 } else {
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_sync_problem_black_24dp);
-                    mBankVerifiedStatus.setColorFilter(Color.YELLOW);
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_cached_black_24dp);
+                    mBankVerifiedStatus.setColorFilter(Color.GRAY);
                 }
 
                 enableDisableButton.setOnClickListener(new View.OnClickListener() {
@@ -676,6 +794,69 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     }
                 });
 
+                verifyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_PENDING)) {
+
+                            MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                                    .title(R.string.enter_the_amount_we_sent)
+                                    .customView(R.layout.dialog_verify_bank_with_amount, true)
+                                    .positiveText(R.string.submit)
+                                    .negativeText(R.string.cancel)
+                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
+
+                            View view = dialog.getCustomView();
+                            final EditText mAmountEditText = (EditText) view.findViewById(R.id.amount);
+
+                            dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                    if (mAmountEditText.getText().toString().trim().length() == 0) {
+                                        mAmountEditText.setError(getString(R.string.please_enter_amount));
+                                        Toast.makeText(getActivity(), R.string.please_enter_amount, Toast.LENGTH_LONG).show();
+
+                                    } else {
+                                        String amount = mAmountEditText.getText().toString().trim();
+                                        if (Utilities.isConnectionAvailable(getActivity()))
+                                            attemptVerificationWithAmount(bankAccountID, Double.parseDouble(amount));
+                                        else
+                                            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+                                        dialog.dismiss();
+                                    }
+                                }
+                            });
+
+                        } else if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
+
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle(R.string.are_you_sure)
+                                    .setMessage(R.string.send_this_bank_for_verification)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (Utilities.isConnectionAvailable(getActivity())) {
+                                                attemptSendForVerification(bankAccountID);
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Do nothing
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+                });
+
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -683,13 +864,14 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                             optionsLayout.setVisibility(View.GONE);
                         else optionsLayout.setVisibility(View.VISIBLE);
 
-                        new MaterialShowcaseView.Builder(getActivity())
-                                .setTarget(verifyButton)
-                                .setDismissText(R.string.got_it)
-                                .setContentText(Html.fromHtml(getString(R.string.bank_verification_help_html)))
-                                .setDelay(100) // optional but starting animations immediately in onCreate can make them choppy
-                                .singleUse(bankAccountID + "6") // provide a unique ID used to ensure it is only shown once
-                                .show();
+                        if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_PENDING))
+                            new MaterialShowcaseView.Builder(getActivity())
+                                    .setTarget(verifyButton)
+                                    .setDismissText(R.string.got_it)
+                                    .setContentText(Html.fromHtml(getString(R.string.bank_verification_help_html)))
+                                    .setDelay(100) // optional but starting animations immediately in onCreate can make them choppy
+                                    .singleUse(bankAccountID + "") // provide a unique ID used to ensure it is only shown once // TODO: removed for now. Comment out later
+                                    .show();
                     }
                 });
             }

@@ -71,10 +71,12 @@
     <string name="error_loading_data">Error loading data. Please try again.</string>
     <string name="forgot_password"><u>Forgot your password?</u></string>
     <string name="forgot_your_password">Forgot your password?</string>
+    <string name="enter_the_amount_we_sent">Enter the amount we sent to your bank account here.</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="accept">Accept</string>
     <string name="add_new_participant">Add new participant</string>
     <string name="remove_this_account_query">Remove this account from your bank list?</string>
+    <string name="send_this_bank_for_verification">Send request to verify this bank account?</string>
     <string name="accept_money_request_confirm">Are you sure you want to accept this request for sending money?</string>
     <string name="reject_money_request_confirm">Are you sure you want to reject this request for sending money?</string>
     <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
@@ -208,6 +210,8 @@
     <string name="add_a_bank">Add a Bank</string>
     <string name="adding_bank">Bank is being added...</string>
     <string name="removing_bank">Bank is being removed...</string>
+    <string name="sending_for_verification">Sending for verification...</string>
+    <string name="sending_for_verification_with_amount">Bank verification in progress...</string>
     <string name="disabling_bank">Bank is being disabled...</string>
     <string name="enabling_bank">Bank is being enabled...</string>
     <string name="verifying_user">Verifying user...</string>
@@ -254,6 +258,8 @@
     <string name="failed_disable_bank">Failed to disable this bank. Please try again later.</string>
     <string name="failed_enable_bank">Failed to enable this bank. Please try again later.</string>
     <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
+    <string name="failed_to_send_for_bank_verification">Failed to send request.</string>
+    <string name="failed_to_bank_verification">Failed to verify your bank account. Please try again later.</string>
     <string name="account_number">Account Number</string>
     <string name="scan_my_qr">iPay Me</string>
     <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>

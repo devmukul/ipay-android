@@ -177,6 +177,8 @@ public class Constants {
     public static final String URL_PAYMENT_CREATE_INVOICE = "payment/invoice";
     public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/set";
     public static final String URL_ADD_A_BANK = "bank/add";
+    public static final String URL_SEND_FOR_VERIFICATION_BANK = "bank-verify";
+    public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "bank-verify/check";
     public static final String URL_REMOVE_A_BANK = "bank/remove";
     public static final String URL_DISABLE_A_BANK = "bank/disable";
     public static final String URL_ENABLE_A_BANK = "bank/enable";
@@ -244,6 +246,8 @@ public class Constants {
     public static final String COMMAND_CREATE_INVOICE = "COMMAND_CREATE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
+    public static final String COMMAND_SEND_FOR_VERIFICATION_BANK = "COMMAND_SEND_FOR_VERIFICATION_BANK";
+    public static final String COMMAND_VERIFICATION_BANK_WITH_AMOUNT = "COMMAND_VERIFICATION_BANK_WITH_AMOUNT";
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
     public static final String COMMAND_DISABLE_A_BANK = "COMMAND_DISABLE_A_BANK";
     public static final String COMMAND_ENABLE_A_BANK = "COMMAND_ENABLE_A_BANK";
