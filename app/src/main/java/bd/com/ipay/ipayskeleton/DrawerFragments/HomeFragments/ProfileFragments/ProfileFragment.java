@@ -122,7 +122,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     public static int mOccupation = 0;
     public static String mGender = "";
-    public static String mVerificationStatus = "";
+    public static String mVerificationStatus = null;
 
     public static AddressClass mPresentAddress;
     public static AddressClass mPermanentAddress;
@@ -277,12 +277,14 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
 
-        if (mVerificationStatus != null && mVerificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
-            mVerificationStatusView.setBackgroundResource(R.drawable.background_verified);
-            mVerificationStatusView.setText(R.string.verified);
-        } else {
-            mVerificationStatusView.setBackgroundResource(R.drawable.background_not_verified);
-            mVerificationStatusView.setText(R.string.not_verified);
+        if (mVerificationStatus != null) {
+            if (mVerificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                mVerificationStatusView.setBackgroundResource(R.drawable.background_verified);
+                mVerificationStatusView.setText(R.string.verified);
+            } else {
+                mVerificationStatusView.setBackgroundResource(R.drawable.background_not_verified);
+                mVerificationStatusView.setText(R.string.not_verified);
+            }
         }
 
         if (mPresentAddress != null) {

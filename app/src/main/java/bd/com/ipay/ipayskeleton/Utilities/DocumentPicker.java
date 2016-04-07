@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.R;
 /**
  * Source: https://gist.github.com/Mariovc/f06e70ebe8ca52fbbbe2
  */
-public class ImagePicker {
+public class DocumentPicker {
 
 //    private static final int DEFAULT_MIN_WIDTH_QUALITY = 400;        // min pixels
     private static final String TAG = "Picker";
@@ -39,8 +39,8 @@ public class ImagePicker {
         takePhotoIntent.putExtra("return-data", true);
         takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
 
-        intentList = addIntentsToList(context, intentList, pickIntent);
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
+        intentList = addIntentsToList(context, intentList, pickIntent);
 
         return getChooserIntent(intentList, chooserTitle);
     }
@@ -56,8 +56,8 @@ public class ImagePicker {
         takePhotoIntent.putExtra("return-data", true);
         takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
 
-        intentList = addIntentsToList(context, intentList, pickIntent);
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
+        intentList = addIntentsToList(context, intentList, pickIntent);
 
         return getChooserIntent(intentList, chooserTitle);
     }

@@ -34,7 +34,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ImagePicker;
+import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBasicInfoFragment extends Fragment {
@@ -103,7 +103,7 @@ public class EditBasicInfoFragment extends Fragment {
             public void onClick(View v) {
 //                startActivityForResult(new Intent(Intent.ACTION_PICK,
 //                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), ACTION_PICK_PROFILE_PICTURE);
-                Intent imageChooserIntent = ImagePicker.getPickImageIntent(getActivity(), getString(R.string.select_an_image));
+                Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getActivity(), getString(R.string.select_an_image));
                 startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
             }
         });
@@ -297,7 +297,7 @@ public class EditBasicInfoFragment extends Fragment {
         switch (requestCode) {
             case ACTION_PICK_PROFILE_PICTURE:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = ImagePicker.getDocumentFromResult(getActivity(), resultCode, intent);
+                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
                     if (uri == null) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(),
