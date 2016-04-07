@@ -482,7 +482,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
 
                 String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
+                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
 
                 // Handle debit credit
                 if (amount > 0)

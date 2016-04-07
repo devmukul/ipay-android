@@ -501,7 +501,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(userID);
 
                 String description = userTransactionHistoryClasses.get(pos).getDescription(userID);
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userTransactionHistoryClasses.get(pos).getTime());
+                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
 
                 // Handle debit credit
                 if (amount > 0)

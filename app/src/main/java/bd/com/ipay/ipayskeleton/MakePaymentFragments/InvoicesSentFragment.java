@@ -243,7 +243,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
                 final long id = pendingPaymentClasses.get(pos).getId();
                 String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(pendingPaymentClasses.get(pos).getRequestTime());
+                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingPaymentClasses.get(pos).getRequestTime());
                 mDescription.setText(pendingPaymentClasses.get(pos).getDescription());
                 mTime.setText(time);
                 mSenderNumber.setText(pendingPaymentClasses.get(pos).getReceiverProfile().getUserName());

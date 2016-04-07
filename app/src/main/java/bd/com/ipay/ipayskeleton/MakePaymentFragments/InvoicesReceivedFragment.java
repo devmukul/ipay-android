@@ -397,7 +397,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
             public void bindView(int pos) {
 
                 final long id = pendingPaymentRequestClasses.get(pos).getId();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(pendingPaymentRequestClasses.get(pos).getRequestTime());
+                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingPaymentRequestClasses.get(pos).getRequestTime());
                 String imageUrl = pendingPaymentRequestClasses.get(pos).getOriginatorProfile().getUserProfilePicture();
                 final BigDecimal amount = pendingPaymentRequestClasses.get(pos).getAmount();
 

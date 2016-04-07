@@ -483,7 +483,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                 final String imageUrl = notificationList.get(pos).getOriginatorProfile().getUserProfilePicture();
                 final String name = notificationList.get(pos).originatorProfile.getUserName();
                 final String description = notificationList.get(pos).getDescription();
-                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(notificationList.get(pos).getRequestTime());
+                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(notificationList.get(pos).getRequestTime());
                 final String title = notificationList.get(pos).getTitle();
                 final Long id = notificationList.get(pos).getId();
                 final BigDecimal amount = notificationList.get(pos).getAmount();

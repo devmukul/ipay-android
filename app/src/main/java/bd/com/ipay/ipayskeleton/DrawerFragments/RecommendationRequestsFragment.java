@@ -245,8 +245,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
                 final String senderName = mRecommendationRequestsClasses.get(pos).getSenderName();
                 final String senderMobileNumber = mRecommendationRequestsClasses.get(pos).getSenderMobileNumber();
                 final String recommendationStatus = mRecommendationRequestsClasses.get(pos).getStatus();
-                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(mRecommendationRequestsClasses.get(pos).getDate());
-
+                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(mRecommendationRequestsClasses.get(pos).getDate());
 
                 mSenderName.setText(senderName);
                 mSenderMobileNumber.setText(senderMobileNumber);

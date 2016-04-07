@@ -240,7 +240,7 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
             public void bindView(int pos) {
 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
+                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
                 String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);
                 mSenderNumber.setText(pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName());

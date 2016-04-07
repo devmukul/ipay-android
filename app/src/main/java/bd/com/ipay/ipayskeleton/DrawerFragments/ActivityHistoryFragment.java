@@ -537,7 +537,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
             public void bindView(int pos) {
                 String type = activityLogTypes[userActivityResponsesList.get(pos).getType()];
                 String description = userActivityResponsesList.get(pos).getDescription();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, H:MM a").format(userActivityResponsesList.get(pos).getTime());
+                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userActivityResponsesList.get(pos).getTime());
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
 
