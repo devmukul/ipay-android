@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +67,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     private SendMoneyQueryResponse mSendMoneyQueryResponse;
 
     private Button buttonSend;
-    private Button buttonSelectFromContacts;
+    private ImageView buttonSelectFromContacts;
     private Button buttonScanQRCode;
     private EditText mMobileNumberEditText;
     private EditText mDescriptionEditText;
@@ -84,7 +85,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         buttonScanQRCode = (Button) v.findViewById(R.id.button_scan_qr_code);
-        buttonSelectFromContacts = (Button) v.findViewById(R.id.select_receiver_from_contacts);
+        buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
