@@ -269,7 +269,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="submit">Submit</string>
-    <string name="terms_condition"><a href="http://www.google.com">Terms &amp; Conditions</a></string>
+    <string name="terms_condition"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="login_with_existing_account">Login with existing account</string>

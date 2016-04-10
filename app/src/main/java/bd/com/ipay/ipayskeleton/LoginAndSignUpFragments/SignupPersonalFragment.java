@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +47,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
     private CheckBox mAgreementCheckBox;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
-    private TextView mTermsCondtions;
+    private TextView mTermsConditions;
     private EditText mBirthdayEditText;
     private EditText mPromoCodeEditText;
 
@@ -82,7 +81,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
-        mTermsCondtions = (TextView) v.findViewById(R.id.textViewTermsConditions);
+        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
 
@@ -90,7 +89,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
         mDeviceID = telephonyManager.getDeviceId();
 
         // Enable hyperlinked
-        mTermsCondtions.setMovementMethod(LinkMovementMethod.getInstance());
+        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
