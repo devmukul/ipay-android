@@ -721,18 +721,18 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
                 if (bankStatus == Constants.BANK_ACCOUNT_STATUS_ACTIVE) {
                     enableDisableButton.setText(R.string.disable);
-                    mBankCard.setBackgroundColor(getResources().getColor(android.R.color.white));
+                    mBankCard.setCardBackgroundColor(getResources().getColor(android.R.color.white));
 
                 } else if (bankStatus == Constants.BANK_ACCOUNT_STATUS_INACTIVE) {
                     enableDisableButton.setText(R.string.enable);
-                    mBankCard.setBackgroundColor(getResources().getColor(R.color.home_background));
+                    mBankCard.setCardBackgroundColor(getResources().getColor(R.color.home_background));
 
                 } else {
                     enableDisableButton.setText(R.string.enable);
                     enableDisableButton.setEnabled(false);
                     removeButton.setEnabled(false);
                     optionsLayout.setEnabled(false);
-                    mBankCard.setBackgroundColor(getResources().getColor(R.color.home_background));
+                    mBankCard.setCardBackgroundColor(getResources().getColor(R.color.home_background));
                 }
 
                 if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {

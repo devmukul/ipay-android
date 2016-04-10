@@ -40,6 +40,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mBirthdayBusinessHolder;
     public static String mMobileNumberPersonal;
     public static long mTypeofBusiness;
+    public static String mPromoCode;
 
     public static AddressClass mAddressBusiness;
     public static AddressClass mAddressBusinessHolder;

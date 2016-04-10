@@ -50,7 +50,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     private Button mActivateButton;
     private Button mResendOTPButton;
     private EditText mOTPEditText;
-    private EditText mPromoCodeEditText;
     private TextView mTimerTextView;
 
     private String mDeviceID;
@@ -70,7 +69,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
-        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
@@ -148,14 +146,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         boolean cancel = false;
         View focusView = null;
 
-        String promoCode = mPromoCodeEditText.getText().toString().trim();
         String otp = mOTPEditText.getText().toString().trim();
-
-        if (promoCode.length() == 0) {
-            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
-            focusView = mPromoCodeEditText;
-            cancel = true;
-        }
 
         if (otp.length() == 0) {
             mOTPEditText.setError(getActivity().getString(R.string.error_invalid_otp));
@@ -174,7 +165,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     Constants.MOBILE_ANDROID + mDeviceID,
                     SignupOrLoginActivity.mName,
                     SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword,
-                    SignupOrLoginActivity.mGender, otp, promoCode,
+                    SignupOrLoginActivity.mGender, otp, SignupOrLoginActivity.mPromoCode,
                     Constants.PERSONAL_ACCOUNT_TYPE);
             Gson gson = new Gson();
             String json = gson.toJson(mSignupModel);

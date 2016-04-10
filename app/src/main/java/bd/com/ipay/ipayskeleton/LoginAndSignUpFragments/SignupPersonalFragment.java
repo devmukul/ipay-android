@@ -50,6 +50,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
     private CheckBox mFemaleCheckBox;
     private TextView mTermsCondtions;
     private EditText mBirthdayEditText;
+    private EditText mPromoCodeEditText;
 
     private int mYear;
     private int mMonth;
@@ -83,6 +84,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mTermsCondtions = (TextView) v.findViewById(R.id.textViewTermsConditions);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
+        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
@@ -157,6 +159,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
         SignupOrLoginActivity.mBirthday = mBirthdayEditText.getText().toString().trim();
         if (mMaleCheckBox.isChecked()) SignupOrLoginActivity.mGender = Constants.GENDER_MALE;
         else SignupOrLoginActivity.mGender = Constants.GENDER_FEMALE;
+        SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -184,6 +187,12 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
         if (mNameView.getText().toString().trim().length() == 0) {
             mNameView.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameView;
+            cancel = true;
+        }
+
+        if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
+            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
+            focusView = mPromoCodeEditText;
             cancel = true;
         }
 
@@ -220,7 +229,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             // perform the user login attempt.
             mProgressDialog.show();
             OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
-                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE, SignupOrLoginActivity.mPromoCode);
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestPersonalSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
@@ -283,14 +292,12 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
 
             if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.successful_sign_up, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.otp_going_to_send, Toast.LENGTH_LONG).show();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
 
             } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
-
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
