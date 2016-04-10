@@ -54,7 +54,6 @@
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/value5"
                         android:hint="@string/business_mobile_number"
-                        android:imeOptions="actionUnspecified"
                         android:inputType="phone"
                         android:maxLength="10"
                         android:maxLines="1"
@@ -104,9 +103,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -121,10 +117,7 @@
                     android:id="@+id/confirm_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:hint="@string/confirm_password"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -149,9 +142,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:hint="@string/prompt_business_name"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
                     android:inputType="textPersonName"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -223,8 +213,6 @@
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/value5"
                         android:hint="@string/personal_mobile_number"
-                        android:imeOptions="actionUnspecified"
-                        android:inputType="phone"
                         android:maxLength="10"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -286,8 +274,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/birthday_dd_mm_yy"
-                        android:imeActionLabel="@string/action_sign_in_short"
-                        android:imeOptions="actionUnspecified"
                         android:inputType="date"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -329,11 +315,28 @@
             </LinearLayout>
 
 
-
             <bd.com.ipay.ipayskeleton.Customview.AddressInputView
                 android:id="@+id/personal_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:visibility="visible">
+
+                <EditText
+                    android:id="@+id/promo_code_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_promo_code"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
 
 
             <LinearLayout

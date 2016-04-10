@@ -61,6 +61,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
     private TextView mTermsConditions;
     private EditText mBirthdayEditText;
     private EditText mPersonalMobileNumberView;
+    private EditText mPromoCodeEditText;
 
     private Spinner mGenderSpinner;
 
@@ -104,6 +105,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mGenderSpinner = (Spinner) v.findViewById(R.id.gender);
         mAddressCheckbox = (CheckBox) v.findViewById(R.id.checkboxBusinessAddress);
+        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
 
         mBusinessAddressView = (AddressInputView) v.findViewById(R.id.business_address);
         mPersonalAddressView = (AddressInputView) v.findViewById(R.id.personal_address);
@@ -181,6 +183,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
         SignupOrLoginActivity.mGender = GenderList.genderNameToCodeMap.get(
                 mGenderSpinner.getSelectedItem().toString());
         SignupOrLoginActivity.mTypeofBusiness = CommonData.getBusinessTypeId(mBusinessType.getSelectedItem().toString());
+        SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
 
         SignupOrLoginActivity.mAddressBusiness = mBusinessAddressView.getInformation();
         SignupOrLoginActivity.mAddressBusinessHolder = mPersonalAddressView.getInformation();
@@ -235,6 +238,10 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
             focusView = mBirthdayEditText;
             cancel = true;
 
+        } else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
+            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
+            focusView = mPromoCodeEditText;
+            cancel = true;
         } else if (!mAgreementCheckBox.isChecked()) {
             cancel = true;
             if (getActivity() != null)
@@ -256,7 +263,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
             mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_sms));
             mProgressDialog.show();
             OTPRequestBusinessSignup mOtpRequestBusinessSignup = new OTPRequestBusinessSignup(SignupOrLoginActivity.mMobileNumberBusiness,
-                    Constants.MOBILE_ANDROID + mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE);
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE, SignupOrLoginActivity.mPromoCode);
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestBusinessSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
