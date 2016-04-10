@@ -58,7 +58,7 @@ public class Constants {
     // Server Type 2 -> staging server
     // Server Type 3 -> live server
     // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = 2;
     public static final boolean DEBUG = true;
 
     static {
