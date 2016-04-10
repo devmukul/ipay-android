@@ -268,7 +268,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
 
-                        // First time login from this device. Verify OTP for secure login
+                        // Enter previous OTP
                         ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                     } else {
