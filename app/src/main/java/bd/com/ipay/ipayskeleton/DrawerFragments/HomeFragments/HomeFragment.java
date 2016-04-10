@@ -431,7 +431,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         mTransactionHistoryResponse = gson.fromJson(resultList.get(2), TransactionHistoryResponse.class);
 
                         // Show only last 5 transactions
-                        userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions();
+                        userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
+                                0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
 
                         if (userTransactionHistoryClasses.size() == 0)
                             userTransactionHistoryClasses = null;
