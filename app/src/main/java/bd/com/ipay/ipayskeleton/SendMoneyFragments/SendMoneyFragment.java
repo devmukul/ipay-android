@@ -335,13 +335,13 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
     private void showSendMoneyConfirmationDialog() {
         String receiver = mMobileNumberEditText.getText().toString().trim();
-        String amount = mAmountEditText.getText().toString().trim();
+        BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
         String serviceChargeDescription = "";
 
         if (mGetServiceChargeResponse != null) {
-            if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) > 0)
-                serviceChargeDescription = "The receiver be charged " + mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)) + " Tk. for this transaction.";
-            else if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) == 0)
+            if (mGetServiceChargeResponse.getServiceCharge(amount).compareTo(new BigDecimal(0)) > 0) {
+                serviceChargeDescription = "The receiver be charged " + mGetServiceChargeResponse.getServiceCharge(amount) + " Tk. for this transaction.";
+            } else if (mGetServiceChargeResponse.getServiceCharge(amount).compareTo(new BigDecimal(0)) == 0)
                 serviceChargeDescription = getString(R.string.no_extra_charges);
             else {
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
