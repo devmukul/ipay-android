@@ -224,6 +224,15 @@
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
 
+    <style name="ButtonStyleBottom" parent="@android:style/Widget.Button">
+        <item name="android:textSize">18.0sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/background_button_bottom</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
     <style name="ButtonStyleLarge" parent="@android:style/Widget.Button">
         <item name="android:textSize">22.0sp</item>
         <item name="android:textColor">@android:color/white</item>

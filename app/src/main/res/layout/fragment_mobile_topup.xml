@@ -1,117 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="30dp"
-                android:src="@drawable/flag_bangladesh" />
-
-            <TextView
-                style="@style/TextStylePrimaryMedium"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/value5"
-                android:text="+880" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="45dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/flag_bangladesh" />
+
+                <TextView
+                    style="@style/TextStylePrimaryMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/value5"
+                    android:text="+880" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin">
+
+                    <EditText
+                        android:id="@+id/mobile_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/value5"
+                        android:hint="@string/mobile_number"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="phone"
+                        android:maxLength="10"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin">
+                android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/mobile_number"
+                    android:id="@+id/amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/value5"
-                    android:hint="@string/mobile_number"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="phone"
-                    android:maxLength="10"
+                    android:hint="@string/enter_amount"
+                    android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
-        </LinearLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <Spinner
+                android:id="@+id/operator_list_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:prompt="@string/select_an_operator" />
 
-            <EditText
-                android:id="@+id/amount"
+            <RadioGroup
+                android:id="@+id/mobile_number_type_selector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/enter_amount"
-                android:inputType="numberDecimal"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:orientation="horizontal">
 
-        </android.support.design.widget.TextInputLayout>
+                <RadioButton
+                    android:id="@+id/radio_button_prepaid"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/pre_paid"/>
 
-        <Spinner
-            android:id="@+id/operator_list_spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/select_an_operator" />
+                <RadioButton
+                    android:id="@+id/radio_button_postpaid"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/post_paid"/>
 
-        <RadioGroup
-            android:id="@+id/mobile_number_type_selector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/radio_button_prepaid"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/pre_paid"/>
+                android:layout_marginTop="24dp"
+                android:textStyle="italic"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/mobile_topup_restriction_info"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </ScrollView>
 
-            <RadioButton
-                android:id="@+id/radio_button_postpaid"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/post_paid"/>
+    <Button
+        android:id="@+id/button_recharge"
+        style="@style/ButtonStyleBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/continue_mobile_recharge" />
 
-
-        </RadioGroup>
-
-        <Button
-            android:id="@+id/button_recharge"
-            style="@style/ButtonStyleMedium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:text="@string/continue_mobile_recharge" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:textStyle="italic"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/mobile_topup_restriction_info"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>
