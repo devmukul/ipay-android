@@ -27,6 +27,7 @@ public class Constants {
     public static final String DISTRICT = "district";
     public static final String MULTIPART_FORM_DATA_NAME = "file";
     public static final String STARTING_DATE_OF_IPAY = "01/01/2016";
+    public static final String MOBILE_NUMBER_TYPE = "mobile_number_type";
     public static final int STARTING_DATE = 01;
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
@@ -211,6 +212,9 @@ public class Constants {
     public static final int BANK_ACCOUNT_STATUS_ACTIVE = 0;
     public static final int BANK_ACCOUNT_STATUS_INACTIVE = 1;
     public static final int BANK_ACCOUNT_STATUS_DELETED = 2;
+
+    public static final int MOBILE_TYPE_PREPAID = 1;
+    public static final int MOBILE_TYPE_POSTPAID = 2;
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";

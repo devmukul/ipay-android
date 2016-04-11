@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -48,8 +50,11 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private EditText mMobileNumberEditText;
     private EditText mAmountEditText;
     private Spinner mSelectOperator;
-    private Spinner mSelectType;
     private Button mRechargeButton;
+
+    private RadioGroup mSelectType;
+    private RadioButton mPrepaidRadioButton;
+    private RadioButton mPostPaidRadioButton;
 
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
@@ -63,8 +68,18 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mSelectOperator = (Spinner) v.findViewById(R.id.operator_list_spinner);
-        mSelectType = (Spinner) v.findViewById(R.id.recharge_type);
         mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
+
+        mSelectType = (RadioGroup) v.findViewById(R.id.mobile_number_type_selector);
+        mPrepaidRadioButton = (RadioButton) v.findViewById(R.id.radio_button_prepaid);
+        mPostPaidRadioButton = (RadioButton) v.findViewById(R.id.radio_button_postpaid);
+
+        int mobileNumberType = pref.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
+        if (mobileNumberType == Constants.MOBILE_TYPE_PREPAID) {
+            mPrepaidRadioButton.setChecked(true);
+        } else {
+            mPostPaidRadioButton.setChecked(true);
+        }
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.recharging_balance));
@@ -72,10 +87,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         ArrayAdapter<CharSequence> mAdapterMobileOperators = ArrayAdapter.createFromResource(getActivity(),
                 R.array.mobile_operators, android.R.layout.simple_dropdown_item_1line);
         mSelectOperator.setAdapter(mAdapterMobileOperators);
-
-        ArrayAdapter<CharSequence> mAdapterRechargeTypes = ArrayAdapter.createFromResource(getActivity(),
-                R.array.recharge_types, android.R.layout.simple_dropdown_item_1line);
-        mSelectType.setAdapter(mAdapterRechargeTypes);
 
         mRechargeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +165,14 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
         long senderAccountID = Long.parseLong(pref.getString(Constants.USERID, "").replaceAll("[^0-9]", ""));
         String receiverMobileNumber = "+880" + mMobileNumberEditText.getText().toString().trim();
-        int mobileNumberType = mSelectType.getSelectedItemPosition() + 1;
+
+        int mobileNumberType;
+        if (mSelectType.getCheckedRadioButtonId() == R.id.radio_button_prepaid)
+            mobileNumberType = Constants.MOBILE_TYPE_PREPAID;
+        else
+            mobileNumberType = Constants.MOBILE_TYPE_POSTPAID;
+        pref.edit().putInt(Constants.MOBILE_NUMBER_TYPE, mobileNumberType).apply();
+
         int operatorCode = mSelectOperator.getSelectedItemPosition() + 1;
         double amount = Double.parseDouble(mAmountEditText.getText().toString().trim());
         int accountType = pref.getInt(Constants.ACCOUNT_TYPE, 1);

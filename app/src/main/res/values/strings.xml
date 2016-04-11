@@ -470,11 +470,6 @@
         <item>Teletalk</item>
     </string-array>
 
-    <string-array name="recharge_types">
-        <item>Pre-paid</item>
-        <item>Post-paid</item>
-    </string-array>
-
     <string-array name="occupations">
         <item>Select One</item>
         <item>Engineer</item>

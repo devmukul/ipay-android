@@ -72,11 +72,29 @@
             android:layout_height="wrap_content"
             android:prompt="@string/select_an_operator" />
 
-        <Spinner
-            android:id="@+id/recharge_type"
-            android:layout_width="fill_parent"
+        <RadioGroup
+            android:id="@+id/mobile_number_type_selector"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:prompt="@string/select_type" />
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_button_prepaid"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Pre-paid"/>
+
+            <RadioButton
+                android:id="@+id/radio_button_postpaid"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Post-paid"/>
+
+
+        </RadioGroup>
 
         <Button
             android:id="@+id/button_recharge"
