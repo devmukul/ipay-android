@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +62,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
     private final int PICK_CONTACT = 100;
 
     private Button buttonRequest;
-    private Button buttonSelectFromContacts;
+    private ImageView buttonSelectFromContacts;
     private Button buttonShowQRCode;
     private EditText mMobileNumberEditText;
     private EditText mDescriptionEditText;
@@ -75,7 +76,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         View v = inflater.inflate(R.layout.fragment_request_money, container, false);
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         buttonShowQRCode = (Button) v.findViewById(R.id.button_show_qr_code);
-        buttonSelectFromContacts = (Button) v.findViewById(R.id.select_sender_from_contacts);
+        buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_sender_from_contacts);
         buttonRequest = (Button) v.findViewById(R.id.button_request_money);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
