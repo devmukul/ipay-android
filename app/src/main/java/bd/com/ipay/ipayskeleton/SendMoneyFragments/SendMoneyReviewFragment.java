@@ -98,9 +98,9 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
             mDescriptionView.setText(mDescription);
         }
 
-        mAmountView.setText(String.format("%.2f BDT", mAmount));
-        mServiceChargeView.setText(String.format("%.2f BDT", mServiceCharge));
-        mNetReceivedView.setText(String.format("%.2f BDT", mAmount.subtract(mServiceCharge)));
+        mAmountView.setText(String.format("\u09F3 %.2f", mAmount));
+        mServiceChargeView.setText(String.format("\u09F3 %.2f", mServiceCharge));
+        mNetReceivedView.setText(String.format("\u09F3 %.2f", mAmount.subtract(mServiceCharge)));
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
