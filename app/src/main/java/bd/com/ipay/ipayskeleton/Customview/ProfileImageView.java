@@ -45,22 +45,22 @@ public class ProfileImageView extends FrameLayout {
     }
 
     public void setProfilePicture(String photoUri) {
-        if (photoUri != null) {
 //            mProfilePictureView.setVisibility(View.VISIBLE);
 //            mProfileFirstLetterView.setVisibility(View.GONE);
 
-            Glide.with(context)
-                    .load(photoUri)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(mProfilePictureView);
-        } else {
-            Glide.with(context)
-                    .load(R.drawable.ic_person)
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(mProfilePictureView);
-        }
+        Glide.with(context)
+                .load(photoUri)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(mProfilePictureView);
+    }
+
+    public void setProfilePicturePlaceHolder() {
+        Glide.with(context)
+                .load(R.drawable.ic_person)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(mProfilePictureView);
     }
 
     public void setProfileFirstLetter(String name) {
@@ -68,7 +68,7 @@ public class ProfileImageView extends FrameLayout {
 //            mProfilePictureView.setVisibility(View.GONE);
 //            mProfileFirstLetterView.setVisibility(View.VISIBLE);
 
-            mProfileFirstLetterView.setText(String.valueOf(name.charAt(0)));
+            mProfileFirstLetterView.setText(String.valueOf(name.toUpperCase().charAt(0)));
         }
     }
 
@@ -78,7 +78,14 @@ public class ProfileImageView extends FrameLayout {
 //        } else {
 //            setProfileFirstLetter(name);
 //        }
-        setProfileFirstLetter(name);
-        setProfilePicture(photoUri);
+
+        if (name != null && !name.isEmpty()) {
+            setProfileFirstLetter(name);
+            setProfilePicture(photoUri);
+        } else if (photoUri != null){
+            setProfileFirstLetter(photoUri);
+        } else {
+            setProfilePicturePlaceHolder();
+        }
     }
 }
