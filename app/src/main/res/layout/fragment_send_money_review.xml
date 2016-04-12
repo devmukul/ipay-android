@@ -59,14 +59,12 @@
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:layout_marginBottom="6dp"
                                 android:textStyle="bold"
-                                android:text="Rafi Kamal"
                                 android:id="@+id/textview_name" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="+8801939373436"
                                 android:id="@+id/textview_mobile_number" />
 
                         </LinearLayout>
@@ -77,7 +75,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_below="@+id/profile_picture">
+                        android:layout_below="@+id/profile_picture"
+                        android:id="@+id/description_holder">
 
                         <View
                             android:layout_width="match_parent"
@@ -90,7 +89,6 @@
                             android:id="@+id/textview_description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="This is some description"
                             android:layout_marginTop="12dp"
                             android:layout_marginBottom="12dp"
                             android:gravity="center" />
@@ -129,8 +127,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/ReviewItemStyle"
-                            android:gravity="right"
-                            android:text="BDT 500.0"/>
+                            android:gravity="right" />
 
                     </LinearLayout>
 
@@ -151,8 +148,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/ReviewItemStyle"
-                            android:gravity="right"
-                            android:text="BDT 15.0"/>
+                            android:gravity="right" />
 
                     </LinearLayout>
 
@@ -173,8 +169,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/ReviewItemStyle"
-                            android:gravity="right"
-                            android:text="BDT 485.0"/>
+                            android:gravity="right" />
 
                     </LinearLayout>
 

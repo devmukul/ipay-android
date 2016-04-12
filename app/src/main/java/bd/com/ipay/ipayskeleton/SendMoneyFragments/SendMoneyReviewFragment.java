@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,11 +48,13 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
     private TextView mMobileNumberView;
-    private TextView mDescriptionVIew;
+    private TextView mDescriptionView;
+    private LinearLayout mDescriptionHolder;
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mNetReceivedView;
     private Button mSendMoneyButton;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,7 +70,8 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mDescriptionVIew = (TextView) v.findViewById(R.id.textview_description);
+        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
+        mDescriptionHolder = (LinearLayout) v.findViewById(R.id.description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_fee);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
@@ -79,12 +83,24 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
         mSenderMobileNumber = pref.getString(Constants.USERID, "");
 
         mProfileImageView.setInformation(mPhotoUri, mReceiverName);
-        mNameView.setText(mReceiverName);
+
+        if (mReceiverName == null || mReceiverName.isEmpty()) {
+            mNameView.setVisibility(View.GONE);
+        } else {
+            mNameView.setText(mReceiverName);
+        }
+
         mMobileNumberView.setText(mReceiverMobileNumber);
-        mDescriptionVIew.setText(mDescription);
-        mAmountView.setText(mAmount + " BDT");
-        mServiceChargeView.setText(mServiceCharge + " BDT");
-        mNetReceivedView.setText(mAmount.subtract(mServiceCharge) + " BDT");
+
+        if (mDescription == null || mDescription.isEmpty()) {
+            mDescriptionHolder.setVisibility(View.GONE);
+        } else {
+            mDescriptionView.setText(mDescription);
+        }
+
+        mAmountView.setText(String.format("%.2f BDT", mAmount));
+        mServiceChargeView.setText(String.format("%.2f BDT", mServiceCharge));
+        mNetReceivedView.setText(String.format("%.2f BDT", mAmount.subtract(mServiceCharge)));
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override

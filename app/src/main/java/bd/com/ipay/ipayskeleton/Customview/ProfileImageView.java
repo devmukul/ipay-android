@@ -54,6 +54,12 @@ public class ProfileImageView extends FrameLayout {
                     .crossFade()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(mProfilePictureView);
+        } else {
+            Glide.with(context)
+                    .load(R.drawable.ic_person)
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(mProfilePictureView);
         }
     }
 
