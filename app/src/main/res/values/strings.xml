@@ -444,6 +444,12 @@
     <string name="mobile_topup_restriction_info">* You can recharge only in your own mobile number</string>
     <string name="pre_paid">Pre-paid</string>
     <string name="post_paid">Post-paid</string>
+    <string name="review_and_send">Review &amp; Send</string>
+    <string name="review_and_request">Review &amp; Request</string>
+    <string name="review_and_recharge">Review &amp; Recharge</string>
+    <string name="amount">Amount</string>
+    <string name="fee">Fee</string>
+    <string name="net_received">Net Received</string>
 
     <string-array name="account_types">
         <item>Personal</item>

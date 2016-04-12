@@ -25,9 +25,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -38,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.SendMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyQueryRequest;
@@ -48,7 +46,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeReq
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
-import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -109,7 +106,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                     // For now, we are directly sending the money without going through any send money query
                     // sendMoneyQuery();
                     if (verifyUserInputs()) {
-                        showSendMoneyConfirmationDialog();
+                        launchReviewPage();
                     }
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -333,79 +330,95 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         }
     }
 
-    private void showSendMoneyConfirmationDialog() {
+    private void launchReviewPage() {
+
         String receiver = mMobileNumberEditText.getText().toString().trim();
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
-        String serviceChargeDescription = "";
+        String description = mDescriptionEditText.getText().toString().trim();
+        BigDecimal serviceCharge = mGetServiceChargeResponse.getServiceCharge(amount);
 
-        if (mGetServiceChargeResponse != null) {
-            if (mGetServiceChargeResponse.getServiceCharge(amount).compareTo(new BigDecimal(0)) > 0) {
-                serviceChargeDescription = "The receiver be charged " + mGetServiceChargeResponse.getServiceCharge(amount) + " Tk. for this transaction.";
-            } else if (mGetServiceChargeResponse.getServiceCharge(amount).compareTo(new BigDecimal(0)) == 0)
-                serviceChargeDescription = getString(R.string.no_extra_charges);
-            else {
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-        } else {
+        if (mGetServiceChargeResponse == null || serviceCharge.compareTo(new BigDecimal(0)) < 0) {
             Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+        Intent intent = new Intent(getActivity(), SendMoneyReviewActivity.class);
+        intent.putExtra(Constants.AMOUNT, amount);
+        intent.putExtra(Constants.RECEIVER, receiver);
+        intent.putExtra(Constants.DESCRIPTION, description);
+        startActivity(intent);
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View dialogLayout = inflater.inflate(R.layout.dialog_send_money_query, null);
-        alertDialogue.setView(dialogLayout);
+//        String serviceChargeDescription = "";
+//        if (mGetServiceChargeResponse != null) {
+//            if (mGetServiceChargeResponse.getServiceCharge(amount).compareTo(new BigDecimal(0)) > 0) {
+//                serviceChargeDescription = "The receiver be charged " + mGetServiceChargeResponse.getServiceCharge(amount) + " Tk. for this transaction.";
+//            } else if (mGetServiceChargeResponse.getServiceCharge(amount).compareTo(new BigDecimal(0)) == 0)
+//                serviceChargeDescription = getString(R.string.no_extra_charges);
+//            else {
+//                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//        } else {
+//            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+//
+//        LayoutInflater inflater = getActivity().getLayoutInflater();
+//        View dialogLayout = inflater.inflate(R.layout.dialog_send_money_query, null);
+//        alertDialogue.setView(dialogLayout);
+//
+//        TextView title = (TextView) dialogLayout.findViewById(R.id.title);
+//        TextView msg = (TextView) dialogLayout.findViewById(R.id.message);
+//        RoundedImageView image = (RoundedImageView) dialogLayout.findViewById(R.id.portrait);
+//
+//        title.setText(R.string.confirm_query);
+//        msg.setText("You're going to send " + amount + " Tk. to " + receiver
+//                + "\n" + serviceChargeDescription
+//                + "\nDo you want to continue?");
+//
+//        File file = new File(Environment.getExternalStorageDirectory().getPath()
+//                + Constants.PICTURE_FOLDER + receiver.replaceAll("[^0-9]", "") + ".jpg");
+//
+//        if (file.exists()) {
+//            try {
+//                Glide.with(getActivity())
+//                        .load(file.getPath().toString())
+//                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                        .skipMemoryCache(true)     // Skip the cache. Load from disk each time
+//                        .into(image);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            try {
+//                Glide.with(getActivity())
+//                        .load(R.drawable.ic_person)
+//                        .crossFade()
+//                        .transform(new CircleTransform(getActivity()))
+//                        .into(image);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        alertDialogue.setPositiveButton(R.string.send_money, new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int which) {
+//                attemptSendMoney();
+//            }
+//        });
+//
+//        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int which) {
+//                // Do nothing
+//            }
+//        });
+//
+//        alertDialogue.show();
 
-        TextView title = (TextView) dialogLayout.findViewById(R.id.title);
-        TextView msg = (TextView) dialogLayout.findViewById(R.id.message);
-        RoundedImageView image = (RoundedImageView) dialogLayout.findViewById(R.id.portrait);
 
-        title.setText(R.string.confirm_query);
-        msg.setText("You're going to send " + amount + " Tk. to " + receiver
-                + "\n" + serviceChargeDescription
-                + "\nDo you want to continue?");
-
-        File file = new File(Environment.getExternalStorageDirectory().getPath()
-                + Constants.PICTURE_FOLDER + receiver.replaceAll("[^0-9]", "") + ".jpg");
-
-        if (file.exists()) {
-            try {
-                Glide.with(getActivity())
-                        .load(file.getPath().toString())
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)     // Skip the cache. Load from disk each time
-                        .into(image);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                Glide.with(getActivity())
-                        .load(R.drawable.ic_person)
-                        .crossFade()
-                        .transform(new CircleTransform(getActivity()))
-                        .into(image);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        alertDialogue.setPositiveButton(R.string.send_money, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                attemptSendMoney();
-            }
-        });
-
-        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-            }
-        });
-
-        alertDialogue.show();
     }
 
     @Override
@@ -459,7 +472,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                     double amount = mSendMoneyQueryResponse.getAmount();
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_ACCEPTED)) {
-//                        showSendMoneyConfirmationDialog(receiver, amount);
+//                        launchReviewPage(receiver, amount);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.send_money_query_failed, Toast.LENGTH_SHORT).show();

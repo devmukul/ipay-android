@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:cardElevation="4dp">
+
+                <RelativeLayout
+                    android:id="@+id/profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <bd.com.ipay.ipayskeleton.Customview.ProfileImageView
+                        android:id="@+id/profile_picture"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin_double"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                        android:layout_width="74dp"
+                        android:layout_height="74dp">
+
+                    </bd.com.ipay.ipayskeleton.Customview.ProfileImageView>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_alignTop="@id/profile_picture"
+                        android:layout_alignBottom="@id/profile_picture"
+                        android:layout_toRightOf="@+id/profile_picture"
+                        android:layout_toEndOf="@+id/profile_picture">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_centerVertical="true">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:layout_marginBottom="6dp"
+                                android:textStyle="bold"
+                                android:text="Rafi Kamal"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="+8801939373436"/>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_below="@+id/profile_picture">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginRight="12dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="This is some description"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="32dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/ReviewItemLabelStyle"
+                            android:text="@string/amount"/>
+
+                        <TextView
+                            android:id="@+id/textview_amount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/ReviewItemStyle"
+                            android:gravity="right"
+                            android:text="BDT 500.0"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="24dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/ReviewItemLabelStyle"
+                            android:text="@string/fee"/>
+
+                        <TextView
+                            android:id="@+id/textview_fee"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/ReviewItemStyle"
+                            android:gravity="right"
+                            android:text="BDT 15.0"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="24dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/ReviewItemLabelStyle"
+                            android:text="@string/net_received"/>
+
+                        <TextView
+                            android:id="@+id/textview_net_received"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/ReviewItemStyle"
+                            android:gravity="right"
+                            android:text="BDT 485.0"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/button_send_money"
+        style="@style/ButtonStyleBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Now" />
+
+</LinearLayout>
