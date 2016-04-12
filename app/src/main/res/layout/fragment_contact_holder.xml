@@ -9,27 +9,42 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Switch
-            android:id="@+id/switch_contacts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-            android:showText="true"
-            android:switchTextAppearance="@style/TextStyleWhiteSmallBold"
-            android:textOff="@string/all_contacts"
-            android:textOn="@string/ipay_contacts"
-            android:thumb="@drawable/switch_selector_contacts"
-            android:track="@drawable/switch_track_contacts" />
-
         <FrameLayout
             android:id="@+id/fragment_container_contacts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/switch_contacts">
+            android:layout_below="@+id/contacts_selector">
 
         </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/contacts_selector"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/drawable_contact_selector_background">
+
+            <Button
+                android:id="@+id/button_contacts_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/all_contacts"
+                style="@style/ContactsSelectorStyle"
+                android:layout_marginRight="1dp"/>
+
+            <Button
+                android:id="@+id/button_contacts_ipay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ipay_contacts"
+                android:layout_marginLeft="1dp"
+                style="@style/ContactsSelectorStyle"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

@@ -3,9 +3,11 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -30,25 +32,34 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private BottomSheetLayout mBottomSheetLayout;
     private IPayContactsFragment iPayContactsFragment;
     private AllContactsFragment allContactsFragment;
-    private Switch mContactSwitch;
+
+    private Button mAllContactsSelector;
+    private Button miPayContactsSelector;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contact_holder, container, false);
         mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
-        mContactSwitch = (Switch) v.findViewById(R.id.switch_contacts);
+
+        mAllContactsSelector = (Button) v.findViewById(R.id.button_contacts_all);
+        miPayContactsSelector = (Button) v.findViewById(R.id.button_contacts_ipay);
 
         iPayContactsFragment = new IPayContactsFragment();
         allContactsFragment = new AllContactsFragment();
         iPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
         allContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
 
-        mContactSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mAllContactsSelector.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    switchToiPayContacts();
-                else switchToAllContacts();
+            public void onClick(View v) {
+                switchToAllContacts();
+            }
+        });
+
+        miPayContactsSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchToiPayContacts();
             }
         });
 
@@ -56,6 +67,16 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         switchToAllContacts();
 
         return v;
+    }
+
+    private void setEnabled(Button button, boolean isEnabled) {
+        if (isEnabled) {
+            button.setBackgroundResource(R.drawable.drawable_contact_selector_active);
+            button.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+        } else {
+            button.setBackgroundResource(R.drawable.drawable_contact_selector_inactive);
+            button.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorLightGray));
+        }
     }
 
     private void getInviteInfo() {
@@ -67,6 +88,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private void switchToAllContacts() {
+        setEnabled(mAllContactsSelector, true);
+        setEnabled(miPayContactsSelector, false);
+
         if (getActivity() != null)
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -77,6 +101,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private void switchToiPayContacts() {
+        setEnabled(miPayContactsSelector, true);
+        setEnabled(mAllContactsSelector, false);
+
         if (getActivity() != null)
             new Handler().postDelayed(new Runnable() {
                 @Override
