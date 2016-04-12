@@ -83,7 +83,8 @@ public class DataHelper {
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
             cursor = db.rawQuery("SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS
-                    + " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'", null);
+                    + " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'" +
+                    " ORDER BY " + DBConstants.KEY_NAME + " COLLATE NOCASE", null);
 
             if (cursor != null) {
                 cursor.getCount();
