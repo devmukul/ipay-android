@@ -32,6 +32,8 @@ public class Constants {
     public static final String AMOUNT = "amount";
     public static final String DESCRIPTION = "description";
     public static final String RECEIVER = "receiver";
+    public static final String SERVICE_CHARGE = "service_charge";
+    public static final String PHOTO_URI = "photo_uri";
 
     public static final int STARTING_DATE = 01;
     public static final int STARTING_MONTH = 01;

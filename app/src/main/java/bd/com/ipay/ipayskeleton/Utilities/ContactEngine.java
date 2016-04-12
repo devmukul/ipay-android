@@ -671,27 +671,27 @@ public class ContactEngine {
         return name;
     }
 
-    public static ContactData getContacInfofromNumber(Context context, String contactNumber) {
-        if (contactNumber == null || contactNumber.equals(""))
-            return null;
-        ContactData cd = null;
-        Cursor contactLookupCursor = context.getContentResolver().query(
-                Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
-                        Uri.encode(contactNumber.replaceAll("\\D", ""))),
-                new String[]{PhoneLookup.DISPLAY_NAME, PhoneLookup._ID, PhoneLookup.LOOKUP_KEY},
-                null, null, null);
-        if (contactLookupCursor != null) {
-            if (contactLookupCursor.moveToFirst()) {
-                do {
-                    cd = new ContactData(contactLookupCursor.getString(contactLookupCursor.getColumnIndex(PhoneLookup.DISPLAY_NAME)),
-                            contactLookupCursor.getString(contactLookupCursor.getColumnIndex(PhoneLookup.LOOKUP_KEY)),
-                            contactLookupCursor.getLong(contactLookupCursor.getColumnIndex(PhoneLookup._ID)));
-                } while (contactLookupCursor.moveToNext());
-            }
-            contactLookupCursor.close();
+    public static ContactData getContactInfoFromNumber(Context context, String contactNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(contactNumber));
+        Cursor cursor = cr.query(uri, new String[]{
+                PhoneLookup._ID,
+                PhoneLookup.DISPLAY_NAME,
+                PhoneLookup.PHOTO_URI,
+        }, null, null, null);
+
+        ContactData contactData = null;
+        if(cursor != null && cursor.moveToFirst()) {
+            long id = cursor.getLong(cursor.getColumnIndex(PhoneLookup._ID));
+            String name = cursor.getString(cursor.getColumnIndex(PhoneLookup.DISPLAY_NAME));
+            String photoUri = cursor.getString(cursor.getColumnIndex(PhoneLookup.PHOTO_URI));
+
+            contactData = new ContactData(id, name, contactNumber, photoUri);
+
+            cursor.close();
         }
 
-        return cd;
+        return contactData;
     }
 
     public static String getContactNumberFromId(Context context, long _id) {
@@ -979,14 +979,16 @@ public class ContactEngine {
     }
 
     public static class ContactData {
-        public String name;
-        public String lookup_key;
         public long contactID;
+        public String name;
+        public String mobileNumber;
+        public String photoUri;
 
-        public ContactData(String n, String lookup, long id) {
-            name = n;
-            lookup_key = lookup;
-            contactID = id;
+        public ContactData(long contactID, String name, String mobileNumber, String photoUri) {
+            this.contactID = contactID;
+            this.name = name;
+            this.mobileNumber = mobileNumber;
+            this.photoUri = photoUri;
         }
     }
 

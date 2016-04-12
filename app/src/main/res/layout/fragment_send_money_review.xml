@@ -31,8 +31,8 @@
                         android:id="@+id/profile_picture"
                         android:layout_marginRight="@dimen/activity_horizontal_margin_double"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin"
-                        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="24dp"
                         android:layout_width="74dp"
                         android:layout_height="74dp">
 
@@ -59,13 +59,15 @@
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:layout_marginBottom="6dp"
                                 android:textStyle="bold"
-                                android:text="Rafi Kamal"/>
+                                android:text="Rafi Kamal"
+                                android:id="@+id/textview_name" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="+8801939373436"/>
+                                android:text="+8801939373436"
+                                android:id="@+id/textview_mobile_number" />
 
                         </LinearLayout>
 
@@ -85,6 +87,7 @@
                             android:layout_marginRight="12dp"/>
 
                         <TextView
+                            android:id="@+id/textview_description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="This is some description"
@@ -185,6 +188,6 @@
         style="@style/ButtonStyleBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Send Now" />
+        android:text="@string/send_now" />
 
 </LinearLayout>
