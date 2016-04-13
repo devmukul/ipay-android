@@ -128,7 +128,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_NOTIFICATIONS,
-                Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
+                Constants.BASE_URL + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mGetAllNotificationsTask.mHttpResponseListener = this;
         mGetAllNotificationsTask.execute((Void) null);
     }
@@ -146,7 +146,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectPaymentTask.mHttpResponseListener = this;
         mRejectPaymentTask.execute((Void) null);
     }
@@ -164,7 +164,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptPaymentTask.mHttpResponseListener = this;
         mAcceptPaymentTask.execute((Void) null);
     }
@@ -181,7 +181,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.execute((Void) null);
     }
@@ -198,7 +198,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptRequestTask.mHttpResponseListener = this;
         mAcceptRequestTask.execute((Void) null);
     }

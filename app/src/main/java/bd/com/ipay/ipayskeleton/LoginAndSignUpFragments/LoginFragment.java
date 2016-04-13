@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,7 +151,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mForgetPasswordRequest);
         mForgetPasswordTask = new HttpRequestPostAsyncTask(Constants.COMMAND_FORGET_PASSWORD_SEND_OTP,
-                Constants.BASE_URL_POST_MM + Constants.URL_SEND_OTP_FORGET_PASSWORD, json, getActivity());
+                Constants.BASE_URL + Constants.URL_SEND_OTP_FORGET_PASSWORD, json, getActivity());
 
         // Save the mobile number and device id in a static field so that it can be used later in OTP verification fragment
         SignupOrLoginActivity.mMobileNumber = mobileNumber;
@@ -219,7 +217,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
-                    Constants.BASE_URL_POST_MM + Constants.URL_LOGIN, json, getActivity());
+                    Constants.BASE_URL + Constants.URL_LOGIN, json, getActivity());
             mLoginTask.mHttpResponseListener = this;
             mLoginTask.execute((Void) null);
         }

@@ -142,7 +142,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
                     String profileInfoJson = gson.toJson(setProfileInfoRequest);
                     mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
-                            Constants.BASE_URL_POST_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, this);
+                            Constants.BASE_URL + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, this);
                     mSetProfileInfoTask.mHttpResponseListener = this;
                     mSetProfileInfoTask.execute();
                 }
@@ -157,7 +157,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
 
                     String addressJson = gson.toJson(userAddressRequest, SetUserAddressRequest.class);
                     mSetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_USER_ADDRESS_REQUEST,
-                            Constants.BASE_URL_POST_MM + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, this);
+                            Constants.BASE_URL + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, this);
                     mSetUserAddressTask.mHttpResponseListener = this;
                     mSetUserAddressTask.execute();
                 }
@@ -191,7 +191,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         Gson gson = new Gson();
         String json = gson.toJson(mEmailVerificationRequest);
         mEmailVerificationAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_VERIFICATION_REQUEST,
-                Constants.BASE_URL_POST_MM + Constants.URL_EMAIL_VERIFICATION, json, EditProfileActivity.this);
+                Constants.BASE_URL + Constants.URL_EMAIL_VERIFICATION, json, EditProfileActivity.this);
         mEmailVerificationAsyncTask.mHttpResponseListener = this;
         mEmailVerificationAsyncTask.execute((Void) null);
 

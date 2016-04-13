@@ -46,7 +46,6 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.E
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.ProfileFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
-import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
@@ -293,7 +292,7 @@ public class HomeActivity extends BaseActivity
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_POST_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
+                Constants.BASE_URL + Constants.URL_LOG_OUT, json, HomeActivity.this);
         mLogoutTask.mHttpResponseListener = this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -308,12 +307,11 @@ public class HomeActivity extends BaseActivity
             return;
         }
 
-        GetFireBaseTokenRequestBuilder mGetFireBaseTokenRequestBuilder = new GetFireBaseTokenRequestBuilder();
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
-        String mUri = mGetFireBaseTokenRequestBuilder.getGeneratedUri();
+        String mUri = Constants.BASE_URL + "/" + Constants.URL_GET_FIREBASE_TOKEN;
         mGetFireBaseTokenTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_FIREBASE_TOKEN,
                 mUri, HomeActivity.this);
         mGetFireBaseTokenTask.mHttpResponseListener = this;

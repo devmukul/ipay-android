@@ -15,8 +15,6 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
@@ -89,7 +87,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Str
         try {
             HttpClient client = new DefaultHttpClient();
             File file = new File(selectedImagePath);
-            HttpPost post = new HttpPost(Constants.BASE_URL_POST_MM + Constants.URL_UPLOAD_DOCUMENTS);
+            HttpPost post = new HttpPost(Constants.BASE_URL + Constants.URL_UPLOAD_DOCUMENTS);
 
             if (HomeActivity.iPayToken.length() > 0)
                 post.setHeader(Constants.TOKEN, HomeActivity.iPayToken);

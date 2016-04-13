@@ -397,7 +397,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
-                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
+                Constants.BASE_URL + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.execute();
     }

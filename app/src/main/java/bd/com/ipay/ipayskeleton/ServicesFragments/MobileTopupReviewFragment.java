@@ -94,7 +94,7 @@ public class MobileTopupReviewFragment extends Fragment implements HttpResponseL
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_TOPUP_REQUEST, json, getActivity());
         mTopupTask.mHttpResponseListener = this;
         mTopupTask.execute();
     }

@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,22 +34,17 @@ import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetIntroducerListRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetIdentificationDocumentResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocument;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocumentsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserAddressRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ProfileFragment extends Fragment implements HttpResponseListener {
 
@@ -322,7 +316,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mProgressDialog.show();
 
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                new ProfileInfoRequestBuilder().getGeneratedUri(), getActivity(), this);
+                Constants.BASE_URL + "/" + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
         mGetProfileInfoTask.execute();
     }
 
@@ -332,7 +326,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         }
 
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
-                new UserAddressRequestBuilder().getGeneratedUri(), getActivity(), this);
+                Constants.BASE_URL + "/" + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this);
         mGetUserAddressTask.execute();
     }
 
@@ -342,7 +336,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         }
 
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
-                new IdentificationDocumentsRequestBuilder().getGeneratedUri(), getActivity(), this);
+                Constants.BASE_URL + "/" + Constants.URL_GET_DOCUMENTS, getActivity(), this);
         mGetIdentificationDocumentsTask.execute();
     }
 
@@ -352,7 +346,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         }
 
         mGetIntroducerListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
-                new GetIntroducerListRequestBuilder().getGeneratedUri(), getActivity(), this);
+                Constants.BASE_URL + "/" + Constants.URL_GET_INTRODUCER_LIST, getActivity(), this);
         mGetIntroducerListTask.execute();
     }
 

@@ -131,7 +131,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             String json = gson.toJson(mOtpRequestBusinessSignup);
             mRequestOTPTask = new
                     HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL_POST_MM + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity()
+                    Constants.BASE_URL + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity()
 
             );
             mRequestOTPTask.mHttpResponseListener = this;
@@ -174,7 +174,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             Gson gson = new Gson();
             String json = gson.toJson(mSignupModel);
             mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_BUSINESS,
-                    Constants.BASE_URL_POST_MM + Constants.URL_SIGN_UP_BUSINESS, json, getActivity());
+                    Constants.BASE_URL + Constants.URL_SIGN_UP_BUSINESS, json, getActivity());
             mSignUpTask.mHttpResponseListener = this;
             mSignUpTask.execute((Void) null);
         }
@@ -191,7 +191,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
         mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
-                Constants.BASE_URL_POST_MM + Constants.URL_LOGIN, json, getActivity());
+                Constants.BASE_URL + Constants.URL_LOGIN, json, getActivity());
         mLoginTask.mHttpResponseListener = this;
         mLoginTask.execute((Void) null);
     }

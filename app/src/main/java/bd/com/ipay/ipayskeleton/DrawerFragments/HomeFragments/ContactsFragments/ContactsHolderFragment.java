@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
@@ -19,7 +17,6 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -82,7 +79,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private void getInviteInfo() {
         if (mGetInviteInfoTask == null) {
             mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
-                    new GetInviteInfoRequestBuilder().getGeneratedUri(), getActivity(), this);
+                    Constants.BASE_URL + "/" + Constants.URL_GET_INVITE_INFO, getActivity(), this);
             mGetInviteInfoTask.execute();
         }
     }

@@ -23,7 +23,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.CreateNewEventResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Events.GetEventCategoriesRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.GetEventCategoriesResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -102,10 +101,7 @@ public class CreateNewEventFragment extends Fragment implements HttpResponseList
             return;
         }
 
-        GetEventCategoriesRequestBuilder mGetEventCategoriesRequestBuilder =
-                new GetEventCategoriesRequestBuilder();
-
-        String mUri = mGetEventCategoriesRequestBuilder.getGeneratedUri();
+        String mUri = Constants.BASE_URL + "/" + Constants.URL_EVENT_CATEGORIES;
         mGetEventCategoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_EVENT_CATEGORIES,
                 mUri, getActivity());
         mGetEventCategoryTask.mHttpResponseListener = this;

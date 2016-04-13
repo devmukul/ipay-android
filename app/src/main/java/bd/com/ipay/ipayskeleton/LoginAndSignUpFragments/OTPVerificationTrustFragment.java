@@ -102,7 +102,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
-                    Constants.BASE_URL_POST_MM + Constants.URL_LOGIN, json, getActivity());
+                    Constants.BASE_URL + Constants.URL_LOGIN, json, getActivity());
             mLoginTask.mHttpResponseListener = this;
             mLoginTask.execute((Void) null);
         }

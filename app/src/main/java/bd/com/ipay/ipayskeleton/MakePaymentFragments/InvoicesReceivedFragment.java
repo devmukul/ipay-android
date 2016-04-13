@@ -117,7 +117,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         Gson gson = new Gson();
         String json = gson.toJson(mServiceChargeRequest);
         mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
+                Constants.BASE_URL + Constants.URL_SERVICE_CHARGE, json, getActivity());
         mServiceChargeTask.mHttpResponseListener = this;
         mServiceChargeTask.execute((Void) null);
     }
@@ -144,7 +144,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         Gson gson = new Gson();
         String json = gson.toJson(mGetPendingPaymentsRequest);
         mPendingPaymentsRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED,
-                Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
+                Constants.BASE_URL + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mPendingPaymentsRequestTask.mHttpResponseListener = this;
         mPendingPaymentsRequestTask.execute((Void) null);
     }
@@ -162,7 +162,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectPaymentTask.mHttpResponseListener = this;
         mRejectPaymentTask.execute((Void) null);
     }
@@ -180,7 +180,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptPaymentTask.mHttpResponseListener = this;
         mAcceptPaymentTask.execute((Void) null);
     }

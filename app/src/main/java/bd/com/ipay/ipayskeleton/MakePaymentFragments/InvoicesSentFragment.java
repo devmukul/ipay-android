@@ -109,7 +109,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mGetPendingPaymentsRequest);
         mPendingInvoicesTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT,
-                Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity());
+                Constants.BASE_URL + Constants.URL_GET_SENT_REQUESTS, json, getActivity());
         mPendingInvoicesTask.mHttpResponseListener = this;
         mPendingInvoicesTask.execute((Void) null);
     }
@@ -126,7 +126,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mCancelPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mCancelPaymentRequestTask.mHttpResponseListener = this;
         mCancelPaymentRequestTask.execute((Void) null);
     }

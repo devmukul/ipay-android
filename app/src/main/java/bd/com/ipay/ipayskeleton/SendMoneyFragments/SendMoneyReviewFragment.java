@@ -125,7 +125,7 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
         Gson gson = new Gson();
         String json = gson.toJson(mSendMoneyRequest);
         mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity());
+                Constants.BASE_URL + Constants.URL_SEND_MONEY, json, getActivity());
         mSendMoneyTask.mHttpResponseListener = this;
         mSendMoneyTask.execute();
     }

@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Resource;
 
+import android.net.Uri;
+
 import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
@@ -25,29 +27,18 @@ public abstract class ResourceRequestBuilder {
     }
 
     private void generateUri() {
-        try {
-            URI uri;
-            if (filter == -1) uri = new URIBuilder()
-                    .setScheme(Constants.SCHEME)
-                    .setHost(Constants.BASE_URL_GET_MM)
-                    .setPort(Constants.BASE_URL_GET_MM_PORT)
-                    .setPath(Constants.BASE_URL_GET_MM_PATH + "/" + Constants.URL_RESOURCE)
-                    .addParameter(PARAM_TYPE, getResourceType())
-                    .build();
-            else uri = new URIBuilder()
-                    .setScheme(Constants.SCHEME)
-                    .setHost(Constants.BASE_URL_GET_MM)
-                    .setPort(Constants.BASE_URL_GET_MM_PORT)
-                    .setPath(Constants.BASE_URL_GET_MM_PATH + "/" + Constants.URL_RESOURCE)
-                    .addParameter(PARAM_TYPE, getResourceType())
-                    .addParameter(PARAM_FILTER, filter + "")
-                    .build();
+        Uri uri;
+        if (filter == -1) uri = Uri.parse(Constants.BASE_URL + "/" + Constants.URL_RESOURCE)
+                .buildUpon()
+                .appendQueryParameter(PARAM_TYPE, getResourceType())
+                .build();
+        else uri = Uri.parse(Constants.BASE_URL + "/" + Constants.URL_RESOURCE)
+                .buildUpon()
+                .appendQueryParameter(PARAM_TYPE, getResourceType())
+                .appendQueryParameter(PARAM_FILTER, filter + "")
+                .build();
 
-            setGeneratedUri(uri.toString());
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        setGeneratedUri(uri.toString());
     }
 
     public abstract String getResourceType();

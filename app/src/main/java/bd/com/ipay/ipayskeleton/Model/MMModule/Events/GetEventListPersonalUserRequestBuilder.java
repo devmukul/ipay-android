@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Events;
 
+import android.net.Uri;
+
 import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
@@ -28,22 +30,13 @@ public class GetEventListPersonalUserRequestBuilder {
     }
 
     private void generateUri(long categoryId, long startTime, long endTime) {
-
-        try {
-            URI uri = new URIBuilder()
-                    .setScheme(Constants.SCHEME)
-                    .setHost(Constants.BASE_URL_GET_EM)
-                    .setPort(Constants.BASE_URL_GET_EM_PORT)
-                    .setPath(Constants.BASE_URL_GET_EM_PATH + "/" + Constants.URL_EVENT_LIST)
-                    .addParameter(PARAM_CATEGORY_ID, categoryId + "")
-                    .addParameter(PARAM_START_TIME, startTime + "")
-                    .addParameter(PARAM_END_TIME, endTime + "")
-                    .build();
-            setGeneratedUri(uri.toString());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
+        Uri uri = Uri.parse(Constants.BASE_URL + "/" + Constants.URL_EVENT_LIST)
+                .buildUpon()
+                .appendQueryParameter(PARAM_CATEGORY_ID, categoryId + "")
+                .appendQueryParameter(PARAM_START_TIME, startTime + "")
+                .appendQueryParameter(PARAM_END_TIME, endTime + "")
+                .build();
+        setGeneratedUri(uri.toString());
     }
 
     public String getGeneratedUri() {

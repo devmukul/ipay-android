@@ -153,7 +153,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mServiceChargeRequest);
         mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
+                Constants.BASE_URL + Constants.URL_SERVICE_CHARGE, json, getActivity());
         mServiceChargeTask.mHttpResponseListener = this;
         mServiceChargeTask.execute((Void) null);
     }
@@ -169,7 +169,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mGetBankListRequest);
         mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_POST_MM + Constants.URL_GET_BANK, json, getActivity());
+                Constants.BASE_URL + Constants.URL_GET_BANK, json, getActivity());
         mGetBankTask.mHttpResponseListener = this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -197,7 +197,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);
         mCashInTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, json, getActivity());
+                Constants.BASE_URL + Constants.URL_ADD_MONEY, json, getActivity());
         mCashInTask.mHttpResponseListener = this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

@@ -129,7 +129,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         Gson gson = new Gson();
         String json = gson.toJson(mServiceChargeRequest);
         mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
+                Constants.BASE_URL + Constants.URL_SERVICE_CHARGE, json, getActivity());
         mServiceChargeTask.mHttpResponseListener = this;
         mServiceChargeTask.execute((Void) null);
     }
@@ -169,7 +169,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         Gson gson = new Gson();
         String json = gson.toJson(mGetBankListRequest);
         mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_POST_MM + Constants.URL_GET_BANK, json, getActivity());
+                Constants.BASE_URL + Constants.URL_GET_BANK, json, getActivity());
         mGetBankTask.mHttpResponseListener = this;
         mGetBankTask.execute((Void) null);
     }
@@ -193,7 +193,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         Gson gson = new Gson();
         String json = gson.toJson(mWithdrawMoneyRequest);
         mCashOutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, json, getActivity());
+                Constants.BASE_URL + Constants.URL_WITHDRAW_MONEY, json, getActivity());
         mCashOutTask.mHttpResponseListener = this;
         mCashOutTask.execute((Void) null);
 

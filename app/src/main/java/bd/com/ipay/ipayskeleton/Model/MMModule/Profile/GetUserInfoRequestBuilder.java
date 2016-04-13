@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
 
+import android.net.Uri;
+
 import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
@@ -21,20 +23,12 @@ public class GetUserInfoRequestBuilder {
     }
 
     private void generateUri(String loginId) {
+        Uri uri = Uri.parse(Constants.BASE_URL + "/" + Constants.URL_GET_USER_INFO)
+                .buildUpon()
+                .appendQueryParameter(PARAM_LOGIN_ID, loginId)
+                .build();
 
-        try {
-            URI uri = new URIBuilder()
-                    .setScheme(Constants.SCHEME)
-                    .setHost(Constants.BASE_URL_GET_MM)
-                    .setPort(Constants.BASE_URL_GET_MM_PORT)
-                    .setPath(Constants.BASE_URL_GET_MM_PATH + "/" + Constants.URL_GET_USER_INFO)
-                    .addParameter(PARAM_LOGIN_ID, loginId)
-                    .build();
-            setGeneratedUri(uri.toString());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
+         setGeneratedUri(uri.toString());
     }
 
     public String getGeneratedUri() {

@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed;
 
+import android.net.Uri;
+
 import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
@@ -20,20 +22,11 @@ public class GetNewsFeedRequestBuilder {
     }
 
     private void generateUri(int page) {
-
-        try {
-            URI uri = new URIBuilder()
-                    .setScheme(Constants.SCHEME)
-                    .setHost(Constants.BASE_URL_GET_MM)
-                    .setPort(Constants.BASE_URL_GET_MM_PORT)
-                    .setPath(Constants.BASE_URL_GET_MM_PATH + "/" + Constants.URL_GET_NEWS_FEED)
-                    .addParameter(PARAM_PAGE, page + "")
+        Uri uri = Uri.parse(Constants.BASE_URL + "/" + Constants.URL_GET_NEWS_FEED)
+                    .buildUpon()
+                    .appendQueryParameter(PARAM_PAGE, page + "")
                     .build();
-            setGeneratedUri(uri.toString());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
+        setGeneratedUri(uri.toString());
     }
 
     public String getGeneratedUri() {

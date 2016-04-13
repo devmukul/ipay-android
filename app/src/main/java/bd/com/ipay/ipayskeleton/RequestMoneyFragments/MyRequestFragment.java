@@ -109,7 +109,7 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
         Gson gson = new Gson();
         String json = gson.toJson(mUserActivityRequest);
         mPendingRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_REQUESTS_ME,
-                Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity());
+                Constants.BASE_URL + Constants.URL_GET_SENT_REQUESTS, json, getActivity());
         mPendingRequestTask.mHttpResponseListener = this;
         mPendingRequestTask.execute((Void) null);
     }
@@ -126,7 +126,7 @@ public class MyRequestFragment extends Fragment implements HttpResponseListener 
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mCancelRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mCancelRequestTask.mHttpResponseListener = this;
         mCancelRequestTask.execute((Void) null);
     }

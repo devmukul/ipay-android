@@ -44,25 +44,10 @@ public class Constants {
 
     // Member Management (MM) Module
     // For POST Requests
-    public static final String BASE_URL_POST_MM;
-    // For GET Requests
-    public static final String BASE_URL_GET_MM;
-    public static final int BASE_URL_GET_MM_PORT;
-    public static final String BASE_URL_GET_MM_PATH;
+    public static final String BASE_URL;
 
     // For Images
     public static final String BASE_URL_IMAGE_SERVER;
-
-    // Service Module (SM)
-    public static final String BASE_URL_SM;
-
-    // Event Management (EM) Module
-    public static final String BASE_URL_GET_EM;
-    public static final int BASE_URL_GET_EM_PORT;
-    public static final String BASE_URL_GET_EM_PATH;
-    public static final String BASE_URL_POST_EM;
-
-    public static final String SCHEME;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> staging server
@@ -75,76 +60,24 @@ public class Constants {
 
     static {
         if (SERVER_TYPE == 1) {
-            SCHEME = "http";
 
-            BASE_URL_POST_MM = "http://10.10.10.10:8085/api/v1/";
-
-            BASE_URL_GET_MM = "10.10.10.10";
-            BASE_URL_GET_MM_PORT = 8085;
-            BASE_URL_GET_MM_PATH = "/api/v1/";
-
+            BASE_URL = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
-
-            BASE_URL_SM = "http://10.10.10.10:8085/api/v1/";
-
-            BASE_URL_GET_EM = "10.10.10.10";
-            BASE_URL_GET_EM_PORT = 8085;
-            BASE_URL_GET_EM_PATH = "";
-            BASE_URL_POST_EM = "http://10.10.10.10:8085/api/v1/";
 
         } else if (SERVER_TYPE == 2) {
-            SCHEME = "http";
 
-            BASE_URL_POST_MM = "http://stage.ipay.com.bd:8085/api/v1/";
-
-            BASE_URL_GET_MM = "stage.ipay.com.bd";
-            BASE_URL_GET_MM_PORT = 8085;
-            BASE_URL_GET_MM_PATH = "/api/v1/";
-
+            BASE_URL = "http://stage.ipay.com.bd:8085/api/v1/";
             BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
 
-            BASE_URL_SM = "http://stage.ipay.com.bd:8085/api/v1/";
-
-            BASE_URL_GET_EM = "http://stage.ipay.com.bd";
-            BASE_URL_GET_EM_PORT = 8085;
-            BASE_URL_GET_EM_PATH = "";
-            BASE_URL_POST_EM = "http://stage.ipay.com.bd:8085/api/v1/";
-
         } else if (SERVER_TYPE == 3) {
-            SCHEME = "https";
 
-            BASE_URL_POST_MM = "https://www.ipay.com.bd/api/v1/";
-
-            BASE_URL_GET_MM = "www.ipay.com.bd";
-            BASE_URL_GET_MM_PORT = 443;
-            BASE_URL_GET_MM_PATH = "/api/v1/";
-
+            BASE_URL = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_IMAGE_SERVER = "https://www.ipay.com.bd";
 
-            BASE_URL_SM = "https://www.ipay.com.bd/api/v1/";
-
-            BASE_URL_GET_EM = "https://www.ipay.com.bd";
-            BASE_URL_GET_EM_PORT = 80;
-            BASE_URL_GET_EM_PATH = "";
-            BASE_URL_POST_EM = "https://www.ipay.com.bd/api/v1/";
-
         } else {
-            SCHEME = "http";
 
-            BASE_URL_POST_MM = "http://192.168.1.105:8085/api/v1/";
-
-            BASE_URL_GET_MM = "192.168.1.105";
-            BASE_URL_GET_MM_PORT = 8085;
-            BASE_URL_GET_MM_PATH = "/api/v1/";
-
+            BASE_URL = "http://192.168.1.105:8085/api/v1/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
-
-            BASE_URL_SM = "http://192.168.1.105:8085/api/v1/";
-
-            BASE_URL_GET_EM = "192.168.1.105";
-            BASE_URL_GET_EM_PORT = 8085;
-            BASE_URL_GET_EM_PATH = "";
-            BASE_URL_POST_EM = "http://192.168.1.105:8085/api/v1/";
         }
     }
 

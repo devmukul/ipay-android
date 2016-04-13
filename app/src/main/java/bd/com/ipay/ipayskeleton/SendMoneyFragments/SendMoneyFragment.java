@@ -253,7 +253,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         Gson gson = new Gson();
         String json = gson.toJson(mServiceChargeRequest);
         mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
+                Constants.BASE_URL + Constants.URL_SERVICE_CHARGE, json, getActivity());
         mServiceChargeTask.mHttpResponseListener = this;
         mServiceChargeTask.execute((Void) null);
     }
@@ -305,7 +305,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             Gson gson = new Gson();
             String json = gson.toJson(mSendMoneyQueryRequest);
             mSendMoneyQueryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY_QUERY,
-                    Constants.BASE_URL_SM + Constants.URL_SEND_MONEY_QUERY, json, getActivity());
+                    Constants.BASE_URL + Constants.URL_SEND_MONEY_QUERY, json, getActivity());
             mSendMoneyQueryTask.mHttpResponseListener = this;
             mSendMoneyQueryTask.execute((Void) null);
         }

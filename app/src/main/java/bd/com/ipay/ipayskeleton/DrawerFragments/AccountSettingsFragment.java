@@ -32,9 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordR
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDevicesRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
@@ -234,7 +232,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             Gson gson = new Gson();
             String json = gson.toJson(mSetPinRequest);
             mSavePINTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PIN,
-                    Constants.BASE_URL_POST_MM + Constants.URL_SET_PIN, json, getActivity());
+                    Constants.BASE_URL + Constants.URL_SET_PIN, json, getActivity());
             mSavePINTask.mHttpResponseListener = this;
             mSavePINTask.execute((Void) null);
         }
@@ -282,7 +280,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             Gson gson = new Gson();
             String json = gson.toJson(mChangePasswordRequest);
             mChangePasswordTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
-                    Constants.BASE_URL_POST_MM + Constants.URL_CHANGE_PASSWORD, json, getActivity());
+                    Constants.BASE_URL + Constants.URL_CHANGE_PASSWORD, json, getActivity());
             mChangePasswordTask.mHttpResponseListener = this;
             mChangePasswordTask.execute((Void) null);
         }
@@ -294,7 +292,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         }
 
         mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
-                new GetTrustedDevicesRequestBuilder().getGeneratedUri(), getActivity(), this);
+                Constants.BASE_URL + "/" + Constants.URL_GET_TRUSTED_DEVICES, getActivity(), this);
         mGetTrustedDeviceTask.execute();
     }
 
@@ -329,7 +327,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         String json = gson.toJson(removeTrustedDeviceRequest);
 
         mRemoveTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_DEVICE,
-                Constants.BASE_URL_POST_MM + Constants.URL_REMOVE_TRUSTED_DEVICE, json, getActivity(), this);
+                Constants.BASE_URL + Constants.URL_REMOVE_TRUSTED_DEVICE, json, getActivity(), this);
         mRemoveTrustedDeviceTask.execute();
     }
 

@@ -143,7 +143,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         Gson gson = new Gson();
         String json = gson.toJson(mUserActivityRequest);
         mGetAllParticipantsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_ALL_PARTICIPANTS_LIST,
-                Constants.BASE_URL_SM + Constants.URL_GET_ALL_PARTICIPANTS_LIST, json, getActivity());
+                Constants.BASE_URL + Constants.URL_GET_ALL_PARTICIPANTS_LIST, json, getActivity());
         mGetAllParticipantsTask.mHttpResponseListener = this;
         mGetAllParticipantsTask.execute((Void) null);
     }

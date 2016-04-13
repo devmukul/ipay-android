@@ -97,7 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         Gson gson = new Gson();
         String json = gson.toJson(mGetRefreshTokenRequest);
         HomeActivity.mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_TOKEN,
-                Constants.BASE_URL_POST_MM + Constants.URL_GET_REFRESH_TOKEN, json, context);
+                Constants.BASE_URL + Constants.URL_GET_REFRESH_TOKEN, json, context);
         HomeActivity.mRefreshTokenAsyncTask.mHttpResponseListener = this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -124,7 +124,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_POST_MM + Constants.URL_LOG_OUT, json, context);
+                Constants.BASE_URL + Constants.URL_LOG_OUT, json, context);
         mLogoutTask.mHttpResponseListener = this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

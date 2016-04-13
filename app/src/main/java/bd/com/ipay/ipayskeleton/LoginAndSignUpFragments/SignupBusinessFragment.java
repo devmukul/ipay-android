@@ -267,7 +267,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestBusinessSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL_POST_MM + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity());
+                    Constants.BASE_URL + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity());
             mRequestOTPTask.mHttpResponseListener = this;
             mRequestOTPTask.execute((Void) null);
         }

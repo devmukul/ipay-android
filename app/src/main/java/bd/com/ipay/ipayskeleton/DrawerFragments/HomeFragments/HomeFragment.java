@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.PinInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.News;
@@ -68,6 +69,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetNewsFeedTask = null;
     private GetNewsFeedResponse mGetNewsFeedResponse;
+
+    private HttpRequestGetAsyncTask mGetPinInfoTask = null;
+    private PinInfoResponse mPinInfoResponse;
 
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
@@ -255,7 +259,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
         mRefreshBalanceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_BALANCE,
-                Constants.BASE_URL_SM + Constants.URL_REFRESH_BALANCE, json, getActivity());
+                Constants.BASE_URL + Constants.URL_REFRESH_BALANCE, json, getActivity());
         mRefreshBalanceTask.mHttpResponseListener = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -277,13 +281,21 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
-                Constants.BASE_URL_POST_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
+                Constants.BASE_URL + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
         mAddTrustedDeviceTask.mHttpResponseListener = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             mAddTrustedDeviceTask.execute((Void) null);
         }
+    }
+
+    private void getPinInfo() {
+        if (mGetPinInfoTask != null) {
+            return;
+        }
+
+
     }
 
     private void getNewsFeed() {
@@ -314,7 +326,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
-                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
+                Constants.BASE_URL + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.execute();
     }

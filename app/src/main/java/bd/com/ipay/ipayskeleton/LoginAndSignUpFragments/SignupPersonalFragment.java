@@ -232,7 +232,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestPersonalSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL_POST_MM + Constants.URL_OTP_REQUEST, json, getActivity());
+                    Constants.BASE_URL + Constants.URL_OTP_REQUEST, json, getActivity());
             mRequestOTPTask.mHttpResponseListener = this;
             mRequestOTPTask.execute((Void) null);
         }
