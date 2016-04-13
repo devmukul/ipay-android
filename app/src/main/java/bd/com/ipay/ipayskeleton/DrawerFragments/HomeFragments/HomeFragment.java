@@ -56,6 +56,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHis
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -181,6 +182,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
 
         setButtonActions();
+        getPinInfo();
 
         return v;
     }
@@ -295,7 +297,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
-
+        mGetPinInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PIN_INFO,
+                Constants.BASE_URL + Constants.URL_GET_PIN_INFO, getActivity(), this);
+        mGetPinInfoTask.execute();
     }
 
     private void getNewsFeed() {
@@ -338,6 +342,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.dismiss();
             mRefreshBalanceTask = null;
             mGetNewsFeedTask = null;
+            mGetPinInfoTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
@@ -465,6 +470,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_PIN_INFO)) {
+            if (resultList.size() > 2) {
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    try {
+                        mPinInfoResponse = gson.fromJson(resultList.get(2), PinInfoResponse.class);
+                        CommonData.setPinInfo(mPinInfoResponse);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
 

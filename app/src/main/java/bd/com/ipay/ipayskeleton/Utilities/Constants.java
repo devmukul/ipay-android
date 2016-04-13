@@ -139,7 +139,7 @@ public class Constants {
     public static final String URL_GET_FIREBASE_TOKEN = "friend/firebasetoken";
     public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
     public static final String URL_SERVICE_CHARGE = "feecharge";
-
+    public static final String URL_GET_PIN_INFO = "settings/pin";
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
     public static final String HTTP_RESPONSE_STATUS_OK = "200";
@@ -226,6 +226,8 @@ public class Constants {
     public static final String COMMAND_UPLOAD_DRIVING_LICENSE = "COMMAND_UPLOAD_DRIVING_LICENSE";
     public static final String COMMAND_UPLOAD_BIRTH_CERTIFICATE = "COMMAND_UPLOAD_BIRTH_CERTIFICATE";
     public static final String COMMAND_UPLOAD_TIN = "COMMAND_UPLOAD_TIN";
+    public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
+
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";

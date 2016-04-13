@@ -16,14 +16,14 @@ public class CommonData {
     private static Map<Long, BusinessType> businessIdToTypeMap;
     private static Map<String, Long> businessNameToIdMap;
 
-    private PinInfoResponse pinInfoResponse;
+    private static PinInfoResponse pinInfo;
 
-    public void setPinInfoResponse(PinInfoResponse pinInfoResponse) {
-        this.pinInfoResponse = pinInfoResponse;
+    public static void setPinInfo(PinInfoResponse pinInfo) {
+        pinInfo = pinInfo;
     }
 
-    public PinInfoResponse getPinInfoResponse() {
-        return pinInfoResponse;
+    public static PinInfoResponse getPinInfo() {
+        return pinInfo;
     }
 
     public static List<Bank> getAvailableBanks() {
