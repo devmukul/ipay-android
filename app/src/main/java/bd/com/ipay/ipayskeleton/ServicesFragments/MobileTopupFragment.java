@@ -5,12 +5,12 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -27,7 +27,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.MobileTopUpReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
@@ -58,6 +58,8 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
+
+    private static final int MOBILE_TOPUP_REVIEW_REQUEST = 100;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,7 +93,14 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mRechargeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAlertDialogue();
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    // For now, we are directly sending the money without going through any send money query
+                    // sendMoneyQuery();
+                    if (verifyUserInputs()) {
+                        launchReviewPage();
+                    }
+                } else if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -143,19 +152,9 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mSelectOperator.setEnabled(false);
     }
 
-    private void attemptTopUp() {
-        if (mTopupTask != null) {
-            return;
-        }
-
+    private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
-
-//        if (mMobileNumberEditText.getText().toString().trim().length() != 10) {
-//            mMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
-//            focusView = mMobileNumberEditText;
-//            cancel = true;
-//        }
 
         if (mAmountEditText.getText().toString().trim().length() == 0) {
             mAmountEditText.setError(getString(R.string.please_enter_amount));
@@ -163,8 +162,31 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             cancel = true;
         }
 
-        long senderAccountID = Long.parseLong(pref.getString(Constants.USERID, "").replaceAll("[^0-9]", ""));
-        String receiverMobileNumber = "+880" + mMobileNumberEditText.getText().toString().trim();
+        if (cancel) {
+            focusView.requestFocus();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == MOBILE_TOPUP_REVIEW_REQUEST) {
+            if (getActivity() != null)
+                getActivity().finish();
+        }
+    }
+
+    private void launchReviewPage() {
+
+        double amount = Double.parseDouble(mAmountEditText.getText().toString().trim());
+        BigDecimal serviceCharge = mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount));
+
+        if (mGetServiceChargeResponse == null || serviceCharge.compareTo(BigDecimal.ZERO) < 0) {
+            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         int mobileNumberType;
         if (mSelectType.getCheckedRadioButtonId() == R.id.radio_button_prepaid)
@@ -174,87 +196,16 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         pref.edit().putInt(Constants.MOBILE_NUMBER_TYPE, mobileNumberType).apply();
 
         int operatorCode = mSelectOperator.getSelectedItemPosition() + 1;
-        double amount = Double.parseDouble(mAmountEditText.getText().toString().trim());
-        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, 1);
         String countryCode = "+88"; // TODO: For now Bangladesh Only
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+        Intent intent = new Intent(getActivity(), MobileTopUpReviewActivity.class);
+        intent.putExtra(Constants.AMOUNT, amount);
+        intent.putExtra(Constants.SERVICE_CHARGE, serviceCharge);
+        intent.putExtra(Constants.MOBILE_NUMBER_TYPE, mobileNumberType);
+        intent.putExtra(Constants.OPERATOR_CODE, operatorCode);
+        intent.putExtra(Constants.COUNTRY_CODE, countryCode);
 
-            mProgressDialog.show();
-            // TODO: token theke userclass and userType ashbe
-            TopupRequest mTopupRequestModel = new TopupRequest(senderAccountID, receiverMobileNumber,
-                    mobileNumberType, operatorCode, amount, countryCode, accountType, Constants.DEFAULT_USER_CLASS);
-            Gson gson = new Gson();
-            String json = gson.toJson(mTopupRequestModel);
-            mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
-                    Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity());
-            mTopupTask.mHttpResponseListener = this;
-            mTopupTask.execute((Void) null);
-        }
-    }
-
-    private void showAlertDialogue() {
-
-        boolean cancel = false;
-        View focusView = null;
-
-        if (mAmountEditText.getText().toString().trim().length() == 0) {
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            focusView = mAmountEditText;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-
-            double amount = Double.parseDouble(mAmountEditText.getText().toString().trim());
-            String serviceChargeDescription = "";
-
-            if (mGetServiceChargeResponse != null) {
-                if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) > 0)
-                    serviceChargeDescription = "You'll be charged " + mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)) + " Tk. from your iPay account for this recharge.";
-                else if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) == 0)
-                    serviceChargeDescription = getString(R.string.no_extra_charges);
-                else {
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-            } else {
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-
-            AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
-            alertDialogue.setTitle(R.string.confirm_add_money);
-            alertDialogue.setMessage("You're going to recharge your mobile with " + amount + " Tk. from your iPay account."
-                    + "\n" + serviceChargeDescription
-                    + "\nDo you want to continue?");
-
-            alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    attemptTopUp();
-                }
-            });
-
-            alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // Do nothing
-                }
-            });
-
-            alertDialogue.show();
-        }
+        startActivityForResult(intent, MOBILE_TOPUP_REVIEW_REQUEST);
     }
 
     @Override
@@ -271,38 +222,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_TOPUP_REQUEST)) {
-
-            if (resultList.size() > 2) {
-                try {
-                    mTopupResponse = gson.fromJson(resultList.get(2), TopupResponse.class);
-
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
-                        // TODO: Save transaction in database
-                        getActivity().finish();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
-                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        // TODO: Save transaction in database
-                        getActivity().finish();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
-
-            mProgressDialog.dismiss();
-            mTopupTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
+        if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
             if (resultList.size() > 2) {
                 try {
                     mGetServiceChargeResponse = gson.fromJson(resultList.get(2), GetServiceChargeResponse.class);

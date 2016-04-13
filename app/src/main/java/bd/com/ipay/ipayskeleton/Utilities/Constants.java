@@ -28,6 +28,8 @@ public class Constants {
     public static final String MULTIPART_FORM_DATA_NAME = "file";
     public static final String STARTING_DATE_OF_IPAY = "01/01/2016";
     public static final String MOBILE_NUMBER_TYPE = "mobile_number_type";
+    public static final String OPERATOR_CODE = "operator_code";
+    public static final String COUNTRY_CODE = "country_code";
 
     public static final String AMOUNT = "amount";
     public static final String DESCRIPTION = "description";

@@ -364,6 +364,15 @@
         <item name="rippleColor">@android:color/white</item>
     </style>
 
+    <style name="ReviewImageStyle">
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin_double</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:layout_width">74dp</item>
+        <item name="android:layout_height">74dp</item>
+    </style>
+
     <style name="ReviewItemLabelStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/black</item>

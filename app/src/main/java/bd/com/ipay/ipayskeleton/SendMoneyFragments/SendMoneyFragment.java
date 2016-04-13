@@ -194,7 +194,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 Toast.makeText(getActivity(), getString(R.string.scan_cancelled),
                         Toast.LENGTH_SHORT).show();
         } else if (resultCode == Activity.RESULT_OK && requestCode == SEND_MONEY_REVIEW_REQUEST) {
-            getActivity().finish();
+            if (getActivity() != null)
+                getActivity().finish();
         }
     }
 

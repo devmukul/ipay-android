@@ -73,7 +73,7 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mDescriptionHolder = (LinearLayout) v.findViewById(R.id.description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
-        mServiceChargeView = (TextView) v.findViewById(R.id.textview_fee);
+        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
 

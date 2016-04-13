@@ -33,12 +33,9 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-
-                        <bd.com.ipay.ipayskeleton.Customview.ProfileImageView
-                            android:id="@+id/profile_picture"
-                            style="@style/ReviewImageStyle">
-
-                        </bd.com.ipay.ipayskeleton.Customview.ProfileImageView>
+                        <ImageView
+                            style="@style/ReviewImageStyle"
+                            android:src="@drawable/ic_mobile_recharge_large" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -53,7 +50,7 @@
                                 android:layout_marginBottom="6dp"
                                 android:textStyle="bold"
                                 android:textSize="20sp"
-                                android:id="@+id/textview_name" />
+                                android:text="Recharge to"/>
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -63,30 +60,6 @@
 
                         </LinearLayout>
 
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_below="@+id/profile_picture"
-                        android:id="@+id/description_holder">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@android:color/darker_gray"
-                            android:layout_marginLeft="12dp"
-                            android:layout_marginRight="12dp"/>
-
-                        <TextView
-                            android:id="@+id/textview_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginBottom="12dp"
-                            android:gravity="center" />
 
                     </LinearLayout>
 
@@ -114,7 +87,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             style="@style/ReviewItemLabelStyle"
-                            android:text="@string/amount"/>
+                            android:text="@string/topup_amount"/>
 
                         <TextView
                             android:id="@+id/textview_amount"
@@ -156,10 +129,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             style="@style/ReviewItemLabelStyle"
-                            android:text="@string/net_received"/>
+                            android:text="@string/total"/>
 
                         <TextView
-                            android:id="@+id/textview_net_received"
+                            android:id="@+id/textview_total"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             style="@style/ReviewItemStyle"
@@ -173,10 +146,10 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/button_send_money"
+        android:id="@+id/button_topup"
         style="@style/ButtonStyleBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/send_now" />
+        android:text="@string/recharge_now" />
 
 </LinearLayout>
