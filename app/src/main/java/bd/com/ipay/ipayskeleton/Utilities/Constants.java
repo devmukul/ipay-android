@@ -70,6 +70,8 @@ public class Constants {
     // Server Type 4 -> local server
     public static final int SERVER_TYPE = 1;
     public static final boolean DEBUG = true;
+    public static final boolean DEBUG_TOKEN_ENABLED = false;
+    public static final int ACCOUNT_ID = 291;
 
     static {
         if (SERVER_TYPE == 1) {
