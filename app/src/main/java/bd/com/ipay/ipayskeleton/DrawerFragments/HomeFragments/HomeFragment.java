@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Activities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Customview.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
@@ -204,21 +205,31 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mSendMoneyButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
-                startActivity(intent);
+                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
+                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
+                    addPinDialogBuilder.show();
+                } else {
+                    Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         mCreateInvoiceOrMobileRechargeButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent;
-                if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
-                    intent = new Intent(getActivity(), TopUpActivity.class);
-                    startActivity(intent);
-                } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
-                    intent = new Intent(getActivity(), MakePaymentActivity.class);
-                    startActivity(intent);
+                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
+                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
+                    addPinDialogBuilder.show();
+                } else {
+                    Intent intent;
+                    if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
+                        intent = new Intent(getActivity(), TopUpActivity.class);
+                        startActivity(intent);
+                    } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+                        intent = new Intent(getActivity(), MakePaymentActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
         });

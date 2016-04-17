@@ -23,7 +23,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Customview.PinDialogBuilder;
+import bd.com.ipay.ipayskeleton.Customview.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -84,16 +84,16 @@ public class MobileTopupReviewFragment extends Fragment implements HttpResponseL
         mTopupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PinDialogBuilder pinDialogBuilder = new PinDialogBuilder(getActivity());
+                final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
-                pinDialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
+                pinInputDialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        attemptTopUp(pinDialogBuilder.getPin());
+                        attemptTopUp(pinInputDialogBuilder.getPin());
                     }
                 });
 
-                pinDialogBuilder.build().show();
+                pinInputDialogBuilder.build().show();
             }
         });
 

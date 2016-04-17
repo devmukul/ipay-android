@@ -61,7 +61,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private View changePasswordHeader;
     private View trustedDevicesHeader;
 
-    private Button setPINButton;
+    private Button mSetPINButton;
     private ImageView setPinArrow;
     private ImageView changePassArrow;
     private ImageView trustedDevicesArrow;
@@ -70,7 +70,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private LinearLayout mPassChangeLayout;
     private LinearLayout mTrustedDevicesLayout;
 
-    private Button changePasswordButton;
+    private Button mChangePasswordButton;
     private EditText mEnterCurrentPasswordEditText;
     private EditText mEnterNewPasswordEditText;
     private EditText mEnterConfirmNewPasswordEditText;
@@ -99,8 +99,8 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         mEnterNewPasswordEditText = (EditText) v.findViewById(R.id.new_password);
         mEnterConfirmNewPasswordEditText = (EditText) v.findViewById(R.id.confirm_new_password);
 
-        changePasswordButton = (Button) v.findViewById(R.id.save_pass);
-        setPINButton = (Button) v.findViewById(R.id.save_pin);
+        mChangePasswordButton = (Button) v.findViewById(R.id.save_pass);
+        mSetPINButton = (Button) v.findViewById(R.id.save_pin);
 
         setPINHeader = v.findViewById(R.id.set_pin_header);
         changePasswordHeader = v.findViewById(R.id.change_password);
@@ -168,19 +168,23 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             }
         });
 
-        setPINButton.setOnClickListener(new View.OnClickListener() {
+        mSetPINButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptSavePIN();
             }
         });
 
-        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+        mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptChangePassword();
             }
         });
+
+        if (getArguments() != null && getArguments().getBoolean(Constants.EXPAND_PIN, false)) {
+            setPINHeader.performClick();
+        }
 
         loadTrustedDeviceList();
 

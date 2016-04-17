@@ -281,6 +281,18 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    public void switchToAccountSettingsFragmentForPin() {
+        AccountSettingsFragment accountSettingsFragment = new AccountSettingsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(Constants.EXPAND_PIN, true);
+        accountSettingsFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, accountSettingsFragment).commit();
+        switchedToHomeFragment = false;
+
+        mNavigationView.getMenu().findItem(R.id.nav_settings).setChecked(true);
+    }
+
     private void attemptLogout() {
         if (mLogoutTask != null) {
             return;

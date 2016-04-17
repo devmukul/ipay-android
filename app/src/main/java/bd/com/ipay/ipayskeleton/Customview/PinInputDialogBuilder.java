@@ -7,11 +7,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import bd.com.ipay.ipayskeleton.R;
 
-public class PinDialogBuilder extends MaterialDialog.Builder {
+public class PinInputDialogBuilder extends MaterialDialog.Builder {
 
     private EditText mPinField;
 
-    public PinDialogBuilder(Context context) {
+    public PinInputDialogBuilder(Context context) {
         super(context);
         initializeView(context);
     }

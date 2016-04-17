@@ -142,14 +142,16 @@
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+
+
+            <Button
+                android:id="@+id/button_topup"
+                style="@style/ButtonStyleMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recharge_now" />
+
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/button_topup"
-        style="@style/ButtonStyleBottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/recharge_now" />
 
 </LinearLayout>

@@ -30,6 +30,8 @@ public class Constants {
     public static final String MOBILE_NUMBER_TYPE = "mobile_number_type";
     public static final String OPERATOR_CODE = "operator_code";
     public static final String COUNTRY_CODE = "country_code";
+    public static final String EXPAND_PIN = "expand_pin";
+
 
     public static final String AMOUNT = "amount";
     public static final String DESCRIPTION = "description";
@@ -55,8 +57,8 @@ public class Constants {
     // Server Type 4 -> local server
     public static final int SERVER_TYPE = 1;
     public static final boolean DEBUG = true;
-    public static final boolean DEBUG_TOKEN_ENABLED = false;
-    public static final int ACCOUNT_ID = 291;
+    public static final boolean DEBUG_TOKEN_ENABLED = true;
+    public static final int ACCOUNT_ID = 292;
 
     static {
         if (SERVER_TYPE == 1) {

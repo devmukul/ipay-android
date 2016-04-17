@@ -111,14 +111,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/mobile_topup_restriction_info"
                 android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:id="@+id/button_recharge"
+                style="@style/ButtonStyleMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/continue_mobile_recharge" />
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/button_recharge"
-        style="@style/ButtonStyleBottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/continue_mobile_recharge" />
 
 </LinearLayout>

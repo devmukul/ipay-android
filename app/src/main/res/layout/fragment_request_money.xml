@@ -112,16 +112,16 @@
 
             </android.support.design.widget.TextInputLayout>
 
+
+            <Button
+                android:id="@+id/button_request_money"
+                style="@style/ButtonStyleMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:text="@string/request_money" />
+
         </LinearLayout>
     </ScrollView>
-
-
-    <Button
-        android:id="@+id/button_request_money"
-        style="@style/ButtonStyleBottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:text="@string/request_money" />
 
 </LinearLayout>

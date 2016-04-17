@@ -87,7 +87,7 @@
     <string name="contacts">Contacts</string>
     <string name="country">Country</string>
     <string name="change_pin">Change PIN</string>
-    <string name="set_pin">Set your PIN</string>
+    <string name="set_pin">Set PIN</string>
     <string name="change_password">Change Password</string>
     <string name="gender">Gender</string>
     <string name="enable">Enable</string>
@@ -457,6 +457,7 @@
     <string name="recharge_now">Recharge Now</string>
     <string name="enter_pin">Enter Pin</string>
     <string name="ok">OK</string>
+    <string name="dialog_set_pin">You haven\'t set up your pin yet. Set pin now?</string>
 
     <string-array name="account_types">
         <item>Personal</item>
