@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
@@ -258,6 +259,14 @@ public class Utilities {
         Pattern emailPattern = Pattern.compile("[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+");
         Matcher m = emailPattern.matcher(email);
         return !m.matches();
+    }
+
+    public static String formatTaka(BigDecimal amount) {
+        return String.format("\u09F3 %.2f BDT", amount);
+    }
+
+    public static String formatTaka(double amount) {
+        return String.format("\u09F3 %.2f BDT", amount);
     }
 
 }

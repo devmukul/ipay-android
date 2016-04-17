@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MobileTopupReviewFragment extends Fragment implements HttpResponseListener {
 
@@ -77,9 +78,9 @@ public class MobileTopupReviewFragment extends Fragment implements HttpResponseL
 
         mMobileNumberView.setText(mMobileNumber);
 
-        mAmountView.setText(String.format("\u09F3 %.2f", mAmount));
-        mServiceChargeView.setText(String.format("\u09F3 %.2f", mServiceCharge));
-        mTotalView.setText(String.format("\u09F3 %.2f", new BigDecimal(mAmount).add(mServiceCharge)));
+        mAmountView.setText(Utilities.formatTaka(mAmount));
+        mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
+        mTotalView.setText(Utilities.formatTaka(new BigDecimal(mAmount).add(mServiceCharge)));
 
         mTopupButton.setOnClickListener(new View.OnClickListener() {
             @Override

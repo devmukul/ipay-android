@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewFragment extends Fragment implements HttpResponseListener {
 
@@ -102,9 +103,9 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
             mDescriptionView.setText(mDescription);
         }
 
-        mAmountView.setText(String.format("\u09F3 %.2f", mAmount));
-        mServiceChargeView.setText(String.format("\u09F3 %.2f", mServiceCharge));
-        mNetReceivedView.setText(String.format("\u09F3 %.2f", mAmount.subtract(mServiceCharge)));
+        mAmountView.setText(Utilities.formatTaka(mAmount));
+        mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
+        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(mServiceCharge)));
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override

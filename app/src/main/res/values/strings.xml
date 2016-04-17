@@ -203,6 +203,7 @@
     <string name="not_implemented">Not implemented yet.</string>
     <string name="send_money">Send Money</string>
     <string name="continue_send_money">Continue</string>
+    <string name="continue_request_money">Continue</string>
     <string name="continue_mobile_recharge">Continue</string>
     <string name="send_invoice">Send Invoice</string>
     <string name="payment">Payment</string>
@@ -458,6 +459,8 @@
     <string name="enter_pin">Enter Pin</string>
     <string name="ok">OK</string>
     <string name="dialog_set_pin">You haven\'t set up your pin yet. Set pin now?</string>
+    <string name="request_now">Request Now</string>
+    <string name="you_will_receive">You will receive</string>
 
     <string-array name="account_types">
         <item>Personal</item>
