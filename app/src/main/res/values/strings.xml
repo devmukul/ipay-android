@@ -455,6 +455,8 @@
     <string name="service_charge">Service Charge</string>
     <string name="topup_amount">Topup Amount</string>
     <string name="recharge_now">Recharge Now</string>
+    <string name="enter_pin">Enter Pin</string>
+    <string name="ok">OK</string>
 
     <string-array name="account_types">
         <item>Personal</item>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -21,6 +24,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Customview.PinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
@@ -105,14 +109,23 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptSendMoney();
+                final PinDialogBuilder pinDialogBuilder = new PinDialogBuilder(getActivity());
+
+                pinDialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        attemptSendMoney(pinDialogBuilder.getPin());
+                    }
+                });
+
+                pinDialogBuilder.build().show();
             }
         });
 
         return v;
     }
 
-    private void attemptSendMoney() {
+    private void attemptSendMoney(String pin) {
         if (mSendMoneyTask != null) {
             return;
         }
