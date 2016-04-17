@@ -237,24 +237,39 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mRequestMoneyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
-                startActivity(intent);
+                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
+                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
+                    addPinDialogBuilder.show();
+                } else {
+                    Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                startActivity(intent);
+                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
+                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
+                    addPinDialogBuilder.show();
+                } else {
+                    Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
-                startActivity(intent);
+                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
+                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
+                    addPinDialogBuilder.show();
+                } else {
+                    Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }
