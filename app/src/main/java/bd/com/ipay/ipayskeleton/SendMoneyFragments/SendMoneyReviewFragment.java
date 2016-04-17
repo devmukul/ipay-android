@@ -134,7 +134,7 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
         mProgressDialog.show();
         SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(
                 mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
-                mAmount.toString(), mDescription);
+                mAmount.toString(), mDescription, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mSendMoneyRequest);
         mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,

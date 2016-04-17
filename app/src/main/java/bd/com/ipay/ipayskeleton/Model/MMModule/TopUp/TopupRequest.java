@@ -10,10 +10,11 @@ public class TopupRequest {
     private String countryCode;
     private int senderAccountUserType;
     private int senderAccountUserClass;
+    private String pin;
 
     public TopupRequest(long senderAccountID, String receiverMobileNumber,
                         int mobileNumberType, int operatorCode, double amount, String countryCode,
-                        int senderAccountUserType, int senderAccountUserClass) {
+                        int senderAccountUserType, int senderAccountUserClass, String pin) {
         this.senderAccountID = senderAccountID;
         this.receiverMobileNumber = receiverMobileNumber;
         this.mobileNumberType = mobileNumberType;
@@ -22,5 +23,6 @@ public class TopupRequest {
         this.countryCode = countryCode;
         this.senderAccountUserClass = senderAccountUserClass;
         this.senderAccountUserType = senderAccountUserType;
+        this.pin = pin;
     }
 }

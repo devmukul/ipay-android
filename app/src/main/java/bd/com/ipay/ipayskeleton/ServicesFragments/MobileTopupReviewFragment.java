@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -20,6 +23,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Customview.PinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -80,17 +84,26 @@ public class MobileTopupReviewFragment extends Fragment implements HttpResponseL
         mTopupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptTopUp();
+                final PinDialogBuilder pinDialogBuilder = new PinDialogBuilder(getActivity());
+
+                pinDialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        attemptTopUp(pinDialogBuilder.getPin());
+                    }
+                });
+
+                pinDialogBuilder.build().show();
             }
         });
 
         return v;
     }
 
-    private void attemptTopUp() {
+    private void attemptTopUp(String pin) {
         TopupRequest mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
                 mMobileNumber, mMobileNumberType, mOperatorCode, mAmount,
-                mCountryCode, mAccountType, Constants.DEFAULT_USER_CLASS);
+                mCountryCode, mAccountType, Constants.DEFAULT_USER_CLASS, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
