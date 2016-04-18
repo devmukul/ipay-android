@@ -185,7 +185,7 @@
                 style="@style/ButtonStyleMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/request_now" />
+                android:text="@string/request_money" />
         </LinearLayout>
     </ScrollView>
 
