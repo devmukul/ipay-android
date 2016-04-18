@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SendMoneyFragments.SendMoneyFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class SendMoneyActivity extends BaseActivity {

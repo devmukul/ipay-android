@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.SendMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -325,7 +325,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
         Intent intent = new Intent(getActivity(), SendMoneyReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
-        intent.putExtra(Constants.RECEIVER, receiver);
+        intent.putExtra(Constants.RECEIVER, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.DESCRIPTION, description);
         intent.putExtra(Constants.SERVICE_CHARGE, serviceCharge);
 

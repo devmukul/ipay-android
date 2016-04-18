@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SendMoneyFragments.SendMoneyReviewFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyReviewFragment;
 
 public class SendMoneyReviewActivity extends AppCompatActivity {
 

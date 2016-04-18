@@ -6,8 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.RequestMoneyFragments.MyRequestFragment;
-import bd.com.ipay.ipayskeleton.RequestMoneyFragments.RequestMoneyFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MyRequestFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 
 public class RequestMoneyActivity extends BaseActivity {
 

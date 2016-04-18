@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.MakePaymentFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,9 +18,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

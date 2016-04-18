@@ -136,6 +136,12 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
+            android:name=".Activities.RequestMoneyReviewActivity"
+            android:label="@string/review_and_request"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
             android:name=".Activities.MobileTopUpReviewActivity"
             android:label="@string/review_and_recharge"
             android:screenOrientation="portrait"

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.ServicesFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

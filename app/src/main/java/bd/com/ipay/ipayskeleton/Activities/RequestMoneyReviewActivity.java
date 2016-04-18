@@ -1,21 +1,22 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyReviewFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.MobileTopupReviewFragment;
 
-public class MobileTopUpReviewActivity extends AppCompatActivity {
+public class RequestMoneyReviewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mobile_top_up_review);
+        setContentView(R.layout.activity_request_money_review);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new MobileTopupReviewFragment()).commit();
+                .add(R.id.fragment_container, new RequestMoneyReviewFragment()).commit();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.content.Context;
 import android.os.Bundle;
 
-import bd.com.ipay.ipayskeleton.ServicesFragments.MobileTopupFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.MobileTopupFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 public class TopUpActivity extends BaseActivity {
