@@ -16,6 +16,7 @@ public class Constants {
     public static final String LOGGEDIN = "LOGGEDIN";
     public static final String PASSWORD = "PASSWORD";
     public static final String NAME = "NAME";
+    public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
     public static final String GENDER = "GENDER";
@@ -65,7 +66,7 @@ public class Constants {
         if (SERVER_TYPE == 1) {
 
             BASE_URL = "http://10.10.10.10:8085/api/v1/";
-            BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
+            BASE_URL_IMAGE_SERVER = "https://10.10.10.10";
 
         } else if (SERVER_TYPE == 2) {
 
@@ -145,6 +146,7 @@ public class Constants {
     public static final String URL_GET_PIN_INFO = "settings/pin";
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
+    public static final String HTTP_RESPONSE_STATUS_NOT_FOUND = "404";
     public static final String HTTP_RESPONSE_STATUS_OK = "200";
     public static final String HTTP_RESPONSE_STATUS_PROCESSING = "102";
     public static final String HTTP_RESPONSE_STATUS_UNAUTHORIZED = "401";

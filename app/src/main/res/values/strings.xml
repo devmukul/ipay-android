@@ -112,6 +112,7 @@
     <string name="confirm_add_money">Are you sure?</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_get_failed">Failed to fetch profile picture.</string>
+    <string name="profile_info_get_failed">Failed to fetch profile information.</string>
     <string name="account_type_business">Business</string>
     <string name="upload_documents">UPLOAD DOCUMENTS</string>
     <string name="transition_image">newsImage</string>
@@ -381,6 +382,7 @@
     <string name="reopen_application">Please re-open the application.</string>
     <string name="failed_available_bank_list_loading">Failed to load bank lists. Please try again later</string>
     <string name="invite_to_ipay">Invite to iPay</string>
+    <string name="invite_now">Invite Now</string>
     <string name="ask_for_introduction">Ask for Introduction</string>
     <string name="send_invite">Send invitation</string>
     <string name="recommendation">Recommendation</string>
@@ -461,6 +463,7 @@
     <string name="dialog_set_pin">You haven\'t set up your pin yet. Set pin now?</string>
     <string name="request_now">Request Now</string>
     <string name="you_will_receive">You will receive</string>
+    <string name="confirm_ipay_invitation">Invite him/her to iPay?</string>
 
     <string-array name="account_types">
         <item>Personal</item>

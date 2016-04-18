@@ -103,7 +103,7 @@ public class DownloadProfilePictureGetAsyncTask extends AsyncTask<Void, Void, St
             Gson gson = new Gson();
             String profilePictureUrl = "";
             GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(sb.toString(), GetUserInfoResponse.class);
-            Set<UserProfilePictureClass> profilePictures = mGetUserInfoResponse.getProfilePictures();
+            List<UserProfilePictureClass> profilePictures = mGetUserInfoResponse.getProfilePictures();
 
             if (profilePictures.size() > 0) {
                 for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {

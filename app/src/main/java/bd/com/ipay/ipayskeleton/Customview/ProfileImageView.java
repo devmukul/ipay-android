@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Customview;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -82,6 +83,8 @@ public class ProfileImageView extends FrameLayout {
         if (name != null && !name.isEmpty()) {
             setProfileFirstLetter(name);
             setProfilePicture(photoUri);
+
+            Log.w("Profile Picture", photoUri);
         } else if (photoUri != null){
             setProfileFirstLetter(photoUri);
         } else {

@@ -27,6 +27,7 @@ import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -79,7 +80,7 @@ public class HomeActivity extends BaseActivity
     private RoundedImageView mPortrait;
     private SharedPreferences pref;
     private String mUserID;
-    private Set<UserProfilePictureClass> profilePictures;
+    private List<UserProfilePictureClass> profilePictures;
 
     private ProgressDialog mProgressDialog;
     private NavigationView mNavigationView;
@@ -105,7 +106,7 @@ public class HomeActivity extends BaseActivity
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = pref.getString(Constants.USERID, "");
         mProgressDialog = new ProgressDialog(HomeActivity.this);
-        profilePictures = new HashSet<>();
+        profilePictures = new ArrayList<>();
         Firebase.setAndroidContext(this);
 
         // Initialize token timer
@@ -422,11 +423,11 @@ public class HomeActivity extends BaseActivity
 
                     setProfilePicture(imageUrl);
                 } else {
-                    Toast.makeText(HomeActivity.this, R.string.profile_picture_get_failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(HomeActivity.this, R.string.profile_picture_get_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
             }
 
             mGetProfileInfoTask = null;

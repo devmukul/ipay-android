@@ -1,13 +1,15 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class GetUserInfoResponse {
 
     public String message;
     public String name;
-    public Set<UserProfilePictureClass> profilePictures = new HashSet<>();
+    public List<UserProfilePictureClass> profilePictures = new ArrayList<>();
 
     public GetUserInfoResponse() {
     }
@@ -20,7 +22,7 @@ public class GetUserInfoResponse {
         return name;
     }
 
-    public Set<UserProfilePictureClass> getProfilePictures() {
+    public List<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
     }
 }

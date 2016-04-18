@@ -57,8 +57,6 @@ public class RequestMoneyFragment extends Fragment {
     private final int PICK_CONTACT_REQUEST = 100;
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
 
-    private ContactEngine.ContactData contactData;
-
     private Button buttonRequest;
     private ImageView buttonSelectFromContacts;
     private Button buttonShowQRCode;
@@ -158,11 +156,6 @@ public class RequestMoneyFragment extends Fragment {
         intent.putExtra(Constants.DESCRIPTION, description);
         intent.putExtra(Constants.TITLE, title);
 
-        if (contactData != null) {
-            intent.putExtra(Constants.NAME, contactData.name);
-            intent.putExtra(Constants.PHOTO_URI, contactData.photoUri);
-        }
-
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
     }
 
@@ -182,9 +175,6 @@ public class RequestMoneyFragment extends Fragment {
                 bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
                 mMobileNumberEditText.setText(bdNumberStr);
 
-                // TODO contact data should be changed when the number in the edit text gets changed
-                contactData = ContactEngine.getContactInfoFromNumber(getActivity(), numbers[0]);
-
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.pick_a_number));
@@ -195,8 +185,6 @@ public class RequestMoneyFragment extends Fragment {
                         String bdNumberStr = numbers[which].toString();
                         bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
                         mMobileNumberEditText.setText(bdNumberStr);
-
-                        contactData = ContactEngine.getContactInfoFromNumber(getActivity(), numbers[which]);
                     }
                 });
                 builder.show();

@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,19 +21,15 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
-import bd.com.ipay.ipayskeleton.PaymentFragments.ReviewFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -73,8 +68,9 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
         mTitle = getActivity().getIntent().getStringExtra(Constants.TITLE);
-        mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
-        mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+
+        mReceiverName = getArguments().getString(Constants.NAME);
+        mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -188,14 +184,15 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
                             Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
                 }
-            } else if (getActivity() != null)
+            } else if (getActivity()
+                    != null)
                 Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
 
             mProgressDialog.dismiss();
