@@ -28,12 +28,13 @@ import bd.com.ipay.ipayskeleton.Customview.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SendMoneyReviewFragment extends Fragment implements HttpResponseListener {
+public class SendMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSendMoneyTask = null;
     private SendMoneyResponse mSendMoneyResponse;
@@ -69,8 +70,9 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
         mServiceCharge = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.SERVICE_CHARGE);
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
-        mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
-        mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+
+        mReceiverName = getArguments().getString(Constants.NAME);
+        mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -104,8 +106,6 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
         }
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
-        mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(mServiceCharge)));
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +122,8 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
                 pinInputDialogBuilder.build().show();
             }
         });
+
+        attemptGetServiceCharge();
 
         return v;
     }
@@ -145,6 +147,22 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
     }
 
     @Override
+    public int getServiceID() {
+        return Constants.SERVICE_ID_SEND_MONEY;
+    }
+
+    @Override
+    public BigDecimal getAmount() {
+        return mAmount;
+    }
+
+    @Override
+    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
+        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+    }
+
+    @Override
     public void httpResponseReceiver(String result) {
         if (result == null) {
             mProgressDialog.show();
@@ -163,16 +181,15 @@ public class SendMoneyReviewFragment extends Fragment implements HttpResponseLis
 
                 try {
                     mSendMoneyResponse = gson.fromJson(resultList.get(2), SendMoneyResponse.class);
-                    String message = mSendMoneyResponse.getMessage();
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.send_money_failed, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -27,7 +26,7 @@ public class RequestMoneyReviewActivity extends AppCompatActivity implements Htt
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
-    private ProgressBar mProgressaBar;
+    private ProgressBar mProgressBar;
 
     private String mReceiverMobileNumber;
 
@@ -36,7 +35,7 @@ public class RequestMoneyReviewActivity extends AppCompatActivity implements Htt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_money_review);
 
-        mProgressaBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -138,7 +137,7 @@ public class RequestMoneyReviewActivity extends AppCompatActivity implements Htt
             }
 
             mGetProfileInfoTask = null;
-            mProgressaBar.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }

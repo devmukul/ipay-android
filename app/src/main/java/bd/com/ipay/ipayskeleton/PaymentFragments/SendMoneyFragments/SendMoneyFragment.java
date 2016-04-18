@@ -20,43 +20,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SendMoneyReviewActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyQueryRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyQueryResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SendMoneyFragment extends Fragment implements HttpResponseListener {
+public class SendMoneyFragment extends Fragment {
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int SEND_MONEY_REVIEW_REQUEST = 101;
 
-    private HttpRequestPostAsyncTask mSendMoneyTask = null;
-    private SendMoneyResponse mSendMoneyResponse;
-
-    private HttpRequestPostAsyncTask mServiceChargeTask = null;
-    private GetServiceChargeResponse mGetServiceChargeResponse;
-
-    private HttpRequestPostAsyncTask mSendMoneyQueryTask = null;
-    private SendMoneyQueryResponse mSendMoneyQueryResponse;
-
-    private ContactEngine.ContactData contactData;
+//    private HttpRequestPostAsyncTask mSendMoneyQueryTask = null;
+//    private SendMoneyQueryResponse mSendMoneyQueryResponse;
 
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
@@ -117,11 +99,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        if (Utilities.isConnectionAvailable(getActivity()))
-            attemptGetServiceCharge();
-        else
-            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-
         return v;
     }
 
@@ -145,9 +122,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
                 mMobileNumberEditText.setText(bdNumberStr);
 
-                // TODO contact data should be changed when the number in the edit text gets changed
-                contactData = ContactEngine.getContactInfoFromNumber(getActivity(), numbers[0]);
-
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.pick_a_number));
@@ -158,8 +132,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                         String bdNumberStr = numbers[which].toString();
                         bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
                         mMobileNumberEditText.setText(bdNumberStr);
-
-                        contactData = ContactEngine.getContactInfoFromNumber(getActivity(), numbers[which]);
                     }
                 });
                 builder.show();
@@ -239,25 +211,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         return numbers;
     }
 
-    private void attemptGetServiceCharge() {
-        if (mServiceChargeTask != null) {
-            return;
-        }
-
-        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
-        int accountClass = Constants.DEFAULT_USER_CLASS;
-
-        mProgressDialog.setMessage(getString(R.string.loading));
-        mProgressDialog.show();
-        GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(Constants.SERVICE_ID_SEND_MONEY, accountType, accountClass);
-        Gson gson = new Gson();
-        String json = gson.toJson(mServiceChargeRequest);
-        mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL + Constants.URL_SERVICE_CHARGE, json, getActivity());
-        mServiceChargeTask.mHttpResponseListener = this;
-        mServiceChargeTask.execute((Void) null);
-    }
-
     private boolean verifyUserInputs() {
         mAmountEditText.setError(null);
         mMobileNumberEditText.setError(null);
@@ -286,91 +239,43 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         }
     }
 
-    private void sendMoneyQuery() {
-        if (mSendMoneyQueryTask != null) {
-            return;
-        }
-
-
-        if (verifyUserInputs()) {
-            String amount = mAmountEditText.getText().toString().trim();
-            String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-            String description = mDescriptionEditText.getText().toString().trim();
-            String senderMobileNumber = pref.getString(Constants.USERID, "");
-
-            mProgressDialog.setMessage(getString(R.string.validating));
-            mProgressDialog.show();
-            SendMoneyQueryRequest mSendMoneyQueryRequest = new SendMoneyQueryRequest(
-                    senderMobileNumber, ContactEngine.formatMobileNumberBD(mobileNumber), amount);
-            Gson gson = new Gson();
-            String json = gson.toJson(mSendMoneyQueryRequest);
-            mSendMoneyQueryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY_QUERY,
-                    Constants.BASE_URL + Constants.URL_SEND_MONEY_QUERY, json, getActivity());
-            mSendMoneyQueryTask.mHttpResponseListener = this;
-            mSendMoneyQueryTask.execute((Void) null);
-        }
-    }
+//    private void sendMoneyQuery() {
+//        if (mSendMoneyQueryTask != null) {
+//            return;
+//        }
+//
+//
+//        if (verifyUserInputs()) {
+//            String amount = mAmountEditText.getText().toString().trim();
+//            String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+//            String description = mDescriptionEditText.getText().toString().trim();
+//            String senderMobileNumber = pref.getString(Constants.USERID, "");
+//
+//            mProgressDialog.setMessage(getString(R.string.validating));
+//            mProgressDialog.show();
+//            SendMoneyQueryRequest mSendMoneyQueryRequest = new SendMoneyQueryRequest(
+//                    senderMobileNumber, ContactEngine.formatMobileNumberBD(mobileNumber), amount);
+//            Gson gson = new Gson();
+//            String json = gson.toJson(mSendMoneyQueryRequest);
+//            mSendMoneyQueryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY_QUERY,
+//                    Constants.BASE_URL + Constants.URL_SEND_MONEY_QUERY, json, getActivity());
+//            mSendMoneyQueryTask.mHttpResponseListener = this;
+//            mSendMoneyQueryTask.execute((Void) null);
+//        }
+//    }
 
     private void launchReviewPage() {
 
         String receiver = mMobileNumberEditText.getText().toString().trim();
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
         String description = mDescriptionEditText.getText().toString().trim();
-        BigDecimal serviceCharge = mGetServiceChargeResponse.getServiceCharge(amount);
-
-        if (mGetServiceChargeResponse == null || serviceCharge.compareTo(BigDecimal.ZERO) < 0) {
-            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         Intent intent = new Intent(getActivity(), SendMoneyReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.RECEIVER, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.DESCRIPTION, description);
-        intent.putExtra(Constants.SERVICE_CHARGE, serviceCharge);
-
-        if (contactData != null) {
-            intent.putExtra(Constants.NAME, contactData.name);
-            intent.putExtra(Constants.PHOTO_URI, contactData.photoUri);
-        }
 
         startActivityForResult(intent, SEND_MONEY_REVIEW_REQUEST);
 
-    }
-
-    @Override
-    public void httpResponseReceiver(String result) {
-        if (result == null) {
-            mProgressDialog.show();
-            mSendMoneyTask = null;
-            mSendMoneyQueryTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        List<String> resultList = Arrays.asList(result.split(";"));
-        Gson gson = new Gson();
-
-        if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
-            if (resultList.size() > 2) {
-                try {
-                    mGetServiceChargeResponse = gson.fromJson(resultList.get(2), GetServiceChargeResponse.class);
-
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        // Do nothing
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-
-            mProgressDialog.dismiss();
-            mServiceChargeTask = null;
-        }
     }
 }
