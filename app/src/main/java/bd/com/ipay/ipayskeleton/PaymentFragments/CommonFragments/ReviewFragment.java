@@ -20,6 +20,11 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRes
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+/**
+ * Be sure to call the attemptGetServiceCharge method at the end of your onCreateView method
+ * of the fragment. If you override httpResponseReceiver, make sure to call
+ * super.httpResponseReceiver() first.
+ */
 public abstract class ReviewFragment extends Fragment implements HttpResponseListener {
 
     private ProgressDialog mProgressDialog;
@@ -27,8 +32,20 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
     private HttpRequestPostAsyncTask mServiceChargeTask = null;
     private GetServiceChargeResponse mGetServiceChargeResponse;
 
+    /**
+     * Service ID used to query the service charge
+     */
     public abstract int getServiceID();
+
+    /**
+     * The original amount you have entered in the previous page
+     */
     public abstract BigDecimal getAmount();
+
+    /**
+     * This method will be called once the service charge loading is finished. You should populate
+     * the service charge and net amount view withing this method.
+     */
     public abstract void onServiceChargeLoadFinished(BigDecimal serviceCharge);
 
     protected void attemptGetServiceCharge() {
