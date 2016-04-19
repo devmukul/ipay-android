@@ -1,9 +1,11 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -42,14 +46,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mCashOutTask = null;
-    private WithdrawMoneyResponse mWithdrawMoneyResponse;
-
     private HttpRequestPostAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
 
-    private HttpRequestPostAsyncTask mServiceChargeTask = null;
-    private GetServiceChargeResponse mGetServiceChargeResponse;
+    private static final int WITHDRAW_MONEY_REVIEW_REQUEST = 101;
 
     private Button buttonWithdrawMoney;
     private EditText mBankAccountNumberEditText;
@@ -93,7 +93,9 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             @Override
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    showAlertDialogue();
+                    if (verifyUserInputs()) {
+                        launchReviewPage();
+                    }
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -106,32 +108,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        if (Utilities.isConnectionAvailable(getActivity()))
-            attemptGetServiceCharge();
-        else
-            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-
         return v;
-    }
-
-    private void attemptGetServiceCharge() {
-        if (mServiceChargeTask != null) {
-            return;
-        }
-
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
-        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
-        int accountClass = Constants.DEFAULT_USER_CLASS;
-
-        mProgressDialog.setMessage(getString(R.string.loading));
-        mProgressDialog.show();
-        GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(Constants.SERVICE_ID_WITHDRAW_MONEY, accountType, accountClass);
-        Gson gson = new Gson();
-        String json = gson.toJson(mServiceChargeRequest);
-        mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL + Constants.URL_SERVICE_CHARGE, json, getActivity());
-        mServiceChargeTask.mHttpResponseListener = this;
-        mServiceChargeTask.execute((Void) null);
     }
 
     private void attemptRefreshAvailableBankNames() {
@@ -174,36 +151,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         mGetBankTask.execute((Void) null);
     }
 
-    private void attemptWithdrawMoney(String amount, String accountNumber, String description) {
-        if (mCashOutTask != null) {
-            return;
-        }
-
-        if (!accountNumber.equals(mListUserBankClasses.get(selectedBankPosition).getAccountNumber())) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.invalid_account_number, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        mProgressDialog.show();
-        long bankAccountId = mListUserBankClasses.get(selectedBankPosition).getBankAccountId();
-
-        WithdrawMoneyRequest mWithdrawMoneyRequest = new WithdrawMoneyRequest(bankAccountId,
-                Double.parseDouble(amount), description);
-        Gson gson = new Gson();
-        String json = gson.toJson(mWithdrawMoneyRequest);
-        mCashOutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
-                Constants.BASE_URL + Constants.URL_WITHDRAW_MONEY, json, getActivity());
-        mCashOutTask.mHttpResponseListener = this;
-        mCashOutTask.execute((Void) null);
-
-    }
-
-    private void showAlertDialogue() {
-
-        mAmountEditText.setError(null);
-        mBankAccountNumberEditText.setError(null);
-
+    private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
 
@@ -217,55 +165,42 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             mBankAccountNumberEditText.setError(getString(R.string.enter_bank_account_number));
             cancel = true;
         }
-
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
+            return false;
         } else {
+            return true;
+        }
 
-            final String amount = mAmountEditText.getText().toString().trim();
-            final String accountNumber = mBankAccountNumberEditText.getText().toString().trim();
-            final String description = mDescriptionEditText.getText().toString().trim();
-            String serviceChargeDescription = "";
+    }
 
-            if (mGetServiceChargeResponse != null) {
-                if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) > 0)
-                    serviceChargeDescription = "You'll be charged " + mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)) + " Tk. for this transaction.";
-                else if (mGetServiceChargeResponse.getServiceCharge(new BigDecimal(amount)).compareTo(new BigDecimal(0)) == 0)
-                    serviceChargeDescription = getString(R.string.no_extra_charges);
-                else {
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+    private void launchReviewPage() {
+        final String amount = mAmountEditText.getText().toString().trim();
+        final String description = mDescriptionEditText.getText().toString().trim();
 
-            } else {
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                return;
-            }
+        UserBankClass selectedBankAccount = mListUserBankClasses.get(selectedBankPosition);
+        long bankAccountId = selectedBankAccount.getBankAccountId();
+        String bankName = selectedBankAccount.getBankName();
+        String accountNumber = selectedBankAccount.getAccountNumber();
 
-            AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
-            alertDialogue.setTitle(R.string.confirm_add_money);
-            alertDialogue.setMessage("You're going to withdraw " + amount + " BDT from iPay to your Account Number: "
-                    + accountNumber
-                    + "\n" + serviceChargeDescription
-                    + "\nDo you want to continue?");
+        Intent intent = new Intent(getActivity(), WithdrawMoneyReviewActivity.class);
+        intent.putExtra(Constants.AMOUNT, Double.parseDouble(amount));
+        intent.putExtra(Constants.BANK_NAME, bankName);
+        intent.putExtra(Constants.BANK_ACCOUNT_ID, bankAccountId);
+        intent.putExtra(Constants.BANK_ACCOUNT_NUMBER, accountNumber);
+        intent.putExtra(Constants.DESCRIPTION, description);
 
-            alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    attemptWithdrawMoney(amount, accountNumber, description);
-                }
-            });
+        startActivityForResult(intent, WITHDRAW_MONEY_REVIEW_REQUEST);
+    }
 
-            alertDialogue.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // Do nothing
-                }
-            });
-
-            alertDialogue.show();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == WITHDRAW_MONEY_REVIEW_REQUEST) {
+            if (getActivity() != null)
+                getActivity().finish();
         }
     }
+
 
     private void showBankListAlertDialogue() {
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(getActivity());
@@ -323,7 +258,6 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         if (result == null) {
             mProgressDialog.show();
             mGetBankTask = null;
-            mCashOutTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -332,32 +266,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_WITHDRAW_MONEY)) {
-
-            if (resultList.size() > 2) {
-                try {
-                    mWithdrawMoneyResponse = gson.fromJson(resultList.get(2), WithdrawMoneyResponse.class);
-                    String message = mWithdrawMoneyResponse.getMessage();
-
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        // Return to HomeActivity
-                        getActivity().finish();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
-
-            mProgressDialog.dismiss();
-            mCashOutTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_BANK_LIST)) {
+        if (resultList.get(0).equals(Constants.COMMAND_GET_BANK_LIST)) {
             if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
 
                 if (resultList.size() > 2) {
@@ -408,25 +317,6 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             mProgressDialog.dismiss();
             mGetBankTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
-            if (resultList.size() > 2) {
-                try {
-                    mGetServiceChargeResponse = gson.fromJson(resultList.get(2), GetServiceChargeResponse.class);
-
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        // Do nothing
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-
-            mProgressDialog.dismiss();
-            mServiceChargeTask = null;
         }
     }
 }

@@ -35,12 +35,13 @@
 
                         <ImageView
                             style="@style/ReviewImageStyle"
-                            android:src="@drawable/ic_add_money_large" />
+                            android:src="@drawable/ic_withdraw_money_large" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
+                            android:layout_marginRight="@dimen/activity_horizontal_margin"
                             android:gravity="center">
 
                             <TextView
@@ -48,19 +49,41 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:layout_marginBottom="6dp"
-                                android:text="Dutch Bangla Bank Limited"/>
+                                android:layout_marginBottom="6dp"/>
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:textStyle="bold"
-                                android:text="108.101.488982"
                                 android:id="@+id/textview_account_number" />
 
                         </LinearLayout>
 
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_below="@+id/profile_picture"
+                        android:id="@+id/description_holder">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginRight="12dp"/>
+
+                        <TextView
+                            android:id="@+id/textview_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="12dp"
+                            android:gravity="center" />
 
                     </LinearLayout>
 
@@ -88,7 +111,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             style="@style/ReviewItemLabelStyle"
-                            android:text="@string/amount"/>
+                            android:text="@string/amount_to_withdraw"/>
 
                         <TextView
                             android:id="@+id/textview_amount"
@@ -130,7 +153,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             style="@style/ReviewItemLabelStyle"
-                            android:text="@string/total"/>
+                            android:text="@string/total_transferred"/>
 
                         <TextView
                             android:id="@+id/textview_total"
@@ -146,11 +169,11 @@
 
 
             <Button
-                android:id="@+id/button_topup"
+                android:id="@+id/button_withdraw_money"
                 style="@style/ButtonStyleMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/recharge_now" />
+                android:text="@string/withdraw_money" />
 
         </LinearLayout>
     </ScrollView>

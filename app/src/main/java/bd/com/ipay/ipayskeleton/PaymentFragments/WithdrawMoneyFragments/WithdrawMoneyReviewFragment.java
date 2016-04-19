@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,18 +26,18 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.PinInputDialogBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mAddMoneyTask = null;
-    private AddMoneyResponse mAddMoneyResponse;
+    private HttpRequestPostAsyncTask mWithdrawMoneyTask = null;
+    private WithdrawMoneyResponse mWithdrawMoneyResponse;
 
     private ProgressDialog mProgressDialog;
 
@@ -57,12 +56,12 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mTotalView;
-    private Button mAddMoneyButton;
+    private Button mWithdrawMoneyButton;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_add_money_review, container, false);
+        View v = inflater.inflate(R.layout.fragment_withdraw_money_review, container, false);
 
         mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
@@ -77,7 +76,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         mBankAccountNumberView = (TextView) v.findViewById(R.id.textview_account_number);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
-        mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
+        mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -93,7 +92,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
             mDescriptionView.setText(mDescription);
         }
 
-        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
+        mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
@@ -101,7 +100,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
                 pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        attemptAddMoney(pinInputDialogBuilder.getPin());
+                        attemptWithdrawMoney(pinInputDialogBuilder.getPin());
                     }
                 });
 
@@ -114,25 +113,25 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         return v;
     }
 
-    private void attemptAddMoney(String pin) {
-        if (mAddMoneyTask != null) {
+    private void attemptWithdrawMoney(String pin) {
+        if (mWithdrawMoneyTask != null) {
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
         mProgressDialog.show();
 
-        AddMoneyRequest mAddMoneyRequest = new AddMoneyRequest(mBankAccountId, mAmount, mDescription, pin);
+        WithdrawMoneyRequest mAddMoneyRequest = new WithdrawMoneyRequest(mBankAccountId, mAmount, mDescription, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);
-        mAddMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
-                Constants.BASE_URL + Constants.URL_ADD_MONEY, json, getActivity());
-        mAddMoneyTask.mHttpResponseListener = this;
+        mWithdrawMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
+                Constants.BASE_URL + Constants.URL_WITHDRAW_MONEY, json, getActivity());
+        mWithdrawMoneyTask.mHttpResponseListener = this;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mWithdrawMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            mAddMoneyTask.execute((Void) null);
+            mWithdrawMoneyTask.execute((Void) null);
         }
 
     }
@@ -140,7 +139,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
 
     @Override
     public int getServiceID() {
-        return Constants.SERVICE_ID_ADD_MONEY;
+        return Constants.SERVICE_ID_WITHDRAW_MONEY;
     }
 
     @Override
@@ -160,7 +159,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
 
         if (result == null) {
             mProgressDialog.show();
-            mAddMoneyTask = null;
+            mWithdrawMoneyTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -169,34 +168,30 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_ADD_MONEY)) {
+        if (resultList.get(0).equals(Constants.COMMAND_WITHDRAW_MONEY)) {
 
             if (resultList.size() > 2) {
                 try {
-                    mAddMoneyResponse = gson.fromJson(resultList.get(2), AddMoneyResponse.class);
-                    String message = mAddMoneyResponse.getMessage();
+                    mWithdrawMoneyResponse = gson.fromJson(resultList.get(2), WithdrawMoneyResponse.class);
+                    String message = mWithdrawMoneyResponse.getMessage();
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                         getActivity().setResult(Activity.RESULT_OK);
-                        // Exit the Add money activity and return to HomeActivity
                         getActivity().finish();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
                 }
-
             } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
 
             mProgressDialog.dismiss();
-            mAddMoneyTask = null;
+            mWithdrawMoneyTask = null;
 
         }
     }

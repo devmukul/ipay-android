@@ -40,10 +40,10 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
         onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                if (!getPin().isEmpty()) {
-                    InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mPinField.getWindowToken(), 0);
+                InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mPinField.getWindowToken(), 0);
 
+                if (!getPin().isEmpty()) {
                     onSubmitListener.onClick(dialog, which);
                     build().dismiss();
                 } else {
