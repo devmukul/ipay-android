@@ -32,7 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
 
-    private ProgressDialog mProgressDialog;
     private Context context;
 
     public static final long DISCONNECT_TIMEOUT = 300000; // 5 min = 5 * 60 * 1000 ms
@@ -112,10 +111,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             return;
         }
 
-        mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
-        mProgressDialog.show();
-
         SharedPreferences pref;
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         String mUserID = pref.getString(Constants.USERID, "");
@@ -138,7 +133,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
     public void httpResponseReceiver(String result) {
 
         if (result == null) {
-            mProgressDialog.dismiss();
             mLogoutTask = null;
             HomeActivity.mRefreshTokenAsyncTask = null;
             return;
@@ -167,7 +161,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
                 Toast.makeText(context, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
             }
 
-            mProgressDialog.dismiss();
             mLogoutTask = null;
 
         } else if (resultList.get(0).equals(Constants.COMMAND_REFRESH_TOKEN)) {
