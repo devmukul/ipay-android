@@ -26,7 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/status_layout"
         android:layout_toRightOf="@+id/portrait"
         android:orientation="vertical">
 
@@ -54,16 +53,17 @@
 
             <TextView
                 android:id="@+id/amount"
-                style="@style/TextStylePrimarySmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/value5"
-                android:text="100" />
+                android:gravity="center_vertical"
+                android:text=""
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/status"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_error_black_24dp"
                 android:tint="@color/background_red" />
