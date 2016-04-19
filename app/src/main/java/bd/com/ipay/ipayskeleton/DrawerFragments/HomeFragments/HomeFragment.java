@@ -554,14 +554,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(userID);
 
-                String description = userTransactionHistoryClasses.get(pos).getDescription(userID);
+                String description = userTransactionHistoryClasses.get(pos).getDescription();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
 
-                // Handle debit credit
-                if (amount > 0)
-                    mAmountTextView.setText("+" + String.format("%.2f", amount) + " Tk."); // TODO: Currency will be set later. Put it as a constant now.
-                else
-                    mAmountTextView.setText(String.format("%.2f", amount) + " Tk.");   // TODO: Set taka unicode character, remove + for credit
+                mAmountTextView.setText(Utilities.formatTaka(amount));
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
