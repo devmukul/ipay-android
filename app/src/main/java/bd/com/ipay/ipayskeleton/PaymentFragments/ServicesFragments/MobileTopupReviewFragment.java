@@ -26,11 +26,12 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MobileTopupReviewFragment extends Fragment implements HttpResponseListener {
+public class MobileTopupReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mTopupTask = null;
     private TopupResponse mTopupResponse;
@@ -79,8 +80,6 @@ public class MobileTopupReviewFragment extends Fragment implements HttpResponseL
         mMobileNumberView.setText(mMobileNumber);
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
-        mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
-        mTotalView.setText(Utilities.formatTaka(new BigDecimal(mAmount).add(mServiceCharge)));
 
         mTopupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +96,8 @@ public class MobileTopupReviewFragment extends Fragment implements HttpResponseL
                 pinInputDialogBuilder.build().show();
             }
         });
+
+        attemptGetServiceCharge();
 
         return v;
     }
@@ -115,7 +116,25 @@ public class MobileTopupReviewFragment extends Fragment implements HttpResponseL
 
 
     @Override
+    public int getServiceID() {
+        return Constants.SERVICE_ID_TOP_UP;
+    }
+
+    @Override
+    public BigDecimal getAmount() {
+        return new BigDecimal(mAmount);
+    }
+
+    @Override
+    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
+        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+        mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+    }
+
+    @Override
     public void httpResponseReceiver(String result) {
+        super.httpResponseReceiver(result);
+
         if (result == null) {
             mProgressDialog.show();
             mTopupTask = null;
