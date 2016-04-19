@@ -192,6 +192,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public void onResume() {
         super.onResume();
         getActivity().invalidateOptionsMenu();
+        refreshBalance();
     }
 
     @Override
