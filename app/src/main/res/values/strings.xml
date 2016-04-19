@@ -262,6 +262,7 @@
     <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
     <string name="failed_to_send_for_bank_verification">Failed to send request.</string>
     <string name="failed_to_bank_verification">Failed to verify your bank account. Please try again later.</string>
+    <string name="failed_empty_pin">Pin cannot be empty</string>
     <string name="account_number">Account Number</string>
     <string name="scan_my_qr">iPay Me</string>
     <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>

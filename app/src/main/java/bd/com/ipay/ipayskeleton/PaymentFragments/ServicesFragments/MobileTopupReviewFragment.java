@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,12 +85,19 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             public void onClick(View v) {
                 final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
-                pinInputDialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
+                pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         attemptTopUp(pinInputDialogBuilder.getPin());
                     }
                 });
+//                pinInputDialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        if (pinInputDialogBuilder.validatePin())
+//                            attemptTopUp(pinInputDialogBuilder.getPin());
+//                    }
+//                });
 
                 pinInputDialogBuilder.build().show();
             }
