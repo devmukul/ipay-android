@@ -1,15 +1,16 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class SendMoneyActivity extends BaseActivity {
+public class WithdrawMoneyReviewActivity extends BaseActivity {
 
     private SharedPreferences pref;
     private Boolean switchedToAccountSelection = false;
@@ -27,7 +28,7 @@ public class SendMoneyActivity extends BaseActivity {
 
     @Override
     public Context setContext() {
-        return SendMoneyActivity.this;
+        return WithdrawMoneyReviewActivity.this;
     }
 }
 

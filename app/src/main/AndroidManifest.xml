@@ -42,14 +42,14 @@
             android:name=".Activities.DetailsNewsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.SendMoneyActivity"
+            android:name=".Activities.PaymentActivities.SendMoneyActivity"
             android:label="@string/send_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.MakePaymentActivity"
+            android:name=".Activities.PaymentActivities.MakePaymentActivity"
             android:label="@string/payment"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
@@ -63,28 +63,28 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.AddMoneyActivity"
+            android:name=".Activities.PaymentActivities.AddMoneyActivity"
             android:label="@string/add_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.TopUpActivity"
+            android:name=".Activities.PaymentActivities.TopUpActivity"
             android:label="@string/topup"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.WithdrawMoneyActivity"
+            android:name=".Activities.PaymentActivities.WithdrawMoneyActivity"
             android:label="@string/withdraw_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.RequestMoneyActivity"
+            android:name=".Activities.PaymentActivities.RequestMoneyActivity"
             android:label="@string/request_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
@@ -129,18 +129,28 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation" />
         <activity
-            android:name=".Activities.SendMoneyReviewActivity"
+            android:name=".Activities.PaymentActivities.SendMoneyReviewActivity"
             android:label="@string/review_and_send"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Activities.RequestMoneyReviewActivity"
+            android:name=".Activities.PaymentActivities.RequestMoneyReviewActivity"
             android:label="@string/review_and_request"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Activities.MobileTopUpReviewActivity"
+            android:name=".Activities.PaymentActivities.TopUpReviewActivity"
             android:label="@string/review_and_recharge"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Activities.PaymentActivities.AddMoneyReviewActivity"
+            android:label="@string/review_and_add_money"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Activities.PaymentActivities.WithdrawMoneyReviewActivity"
+            android:label="@string/review_and_withdraw_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
     </application>

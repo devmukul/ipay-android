@@ -26,7 +26,7 @@ import com.google.zxing.integration.android.IntentResult;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import bd.com.ipay.ipayskeleton.Activities.SendMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;

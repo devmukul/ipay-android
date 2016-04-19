@@ -1,8 +1,9 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.content.Context;
 import android.os.Bundle;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.MobileTopupFragment;
 import bd.com.ipay.ipayskeleton.R;
 

@@ -1,7 +1,7 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -19,10 +19,10 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyReviewFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class SendMoneyReviewActivity extends AppCompatActivity implements HttpResponseListener {
+public class RequestMoneyReviewActivity extends AppCompatActivity implements HttpResponseListener {
+
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
@@ -57,15 +57,15 @@ public class SendMoneyReviewActivity extends AppCompatActivity implements HttpRe
     }
 
     private void switchToRequestReviewFragment(String name, String profilePictureUrl) {
-        SendMoneyReviewFragment sendMoneyReviewFragment = new SendMoneyReviewFragment();
+        RequestMoneyReviewFragment requestMoneyReviewFragment = new RequestMoneyReviewFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NAME, name);
         bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_IMAGE_SERVER + profilePictureUrl);
-        sendMoneyReviewFragment.setArguments(bundle);
+        requestMoneyReviewFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, sendMoneyReviewFragment).commit();
+                .replace(R.id.fragment_container, requestMoneyReviewFragment).commit();
 
     }
 

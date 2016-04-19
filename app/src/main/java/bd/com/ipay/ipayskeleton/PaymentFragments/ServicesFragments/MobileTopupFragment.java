@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,18 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-
-import bd.com.ipay.ipayskeleton.Activities.MobileTopUpReviewActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -157,7 +145,7 @@ public class MobileTopupFragment extends Fragment {
         int operatorCode = mSelectOperator.getSelectedItemPosition() + 1;
         String countryCode = "+88"; // TODO: For now Bangladesh Only
 
-        Intent intent = new Intent(getActivity(), MobileTopUpReviewActivity.class);
+        Intent intent = new Intent(getActivity(), TopUpReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.MOBILE_NUMBER_TYPE, mobileNumberType);
         intent.putExtra(Constants.OPERATOR_CODE, operatorCode);

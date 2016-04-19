@@ -451,6 +451,8 @@
     <string name="review_and_send">Review &amp; Send</string>
     <string name="review_and_request">Review &amp; Request Money</string>
     <string name="review_and_recharge">Review &amp; Recharge</string>
+    <string name="review_and_add_money"><![CDATA[Review & Add Money]]></string>
+    <string name="review_and_withdraw_money"><![CDATA[Review & Withdraw Money]]></string>
     <string name="amount">Amount</string>
     <string name="fee">Fee</string>
     <string name="net_received">Net Received</string>
