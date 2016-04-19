@@ -173,16 +173,15 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             if (resultList.size() > 2) {
                 try {
                     mWithdrawMoneyResponse = gson.fromJson(resultList.get(2), WithdrawMoneyResponse.class);
-                    String message = mWithdrawMoneyResponse.getMessage();
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

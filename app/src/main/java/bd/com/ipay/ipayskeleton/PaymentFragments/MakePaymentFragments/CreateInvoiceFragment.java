@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CreateInvoiceReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -34,15 +36,13 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class CreateInvoiceFragment extends Fragment implements HttpResponseListener {
+public class CreateInvoiceFragment extends Fragment {
 
-    private HttpRequestPostAsyncTask mCreateInvoiceTask = null;
-    private CreateInvoiceResponse mCreateInvoiceResponse;
-
-    private final int PICK_CONTACT = 100;
+    private static final int REQUEST_PICK_CONTACT = 100;
+    private static final int REQUEST_CREATE_INVOICE_REVIEW = 101;
 
     private Button buttonCreateInvoice;
-    private Button buttonSelectFromContacts;
+    private ImageView buttonSelectFromContacts;
     private EditText mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
@@ -54,7 +54,7 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_create_invoice, container, false);
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
-        buttonSelectFromContacts = (Button) v.findViewById(R.id.select_sender_from_contacts);
+        buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonCreateInvoice = (Button) v.findViewById(R.id.button_request_money);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
@@ -67,14 +67,17 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, PICK_CONTACT);
+                startActivityForResult(intent, REQUEST_PICK_CONTACT);
             }
         });
 
         buttonCreateInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) attemptSendInvoice();
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    if (verifyUserInputs())
+                        launchReviewPage();
+                }
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -83,11 +86,7 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
         return v;
     }
 
-    private void attemptSendInvoice() {
-        if (mCreateInvoiceTask != null) {
-            return;
-        }
-
+    private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
 
@@ -122,80 +121,41 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
+            return false;
         } else {
-
-            // Format the number
-            receiver = ContactEngine.formatMobileNumberBD(receiver);
-
-            mProgressDialog.setMessage(getString(R.string.requesting_money));
-            mProgressDialog.show();
-            CreateInvoiceRequest mCreateInvoiceRequest = new CreateInvoiceRequest(description,
-                    BigDecimal.valueOf(Double.parseDouble(amount)), BigDecimal.valueOf(Double.parseDouble(vat)), receiver);
-            Gson gson = new Gson();
-            String json = gson.toJson(mCreateInvoiceRequest);
-            mCreateInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_INVOICE,
-                    Constants.BASE_URL + Constants.URL_PAYMENT_CREATE_INVOICE, json, getActivity());
-            mCreateInvoiceTask.mHttpResponseListener = this;
-            mCreateInvoiceTask.execute((Void) null);
+            return true;
         }
-
     }
 
-    @Override
-    public void httpResponseReceiver(String result) {
-        if (result == null) {
-            mProgressDialog.dismiss();
-            mCreateInvoiceTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
-            return;
-        }
+    private void launchReviewPage() {
+        String receiver = mMobileNumberEditText.getText().toString().trim();
+        String description = mDescriptionEditText.getText().toString();
+        String amount = mAmountEditText.getText().toString();
+        String vat = mVATEditText.getText().toString().trim();
 
-        List<String> resultList = Arrays.asList(result.split(";"));
-        Gson gson = new Gson();
+        Intent intent = new Intent(getActivity(), CreateInvoiceReviewActivity.class);
+        intent.putExtra(Constants.AMOUNT, amount);
+        intent.putExtra(Constants.RECEIVER, ContactEngine.formatMobileNumberBD(receiver));
+        intent.putExtra(Constants.DESCRIPTION, description);
+        intent.putExtra(Constants.VAT, vat);
 
-        if (resultList.get(0).equals(Constants.COMMAND_CREATE_INVOICE)) {
-
-            if (resultList.size() > 2) {
-                try {
-                    mCreateInvoiceResponse = gson.fromJson(resultList.get(2), CreateInvoiceResponse.class);
-
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        ((MakePaymentActivity) getActivity()).switchToInvoicesSentFragment();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mCreateInvoiceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
-
-            mProgressDialog.dismiss();
-            mCreateInvoiceTask = null;
-        }
+        startActivityForResult(intent, REQUEST_CREATE_INVOICE_REVIEW);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK && requestCode == PICK_CONTACT) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_PICK_CONTACT) {
 
             final CharSequence[] numbers = getNameAndPhoneList(data.getData());
             int size = numbers.length;
-            if (size < 1)
+            if (size < 1) {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.account_type_business,
+                    Toast.makeText(getActivity(), R.string.no_numbers_found,
                             Toast.LENGTH_LONG).show();
+            }
                 else if (size == 1) {
 
                     // Format the number
@@ -219,10 +179,13 @@ public class CreateInvoiceFragment extends Fragment implements HttpResponseListe
                     });
                     builder.show();
                 }
-        } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT) {
+        } else if (resultCode == Activity.RESULT_CANCELED && requestCode == REQUEST_PICK_CONTACT) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
                         Toast.LENGTH_SHORT).show();
+        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CREATE_INVOICE_REVIEW) {
+            if (getActivity() != null)
+                ((MakePaymentActivity) getActivity()).switchToInvoicesSentFragment();
         }
     }
 

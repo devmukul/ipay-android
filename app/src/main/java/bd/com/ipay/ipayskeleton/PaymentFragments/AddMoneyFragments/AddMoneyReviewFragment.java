@@ -174,17 +174,16 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
             if (resultList.size() > 2) {
                 try {
                     mAddMoneyResponse = gson.fromJson(resultList.get(2), AddMoneyResponse.class);
-                    String message = mAddMoneyResponse.getMessage();
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                         getActivity().setResult(Activity.RESULT_OK);
                         // Exit the Add money activity and return to HomeActivity
                         getActivity().finish();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

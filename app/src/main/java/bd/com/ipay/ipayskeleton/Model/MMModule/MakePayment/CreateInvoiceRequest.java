@@ -8,11 +8,13 @@ public class CreateInvoiceRequest {
     private BigDecimal amount;
     private BigDecimal vat;
     private String clientUserMobileNumber;
+    private String pin;
 
-    public CreateInvoiceRequest(String item, BigDecimal amount, BigDecimal vat, String clientUserMobileNumber) {
+    public CreateInvoiceRequest(String item, BigDecimal amount, BigDecimal vat, String clientUserMobileNumber, String pin) {
         this.item = item;
         this.amount = amount;
         this.vat = vat;
         this.clientUserMobileNumber = clientUserMobileNumber;
+        this.pin = pin;
     }
 }

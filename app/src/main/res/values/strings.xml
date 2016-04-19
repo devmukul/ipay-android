@@ -172,6 +172,7 @@
     <string name="progress_dialog_fetching_bank_list">Fetching bank list...</string>
     <string name="progress_dialog_sending_invite">Sending invitation...</string>
     <string name="progress_dialog_fetching_business_types">Loading business types..</string>
+    <string name="progress_dialog_sending_invoice">Sending Invoice...</string>
     <string name="invalid_account_number">Please enter a valid account number</string>
     <string name="validating">Validating your request...</string>
     <string name="progress_dialog_rejecting">Rejecting request...</string>
@@ -208,6 +209,7 @@
     <string name="continue_mobile_recharge">Continue</string>
     <string name="continue_add_money">Continue</string>
     <string name="continue_withdraw_money">Continue</string>
+    <string name="continue_create_invoice">Continue</string>
     <string name="send_invoice">Send Invoice</string>
     <string name="payment">Payment</string>
     <string name="password_recovery">Password Recovery</string>
@@ -455,6 +457,7 @@
     <string name="review_and_recharge">Review &amp; Recharge</string>
     <string name="review_and_add_money"><![CDATA[Review & Add Money]]></string>
     <string name="review_and_withdraw_money"><![CDATA[Review & Withdraw Money]]></string>
+    <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
     <string name="amount">Amount</string>
     <string name="fee">Fee</string>
     <string name="net_received">Net Received</string>
@@ -472,6 +475,7 @@
     <string name="amount_to_receive">Amount to Receive</string>
     <string name="amount_to_withdraw">Amount to Withdraw</string>
     <string name="total_transferred">Total Transferred</string>
+    <string name="vat">VAT</string>
 
     <string-array name="account_types">
         <item>Personal</item>

@@ -59,38 +59,52 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" >
 
-            <EditText
-                android:id="@+id/mobile_number"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:hint="@string/enter_mobile_number"
-                android:inputType="phone"
-                android:maxLength="14"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/select_receiver_from_contacts"
+                android:layout_toStartOf="@+id/select_receiver_from_contacts">
 
-        </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="@string/enter_mobile_number"
+                    android:inputType="phone"
+                    android:maxLength="14"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
-        <Button
-            android:id="@+id/select_sender_from_contacts"
-            style="@style/ButtonStyleSecondarySmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/select_sender_from_contact" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <ImageView
+                android:id="@+id/select_receiver_from_contacts"
+                style="@style/ButtonStyleAccentSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:padding="@dimen/value5"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:src="@drawable/ic_contacts_white_24dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/button_request_money"
-            style="@style/ButtonStyleMedium"
+            style="@style/ButtonStyleMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/send_invoice" />
+            android:text="@string/continue_create_invoice" />
 
     </LinearLayout>
 </ScrollView>

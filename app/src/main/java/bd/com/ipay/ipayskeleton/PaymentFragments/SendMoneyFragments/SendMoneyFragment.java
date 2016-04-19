@@ -47,8 +47,6 @@ public class SendMoneyFragment extends Fragment {
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
 
-    private ProgressDialog mProgressDialog;
-
     private SharedPreferences pref;
 
     @Override
@@ -65,8 +63,6 @@ public class SendMoneyFragment extends Fragment {
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
         }
-
-        mProgressDialog = new ProgressDialog(getActivity());
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
