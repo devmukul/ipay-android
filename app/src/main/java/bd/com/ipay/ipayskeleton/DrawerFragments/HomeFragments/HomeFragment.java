@@ -583,9 +583,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 }
 
                 //TODO: remove this when pro pic came
-                Glide.with(getActivity())
-                        .load(R.drawable.ic_transaction_history)
-                        .into(mPortrait);
+//                Glide.with(getActivity())
+//                        .load(R.drawable.ic_transaction_history)
+//                        .into(mPortrait);
             }
 
             public void bindViewNewsFeed(int pos) {
