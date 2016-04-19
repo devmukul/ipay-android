@@ -365,7 +365,14 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                     try {
                         mBankListResponse = gson.fromJson(resultList.get(2), GetBankListResponse.class);
 
-                        mListUserBankClasses = mBankListResponse.getBanks();
+                        mListUserBankClasses = new ArrayList<>();
+
+                        for (UserBankClass bank : mBankListResponse.getBanks()) {
+                            if (bank.getAccountStatus() == Constants.BANK_ACCOUNT_STATUS_ACTIVE &&
+                                    bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+                                mListUserBankClasses.add(bank);
+                            }
+                        }
 
                         if (mListUserBankClasses == null) {
                             mBankPicker.setEnabled(false);

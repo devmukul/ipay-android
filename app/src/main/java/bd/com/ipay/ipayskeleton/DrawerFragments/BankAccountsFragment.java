@@ -139,14 +139,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mProgressDialog = new ProgressDialog(getActivity());
         bankAccountTypes = getResources().getStringArray(R.array.default_bank_account_types);
 
-        // It might be possible that we have failed to load the available bank list during
-        // application startup. In that case first try to load the available bank list first, and
-        // then load user bank details. Otherwise directly load the bank list.
-        if (CommonData.isAvailableBankListLoaded()) {
-            getBankList();
-        } else {
-            attemptRefreshAvailableBankNames();
-        }
+        attemptRefreshAvailableBankNames();
 
         addNewBankButton.setOnClickListener(new View.OnClickListener() {
             @Override

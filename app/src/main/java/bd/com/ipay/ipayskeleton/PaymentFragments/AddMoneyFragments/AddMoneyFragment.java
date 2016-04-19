@@ -379,15 +379,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     try {
                         mBankListResponse = gson.fromJson(resultList.get(2), GetBankListResponse.class);
 
-                        // TODO This is a hack. Consider removing this later.
-                        //
-                        // It might be possible that for some bank ids added earlier
-                        // (on the era of the hardcoded bank list), corresponding bank names
-                        // cannot be found. Filter those ids first to prevent crash.
-                        List<UserBankClass> allBanks = mBankListResponse.getBanks();
                         mListUserBankClasses = new ArrayList<>();
-                        for (UserBankClass bank : allBanks) {
-                            if (CommonData.getBankById(bank.getBankAccountId()) != null) {
+
+                        for (UserBankClass bank : mBankListResponse.getBanks()) {
+                            if (bank.getAccountStatus() == Constants.BANK_ACCOUNT_STATUS_ACTIVE &&
+                                    bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
                                 mListUserBankClasses.add(bank);
                             }
                         }
