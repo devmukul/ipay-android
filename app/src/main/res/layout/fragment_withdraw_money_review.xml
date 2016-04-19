@@ -35,7 +35,7 @@
 
                         <ImageView
                             style="@style/ReviewImageStyle"
-                            android:src="@drawable/ic_mobile_recharge_large" />
+                            android:src="@drawable/ic_add_money_large" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -44,19 +44,20 @@
                             android:gravity="center">
 
                             <TextView
+                                android:id="@+id/textview_bank_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:layout_marginBottom="6dp"
-                                android:textStyle="bold"
-                                android:textSize="20sp"
-                                android:text="Recharge to"/>
+                                android:text="Dutch Bangla Bank Limited"/>
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:id="@+id/textview_mobile_number" />
+                                android:textStyle="bold"
+                                android:text="108.101.488982"
+                                android:id="@+id/textview_account_number" />
 
                         </LinearLayout>
 
@@ -87,7 +88,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             style="@style/ReviewItemLabelStyle"
-                            android:text="@string/topup_amount"/>
+                            android:text="@string/amount"/>
 
                         <TextView
                             android:id="@+id/textview_amount"

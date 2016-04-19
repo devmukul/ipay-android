@@ -206,6 +206,8 @@
     <string name="continue_send_money">Continue</string>
     <string name="continue_request_money">Continue</string>
     <string name="continue_mobile_recharge">Continue</string>
+    <string name="continue_add_money">Continue</string>
+    <string name="continue_withdraw_money">Continue</string>
     <string name="send_invoice">Send Invoice</string>
     <string name="payment">Payment</string>
     <string name="password_recovery">Password Recovery</string>
@@ -467,6 +469,8 @@
     <string name="request_now">Request Now</string>
     <string name="you_will_receive">You will receive</string>
     <string name="confirm_ipay_invitation">Invite him/her to iPay?</string>
+    <string name="amount_to_receive">Amount to Receive</string>
+    <string name="total_transferred">Total Transferred</string>
 
     <string-array name="account_types">
         <item>Personal</item>

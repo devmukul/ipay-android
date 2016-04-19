@@ -43,7 +43,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private SharedPreferences pref;
 
     private BigDecimal mAmount;
-    private BigDecimal mServiceCharge;
     private String mReceiverName;
     private String mReceiverMobileNumber;
     private String mSenderMobileNumber;
@@ -66,7 +65,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         View v = inflater.inflate(R.layout.fragment_send_money_review, container, false);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mServiceCharge = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.SERVICE_CHARGE);
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
 

@@ -175,7 +175,7 @@
                 style="@style/ButtonStyleMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/send_now" />
+                android:text="@string/send_money" />
         </LinearLayout>
     </ScrollView>
 

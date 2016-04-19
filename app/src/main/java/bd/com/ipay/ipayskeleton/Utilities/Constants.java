@@ -35,6 +35,9 @@ public class Constants {
 
 
     public static final String AMOUNT = "amount";
+    public static final String BANK_NAME = "bank_name";
+    public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
+    public static final String BANK_ACCOUNT_ID = "bank_account_id";
     public static final String DESCRIPTION = "description";
     public static final String TITLE = "title";
     public static final String RECEIVER = "receiver";

@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoRequestBuilder;
@@ -21,7 +23,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMo
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class RequestMoneyReviewActivity extends AppCompatActivity implements HttpResponseListener {
+public class RequestMoneyReviewActivity extends BaseActivity implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
@@ -91,6 +93,11 @@ public class RequestMoneyReviewActivity extends AppCompatActivity implements Htt
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public Context setContext() {
+        return RequestMoneyReviewActivity.this;
     }
 
     @Override

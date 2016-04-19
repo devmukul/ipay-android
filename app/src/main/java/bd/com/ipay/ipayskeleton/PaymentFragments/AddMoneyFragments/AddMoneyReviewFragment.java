@@ -3,12 +3,16 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +27,8 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.PinInputDialogBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -32,55 +37,64 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mTopupTask = null;
-    private TopupResponse mTopupResponse;
+    private HttpRequestPostAsyncTask mAddMoneyTask = null;
+    private AddMoneyResponse mAddMoneyResponse;
 
     private ProgressDialog mProgressDialog;
 
     private SharedPreferences pref;
 
     private double mAmount;
-    private BigDecimal mServiceCharge;
-    private String mMobileNumber;
-    private int mAccountType;
-    private int mMobileNumberType;
-    private String mCountryCode;
-    private int mOperatorCode;
+    private String mDescription;
+    private long mBankAccountId;
+    private String mBankName;
+    private String mBankAccountNumber;
 
-    private TextView mMobileNumberView;
+    private TextView mBankNameView;
+    private TextView mBankAccountNumberView;
+    private TextView mDescriptionView;
+    private LinearLayout mDescriptionHolder;
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mTotalView;
-    private Button mTopupButton;
+    private Button mAddMoneyButton;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_mobile_topup_review, container, false);
+        View v = inflater.inflate(R.layout.fragment_add_money_review, container, false);
 
         mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
-        mServiceCharge = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.SERVICE_CHARGE);
-        mMobileNumberType = getActivity().getIntent().getIntExtra(Constants.MOBILE_NUMBER_TYPE, 1);
-        mOperatorCode = getActivity().getIntent().getIntExtra(Constants.OPERATOR_CODE, 0);
-        mCountryCode = getActivity().getIntent().getStringExtra(Constants.COUNTRY_CODE);
+        Log.w("Amount", mAmount + "");
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
+        mBankAccountId = getActivity().getIntent().getLongExtra(Constants.BANK_ACCOUNT_ID, -1);
+        mBankName = getActivity().getIntent().getStringExtra(Constants.BANK_NAME);
+        mBankAccountNumber = getActivity().getIntent().getStringExtra(Constants.BANK_ACCOUNT_NUMBER);
 
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
+        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
+        mDescriptionHolder = (LinearLayout) v.findViewById(R.id.description_holder);
+        mBankNameView = (TextView) v.findViewById(R.id.textview_bank_name);
+        mBankAccountNumberView = (TextView) v.findViewById(R.id.textview_account_number);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
-        mTopupButton = (Button) v.findViewById(R.id.button_topup);
+        mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        mMobileNumber = pref.getString(Constants.USERID, "");
-        mAccountType = pref.getInt(Constants.ACCOUNT_TYPE, 1);
 
-        mMobileNumberView.setText(mMobileNumber);
-
+        mBankNameView.setText(mBankName);
+        mBankAccountNumberView.setText(mBankAccountNumber);
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
-        mTopupButton.setOnClickListener(new View.OnClickListener() {
+        if (mDescription == null || mDescription.isEmpty()) {
+            mDescriptionHolder.setVisibility(View.GONE);
+        } else {
+            mDescriptionView.setText(mDescription);
+        }
+
+        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
@@ -88,16 +102,9 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
                 pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        attemptTopUp(pinInputDialogBuilder.getPin());
+                        attemptAddMoney(pinInputDialogBuilder.getPin());
                     }
                 });
-//                pinInputDialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
-//                    @Override
-//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                        if (pinInputDialogBuilder.validatePin())
-//                            attemptTopUp(pinInputDialogBuilder.getPin());
-//                    }
-//                });
 
                 pinInputDialogBuilder.build().show();
             }
@@ -108,22 +115,33 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         return v;
     }
 
-    private void attemptTopUp(String pin) {
-        TopupRequest mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
-                mMobileNumber, mMobileNumberType, mOperatorCode, mAmount,
-                mCountryCode, mAccountType, Constants.DEFAULT_USER_CLASS, pin);
+    private void attemptAddMoney(String pin) {
+        if (mAddMoneyTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
+        mProgressDialog.show();
+
+        AddMoneyRequest mAddMoneyRequest = new AddMoneyRequest(mBankAccountId, mAmount, mDescription, pin);
         Gson gson = new Gson();
-        String json = gson.toJson(mTopupRequestModel);
-        mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
-                Constants.BASE_URL + Constants.URL_TOPUP_REQUEST, json, getActivity());
-        mTopupTask.mHttpResponseListener = this;
-        mTopupTask.execute();
+        String json = gson.toJson(mAddMoneyRequest);
+        mAddMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
+                Constants.BASE_URL + Constants.URL_ADD_MONEY, json, getActivity());
+        mAddMoneyTask.mHttpResponseListener = this;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mAddMoneyTask.execute((Void) null);
+        }
+
     }
 
 
     @Override
     public int getServiceID() {
-        return Constants.SERVICE_ID_TOP_UP;
+        return Constants.SERVICE_ID_ADD_MONEY;
     }
 
     @Override
@@ -134,7 +152,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+        mTotalView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
     }
 
     @Override
@@ -143,47 +161,43 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
 
         if (result == null) {
             mProgressDialog.show();
-            mTopupTask = null;
+            mAddMoneyTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
         }
 
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_TOPUP_REQUEST)) {
+        if (resultList.get(0).equals(Constants.COMMAND_ADD_MONEY)) {
 
             if (resultList.size() > 2) {
                 try {
-                    mTopupResponse = gson.fromJson(resultList.get(2), TopupResponse.class);
+                    mAddMoneyResponse = gson.fromJson(resultList.get(2), AddMoneyResponse.class);
+                    String message = mAddMoneyResponse.getMessage();
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
-                        // TODO: Save transaction in database
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
-                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        // TODO: Save transaction in database
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                         getActivity().setResult(Activity.RESULT_OK);
+                        // Exit the Add money activity and return to HomeActivity
                         getActivity().finish();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
                 }
+
             } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
 
             mProgressDialog.dismiss();
-            mTopupTask = null;
+            mAddMoneyTask = null;
 
         }
     }

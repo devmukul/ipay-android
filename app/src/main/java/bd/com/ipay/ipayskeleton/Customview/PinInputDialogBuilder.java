@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Customview;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -40,6 +41,9 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 if (!getPin().isEmpty()) {
+                    InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mPinField.getWindowToken(), 0);
+
                     onSubmitListener.onClick(dialog, which);
                     build().dismiss();
                 } else {

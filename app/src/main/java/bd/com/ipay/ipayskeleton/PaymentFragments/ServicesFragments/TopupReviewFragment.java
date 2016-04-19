@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MobileTopupReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class TopupReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mTopupTask = null;
     private TopupResponse mTopupResponse;
@@ -40,7 +40,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private SharedPreferences pref;
 
     private double mAmount;
-    private BigDecimal mServiceCharge;
     private String mMobileNumber;
     private int mAccountType;
     private int mMobileNumberType;
@@ -59,7 +58,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         View v = inflater.inflate(R.layout.fragment_mobile_topup_review, container, false);
 
         mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
-        mServiceCharge = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.SERVICE_CHARGE);
         mMobileNumberType = getActivity().getIntent().getIntExtra(Constants.MOBILE_NUMBER_TYPE, 1);
         mOperatorCode = getActivity().getIntent().getIntExtra(Constants.OPERATOR_CODE, 0);
         mCountryCode = getActivity().getIntent().getStringExtra(Constants.COUNTRY_CODE);
@@ -91,13 +89,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                         attemptTopUp(pinInputDialogBuilder.getPin());
                     }
                 });
-//                pinInputDialogBuilder.onPositive(new MaterialDialog.SingleButtonCallback() {
-//                    @Override
-//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                        if (pinInputDialogBuilder.validatePin())
-//                            attemptTopUp(pinInputDialogBuilder.getPin());
-//                    }
-//                });
 
                 pinInputDialogBuilder.build().show();
             }
@@ -134,7 +125,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+        mTotalView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
     }
 
     @Override

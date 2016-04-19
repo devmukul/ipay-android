@@ -1,13 +1,15 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.MobileTopupReviewFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.TopupReviewFragment;
 
-public class TopUpReviewActivity extends AppCompatActivity {
+public class TopUpReviewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,7 +17,7 @@ public class TopUpReviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mobile_top_up_review);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new MobileTopupReviewFragment()).commit();
+                .add(R.id.fragment_container, new TopupReviewFragment()).commit();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -28,5 +30,10 @@ public class TopUpReviewActivity extends AppCompatActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public Context setContext() {
+        return TopUpReviewActivity.this;
     }
 }
