@@ -14,23 +14,20 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -46,13 +43,10 @@ import java.util.Map;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -217,6 +211,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                     historyPageCount = 0;
                     if (userTransactionHistoryClasses != null)
                         userTransactionHistoryClasses.clear();
+
                     getTransactionHistory();
                 }
             }
@@ -572,8 +567,9 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount,
-                                balance, purpose, time, statusCode, description, transactionID);
+                        if (!mSwipeRefreshLayout.isRefreshing())
+                            showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount,
+                                    balance, purpose, time, statusCode, description, transactionID);
                     }
                 });
 
