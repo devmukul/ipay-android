@@ -8,13 +8,42 @@ public class TransactionHistoryClass {
 
     public String originatingMobileNumber;
     public String receiverInfo;
-    public double originatingAmount;
-    public double effectiveAmount;
     public int serviceID;
     public Integer statusCode;
     public String statusDescription;
-    public String purpose;
     public long time;
+
+    public double amount;
+    public double fee;
+    public double netAmount;
+    public double balance;
+    public String purpose;
+    public String description;
+    public String transactionID;
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public double getFee() {
+        return fee;
+    }
+
+    public double getNetAmount() {
+        return netAmount;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getTransactionID() {
+        return transactionID;
+    }
 
     public TransactionHistoryClass() {
     }
@@ -27,46 +56,38 @@ public class TransactionHistoryClass {
         return receiverInfo;
     }
 
-    public double getOriginatingAmount() {
-        return originatingAmount;
-    }
-
-    public double getEffectiveAmount() {
-        return effectiveAmount;
-    }
-
-    public String getDescription(String userMobileNumber) {
-        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && (
-                originatingMobileNumber == null || receiverInfo == null))
-            return "No information available";
-
-        switch (serviceID) {
-            case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
-                return "Opening balance from iPay";
-            case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
-                if (originatingMobileNumber.equals(userMobileNumber))
-                    return "Money sent to " + receiverInfo;
-                else if (receiverInfo.equals(userMobileNumber))
-                    return "Money received from " + originatingMobileNumber;
-                else
-                    return "No information available";
-            case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
-                return "Money transfer from " + receiverInfo;
-            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                return "Money transfer to " + receiverInfo;
-            case (Constants.TRANSACTION_HISTORY_TOP_UP):
-                return "Mobile TopUp to " + receiverInfo;
-            case (Constants.TRANSACTION_HISTORY_PAYMENT):
-                if (originatingMobileNumber.equals(userMobileNumber))
-                    return "Payment sent to " + receiverInfo;
-                else if (receiverInfo.equals(userMobileNumber))
-                    return "Payment received from " + originatingMobileNumber;
-                else
-                    return "No information available";
-        }
-
-        return "No information available";
-    }
+//    public String getDescription(String userMobileNumber) {
+//        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && (
+//                originatingMobileNumber == null || receiverInfo == null))
+//            return "No information available";
+//
+//        switch (serviceID) {
+//            case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
+//                return "Opening balance from iPay";
+//            case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
+//                if (originatingMobileNumber.equals(userMobileNumber))
+//                    return "Money sent to " + receiverInfo;
+//                else if (receiverInfo.equals(userMobileNumber))
+//                    return "Money received from " + originatingMobileNumber;
+//                else
+//                    return "No information available";
+//            case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
+//                return "Money transfer from " + receiverInfo;
+//            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
+//                return "Money transfer to " + receiverInfo;
+//            case (Constants.TRANSACTION_HISTORY_TOP_UP):
+//                return "Mobile TopUp to " + receiverInfo;
+//            case (Constants.TRANSACTION_HISTORY_PAYMENT):
+//                if (originatingMobileNumber.equals(userMobileNumber))
+//                    return "Payment sent to " + receiverInfo;
+//                else if (receiverInfo.equals(userMobileNumber))
+//                    return "Payment received from " + originatingMobileNumber;
+//                else
+//                    return "No information available";
+//        }
+//
+//        return "No information available";
+//    }
 
     public double getAmount(String userMobileNumber) {
         if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && (
@@ -75,25 +96,25 @@ public class TransactionHistoryClass {
 
         switch (serviceID) {
             case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
-                return +effectiveAmount;
+                return +netAmount;
             case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
                 if (originatingMobileNumber.equals(userMobileNumber))
-                    return -originatingAmount;
+                    return -netAmount;
                 else if (receiverInfo.equals(userMobileNumber))
-                    return +effectiveAmount;
+                    return +netAmount;
                 else
                     return 0;
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
-                return +effectiveAmount;
+                return +netAmount;
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                return -originatingAmount;
+                return -netAmount;
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
-                return -originatingAmount;
+                return -netAmount;
             case (Constants.TRANSACTION_HISTORY_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber))
-                    return -originatingAmount;
+                    return -netAmount;
                 else if (receiverInfo.equals(userMobileNumber))
-                    return +effectiveAmount;
+                    return +netAmount;
                 else
                     return 0;
         }

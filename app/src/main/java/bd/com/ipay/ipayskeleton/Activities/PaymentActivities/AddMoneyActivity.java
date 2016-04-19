@@ -30,4 +30,3 @@ public class AddMoneyActivity extends BaseActivity {
         return AddMoneyActivity.this;
     }
 }
-

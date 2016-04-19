@@ -481,14 +481,10 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             public void bindView(int pos) {
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
 
-                String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
+                String description = userTransactionHistoryClasses.get(pos).getDescription();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
-
-                // Handle debit credit
-                if (amount > 0)
-                    mAmountTextView.setText("+" + String.format("%.2f", amount) + " Tk."); // TODO: Set currency later, remove + for credit
-                else
-                    mAmountTextView.setText(String.format("%.2f", amount) + " Tk.");     // TODO: Set taka unicode character
+                
+                mAmountTextView.setText(Utilities.formatTaka(amount));
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
@@ -530,9 +526,9 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 //                }
 
                 //TODO: remove this when pro pic came
-                Glide.with(getActivity())
-                        .load(R.drawable.ic_transaction_history)
-                        .into(mPortrait);
+//                Glide.with(getActivity())
+//                        .load(R.drawable.ic_transaction_history)
+//                        .into(mPortrait);
             }
 
             public void bindViewFooter(int pos) {
