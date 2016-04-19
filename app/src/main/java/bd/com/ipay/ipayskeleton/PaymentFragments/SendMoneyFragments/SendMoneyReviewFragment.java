@@ -164,6 +164,8 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
     @Override
     public void httpResponseReceiver(String result) {
+        super.httpResponseReceiver(result);
+
         if (result == null) {
             mProgressDialog.show();
             mSendMoneyTask = null;
