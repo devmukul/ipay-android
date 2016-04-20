@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
+@Deprecated
 public class EditBasicInfoFragment extends Fragment {
 
     private EditText mNameEditText;

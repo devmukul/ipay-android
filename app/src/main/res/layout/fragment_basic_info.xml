@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="@dimen/activity_horizontal_margin">
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout style="@style/ProfileCardLayoutStyle">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginTop="14dp"
+                    android:clickable="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_person"
+                    app:riv_border_color="@color/colorPrimary"
+                    app:riv_border_width="1dip"
+                    app:riv_corner_radius="75dip"
+                    app:riv_oval="false" />
+
+                <TextView
+                    android:id="@+id/textview_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_picture"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textview_name"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textview_verification_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textview_mobile_number"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="Verified"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileCardLayoutStyle"
+                android:layout_marginTop="18dp">
+
+                <TextView
+                    android:id="@+id/textview_email_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_basic_info"
+                    android:layout_toLeftOf="@+id/textview_email"
+                    android:text="Email" />
+
+                <TextView
+                    android:id="@+id/textview_email"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_basic_info" />
+
+                <TextView
+                    android:id="@+id/textview_date_of_birth_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_email"
+                    android:layout_toLeftOf="@+id/textview_date_of_birth"
+                    android:text="Date of Birth" />
+
+                <TextView
+                    android:id="@+id/textview_date_of_birth"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_email" />
+
+                <!-- Relative names -->
+                <TextView
+                    android:id="@+id/textview_fathers_name_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_date_of_birth"
+                    android:layout_toLeftOf="@+id/textview_fathers_name"
+                    android:text="Father's Name" />
+
+                <TextView
+                    android:id="@+id/textview_fathers_name"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_date_of_birth" />
+
+                <TextView
+                    android:id="@+id/textview_mothers_name_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_fathers_name"
+                    android:layout_toLeftOf="@+id/textview_mothers_name"
+                    android:text="Mother's Name" />
+
+                <TextView
+                    android:id="@+id/textview_mothers_name"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_fathers_name" />
+
+                <TextView
+                    android:id="@+id/textview_spouse_name_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_mothers_name"
+                    android:layout_toLeftOf="@+id/textview_spouse_name"
+                    android:text="Spouse's Name" />
+
+                <TextView
+                    android:id="@+id/textview_spouse_name"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_mothers_name" />
+
+
+                <!-- Relative mobile number -->
+                <TextView
+                    android:id="@+id/textview_fathers_mobile_number_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_spouse_name"
+                    android:layout_toLeftOf="@+id/textview_fathers_mobile_number"
+                    android:text="Father's Mobile Number" />
+
+                <TextView
+                    android:id="@+id/textview_fathers_mobile_number"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_spouse_name" />
+
+                <TextView
+                    android:id="@+id/textview_mothers_mobile_number_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_fathers_mobile_number"
+                    android:layout_toLeftOf="@+id/textview_mothers_mobile_number"
+                    android:text="Mother's Mobile Number" />
+
+                <TextView
+                    android:id="@+id/textview_mothers_mobile_number"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_fathers_mobile_number" />
+
+                <TextView
+                    android:id="@+id/textview_spouse_mobile_number_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_mothers_mobile_number"
+                    android:layout_toLeftOf="@+id/textview_spouse_mobile_number"
+                    android:text="Spouse's Mobile Number" />
+
+                <TextView
+                    android:id="@+id/textview_spouse_mobile_number"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_mothers_mobile_number" />
+
+
+                <!-- Spinners -->
+                <TextView
+                    android:id="@+id/textview_occupation_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_spouse_mobile_number"
+                    android:layout_toLeftOf="@+id/textview_occupation"
+                    android:text="Occupation" />
+
+                <TextView
+                    android:id="@+id/textview_occupation"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_spouse_mobile_number" />
+
+                <TextView
+                    android:id="@+id/textview_gender_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_occupation"
+                    android:layout_toLeftOf="@+id/textview_gender"
+                    android:text="Gender" />
+
+                <TextView
+                    android:id="@+id/textview_gender"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_occupation" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="?android:attr/actionBarSize"
+        android:src="@drawable/ic_edit_black_24dp"
+        app:backgroundTint="@color/background_fab"
+        app:borderWidth="0dp"
+        app:elevation="4dp"
+        app:fabSize="normal" />
+</android.support.design.widget.CoordinatorLayout>

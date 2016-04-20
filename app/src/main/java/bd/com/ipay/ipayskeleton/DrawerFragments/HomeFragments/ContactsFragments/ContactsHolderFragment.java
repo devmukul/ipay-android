@@ -88,13 +88,13 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         setEnabled(mAllContactsSelector, true);
         setEnabled(miPayContactsSelector, false);
 
-        if (getActivity() != null)
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (getActivity() != null)
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, allContactsFragment).commit();
-                }
-            }, 300);
+            }
+        }, 300);
     }
 
     private void switchToiPayContacts() {

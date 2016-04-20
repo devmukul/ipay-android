@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+@Deprecated
 public class ProfileFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;

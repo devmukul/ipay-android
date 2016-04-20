@@ -6,6 +6,7 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_drawer_home"
             android:title="@string/home" />
+
         <item
             android:id="@+id/nav_bank_account"
             android:icon="@drawable/ic_drawer_bank"
@@ -41,6 +42,31 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_drawer_logout"
             android:title="@string/logout" />
+
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_drawer_profile"
+            android:title="@string/profile" >
+
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_profile_basic_info"
+                        android:title="@string/profile_basic_info"
+                        android:icon="@drawable/ic_drawer_profile"/>
+
+                    <item
+                        android:id="@+id/nav_profile_addresses"
+                        android:title="@string/profile_address"
+                        android:icon="@drawable/ic_drawer_profile" />
+
+                    <item
+                        android:id="@+id/nav_profile_documents"
+                        android:title="@string/profile_documents"
+                        android:icon="@drawable/ic_drawer_profile" />
+                </group>
+            </menu>
+        </item>
     </group>
 
 </menu>

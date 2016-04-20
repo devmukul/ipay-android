@@ -42,8 +42,9 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.DashBoardFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.ProfileFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.BasicInfoFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.EditBasicInfoFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenResponse;
@@ -278,7 +279,19 @@ public class HomeActivity extends BaseActivity
                 Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
                 startActivity(intent);
             }
+        } else if (id == R.id.nav_profile_basic_info) {
+            switchToBasicInfoFragment();
         }
+    }
+
+    public void switchToBasicInfoFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new BasicInfoFragment()).commit();
+        switchedToHomeFragment = false;
+    }
+
+    private void switchToEditBasicInfoFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new EditBasicInfoFragment()).commit();
+        switchedToHomeFragment = false;
     }
 
     public void switchToAccountSettingsFragmentForPin() {

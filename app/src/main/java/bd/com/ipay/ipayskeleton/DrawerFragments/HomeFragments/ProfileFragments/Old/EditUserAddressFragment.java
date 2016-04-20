@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,8 +13,10 @@ import android.widget.CompoundButton;
 
 import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
 import bd.com.ipay.ipayskeleton.R;
 
+@Deprecated
 public class EditUserAddressFragment extends Fragment {
 
     private AddressInputView mPresentAddressView;

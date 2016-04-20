@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
+package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -21,12 +21,14 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 
+@Deprecated
 public class DocumentUploadFragment extends Fragment implements HttpResponseListener {
 
     private EditText mNationalIdNumber;
