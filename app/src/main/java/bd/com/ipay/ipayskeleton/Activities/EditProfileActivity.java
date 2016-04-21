@@ -115,7 +115,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.profile, menu);
+        inflater.inflate(R.menu.save, menu);
     }
 
     public void attemptSaveProfile() {

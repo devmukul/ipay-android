@@ -18,6 +18,7 @@ public class Constants {
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
+    public static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";
     public static final String GENDER = "GENDER";
     public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public static final String BOUNDARY = "iPayBoundary";

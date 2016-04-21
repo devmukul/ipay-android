@@ -133,7 +133,7 @@ public class EditBasicInfoFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.profile, menu);
+        inflater.inflate(R.menu.save, menu);
     }
 
     @Override

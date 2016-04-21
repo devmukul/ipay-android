@@ -161,19 +161,31 @@
                     style="@style/ProfileTextStyle"
                     android:layout_below="@+id/textview_mothers_mobile_number" />
 
+                <TextView
+                    android:id="@+id/textview_dob_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_spouse_mobile_number"
+                    android:layout_toLeftOf="@+id/textview_dob"
+                    android:text="@string/date_of_birth" />
+
+                <TextView
+                    android:id="@+id/textview_dob"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_spouse_mobile_number" />
+
 
                 <!-- Spinners -->
                 <TextView
                     android:id="@+id/textview_occupation_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_below="@+id/textview_spouse_mobile_number"
+                    android:layout_below="@+id/textview_dob"
                     android:layout_toLeftOf="@+id/textview_occupation"
                     android:text="@string/occupation" />
 
                 <TextView
                     android:id="@+id/textview_occupation"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_spouse_mobile_number" />
+                    android:layout_below="@+id/textview_dob" />
 
                 <TextView
                     android:id="@+id/textview_gender_label"
@@ -188,21 +200,29 @@
                     android:layout_below="@+id/textview_occupation" />
             </RelativeLayout>
 
+
+            <Button
+                android:id="@+id/button_edit"
+                style="@style/ButtonStyleMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="?android:attr/actionBarSize"
-        android:src="@drawable/ic_edit_black_24dp"
-        app:backgroundTint="@color/background_fab"
-        app:borderWidth="0dp"
-        app:elevation="4dp"
-        app:fabSize="normal" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_edit"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_gravity="bottom|right"-->
+        <!--android:layout_marginBottom="?android:attr/actionBarSize"-->
+        <!--android:src="@drawable/ic_edit_black_24dp"-->
+        <!--app:backgroundTint="@color/background_fab"-->
+        <!--app:borderWidth="0dp"-->
+        <!--app:elevation="4dp"-->
+        <!--app:fabSize="normal" />-->
 </android.support.design.widget.CoordinatorLayout>

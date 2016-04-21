@@ -10,8 +10,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,8 +48,6 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
     private TextView mMobileNumberView;
     private TextView mVerificationStatusView;
 
-    private TextView mDateOfBirthView;
-
     private TextView mFathersNameView;
     private TextView mMothersNameView;
     private TextView mSpouseNameView;
@@ -56,10 +56,11 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
     private TextView mMothersMobileNumberView;
     private TextView mSpouseMobileNumberView;
 
+    private TextView mDateOfBirthView;
     private TextView mOccupationView;
     private TextView mGenderView;
 
-    private FloatingActionButton mEditButton;
+    private Button mEditButton;
 
     private SharedPreferences pref;
 
@@ -80,19 +81,6 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
     private int mOccupation = 0;
     private String mGender = "";
     private String mVerificationStatus = null;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,10 +104,12 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         mMothersMobileNumberView = (TextView) v.findViewById(R.id.textview_mothers_mobile_number);
         mSpouseMobileNumberView = (TextView) v.findViewById(R.id.textview_spouse_mobile_number);
 
+        mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
         mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
         mGenderView = (TextView) v.findViewById(R.id.textview_gender);
 
-        mEditButton = (FloatingActionButton) v.findViewById(R.id.fab_edit);
+        mEditButton = (Button) v.findViewById(R.id.button_edit);
+
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,6 +129,13 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         return v;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (menu.findItem(R.id.action_search_contacts) != null)
+            menu.findItem(R.id.action_search_contacts).setVisible(false);
+    }
+
     private void launchEditFragment() {
         Bundle bundle = new Bundle();
 
@@ -149,6 +146,7 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         bundle.putString(Constants.FATHERS_MOBILE_NUMBER, mFathersMobileNumber);
         bundle.putString(Constants.MOTHERS_MOBILE_NUMBER, mMothersMobileNumber);
         bundle.putString(Constants.SPOUSES_MOBILE_NUMBER, mSpouseMobileNumber);
+        bundle.putString(Constants.DATE_OF_BIRTH, mDateOfBirth);
         bundle.putString(Constants.PROFILE_PICTURE, mProfilePicture);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
@@ -172,6 +170,8 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         mFathersMobileNumberView.setText(mFathersMobileNumber);
         mMothersMobileNumberView.setText(mMothersMobileNumber);
         mSpouseMobileNumberView.setText(mSpouseMobileNumber);
+
+        mDateOfBirthView.setText(mDateOfBirth);
 
         if (mOccupation == 0) mOccupationView.setText("");
         else {

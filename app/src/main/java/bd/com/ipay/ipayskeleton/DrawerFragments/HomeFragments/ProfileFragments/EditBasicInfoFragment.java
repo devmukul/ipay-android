@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -69,11 +70,11 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private Spinner mOccupationSpinner;
     private Spinner mGenderSpinner;
 
+    private Button mSaveButton;
+
     private ImageView mDatePickerButton;
     private RoundedImageView mProfilePictureView;
 
-    private FloatingActionButton mSaveButton;
-    
     private ProgressDialog mProgressDialog;
 
     private SharedPreferences pref;
@@ -95,13 +96,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private int mOccupation = 0;
     private String mGender = "";
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -118,6 +112,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mMothersMobileNumber = bundle.getString(Constants.MOTHERS_MOBILE_NUMBER);
         mSpouseMobileNumber = bundle.getString(Constants.SPOUSES_MOBILE_NUMBER);
         mProfilePicture = bundle.getString(Constants.PROFILE_PICTURE);
+        mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
 
@@ -133,6 +128,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mSpouseMobileNumberEditText = (EditText) v.findViewById(R.id.spouse_mobile_number);
 
         mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
+
+        mSaveButton = (Button) v.findViewById(R.id.button_save);
 
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
 
@@ -164,13 +161,11 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        mSaveButton = (FloatingActionButton) v.findViewById(R.id.fab_save);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyUserInputs()) {
+                if (verifyUserInputs())
                     attemptSaveBasicInfo();
-                }
             }
         });
 
@@ -187,17 +182,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         super.onCreateOptionsMenu(menu, inflater);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
-        inflater.inflate(R.menu.profile, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            ((EditProfileActivity) getActivity()).attemptSaveProfile();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
     }
 
     public boolean verifyUserInputs() {
@@ -228,21 +212,25 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         if (!ContactEngine.isValidNumber(mFathersMobileNumber)) {
             focusView = mFathersMobileNumberEditText;
+            cancel = true;
             mFathersMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
         }
 
         if (!ContactEngine.isValidNumber(mMothersMobileNumber)) {
             focusView = mMothersMobileNumberEditText;
+            cancel = true;
             mMothersMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
         }
 
         if (!ContactEngine.isValidNumber(mSpouseMobileNumber)) {
             focusView = mSpouseMobileNumberEditText;
+            cancel = true;
             mSpouseMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
         }
 
         if (!Utilities.isDateOfBirthValid(mDateOfBirth)) {
             focusView = mDateOfBirthEditText;
+            cancel = true;
             mDateOfBirthEditText.setError(getString(R.string.please_enter_valid_date_of_birth));
         }
 
@@ -419,12 +407,12 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_picture_get_failed, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_picture_get_failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT).show();
             }
 
             mProgressDialog.dismiss();

@@ -81,7 +81,12 @@
                     android:hint="@string/name"
                     android:inputType="textPersonName"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true" >
+
+                    <requestFocus/>
+                </EditText>
+
+
 
             </android.support.design.widget.TextInputLayout>
 
@@ -95,9 +100,8 @@
                     android:id="@+id/fathers_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Father's Name"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPostalAddress"
+                    android:hint="@string/fathers_name"
+                    android:inputType="textPersonName"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -111,9 +115,8 @@
                     android:id="@+id/mothers_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Mother's Name"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPostalAddress"
+                    android:hint="@string/mothers_name"
+                    android:inputType="textPersonName"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -127,9 +130,8 @@
                     android:id="@+id/spouse_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Spouse's Name"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPostalAddress"
+                    android:hint="@string/spouses_name"
+                    android:inputType="textPersonName"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -146,7 +148,7 @@
                     android:id="@+id/fathers_mobile_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Father's Mobile Number"
+                    android:hint="@string/fathers_mobile_number"
                     android:imeOptions="actionNext"
                     android:inputType="phone"
                     android:maxLines="1"
@@ -162,7 +164,7 @@
                     android:id="@+id/mothers_mobile_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Mother's Mobile Number"
+                    android:hint="@string/mothers_mobile_number"
                     android:imeOptions="actionNext"
                     android:inputType="phone"
                     android:maxLines="1"
@@ -178,7 +180,7 @@
                     android:id="@+id/spouse_mobile_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Spouse's Mobile Number"
+                    android:hint="@string/spouses_mobile_number"
                     android:imeOptions="actionNext"
                     android:inputType="phone"
                     android:maxLines="1"
@@ -267,21 +269,29 @@
                     android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
             </LinearLayout>
 
+
+            <Button
+                android:id="@+id/button_save"
+                style="@style/ButtonStyleMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="?android:attr/actionBarSize"
-        android:src="@drawable/ic_save_black_24dp"
-        app:backgroundTint="@color/background_fab"
-        app:borderWidth="0dp"
-        app:elevation="4dp"
-        app:fabSize="normal" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_save"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_gravity="bottom|right"-->
+        <!--android:layout_marginBottom="?android:attr/actionBarSize"-->
+        <!--android:src="@drawable/ic_save_black_24dp"-->
+        <!--app:backgroundTint="@color/background_fab"-->
+        <!--app:borderWidth="0dp"-->
+        <!--app:elevation="4dp"-->
+        <!--app:fabSize="normal" />-->
 
 </android.support.design.widget.CoordinatorLayout>
