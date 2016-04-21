@@ -502,6 +502,7 @@
     <string name="add_permanent_address">Add Permanent Address</string>
     <string name="add_office_address">Add Office Address</string>
     <string name="progress_dialog_address">Loading addresses...</string>
+    <string name="progress_dialog_saving_address">Saving address...</string>
 
     <string-array name="account_types">
         <item>Personal</item>

@@ -122,6 +122,63 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
             mOfficeAddressAddButton.setVisibility(View.GONE);
             mOfficeAddressView.setText(mOfficeAddress.toString());
         }
+
+        final Bundle presentAddressBundle = new Bundle();
+        presentAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_PRESENT);
+        if (mPresentAddress != null)
+            presentAddressBundle.putSerializable(Constants.ADDRESS, mPresentAddress);
+
+        final Bundle permanentAddressBundle = new Bundle();
+        permanentAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_PERMANENT);
+        if (mPermanentAddress != null)
+            permanentAddressBundle.putSerializable(Constants.ADDRESS, mPermanentAddress);
+
+        final Bundle officeAddressBundle = new Bundle();
+        officeAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_OFFICE);
+        if (mOfficeAddress != null)
+            officeAddressBundle.putSerializable(Constants.ADDRESS, mOfficeAddress);
+
+        mPresentAddressAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
+            }
+        });
+
+        mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
+            }
+        });
+
+        mPermanentAddressAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
+            }
+        });
+
+        mPermanentAddressEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
+            }
+        });
+
+        mOfficeAddressAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).switchToEditAddressFragment(officeAddressBundle);
+            }
+        });
+
+        mOfficeAddressEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).switchToEditAddressFragment(officeAddressBundle);
+            }
+        });
     }
 
     private void getUserAddress() {

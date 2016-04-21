@@ -16,7 +16,10 @@
             android:imeOptions="actionUnspecified"
             android:inputType="textPostalAddress"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true" >
+
+            <requestFocus/>
+        </EditText>
 
     </android.support.design.widget.TextInputLayout>
 

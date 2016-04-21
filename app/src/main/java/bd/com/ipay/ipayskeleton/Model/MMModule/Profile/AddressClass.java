@@ -1,10 +1,12 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
 
+import java.io.Serializable;
+
 import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
 import bd.com.ipay.ipayskeleton.Utilities.Common.DistrictList;
 import bd.com.ipay.ipayskeleton.Utilities.Common.ThanaList;
 
-public class AddressClass {
+public class AddressClass implements Serializable {
     private String addressLine1;
     private String addressLine2;
     private String country;

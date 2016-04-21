@@ -44,6 +44,8 @@ public class Constants {
     public static final String MOTHERS_MOBILE_NUMBER = "MOTHERS_MOBILE_NUMBER";
     public static final String SPOUSES_MOBILE_NUMBER = "SPOUSES_MOBILE_NUMBER";
 
+    public static final String ADDRESS = "ADDRESS";
+    public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
 
     public static final String AMOUNT = "amount";
     public static final String BANK_NAME = "bank_name";

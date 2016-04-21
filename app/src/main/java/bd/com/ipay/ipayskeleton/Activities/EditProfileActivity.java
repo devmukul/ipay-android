@@ -152,14 +152,14 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
                 if (mUserAddressFragment != null && mUserAddressFragment.verifyUserInputs()) {
                     mProgressDialog.show();
 
-                    SetUserAddressRequest userAddressRequest = new SetUserAddressRequest(
-                            ProfileFragment.mPresentAddress, ProfileFragment.mPermanentAddress, ProfileFragment.mOfficeAddress);
-
-                    String addressJson = gson.toJson(userAddressRequest, SetUserAddressRequest.class);
-                    mSetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_USER_ADDRESS_REQUEST,
-                            Constants.BASE_URL + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, this);
-                    mSetUserAddressTask.mHttpResponseListener = this;
-                    mSetUserAddressTask.execute();
+//                    SetUserAddressRequest userAddressRequest = new SetUserAddressRequest(
+//                            ProfileFragment.mPresentAddress, ProfileFragment.mPermanentAddress, ProfileFragment.mOfficeAddress);
+//
+//                    String addressJson = gson.toJson(userAddressRequest, SetUserAddressRequest.class);
+//                    mSetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_USER_ADDRESS_REQUEST,
+//                            Constants.BASE_URL + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, this);
+//                    mSetUserAddressTask.mHttpResponseListener = this;
+//                    mSetUserAddressTask.execute();
                 }
             }
         } else {

@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.A
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.BasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.DocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.FragmentEditAddress;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
@@ -285,8 +286,7 @@ public class HomeActivity extends BaseActivity
             switchToBasicInfoFragment();
         } else if (id == R.id.nav_profile_addresses) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new AddressFragment()).commit();
-            switchedToHomeFragment = false;
+            switchToAddressFragment();
 
         } else if (id == R.id.nav_profile_documents) {
 
@@ -294,6 +294,11 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = false;
 
         }
+    }
+
+    public void switchToAddressFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new AddressFragment()).commit();
+        switchedToHomeFragment = false;
     }
 
     public void switchToBasicInfoFragment() {
@@ -318,6 +323,13 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = false;
 
         mNavigationView.getMenu().findItem(R.id.nav_settings).setChecked(true);
+    }
+
+    public void switchToEditAddressFragment(Bundle bundle) {
+        FragmentEditAddress fragmentEditAddress = new FragmentEditAddress();
+        fragmentEditAddress.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragmentEditAddress).commit();
+        switchedToHomeFragment = false;
     }
 
     private void attemptLogout() {
