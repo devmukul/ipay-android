@@ -258,6 +258,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
 
                         // First time login from this device. Verify OTP for secure login
+                        SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
                         ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                     } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
@@ -267,6 +268,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
 
                         // Enter previous OTP
+                        SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
                         ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                     } else {

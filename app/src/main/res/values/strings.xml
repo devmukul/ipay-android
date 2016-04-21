@@ -200,7 +200,7 @@
     <string name="otp_going_to_send">We are sending an OTP to your mobile number. Please enter the OTP in the box below.</string>
     <string name="activate">Activate</string>
     <string name="verify">Verify</string>
-    <string name="resend_otp_description">If you did not receive the OTP in your mobile in 60 seconds, please click the button Resend to send the OTP again.</string>
+    <string name="resend_otp_description">If you did not receive the OTP in your mobile, please click the button Resend to send the OTP again.</string>
     <string name="verify_otp_for_trust_description">You are going to login fist time from this device. Please verify the OTP sent to your mobile for a secure login.</string>
     <string name="resend">Resend</string>
     <string name="not_implemented">Not implemented yet.</string>

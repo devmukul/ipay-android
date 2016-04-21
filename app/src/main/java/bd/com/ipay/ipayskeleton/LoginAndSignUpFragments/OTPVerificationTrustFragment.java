@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -12,11 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
@@ -35,6 +39,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
     private Button mActivateButton;
     private EditText mOTPEditText;
+    private TextView mTimerTextView;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
@@ -53,6 +58,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
+        mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
@@ -70,6 +76,18 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
+
+        mTimerTextView.setVisibility(View.VISIBLE);
+        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+            }
+
+            public void onFinish() {
+                mTimerTextView.setVisibility(View.INVISIBLE);
+            }
+        }.start();
 
         return v;
     }

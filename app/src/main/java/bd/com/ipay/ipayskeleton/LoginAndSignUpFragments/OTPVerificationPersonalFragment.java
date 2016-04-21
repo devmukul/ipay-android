@@ -100,7 +100,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
-        new CountDownTimer(60000, 1000) {
+        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
@@ -266,7 +266,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
                         mResendOTPButton.setEnabled(false);
-                        new CountDownTimer(1800000, 1000) {
+                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
 
                             public void onTick(long millisUntilFinished) {
                                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));

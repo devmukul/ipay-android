@@ -41,6 +41,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mMobileNumberPersonal;
     public static long mTypeofBusiness;
     public static String mPromoCode;
+    public static long otpDuration;
 
     public static AddressClass mAddressBusiness;
     public static AddressClass mAddressBusinessHolder;

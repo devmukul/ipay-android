@@ -333,12 +333,17 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
             }
 
             if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
             } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST)) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
+
+                // Previous OTP has not expired yet.
+                SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
+                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
+                
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
