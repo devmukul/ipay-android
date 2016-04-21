@@ -1,23 +1,71 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
 
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+
 public class GetUserAddressResponse {
-    private AddressClass presentAddress;
-    private AddressClass permanentAddress;
-    private AddressClass officeAddress;
+    private String message;
+    private List<AddressContainer> addressList;
 
-    public GetUserAddressResponse() {
+    public String getMessage() {
+        return message;
+    }
 
+    public List<AddressContainer> getAddressList() {
+        return addressList;
     }
 
     public AddressClass getPresentAddress() {
-        return presentAddress;
+        for (AddressContainer addressContainer : addressList) {
+            if (addressContainer.getAddressType().equals(Constants.ADDRESS_TYPE_PRESENT))
+                return addressContainer.getAddress();
+        }
+        return null;
     }
 
     public AddressClass getPermanentAddress() {
-        return permanentAddress;
+        for (AddressContainer addressContainer : addressList) {
+            if (addressContainer.getAddressType().equals(Constants.ADDRESS_TYPE_PERMANENT))
+                return addressContainer.getAddress();
+        }
+        return null;
     }
 
     public AddressClass getOfficeAddress() {
-        return officeAddress;
+        for (AddressContainer addressContainer : addressList) {
+            if (addressContainer.getAddressType().equals(Constants.ADDRESS_TYPE_OFFICE))
+                return addressContainer.getAddress();
+        }
+        return null;
+    }
+
+    public static class AddressContainer {
+        private String addressType;
+        private AddressClass address;
+
+        public String getAddressType() {
+            return addressType;
+        }
+
+        public AddressClass getAddress() {
+            return address;
+        }
+
+        @Override
+        public String toString() {
+            return "AddressContainer{" +
+                    "addressType='" + addressType + '\'' +
+                    ", address=" + address +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "GetUserAddressResponse{" +
+                "message='" + message + '\'' +
+                ", addressList=" + addressList +
+                '}';
     }
 }

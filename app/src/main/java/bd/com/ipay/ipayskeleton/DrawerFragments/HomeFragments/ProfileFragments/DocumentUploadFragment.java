@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -71,6 +73,19 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
     private static final int ACTION_PICK_DRIVING_LICENSE = 2;
     private static final int ACTION_PICK_BIRTH_CERTIFICATE = 3;
     private static final int ACTION_PICK_TIN = 4;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (menu.findItem(R.id.action_search_contacts) != null)
+            menu.findItem(R.id.action_search_contacts).setVisible(false);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

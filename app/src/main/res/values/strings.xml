@@ -495,6 +495,13 @@
     <string name="mothers_mobile_number">Mother\'s Mobile Number</string>
     <string name="spouses_mobile_number">Spouse\'s Mobile Number</string>
     <string name="progress_dialog_identification_documents">Loading submitted document information...</string>
+    <string name="present_address">Present Address</string>
+    <string name="permanent_address">Permanent Address</string>
+    <string name="office_address">Office Address</string>
+    <string name="add_present_address">Add Present Address</string>
+    <string name="add_permanent_address">Add Permanent Address</string>
+    <string name="add_office_address">Add Office Address</string>
+    <string name="progress_dialog_address">Loading addresses...</string>
 
     <string-array name="account_types">
         <item>Personal</item>

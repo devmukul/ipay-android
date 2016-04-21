@@ -42,6 +42,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.DashBoardFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.BasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.DocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
@@ -282,9 +283,16 @@ public class HomeActivity extends BaseActivity
             }
         } else if (id == R.id.nav_profile_basic_info) {
             switchToBasicInfoFragment();
+        } else if (id == R.id.nav_profile_addresses) {
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new AddressFragment()).commit();
+            switchedToHomeFragment = false;
+
         } else if (id == R.id.nav_profile_documents) {
+
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new DocumentUploadFragment()).commit();
             switchedToHomeFragment = false;
+
         }
     }
 

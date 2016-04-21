@@ -80,12 +80,12 @@ public class AddressClass {
             builder.append(getAddressLine1()).append("\n");
         if (getAddressLine2() != null)
             builder.append(getAddressLine2()).append("\n");
-        if (getPostalCode() != null)
-            builder.append(getPostalCode()).append(" ");
         if (getThana() != null)
             builder.append(getThana()).append(", ");
         if (getDistrict() != null)
-            builder.append(getDistrict());
+            builder.append(getDistrict()).append(" ");
+        if (getPostalCode() != null)
+            builder.append(getPostalCode());
         builder.append("\n");
         if (getCountry() != null)
             builder.append(getCountry());

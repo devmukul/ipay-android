@@ -352,4 +352,8 @@ public class Constants {
     public static final String VERIFICATION_STATUS_VERIFIED = "VERIFIED";
     public static final String VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
 
+    public static final String ADDRESS_TYPE_PRESENT = "PRESENT";
+    public static final String ADDRESS_TYPE_PERMANENT = "PERMANENT";
+    public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
+
 }

@@ -244,7 +244,7 @@
                     style="@style/ProfileAddressHeaderStyle"
                     android:layout_below="@+id/textview_address"
                     android:layout_toLeftOf="@+id/button_edit_present_address"
-                    android:text="Present Address" />
+                    android:text="@string/present_address" />
 
                 <Button
                     android:id="@+id/button_edit_present_address"
@@ -267,7 +267,7 @@
                     style="@style/ProfileAddressHeaderStyle"
                     android:layout_below="@+id/textview_present_address"
                     android:layout_toLeftOf="@+id/button_edit_permanent_address"
-                    android:text="Permanent Address" />
+                    android:text="@string/permanent_address" />
 
                 <Button
                     android:id="@+id/button_edit_permanent_address"
@@ -291,7 +291,7 @@
                     style="@style/ProfileAddressHeaderStyle"
                     android:layout_below="@+id/textview_permanent_address"
                     android:layout_toLeftOf="@+id/button_edit_office_address"
-                    android:text="Office Address" />
+                    android:text="@string/office_address" />
 
                 <Button
                     android:id="@+id/button_edit_office_address"

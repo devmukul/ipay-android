@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="?android:attr/actionBarSize">
+
+        <LinearLayout
+            android:id="@+id/present_address_holder"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_double">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/AddressViewHeader"
+                android:text="@string/present_address"/>
+
+            <TextView
+                android:id="@+id/textview_present_address"
+                style="@style/ProfileAddressTextStyle" />
+
+            <Button
+                android:id="@+id/button_edit_present_address"
+                style="@style/ButtonStyleMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/permanent_address_holder"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_double">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/AddressViewHeader"
+                android:text="@string/permanent_address"/>
+
+            <TextView
+                android:id="@+id/textview_permanent_address"
+                style="@style/ProfileAddressTextStyle" />
+
+            <Button
+                android:id="@+id/button_edit_permanent_address"
+                style="@style/ButtonStyleMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/office_address_holder"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_double">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/AddressViewHeader"
+                android:text="@string/office_address"/>
+
+            <TextView
+                android:id="@+id/textview_office_address"
+                style="@style/ProfileAddressTextStyle" />
+
+            <Button
+                android:id="@+id/button_edit_office_address"
+                style="@style/ButtonStyleMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_add_present_address"
+            style="@style/ButtonStyleMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_present_address"/>
+
+        <Button
+            android:id="@+id/button_add_permanent_address"
+            style="@style/ButtonStyleMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_permanent_address"/>
+
+        <Button
+            android:id="@+id/button_add_office_address"
+            style="@style/ButtonStyleMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_office_address"/>
+
+    </LinearLayout>
+
+</ScrollView>

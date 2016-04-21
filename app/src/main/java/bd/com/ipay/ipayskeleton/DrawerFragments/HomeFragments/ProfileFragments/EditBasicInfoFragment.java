@@ -97,6 +97,19 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private String mGender = "";
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (menu.findItem(R.id.action_search_contacts) != null)
+            menu.findItem(R.id.action_search_contacts).setVisible(false);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
@@ -175,13 +188,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         setProfileInformation();
 
         return v;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
     }
 
     public boolean verifyUserInputs() {
