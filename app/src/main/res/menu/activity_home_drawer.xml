@@ -66,8 +66,8 @@
                         android:icon="@drawable/ic_drawer_email" />
 
                     <item
-                        android:id="@+id/nav_trusted_people"
-                        android:title="@string/trusted_people"
+                        android:id="@+id/nav_trusted_network"
+                        android:title="@string/trusted_network"
                         android:icon="@drawable/ic_drawer_trusted_people" />
 
                     <item
