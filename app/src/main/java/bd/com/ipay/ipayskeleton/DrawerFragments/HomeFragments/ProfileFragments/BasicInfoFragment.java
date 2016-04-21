@@ -2,20 +2,16 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,23 +19,15 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetIdentificationDocumentResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserAddressResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocument;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
@@ -53,12 +41,11 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
 
     private ProgressDialog mProgressDialog;
 
-    private RoundedImageView mProfilePicture;
+    private RoundedImageView mProfilePictureView;
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mVerificationStatusView;
 
-    private TextView mEmailAddressView;
     private TextView mDateOfBirthView;
 
     private TextView mFathersNameView;
@@ -72,13 +59,14 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
     private TextView mOccupationView;
     private TextView mGenderView;
 
+    private FloatingActionButton mEditButton;
+
     private SharedPreferences pref;
 
     private String mName = "";
     private String mMobileNumber = "";
-    private Set<UserProfilePictureClass> mProfilePictures;
+    private String mProfilePicture = "";
 
-    private String mEmailAddress = "";
     private String mDateOfBirth = "";
 
     private String mFathersName = "";
@@ -113,14 +101,11 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.profile);
 
-        mProfilePictures = new HashSet<>();
-
-        mProfilePicture = (RoundedImageView) v.findViewById(R.id.profile_picture);
+        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
 
-        mEmailAddressView = (TextView) v.findViewById(R.id.textview_email);
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_date_of_birth);
 
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
@@ -134,6 +119,14 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
         mGenderView = (TextView) v.findViewById(R.id.textview_gender);
 
+        mEditButton = (FloatingActionButton) v.findViewById(R.id.fab_edit);
+        mEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchEditFragment();
+            }
+        });
+
         mMobileNumber = pref.getString(Constants.USERID, "");
         mGender = pref.getString(Constants.GENDER, "");
         mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
@@ -146,21 +139,29 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         return v;
     }
 
-    private void setProfileInformation() {
-        if (mProfilePictures.size() > 0) {
+    private void launchEditFragment() {
+        Bundle bundle = new Bundle();
 
-            String imageUrl = "";
-            for (Iterator<UserProfilePictureClass> it = mProfilePictures.iterator(); it.hasNext(); ) {
-                UserProfilePictureClass userProfilePictureClass = it.next();
-                imageUrl = userProfilePictureClass.getUrl();
-                break;
-            }
-            setProfilePicture(imageUrl);
-        }
+        bundle.putString(Constants.NAME, mName);
+        bundle.putString(Constants.FATHERS_NAME, mFathersName);
+        bundle.putString(Constants.MOTHERS_NAME, mMothersName);
+        bundle.putString(Constants.SPOUSES_NAME, mSpouseName);
+        bundle.putString(Constants.FATHERS_MOBILE_NUMBER, mFathersMobileNumber);
+        bundle.putString(Constants.MOTHERS_MOBILE_NUMBER, mMothersMobileNumber);
+        bundle.putString(Constants.SPOUSES_MOBILE_NUMBER, mSpouseMobileNumber);
+        bundle.putString(Constants.PROFILE_PICTURE, mProfilePicture);
+        bundle.putString(Constants.GENDER, mGender);
+        bundle.putInt(Constants.OCCUPATION, mOccupation);
+
+        ((HomeActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
+    }
+
+    private void setProfileInformation() {
+        setProfilePicture(mProfilePicture);
+
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
 
-        mEmailAddressView.setText(mEmailAddress);
         mGenderView.setText(mGender);
         mDateOfBirthView.setText(mDateOfBirth);
 
@@ -221,12 +222,12 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
                         .crossFade()
                         .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))
-                        .into(mProfilePicture);
+                        .into(mProfilePictureView);
             } else {
                 Glide.with(getActivity())
                         .load(R.drawable.ic_person)
                         .crossFade()
-                        .into(mProfilePicture);
+                        .into(mProfilePictureView);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -256,8 +257,6 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
                         mName = mGetProfileInfoResponse.getName();
                     if (mGetProfileInfoResponse.getMobileNumber() != null)
                         mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
-                    if (mGetProfileInfoResponse.getEmail() != null)
-                        mEmailAddress = mGetProfileInfoResponse.getEmail();
                     if (mGetProfileInfoResponse.getDateOfBirth() != null)
                         mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
 
@@ -280,7 +279,15 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
 
                     mOccupation = mGetProfileInfoResponse.getOccupation();
                     mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
-                    mProfilePictures = mGetProfileInfoResponse.getProfilePictures();
+
+                    if (mGetProfileInfoResponse.getProfilePictures().size() > 0) {
+
+                        for (Iterator<UserProfilePictureClass> it = mGetProfileInfoResponse.getProfilePictures().iterator(); it.hasNext(); ) {
+                            UserProfilePictureClass userProfilePictureClass = it.next();
+                            mProfilePicture = userProfilePictureClass.getUrl();
+                            break;
+                        }
+                    }
 
                     setProfileInformation();
                 } else {

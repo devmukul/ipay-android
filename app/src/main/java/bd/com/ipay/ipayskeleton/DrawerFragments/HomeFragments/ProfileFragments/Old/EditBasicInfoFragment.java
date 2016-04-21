@@ -43,7 +43,6 @@ public class EditBasicInfoFragment extends Fragment {
 
     private EditText mNameEditText;
     private EditText mEmailEditText;
-    private ImageView mEmailVerify;
 
     private EditText mFathersNameEditText;
     private EditText mMothersNameEditText;
@@ -62,7 +61,6 @@ public class EditBasicInfoFragment extends Fragment {
     private RoundedImageView mProfilePicture;
     private Set<UserProfilePictureClass> profilePictures;
 
-    private int emailVerificationStatus;
     private boolean profilePictureUpdated = false;
 
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
@@ -98,7 +96,6 @@ public class EditBasicInfoFragment extends Fragment {
 
         mOccupationSpinner = (Spinner) v.findViewById(R.id.occupation);
         mGenderSpinner = (Spinner) v.findViewById(R.id.gender);
-        mEmailVerify = (ImageView) v.findViewById(R.id.email_verification_status);
 
         mProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,16 +114,6 @@ public class EditBasicInfoFragment extends Fragment {
         ArrayAdapter<CharSequence> mAdapterGender = new ArrayAdapter<CharSequence>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, GenderList.genderNames);
         mGenderSpinner.setAdapter(mAdapterGender);
-
-        mEmailVerify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = mEmailEditText.getText().toString().trim();
-                if (email.length() > 0 && emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_NOT_VERIFIED) {
-                    showAlertDialogue(getString(R.string.alert_verify_email));
-                }
-            }
-        });
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
@@ -177,7 +164,6 @@ public class EditBasicInfoFragment extends Fragment {
             focusView.requestFocus();
             return false;
         } else {
-            ProfileFragment.mEmailAddress = mEmailEditText.getText().toString().trim();
             ProfileFragment.mName = mNameEditText.getText().toString().trim();
             ProfileFragment.mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
 
@@ -211,7 +197,6 @@ public class EditBasicInfoFragment extends Fragment {
         }
 
         mNameEditText.setText(ProfileFragment.mName);
-        mEmailEditText.setText(ProfileFragment.mEmailAddress);
 
         mFathersNameEditText.setText(ProfileFragment.mFathersName);
         mMothersNameEditText.setText(ProfileFragment.mMothersName);
@@ -327,7 +312,6 @@ public class EditBasicInfoFragment extends Fragment {
         alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String emailAddress = mEmailEditText.getText().toString().trim();
-                ProfileFragment.mEmailAddress = emailAddress;
                 ((EditProfileActivity) getActivity()).verifyEmail(emailAddress);
             }
         });

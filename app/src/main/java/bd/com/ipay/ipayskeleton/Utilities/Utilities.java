@@ -255,6 +255,22 @@ public class Utilities {
         return "";
     }
 
+    // TODO return meaningful message based on the error
+    public static boolean isDateOfBirthValid(String dob) {
+        try {
+            String[] dobFields = dob.split("/");
+
+            int day = Integer.parseInt(dobFields[0]);
+            int month = Integer.parseInt(dobFields[1]);
+            int year = Integer.parseInt(dobFields[2]);
+
+            return (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 0 && year <= 9999);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static boolean isValidEmail(String email) {
         Pattern emailPattern = Pattern.compile("[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+");
         Matcher m = emailPattern.matcher(email);

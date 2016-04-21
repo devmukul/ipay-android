@@ -15,7 +15,6 @@ public class Constants {
     public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String LOGGEDIN = "LOGGEDIN";
     public static final String PASSWORD = "PASSWORD";
-    public static final String NAME = "NAME";
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
@@ -32,6 +31,17 @@ public class Constants {
     public static final String OPERATOR_CODE = "operator_code";
     public static final String COUNTRY_CODE = "country_code";
     public static final String EXPAND_PIN = "expand_pin";
+
+    public static final String NAME = "NAME";
+    public static final String OCCUPATION = "OCCUPATION";
+
+    public static final String FATHERS_NAME = "FATHERS_NAME";
+    public static final String MOTHERS_NAME = "MOTHERS_NAME";
+    public static final String SPOUSES_NAME = "SPOUSES_NAME";
+
+    public static final String FATHERS_MOBILE_NUMBER = "FATHERS_MOBILE_NUMBER";
+    public static final String MOTHERS_MOBILE_NUMBER = "MOTHERS_MOBILE_NUMBER";
+    public static final String SPOUSES_MOBILE_NUMBER = "SPOUSES_MOBILE_NUMBER";
 
 
     public static final String AMOUNT = "amount";
@@ -63,7 +73,7 @@ public class Constants {
     // Server Type 4 -> local server
     public static final int SERVER_TYPE = 1;
     public static final boolean DEBUG = true;
-    public static final boolean DEBUG_TOKEN_ENABLED = true;
+    public static final boolean DEBUG_TOKEN_ENABLED = false;
     public static final int ACCOUNT_ID = 291;
 
     static {

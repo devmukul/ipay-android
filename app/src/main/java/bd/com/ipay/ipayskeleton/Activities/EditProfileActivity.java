@@ -136,7 +136,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
                     SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(
                             ProfileFragment.mMobileNumber, ProfileFragment.mName,
                             ProfileFragment.mGender, ProfileFragment.mDateOfBirth,
-                            ProfileFragment.mEmailAddress, ProfileFragment.mOccupation, ProfileFragment.mFathersName,
+                            ProfileFragment.mOccupation, ProfileFragment.mFathersName,
                             ProfileFragment.mMothersName, ProfileFragment.mSpouseName,
                             ProfileFragment.mFathersMobileNumber, ProfileFragment.mMothersMobileNumber, ProfileFragment.mSpouseMobileNumber);
 

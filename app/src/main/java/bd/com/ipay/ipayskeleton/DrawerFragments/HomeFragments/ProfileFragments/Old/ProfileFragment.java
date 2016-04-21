@@ -69,7 +69,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     private TextView mMobileNumberView;
     private TextView mVerificationStatusView;
 
-    private TextView mEmailAddressView;
     private TextView mDateOfBirthView;
 
     private TextView mFathersNameView;
@@ -104,7 +103,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
     public static String mMobileNumber = "";
     public static Set<UserProfilePictureClass> mProfilePictures;
 
-    public static String mEmailAddress = "";
     public static String mDateOfBirth = "";
 
     public static String mFathersName = "";
@@ -155,7 +153,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
 
-        mEmailAddressView = (TextView) v.findViewById(R.id.textview_email);
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_date_of_birth);
 
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
@@ -251,7 +248,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
 
-        mEmailAddressView.setText(mEmailAddress);
         mGenderView.setText(mGender);
         mDateOfBirthView.setText(mDateOfBirth);
 
@@ -399,8 +395,6 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                         mName = mGetProfileInfoResponse.getName();
                     if (mGetProfileInfoResponse.getMobileNumber() != null)
                         mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
-                    if (mGetProfileInfoResponse.getEmail() != null)
-                        mEmailAddress = mGetProfileInfoResponse.getEmail();
                     if (mGetProfileInfoResponse.getDateOfBirth() != null)
                         mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
 

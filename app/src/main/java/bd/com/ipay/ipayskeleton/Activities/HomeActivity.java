@@ -43,10 +43,10 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.BasicInfoFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.EditBasicInfoFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
@@ -289,8 +289,10 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = false;
     }
 
-    private void switchToEditBasicInfoFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new EditBasicInfoFragment()).commit();
+    public void switchToEditBasicInfoFragment(Bundle bundle) {
+        EditBasicInfoFragment editBasicInfoFragment = new EditBasicInfoFragment();
+        editBasicInfoFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, editBasicInfoFragment).commit();
         switchedToHomeFragment = false;
     }
 

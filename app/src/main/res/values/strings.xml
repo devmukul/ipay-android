@@ -302,6 +302,7 @@
     <string name="please_add_title">Please add a title</string>
     <string name="otp_sent">OTP sent. Please wait...</string>
     <string name="please_enter_valid_mobile_number">Please enter a valid mobile number.</string>
+    <string name="please_enter_valid_date_of_birth">Please enter a valid date of birth.</string>
     <string name="please_enter_amount">Please enter an amount.</string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
@@ -485,6 +486,13 @@
     <string name="amount_to_withdraw">Amount to Withdraw</string>
     <string name="total_transferred">Total Transferred</string>
     <string name="vat">VAT</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="fathers_name">Father\'s Name</string>
+    <string name="mothers_name">Mother\'s Name</string>
+    <string name="spouses_name">Spouse\'s Name</string>
+    <string name="fathers_mobile_number">Father\'s Mobile Number</string>
+    <string name="mothers_mobile_number">Mother\'s Mobile Number</string>
+    <string name="spouses_mobile_number">Spouse\'s Mobile Number</string>
 
     <string-array name="account_types">
         <item>Personal</item>

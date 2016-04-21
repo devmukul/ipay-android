@@ -2,12 +2,13 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,27 +23,39 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfilePictureResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditBasicInfoFragment extends Fragment {
+public class EditBasicInfoFragment extends Fragment implements HttpResponseListener {
+
+    private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
+    private SetProfileInfoResponse mSetProfileInfoResponse;
+
+    private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask;
+    private SetProfilePictureResponse mSetProfilePictureResponse;
 
     private EditText mNameEditText;
-    private EditText mEmailEditText;
-    private ImageView mEmailVerify;
 
     private EditText mFathersNameEditText;
     private EditText mMothersNameEditText;
@@ -57,14 +70,31 @@ public class EditBasicInfoFragment extends Fragment {
     private Spinner mGenderSpinner;
 
     private ImageView mDatePickerButton;
+    private RoundedImageView mProfilePictureView;
 
-    private RoundedImageView mProfilePicture;
-    private Set<UserProfilePictureClass> profilePictures;
+    private FloatingActionButton mSaveButton;
+    
+    private ProgressDialog mProgressDialog;
 
-    private int emailVerificationStatus;
-    private boolean profilePictureUpdated = false;
+    private SharedPreferences pref;
 
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
+
+    private String mName = "";
+    private String mDateOfBirth = "";
+    private String mProfilePicture;
+
+    private String mFathersName = "";
+    private String mMothersName = "";
+    private String mSpouseName = "";
+
+    private String mFathersMobileNumber = "";
+    private String mMothersMobileNumber = "";
+    private String mSpouseMobileNumber = "";
+
+    private int mOccupation = 0;
+    private String mGender = "";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,12 +106,23 @@ public class EditBasicInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        profilePictures = new HashSet<>();
+        Bundle bundle = getArguments();
 
-        mProfilePicture = (RoundedImageView) v.findViewById(R.id.profile_picture);
+        mName = bundle.getString(Constants.NAME);
+        mFathersName = bundle.getString(Constants.FATHERS_NAME);
+        mMothersName = bundle.getString(Constants.MOTHERS_NAME);
+        mSpouseName = bundle.getString(Constants.SPOUSES_NAME);
+        mFathersMobileNumber = bundle.getString(Constants.FATHERS_MOBILE_NUMBER);
+        mMothersMobileNumber = bundle.getString(Constants.MOTHERS_MOBILE_NUMBER);
+        mSpouseMobileNumber = bundle.getString(Constants.SPOUSES_MOBILE_NUMBER);
+        mProfilePicture = bundle.getString(Constants.PROFILE_PICTURE);
+        mGender = bundle.getString(Constants.GENDER);
+        mOccupation = bundle.getInt(Constants.OCCUPATION);
+
+        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mNameEditText = (EditText) v.findViewById(R.id.name);
-        mEmailEditText = (EditText) v.findViewById(R.id.email);
 
         mFathersNameEditText = (EditText) v.findViewById(R.id.fathers_name);
         mMothersNameEditText = (EditText) v.findViewById(R.id.mothers_name);
@@ -97,13 +138,10 @@ public class EditBasicInfoFragment extends Fragment {
 
         mOccupationSpinner = (Spinner) v.findViewById(R.id.occupation);
         mGenderSpinner = (Spinner) v.findViewById(R.id.gender);
-        mEmailVerify = (ImageView) v.findViewById(R.id.email_verification_status);
 
-        mProfilePicture.setOnClickListener(new View.OnClickListener() {
+        mProfilePictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivityForResult(new Intent(Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI), ACTION_PICK_PROFILE_PICTURE);
                 Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getActivity(), getString(R.string.select_an_image));
                 startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
             }
@@ -117,16 +155,6 @@ public class EditBasicInfoFragment extends Fragment {
                 android.R.layout.simple_dropdown_item_1line, GenderList.genderNames);
         mGenderSpinner.setAdapter(mAdapterGender);
 
-        mEmailVerify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = mEmailEditText.getText().toString().trim();
-                if (email.length() > 0 && emailVerificationStatus == Constants.EMAIL_VERIFICATION_STATUS_NOT_VERIFIED) {
-                    showAlertDialogue(getString(R.string.alert_verify_email));
-                }
-            }
-        });
-
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
         mDatePickerButton.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +163,18 @@ public class EditBasicInfoFragment extends Fragment {
                 dialog.show();
             }
         });
+
+        mSaveButton = (FloatingActionButton) v.findViewById(R.id.fab_save);
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (verifyUserInputs()) {
+                    attemptSaveBasicInfo();
+                }
+            }
+        });
+
+        mProgressDialog = new ProgressDialog(getActivity());
 
         setProfilePicture("");
         setProfileInformation();
@@ -145,6 +185,8 @@ public class EditBasicInfoFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        if (menu.findItem(R.id.action_search_contacts) != null)
+            menu.findItem(R.id.action_search_contacts).setVisible(false);
         inflater.inflate(R.menu.profile, menu);
     }
 
@@ -162,97 +204,102 @@ public class EditBasicInfoFragment extends Fragment {
         boolean cancel = false;
         View focusView = null;
 
-        if (mNameEditText.getText().toString().trim().length() == 0) {
+        mName = mNameEditText.getText().toString().trim();
+        mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
+
+        mFathersName = mFathersNameEditText.getText().toString().trim();
+        mMothersName = mMothersNameEditText.getText().toString().trim();
+        mSpouseName = mSpouseNameEditText.getText().toString().trim();
+
+        mFathersMobileNumber = mFathersMobileNumberEditText.getText().toString().trim();
+        mMothersMobileNumber = mMothersMobileNumberEditText.getText().toString().trim();
+        mSpouseMobileNumber = mSpouseMobileNumberEditText.getText().toString().trim();
+
+        mOccupation = mOccupationSpinner.getSelectedItemPosition();
+
+        mGender = GenderList.genderNameToCodeMap.get(
+                mGenderSpinner.getSelectedItem().toString());
+
+        if (mName.isEmpty()) {
             mNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameEditText;
             cancel = true;
-        } else if (Utilities.isValidEmail(mEmailEditText.getText().toString().trim())) {
-            mEmailEditText.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailEditText;
-            cancel = true;
+        }
+
+        if (!ContactEngine.isValidNumber(mFathersMobileNumber)) {
+            focusView = mFathersMobileNumberEditText;
+            mFathersMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+        }
+
+        if (!ContactEngine.isValidNumber(mMothersMobileNumber)) {
+            focusView = mMothersMobileNumberEditText;
+            mMothersMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+        }
+
+        if (!ContactEngine.isValidNumber(mSpouseMobileNumber)) {
+            focusView = mSpouseMobileNumberEditText;
+            mSpouseMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+        }
+
+        if (!Utilities.isDateOfBirthValid(mDateOfBirth)) {
+            focusView = mDateOfBirthEditText;
+            mDateOfBirthEditText.setError(getString(R.string.please_enter_valid_date_of_birth));
         }
 
         if (cancel) {
             focusView.requestFocus();
             return false;
         } else {
-            ProfileFragment.mEmailAddress = mEmailEditText.getText().toString().trim();
-            ProfileFragment.mName = mNameEditText.getText().toString().trim();
-            ProfileFragment.mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
-
-            ProfileFragment.mFathersName = mFathersNameEditText.getText().toString().trim();
-            ProfileFragment.mMothersName = mMothersNameEditText.getText().toString().trim();
-            ProfileFragment.mSpouseName = mSpouseNameEditText.getText().toString().trim();
-
-            ProfileFragment.mFathersMobileNumber = mFathersMobileNumberEditText.getText().toString().trim();
-            ProfileFragment.mMothersMobileNumber = mMothersMobileNumberEditText.getText().toString().trim();
-            ProfileFragment.mSpouseMobileNumber = mSpouseMobileNumberEditText.getText().toString().trim();
-            
-            ProfileFragment.mOccupation = mOccupationSpinner.getSelectedItemPosition();
-
-            ProfileFragment.mGender = GenderList.genderNameToCodeMap.get(
-                    mGenderSpinner.getSelectedItem().toString());
-
             return true;
         }
     }
+    
+    private void attemptSaveBasicInfo() {
+        mProgressDialog.setMessage(getString(R.string.saving_profile_information));
+        mProgressDialog.show();
+
+        Gson gson = new Gson();
+        
+        SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(
+                pref.getString(Constants.USERID, ""), mName, mGender, mDateOfBirth,
+                mOccupation, mFathersName,
+                mMothersName, mSpouseName,
+                mFathersMobileNumber, mMothersMobileNumber, mSpouseMobileNumber);
+
+        String profileInfoJson = gson.toJson(setProfileInfoRequest);
+        mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
+                Constants.BASE_URL + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, getActivity(), this);
+        mSetProfileInfoTask.execute();
+    }
 
     private void setProfileInformation() {
-        if (ProfileFragment.mProfilePictures.size() > 0) {
 
-            String imageUrl = "";
-            for (Iterator<UserProfilePictureClass> it = ProfileFragment.mProfilePictures.iterator(); it.hasNext(); ) {
-                UserProfilePictureClass userProfilePictureClass = it.next();
-                imageUrl = userProfilePictureClass.getUrl();
-                break;
-            }
-            setProfilePicture(imageUrl);
-        }
+        mNameEditText.setText(mName);
 
-        mNameEditText.setText(ProfileFragment.mName);
-        mEmailEditText.setText(ProfileFragment.mEmailAddress);
+        mFathersNameEditText.setText(mFathersName);
+        mMothersNameEditText.setText(mMothersName);
+        mSpouseNameEditText.setText(mSpouseName);
 
-        mFathersNameEditText.setText(ProfileFragment.mFathersName);
-        mMothersNameEditText.setText(ProfileFragment.mMothersName);
-        mSpouseNameEditText.setText(ProfileFragment.mSpouseName);
+        mFathersMobileNumberEditText.setText(mFathersMobileNumber);
+        mMothersMobileNumberEditText.setText(mMothersMobileNumber);
+        mSpouseMobileNumberEditText.setText(mSpouseMobileNumber);
 
-        mFathersMobileNumberEditText.setText(ProfileFragment.mFathersMobileNumber);
-        mMothersMobileNumberEditText.setText(ProfileFragment.mMothersMobileNumber);
-        mSpouseMobileNumberEditText.setText(ProfileFragment.mSpouseMobileNumber);
-
-        mDateOfBirthEditText.setText(ProfileFragment.mDateOfBirth);
+        mDateOfBirthEditText.setText(mDateOfBirth);
 
         // Set occupation spinner value
-        mOccupationSpinner.setSelection(ProfileFragment.mOccupation);
+        mOccupationSpinner.setSelection(mOccupation);
 
         String[] genderArray = GenderList.genderNames;
         for (int i = 0; i < genderArray.length; i++) {
             String genderCode = GenderList.genderNameToCodeMap.get(
                     genderArray[i]);
-            if (genderCode.equals(ProfileFragment.mGender)) {
+            if (genderCode.equals(mGender)) {
                 mGenderSpinner.setSelection(i);
                 break;
             }
         }
 
-        if (profilePictures.size() > 0) {
-
-            String imageUrl = "";
-            for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
-                UserProfilePictureClass userProfilePictureClass = it.next();
-                imageUrl = userProfilePictureClass.getUrl();
-                break;
-            }
-            setProfilePicture(imageUrl);
-        }
-
-        // Update preferences
-        // TODO: Date doesn't save in proper format in database
-//        if (userDOB.length() > 0) pref.edit().putString(Constants.BIRTHDAY, userDOB).commit();
-//        if (userGender.length() > 0) pref.edit().putString(Constants.GENDER, userGender).commit();
-//        if (userID.length() > 0) pref.edit().putString(Constants.USERID, userID).commit();
-//        if (userCountry != null && userCountry.length() > 0)
-//            pref.edit().putString(Constants.USERCOUNTRY, userCountry).commit();
+        setProfilePicture(mProfilePicture);
 
     }
 
@@ -267,20 +314,30 @@ public class EditBasicInfoFragment extends Fragment {
                         .crossFade()
                         .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))
-                        .into(mProfilePicture);
-                if (profilePictureUpdated) {
-                    ProfilePictureChangeListener listener = (ProfilePictureChangeListener) getActivity();
-                    listener.onProfilePictureChange(url);
-                }
+                        .into(mProfilePictureView);
             } else {
                 Glide.with(getActivity())
                         .load(R.drawable.ic_person)
                         .crossFade()
-                        .into(mProfilePicture);
+                        .into(mProfilePictureView);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void updateProfilePicture(Uri selectedImageUri) {
+        mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
+        mProgressDialog.show();
+
+        String selectedOImagePath = selectedImageUri.getPath();
+
+        mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
+                selectedOImagePath, getActivity());
+        mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
+        mUploadProfilePictureAsyncTask.execute();
+
+        ((ProfilePictureChangeListener) getActivity()).onProfilePictureChange(selectedOImagePath);
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener =
@@ -306,10 +363,7 @@ public class EditBasicInfoFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();
                     } else {
                         setProfilePicture(uri.toString());
-                        ProfileFragment.mProfilePictures.clear();
-                        ProfileFragment.mProfilePictures.add(new UserProfilePictureClass(
-                                uri.toString(), ""));
-                        ((EditProfileActivity) getActivity()).updateProfilePicture(uri);
+                        updateProfilePicture(uri);
                     }
 
                 }
@@ -319,29 +373,63 @@ public class EditBasicInfoFragment extends Fragment {
         }
     }
 
-    private void showAlertDialogue(String msg) {
-        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
-        alertDialogue.setMessage(msg);
-
-        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                String emailAddress = mEmailEditText.getText().toString().trim();
-                ProfileFragment.mEmailAddress = emailAddress;
-                ((EditProfileActivity) getActivity()).verifyEmail(emailAddress);
-            }
-        });
-
-        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-            }
-        });
-
-        alertDialogue.show();
-    }
-
     public interface ProfilePictureChangeListener {
         void onProfilePictureChange(String imageUrl);
     }
 
+    public void httpResponseReceiver(String result) {
+        if (result == null) {
+            mProgressDialog.dismiss();
+            mSetProfileInfoTask = null;
+            mUploadProfilePictureAsyncTask = null;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        List<String> resultList = Arrays.asList(result.split(";"));
+        Gson gson = new Gson();
+        if (resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)) {
+
+            try {
+                mSetProfileInfoResponse = gson.fromJson(resultList.get(2), SetProfileInfoResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ((HomeActivity) getActivity()).switchToBasicInfoFragment();
+                    }
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+            }
+
+            mSetProfileInfoTask = null;
+            mProgressDialog.dismiss();
+        } else if (resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
+            try {
+                mSetProfilePictureResponse = gson.fromJson(resultList.get(2), SetProfilePictureResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.profile_picture_get_failed, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.profile_picture_get_failed, Toast.LENGTH_SHORT).show();
+            }
+
+            mProgressDialog.dismiss();
+            mUploadProfilePictureAsyncTask = null;
+
+        }
+    }
 }

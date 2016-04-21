@@ -10,9 +10,7 @@ public class GetProfileInfoResponse {
     public String name;
     public String gender;
     public String dob;
-    public String email;
     public int occupation;
-    public int emailVerificationStatus;
     public int accountType;
     public String verificationStatus;
     public int verifiedByCount;
@@ -48,16 +46,8 @@ public class GetProfileInfoResponse {
         return dob;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public int getOccupation() {
         return occupation;
-    }
-
-    public int getEmailVerificationStatus() {
-        return emailVerificationStatus;
     }
 
     public int getAccountType() {
