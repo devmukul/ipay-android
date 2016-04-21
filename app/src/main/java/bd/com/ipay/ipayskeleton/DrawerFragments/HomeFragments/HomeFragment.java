@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         userID = pref.getString(Constants.USERID, "");
 
         if (pref.contains(Constants.UUID))
-            UUID = pref.getString(UUID, null);
+            UUID = pref.getString(Constants.UUID, null);
 
         TextView makePaymentOrRechargeLabel = (TextView) v.findViewById(R.id.textview_make_payment_or_recharge);
         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
