@@ -61,6 +61,16 @@
                         android:icon="@drawable/ic_drawer_address" />
 
                     <item
+                        android:id="@+id/nav_email_addresses"
+                        android:title="@string/email"
+                        android:icon="@drawable/ic_drawer_email" />
+
+                    <item
+                        android:id="@+id/nav_trusted_people"
+                        android:title="@string/trusted_people"
+                        android:icon="@drawable/ic_drawer_trusted_people" />
+
+                    <item
                         android:id="@+id/nav_profile_documents"
                         android:title="@string/profile_documents"
                         android:icon="@drawable/ic_drawer_documents" />
