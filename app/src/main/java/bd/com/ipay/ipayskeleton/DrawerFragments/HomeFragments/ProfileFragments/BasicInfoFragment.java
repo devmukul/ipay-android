@@ -211,6 +211,7 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
                 Constants.BASE_URL + "/" + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
         mGetProfileInfoTask.execute();
     }
+
     private void setProfilePicture(String url) {
         try {
             if (!url.equals("")) {

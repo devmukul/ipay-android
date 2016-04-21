@@ -494,6 +494,7 @@
     <string name="fathers_mobile_number">Father\'s Mobile Number</string>
     <string name="mothers_mobile_number">Mother\'s Mobile Number</string>
     <string name="spouses_mobile_number">Spouse\'s Mobile Number</string>
+    <string name="progress_dialog_identification_documents">Loading submitted document information...</string>
 
     <string-array name="account_types">
         <item>Personal</item>
