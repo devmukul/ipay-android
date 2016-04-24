@@ -28,6 +28,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
@@ -266,6 +268,21 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
                 mGetEmailResponse = gson.fromJson(resultList.get(2), GetEmailResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     mEmails = mGetEmailResponse.getEmailAdressList();
+
+                    Collections.sort(mEmails, new Comparator<Email>() {
+                        @Override
+                        public int compare(Email lhs, Email rhs) {
+
+                            if ((lhs.isPrimary() && !rhs.isPrimary()) || (!lhs.isPrimary() && rhs.isPrimary())) {
+                                if (lhs.isPrimary())
+                                    return -1;
+                                else
+                                    return 1;
+                            } else {
+                                return (int) (lhs.getEmailId() - rhs.getEmailId());
+                            }
+                        }
+                    });
 
                     mEmailListAdapter.notifyDataSetChanged();
                 } else {
