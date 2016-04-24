@@ -164,10 +164,6 @@ public class HomeActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new ProfileFragment()).commit();
-                switchedToHomeFragment = false;
-                return true;
             case R.id.action_transaction_history:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
                 switchedToHomeFragment = false;
