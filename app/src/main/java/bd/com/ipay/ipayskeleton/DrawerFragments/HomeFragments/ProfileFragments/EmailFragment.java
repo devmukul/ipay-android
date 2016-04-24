@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,12 +12,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -35,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailResponse
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryEmailResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmailFragment extends Fragment implements HttpResponseListener {
 
@@ -42,7 +49,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
     private GetEmailResponse mGetEmailResponse;
 
     private HttpRequestPostAsyncTask mAddNewEmailTask = null;
-    private AddNewEmailResponse mNewEmailResponse;
+    private AddNewEmailResponse mAddNewEmailResponse;
 
     private HttpRequestDeleteAsyncTask mDeleteEmailTask = null;
     private DeleteEmailResponse mDeleteEmailResponse;
@@ -56,6 +63,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
     private List<Email> mEmails;
     private EmailListAdapter mEmailListAdapter;
 
+    private Button mAddNewEmailButton;
     private RecyclerView mEmailListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -79,6 +87,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_email, container, false);
 
+        mAddNewEmailButton = (Button) v.findViewById(R.id.button_add_email);
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -88,9 +97,47 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
         mEmailListRecyclerView.setLayoutManager(mLayoutManager);
         mEmailListRecyclerView.setAdapter(mEmailListAdapter);
 
+        mAddNewEmailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddNewEmailDialog();
+            }
+        });
+
         loadEmails();
 
         return v;
+    }
+
+    private void showAddNewEmailDialog() {
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.add_an_email)
+                .customView(R.layout.dialog_add_new_email, true)
+                .positiveText(R.string.add)
+                .negativeText(R.string.cancel)
+                .build();
+
+        View view = dialog.getCustomView();
+
+        final EditText emailView = (EditText) view.findViewById(R.id.edit_text_email);
+
+        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                String email = emailView.getText().toString().trim();
+
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
+
+                if (!Utilities.isValidEmail(email)) {
+                    Toast.makeText(getActivity(), R.string.enter_valid_email, Toast.LENGTH_LONG).show();
+                } else {
+                    addNewEmail(email);
+                }
+            }
+        });
+
+        dialog.show();
     }
 
     private void loadEmails() {
@@ -137,12 +184,12 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
     }
 
 
-
     @Override
     public void httpResponseReceiver(String result) {
-        if (result == null) {
-            mProgressDialog.dismiss();
 
+        mProgressDialog.dismiss();
+
+        if (result == null) {
             mGetEmailsTask = null;
             mAddNewEmailTask = null;
             mAddNewEmailTask = null;
@@ -173,13 +220,31 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    Toast.makeText(getActivity(), "Failed to load emails", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.failed_loading_emails, Toast.LENGTH_LONG).show();
                     ((HomeActivity) getActivity()).switchToDashBoard();
                 }
             }
+
+            mGetEmailsTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_ADD_NEW_EMAIL)) {
+            try {
+                mAddNewEmailResponse = gson.fromJson(resultList.get(2), AddNewEmailResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    loadEmails();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_add_email, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            mAddNewEmailTask = null;
         }
 
-        mProgressDialog.dismiss();
     }
 
 
@@ -196,7 +261,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
             private Button removeButton;
             private Button verifyButton;
             private Button makePrimaryButton;
-            private View verifyDivider;
+            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -206,8 +271,10 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.email_verification_status);
 
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                removeButton = (Button) itemView.findViewById(R.id.remove_button);
-                verifyButton = (Button) itemView.findViewById(R.id.verify_button);
+                divider = itemView.findViewById(R.id.divider);
+
+                removeButton = (Button) itemView.findViewById(R.id.button_remove);
+                verifyButton = (Button) itemView.findViewById(R.id.button_verify);
                 makePrimaryButton = (Button) itemView.findViewById(R.id.button_make_primary);
             }
 
@@ -226,11 +293,19 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
                 } else {
                     makePrimaryButton.setVisibility(View.GONE);
                     verifyButton.setVisibility(View.GONE);
+                    divider.setVisibility(View.GONE);
                 }
 
                 if (email.isPrimary()) {
                     mIsPrimaryView.setVisibility(View.VISIBLE);
                 }
+
+                removeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteEmail(email.getEmailId());
+                    }
+                });
 
                 mEmailView.setText(email.getEmailAddress());
 
@@ -272,7 +347,6 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             try {
                 ViewHolder vh = (ViewHolder) holder;
                 vh.bindView(position);

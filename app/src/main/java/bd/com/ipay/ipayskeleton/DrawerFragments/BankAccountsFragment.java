@@ -102,7 +102,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private List<UserBankClass> mListUserBankClasses;
     private String[] bankAccountTypes;
     private ArrayList<BankBranch> bankBranches;
-    private ArrayList<String> bankBrancheNames;
+    private ArrayList<String> bankBranchNames;
     ArrayAdapter<String> mBranchAdapter;
 
     @Override
@@ -130,8 +130,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         View v = inflater.inflate(R.layout.fragment_bank_accounts, container, false);
         ((HomeActivity) getActivity()).setTitle(R.string.bank_accounts);
         bankBranches = new ArrayList<BankBranch>();
-        bankBrancheNames = new ArrayList<>();
-        mBranchAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, bankBrancheNames);
+        bankBranchNames = new ArrayList<>();
+        mBranchAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, bankBranchNames);
 
         mBankListRecyclerView = (RecyclerView) v.findViewById(R.id.list_bank);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
@@ -572,11 +572,11 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     mGetBankBranchesResponse = gson.fromJson(resultList.get(2), GetBankBranchesResponse.class);
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         bankBranches.clear();
-                        bankBrancheNames.clear();
+                        bankBranchNames.clear();
 
                         bankBranches = (ArrayList) mGetBankBranchesResponse.getAvailableBranches();
                         for (BankBranch branch : bankBranches) {
-                            bankBrancheNames.add(branch.getName());
+                            bankBranchNames.add(branch.getName());
                         }
 
                         mBranchAdapter.notifyDataSetChanged();

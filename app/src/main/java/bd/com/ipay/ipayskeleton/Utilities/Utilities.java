@@ -274,7 +274,7 @@ public class Utilities {
     public static boolean isValidEmail(String email) {
         Pattern emailPattern = Pattern.compile("[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+");
         Matcher m = emailPattern.matcher(email);
-        return !m.matches();
+        return m.matches();
     }
 
     public static String formatTaka(BigDecimal amount) {

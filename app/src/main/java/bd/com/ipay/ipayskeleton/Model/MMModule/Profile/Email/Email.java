@@ -21,4 +21,14 @@ public class Email {
     public String getVerificationStatus() {
         return verificationStatus;
     }
+
+    @Override
+    public String toString() {
+        return "Email{" +
+                "emailId=" + emailId +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", primary=" + primary +
+                ", verificationStatus='" + verificationStatus + '\'' +
+                '}';
+    }
 }

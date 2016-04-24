@@ -17,7 +17,7 @@
 
             <TextView
                 android:id="@+id/textview_email"
-                style="@style/TextStylePrimaryMedium"
+                style="@style/TextStyleSecondaryMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -31,6 +31,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
                 android:padding="@dimen/activity_horizontal_margin" />
 
             <TextView
@@ -38,7 +40,6 @@
                 android:layout_below="@+id/textview_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:textStyle="bold"
                 android:visibility="gone"
                 android:text="@string/primary_email"/>
@@ -83,7 +84,7 @@
                         android:textSize="12sp" />
 
                     <View
-                        android:id="@+id/verify_divider"
+                        android:id="@+id/divider"
                         android:layout_width="1px"
                         android:layout_height="match_parent"
                         android:background="@color/colorDivider" />

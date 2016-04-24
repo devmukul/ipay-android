@@ -510,6 +510,9 @@
     <string name="progress_dialog_delete_email">Deleting email..</string>
     <string name="make_primary">Make Primary</string>
     <string name="primary_email">Primary Email</string>
+    <string name="failed_loading_emails">Failed to load emails</string>
+    <string name="enter_valid_email">Please enter an valid email</string>
+    <string name="failed_add_email">Failed adding email</string>
 
     <string-array name="account_types">
         <item>Personal</item>

@@ -153,7 +153,7 @@ public class EditBasicInfoFragment extends Fragment {
             mNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameEditText;
             cancel = true;
-        } else if (Utilities.isValidEmail(mEmailEditText.getText().toString().trim())) {
+        } else if (!Utilities.isValidEmail(mEmailEditText.getText().toString().trim())) {
             mEmailEditText.setError(getString(R.string.error_invalid_email));
             focusView = mEmailEditText;
             cancel = true;
