@@ -435,7 +435,8 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
                     mVerificationStatus.setColorFilter(Color.GRAY);
 
                     makePrimaryButton.setVisibility(View.GONE);
-                    verifyButton.setVisibility(View.VISIBLE);
+                    verifyButton.setVisibility(View.GONE);
+                    divider.setVisibility(View.GONE);
                 } else {
                     mVerificationStatus.setImageResource(R.drawable.ic_error_black_24dp);
                     mVerificationStatus.setColorFilter(Color.RED);
