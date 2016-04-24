@@ -1,18 +1,14 @@
 package bd.com.ipay.ipayskeleton.Customview;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
 import bd.com.ipay.ipayskeleton.Utilities.Common.DistrictList;

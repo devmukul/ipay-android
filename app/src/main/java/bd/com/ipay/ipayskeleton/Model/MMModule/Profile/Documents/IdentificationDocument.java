@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

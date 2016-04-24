@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
 
 public class Introducer {
     private String name;

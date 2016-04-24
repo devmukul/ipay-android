@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationTrustFrag
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupPersonalFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

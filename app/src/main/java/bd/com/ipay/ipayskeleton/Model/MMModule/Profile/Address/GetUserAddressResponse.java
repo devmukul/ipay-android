@@ -1,7 +1,8 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class GetUserAddressResponse {

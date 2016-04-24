@@ -29,8 +29,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;

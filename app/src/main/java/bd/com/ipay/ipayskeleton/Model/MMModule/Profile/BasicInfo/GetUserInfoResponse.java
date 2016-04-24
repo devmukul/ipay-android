@@ -1,9 +1,9 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 
 public class GetUserInfoResponse {
 

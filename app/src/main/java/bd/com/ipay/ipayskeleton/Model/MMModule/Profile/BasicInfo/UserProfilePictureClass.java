@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Profile;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
 public class UserProfilePictureClass {
 

@@ -161,6 +161,12 @@ public class Constants {
     public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
     public static final String URL_SERVICE_CHARGE = "feecharge";
     public static final String URL_GET_PIN_INFO = "settings/pin";
+    public static final String URL_GET_EMAIL = "/user/emails";
+    public static final String URL_POST_EMAIL = "/user/emails";
+    public static final String URL_DELETE_EMAIL = "/user/emails/";
+    public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
+    public static final String URL_MAKE_VERIFIED = "/verification";
+
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
     public static final String HTTP_RESPONSE_STATUS_NOT_FOUND = "404";
@@ -262,6 +268,13 @@ public class Constants {
     public static final String COMMAND_GET_INVITE_INFO = "COMMAND_GET_INVITE_INFO";
     public static final String COMMAND_SEND_INVITE = "COMMAND_SEND_INVITE";
 
+    // Email
+    public static final String COMMAND_GET_EMAILS = "COMMAND_GET_EMAILS";
+    public static final String COMMAND_ADD_NEW_EMAIL = "COMMAND_ADD_NEW_EMAIL";
+    public static final String COMMAND_EMAIL_VERIFICATION = "COMMAND_EMAIL_VERIFICATION";
+    public static final String COMMAND_EMAIL_MAKE_PRIMARY = "COMMAND_EMAIL_MAKE_PRIMARY";
+    public static final String COMMAND_DELETE_EMAIL = "COMMAND_DELETE_EMAIL";
+
     // FireBase
     public static final String PATH_TO_FIREBASE_DATABASE;
 
@@ -297,9 +310,9 @@ public class Constants {
     public static final int ACTIVITY_TYPE_SYSTEM_EVENT = 4;
     public static final int ACTIVITY_TYPE_CHANGE_SECURITY = 5;
 
-    public static final int EMAIL_VERIFICATION_STATUS_VERIFIED = 2;
-    public static final int EMAIL_VERIFICATION_STATUS_NOT_VERIFIED = 0;
-    public static final int EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS = 1;
+    public static final String EMAIL_VERIFICATION_STATUS_VERIFIED = "IN_PROGRESS";
+    public static final String EMAIL_VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
+    public static final String EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS = "VERIFIED";
 
     public static final int EVENT_STATUS_ACTIVE = 1;
     public static final int EVENT_STATUS_INACTIVE = 2;
@@ -336,6 +349,8 @@ public class Constants {
     public static final String POST_REQUEST = "POST_RESULT: ";
     public static final String GET_REQUEST = "GET_RESULT: ";
     public static final String GET_URL = "GET_URL: ";
+    public static final String DELETE_URL = "DELETE_URL: ";
+    public static final String DELETE_REQUEST = "GET_RESULT: ";
 
     public static final String PARSED_TOKEN = "Parsed Token: ";
     public static final String SUCCESS = "SUCCESS";

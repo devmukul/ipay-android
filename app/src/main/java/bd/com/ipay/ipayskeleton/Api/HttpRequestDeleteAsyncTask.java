@@ -2,10 +2,7 @@ package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,56 +12,61 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class DownloadProfilePictureGetAsyncTask extends AsyncTask<Void, Void, String> {
+public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
+
+    public HttpResponseListener mHttpResponseListener;
 
     private String mUri;
-    private String mUserID;
     private Context mContext;
     private String API_COMMAND;
     private HttpResponse mHttpResponse;
 
-    public DownloadProfilePictureGetAsyncTask(String API_COMMAND, String mUri, String mUserID, Context mContext) {
+    boolean error = false;
+
+    public HttpRequestDeleteAsyncTask(String API_COMMAND, String mUri, Context mContext) {
+        this(API_COMMAND, mUri, mContext, null);
+    }
+
+    public HttpRequestDeleteAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
         this.API_COMMAND = API_COMMAND;
         this.mUri = mUri;
-        this.mUserID = mUserID;
         this.mContext = mContext;
+        this.mHttpResponseListener = listener;
     }
 
     @Override
     protected String doInBackground(Void... params) {
+        if (Constants.DEBUG) {
+            Log.w(Constants.DELETE_URL, mUri);
+        }
 
         if (Utilities.isConnectionAvailable(mContext))
             mHttpResponse = makeRequest(mUri);
-        else
-            Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+        else {
+            error = true;
+            return null;
+        }
 
-        InputStream input = null;
-        InputStream response = null;
+        InputStream inputStream = null;
         String result = null;
 
         try {
@@ -89,67 +91,22 @@ public class DownloadProfilePictureGetAsyncTask extends AsyncTask<Void, Void, St
                 }
             }
 
-            response = entity.getContent();
+            inputStream = entity.getContent();
             // json is UTF-8 by default
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response, "UTF-8"), 8);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
             StringBuilder sb = new StringBuilder();
 
             String line = null;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
-
-            Gson gson = new Gson();
-            String profilePictureUrl = "";
-            GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(sb.toString(), GetUserInfoResponse.class);
-            List<UserProfilePictureClass> profilePictures = mGetUserInfoResponse.getProfilePictures();
-
-            if (profilePictures.size() > 0) {
-                for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
-                    UserProfilePictureClass userProfilePictureClass = it.next();
-                    profilePictureUrl = userProfilePictureClass.getUrl();
-                    break;
-                }
-            }
-
-            // json is UTF-8 by default
-            try {
-                if (profilePictureUrl.length() > 0) {
-                    File dir = new File(Environment.getExternalStorageDirectory().getPath()
-                            + Constants.PICTURE_FOLDER);
-                    if (!dir.exists()) dir.mkdir();
-
-                    File file = new File(dir, mUserID.replaceAll("[^0-9]", "") + ".jpg");
-
-                    URL url = new URL(Constants.BASE_URL_IMAGE_SERVER + profilePictureUrl);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoInput(true);
-                    connection.connect();
-                    input = connection.getInputStream();
-                    Bitmap myBitmap = BitmapFactory.decodeStream(input);
-
-                    FileOutputStream stream = new FileOutputStream(file);
-
-                    ByteArrayOutputStream outstream = new ByteArrayOutputStream();
-                    myBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outstream);
-                    byte[] byteArray = outstream.toByteArray();
-
-                    stream.write(byteArray);
-                    stream.close();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            result = API_COMMAND + ";" + status;
+            result = API_COMMAND + ";" + status + ";" + sb.toString();
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
-                if (input != null) input.close();
-                if (response != null) response.close();
+                if (inputStream != null) inputStream.close();
             } catch (Exception squish) {
                 squish.printStackTrace();
             }
@@ -160,25 +117,61 @@ public class DownloadProfilePictureGetAsyncTask extends AsyncTask<Void, Void, St
 
     @Override
     protected void onPostExecute(final String result) {
+        if (error) {
+            Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (Constants.DEBUG) {
+            if (result == null)
+                Log.e(Constants.RESULT, "NULL");
+            else
+                Log.w(Constants.RESULT, Constants.DELETE_REQUEST + result);
+        }
 
         if (result != null) {
             List<String> resultList = Arrays.asList(result.split(";"));
 
             if (resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED)) {
-                // In case of un-authorization go to login activity
+                String message = mContext.getString(R.string.please_log_in_again);
+                if (resultList.size() > 2) {
+                    try {
+                        Gson gson = new Gson();
+                        message = gson.fromJson(resultList.get(2), LoginResponse.class).getMessage();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
+                intent.putExtra(SignupOrLoginActivity.MESSAGE, message);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 mContext.startActivity(intent);
+
+            } else {
+                if (mHttpResponseListener != null)
+                    mHttpResponseListener.httpResponseReceiver(result);
             }
+
+        } else {
+            if (mHttpResponseListener != null)
+                mHttpResponseListener.httpResponseReceiver(null);
         }
 
     }
 
+    @Override
+    protected void onCancelled() {
+        mHttpResponseListener.httpResponseReceiver(null);
+    }
+
     public static HttpResponse makeRequest(String uri) {
         try {
-            HttpGet httpGet = new HttpGet(uri);
+            HttpDelete httpDelete = new HttpDelete(uri);
+
             if (HomeActivity.iPayToken.length() > 0)
-                httpGet.setHeader("token", HomeActivity.iPayToken);
-            return new DefaultHttpClient().execute(httpGet);
+                httpDelete.setHeader("token", HomeActivity.iPayToken);
+            return new DefaultHttpClient().execute(httpDelete);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {

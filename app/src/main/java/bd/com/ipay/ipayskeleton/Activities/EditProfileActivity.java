@@ -31,11 +31,10 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.O
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.EditUserAddressFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetProfilePictureResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetUserAddressRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.SetUserAddressResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfilePictureResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Verification.EmailVerificationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Verification.EmailVerificationResponse;
 import bd.com.ipay.ipayskeleton.R;

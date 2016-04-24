@@ -21,9 +21,8 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IdentificationDocument;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.UploadDocumentResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.IdentificationDocument;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;

@@ -14,8 +14,8 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.CreateInvoiceReviewFragment;
 import bd.com.ipay.ipayskeleton.R;

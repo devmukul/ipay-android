@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 
 public class SignupRequestBusiness {
 

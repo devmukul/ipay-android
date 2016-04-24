@@ -504,6 +504,12 @@
     <string name="progress_dialog_address">Loading addresses...</string>
     <string name="progress_dialog_saving_address">Saving address...</string>
     <string name="trusted_network">Trusted Network</string>
+    <string name="add_an_email">Add an Email</string>
+    <string name="progress_dialog_loading_emails">Loading emails..</string>
+    <string name="progress_dialog_add_email">Adding email...</string>
+    <string name="progress_dialog_delete_email">Deleting email..</string>
+    <string name="make_primary">Make Primary</string>
+    <string name="primary_email">Primary Email</string>
 
     <string-array name="account_types">
         <item>Personal</item>
