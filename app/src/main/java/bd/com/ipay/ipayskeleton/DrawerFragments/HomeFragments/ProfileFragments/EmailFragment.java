@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -327,12 +328,20 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
                 final String verificationStatus = email.getVerificationStatus();
 
                 if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)) {
+                    mVerificationStatus.setImageResource(R.drawable.ic_verified);
+
                     makePrimaryButton.setVisibility(View.VISIBLE);
                     verifyButton.setVisibility(View.GONE);
                 } else if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
+                    mVerificationStatus.setImageResource(R.drawable.ic_error_black_24dp);
+                    mVerificationStatus.setColorFilter(Color.RED);
+
                     makePrimaryButton.setVisibility(View.GONE);
                     verifyButton.setVisibility(View.VISIBLE);
                 } else {
+                    mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
+                    mVerificationStatus.setColorFilter(Color.GRAY);
+
                     makePrimaryButton.setVisibility(View.GONE);
                     verifyButton.setVisibility(View.GONE);
                     divider.setVisibility(View.GONE);

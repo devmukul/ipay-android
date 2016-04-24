@@ -15,40 +15,55 @@
             android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingTop="@dimen/activity_horizontal_margin_card">
 
-            <TextView
-                android:id="@+id/textview_email"
-                style="@style/TextStyleSecondaryMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/bank_account_verify_status"
-                android:gravity="left"
-                android:singleLine="true" />
-
-            <ImageView
-                android:id="@+id/email_verification_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
-                android:padding="@dimen/activity_horizontal_margin" />
-
-            <TextView
-                android:id="@+id/textview_is_primary"
-                android:layout_below="@+id/textview_email"
+            <RelativeLayout
+                android:id="@+id/info_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:visibility="gone"
-                android:text="@string/primary_email"/>
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/email_holder"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textview_email"
+                        style="@style/TextStyleSecondaryMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_toLeftOf="@+id/bank_account_verify_status"
+                        android:gravity="left"
+                        android:singleLine="true" />
+
+                    <TextView
+                        android:id="@+id/textview_is_primary"
+                        android:layout_below="@+id/textview_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:text="@string/primary_email"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/email_verification_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignBaseline="@+id/email_holder"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_verified"
+                    android:padding="@dimen/activity_horizontal_margin" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/options_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textview_is_primary"
+                android:layout_below="@+id/info_layout"
                 android:layout_marginTop="@dimen/value10"
                 android:orientation="vertical"
                 android:visibility="gone">
