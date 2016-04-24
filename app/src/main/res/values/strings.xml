@@ -514,6 +514,10 @@
     <string name="enter_valid_email">Please enter an valid email</string>
     <string name="failed_add_email">Failed adding email</string>
     <string name="failed_delete_email">Failed to delete email</string>
+    <string name="progress_dialog_sending_verification_mail">Sending verification mail...</string>
+    <string name="progress_dialog_make_primary_email">Making this email primary...</string>
+    <string name="failed_sending_verification_request">Failed to send verification request</string>
+    <string name="failed_make_primary">Failed to make this primary email</string>
 
     <string-array name="account_types">
         <item>Personal</item>

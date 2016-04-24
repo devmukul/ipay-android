@@ -179,20 +179,20 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
     }
 
     public void verifyEmail(String emailAddress) {
-        if (mEmailVerificationAsyncTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.sending_email_to_your_email_account));
-        mProgressDialog.show();
-
-        EmailVerificationRequest mEmailVerificationRequest = new EmailVerificationRequest(emailAddress);
-        Gson gson = new Gson();
-        String json = gson.toJson(mEmailVerificationRequest);
-        mEmailVerificationAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_VERIFICATION_REQUEST,
-                Constants.BASE_URL + Constants.URL_EMAIL_VERIFICATION, json, EditProfileActivity.this);
-        mEmailVerificationAsyncTask.mHttpResponseListener = this;
-        mEmailVerificationAsyncTask.execute((Void) null);
+//        if (mEmailVerificationAsyncTask != null) {
+//            return;
+//        }
+//
+//        mProgressDialog.setMessage(getString(R.string.sending_email_to_your_email_account));
+//        mProgressDialog.show();
+//
+//        EmailVerificationRequest mEmailVerificationRequest = new EmailVerificationRequest(emailAddress);
+//        Gson gson = new Gson();
+//        String json = gson.toJson(mEmailVerificationRequest);
+//        mEmailVerificationAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_VERIFICATION_REQUEST,
+//                Constants.BASE_URL + Constants.URL_EMAIL_VERIFICATION, json, EditProfileActivity.this);
+//        mEmailVerificationAsyncTask.mHttpResponseListener = this;
+//        mEmailVerificationAsyncTask.execute((Void) null);
 
     }
 

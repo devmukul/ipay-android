@@ -122,7 +122,6 @@ public class Constants {
     public static final String URL_RESOURCE = "resource";
     public static final String URL_GET_NEWS_FEED = "news";
     public static final String URL_TOPUP_REQUEST = "topup/dotopup";
-    public static final String URL_EMAIL_VERIFICATION = "settings/email/verification";
     public static final String URL_SET_PIN = "settings/pin/change";
     public static final String URL_CHANGE_PASSWORD = "settings/password/change";
     public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
@@ -161,11 +160,11 @@ public class Constants {
     public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
     public static final String URL_SERVICE_CHARGE = "feecharge";
     public static final String URL_GET_PIN_INFO = "settings/pin";
-    public static final String URL_GET_EMAIL = "/user/emails";
-    public static final String URL_POST_EMAIL = "/user/emails";
+    public static final String URL_GET_EMAIL = "/user/emails/";
+    public static final String URL_POST_EMAIL = "/user/emails/";
     public static final String URL_DELETE_EMAIL = "/user/emails/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
-    public static final String URL_MAKE_VERIFIED = "/verification";
+    public static final String URL_MAKE_EMAIL_VERIFIED = "/verification";
 
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
@@ -310,9 +309,9 @@ public class Constants {
     public static final int ACTIVITY_TYPE_SYSTEM_EVENT = 4;
     public static final int ACTIVITY_TYPE_CHANGE_SECURITY = 5;
 
-    public static final String EMAIL_VERIFICATION_STATUS_VERIFIED = "IN_PROGRESS";
+    public static final String EMAIL_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
     public static final String EMAIL_VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
-    public static final String EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS = "VERIFIED";
+    public static final String EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS = "IN_PROGRESS";
 
     public static final int EVENT_STATUS_ACTIVE = 1;
     public static final int EVENT_STATUS_INACTIVE = 2;

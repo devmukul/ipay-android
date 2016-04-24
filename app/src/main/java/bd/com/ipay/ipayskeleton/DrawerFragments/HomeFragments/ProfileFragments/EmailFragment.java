@@ -38,10 +38,12 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.DeleteEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.Email;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.EmailVerificationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.EmailVerificationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryEmailResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -201,6 +203,43 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
         mDeleteEmailTask.execute();
     }
 
+    private void verifyEmail(long id) {
+        if (mEmailVerificationTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_verification_mail));
+        mProgressDialog.show();
+
+        EmailVerificationRequest emailVerificationRequest = new EmailVerificationRequest();
+        Gson gson = new Gson();
+        String json = gson.toJson(emailVerificationRequest);
+
+        mEmailVerificationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_VERIFICATION,
+                Constants.BASE_URL + Constants.URL_POST_EMAIL + id + Constants.URL_MAKE_EMAIL_VERIFIED,
+                json, getActivity(), this);
+        mEmailVerificationTask.execute();
+    }
+
+
+    private void makeEmailPrimary(long id) {
+        if (mMakePrimaryEmailTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_make_primary_email));
+        mProgressDialog.show();
+
+        MakePrimaryRequest makePrimaryRequest = new MakePrimaryRequest();
+        Gson gson = new Gson();
+        String json = gson.toJson(makePrimaryRequest);
+
+        mMakePrimaryEmailTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_MAKE_PRIMARY,
+                Constants.BASE_URL + Constants.URL_POST_EMAIL + id + Constants.URL_MAKE_PRIMARY_EMAIL,
+                json, getActivity(), this);
+        mMakePrimaryEmailTask.execute();
+    }
+
 
     @Override
     public void httpResponseReceiver(String result) {
@@ -286,6 +325,48 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
             }
 
             mDeleteEmailTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_EMAIL_VERIFICATION)) {
+            try {
+                mEmailVerificationResponse = gson.fromJson(resultList.get(2), EmailVerificationResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    loadEmails();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mEmailVerificationResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mEmailVerificationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_sending_verification_request, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            mEmailVerificationTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_EMAIL_MAKE_PRIMARY)) {
+            try {
+                makePrimaryEmailResponse = gson.fromJson(resultList.get(2), MakePrimaryEmailResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    loadEmails();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), makePrimaryEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), makePrimaryEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_make_primary, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            mMakePrimaryEmailTask = null;
         }
 
     }
@@ -332,29 +413,44 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
 
                     makePrimaryButton.setVisibility(View.VISIBLE);
                     verifyButton.setVisibility(View.GONE);
-                } else if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
+                } else if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)) {
+                    mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
+                    mVerificationStatus.setColorFilter(Color.GRAY);
+
+                    makePrimaryButton.setVisibility(View.GONE);
+                    verifyButton.setVisibility(View.VISIBLE);
+                } else {
                     mVerificationStatus.setImageResource(R.drawable.ic_error_black_24dp);
                     mVerificationStatus.setColorFilter(Color.RED);
 
                     makePrimaryButton.setVisibility(View.GONE);
                     verifyButton.setVisibility(View.VISIBLE);
-                } else {
-                    mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
-                    mVerificationStatus.setColorFilter(Color.GRAY);
-
-                    makePrimaryButton.setVisibility(View.GONE);
-                    verifyButton.setVisibility(View.GONE);
-                    divider.setVisibility(View.GONE);
                 }
 
                 if (email.isPrimary()) {
                     mIsPrimaryView.setVisibility(View.VISIBLE);
+
+                    optionsLayout.setVisibility(View.GONE);
                 }
 
                 removeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showDeleteEmailConfirmationDialog(email);
+                    }
+                });
+
+                verifyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        verifyEmail(email.getEmailId());
+                    }
+                });
+
+                makePrimaryButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        makeEmailPrimary(email.getEmailId());
                     }
                 });
 
