@@ -269,14 +269,6 @@
                     android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
             </LinearLayout>
 
-
-            <Button
-                android:id="@+id/button_save"
-                style="@style/ButtonStyleMain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/save" />
-
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

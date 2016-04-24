@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -58,8 +59,6 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
     private TextView mOccupationView;
     private TextView mGenderView;
 
-    private Button mEditButton;
-
     private SharedPreferences pref;
 
     private String mName = "";
@@ -91,6 +90,18 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         super.onCreateOptionsMenu(menu, inflater);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
+
+        inflater.inflate(R.menu.edit, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_edit) {
+            launchEditFragment();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -118,15 +129,6 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
         mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
         mGenderView = (TextView) v.findViewById(R.id.textview_gender);
-
-        mEditButton = (Button) v.findViewById(R.id.button_edit);
-
-        mEditButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchEditFragment();
-            }
-        });
 
         mMobileNumber = pref.getString(Constants.USERID, "");
         mGender = pref.getString(Constants.GENDER, "");

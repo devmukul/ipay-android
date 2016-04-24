@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,8 +12,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -65,8 +68,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private Spinner mOccupationSpinner;
     private Spinner mGenderSpinner;
 
-    private Button mSaveButton;
-
     private ImageView mDatePickerButton;
     private RoundedImageView mProfilePictureView;
 
@@ -102,6 +103,26 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         super.onCreateOptionsMenu(menu, inflater);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
+
+        inflater.inflate(R.menu.save, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_save) {
+            if (verifyUserInputs()) {
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
+                attemptSaveBasicInfo();
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -137,8 +158,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
 
-        mSaveButton = (Button) v.findViewById(R.id.button_save);
-
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
 
         mOccupationSpinner = (Spinner) v.findViewById(R.id.occupation);
@@ -166,14 +185,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             @Override
             public void onClick(View v) {
                 dialog.show();
-            }
-        });
-
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (verifyUserInputs())
-                    attemptSaveBasicInfo();
             }
         });
 

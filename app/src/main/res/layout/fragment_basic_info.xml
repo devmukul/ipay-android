@@ -188,14 +188,6 @@
                     android:layout_below="@+id/textview_occupation" />
             </RelativeLayout>
 
-
-            <Button
-                android:id="@+id/button_edit"
-                style="@style/ButtonStyleMain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/edit" />
-
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
