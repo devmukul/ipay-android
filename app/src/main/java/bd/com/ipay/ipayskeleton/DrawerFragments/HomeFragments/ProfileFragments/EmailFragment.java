@@ -2,10 +2,12 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -140,6 +142,21 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
         dialog.show();
     }
 
+    private void showDeleteEmailConfirmationDialog(final Email email) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.are_you_sure)
+                .setMessage("Remove this email address?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteEmail(email.getEmailId());
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null);
+
+        dialog.show();
+    }
+
     private void loadEmails() {
         if (mGetEmailsTask != null) {
             return;
@@ -234,6 +251,10 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -243,6 +264,27 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
             }
 
             mAddNewEmailTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_DELETE_EMAIL)) {
+            try {
+                mDeleteEmailResponse = gson.fromJson(resultList.get(2), DeleteEmailResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    loadEmails();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mDeleteEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mDeleteEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_delete_email, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            mDeleteEmailTask = null;
         }
 
     }
@@ -303,7 +345,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
                 removeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deleteEmail(email.getEmailId());
+                        showDeleteEmailConfirmationDialog(email);
                     }
                 });
 
