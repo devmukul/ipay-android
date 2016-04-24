@@ -74,30 +74,18 @@
                 style="@style/ProfileCardLayoutStyle"
                 android:layout_marginTop="18dp">
 
-                <TextView
-                    android:id="@+id/textview_date_of_birth_label"
-                    style="@style/ProfileLabelStyle"
-                    android:layout_alignParentTop="true"
-                    android:layout_toLeftOf="@+id/textview_date_of_birth"
-                    android:text="@string/date_of_birth" />
-
-                <TextView
-                    android:id="@+id/textview_date_of_birth"
-                    style="@style/ProfileTextStyle"
-                    android:layout_alignParentTop="true" />
-
                 <!-- Relative names -->
                 <TextView
                     android:id="@+id/textview_fathers_name_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_below="@+id/textview_date_of_birth"
+                    android:layout_alignParentTop="true"
                     android:layout_toLeftOf="@+id/textview_fathers_name"
                     android:text="@string/fathers_name" />
 
                 <TextView
                     android:id="@+id/textview_fathers_name"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_date_of_birth" />
+                    android:layout_alignParentTop="true" />
 
                 <TextView
                     android:id="@+id/textview_mothers_name_label"
