@@ -186,6 +186,7 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
         }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_address));
+        mProgressDialog.show();
 
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this);
@@ -194,8 +195,9 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
 
     @Override
     public void httpResponseReceiver(String result) {
+        mProgressDialog.dismiss();
+
         if (result == null) {
-            mProgressDialog.dismiss();
             mGetUserAddressTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
