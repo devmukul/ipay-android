@@ -97,6 +97,14 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(
                     SignupOrLoginActivity.mMobileNumber);
             mUserNameLoginView.setText(mobileNumberWithoutPrefix);
+        } else if (pref.contains(Constants.USERID)) {
+            mUserNameLoginView.setText(ContactEngine.trimPrefix(pref.getString(Constants.USERID, "")));
+        }
+
+        // Auto Login
+        if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
+            mPasswordLoginView.setText("qqqqqqq1");
+            attemptLogin();
         }
 
         return v;

@@ -76,8 +76,18 @@ public class Constants {
     // Server Type 4 -> local server
     public static final int SERVER_TYPE = 1;
     public static final boolean DEBUG = true;
-    public static final boolean DEBUG_TOKEN_ENABLED = false;
-    public static final int ACCOUNT_ID = 291;
+
+    /**
+     * If set to true (with DEBUG flag also being set to true),
+     * it works like the "Remember me" function. Mobile number and password will be
+     * required only for the first time when user tries to login. After that, login request will be
+     * automatically sent to the server using the previously used mobile number and default password
+     * (qqqqqqq1).
+     *
+     * *** Set it to false if you are not using the default password ***
+     *
+     */
+    public static final boolean AUTO_LOGIN = true;
 
     static {
         if (SERVER_TYPE == 1) {

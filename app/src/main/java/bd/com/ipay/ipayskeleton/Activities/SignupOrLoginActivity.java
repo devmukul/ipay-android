@@ -56,10 +56,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
 
 
-        if (Constants.SERVER_TYPE == 1 && Constants.DEBUG_TOKEN_ENABLED) {
-            HomeActivity.iPayToken = "debug-token-" + Constants.ACCOUNT_ID;
-            switchToHomeActivity();
-        } else if (pref.contains(Constants.USERID)) {
+        if (pref.contains(Constants.USERID)) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, new LoginFragment()).commit();
         } else {
