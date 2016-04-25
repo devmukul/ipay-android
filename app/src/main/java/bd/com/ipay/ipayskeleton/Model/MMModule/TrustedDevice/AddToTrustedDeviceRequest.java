@@ -5,10 +5,12 @@ public class AddToTrustedDeviceRequest {
     private String deviceName;
     private String deviceId;
     private boolean isMobileBrowser;
+    private String osName;
 
-    public AddToTrustedDeviceRequest(String deviceName, String deviceId) {
+    public AddToTrustedDeviceRequest(String deviceName, String deviceId, String osName) {
         this.deviceName = deviceName;
         this.deviceId = deviceId;
         isMobileBrowser = false;
+        this.osName = osName;
     }
 }

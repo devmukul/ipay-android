@@ -22,6 +22,7 @@ public class Constants {
     public static final String GENDER = "GENDER";
     public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public static final String BOUNDARY = "iPayBoundary";
+    public static final String ANDROID = "Android";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String DUMMY = "DUMMY";
     public static final String THANA = "thana";
