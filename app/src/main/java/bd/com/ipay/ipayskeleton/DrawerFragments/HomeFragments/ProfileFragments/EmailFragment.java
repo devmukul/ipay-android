@@ -150,7 +150,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
     private void showDeleteEmailConfirmationDialog(final Email email) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.are_you_sure)
-                .setMessage("Remove this email address?")
+                .setMessage(getString(R.string.confirmation_remove_email_address))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

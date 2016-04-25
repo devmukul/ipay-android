@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -54,6 +55,9 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask;
     private SetProfilePictureResponse mSetProfilePictureResponse;
 
+    private RoundedImageView mProfilePictureView;
+    private ImageButton mEditProfilePictureButton;
+
     private EditText mNameEditText;
 
     private EditText mFathersNameEditText;
@@ -69,7 +73,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private Spinner mGenderSpinner;
 
     private ImageView mDatePickerButton;
-    private RoundedImageView mProfilePictureView;
 
     private ProgressDialog mProgressDialog;
 
@@ -146,6 +149,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mOccupation = bundle.getInt(Constants.OCCUPATION);
 
         mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
+        mEditProfilePictureButton = (ImageButton) v.findViewById(R.id.button_profile_picture_edit);
         mNameEditText = (EditText) v.findViewById(R.id.name);
 
         mFathersNameEditText = (EditText) v.findViewById(R.id.fathers_name);
@@ -164,6 +168,14 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mGenderSpinner = (Spinner) v.findViewById(R.id.gender);
 
         mProfilePictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getActivity(), getString(R.string.select_an_image));
+                startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
+            }
+        });
+
+        mEditProfilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getActivity(), getString(R.string.select_an_image));
