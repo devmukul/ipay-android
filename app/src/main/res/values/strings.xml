@@ -519,6 +519,7 @@
     <string name="failed_sending_verification_request">Failed to send verification request</string>
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
+    <string name="manage_banks">Manage Banks</string>
 
     <string-array name="account_types">
         <item>Personal</item>
