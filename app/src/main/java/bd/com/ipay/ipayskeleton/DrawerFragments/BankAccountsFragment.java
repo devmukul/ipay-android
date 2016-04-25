@@ -96,11 +96,10 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private ProgressDialog mProgressDialog;
     private RecyclerView mBankListRecyclerView;
     private TextView mEmptyListTextView;
-    private BankListAdapter mBankListAdapter;
+    private UserBankListAdapter mUserBankListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Button addNewBankButton;
     private List<UserBankClass> mListUserBankClasses;
-    private String[] bankAccountTypes;
     private ArrayList<BankBranch> bankBranches;
     private ArrayList<String> bankBranchNames;
     ArrayAdapter<String> mBranchAdapter;
@@ -131,13 +130,13 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         ((HomeActivity) getActivity()).setTitle(R.string.bank_accounts);
         bankBranches = new ArrayList<BankBranch>();
         bankBranchNames = new ArrayList<>();
-        mBranchAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, bankBranchNames);
+        mBranchAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, bankBranchNames);
+        mBranchAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
         mBankListRecyclerView = (RecyclerView) v.findViewById(R.id.list_bank);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         addNewBankButton = (Button) v.findViewById(R.id.button_add_bank);
         mProgressDialog = new ProgressDialog(getActivity());
-        bankAccountTypes = getResources().getStringArray(R.array.default_bank_account_types);
 
         attemptRefreshAvailableBankNames();
 
@@ -148,10 +147,10 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             }
         });
 
-        mBankListAdapter = new BankListAdapter();
+        mUserBankListAdapter = new UserBankListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mBankListRecyclerView.setLayoutManager(mLayoutManager);
-        mBankListRecyclerView.setAdapter(mBankListAdapter);
+        mBankListRecyclerView.setAdapter(mUserBankListAdapter);
 
         return v;
     }
@@ -178,7 +177,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mGetAvailableBankAsyncTask.execute();
     }
 
-    ;
 
     private void getBankList() {
         if (mGetBankTask != null) {
@@ -217,8 +215,13 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         final EditText mAccountNameEditText = (EditText) view.findViewById(R.id.bank_account_name);
         final EditText mAccountNumberEditText = (EditText) view.findViewById(R.id.bank_account_number);
 
-        ArrayAdapter<CharSequence> mAdapterBanks = new ArrayAdapter<CharSequence>(
-                getActivity(), android.R.layout.simple_spinner_item, CommonData.getAvailableBankNames());
+        ArrayList<String> bankNames = new ArrayList<>();
+        bankNames.add(getString(R.string.select_one));
+        bankNames.addAll(Arrays.asList(CommonData.getAvailableBankNames()));
+
+        ArrayAdapter<String> mAdapterBanks = new ArrayAdapter<>(
+                getActivity(), android.R.layout.simple_spinner_item, bankNames);
+        mAdapterBanks.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         mBankListSpinner.setAdapter(mAdapterBanks);
 
         ArrayAdapter<CharSequence> mAdapterAccountTypes = ArrayAdapter.createFromResource(getActivity(),
@@ -230,8 +233,12 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mBankListSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Bank bank = CommonData.getAvailableBanks().get(position);
-                getBankBranch(bank.getId());
+                // First position is "Select One"
+                if (position != 0) {
+                    Bank bank = CommonData.getAvailableBanks().get(position - 1);
+                    getBankBranch(bank.getId());
+                    mBankBranchSpinner.setSelection(0);
+                }
             }
 
             @Override
@@ -243,10 +250,15 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                BankBranch bankBranch = bankBranches.get(mBankBranchSpinner.getSelectedItemPosition());
-                attemptAddBank((int) bankBranch.getId(), mAccountTypesSpinner.getSelectedItemPosition(),
-                        mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
-                dialog.dismiss();
+                // The first position is "Select One"
+                if (mBankBranchSpinner.getSelectedItemPosition() == 0) {
+                    ((TextView) mBankBranchSpinner.getSelectedView()).setError("");
+                } else {
+                    BankBranch bankBranch = bankBranches.get(mBankBranchSpinner.getSelectedItemPosition() - 1);
+                    attemptAddBank((int) bankBranch.getId(), mAccountTypesSpinner.getSelectedItemPosition(),
+                            mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
+                    dialog.dismiss();
+                }
             }
         });
 
@@ -461,7 +473,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                         if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
                             mEmptyListTextView.setVisibility(View.GONE);
                         else mEmptyListTextView.setVisibility(View.VISIBLE);
-                        mBankListAdapter.notifyDataSetChanged();
+                        mUserBankListAdapter.notifyDataSetChanged();
 
                     } else {
                         if (getActivity() != null)
@@ -573,6 +585,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         bankBranches.clear();
                         bankBranchNames.clear();
+                        bankBranchNames.add(getString(R.string.select_one));
 
                         bankBranches = (ArrayList) mGetBankBranchesResponse.getAvailableBranches();
                         for (BankBranch branch : bankBranches) {
@@ -669,9 +682,9 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         });
     }
 
-    public class BankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public class UserBankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        public BankListAdapter() {
+        public UserBankListAdapter() {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -730,6 +743,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
                 if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
                     mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
+                    mBankVerifiedStatus.clearColorFilter();
+
                     verifyDivider.setVisibility(View.GONE);
                     verifyButton.setVisibility(View.GONE);
 
@@ -737,9 +752,15 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     mBankVerifiedStatus.setImageResource(R.drawable.ic_error_black_24dp);
                     mBankVerifiedStatus.setColorFilter(Color.RED);
 
+                    verifyDivider.setVisibility(View.VISIBLE);
+                    verifyButton.setVisibility(View.VISIBLE);
+
                 } else {
                     mBankVerifiedStatus.setImageResource(R.drawable.ic_cached_black_24dp);
                     mBankVerifiedStatus.setColorFilter(Color.GRAY);
+
+                    verifyDivider.setVisibility(View.VISIBLE);
+                    verifyButton.setVisibility(View.VISIBLE);
                 }
 
                 enableDisableButton.setOnClickListener(new View.OnClickListener() {

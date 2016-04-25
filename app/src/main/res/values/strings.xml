@@ -112,7 +112,7 @@
     <string name="confirm_add_money">Are you sure?</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_get_failed">Failed to fetch profile picture.</string>
-    <string name="profile_picture_set_failed">Failed to seet profile picture.</string>
+    <string name="profile_picture_set_failed">Failed to set profile picture.</string>
     <string name="profile_info_get_failed">Failed to fetch profile information.</string>
     <string name="account_type_business">Business</string>
     <string name="upload_documents">UPLOAD DOCUMENTS</string>
@@ -520,6 +520,7 @@
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="manage_banks">Manage Banks</string>
+    <string name="select_one">Select One</string>
 
     <string-array name="account_types">
         <item>Personal</item>
