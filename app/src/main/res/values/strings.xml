@@ -521,6 +521,8 @@
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="manage_banks">Manage Banks</string>
     <string name="select_one">Select One</string>
+    <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
+    <string name="failed_loading_pin">Failed loading pin</string>
 
     <string-array name="account_types">
         <item>Personal</item>

@@ -56,9 +56,6 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private HttpRequestPostAsyncTask mRemoveTrustedDeviceTask = null;
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
 
-    private HttpRequestGetAsyncTask mGetPinInfoTask = null;
-    private PinInfoResponse mPinInfoResponse;
-
     private EditText mEnterPINEditText;
     private EditText mEnterPasswordEditText;
 
@@ -247,16 +244,6 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         }
     }
 
-    private void getPinInfo() {
-        if (mGetPinInfoTask != null) {
-            return;
-        }
-
-        mGetPinInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PIN_INFO,
-                Constants.BASE_URL + Constants.URL_GET_PIN_INFO, getActivity(), this);
-        mGetPinInfoTask.execute();
-    }
-
     private void attemptChangePassword() {
         if (mChangePasswordTask != null) {
             return;
@@ -374,7 +361,6 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        getPinInfo();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -467,17 +453,6 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.cancel();
             mRemoveTrustedDeviceTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_PIN_INFO)) {
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mPinInfoResponse = gson.fromJson(resultList.get(2), PinInfoResponse.class);
-                        CommonData.setPinInfo(mPinInfoResponse);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
         }
     }
 

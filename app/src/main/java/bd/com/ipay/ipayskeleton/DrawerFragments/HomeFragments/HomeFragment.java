@@ -59,6 +59,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceR
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeFragment extends Fragment implements HttpResponseListener {
@@ -71,9 +72,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetNewsFeedTask = null;
     private GetNewsFeedResponse mGetNewsFeedResponse;
-
-    private HttpRequestGetAsyncTask mGetPinInfoTask = null;
-    private PinInfoResponse mPinInfoResponse;
 
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
@@ -158,12 +156,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            refreshBalance();
-
             // Check if the news feed is already cleared or not
             if (!HomeActivity.newsFeedLoadedOnce) getNewsFeed();
 
-            getTransactionHistory();
+            if (!(Constants.DEBUG && Constants.SM_DOWN)) {
+                refreshBalance();
+                getTransactionHistory();
+            }
         }
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
@@ -183,7 +182,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
 
         setButtonActions();
-        getPinInfo();
 
         return v;
     }
@@ -206,71 +204,76 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mSendMoneyButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
-                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
-                    addPinDialogBuilder.show();
-                } else {
-                    Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
-                    startActivity(intent);
-                }
+                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
             }
         });
 
         mCreateInvoiceOrMobileRechargeButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
-                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
-                    addPinDialogBuilder.show();
-                } else {
-                    Intent intent;
-                    if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
-                        intent = new Intent(getActivity(), TopUpActivity.class);
-                        startActivity(intent);
-                    } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
-                        intent = new Intent(getActivity(), MakePaymentActivity.class);
-                        startActivity(intent);
+                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent;
+                        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
+                            intent = new Intent(getActivity(), TopUpActivity.class);
+                            startActivity(intent);
+                        } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+                            intent = new Intent(getActivity(), MakePaymentActivity.class);
+                            startActivity(intent);
+                        }
                     }
-                }
+                });
+                pinChecker.execute();
             }
         });
 
         mRequestMoneyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
-                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
-                    addPinDialogBuilder.show();
-                } else {
-                    Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
-                    startActivity(intent);
-                }
+                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
             }
         });
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
-                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
-                    addPinDialogBuilder.show();
-                } else {
-                    Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                    startActivity(intent);
-                }
+                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
             }
         });
 
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CommonData.getPinInfo() == null || !CommonData.getPinInfo().isPinExists()) {
-                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity());
-                    addPinDialogBuilder.show();
-                } else {
-                    Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
-                    startActivity(intent);
-                }
+                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
             }
         });
     }
@@ -320,16 +323,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
     }
 
-    private void getPinInfo() {
-        if (mGetPinInfoTask != null) {
-            return;
-        }
-
-        mGetPinInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PIN_INFO,
-                Constants.BASE_URL + Constants.URL_GET_PIN_INFO, getActivity(), this);
-        mGetPinInfoTask.execute();
-    }
-
     private void getNewsFeed() {
         if (mGetNewsFeedTask != null) {
             return;
@@ -370,7 +363,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.dismiss();
             mRefreshBalanceTask = null;
             mGetNewsFeedTask = null;
-            mGetPinInfoTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
@@ -498,17 +490,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_PIN_INFO)) {
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mPinInfoResponse = gson.fromJson(resultList.get(2), PinInfoResponse.class);
-                        CommonData.setPinInfo(mPinInfoResponse);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
         }
     }
 

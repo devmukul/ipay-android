@@ -23,6 +23,7 @@ public class Constants {
     public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public static final String BOUNDARY = "iPayBoundary";
     public static final String ANDROID = "Android";
+    public static final String IS_PIN_ADDED = "is-pin-added";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String DUMMY = "DUMMY";
     public static final String THANA = "thana";
@@ -64,18 +65,10 @@ public class Constants {
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
 
-    // Member Management (MM) Module
-    // For POST Requests
-    public static final String BASE_URL;
-
-    // For Images
-    public static final String BASE_URL_IMAGE_SERVER;
-
-    // Server Type 1 -> dev server
-    // Server Type 2 -> staging server
-    // Server Type 3 -> live server
-    // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 1;
+    /**
+     * All requests and responses to server, and token is printed when debug flag is enabled.
+     * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
+     */
     public static final boolean DEBUG = true;
 
     /**
@@ -89,6 +82,25 @@ public class Constants {
      *
      */
     public static final boolean AUTO_LOGIN = true;
+
+    /**
+     * Sometimes SM server becomes down. That's OK - there are ups and downs in life. But before
+     * reporting internal server error, it makes me wait half a minute. At that time it is impossible
+     * to test even MM's features. So set this true if you want to test only MM server and
+     * temporarily block requests to SM server.
+     */
+    public static final boolean SM_DOWN = false;
+
+    public static final String BASE_URL;
+
+    // For Images
+    public static final String BASE_URL_IMAGE_SERVER;
+
+    // Server Type 1 -> dev server
+    // Server Type 2 -> staging server
+    // Server Type 3 -> live server
+    // Server Type 4 -> local server
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {
