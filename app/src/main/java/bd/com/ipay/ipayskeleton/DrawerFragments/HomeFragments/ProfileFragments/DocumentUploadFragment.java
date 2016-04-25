@@ -152,6 +152,8 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
             String verificationStatus = identificationDocument.getDocumentVerificationStatus();
 
             if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID)) {
+                mNationalIdNumber.setText(identificationDocument.getDocumentIdNumber());
+
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mNationalIdUploadButton.setVisibility(View.GONE);
                     mNationalIdNumber.setVisibility(View.GONE);
@@ -163,6 +165,8 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 }
 
             } else if (documentType.equals(Constants.DOCUMENT_TYPE_PASSPORT)) {
+                mPassportNumber.setText(identificationDocument.getDocumentIdNumber());
+
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mPassportUploadButton.setVisibility(View.GONE);
                     mPassportNumber.setVisibility(View.GONE);
@@ -174,6 +178,8 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 }
 
             } else if (documentType.equals(Constants.DOCUMENT_TYPE_DRIVING_LICENSE)) {
+                mDrivingLicenseNumber.setText(identificationDocument.getDocumentIdNumber());
+
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mDrivingLicenseUploadButton.setVisibility(View.GONE);
                     mDrivingLicenseNumber.setVisibility(View.GONE);
@@ -185,6 +191,8 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 }
 
             } else if (documentType.equals(Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE)) {
+                mBirthCertificateNumber.setText(identificationDocument.getDocumentIdNumber());
+
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mBirthCertificateUploadButton.setVisibility(View.GONE);
                     mBirthCertificateNumber.setVisibility(View.GONE);
@@ -196,6 +204,8 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 }
 
             } else if (documentType.equals(Constants.DOCUMENT_TYPE_TIN)) {
+                mTinNumber.setText(identificationDocument.getDocumentIdNumber());
+
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mTinUploadButton.setVisibility(View.GONE);
                     mTinNumber.setVisibility(View.GONE);
