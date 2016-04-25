@@ -307,7 +307,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         String mDeveiceName = android.os.Build.MANUFACTURER + "-" + android.os.Build.PRODUCT + " -" + Build.MODEL;
 
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeveiceName,
-                Constants.MOBILE_ANDROID + mDeviceID, Constants.ANDROID + " " + Build.VERSION.RELEASE);
+                Constants.MOBILE_ANDROID + mDeviceID);
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
