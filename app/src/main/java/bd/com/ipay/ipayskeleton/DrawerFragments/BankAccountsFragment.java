@@ -426,7 +426,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_add_bank, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
