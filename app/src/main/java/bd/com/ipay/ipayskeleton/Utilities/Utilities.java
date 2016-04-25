@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -283,6 +285,14 @@ public class Utilities {
 
     public static String formatTaka(double amount) {
         return String.format("\u09F3 %.2f BDT", amount);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 }
