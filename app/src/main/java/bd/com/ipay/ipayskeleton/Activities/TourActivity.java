@@ -30,8 +30,8 @@ public class TourActivity extends BaseActivity implements View.OnClickListener {
     Button buttonStart;
     private PagerIndicator mPagerIndicator;
 
-    private int[] tourBackgroundDrawables = {R.drawable.tour_1,
-            R.drawable.tour_2, R.drawable.tour_3};
+    private int[] tourBackgroundDrawables = {R.drawable.tour01,
+            R.drawable.tour02, R.drawable.tour03};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
