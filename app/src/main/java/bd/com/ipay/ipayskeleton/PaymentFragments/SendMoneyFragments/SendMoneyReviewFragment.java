@@ -188,14 +188,14 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                         getActivity().finish();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.send_money_failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.send_money_failed, Toast.LENGTH_LONG).show();
             }
 
             mProgressDialog.dismiss();

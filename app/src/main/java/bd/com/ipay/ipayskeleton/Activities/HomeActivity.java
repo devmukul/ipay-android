@@ -50,6 +50,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.E
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EmailFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.FragmentEditAddress;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.Old.ProfileFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenResponse;
@@ -317,6 +318,10 @@ public class HomeActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new EmailFragment()).commit();
             switchedToHomeFragment = false;
 
+        } else if (id == R.id.nav_trusted_network) {
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new TrustedNetworkFragment()).commit();
+            switchedToHomeFragment = false;
         }
     }
 

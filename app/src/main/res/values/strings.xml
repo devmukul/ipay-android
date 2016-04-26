@@ -519,10 +519,18 @@
     <string name="failed_sending_verification_request">Failed to send verification request</string>
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
+    <string name="confirmation_set_trusted_member">This person can help you recover your account in case you forget your password or lose access to your account. Do you want to make them eligible for your account recovery?</string>
     <string name="manage_banks">Manage Banks</string>
     <string name="select_one">Select One</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
     <string name="failed_loading_pin">Failed loading pin</string>
+    <string name="add_a_trusted_person">Add a trusted person</string>
+    <string name="progress_diaog_get_trusted_persons">Loading trusted person list...</string>
+    <string name="failed_loading_trusted_person_list">Failed loading trusted person list</string>
+    <string name="progress_dialog_adding_as_trusted_person">Adding as a trusted person</string>
+    <string name="progress_dialog_adding_as_account_recovery_person">Adding as account recovery person...</string>
+    <string name="failed_adding_trusted_person">Failed adding trusted person</string>
+    <string name="trusted_member">Trusted Member</string>
 
     <string-array name="account_types">
         <item>Personal</item>

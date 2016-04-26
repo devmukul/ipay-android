@@ -183,11 +183,16 @@ public class Constants {
     public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
     public static final String URL_SERVICE_CHARGE = "feecharge";
     public static final String URL_GET_PIN_INFO = "settings/pin";
+
     public static final String URL_GET_EMAIL = "/user/emails/";
     public static final String URL_POST_EMAIL = "/user/emails/";
     public static final String URL_DELETE_EMAIL = "/user/emails/";
+    public static final String URL_MAKE_EMAIL_VERIFIED = "/user/emails/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
-    public static final String URL_MAKE_EMAIL_VERIFIED = "/verification";
+
+    public static final String URL_GET_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
+    public static final String URL_POST_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
+    public static final String URL_SET_RECOVERY_PERSON = "/recovery";
 
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
@@ -296,6 +301,12 @@ public class Constants {
     public static final String COMMAND_EMAIL_VERIFICATION = "COMMAND_EMAIL_VERIFICATION";
     public static final String COMMAND_EMAIL_MAKE_PRIMARY = "COMMAND_EMAIL_MAKE_PRIMARY";
     public static final String COMMAND_DELETE_EMAIL = "COMMAND_DELETE_EMAIL";
+
+    // Trusted Network
+    public static final String COMMAND_GET_TRUSTED_PERSONS = "COMMAND_GET_TRUSTED_PERSONS";
+    public static final String COMMAND_ADD_TRUSTED_PERSON = "COMMAND_ADD_TRUSTED_PERSON";
+    public static final String COMMAND_SET_ACCOUNT_RECOVERY_PERSON = "COMMAND_SET_ACCOUNT_RECOVERY_PERSON";
+
 
     // FireBase
     public static final String PATH_TO_FIREBASE_DATABASE;

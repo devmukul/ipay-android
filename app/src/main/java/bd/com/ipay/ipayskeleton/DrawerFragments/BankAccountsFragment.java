@@ -480,6 +480,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                             Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
