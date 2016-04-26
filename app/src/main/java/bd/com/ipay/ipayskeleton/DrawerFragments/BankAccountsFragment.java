@@ -729,6 +729,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 mBankAccountNumber.setText(mListUserBankClasses.get(pos).getAccountNumber());
                 mBankName.setText(bankName);
                 mBranchName.setText(branchName);
+                optionsLayout.setVisibility(View.GONE);
 
                 if (bankStatus == Constants.BANK_ACCOUNT_STATUS_ACTIVE) {
                     enableDisableButton.setText(R.string.disable);
