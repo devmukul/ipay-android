@@ -219,8 +219,6 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
                 mGetTrustedPersonsResponse = gson.fromJson(resultList.get(2), GetTrustedPersonsResponse.class);
 
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mGetTrustedPersonsResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     mTrustedPersons = mGetTrustedPersonsResponse.getTrustedPersons();
                     mTrustedPersonListAdapter.notifyDataSetChanged();
