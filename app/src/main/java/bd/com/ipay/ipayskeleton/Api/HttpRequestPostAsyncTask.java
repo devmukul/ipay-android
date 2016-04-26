@@ -59,7 +59,7 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         if (Constants.DEBUG) {
-            Log.w("uri", mUri);
+            Log.w("POST_URL", mUri);
             Log.w("json", mJsonString);
         }
 

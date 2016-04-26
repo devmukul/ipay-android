@@ -15,9 +15,11 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.SetAccount
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.TrustedPerson;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TrustedNetworkFragment extends Fragment implements HttpResponseListener {
@@ -94,7 +97,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
         mAddTrustedPersonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddNewEmailDialog();
+                showAddTrustedPersonDialog();
             }
         });
 
@@ -150,30 +153,40 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
         mSetAccountRecoveryPersonTask.execute();
     }
 
-    private void showAddNewEmailDialog() {
+    private void showAddTrustedPersonDialog() {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.add_an_email)
-                .customView(R.layout.dialog_add_new_email, true)
+                .title(R.string.add_a_trusted_person)
+                .customView(R.layout.dialog_add_new_trusted_person, true)
                 .positiveText(R.string.add)
                 .negativeText(R.string.cancel)
                 .build();
 
         View view = dialog.getCustomView();
 
-        final EditText emailView = (EditText) view.findViewById(R.id.edit_text_email);
+        final TextView nameView = (TextView) view.findViewById(R.id.edit_text_name);
+        final TextView mobileNumberView = (TextView) view.findViewById(R.id.edit_text_mobile_number);
+        final Spinner selectRelationshipSpinner = (Spinner) view.findViewById(R.id.spinner_select_relationship);
+
+        ArrayAdapter<CharSequence> relationshipAdapter = ArrayAdapter.createFromResource(
+                getActivity(), R.array.relationship, android.R.layout.simple_spinner_item);
+        relationshipAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        selectRelationshipSpinner.setAdapter(relationshipAdapter);
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                String email = emailView.getText().toString().trim();
+                String name = nameView.getText().toString();
+                String mobileNumber = mobileNumberView.getText().toString();
+                String relationShip = (String) selectRelationshipSpinner.getSelectedItem();
 
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
-
-                if (!Utilities.isValidEmail(email)) {
-                    Toast.makeText(getActivity(), R.string.enter_valid_email, Toast.LENGTH_LONG).show();
+                if (name.isEmpty()) {
+                    Toast.makeText(getActivity(), R.string.error_invalid_name, Toast.LENGTH_LONG).show();
+                } else if (!ContactEngine.isValidNumber(mobileNumber)){
+                    Toast.makeText(getActivity(), R.string.error_invalid_mobile_number, Toast.LENGTH_LONG).show();
                 } else {
-
+                    AddTrustedPersonRequest addTrustedPersonRequest = new AddTrustedPersonRequest(name,
+                            ContactEngine.formatMobileNumberBD(mobileNumber), relationShip.toUpperCase());
+                    addTrustedPerson(addTrustedPersonRequest);
                 }
             }
         });

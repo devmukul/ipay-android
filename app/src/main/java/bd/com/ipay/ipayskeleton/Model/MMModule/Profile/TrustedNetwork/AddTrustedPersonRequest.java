@@ -1,13 +1,13 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork;
 
 public class AddTrustedPersonRequest {
-    private long personId;
     private String name;
-    private String relationShip;
+    private String mobileNumber;
+    private String relationship;
 
-    public AddTrustedPersonRequest(long personId, String name, String relationShip) {
-        this.personId = personId;
+    public AddTrustedPersonRequest(String name, String mobileNumber, String relationship) {
         this.name = name;
-        this.relationShip = relationShip;
+        this.mobileNumber = mobileNumber;
+        this.relationship = relationship;
     }
 }
