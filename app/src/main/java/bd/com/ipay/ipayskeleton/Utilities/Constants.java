@@ -15,6 +15,7 @@ public class Constants {
     public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String LOGGEDIN = "LOGGEDIN";
     public static final String PASSWORD = "PASSWORD";
+
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";

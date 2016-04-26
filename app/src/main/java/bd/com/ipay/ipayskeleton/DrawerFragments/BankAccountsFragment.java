@@ -430,11 +430,15 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG).show();
 
+                        long bankAccountID = mAddBankResponse.getId();
+
                         // Refresh bank list
                         if (mListUserBankClasses != null)
                             mListUserBankClasses.clear();
                         mListUserBankClasses = null;
-                        getBankList();
+
+                        // Send the verification status
+                        attemptSendForVerification(bankAccountID);
 
                     } else {
                         if (getActivity() != null)
@@ -753,10 +757,12 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     mBankVerifiedStatus.setImageResource(R.drawable.ic_error_black_24dp);
                     mBankVerifiedStatus.setColorFilter(Color.RED);
 
-                    verifyDivider.setVisibility(View.VISIBLE);
-                    verifyButton.setVisibility(View.VISIBLE);
+                    verifyDivider.setVisibility(View.GONE);
+                    verifyButton.setVisibility(View.GONE);
 
                 } else {
+
+                    // Bank verification status pending
                     mBankVerifiedStatus.setImageResource(R.drawable.ic_cached_black_24dp);
                     mBankVerifiedStatus.setColorFilter(Color.GRAY);
 
@@ -850,24 +856,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                                 }
                             });
 
-                        } else if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
-
-                            new AlertDialog.Builder(getActivity())
-                                    .setTitle(R.string.are_you_sure)
-                                    .setMessage(R.string.send_this_bank_for_verification)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if (Utilities.isConnectionAvailable(getActivity())) {
-                                                attemptSendForVerification(bankAccountID);
-                                            }
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // Do nothing
-                                        }
-                                    })
-                                    .show();
                         }
                     }
                 });
