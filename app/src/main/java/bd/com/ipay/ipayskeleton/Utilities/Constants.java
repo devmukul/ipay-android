@@ -35,6 +35,7 @@ public class Constants {
     public static final String OPERATOR_CODE = "operator_code";
     public static final String COUNTRY_CODE = "country_code";
     public static final String EXPAND_PIN = "expand_pin";
+    public static final String TRUSTED_OTP_RECEIVERS = "trusted_otp_receivers";
 
     public static final String NAME = "NAME";
     public static final String OCCUPATION = "OCCUPATION";

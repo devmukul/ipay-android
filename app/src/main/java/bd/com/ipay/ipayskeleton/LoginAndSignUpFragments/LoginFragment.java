@@ -338,11 +338,14 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
+                        intent.putParcelableArrayListExtra(Constants.TRUSTED_OTP_RECEIVERS, mForgetPasswordResponse.getTrustedOtpReceiverList());
                         startActivity(intent);
 
-                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
-                        Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
-                        startActivity(intent);
+                        // TODO Discuss with server team when "OTP has not been expired yet" message is received
+//                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
+//                        Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
+//                        intent.putParcelableArrayListExtra(Constants.TRUSTED_OTP_RECEIVERS, mForgetPasswordResponse.getTrustedOtpReceiverList());
+//                        startActivity(intent);
 
                     } else {
                         if (getActivity() != null)
