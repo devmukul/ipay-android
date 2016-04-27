@@ -33,23 +33,18 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SignupPersonalFragment extends Fragment implements HttpResponseListener {
+public class SignupPersonalStepTwoFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponsePersonalSignup mOtpResponsePersonalSignup;
 
-    private EditText mPasswordView;
-    private EditText mConfirmPasswordView;
     private EditText mNameView;
-    private EditText mMobileNumberView;
     private ImageView mDatePickerButton;
     private Button mSignupPersonalButton;
     private CheckBox mAgreementCheckBox;
-    private CheckBox mMaleCheckBox;
-    private CheckBox mFemaleCheckBox;
     private TextView mTermsConditions;
+    private TextView mPrivacyPolicy;
     private EditText mBirthdayEditText;
-    private EditText mPromoCodeEditText;
 
     private int mYear;
     private int mMonth;
@@ -67,29 +62,25 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_signup_personal_step_one, container, false);
+        View v = inflater.inflate(R.layout.fragment_signup_personal_step_two, container, false);
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_sms));
 
-        mPasswordView = (EditText) v.findViewById(R.id.password);
-        mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
         mNameView = (EditText) v.findViewById(R.id.user_name);
-        mMobileNumberView = (EditText) v.findViewById(R.id.mobile_number);
         mSignupPersonalButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
-        mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
-        mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
+        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
-        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
 
         // Enable hyperlinked
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
+        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
@@ -97,19 +88,6 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 dialog.show();
-            }
-        });
-        mMaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mFemaleCheckBox.setChecked(false);
-            }
-        });
-
-        mFemaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mMaleCheckBox.setChecked(false);
             }
         });
 
@@ -122,22 +100,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             }
         });
 
-//        if (SignupOrLoginActivity.mName != null) {
-//            rePopulateData();
-//        }
-
         return v;
-    }
-
-    private void rePopulateData() {
-        mNameView.setText(SignupOrLoginActivity.mName);
-        mMobileNumberView.setText(SignupOrLoginActivity.mMobileNumber);
-        mPasswordView.setText(SignupOrLoginActivity.mPassword);
-        mConfirmPasswordView.setText(SignupOrLoginActivity.mPassword);
-        if (SignupOrLoginActivity.mGender == Constants.GENDER_FEMALE)
-            mFemaleCheckBox.setChecked(true);
-        else mMaleCheckBox.setChecked(true);
-        mDatePickerButton.setVisibility(View.GONE);
     }
 
     private void attemptRequestOTP() {
@@ -145,61 +108,21 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
             return;
         }
 
-        // Reset errors.
-        mPasswordView.setError(null);
-
         // Store values at the time of the login attempt.
-        SignupOrLoginActivity.mPassword = mPasswordView.getText().toString().trim();
         String name = mNameView.getText().toString().trim();
 
         SignupOrLoginActivity.mName = name;
-        SignupOrLoginActivity.mMobileNumber = "+880" + mMobileNumberView.getText().toString().trim();  // TODO: change Bangladesh
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         SignupOrLoginActivity.mBirthday = mBirthdayEditText.getText().toString().trim();
-        if (mMaleCheckBox.isChecked()) SignupOrLoginActivity.mGender = Constants.GENDER_MALE;
-        else SignupOrLoginActivity.mGender = Constants.GENDER_FEMALE;
-        SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        String passwordValidationMsg = Utilities.isPasswordValid(SignupOrLoginActivity.mPassword);
-        if (passwordValidationMsg.length() > 0) {
-            mPasswordView.setError(passwordValidationMsg);
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        if (!mConfirmPasswordView.getText().toString().trim().equals(SignupOrLoginActivity.mPassword) && mConfirmPasswordView.getVisibility() == View.VISIBLE) {
-            mConfirmPasswordView.setError(getString(R.string.confirm_password_not_matched));
-            focusView = mConfirmPasswordView;
-            cancel = true;
-        }
-
-        if (mMobileNumberView.getText().toString().trim().length() != 10) {
-            mMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
-            focusView = mMobileNumberView;
-            cancel = true;
-        }
 
         if (mNameView.getText().toString().trim().length() == 0) {
             mNameView.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameView;
             cancel = true;
         }
-
-        if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
-            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
-            focusView = mPromoCodeEditText;
-            cancel = true;
-        }
-
-//        if (mLastNameView.getText().toString().trim().length() == 0) {
-//            mLastNameView.setError(getString(R.string.error_invalid_last_name));
-//            focusView = mLastNameView;
-//            cancel = true;
-//        }
 
         if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
             cancel = true;
@@ -303,7 +226,7 @@ public class SignupPersonalFragment extends Fragment implements HttpResponseList
                 // Previous OTP has not been expired yet
                 SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
-                
+
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();

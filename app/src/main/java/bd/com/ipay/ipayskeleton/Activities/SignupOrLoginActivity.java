@@ -16,6 +16,8 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationTrustFrag
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupPersonalFragment;
+import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupPersonalStepOneFragment;
+import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupPersonalStepTwoFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -97,6 +99,18 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public void switchToOTPVerificationPersonalFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new OTPVerificationPersonalFragment()).commit();
+        switchedToAccountSelection = false;
+    }
+
+    public void switchToSignupPersonalStepOneFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SignupPersonalStepOneFragment()).commit();
+        switchedToAccountSelection = false;
+    }
+
+    public void switchToSignupPersonalStepTwoFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SignupPersonalStepTwoFragment()).commit();
         switchedToAccountSelection = false;
     }
 

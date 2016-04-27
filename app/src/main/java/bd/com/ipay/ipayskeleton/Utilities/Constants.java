@@ -71,7 +71,7 @@ public class Constants {
      * All requests and responses to server, and token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     /**
      * If set to true (with DEBUG flag also being set to true),
@@ -102,7 +102,7 @@ public class Constants {
     // Server Type 2 -> staging server
     // Server Type 3 -> live server
     // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -130,6 +130,7 @@ public class Constants {
     public static final String URL_SIGN_UP = "signup/activation";
     public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
     public static final String URL_OTP_REQUEST = "signup";
+    public static final String URL_CHECK_PROMO_CODE = "signup/checkpromocode";
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
     public static final String URL_LOGIN = "signin";
     public static final String URL_ASK_FOR_RECOMMENDATION = "kyc/verificationRequest";
@@ -218,6 +219,7 @@ public class Constants {
     public static final int MOBILE_TYPE_POSTPAID = 2;
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
+    public static final String COMMAND_CHECK_PROMO_CODE = "COMMAND_CHECK_PROMO_CODE";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
     public static final String COMMAND_SIGN_UP = "COMMAND_SIGN_UP";
     public static final String COMMAND_SIGN_UP_BUSINESS = "COMMAND_SIGN_UP_BUSINESS";

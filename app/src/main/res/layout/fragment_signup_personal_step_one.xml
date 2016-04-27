@@ -56,7 +56,8 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/user_name"
@@ -71,8 +72,8 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/user_last_name"
@@ -121,7 +122,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
@@ -144,8 +146,8 @@
                     style="@style/ButtonStyleAccentSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:clickable="true"
                     android:padding="@dimen/value5"
                     android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
             </LinearLayout>
@@ -154,7 +156,6 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:visibility="visible">
 
                 <EditText
@@ -172,7 +173,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:gravity="center">
+                android:gravity="center"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -200,7 +202,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <CheckBox
                     android:id="@+id/checkBoxTermsConditions"
@@ -234,7 +237,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:text="@string/action_sign_in" />
+                android:text="@string/next" />
 
         </LinearLayout>
     </ScrollView>

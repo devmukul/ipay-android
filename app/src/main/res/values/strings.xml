@@ -164,6 +164,7 @@
     <string name="progress_dialog_withdraw_money_in_progress">Request submitting for money withdrawal</string>
     <string name="progress_dialog_text_sending_money">Sending money in progress. Please wait...</string>
     <string name="progress_dialog_text_sending_sms">Sending SMS to your mobile...</string>
+    <string name="progress_dialog_validating_promo_code">Validating invitation code...</string>
     <string name="progress_dialog_refreshing">Refreshing...</string>
     <string name="progress_dialog_processing">Processing...</string>
     <string name="progress_dialog_recommendation_list">Fecthing recommendation requests...</string>
@@ -187,7 +188,7 @@
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
     <string name="enter_otp">Enter OTP</string>
-    <string name="enter_promo_code">Enter Promo Code</string>
+    <string name="enter_promo_code">Invitation Code</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
     <string name="recharge_failed">Mobile recharge failed.</string>
@@ -280,9 +281,12 @@
     <string name="female">Female</string>
     <string name="submit">Submit</string>
     <string name="terms_condition"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
+    <string name="privacy_policy"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
+    <string name="try_again_later">Could not connect to iPay. Please try again later.</string>
     <string name="login_with_existing_account">Login with existing account</string>
+    <string name="signup_second_stage_note">Just a few more information!</string>
     <string name="have_an_existing_account">Have an existing account?</string>
     <string name="enter_amount">Enter an amount in BDT</string>
     <string name="event_name">Name of the event</string>
@@ -336,6 +340,7 @@
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="withdraw_money_failed">Could not submit request for money withdrawal</string>
     <string name="home">Home</string>
+    <string name="next">Next</string>
     <string name="profile">Profile</string>
     <string name="your_selected_bank_account_is">Your selected bank account is</string>
     <string name="support">Support</string>
@@ -396,6 +401,7 @@
     <string name="reopen_application">Please re-open the application.</string>
     <string name="failed_available_bank_list_loading">Failed to load bank lists. Please try again later</string>
     <string name="invite_to_ipay">Invite to iPay</string>
+    <string name="and">and</string>
     <string name="invite_now">Invite Now</string>
     <string name="ask_for_introduction">Ask for Introduction</string>
     <string name="send_invite">Send invitation</string>
