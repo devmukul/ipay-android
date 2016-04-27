@@ -1,16 +1,11 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,9 +47,9 @@ public class DashBoardFragment extends Fragment {
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        homeTab =  tabLayout.getTabAt(HOME_TAB);
+        homeTab = tabLayout.getTabAt(HOME_TAB);
         contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
-        notificationsTab =  tabLayout.getTabAt(NOTIFICATIONS_TAB);
+        notificationsTab = tabLayout.getTabAt(NOTIFICATIONS_TAB);
 
         homeTab.setIcon(R.drawable.ic_home_white_24dp);
         contactsTab.setIcon(R.drawable.ic_people_outline_white_24dp);
@@ -132,7 +127,7 @@ public class DashBoardFragment extends Fragment {
                 case 2:
                     return mNotificationFragment;
                 default:
-                    return mHomeFragment;
+                    return new Fragment();
             }
         }
 
