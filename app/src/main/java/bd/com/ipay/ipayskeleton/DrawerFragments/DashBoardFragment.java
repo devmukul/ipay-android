@@ -21,9 +21,18 @@ import bd.com.ipay.ipayskeleton.R;
 
 public class DashBoardFragment extends Fragment {
 
+    private final int HOME_TAB = 0;
+    private final int CONTACTS_TAB = 1;
+    private final int NOTIFICATIONS_TAB = 2;
+
     private HomeFragment mHomeFragment;
     private ContactsHolderFragment mContactsHolderFragment;
     private NotificationFragment mNotificationFragment;
+    private TabLayout.Tab homeTab;
+    private TabLayout.Tab contactsTab;
+    private TabLayout.Tab notificationsTab;
+
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,27 +42,86 @@ public class DashBoardFragment extends Fragment {
         mContactsHolderFragment = new ContactsHolderFragment();
         mNotificationFragment = new NotificationFragment();
 
-        ViewPager viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         viewPager.setAdapter(new DashBoardTabAdapter(getChildFragmentManager()));
         viewPager.setOffscreenPageLimit(2);
 
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        homeTab = tabLayout.newTab();
+        contactsTab = tabLayout.newTab();
+        notificationsTab = tabLayout.newTab();
+
+        // Set initial icons
+        homeTab.setIcon(R.drawable.ic_home_white_24dp);
+        contactsTab.setIcon(R.drawable.ic_people_outline_white_24dp);
+        notificationsTab.setIcon(R.drawable.ic_notifications_none_white_24dp);
+
+        // Adding tabs in appropriate positions in TabLayout
+        tabLayout.addTab(homeTab, HOME_TAB);
+        tabLayout.addTab(contactsTab, CONTACTS_TAB);
+        tabLayout.addTab(notificationsTab, NOTIFICATIONS_TAB);
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        homeTab.setIcon(R.drawable.ic_home_white_24dp);
+                        contactsTab.setIcon(R.drawable.ic_people_outline_white_24dp);
+                        notificationsTab.setIcon(R.drawable.ic_notifications_none_white_24dp);
+                        break;
+                    case 1:
+                        homeTab.setIcon(R.drawable.ic_home_white_outline_24dp);
+                        contactsTab.setIcon(R.drawable.ic_people_white_24dp);
+                        notificationsTab.setIcon(R.drawable.ic_notifications_none_white_24dp);
+                        break;
+                    case 2:
+                        homeTab.setIcon(R.drawable.ic_home_white_outline_24dp);
+                        contactsTab.setIcon(R.drawable.ic_people_outline_white_24dp);
+                        notificationsTab.setIcon(R.drawable.ic_notifications_white_24dp);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         return v;
     }
 
-    private class DashBoardTabAdapter extends FragmentPagerAdapter {
 
-        private int[] tabIcons;
+    private class DashBoardTabAdapter extends FragmentPagerAdapter {
 
         public DashBoardTabAdapter(FragmentManager fm) {
             super(fm);
-            tabIcons = new int[]{
-                    R.drawable.ic_home_white_24dp,
-                    R.drawable.ic_people_white_24dp,
-                    R.drawable.ic_notifications_white_24dp
-            };
         }
 
         @Override
@@ -68,16 +136,6 @@ public class DashBoardFragment extends Fragment {
                 default:
                     return new Fragment();
             }
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Drawable image = getActivity().getResources().getDrawable(tabIcons[position]);
-            image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
-            SpannableString sb = new SpannableString(" ");
-            ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
-            sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return sb;
         }
 
         @Override
