@@ -237,7 +237,7 @@ public class HomeActivity extends BaseActivity
 
     public void switchToDashBoard() {
         mNavigationView.getMenu().getItem(0).setChecked(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
+       getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
         switchedToHomeFragment = true;
     }
 

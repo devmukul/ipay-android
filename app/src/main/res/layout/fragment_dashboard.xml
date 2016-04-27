@@ -1,4 +1,5 @@
 <com.flipboard.bottomsheet.BottomSheetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -6,13 +7,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
+
 
         <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"
             style="@style/TabStyleDashBoard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+         />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
