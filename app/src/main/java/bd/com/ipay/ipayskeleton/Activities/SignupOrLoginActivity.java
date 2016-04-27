@@ -30,7 +30,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mPassword;
     public static String mName;
     public static String mMobileNumber;
-    public static String mGender;
+    public static String mGender = "M";
     public static int mAccountType;
 
     public static String mPasswordBusiness;
