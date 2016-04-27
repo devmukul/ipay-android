@@ -189,7 +189,7 @@ public class Constants {
     public static final String URL_GET_EMAIL = "/user/emails/";
     public static final String URL_POST_EMAIL = "/user/emails/";
     public static final String URL_DELETE_EMAIL = "/user/emails/";
-    public static final String URL_MAKE_EMAIL_VERIFIED = "/user/emails/";
+    public static final String URL_MAKE_EMAIL_VERIFIED = "/verification/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
     public static final String URL_GET_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
