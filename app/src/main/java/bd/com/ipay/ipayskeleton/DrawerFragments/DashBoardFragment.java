@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ public class DashBoardFragment extends Fragment {
     private final int HOME_TAB = 0;
     private final int CONTACTS_TAB = 1;
     private final int NOTIFICATIONS_TAB = 2;
+
+    private final int TOTAL_PAGE_COUNT = 3;
 
     private HomeFragment mHomeFragment;
     private ContactsHolderFragment mContactsHolderFragment;
@@ -49,19 +52,14 @@ public class DashBoardFragment extends Fragment {
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        homeTab = tabLayout.newTab();
-        contactsTab = tabLayout.newTab();
-        notificationsTab = tabLayout.newTab();
+        homeTab =  tabLayout.getTabAt(HOME_TAB);
+        contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
+        notificationsTab =  tabLayout.getTabAt(NOTIFICATIONS_TAB);
 
-        // Set initial icons
         homeTab.setIcon(R.drawable.ic_home_white_24dp);
         contactsTab.setIcon(R.drawable.ic_people_outline_white_24dp);
         notificationsTab.setIcon(R.drawable.ic_notifications_none_white_24dp);
 
-        // Adding tabs in appropriate positions in TabLayout
-        tabLayout.addTab(homeTab, HOME_TAB);
-        tabLayout.addTab(contactsTab, CONTACTS_TAB);
-        tabLayout.addTab(notificationsTab, NOTIFICATIONS_TAB);
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -134,13 +132,13 @@ public class DashBoardFragment extends Fragment {
                 case 2:
                     return mNotificationFragment;
                 default:
-                    return new Fragment();
+                    return mHomeFragment;
             }
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return TOTAL_PAGE_COUNT;
         }
     }
 
