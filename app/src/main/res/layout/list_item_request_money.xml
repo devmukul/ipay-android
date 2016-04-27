@@ -17,7 +17,6 @@
         style="@style/TextStylePrimarySmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/transaction_type"
         android:gravity="left" />
 
     <TextView
