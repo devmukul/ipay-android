@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -126,19 +129,50 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         View view = dialog.getCustomView();
         final EditText mMobileNumberEditText = (EditText) view.findViewById(R.id.mobile_number);
+        final EditText mNameEditText = (EditText) view.findViewById(R.id.name);
+        final EditText mDateOfBirthEditText = (EditText) view.findViewById(R.id.birthdayEditText);
+        final ImageView mDatePickerButton = (ImageView) view.findViewById(R.id.myDatePickerButton);
+
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getActivity(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                mDateOfBirthEditText.setText(
+                        String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year));
+            }
+        }, 1990, 0, 1);
+
+        mDatePickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+            }
+        });
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                if (mMobileNumberEditText.getText().toString().trim().length() != 14) {
+                String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+                String name = mNameEditText.getText().toString().trim();
+                String dob = mDateOfBirthEditText.getText().toString().trim();
+
+                if (!ContactEngine.isValidNumber(mobileNumber)) {
                     mMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
                     Toast.makeText(getActivity(), R.string.error_invalid_mobile_number, Toast.LENGTH_LONG).show();
 
+                } else if (name.isEmpty()) {
+                    mNameEditText.setError(getString(R.string.error_invalid_name));
+                    Toast.makeText(getActivity(), R.string.error_invalid_name, Toast.LENGTH_LONG).show();
+
+                } else if (!Utilities.isDateOfBirthValid(dob)) {
+                    mDateOfBirthEditText.setError(getString(R.string.please_enter_valid_date_of_birth));
+                    Toast.makeText(getActivity(), R.string.please_enter_valid_date_of_birth, Toast.LENGTH_LONG).show();
+
                 } else {
-                    String mobileNumber = mMobileNumberEditText.getText().toString().trim();
                     if (Utilities.isConnectionAvailable(getActivity()))
-                        attemptSendOTP(mobileNumber, Constants.MOBILE_ANDROID + mDeviceID);
+                        attemptSendOTPForgetPassword(name, mobileNumber,
+                                dob, Constants.MOBILE_ANDROID + mDeviceID);
                     else
                         Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
                     dialog.dismiss();
@@ -148,14 +182,16 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
     }
 
-    private void attemptSendOTP(String mobileNumber, String deviceID) {
+    private void attemptSendOTPForgetPassword(String name, String mobileNumber, String dob, String deviceID) {
         if (mForgetPasswordTask != null) {
             return;
         }
 
         mProgressDialog.setMessage(getString(R.string.sending_otp));
         mProgressDialog.show();
-        ForgetPasswordRequest mForgetPasswordRequest = new ForgetPasswordRequest(mobileNumber, deviceID);
+        ForgetPasswordRequest mForgetPasswordRequest = new ForgetPasswordRequest(name,
+                ContactEngine.formatMobileNumberBD(mobileNumber), dob, deviceID);
+
         Gson gson = new Gson();
         String json = gson.toJson(mForgetPasswordRequest);
         mForgetPasswordTask = new HttpRequestPostAsyncTask(Constants.COMMAND_FORGET_PASSWORD_SEND_OTP,

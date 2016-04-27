@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/name"
             android:inputType="textPersonName"
+            android:gravity="center"
             android:maxLines="1"
             android:singleLine="true" >
 
@@ -34,6 +35,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/mobile_number"
             android:inputType="phone"
+            android:gravity="center"
             android:maxLines="1"
             android:singleLine="true" />
 
