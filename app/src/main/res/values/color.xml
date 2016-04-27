@@ -39,4 +39,5 @@
     <color name="background_red">#F41051</color>
 
     <color name="home_background">#E5E5E5</color>
+    <color name="verified_background">#009688</color>
 </resources>

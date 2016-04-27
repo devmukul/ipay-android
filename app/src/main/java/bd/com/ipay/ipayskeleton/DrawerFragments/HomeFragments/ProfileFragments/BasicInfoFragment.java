@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -194,7 +193,7 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
                 mVerificationStatusView.setText(R.string.verified);
             } else {
                 mVerificationStatusView.setBackgroundResource(R.drawable.background_not_verified);
-                mVerificationStatusView.setText(R.string.not_verified);
+                mVerificationStatusView.setText(R.string.unverified);
             }
         }
     }

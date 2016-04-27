@@ -11,23 +11,56 @@
         <ImageView
             android:id="@+id/image_contact"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="220dp" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="56dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_gravity="bottom"
-            android:background="@color/colorBlackTransparent" />
-
-        <TextView
-            android:id="@+id/textview_contact_name"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
-            android:padding="12dp"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/white"
-            android:textSize="26sp" />
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@color/colorBlackTransparent">
+
+            <TextView
+                android:id="@+id/textview_contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white"
+                android:layout_alignParentTop="true"
+                android:textSize="26sp" />
+
+            <RelativeLayout
+                android:id="@+id/info_holder"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/textview_contact_name"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textview_is_verified"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:background="@drawable/brackgound_bottom_sheet_verified"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/textview_account_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="4dp"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
     </FrameLayout>
 </LinearLayout>

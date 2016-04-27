@@ -274,7 +274,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
                 mVerificationStatusView.setText(R.string.verified);
             } else {
                 mVerificationStatusView.setBackgroundResource(R.drawable.background_not_verified);
-                mVerificationStatusView.setText(R.string.not_verified);
+                mVerificationStatusView.setText(R.string.unverified);
             }
         }
 

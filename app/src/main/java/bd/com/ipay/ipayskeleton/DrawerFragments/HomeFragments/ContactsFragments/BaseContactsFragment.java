@@ -141,15 +141,36 @@ public abstract class BaseContactsFragment extends Fragment implements
      * Must be called after show(Non)SubscriberSheet
      */
     protected void setContactInformationInSheet(String contactName, String contactNumber,
-                                                String imageUrl, final int backgroundColor) {
+                String imageUrl, final int backgroundColor, int verificationStatus, int accountType) {
         if (selectedBottomSheetView == null)
             return;
 
         final TextView contactNameView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_contact_name);
         final ImageView contactImage = (ImageView) selectedBottomSheetView.findViewById(R.id.image_contact);
+        final View infoHolderView = selectedBottomSheetView.findViewById(R.id.info_holder);
+        TextView isVerifiedView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_is_verified);
+        TextView accountTypeView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_account_type);
 
         contactImage.setBackgroundResource(backgroundColor);
         contactNameView.setText(contactName);
+
+        if (verificationStatus == DBConstants.VERIFIED_USER) {
+            isVerifiedView.setText(getString(R.string.verified).toUpperCase());
+            isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_verified);
+        } else if (verificationStatus == DBConstants.NOT_VERIFIED_USER) {
+            isVerifiedView.setText(getString(R.string.unverified).toUpperCase());
+            isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_unverified);
+        } else {
+            isVerifiedView.setVisibility(View.GONE);
+        }
+
+        if (accountType == Constants.PERSONAL_ACCOUNT_TYPE) {
+            accountTypeView.setText(R.string.personal_account);
+        } else if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
+            accountTypeView.setText(R.string.business_account);
+        } else {
+            accountTypeView.setVisibility(View.GONE);
+        }
 
         if (imageUrl != null && !imageUrl.equals("")) {
             Glide.with(getActivity())

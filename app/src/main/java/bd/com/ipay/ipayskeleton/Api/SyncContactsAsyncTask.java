@@ -49,7 +49,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
 
-
         try {
             final ArrayList<FriendNodeToUpload> userFriends = getAllContacts();
             count = new AtomicInteger(userFriends.size());

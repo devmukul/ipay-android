@@ -452,7 +452,7 @@
     <string name="confirmation_save_changes">Save changes?</string>
     <string name="no_numbers_found">No numbers found</string>
     <string name="verified">Verified</string>
-    <string name="not_verified">Not Verified</string>
+    <string name="unverified">Unverified</string>
     <string name="trusted_devices">Trusted Devices</string>
     <string name="progress_dialog_loading_trusted_devices">Loading trusted device list</string>
     <string name="failed_loading_trusted_devices">Failed to load trusted device list</string>
@@ -534,6 +534,8 @@
     <string name="trusted_member">Trusted Member</string>
     <string name="relationship">Relationship</string>
     <string name="otp_has_been_sent_to_your_mobile_number">"OTP has been sent to your mobile number "</string>
+    <string name="personal_account">Personal Account</string>
+    <string name="business_account">Business Account</string>
 
     <string-array name="account_types">
         <item>Personal</item>

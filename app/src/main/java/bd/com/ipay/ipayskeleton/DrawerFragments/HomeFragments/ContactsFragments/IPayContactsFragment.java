@@ -190,7 +190,11 @@ public class IPayContactsFragment extends BaseContactsFragment {
                 final int verificationStatus = mCursor.getInt(index);
                 if (verificationStatus == DBConstants.VERIFIED_USER)
                     mVerificationStatus.setVisibility(View.VISIBLE);
-                else mVerificationStatus.setVisibility(View.GONE);
+                else
+                    mVerificationStatus.setVisibility(View.GONE);
+
+                index = mCursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
+                final int accountType = mCursor.getInt(index);
 
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;
@@ -259,7 +263,8 @@ public class IPayContactsFragment extends BaseContactsFragment {
 
                                 showSubscriberSheet(verificationStatus);
                                 setContactInformationInSheet(name,
-                                        mobileNumber, imageUrl, COLORS[randomColor]);
+                                        mobileNumber, imageUrl, COLORS[randomColor],
+                                        verificationStatus, accountType);
                             }
                         }, 100);
                     }

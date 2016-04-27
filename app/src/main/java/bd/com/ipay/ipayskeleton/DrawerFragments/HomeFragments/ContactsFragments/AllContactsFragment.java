@@ -41,7 +41,8 @@ public class AllContactsFragment extends BaseContactsFragment {
 
     protected static final int CONTACTS_QUERY_LOADER = 0;
 
-    private HashMap<String, Integer> subscriber = new HashMap<>();
+    private HashMap<String, Integer> subscriberVerificationStatuses = new HashMap<>();
+    private HashMap<String, Integer> subscriberAccountTypes = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,8 +96,10 @@ public class AllContactsFragment extends BaseContactsFragment {
                     do {
                         String mobileNumber = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER));
                         String name = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_NAME));
-                        int status = cursor.getInt(cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS));
-                        subscriber.put(mobileNumber, status);
+                        int verificationStatus = cursor.getInt(cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS));
+                        int accountType = cursor.getInt(cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE));
+                        subscriberVerificationStatuses.put(mobileNumber, verificationStatus);
+                        subscriberAccountTypes.put(mobileNumber, accountType);
                     } while (cursor.moveToNext());
                 }
             }
@@ -206,13 +209,13 @@ public class AllContactsFragment extends BaseContactsFragment {
                     number = ContactEngine.formatMobileNumberBD(number);
 
                     // Set subscription status
-                    if (subscriber != null && subscriber.containsKey(number))
+                    if (subscriberVerificationStatuses != null && subscriberVerificationStatuses.containsKey(number))
                         isSubscriber.setVisibility(View.VISIBLE);
                     else
                         isSubscriber.setVisibility(View.GONE);
 
                     // Set verification status
-                    if (subscriber != null && subscriber.containsKey(number) && subscriber.get(number) == DBConstants.VERIFIED_USER)
+                    if (subscriberVerificationStatuses != null && subscriberVerificationStatuses.containsKey(number) && subscriberVerificationStatuses.get(number) == DBConstants.VERIFIED_USER)
                         mVerificationStatus.setVisibility(View.VISIBLE);
                     else
                         mVerificationStatus.setVisibility(View.GONE);
@@ -300,14 +303,15 @@ public class AllContactsFragment extends BaseContactsFragment {
                             @Override
                             public void run() {
 
-                                if (subscriber == null || !subscriber.containsKey(contactNumber)) {
+                                if (subscriberVerificationStatuses == null || !subscriberVerificationStatuses.containsKey(contactNumber)) {
                                     showNonSubscriberSheet();
                                     setContactInformationInSheet(name,
-                                            contactNumber, imageUrl, COLORS[randomColor]);
+                                            contactNumber, imageUrl, COLORS[randomColor], -1, -1);
                                 } else {
-                                    showSubscriberSheet(subscriber.get(contactNumber));
+                                    showSubscriberSheet(subscriberVerificationStatuses.get(contactNumber));
                                     setContactInformationInSheet(name,
-                                            contactNumber, imageUrl, COLORS[randomColor]);
+                                            contactNumber, imageUrl, COLORS[randomColor],
+                                            subscriberVerificationStatuses.get(contactNumber), subscriberAccountTypes.get(contactNumber));
                                 }
                             }
                         }, 100);
