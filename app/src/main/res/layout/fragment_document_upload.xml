@@ -48,6 +48,11 @@
                 style="@style/DocumentUploadButton"
                 android:layout_alignBottom="@+id/text_input_national_id"
                 android:text="@string/upload" />
+
+            <TextView
+                android:id="@+id/textview_nid"
+                style="@style/DocumentUploadTextView"
+                android:layout_below="@+id/text_input_national_id"/>
         </RelativeLayout>
 
 
@@ -84,6 +89,11 @@
                     android:inputType="text" />
 
             </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textview_passport"
+                style="@style/DocumentUploadTextView"
+                android:layout_below="@+id/text_input_passport"/>
 
             <Button
                 android:id="@+id/button_passport"
@@ -127,6 +137,11 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <TextView
+                android:id="@+id/textview_driving_license"
+                style="@style/DocumentUploadTextView"
+                android:layout_below="@+id/text_input_driving_license"/>
+
             <Button
                 android:id="@+id/button_driving_license"
                 style="@style/DocumentUploadButton"
@@ -168,6 +183,11 @@
                     android:inputType="text" />
 
             </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textview_birth_certificate"
+                style="@style/DocumentUploadTextView"
+                android:layout_below="@+id/text_input_birth_certificate"/>
 
             <Button
                 android:id="@+id/button_birth_certificate"
@@ -211,6 +231,11 @@
                     android:inputType="text" />
 
             </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textview_tin"
+                style="@style/DocumentUploadTextView"
+                android:layout_below="@+id/text_input_tin"/>
 
             <Button
                 android:id="@+id/button_tin"

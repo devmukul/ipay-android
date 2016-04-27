@@ -53,6 +53,12 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
     private String mDocumentNumber;
     private String mDocumentType;
 
+    private TextView mNIDView;
+    private TextView mPassportView;
+    private TextView mBirthCertificateView;
+    private TextView mTINView;
+    private TextView mDrivingLicenseView;
+
     private TextView mVerificationStatusNID;
     private TextView mVerificationStatusPassport;
     private TextView mVerificationStatusBirthCertificate;
@@ -107,6 +113,12 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         mBirthCertificateUploadButton = (Button) v.findViewById(R.id.button_birth_certificate);
         mTinUploadButton = (Button) v.findViewById(R.id.button_tin);
 
+        mNIDView = (TextView) v.findViewById(R.id.textview_nid);
+        mPassportView = (TextView) v.findViewById(R.id.textview_passport);
+        mDrivingLicenseView = (TextView) v.findViewById(R.id.textview_driving_license);
+        mBirthCertificateView = (TextView) v.findViewById(R.id.textview_birth_certificate);
+        mTINView = (TextView) v.findViewById(R.id.textview_tin);
+
         mProgressDialog = new ProgressDialog(getActivity());
 
         mNationalIdUploadButton.setOnClickListener(new View.OnClickListener() {
@@ -153,12 +165,14 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
             if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID)) {
                 mNationalIdNumber.setText(identificationDocument.getDocumentIdNumber());
+                mNIDView.setText(identificationDocument.getDocumentIdNumber());
 
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mNationalIdUploadButton.setVisibility(View.GONE);
                     mNationalIdNumber.setVisibility(View.GONE);
                     mVerificationStatusNID.setTextColor(getResources().getColor(R.color.bottle_green));
                     mVerificationStatusNID.setText(getString(R.string.verified));
+                    mNIDView.setVisibility(View.VISIBLE);
                 } else {
                     mNationalIdUploadButton.setText(getString(R.string.upload_again));
                     mVerificationStatusNID.setText(getString(R.string.verification_in_progress));
@@ -166,12 +180,14 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
             } else if (documentType.equals(Constants.DOCUMENT_TYPE_PASSPORT)) {
                 mPassportNumber.setText(identificationDocument.getDocumentIdNumber());
+                mPassportView.setText(identificationDocument.getDocumentIdNumber());
 
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mPassportUploadButton.setVisibility(View.GONE);
                     mPassportNumber.setVisibility(View.GONE);
                     mVerificationStatusPassport.setTextColor(getResources().getColor(R.color.bottle_green));
                     mVerificationStatusPassport.setText(getString(R.string.verified));
+                    mPassportView.setVisibility(View.VISIBLE);
                 } else {
                     mPassportUploadButton.setText(getString(R.string.upload_again));
                     mVerificationStatusPassport.setText(getString(R.string.verification_in_progress));
@@ -179,12 +195,14 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
             } else if (documentType.equals(Constants.DOCUMENT_TYPE_DRIVING_LICENSE)) {
                 mDrivingLicenseNumber.setText(identificationDocument.getDocumentIdNumber());
+                mDrivingLicenseView.setText(identificationDocument.getDocumentIdNumber());
 
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mDrivingLicenseUploadButton.setVisibility(View.GONE);
                     mDrivingLicenseNumber.setVisibility(View.GONE);
                     mVerificationStatusDrivingLicense.setTextColor(getResources().getColor(R.color.bottle_green));
                     mVerificationStatusDrivingLicense.setText(getString(R.string.verified));
+                    mDrivingLicenseView.setVisibility(View.VISIBLE);
                 } else {
                     mDrivingLicenseUploadButton.setText(getString(R.string.upload_again));
                     mVerificationStatusDrivingLicense.setText(getString(R.string.verification_in_progress));
@@ -192,12 +210,14 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
             } else if (documentType.equals(Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE)) {
                 mBirthCertificateNumber.setText(identificationDocument.getDocumentIdNumber());
+                mBirthCertificateView.setText(identificationDocument.getDocumentIdNumber());
 
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mBirthCertificateUploadButton.setVisibility(View.GONE);
                     mBirthCertificateNumber.setVisibility(View.GONE);
                     mVerificationStatusBirthCertificate.setTextColor(getResources().getColor(R.color.bottle_green));
                     mVerificationStatusBirthCertificate.setText(getString(R.string.verified));
+                    mBirthCertificateView.setVisibility(View.VISIBLE);
                 } else {
                     mBirthCertificateUploadButton.setText(getString(R.string.upload_again));
                     mVerificationStatusBirthCertificate.setText(getString(R.string.verification_in_progress));
@@ -205,12 +225,14 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
             } else if (documentType.equals(Constants.DOCUMENT_TYPE_TIN)) {
                 mTinNumber.setText(identificationDocument.getDocumentIdNumber());
+                mTINView.setText(identificationDocument.getDocumentIdNumber());
 
                 if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
                     mTinUploadButton.setVisibility(View.GONE);
                     mTinNumber.setVisibility(View.GONE);
                     mVerificationStatusTIN.setTextColor(getResources().getColor(R.color.bottle_green));
                     mVerificationStatusTIN.setText(getString(R.string.verified));
+                    mTINView.setVisibility(View.VISIBLE);
                 } else {
                     mTinUploadButton.setText(getString(R.string.upload_again));
                     mVerificationStatusTIN.setText(getString(R.string.verification_in_progress));
