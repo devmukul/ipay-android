@@ -15,7 +15,6 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationPersonalF
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationTrustFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupBusinessFragment;
-import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupPersonalFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupPersonalStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SignupPersonalStepTwoFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
@@ -76,12 +75,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
 //        GetThanaAsyncTask getThanaAsyncTask = new GetThanaAsyncTask(this);
 //        getThanaAsyncTask.execute();
-    }
-
-    public void switchToPersonalSignUpFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupPersonalFragment()).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToLoginFragment() {
