@@ -4,12 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -70,7 +72,7 @@ public class PinChecker implements HttpResponseListener {
 
         mGetPinInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PIN_INFO,
                 Constants.BASE_URL + Constants.URL_GET_PIN_INFO, mContext, this);
-        mGetPinInfoTask.execute();
+        mGetPinInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

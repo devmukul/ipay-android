@@ -50,10 +50,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/thana" />
+            android:text="@string/district" />
 
         <Spinner
-            android:id="@+id/thana"
+            android:id="@+id/district"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2" />
@@ -70,10 +70,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/district" />
+            android:text="@string/thana" />
 
         <Spinner
-            android:id="@+id/district"
+            android:id="@+id/thana"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2" />

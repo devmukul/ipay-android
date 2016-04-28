@@ -544,6 +544,8 @@
     <string name="personal_account">Personal Account</string>
     <string name="business_account">Business Account</string>
     <string name="failed_loading_occupation_list">Failed to load occupation list</string>
+    <string name="failed_loading_thana_list">Failed to load thana list</string>
+    <string name="failed_loading_district_list">Failed to load district list</string>
 
     <string-array name="account_types">
         <item>Personal</item>

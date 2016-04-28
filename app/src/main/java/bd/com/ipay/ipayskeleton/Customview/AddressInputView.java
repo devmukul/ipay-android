@@ -1,20 +1,51 @@
 package bd.com.ipay.ipayskeleton.Customview;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
-import bd.com.ipay.ipayskeleton.Utilities.Common.DistrictList;
-import bd.com.ipay.ipayskeleton.Utilities.Common.ThanaList;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class AddressInputView extends FrameLayout {
+public class AddressInputView extends FrameLayout implements HttpResponseListener {
+
+    private HttpRequestGetAsyncTask mGetThanaListAsyncTask = null;
+    private GetThanaResponse mGetThanaResponse;
+
+    private HttpRequestGetAsyncTask mGetDistrictListAsyncTask = null;
+    private GetDistrictResponse mGetDistrictResponse;
+
+    private List<Thana> mThanaList;
+    private List<District> mDistrictList;
+
+    private List<String> mThanaNames;
+    private List<String> mDistrictNames;
+
+    private AddressClass mAddressClass;
+
     private Context context;
 
     private EditText mAddressLine1Field;
@@ -23,6 +54,9 @@ public class AddressInputView extends FrameLayout {
     private Spinner mDistrictSelection;
     private Spinner mCountrySelection;
     private EditText mPostalCodeField;
+
+    private ArrayAdapter<String> mAdapterThana;
+    private ArrayAdapter<String> mAdapterDistrict;
 
     public AddressInputView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -51,12 +85,18 @@ public class AddressInputView extends FrameLayout {
         mCountrySelection = (Spinner) v.findViewById(R.id.country);
         mPostalCodeField = (EditText) v.findViewById(R.id.postcode);
 
-        ArrayAdapter<CharSequence> mAdapterBusinessCity = new ArrayAdapter<CharSequence>(context,
-                android.R.layout.simple_dropdown_item_1line, ThanaList.thanaNames);
-        mThanaSelection.setAdapter(mAdapterBusinessCity);
+        mThanaNames = new ArrayList<>();
+        mThanaNames.add(context.getString(R.string.loading));
 
-        ArrayAdapter<CharSequence> mAdapterDistrict = new ArrayAdapter<CharSequence>(context,
-                android.R.layout.simple_dropdown_item_1line, DistrictList.districtNames);
+        mAdapterThana = new ArrayAdapter<>(context,
+                android.R.layout.simple_dropdown_item_1line, mThanaNames);
+        mThanaSelection.setAdapter(mAdapterThana);
+
+        mDistrictNames = new ArrayList<>();
+        mDistrictNames.add(context.getString(R.string.loading));
+
+        mAdapterDistrict = new ArrayAdapter<>(context,
+                android.R.layout.simple_dropdown_item_1line, mDistrictNames);
         mDistrictSelection.setAdapter(mAdapterDistrict);
 
         ArrayAdapter<CharSequence> mAdapterCountry = new ArrayAdapter<CharSequence>(context,
@@ -64,38 +104,62 @@ public class AddressInputView extends FrameLayout {
         mCountrySelection.setAdapter(mAdapterCountry);
 
         addView(v);
+
+        getThanaList();
+        getDistrictList();
+    }
+
+    private void getThanaList() {
+        mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
+                new ThanaRequestBuilder().getGeneratedUri(), context, this);
+        mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getDistrictList() {
+        mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
+                new DistrictRequestBuilder().getGeneratedUri(), context, this);
+        mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void setInformation(AddressClass address) {
         if (address == null)
-            return;;
+            return;
 
-        if (address.getAddressLine1() != null)
-            mAddressLine1Field.setText(address.getAddressLine1());
-        if (address.getAddressLine2() != null)
-            mAddressLine2Field.setText(address.getAddressLine2());
-        if (address.getPostalCode() != null)
-            mPostalCodeField.setText(address.getPostalCode());
+        mAddressClass = address;
+        updateInformation();
+    }
+
+    private void updateInformation() {
+        if (mAddressClass.getAddressLine1() != null)
+            mAddressLine1Field.setText(mAddressClass.getAddressLine1());
+        if (mAddressClass.getAddressLine2() != null)
+            mAddressLine2Field.setText(mAddressClass.getAddressLine2());
+        if (mAddressClass.getPostalCode() != null)
+            mPostalCodeField.setText(mAddressClass.getPostalCode());
 
         int thanaPosition = 0;
-        for (int i = 0; i < ThanaList.thanaIds.length; i++) {
-            if (address.getThanaCode() == ThanaList.thanaIds[i]) {
-                thanaPosition = i;
-                break;
+        if (mThanaList != null) {
+            for (int i = 0; i < mThanaList.size(); i++) {
+                if (mAddressClass.getThanaCode() == mThanaList.get(i).getId()) {
+                    thanaPosition = i + 1;
+                    break;
+                }
             }
         }
         mThanaSelection.setSelection(thanaPosition);
 
         int districtPosition = 0;
-        for (int i = 0; i < DistrictList.districtIds.length; i++) {
-            if (address.getDistrictCode() == DistrictList.districtIds[i]) {
-                districtPosition = i;
-                break;
+        if (mDistrictList != null) {
+            for (int i = 0; i < mDistrictList.size(); i++) {
+                if (mAddressClass.getDistrictCode() == mDistrictList.get(i).getId()) {
+                    districtPosition = i + 1;
+                    break;
+                }
             }
         }
         mDistrictSelection.setSelection(districtPosition);
 
-        String countryCode = address.getCountryCode();
+        String countryCode = mAddressClass.getCountryCode();
         if (countryCode == null)
             countryCode = "BD";
         for (int i = 0; i < CountryList.countryISOcodes.length; i++) {
@@ -132,6 +196,18 @@ public class AddressInputView extends FrameLayout {
             cancel = true;
         }
 
+        if (mThanaSelection.getSelectedItemPosition() == 0) {
+            ((TextView) mThanaSelection.getSelectedItem()).setError("");
+            focusedView = mThanaSelection;
+            cancel = true;
+        }
+
+        if (mDistrictSelection.getSelectedItemPosition() == 0) {
+            ((TextView) mDistrictSelection.getSelectedItem()).setError("");
+            focusedView = mDistrictSelection;
+            cancel = true;
+        }
+
         if (cancel) {
             focusedView.requestFocus();
             return false;
@@ -145,12 +221,82 @@ public class AddressInputView extends FrameLayout {
         String addressLine1 = mAddressLine1Field.getText().toString().trim();
         String addressLine2 = mAddressLine2Field.getText().toString().trim();
         String postalCode = mPostalCodeField.getText().toString().trim();
-        String country = mCountrySelection.getSelectedItem().toString();
-        String thana = mThanaSelection.getSelectedItem().toString();
-        String district = mDistrictSelection.getSelectedItem().toString();
+        String country = CountryList.countryNameToCountryCodeMap.get(
+                mCountrySelection.getSelectedItem().toString());
+        int thana = mThanaList.get(mThanaSelection.getSelectedItemPosition() - 1).getId();
+        int district = mDistrictList.get(mDistrictSelection.getSelectedItemPosition() - 1).getId();
 
         AddressClass addressClass = new AddressClass(addressLine1, addressLine2, country,
                 district, thana, postalCode);
         return addressClass;
+    }
+
+    @Override
+    public void httpResponseReceiver(String result) {
+        if (result == null) {
+            mGetThanaListAsyncTask = null;
+            mGetDistrictListAsyncTask = null;
+            if (context != null)
+                Toast.makeText(context, R.string.request_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<String> resultList = Arrays.asList(result.split(";"));
+        Gson gson = new Gson();
+
+        if (resultList.get(0).equals(Constants.COMMAND_GET_THANA_LIST)) {
+            try {
+                mGetThanaResponse = gson.fromJson(resultList.get(2), GetThanaResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mThanaList = mGetThanaResponse.getThanas();
+                    mThanaNames.clear();
+                    mThanaNames.add(context.getString(R.string.select_one));
+
+                    for (Thana thana : mThanaList) {
+                        mThanaNames.add(thana.getName());
+                    }
+
+                    if (context != null) {
+                        mAdapterThana.notifyDataSetChanged();
+                    }
+                } else {
+                    if (context != null)
+                        Toast.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (context != null)
+                    Toast.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+            }
+
+            mGetThanaListAsyncTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_DISTRICT_LIST)) {
+            try {
+                mGetDistrictResponse = gson.fromJson(resultList.get(2), GetDistrictResponse.class);
+
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mDistrictList = mGetDistrictResponse.getDistricts();
+                    mDistrictNames.clear();
+                    mDistrictNames.add(context.getString(R.string.select_one));
+
+                    for (District district : mDistrictList) {
+                        mDistrictNames.add(district.getName());
+                    }
+
+                    if (context != null) {
+                        mAdapterDistrict.notifyDataSetChanged();
+                    }
+                } else {
+                    if (context != null)
+                        Toast.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (context != null)
+                    Toast.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+            }
+
+            mGetDistrictListAsyncTask = null;
+        }
     }
 }

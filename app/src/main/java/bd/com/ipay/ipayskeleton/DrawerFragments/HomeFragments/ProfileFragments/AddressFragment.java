@@ -24,6 +24,12 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.GetUserAddressResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -31,6 +37,12 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetUserAddressTask = null;
     private GetUserAddressResponse mGetUserAddressResponse = null;
+
+    private HttpRequestGetAsyncTask mGetThanaListAsyncTask = null;
+    private GetThanaResponse mGetThanaResponse;
+
+    private HttpRequestGetAsyncTask mGetDistrictListAsyncTask = null;
+    private GetDistrictResponse mGetDistrictResponse;
 
     private ProgressDialog mProgressDialog;
 
@@ -53,6 +65,9 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
     private Button mPresentAddressAddButton;
     private Button mPermanentAddressAddButton;
     private Button mOfficeAddressAddButton;
+
+    private List<Thana> mThanaList;
+    private List<District> mDistrictList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +105,12 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
         mPermanentAddressHolder = v.findViewById(R.id.permanent_address_holder);
         mOfficeAddressHolder = v.findViewById(R.id.office_address_holder);
 
-        getUserAddress();
+        /**
+         * Get district list first.
+         * Then get all thanas within that district.
+         * Then load addresses.
+         */
+        getDistrictList();
 
         return v;
     }
@@ -102,7 +122,7 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
         } else {
             mPresentAddressHolder.setVisibility(View.VISIBLE);
             mPresentAddressAddButton.setVisibility(View.GONE);
-            mPresentAddressView.setText(mPresentAddress.toString());
+            mPresentAddressView.setText(mPresentAddress.toString(mThanaList, mDistrictList));
         }
 
         if (mPermanentAddress == null) {
@@ -111,7 +131,7 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
         } else {
             mPermanentAddressHolder.setVisibility(View.VISIBLE);
             mPermanentAddressAddButton.setVisibility(View.GONE);
-            mPermanentAddressView.setText(mPermanentAddress.toString());
+            mPermanentAddressView.setText(mPermanentAddress.toString(mThanaList, mDistrictList));
         }
 
         if (mOfficeAddress == null) {
@@ -120,7 +140,7 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
         } else {
             mOfficeAddressHolder.setVisibility(View.VISIBLE);
             mOfficeAddressAddButton.setVisibility(View.GONE);
-            mOfficeAddressView.setText(mOfficeAddress.toString());
+            mOfficeAddressView.setText(mOfficeAddress.toString(mThanaList, mDistrictList));
         }
 
         final Bundle presentAddressBundle = new Bundle();
@@ -181,6 +201,18 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
         });
     }
 
+    private void getThanaList() {
+        mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
+                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this);
+        mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getDistrictList() {
+        mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
+                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this);
+        mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void getUserAddress() {
         if (mGetUserAddressTask != null) {
             return;
@@ -196,9 +228,9 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
 
     @Override
     public void httpResponseReceiver(String result) {
-        mProgressDialog.dismiss();
 
         if (result == null) {
+            mProgressDialog.dismiss();
             mGetUserAddressTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
@@ -209,6 +241,8 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
 
         if (resultList.get(0).equals(Constants.COMMAND_GET_USER_ADDRESS_REQUEST)) {
+            mProgressDialog.dismiss();
+
             try {
                 mGetUserAddressResponse = gson.fromJson(resultList.get(2), GetUserAddressResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -230,6 +264,48 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
             }
 
             mGetUserAddressTask = null;
+
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_THANA_LIST)) {
+            try {
+                mGetThanaResponse = gson.fromJson(resultList.get(2), GetThanaResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mThanaList = mGetThanaResponse.getThanas();
+                    getUserAddress();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                    ((HomeActivity) getActivity()).switchToDashBoard();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                ((HomeActivity) getActivity()).switchToDashBoard();
+            }
+
+            mGetThanaListAsyncTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_DISTRICT_LIST)) {
+            try {
+                mGetDistrictResponse = gson.fromJson(resultList.get(2), GetDistrictResponse.class);
+
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mDistrictList = mGetDistrictResponse.getDistricts();
+                    getThanaList();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                    ((HomeActivity) getActivity()).switchToDashBoard();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                ((HomeActivity) getActivity()).switchToDashBoard();
+            }
+
+            mGetDistrictListAsyncTask = null;
         }
     }
 }

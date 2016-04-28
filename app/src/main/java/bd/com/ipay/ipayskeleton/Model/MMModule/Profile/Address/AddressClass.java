@@ -1,10 +1,11 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address;
 
 import java.io.Serializable;
+import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
-import bd.com.ipay.ipayskeleton.Utilities.Common.DistrictList;
-import bd.com.ipay.ipayskeleton.Utilities.Common.ThanaList;
 
 public class AddressClass implements Serializable {
     private String addressLine1;
@@ -25,17 +26,6 @@ public class AddressClass implements Serializable {
         this.country = country;
         this.district = district;
         this.thana = thana;
-        this.postalCode = postalCode;
-    }
-
-
-    public AddressClass(String addressLine1, String addressLine2, String country,
-                        String district, String thana, String postalCode) {
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.country = CountryList.countryNameToCountryCodeMap.get(country);
-        this.district = DistrictList.districtNameToIdMap.get(district);
-        this.thana = ThanaList.thanaNameToIdMap.get(thana);
         this.postalCode = postalCode;
     }
 
@@ -64,28 +54,49 @@ public class AddressClass implements Serializable {
         return postalCode;
     }
 
-    public String getThana() {
-        return ThanaList.thanaIdToNameMap.get(thana);
+    public String getThana(List<Thana> thanaList) {
+        if (thanaList != null) {
+            for (Thana thana : thanaList) {
+                if (thana.getId() == this.thana)
+                    return thana.getName();
+
+            }
+        }
+
+        return null;
     }
 
-    public String getDistrict() {
-        return DistrictList.districtIdToNameMap.get(district);
+    public String getDistrict(List<District> districtList) {
+        if (districtList != null) {
+            for (District district : districtList) {
+                if (district.getId() == this.district)
+                    return district.getName();
+            }
+        }
+
+        return null;
     }
 
     public String getCountry() {
         return CountryList.countryCodeToCountryNameMap.get(country);
     }
 
-    public String toString() {
+    public String toString(List<Thana> thanaList, List<District> districtList) {
         StringBuilder builder = new StringBuilder();
+
         if (getAddressLine1() != null)
             builder.append(getAddressLine1()).append("\n");
         if (getAddressLine2() != null)
             builder.append(getAddressLine2()).append("\n");
-        if (getThana() != null)
-            builder.append(getThana()).append(", ");
-        if (getDistrict() != null)
-            builder.append(getDistrict()).append(" ");
+
+        String thanaName = getThana(thanaList);
+        if (thanaName != null)
+            builder.append(thanaName).append(", ");
+
+        String districtName = getDistrict(districtList);
+        if (districtName != null)
+            builder.append(districtName).append(" ");
+
         if (getPostalCode() != null)
             builder.append(getPostalCode());
         builder.append("\n");
