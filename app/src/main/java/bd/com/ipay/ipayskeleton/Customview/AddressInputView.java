@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -86,7 +87,6 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         mPostalCodeField = (EditText) v.findViewById(R.id.postcode);
 
         mThanaNames = new ArrayList<>();
-        mThanaNames.add(context.getString(R.string.loading));
 
         mAdapterThana = new ArrayAdapter<>(context,
                 android.R.layout.simple_dropdown_item_1line, mThanaNames);
@@ -99,23 +99,56 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
                 android.R.layout.simple_dropdown_item_1line, mDistrictNames);
         mDistrictSelection.setAdapter(mAdapterDistrict);
 
+        mDistrictSelection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (mDistrictSelection.getSelectedItemPosition() != 0
+                        && mDistrictList != null) {
+                    int districtId = mDistrictList.get(
+                            mDistrictSelection.getSelectedItemPosition() - 1).getId();
+                    getThanaList(districtId);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         ArrayAdapter<CharSequence> mAdapterCountry = new ArrayAdapter<CharSequence>(context,
                 android.R.layout.simple_dropdown_item_1line, CountryList.countryNames);
         mCountrySelection.setAdapter(mAdapterCountry);
 
-        addView(v);
+        for (int i = 0; i < CountryList.countryISOcodes.length; i++) {
+            if (CountryList.countryISOcodes[i].equals("BD")) {
+                mCountrySelection.setSelection(i);
+                break;
+            }
+        }
 
-        getThanaList();
+        addView(v);
         getDistrictList();
     }
 
-    private void getThanaList() {
+    private void getThanaList(int districtId) {
+        if (mGetThanaListAsyncTask != null) {
+            return;
+        }
+        mThanaNames.clear();
+        mThanaNames.add(context.getString(R.string.loading));
+        mAdapterThana.notifyDataSetChanged();
+
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
-                new ThanaRequestBuilder().getGeneratedUri(), context, this);
+                new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this);
         mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getDistrictList() {
+        if (mGetDistrictListAsyncTask != null) {
+            return;
+        }
+
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
                 new DistrictRequestBuilder().getGeneratedUri(), context, this);
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -126,10 +159,6 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
             return;
 
         mAddressClass = address;
-        updateInformation();
-    }
-
-    private void updateInformation() {
         if (mAddressClass.getAddressLine1() != null)
             mAddressLine1Field.setText(mAddressClass.getAddressLine1());
         if (mAddressClass.getAddressLine2() != null)
@@ -137,27 +166,13 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         if (mAddressClass.getPostalCode() != null)
             mPostalCodeField.setText(mAddressClass.getPostalCode());
 
-        int thanaPosition = 0;
         if (mThanaList != null) {
-            for (int i = 0; i < mThanaList.size(); i++) {
-                if (mAddressClass.getThanaCode() == mThanaList.get(i).getId()) {
-                    thanaPosition = i + 1;
-                    break;
-                }
-            }
+            setThana(mAddressClass.getThanaCode());
         }
-        mThanaSelection.setSelection(thanaPosition);
 
-        int districtPosition = 0;
         if (mDistrictList != null) {
-            for (int i = 0; i < mDistrictList.size(); i++) {
-                if (mAddressClass.getDistrictCode() == mDistrictList.get(i).getId()) {
-                    districtPosition = i + 1;
-                    break;
-                }
-            }
+            setDistrict(mAddressClass.getDistrictCode());
         }
-        mDistrictSelection.setSelection(districtPosition);
 
         String countryCode = mAddressClass.getCountryCode();
         if (countryCode == null)
@@ -168,6 +183,30 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
                 break;
             }
         }
+    }
+
+    private void setDistrict(int district) {
+        int districtPosition = 0;
+        if (mDistrictList != null) {
+            for (int i = 0; i < mDistrictList.size(); i++) {
+                if (district == mDistrictList.get(i).getId()) {
+                    districtPosition = i + 1;
+                    break;
+                }
+            }
+        }
+        mDistrictSelection.setSelection(districtPosition);
+    }
+
+    private void setThana(int thana) {
+        int thanaPosition = 0;
+        for (int i = 0; i < mThanaList.size(); i++) {
+            if (thana == mThanaList.get(i).getId()) {
+                thanaPosition = i + 1;
+                break;
+            }
+        }
+        mThanaSelection.setSelection(thanaPosition);
     }
 
     public void resetInformation() {
@@ -197,13 +236,13 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         }
 
         if (mThanaSelection.getSelectedItemPosition() == 0) {
-            ((TextView) mThanaSelection.getSelectedItem()).setError("");
+            ((TextView) mThanaSelection.getSelectedView()).setError("");
             focusedView = mThanaSelection;
             cancel = true;
         }
 
         if (mDistrictSelection.getSelectedItemPosition() == 0) {
-            ((TextView) mDistrictSelection.getSelectedItem()).setError("");
+            ((TextView) mDistrictSelection.getSelectedView()).setError("");
             focusedView = mDistrictSelection;
             cancel = true;
         }
@@ -258,6 +297,9 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
                     if (context != null) {
                         mAdapterThana.notifyDataSetChanged();
+                        if (mAddressClass != null) {
+                            setThana(mAddressClass.getThanaCode());
+                        }
                     }
                 } else {
                     if (context != null)
@@ -285,6 +327,9 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
                     if (context != null) {
                         mAdapterDistrict.notifyDataSetChanged();
+                        if (mAddressClass != null) {
+                            setDistrict(mAddressClass.getDistrictCode());
+                        }
                     }
                 } else {
                     if (context != null)

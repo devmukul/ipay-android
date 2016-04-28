@@ -13,7 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/prompt_business_addr_line1"
-            android:imeOptions="actionUnspecified"
             android:inputType="textPostalAddress"
             android:maxLines="1"
             android:singleLine="true" >
@@ -32,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/prompt_business_addr_line2"
-            android:imeOptions="actionUnspecified"
             android:inputType="textPostalAddress"
             android:maxLines="1"
             android:singleLine="true" />

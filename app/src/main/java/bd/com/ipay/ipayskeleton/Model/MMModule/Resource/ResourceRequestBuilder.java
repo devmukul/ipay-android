@@ -14,7 +14,7 @@ public abstract class ResourceRequestBuilder {
     private static final String PARAM_FILTER = "filter";
 
     private String generatedUri;
-    private long filter;
+    protected long filter;
 
     public ResourceRequestBuilder() {
         filter = -1;
