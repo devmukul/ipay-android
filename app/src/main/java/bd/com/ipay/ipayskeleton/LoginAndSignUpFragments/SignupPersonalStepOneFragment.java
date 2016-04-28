@@ -153,7 +153,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_OTP_VERIFICATION)) {
+        if (resultList.get(0).equals(Constants.COMMAND_CHECK_PROMO_CODE)) {
 
             String message = "";
             if (resultList.size() > 2) {
