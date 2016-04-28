@@ -3,12 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--To prevent EditText from gaining focus, focusable has been set to true -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
@@ -30,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:hint="@string/enter_otp"
-                android:imeOptions="actionUnspecified"
                 android:inputType="number"
                 android:maxLines="1"
                 android:singleLine="true" />

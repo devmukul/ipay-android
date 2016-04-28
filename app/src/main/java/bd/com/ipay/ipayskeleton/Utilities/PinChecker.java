@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ public class PinChecker implements HttpResponseListener {
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
 
+    private boolean cancel;
+
     public PinChecker(Context context, PinCheckerListener pinCheckerListener) {
         mContext = context;
         mPinCheckerListener = pinCheckerListener;
@@ -40,6 +43,8 @@ public class PinChecker implements HttpResponseListener {
     }
 
     public void execute() {
+        cancel = false;
+
         if (pref.getBoolean(Constants.IS_PIN_ADDED, false)) {
             if (mPinCheckerListener != null) {
                 mPinCheckerListener.ifPinAdded();
@@ -55,6 +60,12 @@ public class PinChecker implements HttpResponseListener {
         }
 
         mProgressDialog.setMessage(mContext.getString(R.string.progress_dialog_if_pin_exists));
+        mProgressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                cancel = true;
+            }
+        });
         mProgressDialog.show();
 
         mGetPinInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PIN_INFO,
@@ -79,35 +90,37 @@ public class PinChecker implements HttpResponseListener {
         Gson gson = new Gson();
 
         if (resultList.get(0).equals(Constants.COMMAND_GET_PIN_INFO)) {
-            try {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    mPinInfoResponse = gson.fromJson(resultList.get(2), PinInfoResponse.class);
+            if (!cancel) {
+                try {
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        mPinInfoResponse = gson.fromJson(resultList.get(2), PinInfoResponse.class);
 
-                    if (mPinInfoResponse.isPinExists()) {
-                        if (mPinCheckerListener != null) {
-                            mPinCheckerListener.ifPinAdded();
+                        if (mPinInfoResponse.isPinExists()) {
+                            if (mPinCheckerListener != null) {
+                                mPinCheckerListener.ifPinAdded();
+                            }
+
+                            // Save the information so that we don't need to get pin info again and again
+                            pref.edit().putBoolean(Constants.IS_PIN_ADDED, true).apply();
+
+                        } else {
+                            AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(mContext);
+                            addPinDialogBuilder.show();
                         }
-
-                        // Save the information so that we don't need to get pin info again and again
-                        pref.edit().putBoolean(Constants.IS_PIN_ADDED, true).apply();
-
                     } else {
-                        AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(mContext);
-                        addPinDialogBuilder.show();
+                        if (mContext != null) {
+                            Toast.makeText(mContext, mPinInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (mContext != null) {
-                        Toast.makeText(mContext, mPinInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, R.string.failed_loading_pin, Toast.LENGTH_LONG).show();
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (mContext != null) {
-                    Toast.makeText(mContext, R.string.failed_loading_pin, Toast.LENGTH_LONG).show();
-                }
-            }
 
-            mGetPinInfoTask = null;
+                mGetPinInfoTask = null;
+            }
         }
     }
 
