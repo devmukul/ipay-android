@@ -60,7 +60,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
         int accountClass = Constants.DEFAULT_USER_CLASS;
 
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {

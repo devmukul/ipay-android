@@ -30,6 +30,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
@@ -39,6 +41,9 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
+
+    private HttpRequestGetAsyncTask mGetOccupationTask = null;
+    private GetOccupationResponse mGetOccupationResponse;
 
     private ProgressDialog mProgressDialog;
 
@@ -179,12 +184,6 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
 
         mDateOfBirthView.setText(mDateOfBirth);
 
-        if (mOccupation == 0) mOccupationView.setText("");
-        else {
-            String[] occupationArray = getResources().getStringArray(R.array.occupations);
-            mOccupationView.setText(occupationArray[mOccupation]);
-        }
-
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
 
@@ -218,6 +217,18 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getOccupationList() {
+        if (mGetOccupationTask != null) {
+            return;
+        }
+
+        mOccupationView.setText(getString(R.string.please_wait));
+
+        mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
+                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
+        mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void setProfilePicture(String url) {
         try {
             if (!url.equals("")) {
@@ -243,9 +254,11 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
 
     @Override
     public void httpResponseReceiver(String result) {
+        mProgressDialog.dismiss();
+
         if (result == null) {
-            mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
+            mGetOccupationTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -297,6 +310,7 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
                     }
 
                     setProfileInformation();
+                    getOccupationList();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
@@ -308,7 +322,25 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
             }
 
             mGetProfileInfoTask = null;
-            mProgressDialog.dismiss();
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
+
+            try {
+                mGetOccupationResponse = gson.fromJson(resultList.get(2), GetOccupationResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    String occupation = mGetOccupationResponse.getOccupation(mOccupation);
+                    if (occupation != null)
+                        mOccupationView.setText(occupation);
+                    else
+                        mOccupationView.setText("");
+                } else {
+                    mOccupationView.setText("");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mOccupationView.setText("");
+            }
+
+            mGetOccupationTask = null;
         }
     }
 }

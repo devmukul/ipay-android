@@ -112,7 +112,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
         int accountClass = Constants.DEFAULT_USER_CLASS;
 
-        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.show();
         GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(Constants.SERVICE_ID_MAKE_PAYMENT, accountType, accountClass);
         Gson gson = new Gson();
