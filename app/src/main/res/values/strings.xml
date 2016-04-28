@@ -543,6 +543,7 @@
     <string name="otp_has_been_sent_to_your_mobile_number">"OTP has been sent to your mobile number "</string>
     <string name="personal_account">Personal Account</string>
     <string name="business_account">Business Account</string>
+    <string name="failed_loading_occupation_list">Failed to load occupation list</string>
 
     <string-array name="account_types">
         <item>Personal</item>
@@ -570,16 +571,6 @@
         <item>Airtel</item>
         <item>Banglalink</item>Teletalk
         <item>Teletalk</item>
-    </string-array>
-
-    <string-array name="occupations">
-        <item>Select One</item>
-        <item>Engineer</item>
-        <item>Doctor</item>
-        <item>Hardware specialist</item>
-        <item>Business</item>
-        <item>Government Service</item>
-        <item>Private Service</item>
     </string-array>
 
     <string-array name="default_bank_account_types">

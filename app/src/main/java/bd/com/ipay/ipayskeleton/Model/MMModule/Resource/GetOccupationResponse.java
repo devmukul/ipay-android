@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetOccupationResponse {
@@ -17,6 +18,15 @@ public class GetOccupationResponse {
 
     public List<Occupation> getOccupations() {
         return resource;
+    }
+
+    public List<String> getOccupationNames() {
+        List<String> occupationNames = new ArrayList<>();
+        for (Occupation occupation : resource) {
+            occupationNames.add(occupation.getName());
+        }
+
+        return occupationNames;
     }
 
     public String getOccupation(long id) {

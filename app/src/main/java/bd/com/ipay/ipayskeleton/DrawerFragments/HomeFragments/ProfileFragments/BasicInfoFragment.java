@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.EditProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -196,12 +195,6 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
                 mVerificationStatusView.setText(R.string.unverified);
             }
         }
-    }
-
-    public void editProfile(int targetTab) {
-        Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-        intent.putExtra(EditProfileActivity.TARGET_TAB, targetTab);
-        startActivity(intent);
     }
 
     private void getProfileInfo() {

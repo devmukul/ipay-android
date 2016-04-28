@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,22 +22,28 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfilePictureResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
@@ -50,8 +57,11 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
     private SetProfileInfoResponse mSetProfileInfoResponse;
 
-    private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask;
+    private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
     private SetProfilePictureResponse mSetProfilePictureResponse;
+
+    private HttpRequestGetAsyncTask mGetOccupationTask = null;
+    private GetOccupationResponse mGetOccupationResponse;
 
     private RoundedImageView mProfilePictureView;
     private ImageButton mEditProfilePictureButton;
@@ -92,6 +102,11 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
     private int mOccupation = 0;
     private String mGender = "";
+
+    private List<Occupation> mOccupationList;
+    private List<String> mOccupationNameList;
+
+    private ArrayAdapter<String> mAdapterOccupation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,10 +191,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        ArrayAdapter<CharSequence> mAdapterOccupation = ArrayAdapter.createFromResource(getActivity(),
-                R.array.occupations, android.R.layout.simple_dropdown_item_1line);
-        mOccupationSpinner.setAdapter(mAdapterOccupation);
-
         ArrayAdapter<CharSequence> mAdapterGender = new ArrayAdapter<CharSequence>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, GenderList.genderNames);
         mGenderSpinner.setAdapter(mAdapterGender);
@@ -194,9 +205,16 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         });
 
         mProgressDialog = new ProgressDialog(getActivity());
+        mOccupationNameList = new ArrayList<>();
+        mOccupationNameList.add(getString(R.string.loading));
+
+        mAdapterOccupation = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_list_item_1, mOccupationNameList);
+        mOccupationSpinner.setAdapter(mAdapterOccupation);
 
         setProfilePicture("");
         setProfileInformation();
+        getOccupationList();
 
         return v;
     }
@@ -216,10 +234,19 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mMothersMobileNumber = mMothersMobileNumberEditText.getText().toString().trim();
         mSpouseMobileNumber = mSpouseMobileNumberEditText.getText().toString().trim();
 
-        mOccupation = mOccupationSpinner.getSelectedItemPosition();
-
         mGender = GenderList.genderNameToCodeMap.get(
                 mGenderSpinner.getSelectedItem().toString());
+
+        if (mOccupationSpinner.getSelectedItemPosition() == 0) {
+            focusView = mOccupationSpinner.getSelectedView();
+            cancel = true;
+            ((TextView) mOccupationSpinner.getSelectedView()).setError("");
+        } else {
+            if (mOccupationSpinner.getSelectedItemPosition() - 1 < mOccupationList.size()) {
+                mOccupation = mOccupationList.get(
+                        mOccupationSpinner.getSelectedItemPosition() - 1).getId();
+            }
+        }
 
         if (mName.isEmpty()) {
             mNameEditText.setError(getString(R.string.error_invalid_first_name));
@@ -258,6 +285,16 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             return true;
         }
     }
+
+    private void getOccupationList() {
+        if (mGetOccupationTask != null) {
+            return;
+        }
+
+        mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
+                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
+        mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
     
     private void attemptSaveBasicInfo() {
         mProgressDialog.setMessage(getString(R.string.saving_profile_information));
@@ -290,9 +327,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mSpouseMobileNumberEditText.setText(mSpouseMobileNumber);
 
         mDateOfBirthEditText.setText(mDateOfBirth);
-
-        // Set occupation spinner value
-        mOccupationSpinner.setSelection(mOccupation);
 
         String[] genderArray = GenderList.genderNames;
         for (int i = 0; i < genderArray.length; i++) {
@@ -383,18 +417,20 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     }
 
     public void httpResponseReceiver(String result) {
+        mProgressDialog.dismiss();
+
         if (result == null) {
-            mProgressDialog.dismiss();
             mSetProfileInfoTask = null;
             mUploadProfilePictureAsyncTask = null;
+            mGetOccupationTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
         }
 
-
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
+
         if (resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)) {
 
             try {
@@ -415,7 +451,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
 
             mSetProfileInfoTask = null;
-            mProgressDialog.dismiss();
         } else if (resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
             try {
                 mSetProfilePictureResponse = gson.fromJson(resultList.get(2), SetProfilePictureResponse.class);
@@ -432,9 +467,37 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                     Toast.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT).show();
             }
 
-            mProgressDialog.dismiss();
             mUploadProfilePictureAsyncTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
 
+            try {
+                mGetOccupationResponse = gson.fromJson(resultList.get(2), GetOccupationResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    mOccupationList = mGetOccupationResponse.getOccupations();
+
+                    mOccupationNameList.clear();
+                    mOccupationNameList.add(getString(R.string.select_one));
+                    mOccupationNameList.addAll(mGetOccupationResponse.getOccupationNames());
+
+                    for (int i = 0; i < mOccupationList.size(); i++) {
+                        if (mOccupationList.get(i).getId() == mOccupation) {
+                            mOccupationSpinner.setSelection(i + 1);
+                            break;
+                        }
+                    }
+
+                    mAdapterOccupation.notifyDataSetChanged();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.failed_loading_occupation_list, Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_loading_occupation_list, Toast.LENGTH_LONG).show();
+            }
+
+            mGetOccupationTask = null;
         }
     }
 }
