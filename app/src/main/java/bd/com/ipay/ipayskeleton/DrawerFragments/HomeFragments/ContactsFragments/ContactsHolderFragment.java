@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -80,7 +81,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         if (mGetInviteInfoTask == null) {
             mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
                     Constants.BASE_URL + "/" + Constants.URL_GET_INVITE_INFO, getActivity(), this);
-            mGetInviteInfoTask.execute();
+            mGetInviteInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

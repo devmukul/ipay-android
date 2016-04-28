@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
@@ -157,7 +158,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
                     Constants.BASE_URL + Constants.URL_OTP_REQUEST, json, getActivity());
             mRequestOTPTask.mHttpResponseListener = this;
-            mRequestOTPTask.execute((Void) null);
+            mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

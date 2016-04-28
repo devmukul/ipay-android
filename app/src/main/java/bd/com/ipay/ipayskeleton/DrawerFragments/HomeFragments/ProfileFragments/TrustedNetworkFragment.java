@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -116,7 +117,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
 
         mGetTrustedPersonsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_PERSONS,
                 Constants.BASE_URL + Constants.URL_GET_TRUSTED_PERSONS, getActivity(), this);
-        mGetTrustedPersonsTask.execute();
+        mGetTrustedPersonsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void addTrustedPerson(AddTrustedPersonRequest addTrustedPersonRequest) {
@@ -132,7 +133,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
 
         mAddTrustedPersonTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_PERSON,
                 Constants.BASE_URL + Constants.URL_POST_TRUSTED_PERSONS, json, getActivity(), this);
-        mAddTrustedPersonTask.execute();
+        mAddTrustedPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void setAccountRecoveryPerson(long id) {
@@ -150,7 +151,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
         mSetAccountRecoveryPersonTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_ACCOUNT_RECOVERY_PERSON,
                 Constants.BASE_URL + Constants.URL_POST_TRUSTED_PERSONS + id + Constants.URL_SET_RECOVERY_PERSON,
                 json, getActivity(), this);
-        mSetAccountRecoveryPersonTask.execute();
+        mSetAccountRecoveryPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void showAddTrustedPersonDialog() {

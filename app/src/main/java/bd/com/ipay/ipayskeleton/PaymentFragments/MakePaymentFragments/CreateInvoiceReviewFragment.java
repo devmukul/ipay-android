@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -143,7 +144,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mCreateInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_INVOICE,
                 Constants.BASE_URL + Constants.URL_PAYMENT_CREATE_INVOICE, json, getActivity());
         mCreateInvoiceTask.mHttpResponseListener = this;
-        mCreateInvoiceTask.execute();
+        mCreateInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
@@ -135,7 +136,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
             );
             mRequestOTPTask.mHttpResponseListener = this;
-            mRequestOTPTask.execute((Void) null);
+            mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -176,7 +177,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_BUSINESS,
                     Constants.BASE_URL + Constants.URL_SIGN_UP_BUSINESS, json, getActivity());
             mSignUpTask.mHttpResponseListener = this;
-            mSignUpTask.execute((Void) null);
+            mSignUpTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -193,7 +194,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
                 Constants.BASE_URL + Constants.URL_LOGIN, json, getActivity());
         mLoginTask.mHttpResponseListener = this;
-        mLoginTask.execute((Void) null);
+        mLoginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

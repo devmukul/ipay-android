@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -172,7 +173,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
                 Constants.BASE_URL + Constants.URL_GET_EMAIL, getActivity(), this);
-        mGetEmailsTask.execute();
+        mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void addNewEmail(String email) {
@@ -189,7 +190,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
 
         mAddNewEmailTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_NEW_EMAIL,
                 Constants.BASE_URL + Constants.URL_POST_EMAIL, json, getActivity(), this);
-        mAddNewEmailTask.execute();
+        mAddNewEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void deleteEmail(long id) {
@@ -202,7 +203,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
 
         mDeleteEmailTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_DELETE_EMAIL,
                 Constants.BASE_URL + Constants.URL_DELETE_EMAIL + id, getActivity(), this);
-        mDeleteEmailTask.execute();
+        mDeleteEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void verifyEmail(long id) {
@@ -220,7 +221,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
         mEmailVerificationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_VERIFICATION,
                 Constants.BASE_URL + Constants.URL_POST_EMAIL + id + Constants.URL_MAKE_EMAIL_VERIFIED,
                 json, getActivity(), this);
-        mEmailVerificationTask.execute();
+        mEmailVerificationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
@@ -239,7 +240,7 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
         mMakePrimaryEmailTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_MAKE_PRIMARY,
                 Constants.BASE_URL + Constants.URL_POST_EMAIL + id + Constants.URL_MAKE_PRIMARY_EMAIL,
                 json, getActivity(), this);
-        mMakePrimaryEmailTask.execute();
+        mMakePrimaryEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

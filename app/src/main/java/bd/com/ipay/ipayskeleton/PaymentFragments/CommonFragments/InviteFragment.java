@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -68,7 +69,7 @@ public class InviteFragment extends Fragment implements HttpResponseListener {
         String json = gson.toJson(sendInviteRequest);
         mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
                 Constants.BASE_URL + Constants.URL_SEND_INVITE, json, getActivity(), this);
-        mSendInviteTask.execute();
+        mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

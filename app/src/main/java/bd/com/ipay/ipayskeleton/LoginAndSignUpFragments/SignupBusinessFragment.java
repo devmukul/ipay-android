@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
@@ -155,7 +156,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
                 new GetBusinessTypesAsyncTask(getActivity(), businessTypeLoadListener);
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_business_types));
         mProgressDialog.show();
-        getBusinessTypesAsyncTask.execute();
+        getBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         return v;
     }
@@ -269,7 +270,7 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
                     Constants.BASE_URL + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity());
             mRequestOTPTask.mHttpResponseListener = this;
-            mRequestOTPTask.execute((Void) null);
+            mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

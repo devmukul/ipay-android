@@ -130,7 +130,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 });
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
         mProgressDialog.show();
-        mGetAvailableBankAsyncTask.execute();
+        mGetAvailableBankAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getBankList() {
@@ -147,11 +147,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 Constants.BASE_URL + Constants.URL_GET_BANK, json, getActivity());
         mGetBankTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mGetBankTask.execute((Void) null);
-        }
+        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private boolean verifyUserInputs() {

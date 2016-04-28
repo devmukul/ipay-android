@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -273,7 +274,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         String profileInfoJson = gson.toJson(setProfileInfoRequest);
         mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
                 Constants.BASE_URL + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, getActivity(), this);
-        mSetProfileInfoTask.execute();
+        mSetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void setProfileInformation() {
@@ -339,7 +340,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
                 selectedOImagePath, getActivity());
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
-        mUploadProfilePictureAsyncTask.execute();
+        mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         ((ProfilePictureChangeListener) getActivity()).onProfilePictureChange(selectedOImagePath);
     }

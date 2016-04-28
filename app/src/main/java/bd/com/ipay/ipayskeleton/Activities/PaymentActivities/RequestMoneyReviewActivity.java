@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -81,7 +82,7 @@ public class RequestMoneyReviewActivity extends BaseActivity implements HttpResp
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 mUri, this, this);
 
-        mGetProfileInfoTask.execute();
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

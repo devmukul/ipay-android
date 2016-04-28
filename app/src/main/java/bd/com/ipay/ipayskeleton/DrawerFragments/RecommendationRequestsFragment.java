@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -111,7 +112,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
         mGetRecommendationRequestsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
                 Constants.BASE_URL + Constants.URL_GET_RECOMMENDATION_REQUESTS, json, getActivity());
         mGetRecommendationRequestsTask.mHttpResponseListener = this;
-        mGetRecommendationRequestsTask.execute((Void) null);
+        mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptRecommendAction(long requestID, String recommendationStatus) {
@@ -129,7 +130,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
         mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_RECOMMEND_ACTION,
                 Constants.BASE_URL + Constants.URL_RECOMMEND_ACTION, json, getActivity());
         mRecommendActionTask.mHttpResponseListener = this;
-        mRecommendActionTask.execute((Void) null);
+        mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

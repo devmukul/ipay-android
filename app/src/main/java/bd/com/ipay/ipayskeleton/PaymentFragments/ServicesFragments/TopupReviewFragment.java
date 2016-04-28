@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -108,7 +109,7 @@ public class TopupReviewFragment extends ReviewFragment implements HttpResponseL
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
                 Constants.BASE_URL + Constants.URL_TOPUP_REQUEST, json, getActivity());
         mTopupTask.mHttpResponseListener = this;
-        mTopupTask.execute();
+        mTopupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

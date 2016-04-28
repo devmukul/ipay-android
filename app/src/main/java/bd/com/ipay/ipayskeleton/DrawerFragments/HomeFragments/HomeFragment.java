@@ -293,11 +293,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mRefreshBalanceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_BALANCE,
                 Constants.BASE_URL + Constants.URL_REFRESH_BALANCE, json, getActivity());
         mRefreshBalanceTask.mHttpResponseListener = this;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mRefreshBalanceTask.execute((Void) null);
-        }
+        mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void addToTrustedDeviceList() {
@@ -316,11 +312,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
                 Constants.BASE_URL + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
         mAddTrustedDeviceTask.mHttpResponseListener = this;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mAddTrustedDeviceTask.execute((Void) null);
-        }
+        mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getNewsFeed() {
@@ -334,12 +326,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mGetNewsFeedTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEWS_FEED,
                 mUri, getActivity());
         mGetNewsFeedTask.mHttpResponseListener = this;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mGetNewsFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mGetNewsFeedTask.execute((Void) null);
-        }
+        mGetNewsFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getTransactionHistory() {
@@ -353,7 +340,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 Constants.BASE_URL + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
-        mTransactionHistoryTask.execute();
+        mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

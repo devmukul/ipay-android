@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -130,7 +131,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_NOTIFICATIONS,
                 Constants.BASE_URL + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mGetAllNotificationsTask.mHttpResponseListener = this;
-        mGetAllNotificationsTask.execute((Void) null);
+        mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void rejectPaymentRequest(Long id) {
@@ -148,7 +149,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
                 Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectPaymentTask.mHttpResponseListener = this;
-        mRejectPaymentTask.execute((Void) null);
+        mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void acceptPaymentRequest(Long id) {
@@ -166,7 +167,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
                 Constants.BASE_URL + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptPaymentTask.mHttpResponseListener = this;
-        mAcceptPaymentTask.execute((Void) null);
+        mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void rejectRequestMoney(Long id) {
@@ -183,7 +184,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
                 Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
-        mRejectRequestTask.execute((Void) null);
+        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void acceptRequestMoney(Long id) {
@@ -200,7 +201,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
                 Constants.BASE_URL + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptRequestTask.mHttpResponseListener = this;
-        mAcceptRequestTask.execute((Void) null);
+        mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -91,7 +92,7 @@ public class FragmentEditAddress extends Fragment implements HttpResponseListene
         String addressJson = gson.toJson(userAddressRequest, SetUserAddressRequest.class);
         mSetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_USER_ADDRESS_REQUEST,
                 Constants.BASE_URL + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, getActivity(), this);
-        mSetUserAddressTask.execute();
+        mSetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

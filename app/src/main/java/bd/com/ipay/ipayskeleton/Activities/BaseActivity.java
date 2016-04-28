@@ -99,11 +99,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
                 Constants.BASE_URL + Constants.URL_GET_REFRESH_TOKEN, json, context);
         HomeActivity.mRefreshTokenAsyncTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            HomeActivity.mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            HomeActivity.mRefreshTokenAsyncTask.execute((Void) null);
-        }
+        HomeActivity.mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptLogout() {
@@ -122,11 +118,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
                 Constants.BASE_URL + Constants.URL_LOG_OUT, json, context);
         mLogoutTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mLogoutTask.execute((Void) null);
-        }
+        mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

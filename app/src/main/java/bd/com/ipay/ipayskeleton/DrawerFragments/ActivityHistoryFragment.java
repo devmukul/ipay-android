@@ -455,11 +455,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
                 Constants.BASE_URL + Constants.URL_USER_ACTIVITY, json, getActivity());
         mUserActivityTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mUserActivityTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mUserActivityTask.execute((Void) null);
-        }
+        mUserActivityTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

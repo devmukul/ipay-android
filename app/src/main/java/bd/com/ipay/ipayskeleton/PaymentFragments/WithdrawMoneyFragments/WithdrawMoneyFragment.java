@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -130,7 +131,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                 });
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
         mProgressDialog.show();
-        mGetAvailableBankAsyncTask.execute();
+        mGetAvailableBankAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     ;
@@ -148,7 +149,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
                 Constants.BASE_URL + Constants.URL_GET_BANK, json, getActivity());
         mGetBankTask.mHttpResponseListener = this;
-        mGetBankTask.execute((Void) null);
+        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private boolean verifyUserInputs() {

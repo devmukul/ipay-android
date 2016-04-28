@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.ForgotPasswordFragments;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.TextInputLayout;
@@ -198,7 +199,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
             mOTPConfirmationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_FORGET_PASSWORD_CONFIRM_OTP,
                     Constants.BASE_URL + Constants.URL_CONFIRM_OTP_FORGET_PASSWORD, json, getActivity());
             mOTPConfirmationTask.mHttpResponseListener = this;
-            mOTPConfirmationTask.execute((Void) null);
+            mOTPConfirmationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

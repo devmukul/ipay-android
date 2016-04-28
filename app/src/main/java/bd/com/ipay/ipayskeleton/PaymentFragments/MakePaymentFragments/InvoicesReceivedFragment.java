@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -119,7 +120,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
                 Constants.BASE_URL + Constants.URL_SERVICE_CHARGE, json, getActivity());
         mServiceChargeTask.mHttpResponseListener = this;
-        mServiceChargeTask.execute((Void) null);
+        mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void refreshPendingPaymentList() {
@@ -146,7 +147,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         mPendingPaymentsRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED,
                 Constants.BASE_URL + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mPendingPaymentsRequestTask.mHttpResponseListener = this;
-        mPendingPaymentsRequestTask.execute((Void) null);
+        mPendingPaymentsRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void rejectPaymentRequest(Long id) {
@@ -164,7 +165,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
                 Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectPaymentTask.mHttpResponseListener = this;
-        mRejectPaymentTask.execute((Void) null);
+        mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void acceptPaymentRequest(Long id) {
@@ -182,7 +183,7 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
                 Constants.BASE_URL + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptPaymentTask.mHttpResponseListener = this;
-        mAcceptPaymentTask.execute((Void) null);
+        mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void showAlertDialogue(String msg, final int action, final long id, BigDecimal amount) {

@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
@@ -133,7 +134,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             mCheckPromoCodeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHECK_PROMO_CODE,
                     Constants.BASE_URL + Constants.URL_CHECK_PROMO_CODE, json, getActivity());
             mCheckPromoCodeTask.mHttpResponseListener = this;
-            mCheckPromoCodeTask.execute((Void) null);
+            mCheckPromoCodeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

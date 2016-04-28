@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.AddParticipantsFragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -145,7 +146,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         mGetAllParticipantsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_ALL_PARTICIPANTS_LIST,
                 Constants.BASE_URL + Constants.URL_GET_ALL_PARTICIPANTS_LIST, json, getActivity());
         mGetAllParticipantsTask.mHttpResponseListener = this;
-        mGetAllParticipantsTask.execute((Void) null);
+        mGetAllParticipantsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

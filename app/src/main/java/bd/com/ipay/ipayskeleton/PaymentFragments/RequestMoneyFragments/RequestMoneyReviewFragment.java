@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -151,7 +152,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mRequestMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY,
                 Constants.BASE_URL + Constants.URL_REQUEST_MONEY, json, getActivity());
         mRequestMoneyTask.mHttpResponseListener = this;
-        mRequestMoneyTask.execute();
+        mRequestMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

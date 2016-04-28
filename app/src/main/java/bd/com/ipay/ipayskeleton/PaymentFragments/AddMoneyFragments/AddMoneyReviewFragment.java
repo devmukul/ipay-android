@@ -129,12 +129,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
                 Constants.BASE_URL + Constants.URL_ADD_MONEY, json, getActivity());
         mAddMoneyTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mAddMoneyTask.execute((Void) null);
-        }
-
+        mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

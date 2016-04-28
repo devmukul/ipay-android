@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -319,7 +320,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                                 command, selectedOImagePath, getActivity(), mDocumentNumber, mDocumentType);
                         mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
-                        mUploadIdentifierDocumentAsyncTask.execute();
+                        mUploadIdentifierDocumentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                     }
                 }
@@ -339,7 +340,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_DOCUMENTS, getActivity(), this);
-        mGetIdentificationDocumentsTask.execute();
+        mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

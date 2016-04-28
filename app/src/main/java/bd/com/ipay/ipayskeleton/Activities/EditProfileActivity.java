@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -143,7 +144,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
                     mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
                             Constants.BASE_URL + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, this);
                     mSetProfileInfoTask.mHttpResponseListener = this;
-                    mSetProfileInfoTask.execute();
+                    mSetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
                 }
             }
 
@@ -175,7 +176,7 @@ public class EditProfileActivity extends AppCompatActivity implements HttpRespon
         mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
                 selectedOImagePath, EditProfileActivity.this);
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
-        mUploadProfilePictureAsyncTask.execute();
+        mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void verifyEmail(String emailAddress) {

@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -240,7 +241,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             mSavePINTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PIN,
                     Constants.BASE_URL + Constants.URL_SET_PIN, json, getActivity());
             mSavePINTask.mHttpResponseListener = this;
-            mSavePINTask.execute((Void) null);
+            mSavePINTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -288,7 +289,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             mChangePasswordTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
                     Constants.BASE_URL + Constants.URL_CHANGE_PASSWORD, json, getActivity());
             mChangePasswordTask.mHttpResponseListener = this;
-            mChangePasswordTask.execute((Void) null);
+            mChangePasswordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -299,7 +300,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
         mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
                 Constants.BASE_URL + "/" + Constants.URL_GET_TRUSTED_DEVICES, getActivity(), this);
-        mGetTrustedDeviceTask.execute();
+        mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void showTrustedDeviceRemoveConfirmationDialog(final long id, String name) {
@@ -334,7 +335,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
         mRemoveTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_DEVICE,
                 Constants.BASE_URL + Constants.URL_REMOVE_TRUSTED_DEVICE, json, getActivity(), this);
-        mRemoveTrustedDeviceTask.execute();
+        mRemoveTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

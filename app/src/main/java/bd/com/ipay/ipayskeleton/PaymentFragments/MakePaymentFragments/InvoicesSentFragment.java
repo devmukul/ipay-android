@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -111,7 +112,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         mPendingInvoicesTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT,
                 Constants.BASE_URL + Constants.URL_GET_SENT_REQUESTS, json, getActivity());
         mPendingInvoicesTask.mHttpResponseListener = this;
-        mPendingInvoicesTask.execute((Void) null);
+        mPendingInvoicesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void cancelRequest(Long id) {
@@ -128,7 +129,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         mCancelPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_PAYMENT_REQUEST,
                 Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mCancelPaymentRequestTask.mHttpResponseListener = this;
-        mCancelPaymentRequestTask.execute((Void) null);
+        mCancelPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

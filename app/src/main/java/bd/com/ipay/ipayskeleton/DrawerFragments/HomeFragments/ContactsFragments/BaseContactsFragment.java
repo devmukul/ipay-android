@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -287,7 +288,7 @@ public abstract class BaseContactsFragment extends Fragment implements
         mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
                 Constants.BASE_URL + Constants.URL_ASK_FOR_RECOMMENDATION, json, getActivity());
         mAskForRecommendationTask.mHttpResponseListener = this;
-        mAskForRecommendationTask.execute((Void) null);
+        mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void sendInvite(String phoneNumber) {
@@ -313,7 +314,7 @@ public abstract class BaseContactsFragment extends Fragment implements
             String json = gson.toJson(sendInviteRequest);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
                     Constants.BASE_URL + Constants.URL_SEND_INVITE, json, getActivity(), this);
-            mSendInviteTask.execute();
+            mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

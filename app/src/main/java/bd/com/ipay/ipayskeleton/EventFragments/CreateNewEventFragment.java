@@ -106,11 +106,7 @@ public class CreateNewEventFragment extends Fragment implements HttpResponseList
                 mUri, getActivity());
         mGetEventCategoryTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mGetEventCategoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mGetEventCategoryTask.execute((Void) null);
-        }
+        mGetEventCategoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

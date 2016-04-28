@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
@@ -122,7 +123,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
                     Constants.BASE_URL + Constants.URL_LOGIN, json, getActivity());
             mLoginTask.mHttpResponseListener = this;
-            mLoginTask.execute((Void) null);
+            mLoginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

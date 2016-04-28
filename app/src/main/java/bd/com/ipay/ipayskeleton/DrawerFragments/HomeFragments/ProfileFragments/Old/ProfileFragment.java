@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
@@ -314,7 +315,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
-        mGetProfileInfoTask.execute();
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getUserAddress() {
@@ -324,7 +325,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this);
-        mGetUserAddressTask.execute();
+        mGetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getIdentificationDocuments() {
@@ -334,7 +335,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_DOCUMENTS, getActivity(), this);
-        mGetIdentificationDocumentsTask.execute();
+        mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getIntroducerList() {
@@ -344,7 +345,7 @@ public class ProfileFragment extends Fragment implements HttpResponseListener {
 
         mGetIntroducerListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_INTRODUCER_LIST, getActivity(), this);
-        mGetIntroducerListTask.execute();
+        mGetIntroducerListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void setProfilePicture(String url) {

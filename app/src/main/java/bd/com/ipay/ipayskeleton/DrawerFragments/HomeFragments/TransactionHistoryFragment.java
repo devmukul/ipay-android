@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -403,7 +404,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 Constants.BASE_URL + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
-        mTransactionHistoryTask.execute();
+        mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,

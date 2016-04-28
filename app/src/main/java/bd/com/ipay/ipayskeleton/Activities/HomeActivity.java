@@ -377,11 +377,7 @@ public class HomeActivity extends BaseActivity
                 Constants.BASE_URL + Constants.URL_LOG_OUT, json, HomeActivity.this);
         mLogoutTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mLogoutTask.execute((Void) null);
-        }
+        mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getFireBaseToken() {
@@ -398,11 +394,7 @@ public class HomeActivity extends BaseActivity
                 mUri, HomeActivity.this);
         mGetFireBaseTokenTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mGetFireBaseTokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mGetFireBaseTokenTask.execute((Void) null);
-        }
+        mGetFireBaseTokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getProfileInfo() {
@@ -417,21 +409,12 @@ public class HomeActivity extends BaseActivity
                 mUri, HomeActivity.this);
         mGetProfileInfoTask.mHttpResponseListener = this;
 
-        // TODO: execute thread like this in all other places
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mGetProfileInfoTask.execute((Void) null);
-        }
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getAvailableBankList() {
         GetAvailableBankAsyncTask getAvailableBanksTask = new GetAvailableBankAsyncTask(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            getAvailableBanksTask.execute();
-        }
+        getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -508,12 +491,7 @@ public class HomeActivity extends BaseActivity
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     fireBaseToken = mGetFireBaseTokenResponse.getFirebaseToken();
 
-                    // Sync contacts
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                        new SyncContactsAsyncTask(HomeActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    } else {
-                        new SyncContactsAsyncTask(HomeActivity.this).execute();
-                    }
+                    new SyncContactsAsyncTask(HomeActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

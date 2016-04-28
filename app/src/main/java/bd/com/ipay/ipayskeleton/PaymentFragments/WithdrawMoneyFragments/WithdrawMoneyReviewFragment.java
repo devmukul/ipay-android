@@ -128,12 +128,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                 Constants.BASE_URL + Constants.URL_WITHDRAW_MONEY, json, getActivity());
         mWithdrawMoneyTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mWithdrawMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mWithdrawMoneyTask.execute((Void) null);
-        }
-
+        mWithdrawMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

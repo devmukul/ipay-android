@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -190,7 +191,7 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
 
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this);
-        mGetUserAddressTask.execute();
+        mGetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

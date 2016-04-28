@@ -185,11 +185,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
 
                     }
                     // Update subscriber table
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                        new UpdateSubscriberTableAsyncTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    } else {
-                        new UpdateSubscriberTableAsyncTask(mContext).execute();
-                    }
+                    new UpdateSubscriberTableAsyncTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
 

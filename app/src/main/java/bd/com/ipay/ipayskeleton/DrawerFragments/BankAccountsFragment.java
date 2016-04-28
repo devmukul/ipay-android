@@ -174,7 +174,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 });
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
         mProgressDialog.show();
-        mGetAvailableBankAsyncTask.execute();
+        mGetAvailableBankAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
@@ -191,7 +191,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
                 Constants.BASE_URL + Constants.URL_GET_BANK, json, getActivity());
         mGetBankTask.mHttpResponseListener = this;
-        mGetBankTask.execute((Void) null);
+        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void addBankAccountDialogue() {
@@ -276,11 +276,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 mUri, getActivity());
         mGetBankBranchesTask.mHttpResponseListener = this;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            mGetBankBranchesTask.execute((Void) null);
-        }
+        mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptAddBank(int bankID, int accountType, String accountName, String accountNumber) {
@@ -304,7 +300,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
                 Constants.BASE_URL + Constants.URL_ADD_A_BANK, json, getActivity());
         mAddBankTask.mHttpResponseListener = this;
-        mAddBankTask.execute((Void) null);
+        mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptSendForVerification(Long userBankID) {
@@ -322,7 +318,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mSendForVerificationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_FOR_VERIFICATION_BANK,
                 Constants.BASE_URL + Constants.URL_SEND_FOR_VERIFICATION_BANK, json, getActivity());
         mSendForVerificationTask.mHttpResponseListener = this;
-        mSendForVerificationTask.execute((Void) null);
+        mSendForVerificationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptVerificationWithAmount(Long userBankID, double amount) {
@@ -346,7 +342,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mSendForVerificationWithAmountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_VERIFICATION_BANK_WITH_AMOUNT,
                 Constants.BASE_URL + Constants.URL_BANK_VERIFICATION_WITH_AMOUNT, json, getActivity());
         mSendForVerificationWithAmountTask.mHttpResponseListener = this;
-        mSendForVerificationWithAmountTask.execute((Void) null);
+        mSendForVerificationWithAmountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptRemoveBank(long bankAccountID) {
@@ -364,7 +360,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mRemoveBankAccountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REMOVE_A_BANK,
                 Constants.BASE_URL + Constants.URL_REMOVE_A_BANK, json, getActivity());
         mRemoveBankAccountTask.mHttpResponseListener = this;
-        mRemoveBankAccountTask.execute((Void) null);
+        mRemoveBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptEnableBank(long bankAccountID) {
@@ -382,7 +378,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mEnableBankAccountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ENABLE_A_BANK,
                 Constants.BASE_URL + Constants.URL_ENABLE_A_BANK, json, getActivity());
         mEnableBankAccountTask.mHttpResponseListener = this;
-        mEnableBankAccountTask.execute((Void) null);
+        mEnableBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptDisableBank(long bankAccountID) {
@@ -400,7 +396,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mDisableBankAccountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_DISABLE_A_BANK,
                 Constants.BASE_URL + Constants.URL_DISABLE_A_BANK, json, getActivity());
         mDisableBankAccountTask.mHttpResponseListener = this;
-        mDisableBankAccountTask.execute((Void) null);
+        mDisableBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
