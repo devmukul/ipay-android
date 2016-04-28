@@ -18,9 +18,9 @@
         android:id="@+id/verification_status"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginLeft="36dp"
-        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-        android:src="@drawable/ic_verified"
+        android:layout_marginLeft="34dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_contacts_verified"
         android:visibility="gone" />
 
     <TextView
