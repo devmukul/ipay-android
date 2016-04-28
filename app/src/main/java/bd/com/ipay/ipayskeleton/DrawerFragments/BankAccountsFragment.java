@@ -255,7 +255,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     ((TextView) mBankBranchSpinner.getSelectedView()).setError("");
                 } else {
                     BankBranch bankBranch = bankBranches.get(mBankBranchSpinner.getSelectedItemPosition() - 1);
-                    attemptAddBank((int) bankBranch.getId(), mAccountTypesSpinner.getSelectedItemPosition(),
+                    attemptAddBank(bankBranch.getBranchRoutingNumber(), mAccountTypesSpinner.getSelectedItemPosition(),
                             mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
                     dialog.dismiss();
                 }
@@ -279,7 +279,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void attemptAddBank(int bankID, int accountType, String accountName, String accountNumber) {
+    private void attemptAddBank(String branchRoutingNumber, int accountType, String accountName, String accountNumber) {
         if (accountName.length() == 0) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.please_enter_an_account_name, Toast.LENGTH_LONG).show();
@@ -294,7 +294,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
         mProgressDialog.setMessage(getString(R.string.adding_bank));
         mProgressDialog.show();
-        AddBankRequest mAddBankRequest = new AddBankRequest(bankID, accountType, accountName, accountNumber);
+        AddBankRequest mAddBankRequest = new AddBankRequest(branchRoutingNumber, accountType, accountName, accountNumber);
         Gson gson = new Gson();
         String json = gson.toJson(mAddBankRequest);
         mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
