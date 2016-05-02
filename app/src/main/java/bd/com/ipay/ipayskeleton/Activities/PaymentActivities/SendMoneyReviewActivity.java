@@ -34,9 +34,9 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request_money_review);
+        setContentView(R.layout.activity_send_money_review);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

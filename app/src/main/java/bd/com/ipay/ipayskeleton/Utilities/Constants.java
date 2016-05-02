@@ -107,8 +107,8 @@ public class Constants {
     static {
         if (SERVER_TYPE == 1) {
 
-            BASE_URL = "http://dev.ipay.com.bd:8085/api/v1/";
-            BASE_URL_IMAGE_SERVER = "http://dev.ipay.com.bd";
+            BASE_URL = "http://10.10.10.10:8085/api/v1/";
+            BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 
         } else if (SERVER_TYPE == 2) {
 
@@ -404,8 +404,8 @@ public class Constants {
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";
 
-    public static final String VERIFICATION_STATUS_VERIFIED = "VERIFIED";
-    public static final String VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
+    public static final String ACCOUNT_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
+    public static final String ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
 
     public static final String ADDRESS_TYPE_PRESENT = "PRESENT";
     public static final String ADDRESS_TYPE_PERMANENT = "PERMANENT";

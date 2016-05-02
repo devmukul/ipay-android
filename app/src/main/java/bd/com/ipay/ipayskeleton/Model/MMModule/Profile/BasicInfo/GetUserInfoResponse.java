@@ -10,6 +10,7 @@ public class GetUserInfoResponse {
     public String message;
     public String name;
     public List<UserProfilePictureClass> profilePictures = new ArrayList<>();
+    public String accountStatus;
 
     public GetUserInfoResponse() {
     }
@@ -24,5 +25,9 @@ public class GetUserInfoResponse {
 
     public List<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
     }
 }

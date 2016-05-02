@@ -1,11 +1,11 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +22,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteResponse;
@@ -40,7 +41,12 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
     private TextView mMobileNumberView;
     private Button mInviteToIpayButton;
 
+    private View mInviteContainer;
+    private View mUnverifiedContainer;
+
     private String mMobileNumber;
+
+    private SharedPreferences pref;
 
     @Nullable
     @Override
@@ -53,6 +59,11 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mInviteToIpayButton = (Button) v.findViewById(R.id.button_invite_to_ipay);
 
+        mInviteContainer = v.findViewById(R.id.invite_container);
+        mUnverifiedContainer = v.findViewById(R.id.unverified_container);
+
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+
         mMobileNumberView.setText(mMobileNumber);
         mInviteToIpayButton.setOnClickListener(new View.OnClickListener() {
 
@@ -62,18 +73,29 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
             }
         });
 
-        setEmptyText("Loading...");
-        setContentShown(false);
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setContentShown(true);
-            }
-        }, 3000);
+        getProfileInfo(pref.getString(Constants.USERID, ""));
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
+    }
+
+    private void getProfileInfo(String mobileNumber) {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+
+        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+        String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                mUri, getActivity(), this);
+
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void sendInvite(String phoneNumber) {
@@ -131,6 +153,24 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
             mProgressDialog.dismiss();
             mSendInviteTask = null;
 
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_USER_INFO)) {
+            setContentShown(true);
+
+            try {
+                mGetUserInfoResponse = gson.fromJson(resultList.get(2), GetUserInfoResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    if (mGetUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                        mInviteContainer.setVisibility(View.VISIBLE);
+                    } else {
+                        mUnverifiedContainer.setVisibility(View.VISIBLE);
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mGetProfileInfoTask = null;
         }
     }
 }

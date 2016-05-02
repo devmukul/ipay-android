@@ -551,6 +551,7 @@
     <string name="dialog_prompt_add_pin">Please set your PIN first</string>
     <string name="enter_a_new_pin">Enter a new PIN</string>
     <string name="bank_branch_not_selected">No bank branch selected</string>
+    <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
 
     <string-array name="account_types">
         <item>Personal</item>

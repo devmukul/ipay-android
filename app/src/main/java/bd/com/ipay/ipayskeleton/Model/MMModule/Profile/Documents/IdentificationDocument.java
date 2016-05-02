@@ -20,7 +20,7 @@ public class IdentificationDocument {
     public IdentificationDocument(String documentType, String documentIdNumber) {
         this.documentType = documentType;
         this.documentIdNumber = documentIdNumber;
-        this.documentVerificationStatus = Constants.VERIFICATION_STATUS_NOT_VERIFIED;
+        this.documentVerificationStatus = Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED;
     }
 
     public String getDocumentType() {

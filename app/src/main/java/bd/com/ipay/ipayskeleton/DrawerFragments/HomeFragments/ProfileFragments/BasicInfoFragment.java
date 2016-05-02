@@ -2,19 +2,16 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -198,7 +195,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
 
         if (mVerificationStatus != null) {
-            if (mVerificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+            if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                 mVerificationStatusView.setBackgroundResource(R.drawable.background_verified);
                 mVerificationStatusView.setText(R.string.verified);
             } else {

@@ -168,7 +168,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 mNationalIdNumber.setText(identificationDocument.getDocumentIdNumber());
                 mNIDView.setText(identificationDocument.getDocumentIdNumber());
 
-                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                     mNationalIdUploadButton.setVisibility(View.GONE);
                     mNationalIdNumber.setVisibility(View.GONE);
                     mVerificationStatusNID.setTextColor(getResources().getColor(R.color.bottle_green));
@@ -183,7 +183,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 mPassportNumber.setText(identificationDocument.getDocumentIdNumber());
                 mPassportView.setText(identificationDocument.getDocumentIdNumber());
 
-                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                     mPassportUploadButton.setVisibility(View.GONE);
                     mPassportNumber.setVisibility(View.GONE);
                     mVerificationStatusPassport.setTextColor(getResources().getColor(R.color.bottle_green));
@@ -198,7 +198,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 mDrivingLicenseNumber.setText(identificationDocument.getDocumentIdNumber());
                 mDrivingLicenseView.setText(identificationDocument.getDocumentIdNumber());
 
-                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                     mDrivingLicenseUploadButton.setVisibility(View.GONE);
                     mDrivingLicenseNumber.setVisibility(View.GONE);
                     mVerificationStatusDrivingLicense.setTextColor(getResources().getColor(R.color.bottle_green));
@@ -213,7 +213,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 mBirthCertificateNumber.setText(identificationDocument.getDocumentIdNumber());
                 mBirthCertificateView.setText(identificationDocument.getDocumentIdNumber());
 
-                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                     mBirthCertificateUploadButton.setVisibility(View.GONE);
                     mBirthCertificateNumber.setVisibility(View.GONE);
                     mVerificationStatusBirthCertificate.setTextColor(getResources().getColor(R.color.bottle_green));
@@ -228,7 +228,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 mTinNumber.setText(identificationDocument.getDocumentIdNumber());
                 mTINView.setText(identificationDocument.getDocumentIdNumber());
 
-                if (verificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+                if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                     mTinUploadButton.setVisibility(View.GONE);
                     mTinNumber.setVisibility(View.GONE);
                     mVerificationStatusTIN.setTextColor(getResources().getColor(R.color.bottle_green));
