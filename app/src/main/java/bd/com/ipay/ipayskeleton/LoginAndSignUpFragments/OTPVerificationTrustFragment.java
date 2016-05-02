@@ -70,6 +70,8 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         mActivateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Hiding the keyboard after verifying OTP
+                Utilities.hideKeyboard(getActivity());
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword);
 
