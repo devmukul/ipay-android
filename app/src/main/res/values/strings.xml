@@ -548,6 +548,7 @@
     <string name="failed_loading_district_list">Failed to load district list</string>
     <string name="dialog_prompt_add_pin">Please set your PIN first</string>
     <string name="enter_a_new_pin">Enter a new PIN</string>
+    <string name="bank_branch_not_selected">No bank branch selected</string>
 
     <string-array name="account_types">
         <item>Personal</item>

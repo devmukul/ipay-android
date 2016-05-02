@@ -13,6 +13,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -253,7 +254,12 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 // The first position is "Select One"
                 if (mBankBranchSpinner.getSelectedItemPosition() == 0) {
                     ((TextView) mBankBranchSpinner.getSelectedView()).setError("");
-                } else {
+                }
+                //item position is -1
+                else if (mBankBranchSpinner.getSelectedItemPosition() < 0) {
+                    Toast.makeText(getActivity(), R.string.bank_branch_not_selected, Toast.LENGTH_LONG).show();
+                }
+                else {
                     BankBranch bankBranch = bankBranches.get(mBankBranchSpinner.getSelectedItemPosition() - 1);
                     attemptAddBank(bankBranch.getBranchRoutingNumber(), mAccountTypesSpinner.getSelectedItemPosition(),
                             mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
