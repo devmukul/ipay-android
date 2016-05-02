@@ -546,6 +546,8 @@
     <string name="failed_loading_occupation_list">Failed to load occupation list</string>
     <string name="failed_loading_thana_list">Failed to load thana list</string>
     <string name="failed_loading_district_list">Failed to load district list</string>
+    <string name="dialog_prompt_add_pin">Please set your PIN first</string>
+    <string name="enter_a_new_pin">Enter a new PIN</string>
 
     <string-array name="account_types">
         <item>Personal</item>

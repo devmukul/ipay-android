@@ -31,7 +31,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.PinInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
@@ -39,7 +38,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDevice
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -235,7 +233,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.setMessage(getString(R.string.saving_pin));
             mProgressDialog.show();
-            SetPinRequest mSetPinRequest = new SetPinRequest(password, pin);
+            SetPinRequest mSetPinRequest = new SetPinRequest(pin, password);
             Gson gson = new Gson();
             String json = gson.toJson(mSetPinRequest);
             mSavePINTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PIN,
@@ -345,6 +343,8 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             mProgressDialog.dismiss();
             mSavePINTask = null;
             mChangePasswordTask = null;
+            mGetTrustedDeviceTask = null;
+            mRemoveTrustedDeviceTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
             return;

@@ -295,4 +295,11 @@ public class Utilities {
         }
     }
 
+    public static void hideKeyboard(Context context, View v) {
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
 }
