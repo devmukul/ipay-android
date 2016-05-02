@@ -155,6 +155,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
     }
 
     private void showAddTrustedPersonDialog() {
+
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_a_trusted_person)
                 .customView(R.layout.dialog_add_new_trusted_person, true)
@@ -176,6 +177,10 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                //hiding keyboard after add pressed in add a trusted person
+                Utilities.hideKeyboard(getActivity());
+
                 String name = nameView.getText().toString();
                 String mobileNumber = mobileNumberView.getText().toString();
                 String relationShip = (String) selectRelationshipSpinner.getSelectedItem();
@@ -185,6 +190,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
                 } else if (!ContactEngine.isValidNumber(mobileNumber)){
                     Toast.makeText(getActivity(), R.string.error_invalid_mobile_number, Toast.LENGTH_LONG).show();
                 } else {
+
                     AddTrustedPersonRequest addTrustedPersonRequest = new AddTrustedPersonRequest(name,
                             ContactEngine.formatMobileNumberBD(mobileNumber), relationShip.toUpperCase());
                     addTrustedPerson(addTrustedPersonRequest);

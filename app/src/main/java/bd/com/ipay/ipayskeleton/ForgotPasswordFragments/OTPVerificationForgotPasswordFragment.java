@@ -224,9 +224,10 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
                 try {
                     mForgetPassOTPConfirmationResponse = gson.fromJson(resultList.get(2), ForgetPassOTPConfirmationResponse.class);
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toast.makeText(getActivity(), mForgetPassOTPConfirmationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        getActivity().finish();
+                        }
+                            getActivity().finish();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mForgetPassOTPConfirmationResponse.getMessage(), Toast.LENGTH_LONG).show();

@@ -206,6 +206,10 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     }
 
     private void attemptSavePIN() {
+
+        //hiding keyboard after save button pressed in set pin
+        Utilities.hideKeyboard(getActivity());
+
         if (mSavePINTask != null) {
             return;
         }
@@ -244,6 +248,10 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     }
 
     private void attemptChangePassword() {
+
+        //hiding keyboard after save button pressed in change password
+        Utilities.hideKeyboard(getActivity());
+
         if (mChangePasswordTask != null) {
             return;
         }
@@ -276,6 +284,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             // form field with an error.
             focusView.requestFocus();
         } else {
+
             String newPassword = mEnterNewPasswordEditText.getText().toString().trim();
             String password = mEnterCurrentPasswordEditText.getText().toString().trim();
 

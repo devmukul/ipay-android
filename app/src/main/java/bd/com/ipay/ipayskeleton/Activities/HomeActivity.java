@@ -416,7 +416,6 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void httpResponseReceiver(String result) {
-
         if (result == null) {
             mProgressDialog.dismiss();
             mLogoutTask = null;

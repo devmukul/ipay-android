@@ -83,6 +83,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //hiding keyboard after logIN button pressed
+                Utilities.hideKeyboard(getActivity());
+
                 if (Utilities.isConnectionAvailable(getActivity())) attemptLogin();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
