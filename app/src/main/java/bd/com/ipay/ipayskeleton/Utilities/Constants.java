@@ -83,7 +83,7 @@ public class Constants {
      * *** Set it to false if you are not using the default password ***
      *
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     /**
      * Sometimes SM server becomes down. That's OK - there are ups and downs in life. But before
@@ -107,8 +107,8 @@ public class Constants {
     static {
         if (SERVER_TYPE == 1) {
 
-            BASE_URL = "http://10.10.10.10:8085/api/v1/";
-            BASE_URL_IMAGE_SERVER = "https://10.10.10.10";
+            BASE_URL = "http://dev.ipay.com.bd:8085/api/v1/";
+            BASE_URL_IMAGE_SERVER = "http://dev.ipay.com.bd";
 
         } else if (SERVER_TYPE == 2) {
 

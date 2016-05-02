@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,19 +13,24 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class InviteFragment extends Fragment implements HttpResponseListener {
+public class InviteFragment extends ProgressFragment implements HttpResponseListener {
+    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
+    private GetUserInfoResponse mGetUserInfoResponse;
 
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
@@ -55,6 +61,17 @@ public class InviteFragment extends Fragment implements HttpResponseListener {
                 sendInvite(mMobileNumber);
             }
         });
+
+        setEmptyText("Loading...");
+        setContentShown(false);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setContentShown(true);
+            }
+        }, 3000);
 
         return v;
     }
