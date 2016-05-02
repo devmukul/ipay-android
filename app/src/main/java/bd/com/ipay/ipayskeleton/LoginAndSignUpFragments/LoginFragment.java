@@ -45,9 +45,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
 
-    private HttpRequestPostAsyncTask mForgetPasswordTask = null;
-    private ForgetPasswordResponse mForgetPasswordResponse;
-
     private EditText mUserNameLoginView;
     private EditText mPasswordLoginView;
     private Button mButtonLogin;
@@ -96,7 +93,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                forgetPasswordDialogue();
+                ((SignupOrLoginActivity) getActivity()).switchToForgetPasswordFragment();
             }
         });
 
@@ -116,98 +113,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         }
 
         return v;
-    }
-
-    private void forgetPasswordDialogue() {
-        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.forgot_your_password)
-                .customView(R.layout.dialog_forget_password_get_mobile_number, true)
-                .positiveText(R.string.submit)
-                .negativeText(R.string.cancel)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-
-        View view = dialog.getCustomView();
-        final EditText mMobileNumberEditText = (EditText) view.findViewById(R.id.mobile_number);
-        final EditText mNameEditText = (EditText) view.findViewById(R.id.name);
-        final EditText mDateOfBirthEditText = (EditText) view.findViewById(R.id.birthdayEditText);
-        final ImageView mDatePickerButton = (ImageView) view.findViewById(R.id.myDatePickerButton);
-
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getActivity(), new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                mDateOfBirthEditText.setText(
-                        String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year));
-            }
-        }, 1990, 0, 1);
-
-        mDatePickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerDialog.show();
-            }
-        });
-
-        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-                String name = mNameEditText.getText().toString().trim();
-                String dob = mDateOfBirthEditText.getText().toString().trim();
-
-                if (!ContactEngine.isValidNumber(mobileNumber)) {
-                    mMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
-                    Toast.makeText(getActivity(), R.string.error_invalid_mobile_number, Toast.LENGTH_LONG).show();
-
-                } else if (name.isEmpty()) {
-                    mNameEditText.setError(getString(R.string.error_invalid_name));
-                    Toast.makeText(getActivity(), R.string.error_invalid_name, Toast.LENGTH_LONG).show();
-
-                } else if (!Utilities.isDateOfBirthValid(dob)) {
-                    mDateOfBirthEditText.setError(getString(R.string.please_enter_valid_date_of_birth));
-                    Toast.makeText(getActivity(), R.string.please_enter_valid_date_of_birth, Toast.LENGTH_LONG).show();
-
-                } else {
-                    if (Utilities.isConnectionAvailable(getActivity()))
-                        attemptSendOTPForgetPassword(name, mobileNumber,
-                                dob, Constants.MOBILE_ANDROID + mDeviceID);
-                    else
-                        Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-                    dialog.dismiss();
-                }
-            }
-        });
-
-    }
-
-    private void attemptSendOTPForgetPassword(String name, String mobileNumber, String dob, String deviceID) {
-        if (mForgetPasswordTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.sending_otp));
-        mProgressDialog.show();
-        ForgetPasswordRequest mForgetPasswordRequest = new ForgetPasswordRequest(name,
-                ContactEngine.formatMobileNumberBD(mobileNumber), dob, deviceID);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(mForgetPasswordRequest);
-        mForgetPasswordTask = new HttpRequestPostAsyncTask(Constants.COMMAND_FORGET_PASSWORD_SEND_OTP,
-                Constants.BASE_URL + Constants.URL_SEND_OTP_FORGET_PASSWORD, json, getActivity());
-
-        // Save the mobile number and device id in a static field so that it can be used later in OTP verification fragment
-        SignupOrLoginActivity.mMobileNumber = mobileNumber;
-
-        mForgetPasswordTask.mHttpResponseListener = this;
-        mForgetPasswordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void attemptLogin() {
@@ -278,7 +183,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         if (result == null) {
             mProgressDialog.dismiss();
             mLoginTask = null;
-            mForgetPasswordTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -336,37 +240,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.dismiss();
             mLoginTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_FORGET_PASSWORD_SEND_OTP)) {
-            try {
-                if (resultList.size() > 2) {
-                    mForgetPasswordResponse = gson.fromJson(resultList.get(2), ForgetPasswordResponse.class);
-
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
-                        intent.putParcelableArrayListExtra(Constants.TRUSTED_OTP_RECEIVERS, mForgetPasswordResponse.getTrustedOtpReceiverList());
-                        startActivity(intent);
-
-                        // TODO Discuss with server team when "OTP has not been expired yet" message is received
-//                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
-//                        Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
-//                        intent.putParcelableArrayListExtra(Constants.TRUSTED_OTP_RECEIVERS, mForgetPasswordResponse.getTrustedOtpReceiverList());
-//                        startActivity(intent);
-
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mForgetPasswordResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                } else if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.otp_request_failed, Toast.LENGTH_SHORT).show();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.otp_request_failed, Toast.LENGTH_SHORT).show();
-            }
-
-            mProgressDialog.dismiss();
-            mForgetPasswordTask = null;
         }
     }
 }
