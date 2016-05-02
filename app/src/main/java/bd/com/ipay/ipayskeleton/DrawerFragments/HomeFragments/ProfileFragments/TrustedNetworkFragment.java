@@ -179,7 +179,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                 //hiding keyboard after add pressed in add a trusted person
-                Utilities.hideKeyboard(getActivity());
+                Utilities.hideKeyboard(getContext(),nameView);
 
                 String name = nameView.getText().toString();
                 String mobileNumber = mobileNumberView.getText().toString();
