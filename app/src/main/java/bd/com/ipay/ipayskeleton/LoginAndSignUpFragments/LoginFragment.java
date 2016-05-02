@@ -84,7 +84,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             @Override
             public void onClick(View v) {
 
-                //hiding keyboard after logIN button pressed
+                // Hiding the keyboard after login button pressed
                 Utilities.hideKeyboard(getActivity());
 
                 if (Utilities.isConnectionAvailable(getActivity())) attemptLogin();

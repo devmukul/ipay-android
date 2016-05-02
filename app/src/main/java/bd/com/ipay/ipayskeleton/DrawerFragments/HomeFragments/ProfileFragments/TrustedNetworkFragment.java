@@ -179,7 +179,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                 //hiding keyboard after add pressed in add a trusted person
-                Utilities.hideKeyboard(getContext(),nameView);
+                Utilities.hideKeyboard(getContext(), nameView);
 
                 String name = nameView.getText().toString();
                 String mobileNumber = mobileNumberView.getText().toString();
@@ -187,7 +187,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
 
                 if (name.isEmpty()) {
                     Toast.makeText(getActivity(), R.string.error_invalid_name, Toast.LENGTH_LONG).show();
-                } else if (!ContactEngine.isValidNumber(mobileNumber)){
+                } else if (!ContactEngine.isValidNumber(mobileNumber)) {
                     Toast.makeText(getActivity(), R.string.error_invalid_mobile_number, Toast.LENGTH_LONG).show();
                 } else {
 
@@ -195,6 +195,14 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
                             ContactEngine.formatMobileNumberBD(mobileNumber), relationShip.toUpperCase());
                     addTrustedPerson(addTrustedPersonRequest);
                 }
+            }
+        });
+
+        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                //hiding keyboard after cancel pressed in add a trusted person
+                Utilities.hideKeyboard(getContext(), nameView);
             }
         });
 
