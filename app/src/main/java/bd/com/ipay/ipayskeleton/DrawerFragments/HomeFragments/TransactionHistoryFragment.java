@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -549,6 +550,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
 
+
                 if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
                         .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
@@ -563,6 +565,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
+                    statusView.setColorFilter(Color.RED);
+                    statusView.setImageResource(R.drawable.ic_error_black_24dp);
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
