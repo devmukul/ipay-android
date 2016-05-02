@@ -213,6 +213,7 @@
     <string name="continue_add_money">Continue</string>
     <string name="continue_withdraw_money">Continue</string>
     <string name="continue_create_invoice">Continue</string>
+    <string name="continue_forget_password">Continue</string>
     <string name="send_invoice">Send Invoice</string>
     <string name="payment">Payment</string>
     <string name="password_recovery">Password Recovery</string>
@@ -383,6 +384,7 @@
     <string name="title_login_page">Login</string>
     <string name="title_signup_personal_page">Sign up with iPay</string>
     <string name="title_signup_business_page">Sign up with iPay</string>
+    <string name="title_forget_password_page">Reset Password</string>
     <string name="title_otp_verification_for_personal">Verify OTP</string>
     <string name="title_otp_verification_for_add_trusted_device">Verify OTP</string>
     <string name="title_otp_verification_for_business">Verify OTP</string>

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import bd.com.ipay.ipayskeleton.ForgotPasswordFragments.ForgetPasswordFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.OTPVerificationPersonalFragment;
@@ -122,6 +123,12 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public void switchToAccountSelectionFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
+        switchedToAccountSelection = true;
+    }
+
+    public void switchToForgetPasswordFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new ForgetPasswordFragment()).commit();
         switchedToAccountSelection = true;
     }
 
