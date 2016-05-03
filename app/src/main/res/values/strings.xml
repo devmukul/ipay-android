@@ -47,7 +47,7 @@
     <string name="district">District</string>
     <string name="invalid_district">Please select a District</string>
     <string name="postcode">Postcode</string>
-    <string name="invalid_postcode">Please enter a Postcode</string>
+    <string name="invalid_postcode">Please enter a valid 4-digit postcode</string>
     <string name="invalid_country">Please enter a Country</string>
     <string name="occupation">Occupation</string>
     <string name="mobile_number">Mobile Number</string>

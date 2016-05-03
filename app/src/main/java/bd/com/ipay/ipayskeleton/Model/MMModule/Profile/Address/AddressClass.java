@@ -91,11 +91,11 @@ public class AddressClass implements Serializable {
 
         String thanaName = getThana(thanaList);
         if (thanaName != null)
-            builder.append(thanaName).append(", ");
+            builder.append(thanaName.trim()).append(", ");
 
         String districtName = getDistrict(districtList);
         if (districtName != null)
-            builder.append(districtName).append(" ");
+            builder.append(districtName.trim()).append(" ");
 
         if (getPostalCode() != null)
             builder.append(getPostalCode());
