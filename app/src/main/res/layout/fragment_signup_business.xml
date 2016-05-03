@@ -313,7 +313,6 @@
 
             </LinearLayout>
 
-
             <bd.com.ipay.ipayskeleton.Customview.AddressInputView
                 android:id="@+id/personal_address"
                 android:layout_width="match_parent"
@@ -336,7 +335,6 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
-
 
             <LinearLayout
                 android:id="@+id/signUpTermsWrapperLayout"

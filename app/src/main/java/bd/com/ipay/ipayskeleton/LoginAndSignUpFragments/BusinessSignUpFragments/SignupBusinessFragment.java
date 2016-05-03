@@ -250,8 +250,10 @@ public class SignupBusinessFragment extends Fragment implements HttpResponseList
 
         } else if (!mBusinessAddressView.verifyUserInputs()) {
             cancel = true;
+
         } else if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
+
         }
 
         if (cancel) {
