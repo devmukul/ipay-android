@@ -47,11 +47,9 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivi
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Customview.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.PinInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.News;
@@ -61,7 +59,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHis
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -347,6 +344,54 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,
+                                                double balance, String purpose, String time, Integer statusCode, String description, String transactionID) {
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.transaction_details)
+                .customView(R.layout.dialog_transaction_details, true)
+                .negativeText(R.string.ok)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
+        View view = dialog.getCustomView();
+        final TextView descriptionTextView = (TextView) view.findViewById(R.id.description);
+        final TextView timeTextView = (TextView) view.findViewById(R.id.time);
+        final TextView amountTextView = (TextView) view.findViewById(R.id.amount);
+        final TextView feeTextView = (TextView) view.findViewById(R.id.fee);
+        final TextView transactionIDTextView = (TextView) view.findViewById(R.id.transaction_id);
+        final TextView netAmountTextView = (TextView) view.findViewById(R.id.netAmount);
+        final TextView balanceTextView = (TextView) view.findViewById(R.id.balance);
+        final TextView purposeTextView = (TextView) view.findViewById(R.id.purpose);
+        final TextView statusTextView = (TextView) view.findViewById(R.id.status);
+        final LinearLayout purposeLayout = (LinearLayout) view.findViewById(R.id.purpose_layout);
+
+        descriptionTextView.setText(description);
+        timeTextView.setText(time);
+        amountTextView.setText(Utilities.formatTaka(amount));
+        feeTextView.setText(Utilities.formatTaka(fee));
+        transactionIDTextView.setText(getString(R.string.transaction_id) + " " + transactionID);
+        netAmountTextView.setText(Utilities.formatTaka(netAmount));
+        balanceTextView.setText(Utilities.formatTaka(balance));
+        if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
+        else purposeLayout.setVisibility(View.GONE);
+
+        if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+            statusTextView.setText(getString(R.string.transaction_successful));
+            statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
+        } else if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
+            statusTextView.setText(getString(R.string.in_progress));
+        } else {
+            statusTextView.setText(getString(R.string.transaction_failed));
+            statusTextView.setTextColor(getResources().getColor(R.color.background_red));
+        }
+
+    }
+
     @Override
     public void httpResponseReceiver(String result) {
 
@@ -521,7 +566,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 mNewsShortDescription = (TextView) itemView.findViewById(R.id.short_desc);
             }
 
-            public void bindView(int pos) {
+            public void bindViewTransactionHistory(int pos) {
 
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
@@ -662,7 +707,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             try {
                 if (holder instanceof NormalViewHolder) {
                     NormalViewHolder vh = (NormalViewHolder) holder;
-                    vh.bindView(position);
+                    vh.bindViewTransactionHistory(position);
                 } else if (holder instanceof WhatsNewViewHolder) {
                     WhatsNewViewHolder vh = (WhatsNewViewHolder) holder;
                 } else if (holder instanceof HeaderViewHolder) {
@@ -727,56 +772,5 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             return super.getItemViewType(position);
         }
-
-        private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,
-                                                    double balance, String purpose, String time, Integer statusCode, String description, String transactionID) {
-            MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                    .title(R.string.transaction_details)
-                    .customView(R.layout.dialog_transaction_details, true)
-                    .negativeText(R.string.ok)
-                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .show();
-
-            View view = dialog.getCustomView();
-            final TextView descriptionTextView = (TextView) view.findViewById(R.id.description);
-            final TextView timeTextView = (TextView) view.findViewById(R.id.time);
-            final TextView amountTextView = (TextView) view.findViewById(R.id.amount);
-            final TextView feeTextView = (TextView) view.findViewById(R.id.fee);
-            final TextView transactionIDTextView = (TextView) view.findViewById(R.id.transaction_id);
-            final TextView netAmountTextView = (TextView) view.findViewById(R.id.netAmount);
-            final TextView balanceTextView = (TextView) view.findViewById(R.id.balance);
-            final TextView purposeTextView = (TextView) view.findViewById(R.id.purpose);
-            final TextView statusTextView = (TextView) view.findViewById(R.id.status);
-            final LinearLayout purposeLayout = (LinearLayout) view.findViewById(R.id.purpose_layout);
-
-            descriptionTextView.setText(description);
-            timeTextView.setText(time);
-            amountTextView.setText(Utilities.formatTaka(amount));
-            feeTextView.setText(Utilities.formatTaka(fee));
-            transactionIDTextView.setText(getString(R.string.transaction_id) + " " + transactionID);
-            netAmountTextView.setText(Utilities.formatTaka(netAmount));
-            balanceTextView.setText(Utilities.formatTaka(balance));
-            if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
-            else purposeLayout.setVisibility(View.GONE);
-
-            if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                statusTextView.setText(getString(R.string.transaction_successful));
-                statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
-            } else if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
-                statusTextView.setText(getString(R.string.in_progress));
-            } else {
-                statusTextView.setText(getString(R.string.transaction_failed));
-                statusTextView.setTextColor(getResources().getColor(R.color.background_red));
-            }
-
-        }
-
-
-
     }
 }
