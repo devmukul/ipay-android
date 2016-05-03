@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -51,7 +52,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EmailFragment extends Fragment implements HttpResponseListener {
+public class EmailFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetEmailsTask = null;
     private GetEmailResponse mGetEmailResponse;
@@ -117,6 +118,13 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
         return v;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setContentShown(false);
+    }
+
     private void showAddNewEmailDialog() {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_an_email)
@@ -167,9 +175,6 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
         if (mGetEmailsTask != null) {
             return;
         }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_emails));
-        mProgressDialog.show();
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
                 Constants.BASE_URL + Constants.URL_GET_EMAIL, getActivity(), this);
@@ -284,6 +289,8 @@ public class EmailFragment extends Fragment implements HttpResponseListener {
                             }
                         }
                     });
+
+                    setContentShown(true);
 
                     mEmailListAdapter.notifyDataSetChanged();
                 } else {

@@ -68,7 +68,7 @@ public class Constants {
     public static final int DEFAULT_USER_CLASS = 1;
 
     /**
-     * All requests and responses to server, and token is printed when debug flag is enabled.
+     * All requests and responses to$ server, and token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
     public static final boolean DEBUG = true;
@@ -83,7 +83,7 @@ public class Constants {
      * *** Set it to false if you are not using the default password ***
      *
      */
-    public static final boolean AUTO_LOGIN = true;
+    public static final boolean AUTO_LOGIN = false;
 
     /**
      * Sometimes SM server becomes down. That's OK - there are ups and downs in life. But before
