@@ -6,11 +6,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -36,6 +40,11 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private EditText mConfirmPasswordView;
     private EditText mMobileNumberView;
     private Button mNextButton;
+    private TextView mTermsConditions;
+    private TextView mPrivacyPolicy;
+    private CheckBox mMaleCheckBox;
+    private CheckBox mFemaleCheckBox;
+    private CheckBox mAgreementCheckBox;
     private EditText mPromoCodeEditText;
 
     private String mDeviceID;
@@ -59,7 +68,30 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
         mMobileNumberView = (EditText) v.findViewById(R.id.mobile_number);
         mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
+        mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
+        mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
+        mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
+        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
+        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
         mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
+
+        // Enable hyperlinked
+        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
+        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+
+        mMaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) mFemaleCheckBox.setChecked(false);
+            }
+        });
+
+        mFemaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) mMaleCheckBox.setChecked(false);
+            }
+        });
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
@@ -89,6 +121,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         SignupOrLoginActivity.mMobileNumber = "+880" + mMobileNumberView.getText().toString().trim();  // TODO: change Bangladesh
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
+        if (mMaleCheckBox.isChecked()) SignupOrLoginActivity.mGender = Constants.GENDER_MALE;
+        else SignupOrLoginActivity.mGender = Constants.GENDER_FEMALE;
 
         boolean cancel = false;
         View focusView = null;
@@ -117,6 +151,12 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
             focusView = mPromoCodeEditText;
             cancel = true;
+        }
+
+        if (!mAgreementCheckBox.isChecked()) {
+            cancel = true;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
         }
 
         if (cancel) {

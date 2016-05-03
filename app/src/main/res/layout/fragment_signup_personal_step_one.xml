@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:gravity="center"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -196,40 +196,74 @@
                     android:text="@string/female" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/signUpTermsWrapperLayout"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
 
                 <CheckBox
                     android:id="@+id/checkBoxTermsConditions"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/oath_sign_up"
-                    android:textColor="@color/colorTextSecondary"
-                    android:textSize="14sp" />
+                    android:layout_centerVertical="true" />
 
-                <TextView
-                    android:id="@+id/textViewTermsConditions"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/signUpTermsWrapperLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/linked_textview_selector"
-                    android:clickable="true"
-                    android:text="@string/terms_condition"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="14sp" />
+                    android:layout_toRightOf="@+id/checkBoxTermsConditions"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/oath_sign_up"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTermsConditions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/linked_textview_selector"
+                        android:clickable="true"
+                        android:text="@string/terms_condition"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/signUpTermsWrapperLayout"
+                    android:layout_toRightOf="@id/checkBoxTermsConditions"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/and"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/textViewPrivacyPolicy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/linked_textview_selector"
+                        android:clickable="true"
+                        android:text="@string/privacy_policy"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/personal_sign_in_button"

@@ -201,6 +201,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
                         pref.edit().putString(Constants.USERID, mUserNameLogin).commit();
                         pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
+                        mProgressDialog.dismiss();
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                     } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_ACCEPTED)) {
@@ -212,6 +213,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                         // First time login from this device. Verify OTP for secure login
                         SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
+                        mProgressDialog.dismiss();
                         ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                     } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
@@ -222,6 +224,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                         // Enter previous OTP
                         SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
+                        mProgressDialog.dismiss();
                         ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                     } else {

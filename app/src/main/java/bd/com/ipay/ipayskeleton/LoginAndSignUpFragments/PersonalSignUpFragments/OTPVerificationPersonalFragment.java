@@ -160,14 +160,13 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             // form field with an error.
             focusView.requestFocus();
         } else {
-
             mProgressDialog.show();
             SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
                     Constants.MOBILE_ANDROID + mDeviceID,
                     SignupOrLoginActivity.mName,
                     SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword,
                     SignupOrLoginActivity.mGender, otp, SignupOrLoginActivity.mPromoCode,
-                    Constants.PERSONAL_ACCOUNT_TYPE);
+                    Constants.PERSONAL_ACCOUNT_TYPE, SignupOrLoginActivity.mAddressPersonal);
             Gson gson = new Gson();
             String json = gson.toJson(mSignupModel);
             mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP,
