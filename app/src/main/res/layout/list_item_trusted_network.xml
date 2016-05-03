@@ -29,7 +29,7 @@
                     <TextView
                         android:id="@+id/textview_name"
                         style="@style/TextStyleSecondaryMedium"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
@@ -38,7 +38,7 @@
                     <TextView
                         android:id="@+id/textview_mobile_number"
                         style="@style/TextStyleSecondaryMedium"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
@@ -48,6 +48,7 @@
                         android:id="@+id/textview_relationship"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="12sp"
                         android:gravity="left"
                         android:singleLine="true" />
                 </LinearLayout>
@@ -58,7 +59,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
+                    android:textSize="12sp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
                     android:textStyle="bold"
                     android:visibility="gone"
                     android:text="@string/trusted_member"/>
