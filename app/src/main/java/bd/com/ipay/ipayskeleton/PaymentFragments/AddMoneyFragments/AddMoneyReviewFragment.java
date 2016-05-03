@@ -53,7 +53,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     private TextView mBankNameView;
     private TextView mBankAccountNumberView;
     private TextView mDescriptionView;
-    private LinearLayout mDescriptionHolder;
+    private View mDescriptionHolder;
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mTotalView;
@@ -72,7 +72,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
 
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mDescriptionHolder = (LinearLayout) v.findViewById(R.id.description_holder);
+        mDescriptionHolder = v.findViewById(R.id.description_holder);
         mBankNameView = (TextView) v.findViewById(R.id.textview_bank_name);
         mBankAccountNumberView = (TextView) v.findViewById(R.id.textview_account_number);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
