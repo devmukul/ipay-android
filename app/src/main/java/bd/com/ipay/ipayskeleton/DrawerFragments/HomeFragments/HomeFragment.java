@@ -613,7 +613,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     }
                 });
 
-                //TODO: remove this when pro pic came
+                //TODO: remove this when pro pic will come
 //                Glide.with(getActivity())
 //                        .load(R.drawable.ic_transaction_history)
 //                        .into(mPortrait);
@@ -668,7 +668,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         }
 
-        // Now define the viewholder for Normal list item
+        // Now define the ViewHolder for Normal list item
         public class NormalViewHolder extends TransactionHistoryViewHolder {
             public NormalViewHolder(View itemView) {
                 super(itemView);
