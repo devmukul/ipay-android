@@ -5,21 +5,30 @@
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin">
 
-    <Button
-        android:id="@+id/button_add_trusted_person"
-        style="@style/ButtonStyleLarge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_a_trusted_person"
-        android:textSize="@dimen/text_size_medium"
-        android:textStyle="bold" />
+    <include layout="@layout/layout_progress_container" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_trusted_person"
+    <LinearLayout
+        android:id="@+id/content_container"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/activity_horizontal_margin_double" />
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button_add_trusted_person"
+            style="@style/ButtonStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_a_trusted_person"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_trusted_person"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/activity_horizontal_margin_double" />
+    </LinearLayout>
 
 </LinearLayout>

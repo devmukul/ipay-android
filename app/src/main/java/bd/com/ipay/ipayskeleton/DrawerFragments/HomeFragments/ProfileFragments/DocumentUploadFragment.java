@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 
-public class DocumentUploadFragment extends Fragment implements HttpResponseListener {
+public class DocumentUploadFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
     private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
@@ -156,6 +158,13 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         getIdentificationDocuments();
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setContentShown(false);
     }
 
     private void loadDocumentInfo() {
@@ -335,9 +344,6 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_identification_documents));
-        mProgressDialog.show();
-
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_DOCUMENTS, getActivity(), this);
         mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -402,6 +408,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     mIdentificationDocuments = mIdentificationDocumentResponse.getDocuments();
                     loadDocumentInfo();
+                    setContentShown(true);
 
                 } else {
                     if (getActivity() != null)

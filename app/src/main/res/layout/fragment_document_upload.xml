@@ -9,240 +9,248 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
-        <!-- National ID -->
-        <RelativeLayout
+        <include layout="@layout/layout_progress_container" />
+
+        <LinearLayout
+            android:id="@+id/content_container"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/label_national_id"
-                style="@style/DocumentUploadLabel"
-                android:text="@string/national_id" />
-
-            <TextView
-                android:id="@+id/verification_status_nid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_input_national_id"
+            <!-- National ID -->
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/label_national_id"
-                android:layout_toLeftOf="@+id/button_national_id">
+                android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/edit_text_national_id"
-                    style="@style/DocumentUploadEditText"
+                <TextView
+                    android:id="@+id/label_national_id"
+                    style="@style/DocumentUploadLabel"
+                    android:text="@string/national_id" />
+
+                <TextView
+                    android:id="@+id/verification_status_nid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_national_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/label_national_id"
-                    android:hint="@string/national_id_number"
-                    android:inputType="number"
-                    android:singleLine="true" />
+                    android:layout_toLeftOf="@+id/button_national_id">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/edit_text_national_id"
+                        style="@style/DocumentUploadEditText"
+                        android:layout_below="@+id/label_national_id"
+                        android:hint="@string/national_id_number"
+                        android:inputType="number"
+                        android:singleLine="true" />
 
-            <Button
-                android:id="@+id/button_national_id"
-                style="@style/DocumentUploadButton"
-                android:layout_alignBottom="@+id/text_input_national_id"
-                android:text="@string/upload" />
+                </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/textview_nid"
-                style="@style/DocumentUploadTextView"
-                android:layout_below="@+id/text_input_national_id"/>
-        </RelativeLayout>
+                <Button
+                    android:id="@+id/button_national_id"
+                    style="@style/DocumentUploadButton"
+                    android:layout_alignBottom="@+id/text_input_national_id"
+                    android:text="@string/upload" />
+
+                <TextView
+                    android:id="@+id/textview_nid"
+                    style="@style/DocumentUploadTextView"
+                    android:layout_below="@+id/text_input_national_id"/>
+            </RelativeLayout>
 
 
-        <!-- Passport -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
-
-            <TextView
-                android:id="@+id/label_passport"
-                style="@style/DocumentUploadLabel"
-                android:text="@string/passport" />
-
-            <TextView
-                android:id="@+id/verification_status_passport"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_input_passport"
+            <!-- Passport -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/label_passport"
-                android:layout_toLeftOf="@+id/button_passport">
+                android:layout_marginTop="30dp">
 
-                <EditText
-                    android:id="@+id/edit_text_passport"
-                    style="@style/DocumentUploadEditText"
+                <TextView
+                    android:id="@+id/label_passport"
+                    style="@style/DocumentUploadLabel"
+                    android:text="@string/passport" />
+
+                <TextView
+                    android:id="@+id/verification_status_passport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_passport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/label_passport"
-                    android:hint="@string/passport_number"
-                    android:inputType="text" />
+                    android:layout_toLeftOf="@+id/button_passport">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/edit_text_passport"
+                        style="@style/DocumentUploadEditText"
+                        android:layout_below="@+id/label_passport"
+                        android:hint="@string/passport_number"
+                        android:inputType="text" />
 
-            <TextView
-                android:id="@+id/textview_passport"
-                style="@style/DocumentUploadTextView"
-                android:layout_below="@+id/text_input_passport"/>
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/button_passport"
-                style="@style/DocumentUploadButton"
-                android:layout_alignBottom="@+id/text_input_passport"
-                android:text="@string/upload" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/textview_passport"
+                    style="@style/DocumentUploadTextView"
+                    android:layout_below="@+id/text_input_passport"/>
+
+                <Button
+                    android:id="@+id/button_passport"
+                    style="@style/DocumentUploadButton"
+                    android:layout_alignBottom="@+id/text_input_passport"
+                    android:text="@string/upload" />
+            </RelativeLayout>
 
 
-        <!-- Driving License -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
-
-            <TextView
-                android:id="@+id/label_driving_license"
-                style="@style/DocumentUploadLabel"
-                android:text="@string/driving_license" />
-
-            <TextView
-                android:id="@+id/verification_status_driving_license"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_input_driving_license"
+            <!-- Driving License -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/label_driving_license"
-                android:layout_toLeftOf="@+id/button_driving_license">
+                android:layout_marginTop="30dp">
 
-                <EditText
-                    android:id="@+id/edit_text_driving_license"
-                    style="@style/DocumentUploadEditText"
+                <TextView
+                    android:id="@+id/label_driving_license"
+                    style="@style/DocumentUploadLabel"
+                    android:text="@string/driving_license" />
+
+                <TextView
+                    android:id="@+id/verification_status_driving_license"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_driving_license"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/label_driving_license"
-                    android:hint="@string/driving_license_number"
-                    android:inputType="text" />
+                    android:layout_toLeftOf="@+id/button_driving_license">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/edit_text_driving_license"
+                        style="@style/DocumentUploadEditText"
+                        android:layout_below="@+id/label_driving_license"
+                        android:hint="@string/driving_license_number"
+                        android:inputType="text" />
 
-            <TextView
-                android:id="@+id/textview_driving_license"
-                style="@style/DocumentUploadTextView"
-                android:layout_below="@+id/text_input_driving_license"/>
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/button_driving_license"
-                style="@style/DocumentUploadButton"
-                android:layout_alignBottom="@+id/text_input_driving_license"
-                android:text="@string/upload" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/textview_driving_license"
+                    style="@style/DocumentUploadTextView"
+                    android:layout_below="@+id/text_input_driving_license"/>
+
+                <Button
+                    android:id="@+id/button_driving_license"
+                    style="@style/DocumentUploadButton"
+                    android:layout_alignBottom="@+id/text_input_driving_license"
+                    android:text="@string/upload" />
+            </RelativeLayout>
 
 
-        <!-- Birth Certificate -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
-
-            <TextView
-                android:id="@+id/label_birth_certificate"
-                style="@style/DocumentUploadLabel"
-                android:text="@string/birth_certificate" />
-
-            <TextView
-                android:id="@+id/verification_status_birth_certificate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_input_birth_certificate"
+            <!-- Birth Certificate -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/label_birth_certificate"
-                android:layout_toLeftOf="@+id/button_birth_certificate">
+                android:layout_marginTop="30dp">
 
-                <EditText
-                    android:id="@+id/edit_text_birth_certificate"
-                    style="@style/DocumentUploadEditText"
+                <TextView
+                    android:id="@+id/label_birth_certificate"
+                    style="@style/DocumentUploadLabel"
+                    android:text="@string/birth_certificate" />
+
+                <TextView
+                    android:id="@+id/verification_status_birth_certificate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_birth_certificate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/label_birth_certificate"
-                    android:hint="@string/birth_certificate_number"
-                    android:inputType="text" />
+                    android:layout_toLeftOf="@+id/button_birth_certificate">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/edit_text_birth_certificate"
+                        style="@style/DocumentUploadEditText"
+                        android:layout_below="@+id/label_birth_certificate"
+                        android:hint="@string/birth_certificate_number"
+                        android:inputType="text" />
 
-            <TextView
-                android:id="@+id/textview_birth_certificate"
-                style="@style/DocumentUploadTextView"
-                android:layout_below="@+id/text_input_birth_certificate"/>
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/button_birth_certificate"
-                style="@style/DocumentUploadButton"
-                android:layout_alignBottom="@+id/text_input_birth_certificate"
-                android:text="@string/upload" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/textview_birth_certificate"
+                    style="@style/DocumentUploadTextView"
+                    android:layout_below="@+id/text_input_birth_certificate"/>
+
+                <Button
+                    android:id="@+id/button_birth_certificate"
+                    style="@style/DocumentUploadButton"
+                    android:layout_alignBottom="@+id/text_input_birth_certificate"
+                    android:text="@string/upload" />
+            </RelativeLayout>
 
 
-        <!-- TIN -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="?android:attr/actionBarSize">
-
-            <TextView
-                android:id="@+id/label_tin"
-                style="@style/DocumentUploadLabel"
-                android:text="@string/tin" />
-
-            <TextView
-                android:id="@+id/verification_status_tin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_input_tin"
+            <!-- TIN -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/label_tin"
-                android:layout_toLeftOf="@+id/button_tin">
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="?android:attr/actionBarSize">
 
-                <EditText
-                    android:id="@+id/edit_text_tin"
-                    style="@style/DocumentUploadEditText"
+                <TextView
+                    android:id="@+id/label_tin"
+                    style="@style/DocumentUploadLabel"
+                    android:text="@string/tin" />
+
+                <TextView
+                    android:id="@+id/verification_status_tin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_tin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:layout_below="@+id/label_tin"
-                    android:hint="@string/tin_number"
-                    android:inputType="text" />
+                    android:layout_toLeftOf="@+id/button_tin">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/edit_text_tin"
+                        style="@style/DocumentUploadEditText"
+                        android:layout_below="@+id/label_tin"
+                        android:hint="@string/tin_number"
+                        android:inputType="text" />
 
-            <TextView
-                android:id="@+id/textview_tin"
-                style="@style/DocumentUploadTextView"
-                android:layout_below="@+id/text_input_tin"/>
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/button_tin"
-                style="@style/DocumentUploadButton"
-                android:layout_alignBottom="@+id/text_input_tin"
-                android:text="@string/upload" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/textview_tin"
+                    style="@style/DocumentUploadTextView"
+                    android:layout_below="@+id/text_input_tin"/>
+
+                <Button
+                    android:id="@+id/button_tin"
+                    style="@style/DocumentUploadButton"
+                    android:layout_alignBottom="@+id/text_input_tin"
+                    android:text="@string/upload" />
+            </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
