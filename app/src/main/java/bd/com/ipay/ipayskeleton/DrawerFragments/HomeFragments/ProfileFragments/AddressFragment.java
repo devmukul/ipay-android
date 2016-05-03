@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class AddressFragment extends Fragment implements HttpResponseListener {
+public class AddressFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetUserAddressTask = null;
     private GetUserAddressResponse mGetUserAddressResponse = null;
@@ -43,8 +44,6 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetDistrictListAsyncTask = null;
     private GetDistrictResponse mGetDistrictResponse;
-
-    private ProgressDialog mProgressDialog;
 
     private AddressClass mPresentAddress;
     private AddressClass mPermanentAddress;
@@ -87,8 +86,6 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_address, container, false);
 
-        mProgressDialog = new ProgressDialog(getActivity());
-
         mPresentAddressView = (TextView) v.findViewById(R.id.textview_present_address);
         mPermanentAddressView = (TextView) v.findViewById(R.id.textview_permanent_address);
         mOfficeAddressView = (TextView) v.findViewById(R.id.textview_office_address);
@@ -113,6 +110,13 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
         getDistrictList();
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setContentShown(false);
     }
 
     private void loadAddresses() {
@@ -218,9 +222,6 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_address));
-        mProgressDialog.show();
-
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this);
         mGetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -230,7 +231,6 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
     public void httpResponseReceiver(String result) {
 
         if (result == null) {
-            mProgressDialog.dismiss();
             mGetUserAddressTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
@@ -241,8 +241,6 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
 
         if (resultList.get(0).equals(Constants.COMMAND_GET_USER_ADDRESS_REQUEST)) {
-            mProgressDialog.dismiss();
-
             try {
                 mGetUserAddressResponse = gson.fromJson(resultList.get(2), GetUserAddressResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -251,6 +249,7 @@ public class AddressFragment extends Fragment implements HttpResponseListener {
                     mOfficeAddress = mGetUserAddressResponse.getOfficeAddress();
 
                     loadAddresses();
+                    setContentShown(true);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
