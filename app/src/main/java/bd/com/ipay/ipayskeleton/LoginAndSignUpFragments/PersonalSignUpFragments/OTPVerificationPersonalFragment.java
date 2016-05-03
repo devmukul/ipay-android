@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
+package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
