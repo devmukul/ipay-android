@@ -360,6 +360,7 @@
     <string name="select_type">Select type</string>
     <string name="recharge">Recharge</string>
     <string name="edit">Edit</string>
+    <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
     <string name="purpose">Purpose</string>
     <string name="filter_profile_change">Profile Changes</string>
     <string name="filter_received_money">Money Received</string>
@@ -551,6 +552,7 @@
     <string name="dialog_prompt_add_pin">Please set your PIN first</string>
     <string name="enter_a_new_pin">Enter a new PIN</string>
     <string name="bank_branch_not_selected">No bank branch selected</string>
+    <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
 
     <string-array name="account_types">
         <item>Personal</item>

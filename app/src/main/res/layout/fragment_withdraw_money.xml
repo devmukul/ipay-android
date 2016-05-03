@@ -26,40 +26,6 @@
         android:text="@string/please_link_a_bank_for_cash_out"
         android:visibility="gone" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
-
-        <EditText
-            android:id="@+id/amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="@string/enter_amount"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
-
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="@string/description"
-            android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-    </android.support.design.widget.TextInputLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -95,6 +61,40 @@
             android:padding="@dimen/value5"
             android:src="@drawable/ic_account_balance_white_24dp" />
     </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+        <EditText
+            android:id="@+id/amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/enter_amount"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/description"
+            android:inputType="text"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/button_cash_out"

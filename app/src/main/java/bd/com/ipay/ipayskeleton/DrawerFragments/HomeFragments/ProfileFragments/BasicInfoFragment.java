@@ -2,11 +2,10 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -36,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class BasicInfoFragment extends Fragment implements HttpResponseListener {
+public class BasicInfoFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
@@ -110,6 +110,7 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_basic_info, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
@@ -144,6 +145,13 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         getProfileInfo();
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setContentShown(false);
     }
 
     private void launchEditFragment() {
@@ -187,7 +195,7 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
 
         if (mVerificationStatus != null) {
-            if (mVerificationStatus.equals(Constants.VERIFICATION_STATUS_VERIFIED)) {
+            if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                 mVerificationStatusView.setBackgroundResource(R.drawable.background_verified);
                 mVerificationStatusView.setText(R.string.verified);
             } else {
@@ -201,9 +209,6 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
         if (mGetProfileInfoTask != null) {
             return;
         }
-
-        mProgressDialog.setMessage(getString(R.string.fetching_profile_information));
-        mProgressDialog.show();
 
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
                 Constants.BASE_URL + "/" + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
@@ -304,6 +309,8 @@ public class BasicInfoFragment extends Fragment implements HttpResponseListener 
 
                     setProfileInformation();
                     getOccupationList();
+
+                    setContentShown(true);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();

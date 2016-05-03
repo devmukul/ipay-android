@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -209,8 +211,21 @@ public class HomeActivity extends BaseActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (!switchedToHomeFragment)
             switchToDashBoard();
-        else
-            super.onBackPressed();
+        else {
+            new AlertDialog.Builder(HomeActivity.this)
+                    .setMessage(R.string.are_you_sure_to_exit)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .show();
+        }
     }
 
     private void setProfilePicture(String imageUrl) {
@@ -234,7 +249,7 @@ public class HomeActivity extends BaseActivity
 
     public void switchToDashBoard() {
         mNavigationView.getMenu().getItem(0).setChecked(true);
-       getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
         switchedToHomeFragment = true;
     }
 
@@ -339,18 +354,6 @@ public class HomeActivity extends BaseActivity
         editBasicInfoFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, editBasicInfoFragment).commit();
         switchedToHomeFragment = false;
-    }
-
-    public void switchToAccountSettingsFragmentForPin() {
-        AccountSettingsFragment accountSettingsFragment = new AccountSettingsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(Constants.EXPAND_PIN, true);
-        accountSettingsFragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, accountSettingsFragment).commit();
-        switchedToHomeFragment = false;
-
-        mNavigationView.getMenu().findItem(R.id.nav_settings).setChecked(true);
     }
 
     public void switchToEditAddressFragment(Bundle bundle) {
