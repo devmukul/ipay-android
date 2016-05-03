@@ -312,6 +312,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private TextView mNameView;
+            private TextView mMobileNumberView;
             private TextView mRelationshipView;
             private TextView mIsTrustedMemberView;
             private ImageButton mSetRecoveryPersonButton;
@@ -320,6 +321,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
                 super(itemView);
 
                 mNameView = (TextView) itemView.findViewById(R.id.textview_name);
+                mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
                 mRelationshipView = (TextView) itemView.findViewById(R.id.textview_relationship);
                 mIsTrustedMemberView = (TextView) itemView.findViewById(R.id.textview_is_trusted_member);
                 mSetRecoveryPersonButton = (ImageButton) itemView.findViewById(R.id.button_make_recovery_person);
@@ -330,6 +332,7 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
                 final TrustedPerson trustedPerson = mTrustedPersons.get(pos);
 
                 mNameView.setText(trustedPerson.getName());
+                mMobileNumberView.setText(trustedPerson.getMobileNumber());
                 mRelationshipView.setText(trustedPerson.getRelationship());
 
                 if (trustedPerson.isEligibleForAccountRecovery()) {
