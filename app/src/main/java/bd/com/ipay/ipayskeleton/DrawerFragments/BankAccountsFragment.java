@@ -261,7 +261,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
                 } else {
                     BankBranch bankBranch = bankBranches.get(mBankBranchSpinner.getSelectedItemPosition() - 1);
-                    attemptAddBank(bankBranch.getBranchRoutingNumber(), mAccountTypesSpinner.getSelectedItemPosition(),
+                    attemptAddBank(bankBranch.getRoutingNumber(), mAccountTypesSpinner.getSelectedItemPosition(),
                             mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
                     dialog.dismiss();
                 }

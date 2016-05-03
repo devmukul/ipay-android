@@ -1,7 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Resource;
 
 public class BankBranch {
-    private String branchRoutingNumber;
+    private String routingNumber;
     private String name;
 
     public BankBranch() {
@@ -9,12 +9,12 @@ public class BankBranch {
     }
 
     public BankBranch(String branchRoutingNumber, String name) {
-        this.branchRoutingNumber = branchRoutingNumber;
+        this.routingNumber = branchRoutingNumber;
         this.name = name;
     }
 
-    public String getBranchRoutingNumber() {
-        return branchRoutingNumber;
+    public String getRoutingNumber() {
+        return routingNumber;
     }
 
     public String getName() {
