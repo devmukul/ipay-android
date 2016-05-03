@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,10 +22,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -524,8 +528,15 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(userID);
 
-                String description = userTransactionHistoryClasses.get(pos).getDescription();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
+                final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
+                final double fee = userTransactionHistoryClasses.get(pos).getFee();
+                final double netAmount = userTransactionHistoryClasses.get(pos).getNetAmount();
+                final String transactionID = userTransactionHistoryClasses.get(pos).getTransactionID();
+                final String purpose = userTransactionHistoryClasses.get(pos).getPurpose();
+                final Integer statusCode = userTransactionHistoryClasses.get(pos).getStatusCode();
+                final double balance = userTransactionHistoryClasses.get(pos).getBalance();
+                final String description = userTransactionHistoryClasses.get(pos).getDescription();
+                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
 
                 mAmountTextView.setText(Utilities.formatTaka(amount));
 
@@ -547,6 +558,15 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
                 }
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!mSwipeRefreshLayout.isRefreshing())
+                            showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount,
+                                    balance, purpose, time, statusCode, description, transactionID);
+                    }
+                });
 
                 //TODO: remove this when pro pic came
 //                Glide.with(getActivity())
@@ -707,5 +727,56 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             return super.getItemViewType(position);
         }
+
+        private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,
+                                                    double balance, String purpose, String time, Integer statusCode, String description, String transactionID) {
+            MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                    .title(R.string.transaction_details)
+                    .customView(R.layout.dialog_transaction_details, true)
+                    .negativeText(R.string.ok)
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+
+            View view = dialog.getCustomView();
+            final TextView descriptionTextView = (TextView) view.findViewById(R.id.description);
+            final TextView timeTextView = (TextView) view.findViewById(R.id.time);
+            final TextView amountTextView = (TextView) view.findViewById(R.id.amount);
+            final TextView feeTextView = (TextView) view.findViewById(R.id.fee);
+            final TextView transactionIDTextView = (TextView) view.findViewById(R.id.transaction_id);
+            final TextView netAmountTextView = (TextView) view.findViewById(R.id.netAmount);
+            final TextView balanceTextView = (TextView) view.findViewById(R.id.balance);
+            final TextView purposeTextView = (TextView) view.findViewById(R.id.purpose);
+            final TextView statusTextView = (TextView) view.findViewById(R.id.status);
+            final LinearLayout purposeLayout = (LinearLayout) view.findViewById(R.id.purpose_layout);
+
+            descriptionTextView.setText(description);
+            timeTextView.setText(time);
+            amountTextView.setText(Utilities.formatTaka(amount));
+            feeTextView.setText(Utilities.formatTaka(fee));
+            transactionIDTextView.setText(getString(R.string.transaction_id) + " " + transactionID);
+            netAmountTextView.setText(Utilities.formatTaka(netAmount));
+            balanceTextView.setText(Utilities.formatTaka(balance));
+            if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
+            else purposeLayout.setVisibility(View.GONE);
+
+            if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                statusTextView.setText(getString(R.string.transaction_successful));
+                statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
+            } else if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
+                statusTextView.setText(getString(R.string.in_progress));
+            } else {
+                statusTextView.setText(getString(R.string.transaction_failed));
+                statusTextView.setTextColor(getResources().getColor(R.color.background_red));
+            }
+
+        }
+
+
+
     }
 }
