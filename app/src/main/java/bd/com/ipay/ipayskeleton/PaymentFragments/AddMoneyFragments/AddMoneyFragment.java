@@ -228,25 +228,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     public void onClick(DialogInterface dialog, int which) {
                         final String strName = arrayAdapter.getItem(which);
                         selectedBankPosition = which;
-                        String[] accountNumberAndBankName = strName.split(",");
-                        final String accountNumber = accountNumberAndBankName[0];
-
-                        AlertDialog.Builder builderInner = new AlertDialog.Builder(
-                                getActivity());
-                        builderInner.setMessage(strName);
-                        builderInner.setTitle(R.string.your_selected_bank_account_is);
-                        builderInner.setPositiveButton(
-                                R.string.zxing_button_ok,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(
-                                            DialogInterface dialog,
-                                            int which) {
-                                        mBankAccountNumberEditText.setText(accountNumber.trim());
-                                        dialog.dismiss();
-                                    }
-                                });
-                        builderInner.show();
+                        mBankAccountNumberEditText.setText(strName);
                     }
                 });
 
