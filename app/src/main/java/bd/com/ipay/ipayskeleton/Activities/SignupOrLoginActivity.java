@@ -47,6 +47,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public static AddressClass mAddressBusiness;
     public static AddressClass mAddressBusinessHolder;
+    public static AddressClass mAddressPersonal;
 
     public static final String MESSAGE = "message";
 
