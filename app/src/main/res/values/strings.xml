@@ -360,6 +360,7 @@
     <string name="select_type">Select type</string>
     <string name="recharge">Recharge</string>
     <string name="edit">Edit</string>
+    <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
     <string name="purpose">Purpose</string>
     <string name="filter_profile_change">Profile Changes</string>
     <string name="filter_received_money">Money Received</string>
