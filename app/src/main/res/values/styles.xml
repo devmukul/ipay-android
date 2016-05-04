@@ -412,4 +412,13 @@
         <item name="android:layout_marginBottom">6dp</item>
     </style>
 
+    <style name="RowButton">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
 </resources>

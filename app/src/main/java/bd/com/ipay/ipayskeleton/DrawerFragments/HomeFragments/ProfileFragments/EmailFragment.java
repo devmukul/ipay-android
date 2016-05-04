@@ -435,6 +435,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
                 if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)) {
                     mVerificationStatus.setImageResource(R.drawable.ic_verified);
+                    mVerificationStatus.setColorFilter(null);
 
                     makePrimaryButton.setVisibility(View.VISIBLE);
                     verifyButton.setVisibility(View.GONE);
@@ -492,15 +493,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                                 optionsLayout.setVisibility(View.VISIBLE);
                             }
                         }
-
-//                        if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_PENDING))
-//                            new MaterialShowcaseView.Builder(getActivity())
-//                                    .setTarget(verifyButton)
-//                                    .setDismissText(R.string.got_it)
-//                                    .setContentText(Html.fromHtml(getString(R.string.bank_verification_help_html)))
-//                                    .setDelay(100) // optional but starting animations immediately in onCreate can make them choppy
-//                                    .singleUse(email.getEmailId() + "") // provide a unique ID used to ensure it is only shown once // TODO: removed for now. Comment out later
-//                                    .show();
                     }
                 });
             }

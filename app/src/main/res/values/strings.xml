@@ -553,6 +553,10 @@
     <string name="enter_a_new_pin">Enter a new PIN</string>
     <string name="bank_branch_not_selected">No bank branch selected</string>
     <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
+    <string name="failed_get_document_list">Failed to fetch the list of documents</string>
+    <string name="not_submitted">Not Submitted</string>
+    <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload identification documents to get verified</string>
+    <string name="upload_identification_documents_to_confirm_identity">Upload identification documents to confirm your identity</string>
 
     <string-array name="account_types">
         <item>Personal</item>

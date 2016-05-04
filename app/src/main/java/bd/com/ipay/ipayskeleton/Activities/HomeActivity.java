@@ -472,6 +472,8 @@ public class HomeActivity extends BaseActivity
                         }
                     }
 
+                    pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
+
                     setProfilePicture(imageUrl);
                 } else {
                     Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
