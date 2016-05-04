@@ -19,7 +19,9 @@
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true" >
+            <requestFocus />
+        </EditText>
 
     </android.support.design.widget.TextInputLayout>
 
