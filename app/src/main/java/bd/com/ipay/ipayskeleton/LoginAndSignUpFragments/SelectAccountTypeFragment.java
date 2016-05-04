@@ -43,7 +43,7 @@ public class SelectAccountTypeFragment extends Fragment {
         buttonAccountTypeBusiness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SignupOrLoginActivity) getActivity()).switchToBusinessSignUpFragment();
+                ((SignupOrLoginActivity) getActivity()).switchToBusinessStepOneFragment();
             }
         });
 

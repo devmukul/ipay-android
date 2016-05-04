@@ -68,12 +68,12 @@
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/business_sign_in_button"
+                android:id="@+id/business_again_next_button"
                 style="@style/ButtonStyleMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:text="@string/action_sign_in" />
+                android:text="@string/next" />
 
         </LinearLayout>
     </ScrollView>

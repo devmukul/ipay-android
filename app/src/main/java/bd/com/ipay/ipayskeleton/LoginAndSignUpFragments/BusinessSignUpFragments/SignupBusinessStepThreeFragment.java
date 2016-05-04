@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments;
+package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -7,17 +7,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -29,27 +29,36 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonalSignup;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersonalSignup;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestBusinessSignup;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseBusinessSignup;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SignupPersonalStepTwoFragment extends Fragment implements HttpResponseListener {
-
+/**
+ * Created by farzana on 5/3/16.
+ */
+public class SignupBusinessStepThreeFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
-    private OTPResponsePersonalSignup mOtpResponsePersonalSignup;
+    private OTPResponseBusinessSignup mOtpResponseBusinessSignup;
 
-    private EditText mNameView;
+    private EditText mBusinessHolderFullNameView;
+
+    private CheckBox mAddressCheckbox;
+
     private ImageView mDatePickerButton;
-    private Button mSignupPersonalButton;
+    private Button mSignupBusinessButton;
     private EditText mBirthdayEditText;
+    private EditText mPersonalMobileNumberView;
 
-    private AddressInputView mPersonalAddressView;
+    private Spinner mGenderSpinner;
 
     private int mYear;
     private int mMonth;
     private int mDay;
+
+    private AddressInputView mPersonalAddressView;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
@@ -57,36 +66,42 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(R.string.title_signup_personal_page);
+        getActivity().setTitle(R.string.title_signup_business_page);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_signup_personal_step_two, container, false);
+        View v = inflater.inflate(R.layout.fragment_signup_business_step_three, container, false);
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
 
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_sms));
 
-        mNameView = (EditText) v.findViewById(R.id.user_name);
-        mSignupPersonalButton = (Button) v.findViewById(R.id.personal_sign_in_button);
+
+        mBusinessHolderFullNameView = (EditText) v.findViewById(R.id.full_name);
+
+        mSignupBusinessButton = (Button) v.findViewById(R.id.business_sign_in_button);
+        mPersonalMobileNumberView = (EditText) v.findViewById(R.id.personal_mobile_number);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
+        mGenderSpinner = (Spinner) v.findViewById(R.id.gender);
+        mAddressCheckbox = (CheckBox) v.findViewById(R.id.checkboxBusinessAddress);
+
         mPersonalAddressView = (AddressInputView) v.findViewById(R.id.personal_address);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
+
         mDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
+                new DatePickerDialog(getActivity(),
+                        mDateSetListener,
+                        1990, 0, 1).show();
             }
         });
 
-        mSignupPersonalButton.setOnClickListener(new View.OnClickListener() {
+        mSignupBusinessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) attemptRequestOTP();
@@ -94,6 +109,22 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
+
+        mAddressCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    setAccountHolderAddress();
+                } else {
+                    resetAccountHolderAddress();
+                }
+            }
+        });
+
+
+        ArrayAdapter<CharSequence> mAdapterGender = new ArrayAdapter<CharSequence>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, GenderList.genderNames);
+        mGenderSpinner.setAdapter(mAdapterGender);
 
         return v;
     }
@@ -103,37 +134,44 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             return;
         }
 
-        // Store values at the time of the login attempt.
-        String name = mNameView.getText().toString().trim();
+        String name = mBusinessHolderFullNameView.getText().toString().trim();
 
-        SignupOrLoginActivity.mName = name;
-        SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
-        SignupOrLoginActivity.mBirthday = mBirthdayEditText.getText().toString().trim();
+        // Store values at the time of the login attempt.
+        SignupOrLoginActivity.mMobileNumberPersonal = "+880" +
+                mPersonalMobileNumberView.getText().toString().trim();
+        SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
+        SignupOrLoginActivity.mBirthdayBusinessHolder = mBirthdayEditText.getText().toString().trim();
+        SignupOrLoginActivity.mNameBusiness = name;
+        SignupOrLoginActivity.mGender = GenderList.genderNameToCodeMap.get(
+                mGenderSpinner.getSelectedItem().toString());
 
         boolean cancel = false;
         View focusView = null;
 
-        if (mNameView.getText().toString().trim().length() == 0) {
-            mNameView.setError(getString(R.string.error_invalid_first_name));
-            focusView = mNameView;
-            cancel = true;
-        }
-
-        if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
+       if (SignupOrLoginActivity.mBirthdayBusinessHolder == null || SignupOrLoginActivity.mBirthdayBusinessHolder.length() == 0) {
             cancel = true;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.please_select_your_birthday, Toast.LENGTH_LONG).show();
-        }
 
-        if (mBirthdayEditText.getText().toString().trim().length() == 0) {
+        } else if (mPersonalMobileNumberView.getText().toString().trim().length() != 10) {
+            mPersonalMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
+            focusView = mPersonalMobileNumberView;
+            cancel = true;
+
+        } else if (mBusinessHolderFullNameView.getText().toString().trim().length() == 0) {
+            mBusinessHolderFullNameView.setError(getString(R.string.error_invalid_name));
+            focusView = mBusinessHolderFullNameView;
+            cancel = true;
+
+        } else if (mBirthdayEditText.getText().toString().trim().length() == 0) {
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
             cancel = true;
-        }
 
-        if (!mPersonalAddressView.verifyUserInputs()) {
-            cancel = true;
-        }
+        } else if (!mPersonalAddressView.verifyUserInputs()) {
+           cancel = true;
+       }
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -142,17 +180,26 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            SignupOrLoginActivity.mAddressPersonal = mPersonalAddressView.getInformation();
+            SignupOrLoginActivity.mAddressBusinessHolder = mPersonalAddressView.getInformation();
+            mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_sms));
             mProgressDialog.show();
-            OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
-                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE, SignupOrLoginActivity.mPromoCode);
+            OTPRequestBusinessSignup mOtpRequestBusinessSignup = new OTPRequestBusinessSignup(SignupOrLoginActivity.mMobileNumberBusiness,
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE, SignupOrLoginActivity.mPromoCode);
             Gson gson = new Gson();
-            String json = gson.toJson(mOtpRequestPersonalSignup);
+            String json = gson.toJson(mOtpRequestBusinessSignup);
             mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL + Constants.URL_OTP_REQUEST, json, getActivity());
+                    Constants.BASE_URL + Constants.URL_OTP_REQUEST_BUSINESS, json, getActivity());
             mRequestOTPTask.mHttpResponseListener = this;
             mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+    }
+
+    private void setAccountHolderAddress() {
+            mPersonalAddressView.setInformation(SignupOrLoginActivity.mAddressBusiness);
+    }
+
+    private void resetAccountHolderAddress() {
+        mPersonalAddressView.resetInformation();
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener =
@@ -170,8 +217,6 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
                     else birthMonth = mMonth + "";
                     birthYear = mYear + "";
 
-//                    SignupOrLoginActivity.mBirthday = birthDate + birthMonth + birthYear;
-//                    String[] months = getActivity().getResources().getStringArray(R.array.months);
                     mBirthdayEditText.setText(birthDate + "/" + birthMonth + "/" + birthYear);
                 }
             };
@@ -196,8 +241,8 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             String message = "";
             if (resultList.size() > 2) {
                 try {
-                    mOtpResponsePersonalSignup = gson.fromJson(resultList.get(2), OTPResponsePersonalSignup.class);
-                    message = mOtpResponsePersonalSignup.getMessage();
+                    mOtpResponseBusinessSignup = gson.fromJson(resultList.get(2), OTPResponseBusinessSignup.class);
+                    message = mOtpResponseBusinessSignup.getMessage();
                 } catch (Exception e) {
                     e.printStackTrace();
                     message = getString(R.string.server_down);
@@ -207,19 +252,16 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             }
 
             if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.otp_going_to_send, Toast.LENGTH_LONG).show();
+                SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
+                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
-                SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
-                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
-
-            } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
+            } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST)) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
-                // Previous OTP has not been expired yet
-                SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
-                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
+                // Previous OTP has not expired yet.
+                SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
+                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
             } else {
                 if (getActivity() != null)
@@ -230,5 +272,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             mRequestOTPTask = null;
         }
     }
+
 }
+
 

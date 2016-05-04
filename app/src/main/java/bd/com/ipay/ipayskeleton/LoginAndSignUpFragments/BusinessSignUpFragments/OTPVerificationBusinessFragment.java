@@ -85,7 +85,8 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     else if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
                 } else {
-                    ((SignupOrLoginActivity) getActivity()).switchToBusinessSignUpFragment();
+                    ((SignupOrLoginActivity) getActivity()).switchToBusinessStepOneFragment();
+                   // ((SignupOrLoginActivity) getActivity()).switchToBusinessSignUpFragment();
                 }
             }
         });
