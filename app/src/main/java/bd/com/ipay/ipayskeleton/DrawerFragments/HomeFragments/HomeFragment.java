@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
     private RecyclerView mTransactionHistoryRecyclerView;
-    private TransactionHistoryAdapter mTransactionHistoryAdapter;
+    private TransactionHistoryAndNewsFeedAdapter mTransactionHistoryAndNewsFeedAdapter;
 
     private final int pageCount = 0;
 
@@ -142,9 +142,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
 
         mTransactionHistoryLayoutManager = new LinearLayoutManager(getActivity());
-        mTransactionHistoryAdapter = new TransactionHistoryAdapter();
+        mTransactionHistoryAndNewsFeedAdapter = new TransactionHistoryAndNewsFeedAdapter();
         mTransactionHistoryRecyclerView.setLayoutManager(mTransactionHistoryLayoutManager);
-        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAndNewsFeedAdapter);
 
         refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -454,7 +454,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                         HomeActivity.newsFeedLoadedOnce = true;
                         // TODO: Handle news feed hasNext in future
-                        mTransactionHistoryAdapter.notifyDataSetChanged();
+                        mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -509,7 +509,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                         if (userTransactionHistoryClasses.size() == 0)
                             userTransactionHistoryClasses = null;
-                        mTransactionHistoryAdapter.notifyDataSetChanged();
+                        mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -529,9 +529,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
     }
 
-    private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class TransactionHistoryAndNewsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private static final int HEADER_VIEW = 1;
+        private static final int TRANSACTION_HISTORY_HEADER_VIEW = 1;
         private static final int WHATS_NEW_VIEW = 2;
         private static final int NEWS_FEED_ITEM_VIEW = 3;
 
@@ -685,7 +685,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 WhatsNewViewHolder vh = new WhatsNewViewHolder(v);
                 return vh;
 
-            } else if (viewType == HEADER_VIEW) {
+            } else if (viewType == TRANSACTION_HISTORY_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_header_transaction_histories, parent, false);
                 HeaderViewHolder vh = new HeaderViewHolder(v);
                 return vh;
@@ -756,13 +756,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             if (newsFeedResponsesList != null) newsFeedListSize = newsFeedResponsesList.size();
 
             if (transactionHistoryListSize > 0 && newsFeedListSize > 0) {
-                if (position == 0) return HEADER_VIEW;
+                if (position == 0) return TRANSACTION_HISTORY_HEADER_VIEW;
                 else if (position == transactionHistoryListSize + 1) return WHATS_NEW_VIEW;
                 else if (position > transactionHistoryListSize + 1) return NEWS_FEED_ITEM_VIEW;
                 else return super.getItemViewType(position);
 
             } else if (transactionHistoryListSize > 0 && newsFeedListSize == 0) {
-                if (position == 0) return HEADER_VIEW;
+                if (position == 0) return TRANSACTION_HISTORY_HEADER_VIEW;
                 else return super.getItemViewType(position);
 
             } else if (transactionHistoryListSize == 0 && newsFeedListSize > 0) {

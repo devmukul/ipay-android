@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin">
 
     <TextView
         android:id="@+id/textview_document_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:gravity="center"
-        android:textSize="16sp"
         android:text="@string/upload_small"
-        android:layout_marginBottom="32dp"/>
+        android:textSize="16sp" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/document_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/document_id"
-            android:hint="@string/document_id"
+            android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:layout_gravity="center_horizontal">
-            <requestFocus/>
+            android:hint="@string/document_id">
+
+            <requestFocus />
         </EditText>
 
     </android.support.design.widget.TextInputLayout>
@@ -48,30 +49,28 @@
                 android:id="@+id/select_file"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:gravity="center"
                 android:hint="@string/select_a_file"
                 android:inputType="phone"
                 android:maxLength="14"
                 android:maxLines="1"
-                android:singleLine="true"
-                android:enabled="false"
-                />
+                android:singleLine="true" />
 
         </android.support.design.widget.TextInputLayout>
-
 
         <ImageView
             android:id="@+id/button_select_file"
             style="@style/ButtonStyleAccentSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:clickable="true"
             android:padding="@dimen/value5"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:src="@drawable/ic_file_upload_white_24dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:src="@drawable/ic_file_upload_white_24dp" />
 
     </RelativeLayout>
 
