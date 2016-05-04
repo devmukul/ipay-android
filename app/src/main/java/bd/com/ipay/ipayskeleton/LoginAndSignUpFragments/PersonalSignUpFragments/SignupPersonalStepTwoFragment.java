@@ -109,7 +109,6 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
         SignupOrLoginActivity.mName = name;
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         SignupOrLoginActivity.mBirthday = mBirthdayEditText.getText().toString().trim();
-        SignupOrLoginActivity.mAddressPersonal = mPersonalAddressView.getInformation();
 
         boolean cancel = false;
         View focusView = null;
@@ -143,6 +142,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            SignupOrLoginActivity.mAddressPersonal = mPersonalAddressView.getInformation();
             mProgressDialog.show();
             OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
                     Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE, SignupOrLoginActivity.mPromoCode);
