@@ -616,7 +616,13 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                 markAsSpamRecommendationButton = (Button) itemView.findViewById(R.id.mark_as_spam_button);
             }
 
-            public void bindViewNotificationList(int pos) {
+            public void bindViewMoneyRequestList(int pos) {
+
+                if (mRecommendationRequestList == null) pos = pos - 1;
+                else {
+                    if (mRecommendationRequestList.size() == 0) pos = pos - 1;
+                    else pos = pos - mRecommendationRequestList.size() - 2;
+                }
 
                 final String imageUrl = moneyRequestList.get(pos).getOriginatorProfile().getUserProfilePicture();
                 final String name = moneyRequestList.get(pos).originatorProfile.getUserName();
@@ -684,6 +690,9 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
             }
 
             public void bindViewRecommendationList(int pos) {
+
+                // Decrease pos by 1 as there is a header view now.
+                pos = pos - 1;
 
                 final long requestID = mRecommendationRequestList.get(pos).getId();
                 final String senderName = mRecommendationRequestList.get(pos).getSenderName();
@@ -840,23 +849,23 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                 return vh;
 
             } else if (viewType == RECOMMENDATION_ITEM_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommendation_requests, parent, false);
                 RecommendationRequestViewHolder vh = new RecommendationRequestViewHolder(v);
                 return vh;
 
             } else if (viewType == RECOMMENDATION_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommendation_requests_header, parent, false);
                 RecommendationListHeaderViewHolder vh = new RecommendationListHeaderViewHolder(v);
                 return vh;
 
             } else if (viewType == MONEY_REQUEST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_requests_header, parent, false);
                 MoneyRequestHeaderViewHolder vh = new MoneyRequestHeaderViewHolder(v);
                 return vh;
 
             } else {
                 // MONEY_REQUEST_ITEM_VIEW
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_request, parent, false);
                 MoneyRequestViewHolder vh = new MoneyRequestViewHolder(v);
                 return vh;
             }
@@ -868,7 +877,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
             try {
                 if (holder instanceof MoneyRequestViewHolder) {
                     MoneyRequestViewHolder vh = (MoneyRequestViewHolder) holder;
-                    vh.bindViewNotificationList(position);
+                    vh.bindViewMoneyRequestList(position);
 
                 } else if (holder instanceof RecommendationListHeaderViewHolder) {
                     RecommendationListHeaderViewHolder vh = (RecommendationListHeaderViewHolder) holder;
