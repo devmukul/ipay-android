@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -409,6 +412,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.dismiss();
             mChangePasswordTask = null;
+
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
 
             if (resultList.size() > 2) {
@@ -416,7 +420,9 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
                     mGetTrustedDeviceResponse = gson.fromJson(resultList.get(2), GetTrustedDeviceResponse.class);
 
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mGetTrustedDeviceResponse.getDevices());
+
+                        ArrayList<TrustedDevice> mTrustedDeviceList = (ArrayList<TrustedDevice>) mGetTrustedDeviceResponse.getDevices();
+                        mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mTrustedDeviceList);
                         mTrustedDevicesListView.setAdapter(mTrustedDeviceAdapter);
                         Utilities.setUpNonScrollableListView(mTrustedDevicesListView);
                     } else {
@@ -433,6 +439,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.dismiss();
             mGetTrustedDeviceTask = null;
+
         } else if (resultList.get(0).equals(Constants.COMMAND_REMOVE_TRUSTED_DEVICE)) {
 
             if (resultList.size() > 2) {
@@ -482,13 +489,56 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             View view = convertView;
             if (view == null)
                 view = inflater.inflate(R.layout.list_item_trsuted_device, null);
-
+            ImageView deviceimageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
             TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
             TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);
+            TextView currentDevice = (TextView) view.findViewById(R.id.current_device);
             Button removeButton = (Button) view.findViewById(R.id.button_remove);
+
+            //Setting the correct image based on trusted device type
+            int[] images = {
+                    R.drawable.ic_computer_black_24dp,
+                    R.drawable.ic_phone_android_black_24dp,
+                    R.drawable.ic_phone_iphone_black_24dp
+            };
+            String DeviceID = trustedDevice.getDeviceId();
+            String Android = "android";
+            String IOS = "ios";
+            String Computer = "browser";
+            if(DeviceID.toLowerCase().contains(Android.toLowerCase()))
+            {
+                deviceimageView.setImageResource(images[1]);
+
+            } else if(DeviceID.toLowerCase().contains(IOS.toLowerCase()))
+            {
+                deviceimageView.setImageResource(images[2]);
+
+            } else if(DeviceID.toLowerCase().contains(Computer.toLowerCase()))
+            {
+                deviceimageView.setImageResource(images[0]);
+
+            }
+
+            TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+            String mDeviceID="mobile-android-";
+            mDeviceID=  mDeviceID.concat(telephonyManager.getDeviceId());
+
+            if(mDeviceID.equals(DeviceID))
+            {
+                removeButton.setVisibility(View.INVISIBLE);
+                currentDevice.setVisibility(View.VISIBLE);
+                deviceNameView.setTextColor(getResources().getColor(R.color.cardview_dark_background));
+            } else
+            {
+                removeButton.setVisibility(View.VISIBLE);
+                currentDevice.setVisibility(View.INVISIBLE);
+
+            }
+
 
             deviceNameView.setText(trustedDevice.getDeviceName());
             grantTimeView.setText(trustedDevice.getCreatedTimeString());
+            currentDevice.setText("Current Device");
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
