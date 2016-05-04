@@ -5,26 +5,48 @@
     android:gravity="center|center_vertical"
     android:padding="@dimen/activity_horizontal_margin_card">
 
-    <TextView
-        android:id="@+id/textview_device_name"
-        style="?android:attr/textAppearanceMedium"
+    <ImageView
+        android:id="@+id/trusted_device_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/button_remove"
-        android:singleLine="true"
-        android:textSize="16sp" />
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+        android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
-    <TextView
-        android:id="@+id/textview_time"
-        style="?android:attr/textAppearanceSmall"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textview_device_name"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/button_remove"
-        android:singleLine="true"
-        android:textSize="12sp" />
+        android:layout_toRightOf="@+id/trusted_device_imageView"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview_device_name"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textview_time"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/current_device"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/button_remove"
