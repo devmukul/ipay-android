@@ -57,7 +57,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mDescriptionView;
-    private LinearLayout mDescriptionHolder;
+    private View mDescriptionHolder;
     private TextView mAmountView;
     private TextView mVatView;
     private TextView mTotalView;
@@ -80,7 +80,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mDescriptionHolder = (LinearLayout) v.findViewById(R.id.description_holder);
+        mDescriptionHolder = v.findViewById(R.id.description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mVatView = (TextView) v.findViewById(R.id.textview_vat);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);

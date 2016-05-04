@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -46,7 +47,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TrustedNetworkFragment extends Fragment implements HttpResponseListener {
+public class TrustedNetworkFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetTrustedPersonsTask = null;
     private GetTrustedPersonsResponse mGetTrustedPersonsResponse = null;
@@ -107,13 +108,17 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
         return v;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setContentShown(false);
+    }
+
     private void loadTrustedPersons() {
         if (mGetTrustedPersonsTask != null) {
             return;
         }
-
-        mProgressDialog.setMessage(getString(R.string.progress_diaog_get_trusted_persons));
-        mProgressDialog.show();
 
         mGetTrustedPersonsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_PERSONS,
                 Constants.BASE_URL + Constants.URL_GET_TRUSTED_PERSONS, getActivity(), this);
@@ -250,6 +255,8 @@ public class TrustedNetworkFragment extends Fragment implements HttpResponseList
 
                     mTrustedPersons = mGetTrustedPersonsResponse.getTrustedPersons();
                     mTrustedPersonListAdapter.notifyDataSetChanged();
+
+                    setContentShown(true);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedPersonsResponse.getMessage(), Toast.LENGTH_LONG).show();

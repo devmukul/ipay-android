@@ -28,6 +28,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonalSignup;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersonalSignup;
 import bd.com.ipay.ipayskeleton.R;
@@ -42,10 +43,9 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
     private EditText mNameView;
     private ImageView mDatePickerButton;
     private Button mSignupPersonalButton;
-    private CheckBox mAgreementCheckBox;
-    private TextView mTermsConditions;
-    private TextView mPrivacyPolicy;
     private EditText mBirthdayEditText;
+
+    private AddressInputView mPersonalAddressView;
 
     private int mYear;
     private int mMonth;
@@ -71,17 +71,11 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
 
         mNameView = (EditText) v.findViewById(R.id.user_name);
         mSignupPersonalButton = (Button) v.findViewById(R.id.personal_sign_in_button);
-        mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
-        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
-        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
+        mPersonalAddressView = (AddressInputView) v.findViewById(R.id.personal_address);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
-
-        // Enable hyperlinked
-        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
-        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
@@ -115,6 +109,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
         SignupOrLoginActivity.mName = name;
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         SignupOrLoginActivity.mBirthday = mBirthdayEditText.getText().toString().trim();
+        SignupOrLoginActivity.mAddressPersonal = mPersonalAddressView.getInformation();
 
         boolean cancel = false;
         View focusView = null;
@@ -137,10 +132,8 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             cancel = true;
         }
 
-        if (!mAgreementCheckBox.isChecked()) {
+        if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
         }
 
         if (cancel) {
