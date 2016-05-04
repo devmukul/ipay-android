@@ -227,10 +227,17 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         mProgressDialog.dismiss();
                         ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
+                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED)) {
+                        mProgressDialog.dismiss();
+                        mPasswordLoginView.setText("");
+
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
 
