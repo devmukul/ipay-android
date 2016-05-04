@@ -9,7 +9,11 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
 import bd.com.ipay.ipayskeleton.ForgotPasswordFragments.ForgetPasswordFragment;
+import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepOneFragment;
+import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepThreeFragment;
+import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepTwoFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments.LoginFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.OTPVerificationPersonalFragment;
@@ -137,6 +141,24 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         Intent intent = new Intent(SignupOrLoginActivity.this, HomeActivity.class);
         startActivity(intent);
         this.finish();
+    }
+
+    public void switchToBusinessStepOneFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SignupBusinessStepOneFragment()).commit();
+        switchedToAccountSelection = false;
+    }
+
+    public void switchToBusinessStepTwoFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SignupBusinessStepTwoFragment()).commit();
+        switchedToAccountSelection = false;
+    }
+
+    public void switchToBusinessStepThreeFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).commit();
+        switchedToAccountSelection = false;
     }
 
     @Override

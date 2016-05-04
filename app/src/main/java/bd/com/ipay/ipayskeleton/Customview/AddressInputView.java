@@ -223,12 +223,6 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
             cancel = true;
         }
 
-        if (mAddressLine2Field.getText().toString().isEmpty()) {
-            mAddressLine2Field.setError(context.getString(R.string.invalid_address_line_2));
-            focusedView = mAddressLine2Field;
-            cancel = true;
-        }
-
         if (mPostalCodeField.getText().toString().length() < 4) {
             mPostalCodeField.setError(context.getString(R.string.invalid_postcode));
             focusedView = mPostalCodeField;
