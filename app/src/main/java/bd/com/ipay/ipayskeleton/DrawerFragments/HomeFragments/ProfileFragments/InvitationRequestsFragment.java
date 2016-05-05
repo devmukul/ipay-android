@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,22 +18,16 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-/**
- * Created by farzana on 5/5/16.
- */
+
 public class InvitationRequestsFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mInvitationActionTask = null;
-    private GetInviteInfoResponse mInvitationActionResponse;
 
     private HttpRequestGetAsyncTask mGetInvitationRequestsTask = null;
     private GetInviteInfoResponse mInvitationRequestsResponse;
@@ -49,9 +41,6 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
     private ProgressDialog mProgressDialog;
 
     private TextView mEmptyListTextView;
-    private SharedPreferences pref;
-    private String mUserID;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,15 +59,12 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_invitation_request, container, false);
-        ((HomeActivity) getActivity()).setTitle(R.string.invitation);
+        ( getActivity()).setTitle(R.string.invitation);
 
         mInvitationListRecyclerView = (RecyclerView) v.findViewById(R.id.list_invitees);
         mProgressDialog = new ProgressDialog(getActivity());
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        mUserID = pref.getString(Constants.USERID, "");
-
         if (Utilities.isConnectionAvailable(getActivity())) {
             getInvitationRequestsList();
         }
@@ -103,15 +89,12 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
                 Constants.BASE_URL + "/" + Constants.URL_GET_INVITE_INFO, getActivity(), this);
         mGetInvitationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-
-
     }
 
     @Override
     public void httpResponseReceiver(String result) {
         if (result == null) {
             mProgressDialog.dismiss();
-            mInvitationActionTask = null;
             mGetInvitationRequestsTask = null;
 
             if (getActivity() != null)
@@ -123,7 +106,6 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
         Gson gson = new Gson();
 
         if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
-
             if (resultList.size() > 2) {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     try {
@@ -136,6 +118,7 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
                             tempRecommendationRequestsClasses = mInvitationRequestsResponse.getInvitees();
                             mInvitations.addAll(tempRecommendationRequestsClasses);
                         }
+
                         if (mInvitations != null && mInvitations.size() > 0) {
                             mEmptyListTextView.setVisibility(View.GONE);
                         } else mEmptyListTextView.setVisibility(View.VISIBLE);
@@ -150,14 +133,11 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
                     }
 
                 } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+                    if (getActivity() != null) Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+            } else if (getActivity() != null) Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
 
             mProgressDialog.dismiss();
-            mInvitationActionTask = null;
         }
 
     }
@@ -173,34 +153,26 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-
                 mMobileNumber = (TextView) itemView.findViewById(R.id.invitee_mobile_number);
-
             }
 
             public void bindView(int pos) {
-
                 final String MobileNumber = mInvitations.get(pos);
                 mMobileNumber.setText(MobileNumber);
-
             }
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             View v;
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_invitees,
                     parent, false);
-
             ViewHolder vh = new ViewHolder(v);
-
             return vh;
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             try {
                 ViewHolder vh = (ViewHolder) holder;
                 vh.bindView(position);
