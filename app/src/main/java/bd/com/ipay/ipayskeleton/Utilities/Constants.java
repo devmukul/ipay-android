@@ -275,6 +275,7 @@ public class Constants {
     public static final String COMMAND_GET_RECOMMENDATION_REQUESTS = "COMMAND_GET_RECOMMENDATION_REQUESTS";
     public static final String COMMAND_ADD_MONEY = "COMMAND_ADD_MONEY";
     public static final String COMMAND_RECOMMEND_ACTION = "COMMAND_RECOMMEND_ACTION";
+    public static final String COMMAND_INVITEE_ACTION = "COMMAND_INVITEE_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
     public static final String COMMAND_GET_FIREBASE_TOKEN = "COMMAND_GET_FIREBASE_TOKEN";
     public static final String COMMAND_GET_NEWS_FEED = "COMMAND_GET_NEWS_FEED";

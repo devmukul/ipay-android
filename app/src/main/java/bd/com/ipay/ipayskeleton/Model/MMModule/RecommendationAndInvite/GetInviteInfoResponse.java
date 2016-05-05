@@ -16,6 +16,10 @@ public class GetInviteInfoResponse {
         this.invitees = invitees;
     }
 
+    public List<String> getInvitees() {
+        return invitees;
+    }
+
     @Override
     public String toString() {
         return "GetInviteInfoResponse{" +

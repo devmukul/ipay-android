@@ -57,6 +57,7 @@
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
     <string name="empty_events_list">No recent events found.</string>
     <string name="empty_recommendation_request_list">No request to introduce right now.</string>
+    <string name="empty_invitation_request_list">No invitation to show right now.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="could_not_update_contacts">Could not update the contact list</string>
@@ -169,6 +170,7 @@
     <string name="progress_dialog_refreshing">Refreshing...</string>
     <string name="progress_dialog_processing">Processing...</string>
     <string name="progress_dialog_recommendation_list">Fecthing recommendation requests...</string>
+    <string name="progress_dialog_invitation_list">Fecthing invitation requests...</string>
     <string name="progress_dialog_initializing">Setting up the account. Please wait...</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information...</string>
     <string name="progress_dialog_cancelling">Cancelling request...</string>
@@ -369,6 +371,7 @@
     <string name="filter">Filter</string>
     <string name="verification">Verification</string>
     <string name="introduce">Introduce</string>
+    <string name="invitation">Invitation</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
     <string name="filter_by_date">Filter by date</string>
@@ -516,6 +519,7 @@
     <string name="progress_dialog_saving_address">Saving address...</string>
     <string name="trusted_network">Trusted Network</string>
     <string name="add_an_email">Add an Email</string>
+    <string name="invitees">Invitees</string>
     <string name="progress_dialog_loading_emails">Loading emails..</string>
     <string name="progress_dialog_add_email">Adding email...</string>
     <string name="progress_dialog_delete_email">Deleting email..</string>
