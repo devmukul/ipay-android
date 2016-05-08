@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +66,35 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         getActivity().setTitle(R.string.title_login_page);
     }
 
+    void putConstantStringInfront(final EditText edt, final String constString){
+        edt.setText(constString);
+        Selection.setSelection(edt.getText(), edt.getText().length());
+
+
+        edt.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!s.toString().startsWith(constString)){
+                    edt.setText(constString);
+                    Selection.setSelection(edt.getText(), edt.getText().length());
+
+                }
+
+            }
+        });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -77,6 +109,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
         mUserNameLoginView = (EditText) v.findViewById(R.id.login_mobile_number);
         mPasswordLoginView = (EditText) v.findViewById(R.id.login_password);
+
+        putConstantStringInfront(mUserNameLoginView, "+880");
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +160,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         // Store values at the time of the login attempt.
         mPasswordLogin = mPasswordLoginView.getText().toString().trim();
-        mUserNameLogin = "+880" + mUserNameLoginView.getText().toString().trim();
+        mUserNameLogin = mUserNameLoginView.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -139,7 +173,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             cancel = true;
         }
 
-        if (mUserNameLoginView.getText().toString().trim().length() != 10) {
+        if (mUserNameLoginView.getText().toString().trim().length() != 14) {
             mUserNameLoginView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mUserNameLoginView;
             cancel = true;
