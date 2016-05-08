@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
-import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
 import bd.com.ipay.ipayskeleton.ForgotPasswordFragments.ForgetPasswordFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepThreeFragment;
@@ -19,7 +18,6 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.OTPVerificationPersonalFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments.OTPVerificationTrustFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
-import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepTwoFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
@@ -73,25 +71,14 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         }
 
         if (getIntent().hasExtra(MESSAGE)) {
+            switchToLoginFragment();
             Toast.makeText(this, getIntent().getStringExtra(MESSAGE), Toast.LENGTH_LONG).show();
         }
-
-//        GetDistrictAsyncTask getDistrictAsyncTask = new GetDistrictAsyncTask(this);
-//        getDistrictAsyncTask.execute();
-
-//        GetThanaAsyncTask getThanaAsyncTask = new GetThanaAsyncTask(this);
-//        getThanaAsyncTask.execute();
     }
 
     public void switchToLoginFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new LoginFragment()).commit();
-        switchedToAccountSelection = false;
-    }
-
-    public void switchToBusinessSignUpFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupBusinessFragment()).commit();
         switchedToAccountSelection = false;
     }
 

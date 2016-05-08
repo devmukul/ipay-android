@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.BasicInfoFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.DocumentListFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.DocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EmailFragment;
@@ -330,8 +331,7 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_profile_documents) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new DocumentUploadFragment()).commit();
-            switchedToHomeFragment = false;
+            switchToDocumentListFragment();
 
         } else if (id == R.id.nav_email_addresses) {
 
@@ -343,6 +343,11 @@ public class HomeActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new TrustedNetworkFragment()).commit();
             switchedToHomeFragment = false;
         }
+    }
+
+    public void switchToDocumentListFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new DocumentListFragment()).commit();
+        switchedToHomeFragment = false;
     }
 
     public void switchToAddressFragment() {
@@ -366,6 +371,13 @@ public class HomeActivity extends BaseActivity
         FragmentEditAddress fragmentEditAddress = new FragmentEditAddress();
         fragmentEditAddress.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragmentEditAddress).commit();
+        switchedToHomeFragment = false;
+    }
+
+    public void switchToDocumentUploadFragment(Bundle bundle) {
+        DocumentUploadFragment documentUploadFragment = new DocumentUploadFragment();
+        documentUploadFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, documentUploadFragment).commit();
         switchedToHomeFragment = false;
     }
 
@@ -477,6 +489,8 @@ public class HomeActivity extends BaseActivity
                             break;
                         }
                     }
+
+                    pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
 
                     setProfilePicture(imageUrl);
                 } else {

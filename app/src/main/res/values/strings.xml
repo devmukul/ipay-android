@@ -139,6 +139,8 @@
     <string name="please_enter_an_account_name">Please provide your Account Name and try again</string>
     <string name="please_enter_an_account_number">Please provide your Account Number and try again</string>
     <string name="account_type">Account Type</string>
+    <string name="money_requests_header">Money requests</string>
+    <string name="recommendation_requests_header">Recommendation requests</string>
     <string name="select_account_type">Select an account type for iPay to Sign Up</string>
     <string name="name_of_user">Name</string>
     <string name="name_of_participant">Participant Name</string>
@@ -450,6 +452,7 @@
     <string name="passport">Passport</string>
     <string name="passport_number">Passport Number</string>
     <string name="upload">UPLOAD</string>
+    <string name="upload_small">Upload</string>
     <string name="driving_license">Driving License</string>
     <string name="driving_license_number">Driving License Number</string>
     <string name="birth_certificate">Birth Certificate</string>
@@ -557,6 +560,14 @@
     <string name="enter_a_new_pin">Enter a new PIN</string>
     <string name="bank_branch_not_selected">No bank branch selected</string>
     <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
+    <string name="failed_get_document_list">Failed to fetch the list of documents</string>
+    <string name="not_submitted">Not Submitted</string>
+    <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload identification documents to get verified</string>
+    <string name="upload_identification_documents_to_confirm_identity">Upload identification documents to confirm your identity</string>
+    <string name="document_id">Document ID</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="please_select_a_file_to_upload">Please select a file to upload</string>
+    <string name="select_a_file">Select a file</string>
 
     <string-array name="account_types">
         <item>Personal</item>

@@ -15,6 +15,7 @@ public class Constants {
     public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String LOGGEDIN = "LOGGEDIN";
     public static final String PASSWORD = "PASSWORD";
+    public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
 
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
@@ -36,6 +37,8 @@ public class Constants {
     public static final String COUNTRY_CODE = "country_code";
     public static final String EXPAND_PIN = "expand_pin";
     public static final String TRUSTED_OTP_RECEIVERS = "trusted_otp_receivers";
+    public static final String DOCUMENT_ID = "DOCUMENT_ID";
+    public static final String DOCUMENT_TYPE_NAME = "DOCUMENT_TYPE_NAME";
 
     public static final String NAME = "NAME";
     public static final String OCCUPATION = "OCCUPATION";
@@ -282,6 +285,7 @@ public class Constants {
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
     public static final String COMMAND_EVENT_CATEGORIES = "COMMAND_EVENT_CATEGORIES";
     public static final String COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND = "COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND";
+    public static final String COMMAND_UPLOAD_DOCUMENT = "COMMAND_UPLOAD_DOCUMENT";
     public static final String COMMAND_UPLOAD_NATIONAL_ID = "COMMAND_UPLOAD_NATIONAL_ID";
     public static final String COMMAND_UPLOAD_PASSPORT = "COMMAND_UPLOAD_PASSPORT";
     public static final String COMMAND_UPLOAD_DRIVING_LICENSE = "COMMAND_UPLOAD_DRIVING_LICENSE";

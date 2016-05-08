@@ -23,7 +23,7 @@ public class DocumentPicker {
 
 //    private static final int DEFAULT_MIN_WIDTH_QUALITY = 400;        // min pixels
     private static final String TAG = "Picker";
-    private static final String TEMP_DOCUMENT_NAME = "temp_document";
+    private static final String TEMP_DOCUMENT_NAME = "document.jpg";
 
 //    public static int minWidthQuality = DEFAULT_MIN_WIDTH_QUALITY;
 
@@ -87,9 +87,29 @@ public class DocumentPicker {
         return list;
     }
 
+    public static String getFileFromResult(Context context, int resultCode, Intent returnedIntent) {
+        try {
+            File documentFile = getTempFile(context);
 
-    public static Uri getDocumentFromResult(Context context, int resultCode,
-                                            Intent returnedIntent) {
+            boolean isCamera = (returnedIntent == null ||
+                    returnedIntent.getData() == null ||
+                    returnedIntent.getData().toString().contains(documentFile.toString()));
+
+            if (isCamera) {     /** CAMERA **/
+                return getTempFile(context).getAbsolutePath();
+            } else if (returnedIntent.getData().toString().startsWith("file://")) {
+                return returnedIntent.getData().toString();
+            } else {            /** ALBUM **/
+                return Utilities.getFilePath(context, returnedIntent.getData());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static Uri getDocumentFromResult(Context context, int resultCode, Intent returnedIntent) {
         Log.e(TAG, "getDocumentFromResult, resultCode: " + resultCode);
 //        Bitmap bm = null;
         Uri selectedImage = null;
@@ -100,7 +120,8 @@ public class DocumentPicker {
                         returnedIntent.getData() == null ||
                         returnedIntent.getData().toString().contains(documentFile.toString()));
 
-                Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
+                if (returnedIntent != null)
+                    Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
                 if (isCamera) {     /** CAMERA **/
                     selectedImage = Uri.fromFile(documentFile);
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {

@@ -49,12 +49,16 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Str
     @Override
     protected String doInBackground(Void... params) {
 
+        Log.w("Document Upload", "Started");
+
         String result = null;
 
         if (Utilities.isConnectionAvailable(mContext))
             result = uploadDocument(imagePath);
         else
             Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
+
+        Log.w("Document Upload", "Finished");
 
         return result;
     }
