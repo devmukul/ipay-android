@@ -57,6 +57,7 @@
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
     <string name="empty_events_list">No recent events found.</string>
     <string name="empty_recommendation_request_list">No request to introduce right now.</string>
+    <string name="empty_introducer_request_list">No introducer right now.</string>
     <string name="empty_invitation_request_list">No invitation to show right now.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
@@ -172,6 +173,7 @@
     <string name="progress_dialog_refreshing">Refreshing...</string>
     <string name="progress_dialog_processing">Processing...</string>
     <string name="progress_dialog_recommendation_list">Fecthing recommendation requests...</string>
+    <string name="progress_dialog_introducer_list">Fecthing introducer requests...</string>
     <string name="progress_dialog_invitation_list">Fecthing invitation requests...</string>
     <string name="progress_dialog_initializing">Setting up the account. Please wait...</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information...</string>
