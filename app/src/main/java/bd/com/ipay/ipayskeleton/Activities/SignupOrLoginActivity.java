@@ -120,8 +120,8 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public void switchToForgetPasswordFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ForgetPasswordFragment()).commit();
-        switchedToAccountSelection = true;
+                .replace(R.id.fragment_container, new ForgetPasswordFragment()).addToBackStack(null).commit();
+        switchedToAccountSelection = false;
     }
 
     public void switchToHomeActivity() {
@@ -151,7 +151,9 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (switchedToAccountSelection) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else if (switchedToAccountSelection) {
             super.onBackPressed();
         } else switchToAccountSelectionFragment();
     }
