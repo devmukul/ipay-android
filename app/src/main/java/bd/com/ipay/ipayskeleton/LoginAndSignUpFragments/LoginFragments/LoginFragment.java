@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,6 +181,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     @Override
     public void httpResponseReceiver(String result) {
 
+        Log.w("REsult", result);
         if (result == null) {
             mProgressDialog.dismiss();
             mLoginTask = null;
@@ -225,14 +227,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         // Enter previous OTP
                         SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
                         mProgressDialog.dismiss();
+
                         ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
-                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED)) {
-                        mProgressDialog.dismiss();
-                        mPasswordLoginView.setText("");
-
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
