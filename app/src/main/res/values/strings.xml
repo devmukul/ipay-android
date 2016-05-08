@@ -564,6 +564,7 @@
     <string name="no_file_selected">No file selected</string>
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
     <string name="select_a_file">Select a file</string>
+    <string name="failed_fetching_money_requests">Failed to fetch money requests</string>
 
     <string-array name="account_types">
         <item>Personal</item>

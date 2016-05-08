@@ -6,9 +6,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MyRequestFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MyRequestsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.NewMoneyRequestFragment;
 
 public class RequestMoneyActivity extends BaseActivity {
 
@@ -37,7 +38,7 @@ public class RequestMoneyActivity extends BaseActivity {
         if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
             switchToRequestMoneyFragment();
         else
-            switchToMyRequestsFragment();
+            switchToRequestListFragment();
     }
 
     @Override
@@ -47,20 +48,20 @@ public class RequestMoneyActivity extends BaseActivity {
         } else if (switchedToPendingList) {
             super.onBackPressed();
         } else {
-            switchToMyRequestsFragment();
+            switchToRequestListFragment();
         }
     }
 
-    public void switchToMyRequestsFragment() {
+    public void switchToRequestListFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MyRequestFragment()).commit();
+                .replace(R.id.fragment_container, new MoneyRequestListHolderFragment()).commit();
         mFabRequestMoney.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
 
     public void switchToRequestMoneyFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
+                .replace(R.id.fragment_container, new NewMoneyRequestFragment()).commit();
         mFabRequestMoney.setVisibility(View.GONE);
         switchedToPendingList = false;
     }
