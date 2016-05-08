@@ -938,10 +938,10 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                 if (position == 0) return RECOMMENDATION_HEADER_VIEW;
                 else if (position == recommendationRequestListSize + 1)
                     return MONEY_REQUEST_HEADER_VIEW;
+                else if (position == moneyRequestListSize + 1 + recommendationRequestListSize + 1)
+                    return FOOTER_VIEW;
                 else if (position > recommendationRequestListSize + 1)
                     return MONEY_REQUEST_ITEM_VIEW;
-                else if (position > moneyRequestListSize + 1 + recommendationRequestListSize + 1)
-                    return FOOTER_VIEW;
                 else return RECOMMENDATION_ITEM_VIEW;
 
             } else if (moneyRequestListSize > 0 && recommendationRequestListSize == 0) {
