@@ -163,8 +163,8 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         String fileName = temp[temp.length - 1];
                         mSelectFileField.setText(fileName);
                     }
-                    else
-                        mSelectFileField.setText(getString(R.string.no_file_selected));
+//                    else
+//                        mSelectFileField.setText(getString(R.string.no_file_selected));
                 } else {
                     mSelectFileField.setText(getString(R.string.no_file_selected));
                 }
