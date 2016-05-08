@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
@@ -37,7 +38,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOr
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetRecommendationRequests;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetRecommendationRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.RecommendRequestClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.RecommendationActionRequest;
@@ -69,7 +69,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
     private HttpRequestPostAsyncTask mRecommendActionTask = null;
     private RecommendationActionResponse mRecommendationActionResponse;
 
-    private HttpRequestPostAsyncTask mGetRecommendationRequestsTask = null;
+    private HttpRequestGetAsyncTask mGetRecommendationRequestsTask = null;
     private GetRecommendationRequestsResponse mRecommendationRequestsResponse;
 
     private RecyclerView mNotificationsRecyclerView;
@@ -161,11 +161,8 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_recommendation_list));
         mProgressDialog.show();
-        GetRecommendationRequests mGetRecommendationRequests = new GetRecommendationRequests(mUserID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mGetRecommendationRequests);
-        mGetRecommendationRequestsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
-                Constants.BASE_URL + Constants.URL_GET_RECOMMENDATION_REQUESTS, json, getActivity());
+        mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
+                Constants.BASE_URL + Constants.URL_GET_RECOMMENDATION_REQUESTS, getActivity());
         mGetRecommendationRequestsTask.mHttpResponseListener = this;
         mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
