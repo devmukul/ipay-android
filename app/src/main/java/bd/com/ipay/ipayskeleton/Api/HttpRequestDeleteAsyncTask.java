@@ -174,6 +174,7 @@ public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
 
             if (HomeActivity.iPayToken.length() > 0)
                 httpDelete.setHeader("token", HomeActivity.iPayToken);
+            httpDelete.setHeader("User-Agent", "mobile-android");
             return new DefaultHttpClient().execute(httpDelete);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
