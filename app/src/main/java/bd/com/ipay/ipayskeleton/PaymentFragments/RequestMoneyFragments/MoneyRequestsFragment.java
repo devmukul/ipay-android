@@ -97,7 +97,8 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
             return;
         }
 
-        GetNotificationsRequest mTransactionHistoryRequest = new GetNotificationsRequest(pageCount);
+        GetNotificationsRequest mTransactionHistoryRequest = new GetNotificationsRequest(
+                pageCount, Constants.SERVICE_ID_REQUEST_MONEY);
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
