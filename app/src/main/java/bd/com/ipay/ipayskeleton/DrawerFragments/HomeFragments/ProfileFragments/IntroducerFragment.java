@@ -290,8 +290,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             public void bindViewForIntroducer(int pos) {
 
-
-                Toast.makeText(getActivity(), "introducer request", Toast.LENGTH_LONG).show();
                 final String introducerName = mIntroducerClasses.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerClasses.get(pos).getMobileNumber();
                 String imageUrl = mIntroducerClasses.get(pos).getprofilePictureUrl();
@@ -302,8 +300,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             }
 
             public void bindViewForSentRequest(int pos) {
-
-                Toast.makeText(getActivity(), "sent request", Toast.LENGTH_LONG).show();
 
                 final String introducerName = mSentRequestClasses.get(pos).getName();
                 final String introducerMobileNumber = mSentRequestClasses.get(pos).getMobileNumber();

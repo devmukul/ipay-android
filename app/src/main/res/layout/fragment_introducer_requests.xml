@@ -10,15 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/profile_introducers"
-        android:id="@+id/introducer"
-        android:layout_gravity="center_horizontal" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_introducer_requests"
         android:layout_width="match_parent"
