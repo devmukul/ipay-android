@@ -82,9 +82,9 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         mProgressDialog = new ProgressDialog(getActivity());
 
         if (Utilities.isConnectionAvailable(getActivity())) {
-           //getIntroducerList();
+           getIntroducerList();
            //getIntroducedList();
-            getSentRequestList();
+           //getSentRequestList();
         }
 
         mIntroducerListAdapter = new IntroducerListAdapter();
@@ -340,8 +340,8 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             try {
                 ViewHolder vh = (ViewHolder) holder;
-                //vh.bindViewForIntroducer(position);  // for introducer and introduced list
-               vh.bindViewForSentRequest(position);   // for sent request list
+                vh.bindViewForIntroducer(position);  // for introducer and introduced list
+               //vh.bindViewForSentRequest(position);   // for sent request list
 
 
             } catch (Exception e) {

@@ -27,8 +27,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/profile_picture"
-        android:paddingLeft="20dp"
-        android:paddingTop="20dp"
+        android:paddingLeft="@dimen/value20"
+        android:paddingTop="@dimen/value20"
         style="?android:attr/textAppearanceMedium"
         android:textColor="@color/colorTextPrimary"
         android:text="Mohsin Khan"/>
@@ -37,7 +37,7 @@
         android:id="@+id/introducer_mobile_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
+        android:paddingLeft="@dimen/value20"
         android:layout_below="@+id/introducer_name"
         android:layout_toRightOf="@+id/profile_picture"
         style="?android:attr/textAppearanceMedium"
@@ -51,7 +51,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/introducer_mobile_number"
-            android:paddingLeft="20dp"
+            android:paddingLeft="@dimen/value20"
             android:src="@drawable/ic_sync_problem_black_24dp" />
 
     </RelativeLayout>
