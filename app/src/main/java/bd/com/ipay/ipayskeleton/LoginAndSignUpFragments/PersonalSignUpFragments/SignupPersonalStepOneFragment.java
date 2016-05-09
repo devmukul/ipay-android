@@ -44,6 +44,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private TextView mPrivacyPolicy;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
+    private CheckBox mOtherCheckBox;
     private CheckBox mAgreementCheckBox;
     private EditText mPromoCodeEditText;
 
@@ -70,6 +71,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
+        mOtherCheckBox = (CheckBox) v.findViewById(R.id.checkBoxOther);
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
         mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
         mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
@@ -83,6 +85,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) mFemaleCheckBox.setChecked(false);
+                if (isChecked) mOtherCheckBox.setChecked(false);
             }
         });
 
@@ -90,6 +93,15 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) mMaleCheckBox.setChecked(false);
+                if (isChecked) mOtherCheckBox.setChecked(false);
+            }
+        });
+
+        mOtherCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) mMaleCheckBox.setChecked(false);
+                if (isChecked) mFemaleCheckBox.setChecked(false);
             }
         });
 

@@ -105,7 +105,7 @@ public class Constants {
     // Server Type 2 -> staging server
     // Server Type 3 -> live server
     // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = 2;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -157,6 +157,8 @@ public class Constants {
     public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address";
     public static final String URL_GET_DOCUMENTS = "user/identification/documents";
     public static final String URL_GET_INTRODUCER_LIST = "kyc/introducerList";
+    public static final String URL_GET_INTRODUCED_LIST = "kyc/introducedlist";
+    public static final String URL_GET_SENTREQUEST_LIST = "kyc/sentRequestList";
     public static final String URL_UPLOAD_DOCUMENTS = "/user/identification/documents";
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
     public static final String URL_SET_USER_ADDRESS_REQUEST = "user/profile/address";
@@ -271,6 +273,8 @@ public class Constants {
     public static final String COMMAND_GET_USER_ADDRESS_REQUEST = "COMMAND_GET_USER_ADDRESS_REQUEST";
     public static final String COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST = "COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST";
     public static final String COMMAND_GET_INTRODUCER_LIST = "COMMAND_GET_INTRODUCER_LIST";
+    public static final String COMMAND_GET_INTRODUCED_LIST = "COMMAND_GET_INTRODUCED_LIST";
+    public static final String COMMAND_GET_SENTREQUEST_LIST = "COMMAND_GET_SENTREQUEST_LIST";
     public static final String COMMAND_EMAIL_VERIFICATION_REQUEST = "COMMAND_EMAIL_VERIFICATION_REQUEST";
     public static final String COMMAND_SET_PROFILE_INFO_REQUEST = "COMMAND_SET_PROFILE_INFO_REQUEST";
     public static final String COMMAND_SET_USER_ADDRESS_REQUEST = "COMMAND_SET_USER_ADDRESS_REQUEST";

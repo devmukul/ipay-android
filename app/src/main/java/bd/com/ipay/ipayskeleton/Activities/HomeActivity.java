@@ -307,8 +307,8 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_identification) {
-            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new RecommendationRequestsFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new RecommendationRequestsFragment()).commit();
             switchedToHomeFragment = false;
 
         }  else if (id == R.id.nav_invitation) {

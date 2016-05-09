@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +23,11 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducerListResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetSentRequestListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introducer;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.SentRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -35,13 +38,19 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
     private HttpRequestGetAsyncTask mGetIntroducerTask = null;
     private GetIntroducerListResponse mIntroducerListResponse;
+    private List<Introducer> mIntroducerClasses;
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mIntroducerRecyclerView;
     private TextView mEmptyListTextView;
     private IntroducerListAdapter mIntroducerListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<Introducer> mIntroducerClasses;
+
+
+    private GetIntroducedListResponse mIntroducedListResponse;
+
+    private GetSentRequestListResponse mSentRequestListResponse;
+    private List<SentRequest> mSentRequestClasses;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +82,9 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         mProgressDialog = new ProgressDialog(getActivity());
 
         if (Utilities.isConnectionAvailable(getActivity())) {
-            getIntroducerList();
+           //getIntroducerList();
+           //getIntroducedList();
+            getSentRequestList();
         }
 
         mIntroducerListAdapter = new IntroducerListAdapter();
@@ -93,6 +104,32 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         mProgressDialog.show();
         mGetIntroducerTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
                 Constants.BASE_URL + Constants.URL_GET_INTRODUCER_LIST, getActivity());
+        mGetIntroducerTask.mHttpResponseListener = this;
+        mGetIntroducerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getIntroducedList() {
+        if (mGetIntroducerTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_introduced_list));
+        mProgressDialog.show();
+        mGetIntroducerTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCED_LIST,
+                Constants.BASE_URL + Constants.URL_GET_INTRODUCED_LIST, getActivity());
+        mGetIntroducerTask.mHttpResponseListener = this;
+        mGetIntroducerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getSentRequestList() {
+        if (mGetIntroducerTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_sentRequest_list));
+        mProgressDialog.show();
+        mGetIntroducerTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SENTREQUEST_LIST,
+                Constants.BASE_URL + Constants.URL_GET_SENTREQUEST_LIST, getActivity());
         mGetIntroducerTask.mHttpResponseListener = this;
         mGetIntroducerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -143,7 +180,72 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             mProgressDialog.dismiss();
 
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCED_LIST)) {
+            if (resultList.size() > 2) {
+                try {
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        mIntroducedListResponse = gson.fromJson(resultList.get(2), GetIntroducedListResponse.class);
+
+                        if (mIntroducerClasses == null) {
+                            mIntroducerClasses = mIntroducedListResponse.getIntroducedList();
+                        } else {
+                            List<Introducer> tempIntroducerClasses;
+                            tempIntroducerClasses = mIntroducedListResponse.getIntroducedList();
+                            mIntroducerClasses.clear();
+                            mIntroducerClasses.addAll(tempIntroducerClasses);
+                        }
+
+                        if (mIntroducerClasses != null && mIntroducerClasses.size() > 0)
+                            mEmptyListTextView.setVisibility(View.GONE);
+                        else mEmptyListTextView.setVisibility(View.VISIBLE);
+                        mIntroducerListAdapter.notifyDataSetChanged();
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+
+            mProgressDialog.dismiss();
+
         }
+
+        else if (resultList.get(0).equals(Constants.COMMAND_GET_SENTREQUEST_LIST)) {
+            if (resultList.size() > 2) {
+                try {
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        mSentRequestListResponse = gson.fromJson(resultList.get(2), GetSentRequestListResponse.class);
+
+                        if (mSentRequestClasses == null) {
+                            mSentRequestClasses = mSentRequestListResponse.getSentRequestList();
+                        } else {
+                            List<SentRequest> tempIntroducerClasses;
+                            tempIntroducerClasses = mSentRequestListResponse.getSentRequestList();
+                            mSentRequestClasses.clear();
+                            mSentRequestClasses.addAll(tempIntroducerClasses);
+                        }
+
+                        if (mSentRequestClasses != null && mSentRequestClasses.size() > 0)
+                            mEmptyListTextView.setVisibility(View.GONE);
+                        else mEmptyListTextView.setVisibility(View.VISIBLE);
+                        mIntroducerListAdapter.notifyDataSetChanged();
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                }
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+
+            mProgressDialog.dismiss();
+
+        }
+
     }
 
     private class IntroducerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -155,6 +257,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             private TextView mIntroducerName;
             private TextView mIntroducerMobileNumber;
             private RoundedImageView mProfilePictureView;
+            private ImageView mRequestStatus;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -162,6 +265,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 mProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.profile_picture);
                 mIntroducerName = (TextView) itemView.findViewById(R.id.introducer_name);
                 mIntroducerMobileNumber = (TextView) itemView.findViewById(R.id.introducer_mobile_number);
+                mRequestStatus = (ImageView) itemView.findViewById(R.id.request_status);
 
             }
 
@@ -184,15 +288,41 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             }
 
-            public void bindView(int pos) {
+            public void bindViewForIntroducer(int pos) {
 
+
+                Toast.makeText(getActivity(), "introducer request", Toast.LENGTH_LONG).show();
                 final String introducerName = mIntroducerClasses.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerClasses.get(pos).getMobileNumber();
                 String imageUrl = mIntroducerClasses.get(pos).getprofilePictureUrl();
                 setProfilePicture(imageUrl);
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
+                mRequestStatus.setVisibility(View.GONE);
+            }
 
+            public void bindViewForSentRequest(int pos) {
+
+                Toast.makeText(getActivity(), "sent request", Toast.LENGTH_LONG).show();
+
+                final String introducerName = mSentRequestClasses.get(pos).getName();
+                final String introducerMobileNumber = mSentRequestClasses.get(pos).getMobileNumber();
+                final String requestStatus = mSentRequestClasses.get(pos).getStatus();
+                String imageUrl = mSentRequestClasses.get(pos).getProfilePictureUrl();
+                setProfilePicture(imageUrl);
+                mIntroducerName.setText(introducerName);
+                mIntroducerMobileNumber.setText(introducerMobileNumber);
+
+                if (requestStatus.equals(Constants.RECOMMENDATION_STATUS_PENDING)) {
+                    mRequestStatus.setImageResource(R.drawable.ic_sync_problem_black_24dp);
+                } else if (requestStatus.equals(Constants.RECOMMENDATION_STATUS_APPROVED)) {
+                    mRequestStatus.setImageResource(R.drawable.ic_verified_user_black_24dp);
+                } else if (requestStatus.equals(Constants.RECOMMENDATION_STATUS_SPAM)) {
+                    mRequestStatus.setImageResource(R.drawable.ic_error_black_24dp);
+                } else {
+                    // RECOMMENDATION_STATUS_REJECTED
+                    mRequestStatus.setImageResource(R.drawable.ic_warning_black_24dp);
+                }
 
             }
         }
@@ -214,7 +344,9 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             try {
                 ViewHolder vh = (ViewHolder) holder;
-                vh.bindView(position);
+                //vh.bindViewForIntroducer(position);  // for introducer and introduced list
+               vh.bindViewForSentRequest(position);   // for sent request list
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -223,9 +355,29 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
         @Override
         public int getItemCount() {
+            if(mIntroducerClasses != null && mSentRequestClasses != null)
+                return mIntroducerClasses.size() + mSentRequestClasses.size();
+            else
+            {
+                if(mIntroducerClasses != null)
+                    return mIntroducerClasses.size();
+                else if (mSentRequestClasses != null)
+                    return mSentRequestClasses.size();
+                else
+                    return 0;
+            }
+
+            /*
+            if (mSentRequestClasses != null)
+            return mSentRequestClasses.size();
+            else return 0;
+            */
+
+            /*
             if (mIntroducerClasses != null)
                 return mIntroducerClasses.size();
             else return 0;
+            */
         }
 
         @Override

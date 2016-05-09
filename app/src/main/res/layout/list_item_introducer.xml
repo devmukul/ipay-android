@@ -28,21 +28,31 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/profile_picture"
         android:paddingLeft="20dp"
-        android:layout_centerVertical="true"
+        android:paddingTop="20dp"
         style="?android:attr/textAppearanceMedium"
         android:textColor="@color/colorTextPrimary"
         android:text="Mohsin Khan"/>
 
     <TextView
         android:id="@+id/introducer_mobile_number"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/textview_name"
+        android:paddingLeft="20dp"
+        android:layout_below="@+id/introducer_name"
+        android:layout_toRightOf="@+id/profile_picture"
         style="?android:attr/textAppearanceMedium"
         android:text="+8801919191919"
         android:gravity="right"/>
+
+        <ImageView
+            android:id="@+id/request_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/introducer_name"
+            android:paddingLeft="20dp"
+            android:src="@drawable/ic_sync_problem_black_24dp" />
 
     </RelativeLayout>
 </RelativeLayout>

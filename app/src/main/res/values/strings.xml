@@ -173,7 +173,9 @@
     <string name="progress_dialog_refreshing">Refreshing...</string>
     <string name="progress_dialog_processing">Processing...</string>
     <string name="progress_dialog_recommendation_list">Fecthing recommendation requests...</string>
-    <string name="progress_dialog_introducer_list">Fecthing introducer requests...</string>
+    <string name="progress_dialog_introducer_list">Fecthing introducer lists...</string>
+    <string name="progress_dialog_introduced_list">Fecthing introduced lists...</string>
+    <string name="progress_dialog_sentRequest_list">Fecthing sent requests...</string>
     <string name="progress_dialog_invitation_list">Fecthing invitation requests...</string>
     <string name="progress_dialog_initializing">Setting up the account. Please wait...</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information...</string>
@@ -287,6 +289,7 @@
     <string name="balance">Balance</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="other">Other</string>
     <string name="submit">Submit</string>
     <string name="terms_condition"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
     <string name="privacy_policy"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
