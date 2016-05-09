@@ -23,7 +23,7 @@ public class DocumentPicker {
 
 //    private static final int DEFAULT_MIN_WIDTH_QUALITY = 400;        // min pixels
     private static final String TAG = "Picker";
-    private static final String TEMP_DOCUMENT_NAME = "temp_document";
+    private static final String TEMP_DOCUMENT_NAME = "document.jpg";
 
 //    public static int minWidthQuality = DEFAULT_MIN_WIDTH_QUALITY;
 
@@ -95,7 +95,6 @@ public class DocumentPicker {
                     returnedIntent.getData() == null ||
                     returnedIntent.getData().toString().contains(documentFile.toString()));
 
-            Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
             if (isCamera) {     /** CAMERA **/
                 return getTempFile(context).getAbsolutePath();
             } else if (returnedIntent.getData().toString().startsWith("file://")) {
@@ -121,7 +120,8 @@ public class DocumentPicker {
                         returnedIntent.getData() == null ||
                         returnedIntent.getData().toString().contains(documentFile.toString()));
 
-                Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
+                if (returnedIntent != null)
+                    Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
                 if (isCamera) {     /** CAMERA **/
                     selectedImage = Uri.fromFile(documentFile);
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {

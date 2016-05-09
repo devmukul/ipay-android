@@ -71,6 +71,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         }
 
         if (getIntent().hasExtra(MESSAGE)) {
+            switchToLoginFragment();
             Toast.makeText(this, getIntent().getStringExtra(MESSAGE), Toast.LENGTH_LONG).show();
         }
     }
