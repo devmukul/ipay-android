@@ -143,7 +143,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         // Auto Login
         if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
-            mPasswordLoginView.setText("qqqqqqq1");
+            mPasswordLoginView.setText("q1q1q1q1");
+ //           mUserNameLoginView.setText("+8801677258077");
             attemptLogin();
         }
 
@@ -215,7 +216,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     @Override
     public void httpResponseReceiver(String result) {
 
-        Log.w("REsult", result);
+//        Log.w("Result", result);
         if (result == null) {
             mProgressDialog.dismiss();
             mLoginTask = null;
