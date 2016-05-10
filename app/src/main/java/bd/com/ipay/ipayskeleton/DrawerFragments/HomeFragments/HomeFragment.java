@@ -291,15 +291,33 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     private void promptForProfileCompletion() {
-//        mBottomSheetLayout.showWithSheetView(mProfileCompletionPromptView);
+        if (!mProfileCompletionStatusResponse.isProfileCompleted()) {
 
-        TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
-        Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
-        Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
+            TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
+            Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
+            Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
 
-        mProfileCompletionStatusResponse.analyzeProfileCompletionData();
-        profileCompletionMessageView.setText("Your profile is " +
-                "% " + "complete. Complete your profile to get verified.");
+            mProfileCompletionStatusResponse.analyzeProfileCompletionData();
+            profileCompletionMessageView.setText("Your profile is " +
+                    mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
+                    + "complete. Complete your profile to get verified.");
+
+            completeProfileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBottomSheetLayout.dismissSheet();
+                }
+            });
+
+            completeLaterButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBottomSheetLayout.dismissSheet();
+                }
+            });
+
+             mBottomSheetLayout.showWithSheetView(mProfileCompletionPromptView);
+        }
     }
 
     private void refreshBalance() {

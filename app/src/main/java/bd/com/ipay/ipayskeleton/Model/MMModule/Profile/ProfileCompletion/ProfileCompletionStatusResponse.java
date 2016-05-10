@@ -12,18 +12,13 @@ public class ProfileCompletionStatusResponse {
     private String message;
     private List<CompletionStatus> completionStatusList;
     private List<String> tagList;
-    private int completionPercentage;
-
-    private int basicInfoCompletionPercentage;
-    private int addressCompletionPercentage;
-    private int identificationCompletionPercentage;
-    private int linkBankCompletionPercentage;
 
     private int basicInfoItemCount = 0;
     private int addressItemCount = 0;
     private int identificationItemCount = 0;
     private int linkBankItemCount = 0;
 
+    private double totalCompletionSum = 0;
     private double basicInfoCompletionSum = 0;
     private double addressCompletionSum = 0;
     private double identificationCompletionSum = 0;
@@ -33,6 +28,7 @@ public class ProfileCompletionStatusResponse {
     private Map<String, PropertyDetails> addressCompletionDetails = new TreeMap<>();
     private Map<String, PropertyDetails> identificationCompletionDetails = new TreeMap<>();
     private Map<String, PropertyDetails> linkBankCompletionDetails = new TreeMap<>();
+    private Map<String, PropertyDetails> otherCompletionDetails = new TreeMap<>();
 
     public String getMessage() {
         return message;
@@ -43,7 +39,11 @@ public class ProfileCompletionStatusResponse {
     }
 
     public int getCompletionPercentage() {
-        return completionPercentage;
+        return (int) Math.round(totalCompletionSum / completionStatusList.size());
+    }
+
+    public boolean isProfileCompleted() {
+        return getCompletionPercentage() >= 100;
     }
 
     public int getBasicInfoCompletionPercentage() {
@@ -63,7 +63,7 @@ public class ProfileCompletionStatusResponse {
     }
 
     public double getPropertyCompletionPercentage(int threshold, int value) {
-        if (threshold >= value)
+        if (value >= threshold)
             return 100;
         else
             return (double) value / threshold * 100;
@@ -76,55 +76,49 @@ public class ProfileCompletionStatusResponse {
 
             PropertyDetails propertyDetails = new PropertyDetails(mCompletionStatus.getValue(),
                     mCompletionStatus.getThreshold(), mCompletionStatus.getTag(), mCompletionStatus.getProperty());
+            double propertyCompletionPercentage = getPropertyCompletionPercentage(mCompletionStatus.getThreshold(), mCompletionStatus.getValue());
 
             if (mCompletionStatus.getTag() == TAG_POSITION_BASIC_INFO) {
 
                 basicInfoItemCount++;
-                String propertyName = mCompletionStatus.getProperty();
-                double propertyCompletionPercentage = getPropertyCompletionPercentage(mCompletionStatus.getThreshold(), mCompletionStatus.getValue());
-
                 basicInfoCompletionSum = basicInfoCompletionSum + propertyCompletionPercentage;
 
-                if (propertyDetails.propertyTitle != null)
+                if (propertyDetails.getPropertyTitle() != null)
                     basicInfoCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
 
             } else if (mCompletionStatus.getTag() == TAG_POSITION_ADDRESS) {
 
                 addressItemCount++;
-                String propertyName = mCompletionStatus.getProperty();
-                double propertyCompletionPercentage = getPropertyCompletionPercentage(mCompletionStatus.getThreshold(), mCompletionStatus.getValue());
-
                 addressCompletionSum = addressCompletionSum + propertyCompletionPercentage;
 
-                if (propertyDetails.propertyTitle != null)
+                if (propertyDetails.getPropertyTitle() != null)
                     addressCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
 
             } else if (mCompletionStatus.getTag() == TAG_POSITION_IDENTIFICATION) {
 
                 identificationItemCount++;
-                String propertyName = mCompletionStatus.getProperty();
-                double propertyCompletionPercentage = getPropertyCompletionPercentage(mCompletionStatus.getThreshold(), mCompletionStatus.getValue());
-
                 identificationCompletionSum = identificationCompletionSum + propertyCompletionPercentage;
 
-                if (propertyDetails.propertyTitle != null)
+                if (propertyDetails.getPropertyTitle() != null)
                     identificationCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
 
             } else if (mCompletionStatus.getTag() == TAG_POSITION_LINK_BANK) {
 
                 linkBankItemCount++;
-                String propertyName = mCompletionStatus.getProperty();
-                double propertyCompletionPercentage = getPropertyCompletionPercentage(mCompletionStatus.getThreshold(), mCompletionStatus.getValue());
-
                 linkBankCompletionSum = linkBankCompletionSum + propertyCompletionPercentage;
 
-                if (propertyDetails.propertyTitle != null)
+                if (propertyDetails.getPropertyTitle() != null)
                     linkBankCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
+            } else {
+                if (propertyDetails.getPropertyTitle() != null)
+                    otherCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
             }
+
+            totalCompletionSum += propertyCompletionPercentage;
         }
     }
 
-    public static class PropertyDetails implements Comparable<PropertyDetails>{
+    public class PropertyDetails implements Comparable<PropertyDetails>{
         private String propertyName;
         private String propertyTitle;
         private int value;
