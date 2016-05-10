@@ -7,6 +7,7 @@
     android:orientation="horizontal">
 
     <LinearLayout
+        android:id="@+id/ll_add_money"
         android:padding="20dp"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -33,11 +34,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="from your bank account to iPay account"/>
+            android:text="from your bank account to your iPay account"/>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_withdraw_money"
         android:padding="20dp"
         android:clickable="true"
         android:background="?android:attr/selectableItemBackground"

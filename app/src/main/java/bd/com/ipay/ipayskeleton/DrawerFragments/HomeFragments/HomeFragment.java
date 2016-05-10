@@ -92,8 +92,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private RelativeLayout mCreateInvoiceOrMobileRechargeButtonView;
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-    private Button mAddMoneyButton;
-    private Button mWithdrawMoneyButton;
 
     private BottomSheetLayout homeBottomSheet;
 
@@ -142,9 +140,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProgressDialog = new ProgressDialog(getActivity());
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
         addWithdrawMoneyButton = (ImageView) v.findViewById(R.id.iv_balance_overflow);
-
-        mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
-        mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
 
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
 
@@ -257,38 +252,46 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                pinChecker.execute();
-            }
-        });
-
-        mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                pinChecker.execute();
-            }
-        });
-
         addWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                homeBottomSheet.showWithSheetView(LayoutInflater.from(getContext()).inflate(R.layout.sheet_view_add_withdraw_money, homeBottomSheet, false));
+
+                View sheetView = LayoutInflater.from(getContext()).inflate(R.layout.sheet_view_add_withdraw_money, homeBottomSheet, false);
+
+                LinearLayout llAddMoneyButton = (LinearLayout) sheetView.findViewById(R.id.ll_add_money);
+                LinearLayout llWithdrawMoneyButton = (LinearLayout) sheetView.findViewById(R.id.ll_withdraw_money);
+
+                llAddMoneyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                            @Override
+                            public void ifPinAdded() {
+                                Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        pinChecker.execute();
+                    }
+                });
+
+                llWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                            @Override
+                            public void ifPinAdded() {
+                                Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        pinChecker.execute();
+                    }
+                });
+
+
+
+                homeBottomSheet.showWithSheetView(sheetView);
             }
         });
     }
