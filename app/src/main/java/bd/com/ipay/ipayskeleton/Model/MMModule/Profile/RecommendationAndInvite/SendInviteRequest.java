@@ -1,6 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite;
-
-import java.util.List;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite;
 
 public class SendInviteRequest {
     public String inviteeNumber;

@@ -37,7 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MyRequestFragment extends Fragment implements HttpResponseListener {
+public class MyRequestsFragment extends Fragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 

@@ -93,7 +93,7 @@
             android:label="@string/request_money"
             android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme.ActionBarNoElevation"/>
         <activity
             android:name=".Activities.PaymentActivities.TopUpActivity"
             android:label="@string/topup"

@@ -33,7 +33,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class RequestMoneyFragment extends Fragment {
+public class NewMoneyRequestFragment extends Fragment {
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
@@ -206,7 +206,7 @@ public class RequestMoneyFragment extends Fragment {
             if (getActivity().getIntent().getBooleanExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, false)) {
                 getActivity().finish();
             } else {
-                ((RequestMoneyActivity) getActivity()).switchToMyRequestsFragment();
+                ((RequestMoneyActivity) getActivity()).switchToRequestListFragment();
             }
         }
     }

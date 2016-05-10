@@ -212,6 +212,8 @@ public class HomeActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
         } else if (!switchedToHomeFragment)
             switchToDashBoard();
         else {
@@ -364,21 +366,21 @@ public class HomeActivity extends BaseActivity
     public void switchToEditBasicInfoFragment(Bundle bundle) {
         EditBasicInfoFragment editBasicInfoFragment = new EditBasicInfoFragment();
         editBasicInfoFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, editBasicInfoFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, editBasicInfoFragment).addToBackStack(null).commit();
         switchedToHomeFragment = false;
     }
 
     public void switchToEditAddressFragment(Bundle bundle) {
         FragmentEditAddress fragmentEditAddress = new FragmentEditAddress();
         fragmentEditAddress.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragmentEditAddress).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragmentEditAddress).addToBackStack(null).commit();
         switchedToHomeFragment = false;
     }
 
     public void switchToDocumentUploadFragment(Bundle bundle) {
         DocumentUploadFragment documentUploadFragment = new DocumentUploadFragment();
         documentUploadFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, documentUploadFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, documentUploadFragment).addToBackStack(null).commit();
         switchedToHomeFragment = false;
     }
 

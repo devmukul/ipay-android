@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MyRequestFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MyRequestsFragment;
 
 public class EventFragments extends Fragment implements View.OnClickListener {
 
@@ -114,11 +114,11 @@ public class EventFragments extends Fragment implements View.OnClickListener {
             switch (pos) {
                 case 0:
                     // TODO: event list fragment
-                    fragment = new MyRequestFragment();
+                    fragment = new MyRequestsFragment();
                     break;
                 case 1:
                     // TODO: payments list fragment
-                    fragment = new MyRequestFragment();
+                    fragment = new MyRequestsFragment();
                     break;
                 default:
                     fragment = new Fragment();

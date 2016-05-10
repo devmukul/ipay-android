@@ -296,6 +296,7 @@ public class Constants {
     public static final String COMMAND_UPLOAD_BIRTH_CERTIFICATE = "COMMAND_UPLOAD_BIRTH_CERTIFICATE";
     public static final String COMMAND_UPLOAD_TIN = "COMMAND_UPLOAD_TIN";
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
+    public static final String COMMAND_GET_MONEY_REQUESTS = "COMMAND_GET_MONEY_REQUESTS";
 
 
     // Resource
