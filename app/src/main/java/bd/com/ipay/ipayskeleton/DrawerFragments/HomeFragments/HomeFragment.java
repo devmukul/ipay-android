@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -53,6 +54,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.News;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
@@ -77,6 +79,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
+    private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
+    private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
+
     private SharedPreferences pref;
     private String UUID;
     private String userID;
@@ -98,6 +103,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAndNewsFeedAdapter mTransactionHistoryAndNewsFeedAdapter;
 
+    private BottomSheetLayout mBottomSheetLayout;
+    private View mProfileCompletionPromptView;
+
     private final int pageCount = 0;
 
     @Override
@@ -114,6 +122,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         userID = pref.getString(Constants.USERID, "");
@@ -126,6 +135,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             makePaymentOrRechargeLabel.setText(getString(R.string.topup));
         else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
             makePaymentOrRechargeLabel.setText(getString(R.string.create_invoice));
+
+        mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
+        mProfileCompletionPromptView = getActivity().getLayoutInflater().inflate(R.layout.sheet_view_profile_completion, null);
 
         mSendMoneyButtonView = (RelativeLayout) v.findViewById(R.id.layout_send_money);
         mRequestMoneyView = (RelativeLayout) v.findViewById(R.id.layout_request_money);
@@ -160,10 +172,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             // Check if the news feed is already cleared or not
             if (!HomeActivity.newsFeedLoadedOnce) getNewsFeed();
 
-            if (!(Constants.DEBUG && Constants.SM_DOWN)) {
-                refreshBalance();
-                getTransactionHistory();
-            }
+            refreshBalance();
+            getTransactionHistory();
+            getProfileCompletionStatus();
         }
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
@@ -279,6 +290,18 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         });
     }
 
+    private void promptForProfileCompletion() {
+        mBottomSheetLayout.showWithSheetView(mProfileCompletionPromptView);
+
+        TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
+        Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
+        Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
+
+        mProfileCompletionStatusResponse.analyzeProfileCompletionData();
+        profileCompletionMessageView.setText("Your profile is " +
+                "% " + "complete. Complete your profile to get verified.");
+    }
+
     private void refreshBalance() {
         if (mRefreshBalanceTask != null) {
             return;
@@ -344,6 +367,16 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getProfileCompletionStatus() {
+        if (mGetProfileCompletionStatusTask != null) {
+            return;
+        }
+
+        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                Constants.BASE_URL + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,
                                                 double balance, String purpose, String time, Integer statusCode, String description, String transactionID) {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
@@ -397,8 +430,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         if (result == null) {
             mProgressDialog.dismiss();
+
             mRefreshBalanceTask = null;
             mGetNewsFeedTask = null;
+            mGetProfileCompletionStatusTask = null;
+            mTransactionHistoryTask = null;
+            mAddTrustedDeviceTask = null;
+
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
@@ -526,6 +564,24 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
+            try {
+                mProfileCompletionStatusResponse = gson.fromJson(resultList.get(2), ProfileCompletionStatusResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    promptForProfileCompletion();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG).show();
+            }
+
+            mGetProfileCompletionStatusTask = null;
         }
     }
 

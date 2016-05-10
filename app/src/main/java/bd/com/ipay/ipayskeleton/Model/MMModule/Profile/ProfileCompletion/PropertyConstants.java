@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion;
 
+import java.util.HashMap;
+
 public class PropertyConstants {
     public static final String VERIFY_BANK = "VERIFY_BANK";
     public static final String ADD_PIN = "ADD_PIN";
@@ -25,4 +27,20 @@ public class PropertyConstants {
     public static final int TAG_POSITION_IDENTIFICATION = 2;
     public static final int TAG_POSITION_LINK_BANK = 3;
 
+    public static final HashMap<String, String> PROPERTY_NAME_TO_TITLE_MAP = new HashMap<>();
+    static {
+        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFY_BANK, "Verify Bank Account");
+        PROPERTY_NAME_TO_TITLE_MAP.put(ADD_PIN, "Set up PIN");
+        PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK, "Setup Trusted Network");
+        PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add People Eligible for Password Recovery");
+        PROPERTY_NAME_TO_TITLE_MAP.put(INTRODUCER, "Get Introduced by Other iPay Users");
+        PROPERTY_NAME_TO_TITLE_MAP.put(BASIC_PROFILE, "Complete Basic Profile Information");
+        PROPERTY_NAME_TO_TITLE_MAP.put(ADDRESS, "Add Present, Permanent and Office Addresses");
+        PROPERTY_NAME_TO_TITLE_MAP.put(PROFILE_PICTURE, "Add a Profile Picture");
+        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a Verified Email");
+        PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Photo Identification");
+        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
+        PROPERTY_NAME_TO_TITLE_MAP.put(ADD_BANK, "Add Bank Account");
+        PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parent Details");
+    }
 }

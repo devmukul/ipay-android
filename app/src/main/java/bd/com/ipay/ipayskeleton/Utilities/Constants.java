@@ -86,15 +86,7 @@ public class Constants {
      * *** Set it to false if you are not using the default password ***
      *
      */
-    public static final boolean AUTO_LOGIN = false;
-
-    /**
-     * Sometimes SM server becomes down. That's OK - there are ups and downs in life. But before
-     * reporting internal server error, it makes me wait half a minute. At that time it is impossible
-     * to test even MM's features. So set this true if you want to test only MM server and
-     * temporarily block requests to SM server.
-     */
-    public static final boolean SM_DOWN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     public static final String BASE_URL;
 
@@ -189,6 +181,7 @@ public class Constants {
     public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
     public static final String URL_SERVICE_CHARGE = "feecharge";
     public static final String URL_GET_PIN_INFO = "settings/pin";
+    public static final String URL_GET_PROFILE_COMPLETION_STATUS = "/user/profilecompletion";
 
     public static final String URL_GET_EMAIL = "/user/emails/";
     public static final String URL_POST_EMAIL = "/user/emails/";
@@ -292,6 +285,7 @@ public class Constants {
     public static final String COMMAND_UPLOAD_TIN = "COMMAND_UPLOAD_TIN";
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
     public static final String COMMAND_GET_MONEY_REQUESTS = "COMMAND_GET_MONEY_REQUESTS";
+    public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
 
 
     // Resource
