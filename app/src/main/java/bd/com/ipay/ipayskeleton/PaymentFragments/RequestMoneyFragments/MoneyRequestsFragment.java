@@ -1,10 +1,12 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,6 +41,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MoneyRequestsFragment extends Fragment implements HttpResponseListener {
+
+    private final int ACCEPT = 0;
+    private final int REJECT = 1;
+    private final int MARK_SPAM = 2;
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetNotificationsResponse mGetNotificationsResponse;
@@ -139,6 +145,53 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                 Constants.BASE_URL + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptRequestTask.mHttpResponseListener = this;
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void showAlertDialogue(final Long id, String description, final Long serviceID, String imageUrl, final int action) {
+        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.dialog_notification_action_confirm, null);
+        alertDialogue.setView(dialogLayout);
+
+        TextView title = (TextView) dialogLayout.findViewById(R.id.title);
+        TextView msg = (TextView) dialogLayout.findViewById(R.id.message);
+        RoundedImageView mPortrait = (RoundedImageView) dialogLayout.findViewById(R.id.portrait);
+
+        title.setText(R.string.confirm_query);
+        msg.setText(description);
+
+        Glide.with(getActivity())
+                .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                .crossFade()
+                .error(R.drawable.ic_person)
+                .transform(new CircleTransform(getActivity()))
+                .into(mPortrait);
+
+        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (action == ACCEPT) {
+                    if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) acceptRequestMoney(id);
+                    else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE)
+                        acceptRequestMoney(id);
+                }
+
+                if (action == REJECT) {
+                    if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) rejectRequestMoney(id);
+                    else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE)
+                        rejectRequestMoney(id);
+                }
+            }
+        });
+
+        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+
+        alertDialogue.show();
     }
 
     @Override
@@ -345,6 +398,7 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                         String customDescription = "";
                         if (serviceID != Constants.SERVICE_ID_RECOMMENDATION_REQUEST) {
                             customDescription = "You're going to send " + amount + " Tk. to " + name;
+                            showAlertDialogue(id, customDescription, serviceID, imageUrl, ACCEPT);
                         }
                     }
                 });
@@ -355,6 +409,7 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                         String customDescription = "";
                         if (serviceID != Constants.SERVICE_ID_RECOMMENDATION_REQUEST) {
                             customDescription = "You're going to cancel the request for " + amount + " Tk. from " + name;
+                            showAlertDialogue(id, customDescription, serviceID, imageUrl, REJECT);
                         }
                     }
                 });
