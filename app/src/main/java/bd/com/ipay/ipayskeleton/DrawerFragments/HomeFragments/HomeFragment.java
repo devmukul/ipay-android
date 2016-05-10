@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -37,8 +38,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
@@ -85,6 +86,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public static List<News> newsFeedResponsesList;
 
     private ImageView refreshBalanceButton;
+    private ImageView addWithdrawMoneyButton;
     private RelativeLayout mSendMoneyButtonView;
     private RelativeLayout mRequestMoneyView;
     private RelativeLayout mCreateInvoiceOrMobileRechargeButtonView;
@@ -92,6 +94,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private Button mAddMoneyButton;
     private Button mWithdrawMoneyButton;
+
+    private BottomSheetLayout homeBottomSheet;
 
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
@@ -127,6 +131,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
             makePaymentOrRechargeLabel.setText(getString(R.string.create_invoice));
 
+        homeBottomSheet = (BottomSheetLayout) v.findViewById(R.id.home_bottomsheet);
+
         mSendMoneyButtonView = (RelativeLayout) v.findViewById(R.id.layout_send_money);
         mRequestMoneyView = (RelativeLayout) v.findViewById(R.id.layout_request_money);
         mCreateInvoiceOrMobileRechargeButtonView = (RelativeLayout) v.findViewById(R.id.layout_create_invoice_or_mobile_recharge);
@@ -135,6 +141,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
+        addWithdrawMoneyButton = (ImageView) v.findViewById(R.id.iv_balance_overflow);
 
         mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
@@ -275,6 +282,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     }
                 });
                 pinChecker.execute();
+            }
+        });
+
+        addWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                homeBottomSheet.showWithSheetView(LayoutInflater.from(getContext()).inflate(R.layout.sheet_view_add_withdraw_money, homeBottomSheet, false));
             }
         });
     }
@@ -419,7 +433,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         mRefreshBalanceResponse = gson.fromJson(resultList.get(2), RefreshBalanceResponse.class);
                         String balance = mRefreshBalanceResponse.getBalance() + "";
                         if (balance != null)
-                            balanceView.setText(balance + " " + getString(R.string.balance_placeholder));
+                            balanceView.setText(balance);
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
