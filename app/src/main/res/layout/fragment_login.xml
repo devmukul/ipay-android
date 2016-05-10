@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -26,35 +26,40 @@
 
                 <ImageView
                     android:layout_width="45dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/flag_bangladesh" />
-
-                <TextView
-                    style="@style/TextStylePrimaryMedium"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/iv_flag"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/value5"
-                    android:text="+880" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:paddingBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/flag_bd" />
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/tlayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin">
+                    android:layout_toRightOf="@+id/iv_flag"
+                    >
 
                     <EditText
                         android:id="@+id/login_mobile_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawablePadding="@dimen/value5"
+                        android:textSize="26sp"
                         android:hint="@string/mobile_number"
                         android:imeOptions="actionUnspecified"
                         android:inputType="phone"
-                        android:maxLength="10"
+                        android:maxLength="14"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:text="+880"
+                        >
+                        <requestFocus />
+                    </EditText>
 
                 </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
+            </RelativeLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -69,6 +74,7 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
+                    android:textSize="26sp"
                     android:maxLines="1"
                     android:singleLine="true" />
 

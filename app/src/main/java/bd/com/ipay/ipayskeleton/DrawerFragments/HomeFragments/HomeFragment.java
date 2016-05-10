@@ -457,7 +457,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         mRefreshBalanceResponse = gson.fromJson(resultList.get(2), RefreshBalanceResponse.class);
                         String balance = mRefreshBalanceResponse.getBalance() + "";
                         if (balance != null)
-                            balanceView.setText(getString(R.string.balance_placeholder) + balance);
+                            balanceView.setText(balance + " " + getString(R.string.balance_placeholder));
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)

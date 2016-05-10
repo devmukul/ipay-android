@@ -182,6 +182,7 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
             if (HomeActivity.iPayToken.length() > 0)
                 httpPost.setHeader("token", HomeActivity.iPayToken);
             httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("User-Agent", "mobile-android");
             httpPost.setHeader("Content-type", "application/json");
             return new DefaultHttpClient().execute(httpPost);
         } catch (UnsupportedEncodingException e) {
