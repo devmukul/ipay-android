@@ -268,8 +268,6 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
     private class NotificationAndRecommendationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
-        private static final int RECOMMENDATION_ITEM_VIEW = 2;
-        private static final int RECOMMENDATION_HEADER_VIEW = 3;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
         private static final int MONEY_REQUEST_HEADER_VIEW = 5;
 
@@ -305,15 +303,16 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
             }
 
             public void bindViewMoneyRequestList(int pos) {
+                final NotificationClass moneyRequest = moneyRequestList.get(pos - 1);
 
-                final String imageUrl = moneyRequestList.get(pos).getOriginatorProfile().getUserProfilePicture();
-                final String name = moneyRequestList.get(pos).originatorProfile.getUserName();
-                final String description = moneyRequestList.get(pos).getDescription();
-                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(moneyRequestList.get(pos).getRequestTime());
-                final String title = moneyRequestList.get(pos).getTitle();
-                final Long id = moneyRequestList.get(pos).getId();
-                final BigDecimal amount = moneyRequestList.get(pos).getAmount();
-                final Long serviceID = moneyRequestList.get(pos).getServiceID();
+                final long id = moneyRequest.getId();
+                final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
+                final String name = moneyRequest.originatorProfile.getUserName();
+                final String description = moneyRequest.getDescription();
+                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(moneyRequest.getRequestTime());
+                final String title = moneyRequest.getTitle();
+                final BigDecimal amount = moneyRequest.getAmount();
+                final Long serviceID = moneyRequest.getServiceID();
 
                 mDescription.setText(description);
                 mTime.setText(time);
@@ -369,7 +368,7 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
 
             }
 
-            public void bindViewFooter(int pos) {
+            public void bindViewFooter() {
                 if (hasNext)
                     loadMoreTextView.setText(R.string.load_more);
                 else
@@ -391,8 +390,10 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                 });
 
                 TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                if (hasNext) loadMoreTextView.setText(R.string.load_more);
-                else loadMoreTextView.setText(R.string.no_more_results);
+                if (hasNext)
+                    loadMoreTextView.setText(R.string.load_more);
+                else
+                    loadMoreTextView.setText(R.string.no_more_results);
             }
         }
 
@@ -444,7 +445,7 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
 
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindViewFooter(position);
+                    vh.bindViewFooter();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -464,14 +465,12 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
         @Override
         public int getItemViewType(int position) {
 
-            int moneyRequestListSize = 0;
-
             if (moneyRequestList == null)
                 return super.getItemViewType(position);
 
             if (position == 0)
                 return MONEY_REQUEST_HEADER_VIEW;
-            else if (position == moneyRequestListSize + 1)
+            else if (position == getItemCount() - 1)
                 return FOOTER_VIEW;
             else
                 return MONEY_REQUEST_ITEM_VIEW;
