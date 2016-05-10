@@ -291,7 +291,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     private void promptForProfileCompletion() {
-        mBottomSheetLayout.showWithSheetView(mProfileCompletionPromptView);
+//        mBottomSheetLayout.showWithSheetView(mProfileCompletionPromptView);
 
         TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
         Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
