@@ -92,8 +92,12 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (getActivity() != null)
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, allContactsFragment).commit();
+                try {
+                    if (getActivity() != null)
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, allContactsFragment).commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }, 300);
     }

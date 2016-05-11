@@ -13,9 +13,12 @@ public class Constants {
     public static final String USERID = "USERID";
     public static final String UUID = "UUID";
     public static final String USERCOUNTRY = "USERCOUNTRY";
+    public static final String USER_AGENT = "User-Agent";
+    public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
     public static final String LOGGEDIN = "LOGGEDIN";
     public static final String PASSWORD = "PASSWORD";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
+    public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
 
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
@@ -87,14 +90,6 @@ public class Constants {
      *
      */
     public static final boolean AUTO_LOGIN = false;
-
-    /**
-     * Sometimes SM server becomes down. That's OK - there are ups and downs in life. But before
-     * reporting internal server error, it makes me wait half a minute. At that time it is impossible
-     * to test even MM's features. So set this true if you want to test only MM server and
-     * temporarily block requests to SM server.
-     */
-    public static final boolean SM_DOWN = false;
 
     public static final String BASE_URL;
 
@@ -191,6 +186,7 @@ public class Constants {
     public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
     public static final String URL_SERVICE_CHARGE = "feecharge";
     public static final String URL_GET_PIN_INFO = "settings/pin";
+    public static final String URL_GET_PROFILE_COMPLETION_STATUS = "/user/profilecompletion";
 
     public static final String URL_GET_EMAIL = "/user/emails/";
     public static final String URL_POST_EMAIL = "/user/emails/";
@@ -297,6 +293,7 @@ public class Constants {
     public static final String COMMAND_UPLOAD_TIN = "COMMAND_UPLOAD_TIN";
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
     public static final String COMMAND_GET_MONEY_REQUESTS = "COMMAND_GET_MONEY_REQUESTS";
+    public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
 
 
     // Resource

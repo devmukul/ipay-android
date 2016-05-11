@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
@@ -165,42 +166,42 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         mPresentAddressAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HomeActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
+                ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
             }
         });
 
         mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HomeActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
+                ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
             }
         });
 
         mPermanentAddressAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HomeActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
+                ((ProfileActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
             }
         });
 
         mPermanentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HomeActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
+                ((ProfileActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
             }
         });
 
         mOfficeAddressAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HomeActivity) getActivity()).switchToEditAddressFragment(officeAddressBundle);
+                ((ProfileActivity) getActivity()).switchToEditAddressFragment(officeAddressBundle);
             }
         });
 
         mOfficeAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HomeActivity) getActivity()).switchToEditAddressFragment(officeAddressBundle);
+                ((ProfileActivity) getActivity()).switchToEditAddressFragment(officeAddressBundle);
             }
         });
     }

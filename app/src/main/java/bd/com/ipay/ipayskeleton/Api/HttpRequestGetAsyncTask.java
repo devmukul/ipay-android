@@ -174,7 +174,8 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
             HttpGet httpGet = new HttpGet(uri);
 
             if (HomeActivity.iPayToken.length() > 0)
-                httpGet.setHeader("token", HomeActivity.iPayToken);
+                httpGet.setHeader(Constants.TOKEN, HomeActivity.iPayToken);
+            httpGet.setHeader(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID);
             return new DefaultHttpClient().execute(httpGet);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

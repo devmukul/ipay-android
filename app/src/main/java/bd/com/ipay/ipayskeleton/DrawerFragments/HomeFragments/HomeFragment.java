@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -37,13 +38,14 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -53,6 +55,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.News;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
@@ -77,6 +80,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
+    private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
+    private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
+
     private SharedPreferences pref;
     private String UUID;
     private String userID;
@@ -85,18 +91,21 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public static List<News> newsFeedResponsesList;
 
     private ImageView refreshBalanceButton;
+    private ImageView addWithdrawMoneyButton;
     private RelativeLayout mSendMoneyButtonView;
     private RelativeLayout mRequestMoneyView;
     private RelativeLayout mCreateInvoiceOrMobileRechargeButtonView;
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-    private Button mAddMoneyButton;
-    private Button mWithdrawMoneyButton;
+
+    private BottomSheetLayout homeBottomSheet;
 
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAndNewsFeedAdapter mTransactionHistoryAndNewsFeedAdapter;
+
+    private View mProfileCompletionPromptView;
 
     private final int pageCount = 0;
 
@@ -127,6 +136,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
             makePaymentOrRechargeLabel.setText(getString(R.string.create_invoice));
 
+        homeBottomSheet = (BottomSheetLayout) v.findViewById(R.id.home_bottomsheet);
+        mProfileCompletionPromptView = getActivity().getLayoutInflater().inflate(R.layout.sheet_view_profile_completion, null);
+
         mSendMoneyButtonView = (RelativeLayout) v.findViewById(R.id.layout_send_money);
         mRequestMoneyView = (RelativeLayout) v.findViewById(R.id.layout_request_money);
         mCreateInvoiceOrMobileRechargeButtonView = (RelativeLayout) v.findViewById(R.id.layout_create_invoice_or_mobile_recharge);
@@ -135,9 +147,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
-
-        mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
-        mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
+        addWithdrawMoneyButton = (ImageView) v.findViewById(R.id.iv_balance_overflow);
 
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
 
@@ -160,10 +170,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             // Check if the news feed is already cleared or not
             if (!HomeActivity.newsFeedLoadedOnce) getNewsFeed();
 
-            if (!(Constants.DEBUG && Constants.SM_DOWN)) {
-                refreshBalance();
-                getTransactionHistory();
-            }
+            refreshBalance();
+            getTransactionHistory();
+            getProfileCompletionStatus();
         }
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
@@ -250,33 +259,81 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
+        addWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                pinChecker.execute();
-            }
-        });
 
-        mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                View sheetView = LayoutInflater.from(getContext()).inflate(R.layout.sheet_view_add_withdraw_money, homeBottomSheet, false);
+
+                LinearLayout llAddMoneyButton = (LinearLayout) sheetView.findViewById(R.id.ll_add_money);
+                LinearLayout llWithdrawMoneyButton = (LinearLayout) sheetView.findViewById(R.id.ll_withdraw_money);
+
+                llAddMoneyButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
-                        startActivity(intent);
+                    public void onClick(View v) {
+                        PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                            @Override
+                            public void ifPinAdded() {
+                                Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        pinChecker.execute();
                     }
                 });
-                pinChecker.execute();
+
+                llWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                            @Override
+                            public void ifPinAdded() {
+                                Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        pinChecker.execute();
+                    }
+                });
+
+
+
+                homeBottomSheet.showWithSheetView(sheetView);
             }
         });
+    }
+
+    private void promptForProfileCompletion() {
+        if (!mProfileCompletionStatusResponse.isProfileCompleted()) {
+
+            TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
+            Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
+            Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
+
+            mProfileCompletionStatusResponse.analyzeProfileCompletionData();
+            profileCompletionMessageView.setText("Your profile is " +
+                    mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
+                    + "complete. Complete your profile to get verified.");
+
+            completeProfileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    homeBottomSheet.dismissSheet();
+
+                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            completeLaterButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    homeBottomSheet.dismissSheet();
+                }
+            });
+
+            homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
+        }
     }
 
     private void refreshBalance() {
@@ -304,9 +361,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         String mDeviceID = telephonyManager.getDeviceId();
-        String mDeveiceName = android.os.Build.MANUFACTURER + "-" + android.os.Build.PRODUCT + " -" + Build.MODEL;
+        String mDeviceName = android.os.Build.MANUFACTURER + "-" + android.os.Build.PRODUCT + " -" + Build.MODEL;
 
-        AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeveiceName,
+        AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID);
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
@@ -342,6 +399,16 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 Constants.BASE_URL + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getProfileCompletionStatus() {
+        if (mGetProfileCompletionStatusTask != null) {
+            return;
+        }
+
+        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                Constants.BASE_URL + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,
@@ -397,8 +464,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         if (result == null) {
             mProgressDialog.dismiss();
+
             mRefreshBalanceTask = null;
             mGetNewsFeedTask = null;
+            mGetProfileCompletionStatusTask = null;
+            mTransactionHistoryTask = null;
+            mAddTrustedDeviceTask = null;
+
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
@@ -419,7 +491,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         mRefreshBalanceResponse = gson.fromJson(resultList.get(2), RefreshBalanceResponse.class);
                         String balance = mRefreshBalanceResponse.getBalance() + "";
                         if (balance != null)
-                            balanceView.setText(getString(R.string.balance_placeholder) + balance);
+                            balanceView.setText(balance);
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
@@ -526,6 +598,24 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
+            try {
+                mProfileCompletionStatusResponse = gson.fromJson(resultList.get(2), ProfileCompletionStatusResponse.class);
+                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    promptForProfileCompletion();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG).show();
+            }
+
+            mGetProfileCompletionStatusTask = null;
         }
     }
 

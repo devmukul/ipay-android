@@ -177,7 +177,7 @@ public class DownloadProfilePictureGetAsyncTask extends AsyncTask<Void, Void, St
         try {
             HttpGet httpGet = new HttpGet(uri);
             if (HomeActivity.iPayToken.length() > 0)
-                httpGet.setHeader("token", HomeActivity.iPayToken);
+                httpGet.setHeader(Constants.TOKEN, HomeActivity.iPayToken);
             return new DefaultHttpClient().execute(httpGet);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

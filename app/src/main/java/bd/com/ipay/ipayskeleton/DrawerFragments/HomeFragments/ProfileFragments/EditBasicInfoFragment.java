@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -437,7 +438,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((HomeActivity) getActivity()).switchToBasicInfoFragment();
+                        ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
                     }
                 } else {
                     if (getActivity() != null)

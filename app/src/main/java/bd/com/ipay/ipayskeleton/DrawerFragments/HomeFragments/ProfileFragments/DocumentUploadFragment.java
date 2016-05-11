@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.UploadDocumentResponse;
@@ -193,7 +194,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((HomeActivity) getActivity()).switchToDocumentListFragment();
+                        ((ProfileActivity) getActivity()).switchToDocumentListFragment();
                     }
 
                 } else {

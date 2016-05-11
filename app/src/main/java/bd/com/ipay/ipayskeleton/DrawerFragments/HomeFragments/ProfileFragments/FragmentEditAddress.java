@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
@@ -114,7 +115,7 @@ public class FragmentEditAddress extends Fragment implements HttpResponseListene
                 mSetUserAddressResponse = gson.fromJson(resultList.get(2), SetUserAddressResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    ((HomeActivity) getActivity()).switchToAddressFragment();
+                    ((ProfileActivity) getActivity()).switchToAddressFragment();
 
                 } else {
                     if (getActivity() != null)

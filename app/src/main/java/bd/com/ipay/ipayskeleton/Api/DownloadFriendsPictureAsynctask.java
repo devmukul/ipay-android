@@ -139,7 +139,7 @@ public class DownloadFriendsPictureAsynctask extends AsyncTask<Void, Void, Strin
             HttpPost httpPost = new HttpPost(uri);
             httpPost.setEntity(new StringEntity(json));
             if (HomeActivity.iPayToken.length() > 0)
-                httpPost.setHeader("token", HomeActivity.iPayToken);
+                httpPost.setHeader(Constants.TOKEN, HomeActivity.iPayToken);
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Content-type", "application/json");
             return new DefaultHttpClient().execute(httpPost);
