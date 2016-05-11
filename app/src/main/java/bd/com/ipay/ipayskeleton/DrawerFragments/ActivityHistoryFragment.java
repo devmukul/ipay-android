@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.DatePickerDialog;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.github.kevinsawicki.timeago.TimeAgo;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
