@@ -28,6 +28,8 @@ public class PropertyConstants {
     public static final int TAG_POSITION_LINK_BANK = 3;
 
     public static final HashMap<String, String> PROPERTY_NAME_TO_TITLE_MAP = new HashMap<>();
+    public static final HashMap<String, Integer> PROPERTY_NAME_TO_ICON_MAP = new HashMap<>();
+
     static {
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFY_BANK, "Verify Bank Account");
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_PIN, "Set up PIN");
@@ -42,5 +44,9 @@ public class PropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_BANK, "Add Bank Account");
         PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parent Details");
+    }
+
+    static {
+
     }
 }

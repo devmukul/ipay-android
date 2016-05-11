@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,20 +19,39 @@ public class ProfileCompletionStatusResponse {
     private int identificationItemCount = 0;
     private int linkBankItemCount = 0;
 
-    private double totalCompletionSum = 0;
     private double basicInfoCompletionSum = 0;
     private double addressCompletionSum = 0;
     private double identificationCompletionSum = 0;
     private double linkBankCompletionSum = 0;
 
-    private Map<String, PropertyDetails> basicInfoCompletionDetails = new TreeMap<>();
-    private Map<String, PropertyDetails> addressCompletionDetails = new TreeMap<>();
-    private Map<String, PropertyDetails> identificationCompletionDetails = new TreeMap<>();
-    private Map<String, PropertyDetails> linkBankCompletionDetails = new TreeMap<>();
-    private Map<String, PropertyDetails> otherCompletionDetails = new TreeMap<>();
+    private List<PropertyDetails> basicInfoCompletionDetails = new ArrayList<>();
+    private List<PropertyDetails> addressCompletionDetails = new ArrayList<>();
+    private List<PropertyDetails> identificationCompletionDetails = new ArrayList<>();
+    private List<PropertyDetails> linkBankCompletionDetails = new ArrayList<>();
+    private List<PropertyDetails> otherCompletionDetails = new ArrayList<>();
 
     public String getMessage() {
         return message;
+    }
+
+    public List<PropertyDetails> getBasicInfoCompletionDetails() {
+        return basicInfoCompletionDetails;
+    }
+
+    public List<PropertyDetails> getAddressCompletionDetails() {
+        return addressCompletionDetails;
+    }
+
+    public List<PropertyDetails> getIdentificationCompletionDetails() {
+        return identificationCompletionDetails;
+    }
+
+    public List<PropertyDetails> getLinkBankCompletionDetails() {
+        return linkBankCompletionDetails;
+    }
+
+    public List<PropertyDetails> getOtherCompletionDetails() {
+        return otherCompletionDetails;
     }
 
     public List<CompletionStatus> getCompletionStatusList() {
@@ -39,7 +59,9 @@ public class ProfileCompletionStatusResponse {
     }
 
     public int getCompletionPercentage() {
-        return (int) Math.round(totalCompletionSum / completionStatusList.size());
+        double totalCompletionSum = basicInfoCompletionSum + addressCompletionSum + identificationCompletionSum + linkBankCompletionSum;
+        double totalItemCount = basicInfoItemCount + addressItemCount + identificationItemCount + linkBankItemCount;
+        return (int) Math.round(totalCompletionSum / totalItemCount);
     }
 
     public boolean isProfileCompleted() {
@@ -84,7 +106,7 @@ public class ProfileCompletionStatusResponse {
                 basicInfoCompletionSum = basicInfoCompletionSum + propertyCompletionPercentage;
 
                 if (propertyDetails.getPropertyTitle() != null)
-                    basicInfoCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
+                    basicInfoCompletionDetails.add(propertyDetails);
 
             } else if (mCompletionStatus.getTag() == TAG_POSITION_ADDRESS) {
 
@@ -92,7 +114,7 @@ public class ProfileCompletionStatusResponse {
                 addressCompletionSum = addressCompletionSum + propertyCompletionPercentage;
 
                 if (propertyDetails.getPropertyTitle() != null)
-                    addressCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
+                    addressCompletionDetails.add(propertyDetails);
 
             } else if (mCompletionStatus.getTag() == TAG_POSITION_IDENTIFICATION) {
 
@@ -100,7 +122,7 @@ public class ProfileCompletionStatusResponse {
                 identificationCompletionSum = identificationCompletionSum + propertyCompletionPercentage;
 
                 if (propertyDetails.getPropertyTitle() != null)
-                    identificationCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
+                    identificationCompletionDetails.add(propertyDetails);
 
             } else if (mCompletionStatus.getTag() == TAG_POSITION_LINK_BANK) {
 
@@ -108,17 +130,16 @@ public class ProfileCompletionStatusResponse {
                 linkBankCompletionSum = linkBankCompletionSum + propertyCompletionPercentage;
 
                 if (propertyDetails.getPropertyTitle() != null)
-                    linkBankCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
+                    linkBankCompletionDetails.add(propertyDetails);
             } else {
                 if (propertyDetails.getPropertyTitle() != null)
-                    otherCompletionDetails.put(propertyDetails.getPropertyName(), propertyDetails);
+                    otherCompletionDetails.add(propertyDetails);
             }
-
-            totalCompletionSum += propertyCompletionPercentage;
         }
     }
 
     public class PropertyDetails implements Comparable<PropertyDetails>{
+        private Integer propertyIcon;
         private String propertyName;
         private String propertyTitle;
         private int value;
@@ -131,6 +152,7 @@ public class ProfileCompletionStatusResponse {
             this.tag = tag;
             this.propertyName = propertyName;
             this.propertyTitle = PROPERTY_NAME_TO_TITLE_MAP.get(propertyName);
+            this.propertyIcon = PROPERTY_NAME_TO_ICON_MAP.get(propertyName);
         }
 
         public boolean isCompleted() {
@@ -155,6 +177,10 @@ public class ProfileCompletionStatusResponse {
 
         public int getTag() {
             return tag;
+        }
+
+        public Integer getPropertyIcon() {
+            return propertyIcon;
         }
 
         /**

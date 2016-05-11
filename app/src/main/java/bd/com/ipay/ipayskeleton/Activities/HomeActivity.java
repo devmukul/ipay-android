@@ -60,6 +60,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.PropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
@@ -320,61 +321,31 @@ public class HomeActivity extends BaseActivity
                 startActivity(intent);
             }
         } else if (id == R.id.nav_profile_basic_info) {
-            switchToBasicInfoFragment();
+
+            launchEditProfileActivity(PropertyConstants.BASIC_PROFILE, new Bundle());
         } else if (id == R.id.nav_profile_addresses) {
 
-            switchToAddressFragment();
+            launchEditProfileActivity(PropertyConstants.ADDRESS, new Bundle());
 
         } else if (id == R.id.nav_profile_documents) {
 
-            switchToDocumentListFragment();
+            launchEditProfileActivity(PropertyConstants.VERIFICATION_DOCUMENT, new Bundle());
 
         } else if (id == R.id.nav_email_addresses) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new EmailFragment()).commit();
-            switchedToHomeFragment = false;
+            launchEditProfileActivity(PropertyConstants.VERIFIED_EMAIL, new Bundle());
 
         } else if (id == R.id.nav_trusted_network) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new TrustedNetworkFragment()).commit();
-            switchedToHomeFragment = false;
+            launchEditProfileActivity(PropertyConstants.TRUSTED_NETWORK, new Bundle());
         }
     }
 
-    public void switchToDocumentListFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new DocumentListFragment()).commit();
-        switchedToHomeFragment = false;
-    }
-
-    public void switchToAddressFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new AddressFragment()).commit();
-        switchedToHomeFragment = false;
-    }
-
-    public void switchToBasicInfoFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new BasicInfoFragment()).commit();
-        switchedToHomeFragment = false;
-    }
-
-    public void switchToEditBasicInfoFragment(Bundle bundle) {
-        EditBasicInfoFragment editBasicInfoFragment = new EditBasicInfoFragment();
-        editBasicInfoFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, editBasicInfoFragment).addToBackStack(null).commit();
-        switchedToHomeFragment = false;
-    }
-
-    public void switchToEditAddressFragment(Bundle bundle) {
-        FragmentEditAddress fragmentEditAddress = new FragmentEditAddress();
-        fragmentEditAddress.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragmentEditAddress).addToBackStack(null).commit();
-        switchedToHomeFragment = false;
-    }
-
-    public void switchToDocumentUploadFragment(Bundle bundle) {
-        DocumentUploadFragment documentUploadFragment = new DocumentUploadFragment();
-        documentUploadFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, documentUploadFragment).addToBackStack(null).commit();
-        switchedToHomeFragment = false;
+    private void launchEditProfileActivity(String type, Bundle bundle) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra(Constants.TARGET_FRAGMENT, type);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void attemptLogout() {

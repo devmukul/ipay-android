@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
@@ -169,7 +170,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
 
-        ((HomeActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
+        ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
     }
 
     private void setProfileInformation() {

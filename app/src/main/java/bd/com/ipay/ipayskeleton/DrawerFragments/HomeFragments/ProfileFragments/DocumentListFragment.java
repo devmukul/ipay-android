@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
@@ -247,7 +248,7 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
                         bundle.putString(Constants.DOCUMENT_TYPE, identificationDocumentDetail.getDocumentType());
                         bundle.putString(Constants.DOCUMENT_TYPE_NAME, identificationDocumentDetail.getDocumentTypeName());
                         bundle.putString(Constants.DOCUMENT_ID, identificationDocumentDetail.getDocumentId());
-                        ((HomeActivity) getActivity()).switchToDocumentUploadFragment(bundle);
+                        ((ProfileActivity) getActivity()).switchToDocumentUploadFragment(bundle);
                     }
                 });
             }
