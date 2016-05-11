@@ -128,7 +128,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bank_accounts, container, false);
-        ((HomeActivity) getActivity()).setTitle(R.string.bank_accounts);
+        getActivity().setTitle(R.string.bank_accounts);
         bankBranches = new ArrayList<BankBranch>();
         bankBranchNames = new ArrayList<>();
         mBranchAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, bankBranchNames);

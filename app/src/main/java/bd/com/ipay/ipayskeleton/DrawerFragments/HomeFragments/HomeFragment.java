@@ -332,7 +332,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 }
             });
 
-//            homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
+            homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
         }
     }
 

@@ -3,6 +3,8 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.AddressFragment;
@@ -30,23 +32,57 @@ public class ProfileActivity extends BaseActivity {
         String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
 
         if (targetFragment != null) {
-            if (targetFragment.equals(BASIC_PROFILE))
-                switchToBasicInfoFragment();
-            else if (targetFragment.equals(ADDRESS))
-                switchToAddressFragment();
-            else if (targetFragment.equals(VERIFICATION_DOCUMENT))
-                switchToDocumentListFragment();
-            else if (targetFragment.equals(VERIFIED_EMAIL))
-                switchToEmailFragment();
-            else if (targetFragment.equals(TRUSTED_NETWORK))
-                switchToTrustedNetworkFragment();
-            else
-                switchToProfileCompletionFragment();
+            switchToFragment(targetFragment, null, false);
         } else {
             switchToProfileCompletionFragment();
         }
     }
 
+
+    public void switchToFragment(String targetFragment, Bundle bundle, boolean addToBackStack) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment fragment;
+
+        switch (targetFragment) {
+            case VERIFY_BANK:
+            case ADD_BANK:
+                fragment = new BankAccountsFragment();
+                break;
+            case TRUSTED_NETWORK:
+            case TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE:
+                fragment = new TrustedNetworkFragment();
+                break;
+            case BASIC_PROFILE:
+            case PROFILE_PICTURE:
+            case PARENT:
+                fragment = new BasicInfoFragment();
+                break;
+            case INTRODUCER:
+                fragment = new RecommendationRequestsFragment();
+                break;
+            case ADDRESS:
+                fragment = new AddressFragment();
+                break;
+            case VERIFIED_EMAIL:
+                fragment = new EmailFragment();
+                break;
+            case VERIFICATION_DOCUMENT:
+            case PHOTOID:
+                fragment = new DocumentListFragment();
+                break;
+            default:
+                fragment = new ProfileCompletionFragment();
+        }
+
+        if (bundle != null)
+            fragment.setArguments(bundle);
+
+        ft.replace(R.id.fragment_container, fragment);
+        if (addToBackStack)
+                ft.addToBackStack(null);
+
+        ft.commit();
+    }
 
     public void switchToBasicInfoFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BasicInfoFragment()).commit();

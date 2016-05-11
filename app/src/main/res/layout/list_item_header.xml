@@ -14,4 +14,11 @@
         android:text="@string/your_latest_transactions"
         android:textStyle="bold" />
 
+    <View
+        android:layout_below="@+id/profile_completion_holder"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorDivider"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"/>
 </LinearLayout>
