@@ -208,7 +208,7 @@
     <string name="verify_otp_for_trust_description">You are going to login fist time from this device. Please verify the OTP sent to your mobile for a secure login.</string>
     <string name="resend">Resend</string>
     <string name="not_implemented">Not implemented yet.</string>
-    <string name="send_money">SEND MONEY</string>
+    <string name="send_money">Send Money</string>
     <string name="continue_send_money">Continue</string>
     <string name="continue_request_money">Continue</string>
     <string name="continue_mobile_recharge">Continue</string>

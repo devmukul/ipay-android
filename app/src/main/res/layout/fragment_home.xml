@@ -52,7 +52,7 @@
                         android:id="@+id/balance"
                         style="@style/TextStylePrimaryLarge"
                         android:layout_width="wrap_content"
-                        android:textSize="42sp"
+                        android:textSize="36sp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_marginTop="15dp"
@@ -96,12 +96,10 @@
                         android:src="@drawable/ic_refresh_black_48dp" />
 
 
-
-
-
                 </RelativeLayout>
 
                 <LinearLayout
+
                     android:id="@+id/options_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -137,7 +135,7 @@
                         style="@style/HomeImageButtonStyle"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/send_money" />
+                        android:src="@drawable/money_bag" />
 
                     <TextView
                         style="@style/HomeImageTextViewStyle"
@@ -161,7 +159,7 @@
                         style="@style/HomeImageButtonStyle"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/request_money" />
+                        android:src="@drawable/money_request" />
 
                     <TextView
                         style="@style/HomeImageTextViewStyle"
@@ -185,7 +183,7 @@
                         style="@style/HomeImageButtonStyle"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/make_payment" />
+                        android:src="@drawable/cell_phone" />
 
                     <TextView
                         android:id="@+id/textview_make_payment_or_recharge"
