@@ -2,47 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_marginTop="@dimen/value5"
+    android:background="@android:color/white"
+    android:paddingLeft="@dimen/activity_horizontal_margin">
 
-    <RelativeLayout style="@style/ProfileCardLayoutStyle">
-
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="14dp"
-        android:clickable="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_person"
-        app:riv_border_color="@color/colorPrimary"
-        app:riv_border_width="1dip"
-        app:riv_corner_radius="75dip"
-        app:riv_oval="false" />
+        <include
+            android:id="@+id/requested_profile_picture"
+            layout="@layout/contact_portrait_view"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp" />
 
     <TextView
-        android:id="@+id/introducer_name"
+        android:id="@+id/requested_name"
+        style="@style/TextStylePrimaryMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/profile_picture"
-        android:paddingLeft="@dimen/value20"
-        android:paddingTop="@dimen/value20"
-        style="?android:attr/textAppearanceMedium"
-        android:textColor="@color/colorTextPrimary"
+        android:layout_toRightOf="@+id/requested_profile_picture"
+        android:gravity="left"
+        android:paddingBottom="2dp"
+        android:paddingTop="14dp"
+        android:singleLine="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:text="Mohsin Khan"/>
 
     <TextView
-        android:id="@+id/introducer_mobile_number"
+        android:id="@+id/requested_mobile_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/value20"
-        android:layout_below="@+id/introducer_name"
-        android:layout_toRightOf="@+id/profile_picture"
-        style="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/requested_name"
+        android:layout_toRightOf="@+id/requested_profile_picture"
+        style="@style/TextStyleSecondaryMedium"
         android:text="+8801919191919"
-        android:gravity="right"/>
+        android:gravity="left"
+        android:paddingBottom="14dp"
+        android:singleLine="true"
+        android:textSize="15sp"/>
 
         <ImageView
             android:id="@+id/request_status"
@@ -50,9 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/introducer_mobile_number"
-            android:paddingLeft="@dimen/value20"
-            android:src="@drawable/ic_sync_problem_black_24dp" />
+            android:src="@drawable/ic_sync_problem_black_24dp"
+            android:paddingRight="@dimen/activity_horizontal_margin"/>
 
-    </RelativeLayout>
+
 </RelativeLayout>

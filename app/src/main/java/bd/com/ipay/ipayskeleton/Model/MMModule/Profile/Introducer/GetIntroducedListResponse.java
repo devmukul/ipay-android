@@ -7,7 +7,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introducer;
 
 public class GetIntroducedListResponse {
     private String message;
-    private List<Introducer> introducedList;
+    private List<Introduced> introducedList;
 
     public GetIntroducedListResponse() {}
 
@@ -15,7 +15,7 @@ public class GetIntroducedListResponse {
             return message;
         }
 
-    public List<Introducer> getIntroducedList() { return introducedList; }
+    public List<Introduced> getIntroducedList() { return introducedList; }
 
 
 }

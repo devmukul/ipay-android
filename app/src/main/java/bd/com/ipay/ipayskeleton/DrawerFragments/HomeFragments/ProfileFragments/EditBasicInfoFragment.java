@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -156,7 +155,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
 
-        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
+        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.introducer_profile_picture);
         mEditProfilePictureButton = (ImageButton) v.findViewById(R.id.button_profile_picture_edit);
         mNameEditText = (EditText) v.findViewById(R.id.name);
 

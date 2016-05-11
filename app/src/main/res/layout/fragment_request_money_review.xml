@@ -30,7 +30,7 @@
 
 
                     <bd.com.ipay.ipayskeleton.Customview.ProfileImageView
-                        android:id="@+id/profile_picture"
+                        android:id="@+id/introducer_profile_picture"
                         style="@style/ReviewImageStyle">
 
                     </bd.com.ipay.ipayskeleton.Customview.ProfileImageView>

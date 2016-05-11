@@ -38,10 +38,10 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOr
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.GetRecommendationRequestsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.RecommendRequestClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.RecommendationActionRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite.RecommendationActionResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.GetRecommendationRequestsResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendRequestClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendationActionRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendationActionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;

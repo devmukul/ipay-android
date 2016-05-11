@@ -57,7 +57,7 @@
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
     <string name="empty_events_list">No recent events found.</string>
     <string name="empty_recommendation_request_list">No request to introduce right now.</string>
-    <string name="empty_introducer_request_list">No introducer right now.</string>
+    <string name="empty_list">Nothing to show right now.</string>
     <string name="empty_invitation_request_list">No invitation to show right now.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
@@ -142,6 +142,9 @@
     <string name="account_type">Account Type</string>
     <string name="money_requests_header">Money requests</string>
     <string name="recommendation_requests_header">Recommendation requests</string>
+    <string name="sent_requests_header">You have sent requests to</string>
+    <string name="introducer_list_header">Your introducer</string>
+    <string name="introduced_list_header">You are introduced by</string>
     <string name="select_account_type">Select an account type for iPay to Sign Up</string>
     <string name="name_of_user">Name</string>
     <string name="name_of_participant">Participant Name</string>
