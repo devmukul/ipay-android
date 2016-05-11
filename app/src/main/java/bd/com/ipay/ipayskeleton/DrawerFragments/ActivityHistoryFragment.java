@@ -2,11 +2,11 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.DatePickerDialog;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -533,7 +533,8 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
             public void bindView(int pos) {
                 String type = activityLogTypes[userActivityResponsesList.get(pos).getType()];
                 String description = userActivityResponsesList.get(pos).getDescription();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userActivityResponsesList.get(pos).getTime());
+
+                String time = DateUtils.getRelativeTimeSpanString(userActivityResponsesList.get(pos).getTime()).toString();
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
 

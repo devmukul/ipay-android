@@ -116,7 +116,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
             HttpGet httpGet = new HttpGet(uri);
 
             if (HomeActivity.iPayToken.length() > 0)
-                httpGet.setHeader("token", HomeActivity.iPayToken);
+                httpGet.setHeader(Constants.TOKEN, HomeActivity.iPayToken);
             return new DefaultHttpClient().execute(httpGet);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

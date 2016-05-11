@@ -13,6 +13,8 @@ public class Constants {
     public static final String USERID = "USERID";
     public static final String UUID = "UUID";
     public static final String USERCOUNTRY = "USERCOUNTRY";
+    public static final String USER_AGENT = "User-Agent";
+    public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
     public static final String LOGGEDIN = "LOGGEDIN";
     public static final String PASSWORD = "PASSWORD";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
