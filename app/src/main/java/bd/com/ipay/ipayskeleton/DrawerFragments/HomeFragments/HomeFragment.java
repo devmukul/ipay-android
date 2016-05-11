@@ -105,7 +105,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAndNewsFeedAdapter mTransactionHistoryAndNewsFeedAdapter;
 
-    private BottomSheetLayout mBottomSheetLayout;
     private View mProfileCompletionPromptView;
 
     private final int pageCount = 0;
@@ -138,8 +137,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             makePaymentOrRechargeLabel.setText(getString(R.string.create_invoice));
 
         homeBottomSheet = (BottomSheetLayout) v.findViewById(R.id.home_bottomsheet);
-
-        mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
         mProfileCompletionPromptView = getActivity().getLayoutInflater().inflate(R.layout.sheet_view_profile_completion, null);
 
         mSendMoneyButtonView = (RelativeLayout) v.findViewById(R.id.layout_send_money);
@@ -321,7 +318,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             completeProfileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mBottomSheetLayout.dismissSheet();
+                    homeBottomSheet.dismissSheet();
 
                     Intent intent = new Intent(getActivity(), ProfileActivity.class);
                     startActivity(intent);
@@ -331,11 +328,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             completeLaterButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mBottomSheetLayout.dismissSheet();
+                    homeBottomSheet.dismissSheet();
                 }
             });
 
-             mBottomSheetLayout.showWithSheetView(mProfileCompletionPromptView);
+//            homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
         }
     }
 
