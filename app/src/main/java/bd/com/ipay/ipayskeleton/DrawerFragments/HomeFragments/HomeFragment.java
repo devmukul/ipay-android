@@ -38,8 +38,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
@@ -91,13 +91,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public static List<News> newsFeedResponsesList;
 
     private ImageView refreshBalanceButton;
+    private ImageView addWithdrawMoneyButton;
     private RelativeLayout mSendMoneyButtonView;
     private RelativeLayout mRequestMoneyView;
     private RelativeLayout mCreateInvoiceOrMobileRechargeButtonView;
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-    private Button mAddMoneyButton;
-    private Button mWithdrawMoneyButton;
+
+    private BottomSheetLayout homeBottomSheet;
 
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
@@ -123,7 +124,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         userID = pref.getString(Constants.USERID, "");
@@ -137,6 +137,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
             makePaymentOrRechargeLabel.setText(getString(R.string.create_invoice));
 
+        homeBottomSheet = (BottomSheetLayout) v.findViewById(R.id.home_bottomsheet);
+
         mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
         mProfileCompletionPromptView = getActivity().getLayoutInflater().inflate(R.layout.sheet_view_profile_completion, null);
 
@@ -148,9 +150,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
-
-        mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
-        mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
+        addWithdrawMoneyButton = (ImageView) v.findViewById(R.id.iv_balance_overflow);
 
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
 
@@ -262,31 +262,46 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
+        addWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                pinChecker.execute();
-            }
-        });
 
-        mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                View sheetView = LayoutInflater.from(getContext()).inflate(R.layout.sheet_view_add_withdraw_money, homeBottomSheet, false);
+
+                LinearLayout llAddMoneyButton = (LinearLayout) sheetView.findViewById(R.id.ll_add_money);
+                LinearLayout llWithdrawMoneyButton = (LinearLayout) sheetView.findViewById(R.id.ll_withdraw_money);
+
+                llAddMoneyButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
-                        startActivity(intent);
+                    public void onClick(View v) {
+                        PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                            @Override
+                            public void ifPinAdded() {
+                                Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        pinChecker.execute();
                     }
                 });
-                pinChecker.execute();
+
+                llWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                            @Override
+                            public void ifPinAdded() {
+                                Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        pinChecker.execute();
+                    }
+                });
+
+
+
+                homeBottomSheet.showWithSheetView(sheetView);
             }
         });
     }
@@ -479,7 +494,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         mRefreshBalanceResponse = gson.fromJson(resultList.get(2), RefreshBalanceResponse.class);
                         String balance = mRefreshBalanceResponse.getBalance() + "";
                         if (balance != null)
-                            balanceView.setText(balance + " " + getString(R.string.balance_placeholder));
+                            balanceView.setText(balance);
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
