@@ -87,6 +87,8 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_address, container, false);
 
+        getActivity().setTitle(getString(R.string.address));
+
         mPresentAddressView = (TextView) v.findViewById(R.id.textview_present_address);
         mPermanentAddressView = (TextView) v.findViewById(R.id.textview_permanent_address);
         mOfficeAddressView = (TextView) v.findViewById(R.id.textview_office_address);

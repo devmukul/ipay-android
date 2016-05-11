@@ -109,6 +109,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private final int pageCount = 0;
 
+    private static boolean profileCompletionPromptShown = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -304,13 +306,18 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     private void promptForProfileCompletion() {
+        if (profileCompletionPromptShown)
+            return;
+
+        profileCompletionPromptShown = true;
+
+        mProfileCompletionStatusResponse.analyzeProfileCompletionData();
         if (!mProfileCompletionStatusResponse.isProfileCompleted()) {
 
             TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
             Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
             Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
 
-            mProfileCompletionStatusResponse.analyzeProfileCompletionData();
             profileCompletionMessageView.setText("Your profile is " +
                     mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
                     + "complete. Complete your profile to get verified.");
@@ -333,6 +340,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             });
 
             homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
+            ((HomeActivity) getActivity()).changeMenuVisibility(R.id.nav_profile_completeness, true);
         }
     }
 

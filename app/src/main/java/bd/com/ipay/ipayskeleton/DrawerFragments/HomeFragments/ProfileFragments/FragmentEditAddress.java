@@ -60,6 +60,8 @@ public class FragmentEditAddress extends Fragment implements HttpResponseListene
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_address, container, false);
 
+        getActivity().setTitle(getString(R.string.edit_address));
+
         mProgressDialog = new ProgressDialog(getActivity());
         mAddressInputView = (AddressInputView) v.findViewById(R.id.input_address);
         mSaveButton = (Button) v.findViewById(R.id.button_save);

@@ -12,6 +12,9 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 public class PropertyConstants {
+
+    public static final String PROFILE_COMPLETENESS = "PROFILE_COMPLETENESS";
+
     public static final String VERIFY_BANK = "VERIFY_BANK";
     public static final String ADD_PIN = "ADD_PIN";
     public static final String TRUSTED_NETWORK = "TRUSTED_NETWORK";

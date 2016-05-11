@@ -85,6 +85,8 @@ public class ProfileActivity extends BaseActivity {
             case PHOTOID:
                 fragment = new DocumentListFragment();
                 break;
+            case PROFILE_COMPLETENESS:
+                fragment = new ProfileCompletionFragment();
             default:
                 fragment = new ProfileCompletionFragment();
         }
