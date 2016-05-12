@@ -383,16 +383,29 @@
         <item name="android:layout_height">74dp</item>
     </style>
 
+    <style name="ReviewImageStyle.Dialog" parent="ReviewImageStyle">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+    </style>
+
     <style name="ReviewItemLabelStyle">
         <item name="android:layout_marginRight">4dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <style name="ReviewItemLabelStyle.Dialog" parent="ReviewItemLabelStyle">
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="ReviewItemStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ReviewItemStyle.Dialog" parent="ReviewItemStyle">
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="ContactsSelectorStyle">

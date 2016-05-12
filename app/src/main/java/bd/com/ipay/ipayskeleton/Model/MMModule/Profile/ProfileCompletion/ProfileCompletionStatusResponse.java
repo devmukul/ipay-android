@@ -1,12 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion;
 
-import android.support.v4.app.Fragment;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.PropertyConstants.*;
 
