@@ -206,13 +206,17 @@
         <item name="android:visibility">gone</item>
     </style>
 
-
     <style name="MenuLabelsStyle">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">14sp</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ListHeaderStyle">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
 
     <style name="ButtonStyleSmall" parent="@android:style/Widget.Button">

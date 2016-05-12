@@ -3,12 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/content_container"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_introducer_requests"
         android:layout_width="match_parent"
@@ -16,17 +10,13 @@
         android:layout_marginTop="@dimen/value5"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/activity_horizontal_margin_double"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/empty_list_text"
-        style="@style/TextStylePrimaryLarge"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/empty_list"
-        android:visibility="gone"/>
-
-    </LinearLayout>
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/empty_list" />
 </RelativeLayout>
