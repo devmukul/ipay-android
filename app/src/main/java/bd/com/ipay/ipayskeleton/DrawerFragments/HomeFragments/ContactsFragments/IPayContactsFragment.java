@@ -31,6 +31,10 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+/**
+ * Pass (Constants.VERIFIED_USERS_ONLY, true) in the argument bundle to show only the
+ * verified iPay users.
+ */
 public class IPayContactsFragment extends BaseContactsFragment {
 
     private static final int CONTACTS_QUERY_LOADER = 0;
@@ -45,6 +49,8 @@ public class IPayContactsFragment extends BaseContactsFragment {
     // Contacts will be filtered base on this field.
     // It will be populated when the user types in the search bar.
     private String mQuery = "";
+
+    private boolean mShowVerifiedUsersOnly;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +70,9 @@ public class IPayContactsFragment extends BaseContactsFragment {
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this);
 
         mRecyclerView.setAdapter(miPayAdapter);
+
+        if (getArguments() != null)
+            mShowVerifiedUsersOnly = getArguments().getBoolean(Constants.VERIFIED_USERS_ONLY, false);
 
         return v;
     }
@@ -107,7 +116,7 @@ public class IPayContactsFragment extends BaseContactsFragment {
             public Cursor loadInBackground() {
                 Cursor cursor = null;
                 try {
-                    cursor = DataHelper.getInstance(getActivity()).searchSubscribers(mQuery);
+                    cursor = DataHelper.getInstance(getActivity()).searchSubscribers(mQuery, mShowVerifiedUsersOnly);
 
                     if (cursor != null) {
                         cursor.getCount();

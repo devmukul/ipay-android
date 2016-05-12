@@ -258,7 +258,6 @@ public class AllContactsFragment extends BaseContactsFragment {
                     mPortraitTextView.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
                 else mPortraitTextView.setText(String.valueOf(name.charAt(0)).toUpperCase());
 
-
                 if (randomColor == 0)
                     mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle);
                 else if (randomColor == 1)

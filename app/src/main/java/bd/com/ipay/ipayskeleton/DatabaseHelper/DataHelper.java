@@ -75,6 +75,10 @@ public class DataHelper {
     }
 
     public Cursor searchSubscribers(String query) {
+        return searchSubscribers(query, false);
+    }
+
+    public Cursor searchSubscribers(String query, boolean verifiedOnly) {
         Cursor cursor = null;
 
         try {
@@ -82,9 +86,12 @@ public class DataHelper {
                     DATABASE_VERSION);
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
-            cursor = db.rawQuery("SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS
-                    + " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'" +
-                    " ORDER BY " + DBConstants.KEY_NAME + " COLLATE NOCASE", null);
+            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS
+                    + " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'";
+            if (verifiedOnly)
+                queryString += " AND " + DBConstants.KEY_VERIFICATION_STATUS + " = " + DBConstants.VERIFIED_USER;
+            queryString += " ORDER BY " + DBConstants.KEY_NAME + " COLLATE NOCASE";
+            cursor = db.rawQuery(queryString, null);
 
             if (cursor != null) {
                 cursor.getCount();
