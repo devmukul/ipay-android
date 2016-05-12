@@ -15,6 +15,8 @@ public class ProfileCompletionStatusResponse {
     private String message;
     private List<CompletionStatus> completionStatusList;
     private List<String> tagList;
+    private List<Integer> tagwiseScorePercentage;
+    private int completionPercentage;
 
     private int basicInfoItemCount = 0;
     private int addressItemCount = 0;
@@ -61,9 +63,10 @@ public class ProfileCompletionStatusResponse {
     }
 
     public int getCompletionPercentage() {
-        double totalCompletionSum = basicInfoCompletionSum + addressCompletionSum + identificationCompletionSum + linkBankCompletionSum;
-        double totalItemCount = basicInfoItemCount + addressItemCount + identificationItemCount + linkBankItemCount;
-        return (int) Math.round(totalCompletionSum / totalItemCount);
+//        double totalCompletionSum = basicInfoCompletionSum + addressCompletionSum + identificationCompletionSum + linkBankCompletionSum;
+//        double totalItemCount = basicInfoItemCount + addressItemCount + identificationItemCount + linkBankItemCount;
+//        return (int) Math.round(totalCompletionSum / totalItemCount);
+        return completionPercentage;
     }
 
     public boolean isProfileCompleted() {

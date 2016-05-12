@@ -307,44 +307,46 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     private void promptForProfileCompletion() {
-        if (profileCompletionPromptShown)
-            return;
-
-        profileCompletionPromptShown = true;
-
         mProfileCompletionStatusResponse.analyzeProfileCompletionData();
         if (!mProfileCompletionStatusResponse.isProfileCompleted()) {
-
-            CircularProgressBar progressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.progress_bar);
-            TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
-            Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
-            Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
-
-            profileCompletionMessageView.setText("Your profile is " +
-                    mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                    + "complete. Complete your profile to get verified.");
-
-            completeProfileButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    homeBottomSheet.dismissSheet();
-
-                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                    startActivity(intent);
-                }
-            });
-
-            completeLaterButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    homeBottomSheet.dismissSheet();
-                }
-            });
-
-            progressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
-
-            homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
             ((HomeActivity) getActivity()).changeMenuVisibility(R.id.nav_profile_completeness, true);
+        }
+
+        if (!profileCompletionPromptShown) {
+            profileCompletionPromptShown = true;
+
+            if (!mProfileCompletionStatusResponse.isProfileCompleted()) {
+
+                CircularProgressBar progressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.progress_bar);
+                TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
+                Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
+                Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
+
+                profileCompletionMessageView.setText("Your profile is " +
+                        mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
+                        + "complete. Complete your profile to get verified.");
+
+                completeProfileButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        homeBottomSheet.dismissSheet();
+
+                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+                completeLaterButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        homeBottomSheet.dismissSheet();
+                    }
+                });
+
+                progressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
+
+                homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
+            }
         }
     }
 
