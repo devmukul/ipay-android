@@ -37,8 +37,7 @@
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:text="Basic Profile Info" />
+                android:gravity="left"/>
 
             <TextView
                 android:id="@+id/textview_current_status"
@@ -47,8 +46,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:layout_marginTop="2dp"
-                android:textSize="13sp"
-                android:text="1/2 Submitted"/>
+                android:textSize="13sp"/>
         </LinearLayout>
 
         <ImageView
