@@ -448,7 +448,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
             return;
         }
 
-        UserActivityRequest mUserActivityRequest = new UserActivityRequest(type, historyPageCount, fromDate, toDate);
+        UserActivityRequest mUserActivityRequest = new UserActivityRequest(type, historyPageCount, fromDate, toDate, Constants.ACTIVITY_LOG_COUNT);
         Gson gson = new Gson();
         String json = gson.toJson(mUserActivityRequest);
         mUserActivityTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,
