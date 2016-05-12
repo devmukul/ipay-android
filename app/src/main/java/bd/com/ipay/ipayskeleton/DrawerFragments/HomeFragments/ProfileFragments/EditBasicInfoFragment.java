@@ -141,6 +141,9 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
+
+        getActivity().setTitle(getString(R.string.edit_basic_info));
+
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         Bundle bundle = getArguments();

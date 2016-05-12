@@ -146,7 +146,7 @@ public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
                 try {
                     // Switch back to login activity because the user is unauthorized
                     Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
-                    intent.putExtra(SignupOrLoginActivity.MESSAGE, message);
+                    intent.putExtra(Constants.MESSAGE, message);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     mContext.startActivity(intent);
                 } catch (Exception e){e.printStackTrace();}

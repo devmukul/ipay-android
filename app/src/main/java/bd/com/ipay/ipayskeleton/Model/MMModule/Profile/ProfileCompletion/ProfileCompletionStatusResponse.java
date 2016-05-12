@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion;
 
+import android.support.v4.app.Fragment;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,9 +141,7 @@ public class ProfileCompletionStatusResponse {
     }
 
     public class PropertyDetails implements Comparable<PropertyDetails>{
-        private Integer propertyIcon;
         private String propertyName;
-        private String propertyTitle;
         private int value;
         private int threshold;
         private int tag;
@@ -151,8 +151,6 @@ public class ProfileCompletionStatusResponse {
             this.threshold = threshold;
             this.tag = tag;
             this.propertyName = propertyName;
-            this.propertyTitle = PROPERTY_NAME_TO_TITLE_MAP.get(propertyName);
-            this.propertyIcon = PROPERTY_NAME_TO_ICON_MAP.get(propertyName);
         }
 
         public boolean isCompleted() {
@@ -164,7 +162,7 @@ public class ProfileCompletionStatusResponse {
         }
 
         public String getPropertyTitle() {
-            return propertyTitle;
+            return PROPERTY_NAME_TO_TITLE_MAP.get(propertyName);
         }
 
         public int getValue() {
@@ -180,7 +178,7 @@ public class ProfileCompletionStatusResponse {
         }
 
         public Integer getPropertyIcon() {
-            return propertyIcon;
+            return PROPERTY_NAME_TO_ICON_MAP.get(propertyName);
         }
 
         /**

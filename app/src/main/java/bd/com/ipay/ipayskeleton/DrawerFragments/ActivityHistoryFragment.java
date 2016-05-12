@@ -133,7 +133,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user_activity, container, false);
-        ((HomeActivity) getActivity()).setTitle(R.string.activity_log);
+        getActivity().setTitle(R.string.activity_log);
 
         activityLogTypes = getResources().getStringArray(R.array.activity_log_types);
         mActivityLogRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
@@ -448,7 +448,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
             return;
         }
 
-        UserActivityRequest mUserActivityRequest = new UserActivityRequest(type, historyPageCount, fromDate, toDate);
+        UserActivityRequest mUserActivityRequest = new UserActivityRequest(type, historyPageCount, fromDate, toDate, Constants.ACTIVITY_LOG_COUNT);
         Gson gson = new Gson();
         String json = gson.toJson(mUserActivityRequest);
         mUserActivityTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,

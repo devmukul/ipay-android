@@ -6,11 +6,13 @@ public class UserActivityRequest {
     private int page;
     private String fromDate;
     private String toDate;
+    private int count;
 
-    public UserActivityRequest(Integer type, int page, String fromDate, String toDate) {
+    public UserActivityRequest(Integer type, int page, String fromDate, String toDate, int count) {
         this.type = type;
         this.page = page;
         this.fromDate = fromDate;
         this.toDate = toDate;
+        this.count = count;
     }
 }

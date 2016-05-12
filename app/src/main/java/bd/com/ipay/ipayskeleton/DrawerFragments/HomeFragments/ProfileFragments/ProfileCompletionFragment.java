@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
@@ -38,6 +39,8 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_completion, container, false);
+
+        getActivity().setTitle(getString(R.string.profile_completeness));
 
         mProfileCompletionRecyclerView = (RecyclerView) v.findViewById(R.id.list_profile_completion);
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -114,6 +117,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         private static final int VIEW_TYPE_HEADER = 100;
 
         public abstract class ProfileCompletionViewHolder extends RecyclerView.ViewHolder {
+            private View itemView;
             private ImageView profileCompletionIcon;
             private TextView titleView;
             private TextView currentStatusView;
@@ -122,6 +126,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             public ProfileCompletionViewHolder(final View itemView) {
                 super(itemView);
 
+                this.itemView = itemView;
                 profileCompletionIcon = (ImageView) itemView.findViewById(R.id.profile_completion_icon);
                 titleView = (TextView) itemView.findViewById(R.id.textview_title);
                 currentStatusView = (TextView) itemView.findViewById(R.id.textview_current_status);
@@ -130,23 +135,34 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
 
             public abstract void bindViewProfileCompletion(int position);
 
-            public void bindViewProfileCompletion(ProfileCompletionStatusResponse.PropertyDetails propertyDetails) {
+            public void bindViewProfileCompletion(final ProfileCompletionStatusResponse.PropertyDetails propertyDetails) {
                 if (propertyDetails.getPropertyIcon() != null)
                     profileCompletionIcon.setImageDrawable(getResources().getDrawable(propertyDetails.getPropertyIcon()));
                 titleView.setText(propertyDetails.getPropertyTitle());
 
                 if (!propertyDetails.isCompleted() && propertyDetails.getThreshold() > 1) {
-                    currentStatusView.setText(propertyDetails.getValue() + "/" + propertyDetails.getThreshold() + " Submitted");
+                    currentStatusView.setText(propertyDetails.getValue() + "/" + propertyDetails.getThreshold() + " Completed");
                     currentStatusView.setVisibility(View.VISIBLE);
                 } else {
-                    currentStatusView.setVisibility(View.INVISIBLE);
+                    currentStatusView.setVisibility(View.GONE);
                 }
 
                 if (propertyDetails.isCompleted()) {
-                    verificationStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_contacts_verified));
+                    verificationStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_checkmark));
+                    verificationStatus.setVisibility(View.VISIBLE);
                 } else {
+                    titleView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
                     verificationStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_invite));
+                    verificationStatus.setVisibility(View.GONE);
                 }
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
+                        ((ProfileActivity) getActivity()).switchToFragment(propertyDetails.getPropertyName(), null, true);
+                    }
+                });
             }
         }
 

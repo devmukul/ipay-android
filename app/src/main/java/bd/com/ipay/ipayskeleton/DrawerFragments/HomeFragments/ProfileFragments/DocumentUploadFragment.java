@@ -73,6 +73,8 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_document_upload, container, false);
 
+        getActivity().setTitle(R.string.identification_documents);
+
         mProgressDialog = new ProgressDialog(getActivity());
 
         mDocumentTypeNameView = (TextView) v.findViewById(R.id.textview_document_type);

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:background="@android:color/white">
 
     <RelativeLayout
         android:id="@+id/profile_completion_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin_card"
+        android:paddingTop="@dimen/activity_vertical_margin_card"
+        android:paddingBottom="@dimen/activity_vertical_margin_card">
 
         <ImageView
             android:id="@+id/profile_completion_icon"
@@ -19,20 +24,21 @@
 
         <LinearLayout
             android:id="@+id/profile_completion_details_holder"
+            android:layout_toLeftOf="@+id/verification_status"
             android:orientation="vertical"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/profile_completion_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/activity_horizontal_margin">
 
             <TextView
                 android:id="@+id/textview_title"
-                style="@style/TextStyleSecondaryMedium"
+                android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="Basic Profile Info"
-                android:singleLine="true" />
+                android:text="Basic Profile Info" />
 
             <TextView
                 android:id="@+id/textview_current_status"
@@ -41,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/colorTextSecondary"
+                android:textSize="13sp"
                 android:text="1/2 Submitted"/>
         </LinearLayout>
 
@@ -51,8 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_verified"
-            android:padding="@dimen/activity_horizontal_margin" />
+            android:src="@drawable/ic_checkmark"
+            android:padding="@dimen/activity_horizontal_margin_card" />
     </RelativeLayout>
 
     <View

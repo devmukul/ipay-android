@@ -425,6 +425,7 @@
     <string name="successful_sign_up">Sign up successful. Please log in now.</string>
     <string name="recommendations">Recommendations</string>
     <string name="identification">Identification</string>
+    <string name="identification_documents">Identification Documents</string>
     <string name="action_search">Search</string>
     <string name="filter_send_money">Send Money</string>
     <string name="filter_request_money">Request Money</string>
@@ -568,6 +569,9 @@
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
     <string name="complete_now">COMPLETE NOW</string>
     <string name="later">LATER</string>
+    <string name="profile_completeness">Profile Completeness</string>
+    <string name="edit_basic_info">Edit Basic Info</string>
+    <string name="edit_address">Edit Address</string>
 
     <string-array name="account_types">
         <item>Personal</item>

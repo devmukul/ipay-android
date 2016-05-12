@@ -42,6 +42,7 @@ public class Constants {
     public static final String TRUSTED_OTP_RECEIVERS = "trusted_otp_receivers";
     public static final String DOCUMENT_ID = "DOCUMENT_ID";
     public static final String DOCUMENT_TYPE_NAME = "DOCUMENT_TYPE_NAME";
+    public static final String MESSAGE = "message";
 
     public static final String NAME = "NAME";
     public static final String OCCUPATION = "OCCUPATION";
@@ -330,6 +331,9 @@ public class Constants {
     public static final String FIREBASE_CONTACT_LIST = "ContactList";
     public static final String FIREBASE_DIRTY = "dirty";
     public static final String FIREBASE_SYNCED = "synced";
+
+    public static final String BANGLADESH_COUNTRY_CODE = "+880";
+    public static final int ACTIVITY_LOG_COUNT = 10;
 
     public static final int TRANSACTION_TYPE_TOP_UP_REQUEST = 4097;
     public static final int TRANSACTION_TYPE_TOP_UP_RESPONSE = 4098;

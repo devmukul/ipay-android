@@ -86,6 +86,8 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trusted_network, container, false);
 
+        getActivity().setTitle(R.string.trusted_network);
+
         mAddTrustedPersonButton = (Button) v.findViewById(R.id.button_add_trusted_person);
         mTrustedPersonListRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_person);
 
