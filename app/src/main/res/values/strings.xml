@@ -582,6 +582,9 @@
     <string name="sent_requests_header">You have sent requests to</string>
     <string name="invitation">Inivitaion</string>
     <string name="select_a_contact">Select a contact</string>
+    <string name="progress_dialog_introducer_list">Fetching inroducer list...</string>
+    <string name="progress_dialog_introduced_list">Fetching list of introduced people by me...</string>
+    <string name="progress_dialog_sent_request_list">Fetching recommendation requests list...</string>
 
     <string-array name="account_types">
         <item>Personal</item>

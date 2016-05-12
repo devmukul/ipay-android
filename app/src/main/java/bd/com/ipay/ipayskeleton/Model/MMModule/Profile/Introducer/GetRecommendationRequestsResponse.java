@@ -3,11 +3,11 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
 import java.util.List;
 
 
-public class GetSentRequestListResponse {
+public class GetRecommendationRequestsResponse {
     private String message;
     private List<SentRequest> verificationRequests;
 
-    public GetSentRequestListResponse () {}
+    public GetRecommendationRequestsResponse() {}
 
     public String getMessage() {
         return message;

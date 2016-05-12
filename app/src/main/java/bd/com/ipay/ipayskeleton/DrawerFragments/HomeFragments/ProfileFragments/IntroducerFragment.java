@@ -23,24 +23,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducerListResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetSentRequestListResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetRecommendationRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introduced;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.SentRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.GetRecommendationRequestsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendRequestClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendationActionResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -63,7 +53,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
     private HttpRequestGetAsyncTask mGetIntroducedTask = null;
 
     //sent request
-    private GetSentRequestListResponse mSentRequestListResponse;
+    private GetRecommendationRequestsResponse mSentRequestListResponse;
     private List<SentRequest> mSentRequestList;
     private HttpRequestGetAsyncTask mGetSentRequestTask = null;
 
@@ -119,7 +109,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         mProgressDialog.setMessage(getString(R.string.progress_dialog_introducer_list));
         mProgressDialog.show();
         mGetIntroducerTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
-                Constants.BASE_URL + Constants.URL_GET_INTRODUCER_LIST, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_INTRODUCER_LIST, getActivity());
         mGetIntroducerTask.mHttpResponseListener = this;
         mGetIntroducerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -132,7 +122,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         mProgressDialog.setMessage(getString(R.string.progress_dialog_introduced_list));
         mProgressDialog.show();
         mGetIntroducedTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCED_LIST,
-                Constants.BASE_URL + Constants.URL_GET_INTRODUCED_LIST, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_INTRODUCED_LIST, getActivity());
         mGetIntroducedTask.mHttpResponseListener = this;
         mGetIntroducedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -142,10 +132,10 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_sentRequest_list));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_sent_request_list));
         mProgressDialog.show();
         mGetSentRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SENT_REQUEST_LIST,
-                Constants.BASE_URL + Constants.URL_GET_SENT_REQUEST_LIST, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_SENT_REQUEST_LIST, getActivity());
         mGetSentRequestTask.mHttpResponseListener = this;
         mGetSentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -223,7 +213,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             if (resultList.size() > 2) {
                 try {
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        mSentRequestListResponse = gson.fromJson(resultList.get(2), GetSentRequestListResponse.class);
+                        mSentRequestListResponse = gson.fromJson(resultList.get(2), GetRecommendationRequestsResponse.class);
 
                         if (mSentRequestList == null) {
                             mSentRequestList = mSentRequestListResponse.getSentRequestList();
