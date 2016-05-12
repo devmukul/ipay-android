@@ -87,13 +87,13 @@ public class Constants {
      * required only for the first time when user tries to login. After that, login request will be
      * automatically sent to the server using the previously used mobile number and default password
      * (qqqqqqq1).
-     *
+     * <p/>
      * *** Set it to false if you are not using the default password ***
-     *
      */
     public static final boolean AUTO_LOGIN = false;
 
-    public static final String BASE_URL;
+    public static final String BASE_URL_MM;
+    public static final String BASE_URL_SM;
 
     // For Images
     public static final String BASE_URL_IMAGE_SERVER;
@@ -107,22 +107,26 @@ public class Constants {
     static {
         if (SERVER_TYPE == 1) {
 
-            BASE_URL = "http://10.10.10.10:8085/api/v1/";
+            BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
+            BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 
         } else if (SERVER_TYPE == 2) {
 
-            BASE_URL = "http://stage.ipay.com.bd:8085/api/v1/";
+            BASE_URL_MM = "http://stage.ipay.com.bd:8085/api/v1/";
+            BASE_URL_SM = "http://10.40.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
 
         } else if (SERVER_TYPE == 3) {
 
-            BASE_URL = "https://www.ipay.com.bd/api/v1/";
+            BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
+            BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "https://www.ipay.com.bd";
 
         } else {
 
-            BASE_URL = "http://192.168.1.105:8085/api/v1/";
+            BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
+            BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
         }
     }
@@ -141,13 +145,13 @@ public class Constants {
     public static final String URL_GET_TRUSTED_DEVICES = "settings/devices";
     public static final String URL_REMOVE_TRUSTED_DEVICE = "settings/device/remove";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
-    public static final String URL_SEND_MONEY = "money/transaction/send";
-    public static final String URL_SEND_MONEY_QUERY = "money/transaction/send/query";
-    public static final String URL_REFRESH_BALANCE = "money/user/balance";
+    public static final String URL_SEND_MONEY = "transaction/send";
+    public static final String URL_SEND_MONEY_QUERY = "transaction/send/query";
+    public static final String URL_REFRESH_BALANCE = "user/balance";
     public static final String URL_GET_USER_INFO = "user/userinfo";
     public static final String URL_RESOURCE = "resource";
     public static final String URL_GET_NEWS_FEED = "news";
-    public static final String URL_TOPUP_REQUEST = "money/topup/dotopup";
+    public static final String URL_TOPUP_REQUEST = "topup/dotopup";
     public static final String URL_SET_PIN = "settings/pin/change";
     public static final String URL_CHANGE_PASSWORD = "settings/password/change";
     public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
@@ -159,32 +163,32 @@ public class Constants {
     public static final String URL_SET_USER_ADDRESS_REQUEST = "user/profile/address";
     public static final String URL_LOG_OUT = "signout";
     public static final String URL_USER_ACTIVITY = "report/activities";
-    public static final String URL_TRANSACTION_HISTORY = "money/report/transactions";
-    public static final String URL_GET_NOTIFICATIONS = "money/requests/received";
-    public static final String URL_GET_SENT_REQUESTS = "money/requests/sent";
-    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "money/requests/accept";
-    public static final String URL_REJECT_NOTIFICATION_REQUEST = "money/requests/cancel";
-    public static final String URL_REQUEST_MONEY = "money/requestmoney";
-    public static final String URL_PAYMENT_CREATE_INVOICE = "money/payment/invoice";
+    public static final String URL_TRANSACTION_HISTORY = "report/transactions";
+    public static final String URL_GET_NOTIFICATIONS = "requests/received";
+    public static final String URL_GET_SENT_REQUESTS = "requests/sent";
+    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
+    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
+    public static final String URL_REQUEST_MONEY = "requestmoney";
+    public static final String URL_PAYMENT_CREATE_INVOICE = "payment/invoice";
     public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/set";
     public static final String URL_ADD_A_BANK = "bank/add";
-    public static final String URL_SEND_FOR_VERIFICATION_BANK = "money/bank-verify";
-    public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "money/bank-verify/check";
+    public static final String URL_SEND_FOR_VERIFICATION_BANK = "bank-verify";
+    public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "bank-verify/check";
     public static final String URL_REMOVE_A_BANK = "bank/remove";
     public static final String URL_DISABLE_A_BANK = "bank/disable";
     public static final String URL_ENABLE_A_BANK = "bank/enable";
     public static final String URL_GET_BANK = "bank/get";
-    public static final String URL_ADD_MONEY = "money/banktransaction/cashin";
-    public static final String URL_WITHDRAW_MONEY = "money/banktransaction/cashout";
-    public static final String URL_EVENT_LIST = "money/events/user/eventList/";
-    public static final String URL_EVENT_CATEGORIES = "money/categories";
-    public static final String URL_GET_ALL_PARTICIPANTS_LIST = "money/banktransaction/cashout";  // TODO: change
+    public static final String URL_ADD_MONEY = "banktransaction/cashin";
+    public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
+    public static final String URL_EVENT_LIST = "events/user/eventList/";
+    public static final String URL_EVENT_CATEGORIES = "categories";
+    public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
     public static final String URL_GET_INVITE_INFO = "settings/invitations";
     public static final String URL_SEND_INVITE = "settings/invitations";
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
     public static final String URL_GET_FIREBASE_TOKEN = "friend/firebasetoken";
     public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
-    public static final String URL_SERVICE_CHARGE = "money/feecharge";
+    public static final String URL_SERVICE_CHARGE = "feecharge";
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_GET_PROFILE_COMPLETION_STATUS = "/user/profilecompletion";
 

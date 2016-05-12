@@ -79,7 +79,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, String>
         try {
             HttpClient client = new DefaultHttpClient();
             File file = new File(selectedImagePath);
-            HttpPost post = new HttpPost(Constants.BASE_URL + Constants.URL_SET_PROFILE_PICTURE);
+            HttpPost post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_SET_PROFILE_PICTURE);
 
             if (HomeActivity.iPayToken.length() > 0)
                 post.setHeader(Constants.TOKEN, HomeActivity.iPayToken);

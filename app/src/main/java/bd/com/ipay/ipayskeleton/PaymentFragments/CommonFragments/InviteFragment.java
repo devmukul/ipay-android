@@ -107,7 +107,7 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
         Gson gson = new Gson();
         String json = gson.toJson(sendInviteRequest);
         mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                Constants.BASE_URL + Constants.URL_SEND_INVITE, json, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
         mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

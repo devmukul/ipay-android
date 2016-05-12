@@ -142,7 +142,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         Gson gson = new Gson();
         String json = gson.toJson(mCreateInvoiceRequest);
         mCreateInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_INVOICE,
-                Constants.BASE_URL + Constants.URL_PAYMENT_CREATE_INVOICE, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT_CREATE_INVOICE, json, getActivity());
         mCreateInvoiceTask.mHttpResponseListener = this;
         mCreateInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

@@ -144,7 +144,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mGetBankListRequest);
         mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL + Constants.URL_GET_BANK, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, json, getActivity());
         mGetBankTask.mHttpResponseListener = this;
 
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

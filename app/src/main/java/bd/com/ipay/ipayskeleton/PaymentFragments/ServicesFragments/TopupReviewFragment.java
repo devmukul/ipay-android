@@ -107,7 +107,7 @@ public class TopupReviewFragment extends ReviewFragment implements HttpResponseL
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
-                Constants.BASE_URL + Constants.URL_TOPUP_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity());
         mTopupTask.mHttpResponseListener = this;
         mTopupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

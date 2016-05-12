@@ -70,7 +70,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         }
 
         mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                Constants.BASE_URL + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

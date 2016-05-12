@@ -149,7 +149,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_NOTIFICATIONS,
-                Constants.BASE_URL + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mGetAllNotificationsTask.mHttpResponseListener = this;
         mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -162,12 +162,12 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mProgressDialog.setMessage(getString(R.string.progress_dialog_recommendation_list));
         mProgressDialog.show();
         mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
-                Constants.BASE_URL + Constants.URL_GET_RECOMMENDATION_REQUESTS, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_RECOMMENDATION_REQUESTS, getActivity());
         mGetRecommendationRequestsTask.mHttpResponseListener = this;
         mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void attemptRecommendAction(long requestID, String recommendationStatus) {
+    private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
         if (requestID == 0) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
@@ -180,7 +180,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mRecommendationActionRequest);
         mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_RECOMMEND_ACTION,
-                Constants.BASE_URL + Constants.URL_RECOMMEND_ACTION, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_RECOMMEND_ACTION, json, getActivity());
         mRecommendActionTask.mHttpResponseListener = this;
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -198,7 +198,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectPaymentTask.mHttpResponseListener = this;
         mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -216,7 +216,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
         mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptPaymentTask.mHttpResponseListener = this;
         mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -233,7 +233,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -250,7 +250,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
-                Constants.BASE_URL + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptRequestTask.mHttpResponseListener = this;
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -733,7 +733,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            attemptRecommendAction(requestID, Constants.RECOMMENDATION_STATUS_APPROVED);
+                                            attemptSetRecommendationStatus(requestID, Constants.RECOMMENDATION_STATUS_APPROVED);
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -753,7 +753,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            attemptRecommendAction(requestID, Constants.RECOMMENDATION_STATUS_REJECTED);
+                                            attemptSetRecommendationStatus(requestID, Constants.RECOMMENDATION_STATUS_REJECTED);
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -773,7 +773,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            attemptRecommendAction(requestID, Constants.RECOMMENDATION_STATUS_SPAM);
+                                            attemptSetRecommendationStatus(requestID, Constants.RECOMMENDATION_STATUS_SPAM);
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

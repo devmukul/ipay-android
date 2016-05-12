@@ -123,7 +123,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         }
 
         mGetTrustedPersonsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_PERSONS,
-                Constants.BASE_URL + Constants.URL_GET_TRUSTED_PERSONS, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_PERSONS, getActivity(), this);
         mGetTrustedPersonsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -139,7 +139,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         String json = gson.toJson(addTrustedPersonRequest);
 
         mAddTrustedPersonTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_PERSON,
-                Constants.BASE_URL + Constants.URL_POST_TRUSTED_PERSONS, json, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_POST_TRUSTED_PERSONS, json, getActivity(), this);
         mAddTrustedPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -156,7 +156,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         String json = gson.toJson(setAccountRecoveryPersonRequest);
 
         mSetAccountRecoveryPersonTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_ACCOUNT_RECOVERY_PERSON,
-                Constants.BASE_URL + Constants.URL_POST_TRUSTED_PERSONS + id + Constants.URL_SET_RECOVERY_PERSON,
+                Constants.BASE_URL_MM + Constants.URL_POST_TRUSTED_PERSONS + id + Constants.URL_SET_RECOVERY_PERSON,
                 json, getActivity(), this);
         mSetAccountRecoveryPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

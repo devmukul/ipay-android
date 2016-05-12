@@ -172,7 +172,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             Gson gson = new Gson();
             String json = gson.toJson(mCheckPromoCodeRequest);
             mCheckPromoCodeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHECK_PROMO_CODE,
-                    Constants.BASE_URL + Constants.URL_CHECK_PROMO_CODE, json, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_CHECK_PROMO_CODE, json, getActivity());
             mCheckPromoCodeTask.mHttpResponseListener = this;
             mCheckPromoCodeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

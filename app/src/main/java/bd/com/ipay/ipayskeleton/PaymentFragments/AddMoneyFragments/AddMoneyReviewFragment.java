@@ -126,7 +126,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);
         mAddMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
-                Constants.BASE_URL + Constants.URL_ADD_MONEY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, json, getActivity());
         mAddMoneyTask.mHttpResponseListener = this;
 
         mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

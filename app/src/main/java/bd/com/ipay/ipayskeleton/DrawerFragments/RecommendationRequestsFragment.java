@@ -107,7 +107,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
         mProgressDialog.setMessage(getString(R.string.progress_dialog_recommendation_list));
         mProgressDialog.show();
         mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
-                Constants.BASE_URL + Constants.URL_GET_RECOMMENDATION_REQUESTS, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_RECOMMENDATION_REQUESTS, getActivity());
         mGetRecommendationRequestsTask.mHttpResponseListener = this;
         mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -125,7 +125,7 @@ public class RecommendationRequestsFragment extends Fragment implements HttpResp
         Gson gson = new Gson();
         String json = gson.toJson(mRecommendationActionRequest);
         mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_RECOMMEND_ACTION,
-                Constants.BASE_URL + Constants.URL_RECOMMEND_ACTION, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_RECOMMEND_ACTION, json, getActivity());
         mRecommendActionTask.mHttpResponseListener = this;
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

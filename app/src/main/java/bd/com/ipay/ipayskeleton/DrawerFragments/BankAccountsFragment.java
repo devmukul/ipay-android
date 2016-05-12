@@ -190,7 +190,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mGetBankListRequest);
         mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL + Constants.URL_GET_BANK, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, json, getActivity());
         mGetBankTask.mHttpResponseListener = this;
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -304,7 +304,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mAddBankRequest);
         mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
-                Constants.BASE_URL + Constants.URL_ADD_A_BANK, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity());
         mAddBankTask.mHttpResponseListener = this;
         mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -322,7 +322,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mVerifyBankAccountRequest);
         mSendForVerificationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_FOR_VERIFICATION_BANK,
-                Constants.BASE_URL + Constants.URL_SEND_FOR_VERIFICATION_BANK, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_SEND_FOR_VERIFICATION_BANK, json, getActivity());
         mSendForVerificationTask.mHttpResponseListener = this;
         mSendForVerificationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -346,7 +346,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mVerifyBankWithAmountRequest);
         mSendForVerificationWithAmountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_VERIFICATION_BANK_WITH_AMOUNT,
-                Constants.BASE_URL + Constants.URL_BANK_VERIFICATION_WITH_AMOUNT, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_BANK_VERIFICATION_WITH_AMOUNT, json, getActivity());
         mSendForVerificationWithAmountTask.mHttpResponseListener = this;
         mSendForVerificationWithAmountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -364,7 +364,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mRemoveBankAccountRequest);
         mRemoveBankAccountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REMOVE_A_BANK,
-                Constants.BASE_URL + Constants.URL_REMOVE_A_BANK, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_A_BANK, json, getActivity());
         mRemoveBankAccountTask.mHttpResponseListener = this;
         mRemoveBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -382,7 +382,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mEnableBankAccountRequest);
         mEnableBankAccountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ENABLE_A_BANK,
-                Constants.BASE_URL + Constants.URL_ENABLE_A_BANK, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_ENABLE_A_BANK, json, getActivity());
         mEnableBankAccountTask.mHttpResponseListener = this;
         mEnableBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -400,7 +400,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
         String json = gson.toJson(mDisableBankAccountRequest);
         mDisableBankAccountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_DISABLE_A_BANK,
-                Constants.BASE_URL + Constants.URL_DISABLE_A_BANK, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_DISABLE_A_BANK, json, getActivity());
         mDisableBankAccountTask.mHttpResponseListener = this;
         mDisableBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -295,7 +295,7 @@ public abstract class BaseContactsFragment extends Fragment implements
         Gson gson = new Gson();
         String json = gson.toJson(mAskForRecommendationRequest);
         mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
-                Constants.BASE_URL + Constants.URL_ASK_FOR_RECOMMENDATION, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_RECOMMENDATION, json, getActivity());
         mAskForRecommendationTask.mHttpResponseListener = this;
         mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -322,7 +322,7 @@ public abstract class BaseContactsFragment extends Fragment implements
             Gson gson = new Gson();
             String json = gson.toJson(sendInviteRequest);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                    Constants.BASE_URL + Constants.URL_SEND_INVITE, json, getActivity(), this);
+                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
             mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

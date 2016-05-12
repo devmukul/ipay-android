@@ -365,7 +365,7 @@ public class HomeActivity extends BaseActivity
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL + Constants.URL_LOG_OUT, json, HomeActivity.this);
+                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
         mLogoutTask.mHttpResponseListener = this;
 
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -380,7 +380,7 @@ public class HomeActivity extends BaseActivity
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
-        String mUri = Constants.BASE_URL + "/" + Constants.URL_GET_FIREBASE_TOKEN;
+        String mUri = Constants.BASE_URL_MM + "/" + Constants.URL_GET_FIREBASE_TOKEN;
         mGetFireBaseTokenTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_FIREBASE_TOKEN,
                 mUri, HomeActivity.this);
         mGetFireBaseTokenTask.mHttpResponseListener = this;

@@ -125,7 +125,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);
         mWithdrawMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
-                Constants.BASE_URL + Constants.URL_WITHDRAW_MONEY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, json, getActivity());
         mWithdrawMoneyTask.mHttpResponseListener = this;
 
         mWithdrawMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

@@ -363,7 +363,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
         mRefreshBalanceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_BALANCE,
-                Constants.BASE_URL + Constants.URL_REFRESH_BALANCE, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REFRESH_BALANCE, json, getActivity());
         mRefreshBalanceTask.mHttpResponseListener = this;
         mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -382,7 +382,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
-                Constants.BASE_URL + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
         mAddTrustedDeviceTask.mHttpResponseListener = this;
         mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -410,7 +410,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
-                Constants.BASE_URL + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -421,7 +421,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
 
         mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                Constants.BASE_URL + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

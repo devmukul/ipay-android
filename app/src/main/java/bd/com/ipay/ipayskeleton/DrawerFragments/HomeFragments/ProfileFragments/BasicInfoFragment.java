@@ -212,7 +212,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         }
 
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL + "/" + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
+                Constants.BASE_URL_MM + "/" + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

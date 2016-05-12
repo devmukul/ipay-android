@@ -80,7 +80,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private void getInviteInfo() {
         if (mGetInviteInfoTask == null) {
             mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
-                    Constants.BASE_URL + "/" + Constants.URL_GET_INVITE_INFO, getActivity(), this);
+                    Constants.BASE_URL_MM + "/" + Constants.URL_GET_INVITE_INFO, getActivity(), this);
             mGetInviteInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

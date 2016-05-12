@@ -171,7 +171,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, String> {
 
     private void sendUpdateRequest() {
         if (Utilities.isConnectionAvailable(mContext))
-            mHttpResponse = makeRequest(Constants.BASE_URL + "/" + Constants.URL_UPDATE_FIREBASE_FRIEND_LIST);
+            mHttpResponse = makeRequest(Constants.BASE_URL_MM + "/" + Constants.URL_UPDATE_FIREBASE_FRIEND_LIST);
 
         try {
             String status = mHttpResponse.getStatusLine().getStatusCode() + "";

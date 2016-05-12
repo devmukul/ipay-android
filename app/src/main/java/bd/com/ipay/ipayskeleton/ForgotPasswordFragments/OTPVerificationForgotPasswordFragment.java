@@ -197,7 +197,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
             String json = gson.toJson(mForgetPassOTPConfirmationRequest);
 
             mOTPConfirmationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_FORGET_PASSWORD_CONFIRM_OTP,
-                    Constants.BASE_URL + Constants.URL_CONFIRM_OTP_FORGET_PASSWORD, json, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_CONFIRM_OTP_FORGET_PASSWORD, json, getActivity());
             mOTPConfirmationTask.mHttpResponseListener = this;
             mOTPConfirmationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

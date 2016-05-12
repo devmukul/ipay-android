@@ -144,7 +144,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
         Gson gson = new Gson();
         String json = gson.toJson(mForgetPasswordRequest);
         mForgetPasswordTask = new HttpRequestPostAsyncTask(Constants.COMMAND_FORGET_PASSWORD_SEND_OTP,
-                Constants.BASE_URL + Constants.URL_SEND_OTP_FORGET_PASSWORD, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_SEND_OTP_FORGET_PASSWORD, json, getActivity());
 
         // Save the mobile number and device id in a static field so that it can be used later in OTP verification fragment
         SignupOrLoginActivity.mMobileNumber = mobileNumber;

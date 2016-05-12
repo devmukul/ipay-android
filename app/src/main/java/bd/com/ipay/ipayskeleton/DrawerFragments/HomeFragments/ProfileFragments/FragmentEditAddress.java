@@ -94,7 +94,7 @@ public class FragmentEditAddress extends Fragment implements HttpResponseListene
         Gson gson = new Gson();
         String addressJson = gson.toJson(userAddressRequest, SetUserAddressRequest.class);
         mSetUserAddressTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_USER_ADDRESS_REQUEST,
-                Constants.BASE_URL + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_SET_USER_ADDRESS_REQUEST, addressJson, getActivity(), this);
         mSetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
