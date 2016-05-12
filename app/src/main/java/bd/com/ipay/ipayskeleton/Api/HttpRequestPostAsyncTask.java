@@ -122,7 +122,7 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(final String result) {
         if (error) {
-            Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -151,7 +151,7 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, String> {
                 try {
                     // Switch back to login activity because the user is unauthorized
                     Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
-                    intent.putExtra(SignupOrLoginActivity.MESSAGE, message);
+                    intent.putExtra(Constants.MESSAGE, message);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     mContext.startActivity(intent);
                 } catch (Exception e) {

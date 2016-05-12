@@ -42,6 +42,7 @@ public class Constants {
     public static final String TRUSTED_OTP_RECEIVERS = "trusted_otp_receivers";
     public static final String DOCUMENT_ID = "DOCUMENT_ID";
     public static final String DOCUMENT_TYPE_NAME = "DOCUMENT_TYPE_NAME";
+    public static final String MESSAGE = "message";
 
     public static final String NAME = "NAME";
     public static final String OCCUPATION = "OCCUPATION";

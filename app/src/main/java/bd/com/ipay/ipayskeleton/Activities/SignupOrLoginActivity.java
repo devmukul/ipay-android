@@ -51,8 +51,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static AddressClass mAddressBusinessHolder;
     public static AddressClass mAddressPersonal;
 
-    public static final String MESSAGE = "message";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +68,10 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             switchedToAccountSelection = true;
         }
 
-        if (getIntent().hasExtra(MESSAGE)) {
+        if (getIntent().hasExtra(Constants.MESSAGE)) {
+            String message = getIntent().getStringExtra(Constants.MESSAGE);
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             switchToLoginFragment();
-            Toast.makeText(this, getIntent().getStringExtra(MESSAGE), Toast.LENGTH_LONG).show();
         }
     }
 
