@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin">
 
         <include
-            android:id="@+id/introducer_profile_picture"
+            android:id="@+id/profile_picture"
             layout="@layout/contact_portrait_view"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -22,7 +22,7 @@
             style="@style/TextStylePrimaryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/introducer_profile_picture"
+            android:layout_toRightOf="@+id/profile_picture"
             android:gravity="left"
             android:paddingBottom="2dp"
             android:paddingTop="14dp"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/introducer_name"
-            android:layout_toRightOf="@+id/introducer_profile_picture"
+            android:layout_toRightOf="@+id/profile_picture"
             style="@style/TextStyleSecondaryMedium"
             android:text="+8801919191919"
             android:gravity="left"

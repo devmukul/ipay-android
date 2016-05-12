@@ -71,7 +71,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.introducer_profile_picture);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);

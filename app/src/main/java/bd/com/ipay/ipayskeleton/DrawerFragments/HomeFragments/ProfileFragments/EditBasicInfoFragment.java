@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -159,7 +158,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
 
-        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.introducer_profile_picture);
+        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mEditProfilePictureButton = (ImageButton) v.findViewById(R.id.button_profile_picture_edit);
         mNameEditText = (EditText) v.findViewById(R.id.name);
 
