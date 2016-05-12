@@ -160,12 +160,11 @@ public class HomeActivity extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        mMobileNumberView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
-        mNameView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textview_name);
-        mPortrait = (RoundedImageView) navigationView.getHeaderView(0).findViewById(R.id.portrait);
+        mMobileNumberView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
+        mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
+        mPortrait = (RoundedImageView) mNavigationView.getHeaderView(0).findViewById(R.id.portrait);
         mMobileNumberView.setText(mUserID);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         // Get FireBase Token
         if (!contactsSyncedOnce) getFireBaseToken();
@@ -313,8 +312,8 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_identification) {
+
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
-            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new RecommendationRequestsFragment()).commit();
             switchedToHomeFragment = false;
 
         }  else if (id == R.id.nav_invitation) {
