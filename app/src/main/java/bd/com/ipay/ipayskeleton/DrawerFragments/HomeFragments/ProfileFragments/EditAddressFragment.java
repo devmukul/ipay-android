@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressRes
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class FragmentEditAddress extends Fragment implements HttpResponseListener {
+public class EditAddressFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSetUserAddressTask = null;
     private SetUserAddressResponse mSetUserAddressResponse;

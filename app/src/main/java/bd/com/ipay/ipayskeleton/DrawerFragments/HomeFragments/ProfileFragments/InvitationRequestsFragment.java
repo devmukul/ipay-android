@@ -25,9 +25,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-
 public class InvitationRequestsFragment extends Fragment implements HttpResponseListener {
-
 
     private HttpRequestGetAsyncTask mGetInvitationRequestsTask = null;
     private GetInviteInfoResponse mInvitationRequestsResponse;
@@ -49,17 +47,10 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_invitation_request, container, false);
-        ( getActivity()).setTitle(R.string.invitation);
+        (getActivity()).setTitle(R.string.invitation);
 
         mInvitationListRecyclerView = (RecyclerView) v.findViewById(R.id.list_invitees);
         mProgressDialog = new ProgressDialog(getActivity());
@@ -114,7 +105,7 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
                         if (mInvitations == null || mInvitations.size() == 0) {
                             mInvitations = mInvitationRequestsResponse.getInvitees();
                         } else {
-                           List<String> tempRecommendationRequestsClasses;
+                            List<String> tempRecommendationRequestsClasses;
                             tempRecommendationRequestsClasses = mInvitationRequestsResponse.getInvitees();
                             mInvitations.addAll(tempRecommendationRequestsClasses);
                         }
@@ -133,9 +124,11 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
                     }
 
                 } else {
-                    if (getActivity() != null) Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null) Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+            } else if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
 
             mProgressDialog.dismiss();
         }
