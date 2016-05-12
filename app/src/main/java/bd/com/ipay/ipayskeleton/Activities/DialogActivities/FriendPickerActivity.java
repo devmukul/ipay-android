@@ -1,13 +1,10 @@
 package bd.com.ipay.ipayskeleton.Activities.DialogActivities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments.FriendPickerFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments.IPayContactsFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

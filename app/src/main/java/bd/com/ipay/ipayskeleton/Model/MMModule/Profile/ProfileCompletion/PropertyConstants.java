@@ -1,14 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion;
 
-import android.support.v4.app.Fragment;
-
 import java.util.HashMap;
 
-import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.AddressFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.BasicInfoFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.DocumentListFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 public class PropertyConstants {

@@ -23,7 +23,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class NewMoneyRequestFragment extends Fragment {
+public class RequestMoneyFragment extends Fragment {
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;

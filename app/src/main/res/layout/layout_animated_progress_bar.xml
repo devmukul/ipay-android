@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -11,18 +10,18 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:indeterminate="false"
-        android:padding="@dimen/value2"
-        android:max="100"
-        android:progress="0"
-        android:secondaryProgress="100"
         android:layout_centerInParent="true"
-        android:progressDrawable="@drawable/circular_progress_bar" />
+        android:indeterminate="false"
+        android:max="100"
+        android:padding="@dimen/value2"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:secondaryProgress="100" />
 
     <TextView
         android:id="@+id/text_view_percentage"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@android:color/transparent" />
 
