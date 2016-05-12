@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Notification;
 public class GetNotificationsRequest {
 
     private int page;
-    private int serviceID;
+    private Integer serviceID = null;
 
     public GetNotificationsRequest(int page) {
         this.page = page;
