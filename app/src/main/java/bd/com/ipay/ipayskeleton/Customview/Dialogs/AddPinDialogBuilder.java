@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Customview;
+package bd.com.ipay.ipayskeleton.Customview.Dialogs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
