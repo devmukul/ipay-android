@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +25,9 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducerListResponse;
@@ -29,23 +35,31 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetRecommendat
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introduced;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.RecommendationRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IntroducerFragment extends Fragment implements HttpResponseListener {
 
+    private final int PICK_CONTACT_REQUEST = 100;
+
     private GetIntroducerListResponse mIntroducerListResponse;
-    private List<Introducer> mIntroducerList;
     private HttpRequestGetAsyncTask mGetIntroducersTask = null;
 
     private GetIntroducedListResponse mIntroducedListResponse;
-    private List<Introduced> mIntroducedList;
     private HttpRequestGetAsyncTask mGetIntroducedTask = null;
 
     private GetRecommendationRequestsResponse mSentRequestListResponse;
-    private List<RecommendationRequest> mRecommendationRequestList;
     private HttpRequestGetAsyncTask mGetSentRequestTask = null;
+
+    private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
+    private AskForRecommendationResponse mAskForRecommendationResponse;
+
+    private List<RecommendationRequest> mRecommendationRequestList;
+    private List<Introduced> mIntroducedList;
+    private List<Introducer> mIntroducerList;
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mRecyclerView;
@@ -126,6 +140,23 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 Constants.BASE_URL_MM + Constants.URL_GET_SENT_REQUEST_LIST, getActivity());
         mGetSentRequestTask.mHttpResponseListener = this;
         mGetSentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void sendRecommendationRequest(String mobileNumber) {
+        if (mAskForRecommendationTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_recommendation));
+        mProgressDialog.show();
+        AskForRecommendationRequest mAskForRecommendationRequest =
+                new AskForRecommendationRequest(mobileNumber);
+        Gson gson = new Gson();
+        String json = gson.toJson(mAskForRecommendationRequest);
+        mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
+                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_RECOMMENDATION, json, getActivity());
+        mAskForRecommendationTask.mHttpResponseListener = this;
+        mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -223,6 +254,31 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
             mProgressDialog.dismiss();
 
+        } else if (resultList.get(0).equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
+            try {
+
+                if (resultList.size() > 2) {
+                    mAskForRecommendationResponse = gson.fromJson(resultList.get(2), AskForRecommendationResponse.class);
+
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
+                        }
+                    } else if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mAskForRecommendationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            mProgressDialog.dismiss();
+            mAskForRecommendationTask = null;
         }
 
         if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null
@@ -254,6 +310,8 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             private RoundedImageView mIntroducerProfilePictureView;
 
             private TextView mIntroducedName;
+            private RelativeLayout mIntroducerListHeaderLayout;
+            private Button mButtonAskForRecommendation;
             private TextView mIntroducedMobileNumber;
             private RoundedImageView mIntroducedProfilePictureView;
 
@@ -274,6 +332,8 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 mIntroducedName = (TextView) itemView.findViewById(R.id.introduced_name);
                 mIntroducedMobileNumber = (TextView) itemView.findViewById(R.id.introduced_mobile_number);
                 mIntroducedProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mIntroducerListHeaderLayout = (RelativeLayout) itemView.findViewById(R.id.complete_introduction_header);
+                mButtonAskForRecommendation = (Button) itemView.findViewById(R.id.button_ask_for_recommendation);
 
                 mRequestedName = (TextView) itemView.findViewById(R.id.requested_name);
                 mRequestedMobileNumber = (TextView) itemView.findViewById(R.id.requested_mobile_number);
@@ -361,6 +421,25 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 mIntroducedMobileNumber.setText(introducedMobileNumber);
             }
 
+            public void bindViewForIntroducerListHeader(int pos) {
+
+                // TODO: get the MINIMUM_INTRODUCER_COUNT from the list response
+                int MINIMUM_INTRODUCER_COUNT = 2;
+                if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT)
+                    mIntroducerListHeaderLayout.setVisibility(View.VISIBLE);
+                else mIntroducerListHeaderLayout.setVisibility(View.GONE);
+
+                mButtonAskForRecommendation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
+                        intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);                   // Get the verified iPay users only.
+                        startActivityForResult(intent, PICK_CONTACT_REQUEST);
+                    }
+                });
+
+            }
+
             public void bindViewForSentRequestList(int pos) {
 
                 if (mIntroducerList == null && mIntroducedList == null) pos = pos - 1;
@@ -398,9 +477,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             }
         }
-
-
-        //declaring custom ViewHolder for each of the element so that we can differentiate them when onBindViewHolder gets called on Adapter
 
         private class IntroducerListHeaderViewHolder extends ViewHolder {
             public IntroducerListHeaderViewHolder(View itemView) {
@@ -464,12 +540,12 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 return vh;
 
             } else if (viewType == SENT_REQUEST_LIST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_sent_request_list_header, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me_header, parent, false);
                 SentRequestListHeaderViewHolder vh = new SentRequestListHeaderViewHolder(v);
                 return vh;
 
             } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_sent_request_list, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me, parent, false);
                 SentRequestListItemViewHolder vh = new SentRequestListItemViewHolder(v);
                 return vh;
             }
@@ -495,6 +571,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
                 } else if (holder instanceof IntroducerListHeaderViewHolder) {
                     IntroducerListHeaderViewHolder vh = (IntroducerListHeaderViewHolder) holder;
+                    vh.bindViewForIntroducerListHeader(position);
 
                 } else if (holder instanceof IntroducerListItemViewHolder) {
                     IntroducerListItemViewHolder vh = (IntroducerListItemViewHolder) holder;
@@ -607,6 +684,19 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             }
 
             return super.getItemViewType(position);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+
+            String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+
+            if (mobileNumber != null) sendRecommendationRequest(mobileNumber);
+            else
+                Toast.makeText(getActivity(), R.string.could_not_fetch_the_number, Toast.LENGTH_SHORT).show();
+
         }
     }
 }

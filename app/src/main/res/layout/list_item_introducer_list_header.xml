@@ -2,15 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/value10"
+    android:layout_marginTop="@dimen/value10"
     android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/complete_introduction_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/intoduce_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/button_ask_for_recommendation"
+            android:text="@string/at_least_two_introducers"
+            android:textColor="@color/background_red" />
+
+        <Button
+            android:id="@+id/button_ask_for_recommendation"
+            style="@style/MicroButtonPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:text="@string/request_now" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/money_request_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/value5"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginTop="@dimen/value5"
+        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
         android:gravity="center"
         android:text="@string/introducer_list_header"
         android:textStyle="bold" />

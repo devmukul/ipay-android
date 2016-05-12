@@ -87,6 +87,7 @@
     <string name="create_invoice">Create Invoice</string>
     <string name="create_event">Create Event</string>
     <string name="no_contacts">No Contacts Available</string>
+    <string name="no_verified_contacts">No verified contacts available in your account</string>
     <string name="contacts">Contacts</string>
     <string name="country">Country</string>
     <string name="change_pin">Change PIN</string>
@@ -159,6 +160,7 @@
     <string name="could_not_reject_money_request">Could not reject the request. Please try again later.</string>
     <string name="could_not_cancel_money_request">Could not cancel the request. Please try again later.</string>
     <string name="could_not_accept_money_request">Could not accept the request. Please try again later.</string>
+    <string name="could_not_fetch_the_number">Could not fetch the mobile number.</string>
     <string name="progress_dialog_text_logging_in">Signing in...</string>
     <string name="progress_dialog_send_for_recommendation">Sending recommendation request...</string>
     <string name="progress_dialog_saving_new_pass">Saving new password...</string>
@@ -565,6 +567,7 @@
     <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload identification documents to get verified</string>
     <string name="upload_identification_documents_to_confirm_identity">Upload identification documents to confirm your identity</string>
     <string name="document_id">Document ID</string>
+    <string name="at_least_two_introducers">You need one more introducer at least to improve your percentage of profile completion</string>
     <string name="no_file_selected">No file selected</string>
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
     <string name="select_a_file">Select a file</string>
@@ -577,7 +580,7 @@
     <string name="edit_address">Edit Address</string>
     <string name="invitees">Invitees</string>
     <string name="other">Other</string>
-    <string name="introduced_list_header">You are introduced by</string>
+    <string name="introduced_list_header">You have introduced</string>
     <string name="introducer_list_header">Your introducer</string>
     <string name="sent_requests_header">You have sent requests to</string>
     <string name="invitation">Inivitaion</string>

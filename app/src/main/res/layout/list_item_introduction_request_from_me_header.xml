@@ -2,15 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/value10"
+    android:layout_marginTop="@dimen/value10"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/money_request_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/value5"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginTop="@dimen/value10"
         android:gravity="center"
         android:text="@string/sent_requests_header"
         android:textStyle="bold" />

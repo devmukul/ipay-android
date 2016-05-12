@@ -40,11 +40,11 @@ public class IPayContactsFragment extends BaseContactsFragment {
     private static final int CONTACTS_QUERY_LOADER = 0;
 
     private RecyclerView mRecyclerView;
+    private TextView mEmptyContactsTextView;
     private SubscriberListAdapter miPayAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private File dir;
 
-    private HashMap<String, String> subscriber = new HashMap<>();
 
     // Contacts will be filtered base on this field.
     // It will be populated when the user types in the search bar.
@@ -59,6 +59,7 @@ public class IPayContactsFragment extends BaseContactsFragment {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
+        mEmptyContactsTextView = (TextView) v.findViewById(R.id.contact_list_empty);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         miPayAdapter = new SubscriberListAdapter();
@@ -119,14 +120,16 @@ public class IPayContactsFragment extends BaseContactsFragment {
                     cursor = DataHelper.getInstance(getActivity()).searchSubscribers(mQuery, mShowVerifiedUsersOnly);
 
                     if (cursor != null) {
-                        cursor.getCount();
-                        if (cursor.moveToFirst()) {
-                            do {
-                                String mobileNumber = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER));
-                                String name = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_NAME));
-                                subscriber.put(mobileNumber, name);
-                            } while (cursor.moveToNext());
-                        }
+                        cursor.moveToFirst();
+
+                        if (cursor.getCount() == 0 && mShowVerifiedUsersOnly) {
+                            mEmptyContactsTextView.setVisibility(View.VISIBLE);
+                            mEmptyContactsTextView.setText(getString(R.string.no_verified_contacts));
+
+                        } else if (cursor.getCount() == 0) {
+                            mEmptyContactsTextView.setVisibility(View.VISIBLE);
+
+                        } else mEmptyContactsTextView.setVisibility(View.GONE);
 
                         cursor.moveToFirst();
                     }

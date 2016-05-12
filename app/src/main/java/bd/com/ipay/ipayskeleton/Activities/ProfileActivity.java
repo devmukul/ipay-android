@@ -14,9 +14,9 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.D
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EmailFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditAddressFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.IntroducerFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.TrustedNetworkFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import static  bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.PropertyConstants.*;
@@ -71,7 +71,7 @@ public class ProfileActivity extends BaseActivity {
                 fragment = new BasicInfoFragment();
                 break;
             case INTRODUCER:
-                fragment = new RecommendationRequestsFragment();
+                fragment = new IntroducerFragment();
                 break;
             case ADDRESS:
                 fragment = new AddressFragment();
@@ -146,7 +146,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     public void switchToIntroducerFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RecommendationRequestsFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IntroducerFragment()).commit();
     }
 
     @Override
