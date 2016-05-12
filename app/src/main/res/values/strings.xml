@@ -57,6 +57,7 @@
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
     <string name="empty_events_list">No recent events found.</string>
     <string name="empty_recommendation_request_list">No request to introduce right now.</string>
+    <string name="empty_transaction_history">No transaction to show right now.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="could_not_update_contacts">Could not update the contact list</string>

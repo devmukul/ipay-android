@@ -7,18 +7,14 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_recommendation_requests"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/value5"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/activity_horizontal_margin_double" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/empty_list_text"
-        style="@style/TextStylePrimaryLarge"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:gravity="center"
         android:text="@string/empty_recommendation_request_list" />
 
 </RelativeLayout>
