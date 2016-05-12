@@ -109,6 +109,8 @@ public class SendMoneyFragment extends Fragment {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
+        } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
+            getActivity().finish();
         }
     }
 
