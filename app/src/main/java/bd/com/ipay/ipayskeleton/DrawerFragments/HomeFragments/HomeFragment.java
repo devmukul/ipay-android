@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Customview.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
@@ -314,6 +315,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProfileCompletionStatusResponse.analyzeProfileCompletionData();
         if (!mProfileCompletionStatusResponse.isProfileCompleted()) {
 
+            CircularProgressBar progressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.progress_bar);
             TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
             Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
             Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
@@ -338,6 +340,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     homeBottomSheet.dismissSheet();
                 }
             });
+
+            progressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
 
             homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
             ((HomeActivity) getActivity()).changeMenuVisibility(R.id.nav_profile_completeness, true);

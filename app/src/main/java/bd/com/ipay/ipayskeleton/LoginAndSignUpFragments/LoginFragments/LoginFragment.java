@@ -136,7 +136,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             // Delete +880 from the prefix
             String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(
                     SignupOrLoginActivity.mMobileNumber);
-            mUserNameLoginView.setText(mobileNumberWithoutPrefix);
+            mUserNameLoginView.setText(Constants.BANGLADESH_COUNTRY_CODE + mobileNumberWithoutPrefix);
         } else if (pref.contains(Constants.USERID)) {
             mUserNameLoginView.setText(ContactEngine.trimPrefix(pref.getString(Constants.USERID, "")));
         }
