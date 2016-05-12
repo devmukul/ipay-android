@@ -572,6 +572,7 @@
     <string name="profile_completeness">Profile Completeness</string>
     <string name="edit_basic_info">Edit Basic Info</string>
     <string name="edit_address">Edit Address</string>
+    <string name="select_a_contact">Select a Contact</string>
 
     <string-array name="account_types">
         <item>Personal</item>

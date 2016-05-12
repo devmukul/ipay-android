@@ -64,6 +64,11 @@ public class AllContactsFragment extends BaseContactsFragment {
     }
 
     @Override
+    protected boolean isDialogFragment() {
+        return false;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 

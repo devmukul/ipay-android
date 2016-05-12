@@ -25,6 +25,7 @@ import com.google.zxing.integration.android.IntentResult;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import bd.com.ipay.ipayskeleton.Activities.FriendPickerActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyReviewActivity;
@@ -70,7 +71,7 @@ public class NewMoneyRequestFragment extends Fragment {
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });
@@ -142,113 +143,11 @@ public class NewMoneyRequestFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Activity.RESULT_OK && requestCode == PICK_CONTACT_REQUEST) {
-
-            final String[] numbers = getNameAndPhoneList(data.getData());
-            int size = numbers.length;
-            if (size < 1) {
-                Toast.makeText(getActivity(), R.string.no_numbers_found, Toast.LENGTH_LONG).show();
-            } else if (size == 1) {
-                // Format the number selected
-                String bdNumberStr = numbers[0].toString();
-                bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
-                mMobileNumberEditText.setText(bdNumberStr);
-
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(getString(R.string.pick_a_number));
-                builder.setItems(numbers, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Format the number selected
-                        String bdNumberStr = numbers[which].toString();
-                        bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
-                        mMobileNumberEditText.setText(bdNumberStr);
-                    }
-                });
-                builder.show();
-            }
-        } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT_REQUEST) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
-                        Toast.LENGTH_SHORT).show();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (result.matches("[0-9]+") && result.length() > 2) {
-                            mMobileNumberEditText.setText("+" + result);
-                        } else if (getActivity() != null)
-                            Toast.makeText(getActivity(), getResources().getString(
-                                    R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            }
-        } else if (resultCode == Activity.RESULT_CANCELED && requestCode == IntentIntegrator.REQUEST_CODE) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), getString(R.string.scan_cancelled),
-                        Toast.LENGTH_SHORT).show();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_MONEY_REVIEW_REQUEST) {
-
-//          If new request page was directly launched, then no need to go back to the
-//          request fragment, just finish the activity
-            if (getActivity().getIntent().getBooleanExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, false)) {
-                getActivity().finish();
-            } else {
-                ((RequestMoneyActivity) getActivity()).switchToRequestListFragment();
-            }
+        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+            String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+            if (mobileNumber != null)
+                mMobileNumberEditText.setText(mobileNumber);
         }
-    }
-
-    public String[] getNameAndPhoneList(Uri data) {
-        ArrayList<String> list = new ArrayList<String>();
-
-        Cursor cursor = getActivity().getContentResolver().query(data, null, null,
-                null, null);
-        if (cursor.moveToFirst()) {
-            if (cursor
-                    .getString(
-                            cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
-                    .equals("1")) {
-                String contactId = cursor.getString(cursor
-                        .getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cursor
-                        .getString(cursor
-                                .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-                // TODO: Can use name and contact ID
-//                list.add(name);
-                Cursor phones = getActivity().getContentResolver().query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-                                + " = " + contactId, null, null);
-                int numberIndex = phones
-                        .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                while (phones.moveToNext())
-                    list.add(phones.getString(numberIndex));
-
-                phones.close();
-            }
-        }
-        cursor.close();
-
-        String[] numbers = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            numbers[i] = list.get(i);
-        }
-        return numbers;
     }
 
 }

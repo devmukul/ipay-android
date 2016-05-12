@@ -80,44 +80,51 @@ public abstract class BaseContactsFragment extends Fragment implements
 
     private ProgressDialog mProgressDialog;
 
+    protected abstract boolean isDialogFragment();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        if (!isDialogFragment())
+            setHasOptionsMenu(true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().invalidateOptionsMenu();
+        if (!isDialogFragment())
+            getActivity().invalidateOptionsMenu();
     }
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.contact, menu);
 
-        final MenuItem searchItem = menu.findItem(R.id.action_search_contacts);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setItemsVisibility(menu, searchItem, false);
-                searchView.requestFocus();
-                if (mBottomSheetLayout != null && mBottomSheetLayout.isSheetShowing())
-                    mBottomSheetLayout.dismissSheet();
-            }
-        });
+        if (!isDialogFragment()) {
+            inflater.inflate(R.menu.contact, menu);
 
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                searchView.setQuery("", true);
-                setItemsVisibility(menu, searchItem, true);
-                return false;
-            }
-        });
+            final MenuItem searchItem = menu.findItem(R.id.action_search_contacts);
+            final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+            searchView.setOnQueryTextListener(this);
+            searchView.setOnSearchClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setItemsVisibility(menu, searchItem, false);
+                    searchView.requestFocus();
+                    if (mBottomSheetLayout != null && mBottomSheetLayout.isSheetShowing())
+                        mBottomSheetLayout.dismissSheet();
+                }
+            });
+
+            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                @Override
+                public boolean onClose() {
+                    searchView.setQuery("", true);
+                    setItemsVisibility(menu, searchItem, true);
+                    return false;
+                }
+            });
+        }
     }
 
     private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
@@ -132,8 +139,10 @@ public abstract class BaseContactsFragment extends Fragment implements
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
 
-        if (mBottomSheetLayout != null)
-            setUpBottomSheet();
+        if (!isDialogFragment()) {
+            if (mBottomSheetLayout != null)
+                setUpBottomSheet();
+        }
 
         return v;
     }

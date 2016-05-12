@@ -16,12 +16,11 @@
 
     <ImageView
         android:id="@+id/verification_status"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_marginLeft="34dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_contacts_verified"
-        android:visibility="gone" />
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_checkmark" />
 
     <TextView
         android:id="@+id/name"

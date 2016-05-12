@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.Image;
 import android.os.Bundle;
@@ -64,6 +66,11 @@ public class IPayContactsFragment extends BaseContactsFragment {
         mRecyclerView.setAdapter(miPayAdapter);
 
         return v;
+    }
+
+    @Override
+    protected boolean isDialogFragment() {
+        return false;
     }
 
     @Override
@@ -249,24 +256,35 @@ public class IPayContactsFragment extends BaseContactsFragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        setSelectedName(name);
-                        setSelectedNumber(mobileNumber);
+                        if (isDialogFragment()) {
 
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
+                            Intent intent = new Intent();
+                            intent.putExtra(Constants.NAME, name);
+                            intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
+                            intent.putExtra(Constants.PHOTO_URI, imageUrl);
+                            getActivity().setResult(Activity.RESULT_OK, intent);
+                            getActivity().finish();
 
-                        // Add a delay to hide keyboard and then open up the bottomsheet
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
+                        } else {
+                            setSelectedName(name);
+                            setSelectedNumber(mobileNumber);
 
-                                showSubscriberSheet(verificationStatus);
-                                setContactInformationInSheet(name,
-                                        mobileNumber, imageUrl, COLORS[randomColor],
-                                        verificationStatus, accountType);
-                            }
-                        }, 100);
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
+
+                            // Add a delay to hide keyboard and then open up the bottomsheet
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    showSubscriberSheet(verificationStatus);
+                                    setContactInformationInSheet(name,
+                                            mobileNumber, imageUrl, COLORS[randomColor],
+                                            verificationStatus, accountType);
+                                }
+                            }, 100);
+                        }
                     }
 
                 });
