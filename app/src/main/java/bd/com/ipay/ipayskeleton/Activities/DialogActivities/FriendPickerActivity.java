@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.DialogActivities;
 
 import android.app.Activity;
 import android.content.Context;

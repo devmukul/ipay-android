@@ -107,7 +107,7 @@
     <string name="loading">Loading... </string>
     <string name="load_more">Load more...</string>
     <string name="balance_placeholder"> BDT</string>
-    <string name="balance_placeholder_not_available">1,450.00</string>
+    <string name="balance_placeholder_not_available">--.--</string>
     <string name="no_more_results">No more results to show</string>
     <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
     <string name="confirm_query">Are you sure?</string>

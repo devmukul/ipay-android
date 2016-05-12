@@ -32,4 +32,5 @@
     <dimen name="list_item_transaction_history_height">105dp</dimen>
     <dimen name="action_bar_default_elevation">4dp</dimen>
     <dimen name="list_item_icon_size">40dp</dimen>
+    <dimen name="review_item_vertical_spacing_dialog">12dp</dimen>
 </resources>

@@ -22,43 +22,35 @@
                 android:id="@+id/profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+
+                <bd.com.ipay.ipayskeleton.Customview.ProfileImageView
+                    android:id="@+id/profile_picture"
+                    style="@style/ReviewImageStyle">
+
+                </bd.com.ipay.ipayskeleton.Customview.ProfileImageView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-
-                    <bd.com.ipay.ipayskeleton.Customview.ProfileImageView
-                        android:id="@+id/introducer_profile_picture"
-                        style="@style/ReviewImageStyle">
-
-                    </bd.com.ipay.ipayskeleton.Customview.ProfileImageView>
-
-                    <LinearLayout
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_marginBottom="6dp"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:id="@+id/textview_name" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:layout_marginBottom="6dp"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:id="@+id/textview_name" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:id="@+id/textview_mobile_number" />
-
-                    </LinearLayout>
-
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:id="@+id/textview_mobile_number" />
 
                 </LinearLayout>
 
