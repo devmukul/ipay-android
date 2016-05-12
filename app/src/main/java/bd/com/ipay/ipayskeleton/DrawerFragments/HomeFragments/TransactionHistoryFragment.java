@@ -84,6 +84,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     private ImageView mToDatePicker;
     private Button clearDateFilterButton;
     private Button filterByDateButton;
+    private TextView mEmptyListTextView;
 
     private int historyPageCount = 0;
     private Integer type = null;
@@ -138,6 +139,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_transaction_history, container, false);
         getActivity().setTitle(R.string.transaction_history);
+
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
         SharedPreferences pref = getActivity()
                 .getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
@@ -486,6 +489,10 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                         }
 
                         hasNext = mTransactionHistoryResponse.isHasNext();
+                        if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
+                            mEmptyListTextView.setVisibility(View.GONE);
+                        else mEmptyListTextView.setVisibility(View.VISIBLE);
+
                         mTransactionHistoryAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {

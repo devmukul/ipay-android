@@ -1,42 +1,31 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ForgotPasswordActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPasswordRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPasswordResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
@@ -136,14 +125,15 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             // Delete +880 from the prefix
             String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(
                     SignupOrLoginActivity.mMobileNumber);
-            mUserNameLoginView.setText(Constants.BANGLADESH_COUNTRY_CODE + mobileNumberWithoutPrefix);
+            mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + mobileNumberWithoutPrefix);
         } else if (pref.contains(Constants.USERID)) {
-            mUserNameLoginView.setText(ContactEngine.trimPrefix(pref.getString(Constants.USERID, "")));
+            String userIdWithoutPrefix = ContactEngine.trimPrefix(pref.getString(Constants.USERID, ""));
+            mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + userIdWithoutPrefix);
         }
 
         // Auto Login
         if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
-            mPasswordLoginView.setText("q1q1q1q1");
+            mPasswordLoginView.setText("qqqqqqq1");
  //           mUserNameLoginView.setText("+8801677258077");
             attemptLogin();
         }
