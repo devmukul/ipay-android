@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,27 +35,23 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IntroducerFragment extends Fragment implements HttpResponseListener {
 
-    private ProgressDialog mProgressDialog;
-    private RecyclerView mRecyclerView;
-    private TextView mEmptyListTextView;
-    private ListAdapter mListAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    //introducer
     private GetIntroducerListResponse mIntroducerListResponse;
     private List<Introducer> mIntroducerList;
-    private HttpRequestGetAsyncTask mGetIntroducerTask = null;
+    private HttpRequestGetAsyncTask mGetIntroducersTask = null;
 
-    //introduced
     private GetIntroducedListResponse mIntroducedListResponse;
     private List<Introduced> mIntroducedList;
     private HttpRequestGetAsyncTask mGetIntroducedTask = null;
 
-    //sent request
     private GetRecommendationRequestsResponse mSentRequestListResponse;
     private List<RecommendationRequest> mRecommendationRequestList;
     private HttpRequestGetAsyncTask mGetSentRequestTask = null;
 
+    private ProgressDialog mProgressDialog;
+    private RecyclerView mRecyclerView;
+    private TextView mEmptyListTextView;
+    private IntroduceAdapter mIntroduceAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,13 +66,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_introducer_requests, container, false);
@@ -88,30 +76,30 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         mProgressDialog = new ProgressDialog(getActivity());
 
         if (Utilities.isConnectionAvailable(getActivity())) {
-           getIntroducerList();
-           getIntroducedList();
-           getSentRequestList();
+            getIntroducerList();
+            getIntroducedList();
+            getSentRequestList();
         }
 
-        mListAdapter = new ListAdapter();
+        mIntroduceAdapter = new IntroduceAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mListAdapter);
+        mRecyclerView.setAdapter(mIntroduceAdapter);
 
         return v;
     }
 
     private void getIntroducerList() {
-        if (mGetIntroducerTask != null) {
+        if (mGetIntroducersTask != null) {
             return;
         }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_introducer_list));
         mProgressDialog.show();
-        mGetIntroducerTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
+        mGetIntroducersTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_INTRODUCER_LIST, getActivity());
-        mGetIntroducerTask.mHttpResponseListener = this;
-        mGetIntroducerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mGetIntroducersTask.mHttpResponseListener = this;
+        mGetIntroducersTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getIntroducedList() {
@@ -144,7 +132,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
     public void httpResponseReceiver(String result) {
         if (result == null) {
             mProgressDialog.dismiss();
-            mGetIntroducerTask = null;
+            mGetIntroducersTask = null;
 
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
@@ -169,7 +157,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                             mIntroducerList.clear();
                             mIntroducerList.addAll(tempIntroducerClasses);
                         }
-                        mListAdapter.notifyDataSetChanged();
+                        mIntroduceAdapter.notifyDataSetChanged();
 
                     } else {
                         if (getActivity() != null)
@@ -182,7 +170,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             mProgressDialog.dismiss();
 
-        }else if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCED_LIST)) {
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCED_LIST)) {
             if (resultList.size() > 2) {
                 try {
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -196,7 +184,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                             mIntroducedList.clear();
                             mIntroducedList.addAll(tempIntroducedClasses);
                         }
-                        mListAdapter.notifyDataSetChanged();
+                        mIntroduceAdapter.notifyDataSetChanged();
 
                     } else {
                         if (getActivity() != null)
@@ -209,7 +197,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             mProgressDialog.dismiss();
 
-        }else if (resultList.get(0).equals(Constants.COMMAND_GET_SENT_REQUEST_LIST)) {
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_SENT_REQUEST_LIST)) {
             if (resultList.size() > 2) {
                 try {
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -223,7 +211,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                             mRecommendationRequestList.clear();
                             mRecommendationRequestList.addAll(tempIntroducerClasses);
                         }
-                        mListAdapter.notifyDataSetChanged();
+                        mIntroduceAdapter.notifyDataSetChanged();
 
                     } else {
                         if (getActivity() != null)
@@ -236,13 +224,15 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             mProgressDialog.dismiss();
 
         }
-        if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
+
+        if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null
+                && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
             mEmptyListTextView.setVisibility(View.VISIBLE);
         else mEmptyListTextView.setVisibility(View.GONE);
 
     }
 
-    private class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class IntroduceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int INTRODUCER_LIST_ITEM_VIEW = 1;
         private static final int INTRODUCER_LIST_HEADER_VIEW = 2;
@@ -252,7 +242,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         private static final int SENT_REQUEST_LIST_HEADER_VIEW = 6;
 
 
-        public ListAdapter() {
+        public IntroduceAdapter() {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -292,7 +282,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             }
 
-            private void setProfilePicture(String url,RoundedImageView pictureView,String name) {
+            private void setProfilePicture(String url, RoundedImageView pictureView, String name) {
 
                 int position = getAdapterPosition();
                 final int randomColor = position % 10;
@@ -350,7 +340,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 final String introducerName = mIntroducerList.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
                 String imageUrl = mIntroducerList.get(pos).getprofilePictureUrl();
-                setProfilePicture(imageUrl,mIntroducerProfilePictureView,introducerName);
+                setProfilePicture(imageUrl, mIntroducerProfilePictureView, introducerName);
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
             }
@@ -366,7 +356,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 final String introducedName = mIntroducedList.get(pos).getName();
                 final String introducedMobileNumber = mIntroducedList.get(pos).getMobileNumber();
                 String imageUrl = mIntroducedList.get(pos).getprofilePictureUrl();
-                setProfilePicture(imageUrl,mIntroducedProfilePictureView,introducedName);
+                setProfilePicture(imageUrl, mIntroducedProfilePictureView, introducedName);
                 mIntroducedName.setText(introducedName);
                 mIntroducedMobileNumber.setText(introducedMobileNumber);
             }
@@ -374,16 +364,16 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             public void bindViewForSentRequestList(int pos) {
 
                 if (mIntroducerList == null && mIntroducedList == null) pos = pos - 1;
-                else if(mIntroducedList == null){
+                else if (mIntroducedList == null) {
                     if (mIntroducerList.size() == 0) pos = pos - 1;
                     else pos = pos - mIntroducerList.size() - 2;
-                } else if(mIntroducerList == null){
+                } else if (mIntroducerList == null) {
                     if (mIntroducedList.size() == 0) pos = pos - 1;
                     else pos = pos - mIntroducedList.size() - 2;
-                } else{
-                    if(mIntroducedList.size() == 0 && mIntroducerList.size() == 0) pos = pos - 1;
-                    else if(mIntroducedList.size() == 0) pos = pos - mIntroducerList.size() - 2;
-                    else if(mIntroducerList.size() == 0) pos = pos - mIntroducedList.size() - 2;
+                } else {
+                    if (mIntroducedList.size() == 0 && mIntroducerList.size() == 0) pos = pos - 1;
+                    else if (mIntroducedList.size() == 0) pos = pos - mIntroducerList.size() - 2;
+                    else if (mIntroducerList.size() == 0) pos = pos - mIntroducedList.size() - 2;
                     else pos = pos - mIntroducedList.size() - mIntroducerList.size() - 3;
                 }
 
@@ -391,7 +381,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 final String RequestedMobileNumber = mRecommendationRequestList.get(pos).getMobileNumber();
                 final String requestStatus = mRecommendationRequestList.get(pos).getStatus();
                 String imageUrl = mRecommendationRequestList.get(pos).getProfilePictureUrl();
-                setProfilePicture(imageUrl,mRequestedProfilePictureView,RequestedName);
+                setProfilePicture(imageUrl, mRequestedProfilePictureView, RequestedName);
                 mRequestedName.setText(RequestedName);
                 mRequestedMobileNumber.setText(RequestedMobileNumber);
 
@@ -453,17 +443,17 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             View v;
 
-             if (viewType == INTRODUCER_LIST_ITEM_VIEW) {
+            if (viewType == INTRODUCER_LIST_ITEM_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introducer_list, parent, false);
                 IntroducerListItemViewHolder vh = new IntroducerListItemViewHolder(v);
                 return vh;
 
             } else if (viewType == INTRODUCER_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introducer_list_header, parent, false);
-                 IntroducerListHeaderViewHolder vh = new IntroducerListHeaderViewHolder(v);
+                IntroducerListHeaderViewHolder vh = new IntroducerListHeaderViewHolder(v);
                 return vh;
 
-            }else if (viewType == INTRODUCED_LIST_ITEM_VIEW) {
+            } else if (viewType == INTRODUCED_LIST_ITEM_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduced_list, parent, false);
                 IntroducedListItemViewHolder vh = new IntroducedListItemViewHolder(v);
                 return vh;
@@ -473,15 +463,14 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 IntroducedListHeaderViewHolder vh = new IntroducedListHeaderViewHolder(v);
                 return vh;
 
-            }
-            else if (viewType == SENT_REQUEST_LIST_HEADER_VIEW) {
+            } else if (viewType == SENT_REQUEST_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_sent_request_list_header, parent, false);
                 SentRequestListHeaderViewHolder vh = new SentRequestListHeaderViewHolder(v);
                 return vh;
 
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_sent_request_list, parent, false);
-                 SentRequestListItemViewHolder vh = new SentRequestListItemViewHolder(v);
+                SentRequestListItemViewHolder vh = new SentRequestListItemViewHolder(v);
                 return vh;
             }
         }
@@ -494,18 +483,17 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                     SentRequestListItemViewHolder vh = (SentRequestListItemViewHolder) holder;
                     vh.bindViewForSentRequestList(position);
 
-                }else if (holder instanceof SentRequestListHeaderViewHolder) {
+                } else if (holder instanceof SentRequestListHeaderViewHolder) {
                     SentRequestListHeaderViewHolder vh = (SentRequestListHeaderViewHolder) holder;
 
-                }else if (holder instanceof IntroducedListItemViewHolder) {
+                } else if (holder instanceof IntroducedListItemViewHolder) {
                     IntroducedListItemViewHolder vh = (IntroducedListItemViewHolder) holder;
                     vh.bindViewForIntroducedList(position);
 
-                }else if (holder instanceof IntroducedListHeaderViewHolder) {
+                } else if (holder instanceof IntroducedListHeaderViewHolder) {
                     IntroducedListHeaderViewHolder vh = (IntroducedListHeaderViewHolder) holder;
 
-                }
-                else if (holder instanceof IntroducerListHeaderViewHolder) {
+                } else if (holder instanceof IntroducerListHeaderViewHolder) {
                     IntroducerListHeaderViewHolder vh = (IntroducerListHeaderViewHolder) holder;
 
                 } else if (holder instanceof IntroducerListItemViewHolder) {
@@ -521,36 +509,37 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         @Override
         public int getItemCount() {
 
-            int IntroducerListSize = 0;
-            int IntroducedListSize = 0;
-            int SentRequestListSize = 0;
+            int introducerListSize = 0;
+            int introducedListSize = 0;
+            int recommendationRequestsListSize = 0;
 
-            if (mIntroducerList == null && mRecommendationRequestList == null && mIntroducedList==null) return 0;
+            if (mIntroducerList == null && mRecommendationRequestList == null && mIntroducedList == null)
+                return 0;
 
 
             // Get the sizes of the lists
             if (mRecommendationRequestList != null)
-                SentRequestListSize = mRecommendationRequestList.size();
+                recommendationRequestsListSize = mRecommendationRequestList.size();
             if (mIntroducerList != null)
-                IntroducerListSize = mIntroducerList.size();
+                introducerListSize = mIntroducerList.size();
             if (mIntroducedList != null)
-                IntroducedListSize = mIntroducedList.size();
+                introducedListSize = mIntroducedList.size();
 
 
-            if (IntroducerListSize > 0 && IntroducedListSize > 0 && SentRequestListSize > 0)
-                return 1 + IntroducerListSize + 1 + IntroducedListSize + 1 + SentRequestListSize;
-            else if (IntroducerListSize > 0 && IntroducedListSize > 0 && SentRequestListSize == 0)
-                return 1 + IntroducerListSize + 1 + IntroducedListSize ;
-            else if (IntroducerListSize > 0 && IntroducedListSize == 0 && SentRequestListSize > 0)
-                return 1 + IntroducerListSize + 1 + SentRequestListSize ;
-            else if (IntroducerListSize == 0 && IntroducedListSize > 0 && SentRequestListSize > 0)
-                return 1 + SentRequestListSize + 1 + IntroducedListSize ;
-            else if (IntroducerListSize > 0 && IntroducedListSize == 0 && SentRequestListSize == 0)
-                return 1 + IntroducerListSize  ;
-            else if (IntroducerListSize == 0 && IntroducedListSize > 0 && SentRequestListSize == 0)
-                return 1 + IntroducedListSize ;
-            else if (IntroducerListSize == 0 && IntroducedListSize == 0 && SentRequestListSize > 0)
-                return 1 + SentRequestListSize ;
+            if (introducerListSize > 0 && introducedListSize > 0 && recommendationRequestsListSize > 0)
+                return 1 + introducerListSize + 1 + introducedListSize + 1 + recommendationRequestsListSize;
+            else if (introducerListSize > 0 && introducedListSize > 0 && recommendationRequestsListSize == 0)
+                return 1 + introducerListSize + 1 + introducedListSize;
+            else if (introducerListSize > 0 && introducedListSize == 0 && recommendationRequestsListSize > 0)
+                return 1 + introducerListSize + 1 + recommendationRequestsListSize;
+            else if (introducerListSize == 0 && introducedListSize > 0 && recommendationRequestsListSize > 0)
+                return 1 + recommendationRequestsListSize + 1 + introducedListSize;
+            else if (introducerListSize > 0 && introducedListSize == 0 && recommendationRequestsListSize == 0)
+                return 1 + introducerListSize;
+            else if (introducerListSize == 0 && introducedListSize > 0 && recommendationRequestsListSize == 0)
+                return 1 + introducedListSize;
+            else if (introducerListSize == 0 && introducedListSize == 0 && recommendationRequestsListSize > 0)
+                return 1 + recommendationRequestsListSize;
             else return 0;
 
         }
@@ -558,61 +547,61 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         @Override
         public int getItemViewType(int position) {
 
-            int IntroducerListSize = 0;
-            int IntroducedListSize = 0;
-            int SentRequestListSize = 0;
+            int introducerListSize = 0;
+            int introducedListSize = 0;
+            int recommendationRequestsListSize = 0;
 
-            if (mRecommendationRequestList == null && mIntroducerList == null  && mIntroducedList==null)
+            if (mRecommendationRequestList == null && mIntroducerList == null && mIntroducedList == null)
                 return super.getItemViewType(position);
 
             if (mRecommendationRequestList != null)
-                SentRequestListSize = mRecommendationRequestList.size();
+                recommendationRequestsListSize = mRecommendationRequestList.size();
             if (mIntroducerList != null)
-                IntroducerListSize = mIntroducerList.size();
+                introducerListSize = mIntroducerList.size();
             if (mIntroducedList != null)
-                IntroducedListSize = mIntroducedList.size();
+                introducedListSize = mIntroducedList.size();
 
-            if (SentRequestListSize > 0 && IntroducerListSize > 0  && IntroducedListSize > 0) {
+            if (recommendationRequestsListSize > 0 && introducerListSize > 0 && introducedListSize > 0) {
                 if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
-                else if (position == IntroducerListSize + 1)
+                else if (position == introducerListSize + 1)
                     return INTRODUCED_LIST_HEADER_VIEW;
-                else if (position > IntroducerListSize + 1 && position < IntroducerListSize + 1 + IntroducedListSize + 1)
+                else if (position > introducerListSize + 1 && position < introducerListSize + 1 + introducedListSize + 1)
                     return INTRODUCED_LIST_ITEM_VIEW;
-                else if (position == IntroducerListSize + 1 + IntroducedListSize + 1)
+                else if (position == introducerListSize + 1 + introducedListSize + 1)
                     return SENT_REQUEST_LIST_HEADER_VIEW;
-                else if (position > IntroducerListSize + 1 + IntroducedListSize + 1)
+                else if (position > introducerListSize + 1 + introducedListSize + 1)
                     return SENT_REQUEST_LIST_ITEM_VIEW;
                 else return INTRODUCER_LIST_ITEM_VIEW;
 
-            }else if (SentRequestListSize > 0 && IntroducerListSize > 0  && IntroducedListSize == 0) {
+            } else if (recommendationRequestsListSize > 0 && introducerListSize > 0 && introducedListSize == 0) {
                 if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
-                else if (position == IntroducerListSize + 1)
+                else if (position == introducerListSize + 1)
                     return SENT_REQUEST_LIST_HEADER_VIEW;
-                 else if (position > IntroducerListSize + 1)
+                else if (position > introducerListSize + 1)
                     return SENT_REQUEST_LIST_ITEM_VIEW;
                 else return INTRODUCER_LIST_ITEM_VIEW;
 
-            } else if (SentRequestListSize > 0 && IntroducerListSize == 0  && IntroducedListSize > 0) {
+            } else if (recommendationRequestsListSize > 0 && introducerListSize == 0 && introducedListSize > 0) {
                 if (position == 0) return INTRODUCED_LIST_HEADER_VIEW;
-                else if (position == IntroducedListSize + 1)
+                else if (position == introducedListSize + 1)
                     return SENT_REQUEST_LIST_HEADER_VIEW;
-                else if (position > IntroducedListSize + 1)
+                else if (position > introducedListSize + 1)
                     return SENT_REQUEST_LIST_ITEM_VIEW;
                 else return INTRODUCED_LIST_ITEM_VIEW;
 
-            } else if (SentRequestListSize == 0 && IntroducerListSize > 0  && IntroducedListSize > 0) {
+            } else if (recommendationRequestsListSize == 0 && introducerListSize > 0 && introducedListSize > 0) {
                 if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
-                else if (position == IntroducerListSize + 1)
+                else if (position == introducerListSize + 1)
                     return INTRODUCED_LIST_HEADER_VIEW;
-                else if (position > IntroducerListSize + 1)
+                else if (position > introducerListSize + 1)
                     return INTRODUCED_LIST_ITEM_VIEW;
                 else return INTRODUCER_LIST_ITEM_VIEW;
 
-            } else if (SentRequestListSize > 0 && IntroducerListSize == 0 && IntroducedListSize == 0) {
+            } else if (recommendationRequestsListSize > 0 && introducerListSize == 0 && introducedListSize == 0) {
                 if (position == 0) return SENT_REQUEST_LIST_HEADER_VIEW;
-               else return SENT_REQUEST_LIST_ITEM_VIEW;
+                else return SENT_REQUEST_LIST_ITEM_VIEW;
 
-            } else if (SentRequestListSize == 0 && IntroducerListSize > 0 && IntroducedListSize == 0) {
+            } else if (recommendationRequestsListSize == 0 && introducerListSize > 0 && introducedListSize == 0) {
                 if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
                 else return INTRODUCER_LIST_ITEM_VIEW;
             }
