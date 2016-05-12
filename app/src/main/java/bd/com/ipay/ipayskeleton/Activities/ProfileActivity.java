@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.AddressFragment;
@@ -36,8 +37,22 @@ public class ProfileActivity extends BaseActivity {
         } else {
             switchToProfileCompletionFragment();
         }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+                getSupportFragmentManager().popBackStack();
+            else
+                finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
     public void switchToFragment(String targetFragment, Bundle bundle, boolean addToBackStack) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -70,6 +85,8 @@ public class ProfileActivity extends BaseActivity {
             case PHOTOID:
                 fragment = new DocumentListFragment();
                 break;
+            case PROFILE_COMPLETENESS:
+                fragment = new ProfileCompletionFragment();
             default:
                 fragment = new ProfileCompletionFragment();
         }

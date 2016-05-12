@@ -259,7 +259,10 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = true;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    public void changeMenuVisibility(int id, boolean visible) {
+        mNavigationView.getMenu().findItem(id).setVisible(visible);
+    }
+
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         // Handle navigation view item clicks here.
@@ -345,6 +348,9 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_trusted_network) {
 
             launchEditProfileActivity(PropertyConstants.TRUSTED_NETWORK, new Bundle());
+        } else if (id == R.id.nav_profile_completeness) {
+
+            launchEditProfileActivity(PropertyConstants.PROFILE_COMPLETENESS, new Bundle());
         }
     }
 

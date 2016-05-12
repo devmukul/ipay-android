@@ -80,6 +80,12 @@
                         android:id="@+id/nav_profile_documents"
                         android:title="@string/profile_documents"
                         android:icon="@drawable/ic_drawer_documents" />
+
+                    <item
+                        android:id="@+id/nav_profile_completeness"
+                        android:title="@string/profile_completeness"
+                        android:icon="@drawable/ic_drawer_profile_completeness"
+                        android:visible="false"/>
                 </group>
             </menu>
         </item>

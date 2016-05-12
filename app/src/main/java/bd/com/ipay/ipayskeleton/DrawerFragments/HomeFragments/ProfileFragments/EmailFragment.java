@@ -96,6 +96,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_email, container, false);
 
+        getActivity().setTitle(R.string.email);
+
         mAddNewEmailButton = (Button) v.findViewById(R.id.button_add_email);
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
 

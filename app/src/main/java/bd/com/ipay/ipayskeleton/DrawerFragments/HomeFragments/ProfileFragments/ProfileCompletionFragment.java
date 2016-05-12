@@ -40,6 +40,8 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_completion, container, false);
 
+        getActivity().setTitle(getString(R.string.profile_completeness));
+
         mProfileCompletionRecyclerView = (RecyclerView) v.findViewById(R.id.list_profile_completion);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
