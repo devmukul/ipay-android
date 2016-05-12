@@ -281,11 +281,11 @@ public class Utilities {
     }
 
     public static String formatTaka(BigDecimal amount) {
-        return String.format("\u09F3 %.2f BDT", amount);
+        return String.format("%.2f BDT", amount);
     }
 
     public static String formatTaka(double amount) {
-        return String.format("\u09F3 %.2f BDT", amount);
+        return String.format("%.2f BDT", amount);
     }
 
     public static void hideKeyboard(Activity activity) {

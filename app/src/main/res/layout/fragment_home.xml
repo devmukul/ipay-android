@@ -52,7 +52,7 @@
                         android:id="@+id/balance"
                         style="@style/TextStylePrimaryLarge"
                         android:layout_width="wrap_content"
-                        android:textSize="36sp"
+                        android:textSize="40sp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_marginTop="15dp"
@@ -98,19 +98,6 @@
 
                 </RelativeLayout>
 
-                <LinearLayout
-
-                    android:id="@+id/options_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorDivider" />
-
-                </LinearLayout>
 
             </LinearLayout>
 

@@ -596,7 +596,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Do whatever you want on clicking the normal items
+                        //TODO show absolute time of activity on a Toast or something similar.
                     }
                 });
             }
