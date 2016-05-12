@@ -1,11 +1,12 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
 
-public class Introducer {
+
+public class Introduced {
     private String name;
     private String mobileNumber;
     private String profilePictureUrl;
 
-    public Introducer() {
+    public Introduced() {
 
     }
 

@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +72,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.introducer_profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);

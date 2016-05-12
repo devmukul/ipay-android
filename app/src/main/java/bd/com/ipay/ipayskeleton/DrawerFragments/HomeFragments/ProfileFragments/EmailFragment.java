@@ -317,6 +317,11 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     loadEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        // Send the verification status
+                        long emailID = mAddNewEmailResponse.getId();
+                        verifyEmail(emailID);
+
                     }
                 } else {
                     if (getActivity() != null) {

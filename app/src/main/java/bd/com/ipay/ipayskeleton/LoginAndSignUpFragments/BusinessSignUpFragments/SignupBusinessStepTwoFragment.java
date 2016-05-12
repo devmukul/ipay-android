@@ -27,9 +27,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-/**
- * Created by farzana on 5/3/16.
- */
 public class SignupBusinessStepTwoFragment extends Fragment {
 
     private Spinner mBusinessType;

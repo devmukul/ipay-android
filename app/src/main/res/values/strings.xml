@@ -58,6 +58,8 @@
     <string name="empty_events_list">No recent events found.</string>
     <string name="empty_recommendation_request_list">No request to introduce right now.</string>
     <string name="empty_transaction_history">No transaction to show right now.</string>
+    <string name="empty_list">Nothing to show right now.</string>
+    <string name="empty_invitation_request_list">No invitation to show right now.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="could_not_update_contacts">Could not update the contact list</string>
@@ -573,7 +575,6 @@
     <string name="profile_completeness">Profile Completeness</string>
     <string name="edit_basic_info">Edit Basic Info</string>
     <string name="edit_address">Edit Address</string>
-    <string name="select_a_contact">Select a Contact</string>
 
     <string-array name="account_types">
         <item>Personal</item>

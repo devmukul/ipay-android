@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite;
 
 import java.util.List;
 
@@ -14,6 +14,10 @@ public class GetInviteInfoResponse {
         this.message = message;
         this.totalLimit = totalLimit;
         this.invitees = invitees;
+    }
+
+    public List<String> getInvitees() {
+        return invitees;
     }
 
     @Override

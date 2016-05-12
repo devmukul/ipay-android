@@ -30,10 +30,6 @@
             android:title="@string/topup"
             android:visible="false" />
         <item
-            android:id="@+id/nav_identification"
-            android:icon="@drawable/ic_drawer_identification"
-            android:title="@string/introduce" />
-        <item
             android:id="@+id/nav_event"
             android:icon="@drawable/ic_event_black_24dp"
             android:title="@string/events"
@@ -59,6 +55,16 @@
                         android:id="@+id/nav_profile_addresses"
                         android:title="@string/profile_address"
                         android:icon="@drawable/ic_drawer_address" />
+
+                    <item
+                        android:id="@+id/nav_identification"
+                        android:icon="@drawable/ic_drawer_identification"
+                        android:title="@string/introduce" />
+
+                    <item
+                        android:id="@+id/nav_invitation"
+                        android:icon="@drawable/ic_drawer_invitation"
+                        android:title="@string/invitation" />
 
                     <item
                         android:id="@+id/nav_email_addresses"

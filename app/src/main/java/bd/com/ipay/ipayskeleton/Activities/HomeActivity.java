@@ -51,8 +51,10 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.D
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EmailFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.FragmentEditAddress;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.IntroducerFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.InvitationRequestsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.RecommendationRequestsFragment;
 import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
@@ -311,8 +313,13 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_identification) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new RecommendationRequestsFragment()).commit();
+            switchedToHomeFragment = false;
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new RecommendationRequestsFragment()).commit();
+        }  else if (id == R.id.nav_invitation) {
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new InvitationRequestsFragment()).commit();
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_logout) {

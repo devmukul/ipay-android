@@ -117,7 +117,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.profile_basic_info);
 
-        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
+        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.introducer_profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.RecommendationAndInvite;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite;
 
 public class AskForRecommendationResponse {
 
