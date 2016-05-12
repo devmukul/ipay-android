@@ -229,7 +229,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
+                new RequestMoneyAcceptRejectOrCancelRequest(id, "");
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
@@ -246,7 +246,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mProgressDialog.setMessage(getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
+                new RequestMoneyAcceptRejectOrCancelRequest(id, "");
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
