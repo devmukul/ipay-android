@@ -86,7 +86,7 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
         mProgressDialog.show();
 
         mGetInvitationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
-                Constants.BASE_URL + "/" + Constants.URL_GET_INVITE_INFO, getActivity(), this);
+                Constants.BASE_URL_MM + "/" + Constants.URL_GET_INVITE_INFO, getActivity(), this);
         mGetInvitationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }

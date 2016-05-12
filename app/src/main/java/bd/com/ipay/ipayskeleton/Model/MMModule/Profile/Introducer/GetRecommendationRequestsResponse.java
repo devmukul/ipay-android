@@ -5,7 +5,7 @@ import java.util.List;
 
 public class GetRecommendationRequestsResponse {
     private String message;
-    private List<SentRequest> verificationRequests;
+    private List<RecommendationRequest> verificationRequests;
 
     public GetRecommendationRequestsResponse() {}
 
@@ -13,5 +13,5 @@ public class GetRecommendationRequestsResponse {
         return message;
     }
 
-    public List<SentRequest> getSentRequestList() { return verificationRequests; }
+    public List<RecommendationRequest> getSentRequestList() { return verificationRequests; }
 }

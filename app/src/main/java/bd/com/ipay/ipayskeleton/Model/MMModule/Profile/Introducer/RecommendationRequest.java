@@ -1,12 +1,12 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer;
 
-public class SentRequest {
+public class RecommendationRequest {
     private String name;
     private String mobileNumber;
     private String profilePictureUrl;
     private String status;
 
-    public SentRequest() {
+    public RecommendationRequest() {
     }
 
     public String getName() {

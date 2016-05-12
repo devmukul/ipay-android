@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducerL
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetRecommendationRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introduced;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introducer;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.SentRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.RecommendationRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -54,7 +54,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
     //sent request
     private GetRecommendationRequestsResponse mSentRequestListResponse;
-    private List<SentRequest> mSentRequestList;
+    private List<RecommendationRequest> mRecommendationRequestList;
     private HttpRequestGetAsyncTask mGetSentRequestTask = null;
 
 
@@ -215,13 +215,13 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                         mSentRequestListResponse = gson.fromJson(resultList.get(2), GetRecommendationRequestsResponse.class);
 
-                        if (mSentRequestList == null) {
-                            mSentRequestList = mSentRequestListResponse.getSentRequestList();
+                        if (mRecommendationRequestList == null) {
+                            mRecommendationRequestList = mSentRequestListResponse.getSentRequestList();
                         } else {
-                            List<SentRequest> tempIntroducerClasses;
+                            List<RecommendationRequest> tempIntroducerClasses;
                             tempIntroducerClasses = mSentRequestListResponse.getSentRequestList();
-                            mSentRequestList.clear();
-                            mSentRequestList.addAll(tempIntroducerClasses);
+                            mRecommendationRequestList.clear();
+                            mRecommendationRequestList.addAll(tempIntroducerClasses);
                         }
                         mListAdapter.notifyDataSetChanged();
 
@@ -236,7 +236,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             mProgressDialog.dismiss();
 
         }
-        if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null && mIntroducedList.size() == 0 && mSentRequestList != null && mSentRequestList.size() == 0)
+        if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
             mEmptyListTextView.setVisibility(View.VISIBLE);
         else mEmptyListTextView.setVisibility(View.GONE);
 
@@ -387,10 +387,10 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                     else pos = pos - mIntroducedList.size() - mIntroducerList.size() - 3;
                 }
 
-                final String RequestedName = mSentRequestList.get(pos).getName();
-                final String RequestedMobileNumber = mSentRequestList.get(pos).getMobileNumber();
-                final String requestStatus = mSentRequestList.get(pos).getStatus();
-                String imageUrl = mSentRequestList.get(pos).getProfilePictureUrl();
+                final String RequestedName = mRecommendationRequestList.get(pos).getName();
+                final String RequestedMobileNumber = mRecommendationRequestList.get(pos).getMobileNumber();
+                final String requestStatus = mRecommendationRequestList.get(pos).getStatus();
+                String imageUrl = mRecommendationRequestList.get(pos).getProfilePictureUrl();
                 setProfilePicture(imageUrl,mRequestedProfilePictureView,RequestedName);
                 mRequestedName.setText(RequestedName);
                 mRequestedMobileNumber.setText(RequestedMobileNumber);
@@ -525,12 +525,12 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             int IntroducedListSize = 0;
             int SentRequestListSize = 0;
 
-            if (mIntroducerList == null && mSentRequestList == null && mIntroducedList==null) return 0;
+            if (mIntroducerList == null && mRecommendationRequestList == null && mIntroducedList==null) return 0;
 
 
             // Get the sizes of the lists
-            if (mSentRequestList != null)
-                SentRequestListSize = mSentRequestList.size();
+            if (mRecommendationRequestList != null)
+                SentRequestListSize = mRecommendationRequestList.size();
             if (mIntroducerList != null)
                 IntroducerListSize = mIntroducerList.size();
             if (mIntroducedList != null)
@@ -562,11 +562,11 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             int IntroducedListSize = 0;
             int SentRequestListSize = 0;
 
-            if (mSentRequestList == null && mIntroducerList == null  && mIntroducedList==null)
+            if (mRecommendationRequestList == null && mIntroducerList == null  && mIntroducedList==null)
                 return super.getItemViewType(position);
 
-            if (mSentRequestList != null)
-                SentRequestListSize = mSentRequestList.size();
+            if (mRecommendationRequestList != null)
+                SentRequestListSize = mRecommendationRequestList.size();
             if (mIntroducerList != null)
                 IntroducerListSize = mIntroducerList.size();
             if (mIntroducedList != null)
