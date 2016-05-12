@@ -333,6 +333,7 @@ public class Constants {
     public static final String FIREBASE_SYNCED = "synced";
 
     public static final String BANGLADESH_COUNTRY_CODE = "+880";
+    public static final int ACTIVITY_LOG_COUNT = 10;
 
     public static final int TRANSACTION_TYPE_TOP_UP_REQUEST = 4097;
     public static final int TRANSACTION_TYPE_TOP_UP_RESPONSE = 4098;
