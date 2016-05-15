@@ -1,13 +1,13 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
+import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,18 +15,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.devspark.progressfragment.ProgressFragment;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
+import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.SendInviteRequest;
@@ -42,14 +48,13 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.S
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public abstract class BaseContactsFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>,
+public abstract class BaseContactsFragment extends ProgressFragment implements
         SearchView.OnQueryTextListener,
         HttpResponseListener {
 
     private BottomSheetLayout mBottomSheetLayout;
 
-    protected final int[] COLORS = {
+    protected final int[] PROFILE_PICTURE_BACKGROUNDS = {
             R.color.background_default,
             R.color.background_blue,
             R.color.background_bright_pink,
@@ -61,6 +66,20 @@ public abstract class BaseContactsFragment extends Fragment implements
             R.color.background_violet,
             R.color.background_yellow,
             R.color.background_azure
+    };
+
+    protected final int[] LIST_ITEM_BACKGROUNDS = {
+            R.drawable.background_portrait_circle,
+            R.drawable.background_portrait_circle_blue,
+            R.drawable.background_portrait_circle_brightpink,
+            R.drawable.background_portrait_circle_cyan,
+            R.drawable.background_portrait_circle_megenta,
+            R.drawable.background_portrait_circle_orange,
+            R.drawable.background_portrait_circle_red,
+            R.drawable.background_portrait_circle_springgreen,
+            R.drawable.background_portrait_circle_violet,
+            R.drawable.background_portrait_circle_yellow,
+            R.drawable.background_portrait_circle_azure
     };
 
     // When a contact item is clicked, we need to access its name and number from the sheet view.
@@ -327,7 +346,6 @@ public abstract class BaseContactsFragment extends Fragment implements
         }
     }
 
-
     @Override
     public void httpResponseReceiver(String result) {
         if (result == null) {
@@ -432,5 +450,180 @@ public abstract class BaseContactsFragment extends Fragment implements
 
     protected void setSelectedNumber(String contactNumber) {
         this.mSelectedNumber = contactNumber;
+    }
+
+
+    public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private static final int EMPTY_VIEW = 10;
+        private static final int FRIEND_VIEW = 100;
+
+        private List<FriendNode> mAllFriendList;
+        private List<FriendNode> mFilteredFriendList;
+
+        public ContactListAdapter(List<FriendNode> friendList) {
+            mAllFriendList = friendList;
+            mFilteredFriendList = new ArrayList<>(mAllFriendList);
+        }
+
+        public class EmptyViewHolder extends RecyclerView.ViewHolder {
+            public TextView mEmptyDescription;
+
+            public EmptyViewHolder(View itemView) {
+                super(itemView);
+                mEmptyDescription = (TextView) itemView.findViewById(R.id.empty_description);
+            }
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private View itemView;
+
+            private TextView mPortraitTextView;
+            private TextView mNameView;
+            private RoundedImageView mPortrait;
+            private TextView mMobileNumberView;
+            private ImageView isSubscriber;
+            private ImageView mVerificationStatus;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                this.itemView = itemView;
+
+                mPortraitTextView = (TextView) itemView.findViewById(R.id.portraitTxt);
+                mNameView = (TextView) itemView.findViewById(R.id.name);
+                mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
+                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                isSubscriber = (ImageView) itemView.findViewById(R.id.is_subscriber);
+                mVerificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
+            }
+
+            public void bindView(int pos) {
+
+                final FriendNode friend = mAllFriendList.get(pos);
+
+                final String name = friend.getInfo().getName();
+                final String phoneNumber = friend.getPhoneNumber();
+                final String profilePictureUrl = friend.getInfo().getProfilePictureUrl();
+                
+                mNameView.setText(name);
+                mMobileNumberView.setText(phoneNumber);
+
+                if (friend.getInfo().isFriend()) {
+                    isSubscriber.setVisibility(View.VISIBLE);
+                }
+                else {
+                    isSubscriber.setVisibility(View.GONE);
+                }
+
+                if (friend.getInfo().isVerified()) {
+                    mVerificationStatus.setVisibility(View.VISIBLE);
+                } else {
+                    mVerificationStatus.setVisibility(View.GONE);
+                }
+
+                if (name.startsWith("+") && name.length() > 1)
+                    mPortraitTextView.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
+                else if (name.length() > 0)
+                    mPortraitTextView.setText(String.valueOf(name.charAt(0)).toUpperCase());
+
+                int randomListItemBackgroundColor = LIST_ITEM_BACKGROUNDS[getAdapterPosition() % LIST_ITEM_BACKGROUNDS.length];
+                mPortraitTextView.setBackgroundResource(randomListItemBackgroundColor);
+
+                if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) Glide.with(getActivity())
+                        .load(profilePictureUrl)
+                        .crossFade()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(mPortrait);
+                else Glide.with(getActivity())
+                        .load(android.R.color.transparent)
+                        .crossFade()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(mPortrait);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setSelectedName(name);
+                        setSelectedNumber(phoneNumber);
+
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
+
+                        // Add a delay to hide keyboard and then open up the bottom sheet
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int randomProfileBackgroundColor = PROFILE_PICTURE_BACKGROUNDS[getAdapterPosition() % PROFILE_PICTURE_BACKGROUNDS.length];
+                                int verificationStatus = (friend.getInfo().isVerified() ? DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
+                                int accountType = friend.getInfo().getAccountType();
+
+                                if (friend.getInfo().isVerified()) {
+                                    showNonSubscriberSheet();
+                                } else {
+                                    showSubscriberSheet(verificationStatus);
+                                }
+                                setContactInformationInSheet(name,
+                                        phoneNumber, profilePictureUrl, randomProfileBackgroundColor, verificationStatus, accountType);
+                            }
+                        }, 100);
+                    }
+                });
+            }
+
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v;
+
+            if (viewType == EMPTY_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
+                EmptyViewHolder vh = new EmptyViewHolder(v);
+                return vh;
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_contact, parent, false);
+                ViewHolder vh = new ViewHolder(v);
+                return vh;
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+
+                if (holder instanceof ViewHolder) {
+                    ViewHolder vh = (ViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof EmptyViewHolder) {
+                    EmptyViewHolder vh = (EmptyViewHolder) holder;
+                    vh.mEmptyDescription.setText(getString(R.string.no_contacts));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+
+            if (mFilteredFriendList == null) {
+                return 0;
+            }
+
+            return mFilteredFriendList.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (mFilteredFriendList == null)
+                return EMPTY_VIEW;
+            else if (mFilteredFriendList.size() == 0)
+                return EMPTY_VIEW;
+            else
+                return FRIEND_VIEW;
+        }
     }
 }

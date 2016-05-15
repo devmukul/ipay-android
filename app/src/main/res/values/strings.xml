@@ -589,6 +589,7 @@
     <string name="progress_dialog_introduced_list">Fetching list of introduced people by me...</string>
     <string name="progress_dialog_sent_request_list">Fetching recommendation requests list...</string>
     <string name="progress_dialog_invitation_list">Fetching invitation requests...</string>
+    <string name="failed_loading_friends">Failed to load friend list</string>
 
     <string-array name="account_types">
         <item>Personal</item>

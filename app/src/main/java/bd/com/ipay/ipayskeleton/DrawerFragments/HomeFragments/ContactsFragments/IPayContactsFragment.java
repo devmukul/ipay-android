@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +23,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
-import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -35,7 +34,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
  * Pass (Constants.VERIFIED_USERS_ONLY, true) in the argument bundle to show only the
  * verified iPay users.
  */
-public class IPayContactsFragment extends BaseContactsFragment {
+public class IPayContactsFragment extends BaseContactsFragment
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int CONTACTS_QUERY_LOADER = 0;
 
@@ -151,6 +151,7 @@ public class IPayContactsFragment extends BaseContactsFragment {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         miPayAdapter.swapCursor(data);
+        setContentShown(true);
     }
 
     @Override
@@ -215,9 +216,6 @@ public class IPayContactsFragment extends BaseContactsFragment {
                 index = mCursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
                 final int accountType = mCursor.getInt(index);
 
-                int position = getAdapterPosition();
-                final int randomColor = position % 10;
-
                 final String imageUrl;
 
                 // Set profile pic
@@ -242,28 +240,9 @@ public class IPayContactsFragment extends BaseContactsFragment {
                     mPortraitTextView.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
                 else mPortraitTextView.setText(String.valueOf(name.charAt(0)).toUpperCase());
 
-                if (randomColor == 0)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle);
-                else if (randomColor == 1)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_blue);
-                else if (randomColor == 2)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_brightpink);
-                else if (randomColor == 3)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_cyan);
-                else if (randomColor == 4)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_megenta);
-                else if (randomColor == 5)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_orange);
-                else if (randomColor == 6)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_red);
-                else if (randomColor == 7)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_springgreen);
-                else if (randomColor == 8)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_violet);
-                else if (randomColor == 9)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_yellow);
-                else
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_azure);
+
+                int randomListItemBackgroundColor = LIST_ITEM_BACKGROUNDS[getAdapterPosition() % LIST_ITEM_BACKGROUNDS.length];
+                mPortraitTextView.setBackgroundResource(randomListItemBackgroundColor);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -289,10 +268,11 @@ public class IPayContactsFragment extends BaseContactsFragment {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
+                                    int randomProfileBackgroundColor = PROFILE_PICTURE_BACKGROUNDS[getAdapterPosition() % PROFILE_PICTURE_BACKGROUNDS.length];
 
                                     showSubscriberSheet(verificationStatus);
                                     setContactInformationInSheet(name,
-                                            mobileNumber, imageUrl, COLORS[randomColor],
+                                            mobileNumber, imageUrl, randomProfileBackgroundColor,
                                             verificationStatus, accountType);
                                 }
                             }, 100);

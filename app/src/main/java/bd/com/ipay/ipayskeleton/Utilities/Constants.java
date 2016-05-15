@@ -90,10 +90,11 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
+    public static final String BASE_URL_FRIEND;
 
     // For Images
     public static final String BASE_URL_IMAGE_SERVER;
@@ -110,24 +111,28 @@ public class Constants {
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
+            BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
 
         } else if (SERVER_TYPE == 2) {
 
             BASE_URL_MM = "http://stage.ipay.com.bd:8085/api/v1/";
             BASE_URL_SM = "http://10.40.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
+            BASE_URL_FRIEND = "http://stage.ipay.com.bd/friend/v1/";
 
         } else if (SERVER_TYPE == 3) {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "https://www.ipay.com.bd";
+            BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
 
         } else {
 
             BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
+            BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
         }
     }
 
@@ -203,6 +208,9 @@ public class Constants {
     public static final String URL_GET_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
     public static final String URL_POST_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
     public static final String URL_SET_RECOVERY_PERSON = "/recovery";
+
+    public static final String URL_GET_CONTACTS = "getfriends";
+    public static final String URL_ADD_CONTACT = "addfriends";
 
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
@@ -300,6 +308,8 @@ public class Constants {
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
     public static final String COMMAND_GET_MONEY_REQUESTS = "COMMAND_GET_MONEY_REQUESTS";
     public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
+    public static final String COMMAND_GET_CONTACTS = "COMMAND_GET_CONTACTS";
+    public static final String COMMAND_ADD_CONTACT = "COMMAND_ADD_CONTACT";
 
 
     // Resource

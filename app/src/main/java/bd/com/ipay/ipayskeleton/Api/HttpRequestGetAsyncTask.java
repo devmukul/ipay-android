@@ -123,7 +123,7 @@ public class HttpRequestGetAsyncTask extends AsyncTask<Void, Void, String> {
 
         if (Constants.DEBUG) {
             if (result == null)
-                Log.e(Constants.RESULT, "NULL");
+                Log.e(Constants.RESULT, API_COMMAND + " NULL");
             else
                 Log.w(Constants.RESULT, Constants.GET_REQUEST + result);
         }

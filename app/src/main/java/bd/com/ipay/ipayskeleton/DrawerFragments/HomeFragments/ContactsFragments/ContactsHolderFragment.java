@@ -28,9 +28,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     public static GetInviteInfoResponse mGetInviteInfoResponse;
 
     private BottomSheetLayout mBottomSheetLayout;
-    private IPayContactsFragment iPayContactsFragment;
-    private AllContactsFragment allContactsFragment;
-
     private Button mAllContactsSelector;
     private Button miPayContactsSelector;
 
@@ -41,11 +38,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
         mAllContactsSelector = (Button) v.findViewById(R.id.button_contacts_all);
         miPayContactsSelector = (Button) v.findViewById(R.id.button_contacts_ipay);
-
-        iPayContactsFragment = new IPayContactsFragment();
-        allContactsFragment = new AllContactsFragment();
-        iPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-        allContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
 
         mAllContactsSelector.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +85,11 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             @Override
             public void run() {
                 try {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
+                        AllContactsFragment allContactsFragment = new AllContactsFragment();
+                        allContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, allContactsFragment).commit();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -110,6 +105,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    IPayContactsFragment iPayContactsFragment = new IPayContactsFragment();
+                    iPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, iPayContactsFragment).commit();
                 }
             }, 300);
