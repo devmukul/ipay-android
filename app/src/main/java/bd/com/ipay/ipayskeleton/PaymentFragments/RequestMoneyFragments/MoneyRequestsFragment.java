@@ -130,6 +130,9 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
             return;
         }
 
+        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.show();
+
         SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
 
         int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
