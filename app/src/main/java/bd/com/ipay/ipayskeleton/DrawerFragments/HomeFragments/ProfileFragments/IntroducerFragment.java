@@ -44,6 +44,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class IntroducerFragment extends Fragment implements HttpResponseListener {
 
     private final int PICK_CONTACT_REQUEST = 100;
+    private int MINIMUM_INTRODUCER_COUNT = 2;           // Default value
 
     private GetIntroducerListResponse mIntroducerListResponse;
     private HttpRequestGetAsyncTask mGetIntroducersTask = null;
@@ -182,6 +183,7 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
                         if (mIntroducerList == null) {
                             mIntroducerList = mIntroducerListResponse.getIntroducers();
+                            MINIMUM_INTRODUCER_COUNT = mIntroducerListResponse.getRequiredForProfileCompletion();
                         } else {
                             List<Introducer> tempIntroducerClasses;
                             tempIntroducerClasses = mIntroducerListResponse.getIntroducers();
@@ -310,7 +312,8 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             private RoundedImageView mIntroducerProfilePictureView;
 
             private TextView mIntroducedName;
-            private RelativeLayout mIntroducerListHeaderLayout;
+            private RelativeLayout mCompleteIntroducerHeaderLayout;
+            private TextView mIntroducerStatusTextView;
             private Button mButtonAskForRecommendation;
             private TextView mIntroducedMobileNumber;
             private RoundedImageView mIntroducedProfilePictureView;
@@ -332,7 +335,8 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 mIntroducedName = (TextView) itemView.findViewById(R.id.introduced_name);
                 mIntroducedMobileNumber = (TextView) itemView.findViewById(R.id.introduced_mobile_number);
                 mIntroducedProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
-                mIntroducerListHeaderLayout = (RelativeLayout) itemView.findViewById(R.id.complete_introduction_header);
+                mCompleteIntroducerHeaderLayout = (RelativeLayout) itemView.findViewById(R.id.complete_introduction_header);
+                mIntroducerStatusTextView = (TextView) itemView.findViewById(R.id.intoduce_status);
                 mButtonAskForRecommendation = (Button) itemView.findViewById(R.id.button_ask_for_recommendation);
 
                 mRequestedName = (TextView) itemView.findViewById(R.id.requested_name);
@@ -423,11 +427,11 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
             public void bindViewForIntroducerListHeader(int pos) {
 
-                // TODO: get the MINIMUM_INTRODUCER_COUNT from the list response
-                int MINIMUM_INTRODUCER_COUNT = 2;
-                if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT)
-                    mIntroducerListHeaderLayout.setVisibility(View.VISIBLE);
-                else mIntroducerListHeaderLayout.setVisibility(View.GONE);
+                if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT) {
+                    mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
+                    mIntroducerStatusTextView.setText(getString(R.string.you_need_to_have) + MINIMUM_INTRODUCER_COUNT
+                            + getString(R.string.introducers_to_complete_the_account_verification_process));
+                } else mCompleteIntroducerHeaderLayout.setVisibility(View.GONE);
 
                 mButtonAskForRecommendation.setOnClickListener(new View.OnClickListener() {
                     @Override
