@@ -150,40 +150,42 @@ public class InvoicesReceivedFragment extends Fragment implements HttpResponseLi
         mPendingPaymentsRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    // TODO ask for pin before making request
     private void rejectPaymentRequest(Long id) {
 
-        if (mRejectPaymentTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
-                new PaymentAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
-        mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
-        mRejectPaymentTask.mHttpResponseListener = this;
-        mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        if (mRejectPaymentTask != null) {
+//            return;
+//        }
+//
+//        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
+//        mProgressDialog.show();
+//        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
+//                new PaymentAcceptRejectOrCancelRequest(id);
+//        Gson gson = new Gson();
+//        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
+//        mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
+//                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+//        mRejectPaymentTask.mHttpResponseListener = this;
+//        mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    // TODO ask for pin before making request
     private void acceptPaymentRequest(Long id) {
 
-        if (mAcceptPaymentTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_accepted));
-        mProgressDialog.show();
-        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
-                new PaymentAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
-        mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
-        mAcceptPaymentTask.mHttpResponseListener = this;
-        mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        if (mAcceptPaymentTask != null) {
+//            return;
+//        }
+//
+//        mProgressDialog.setMessage(getString(R.string.progress_dialog_accepted));
+//        mProgressDialog.show();
+//        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
+//                new PaymentAcceptRejectOrCancelRequest(id);
+//        Gson gson = new Gson();
+//        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
+//        mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
+//                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
+//        mAcceptPaymentTask.mHttpResponseListener = this;
+//        mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void showAlertDialogue(String msg, final int action, final long id, BigDecimal amount) {

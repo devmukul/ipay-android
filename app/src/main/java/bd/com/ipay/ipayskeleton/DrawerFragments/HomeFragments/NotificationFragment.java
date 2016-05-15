@@ -33,10 +33,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.Customview.Dialogs.RequestMoneyRequestReviewDialog;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
@@ -62,10 +60,6 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
 
     private HttpRequestPostAsyncTask mServiceChargeTask = null;
     private GetServiceChargeResponse mGetServiceChargeResponse;
-
-    private HttpRequestPostAsyncTask mRejectPaymentTask = null;
-    private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
-    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
 
     private HttpRequestPostAsyncTask mRecommendActionTask = null;
     private RecommendationActionResponse mRecommendationActionResponse;
@@ -95,6 +89,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
     private long mMoneyRequestId;
     private String mTitle;
     private String mDescription;
+    private int mServiceID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -202,8 +197,8 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
     }
 
     private void showReviewDialog() {
-        RequestMoneyRequestReviewDialog dialog = new RequestMoneyRequestReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, new ReviewDialogFinishListener() {
+        NotificationReviewDialog dialog = new NotificationReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, mServiceID, new ReviewDialogFinishListener() {
             @Override
             public void onReviewFinish() {
                 refreshNotificationList();
@@ -237,42 +232,6 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                 Constants.BASE_URL_MM + Constants.URL_RECOMMEND_ACTION, json, getActivity());
         mRecommendActionTask.mHttpResponseListener = this;
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void rejectPaymentRequest(Long id) {
-
-        if (mRejectPaymentTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
-                new PaymentAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
-        mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
-        mRejectPaymentTask.mHttpResponseListener = this;
-        mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void acceptPaymentRequest(Long id) {
-
-        if (mAcceptPaymentTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_accepted));
-        mProgressDialog.show();
-        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
-                new PaymentAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
-        mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
-        mAcceptPaymentTask.mHttpResponseListener = this;
-        mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -358,78 +317,6 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
             }
 
             mServiceChargeTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_REJECT_PAYMENT_REQUEST)) {
-
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mPaymentAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
-                                PaymentAcceptRejectOrCancelResponse.class);
-                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
-                        // Refresh the pending list
-                        if (moneyRequestList != null)
-                            moneyRequestList.clear();
-                        moneyRequestList = null;
-                        pageCount = 0;
-
-                        // TODO: get this from notification table in sqlite
-                        getNotifications();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-
-            mProgressDialog.dismiss();
-            mRejectPaymentTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
-
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mPaymentAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
-                                PaymentAcceptRejectOrCancelResponse.class);
-                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
-                        // Refresh the pending list
-                        if (moneyRequestList != null)
-                            moneyRequestList.clear();
-                        moneyRequestList = null;
-                        pageCount = 0;
-
-                        // TODO: get this from notification table in sqlite
-                        getNotifications();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-
-            mProgressDialog.dismiss();
-            mAcceptPaymentTask = null;
-
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS)) {
 
             if (resultList.size() > 2) {
@@ -602,8 +489,12 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                         mPhotoUri = imageUrl;
                         mTitle = title;
                         mDescription = description;
+                        mServiceID = serviceID;
 
-                        attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+                        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+                            attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+                        else
+                            attemptGetServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
                     }
                 });
 

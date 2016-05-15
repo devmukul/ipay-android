@@ -27,7 +27,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.Customview.Dialogs.RequestMoneyRequestReviewDialog;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
@@ -148,8 +148,9 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
     }
 
     private void showReviewDialog() {
-        RequestMoneyRequestReviewDialog dialog = new RequestMoneyRequestReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, new ReviewDialogFinishListener() {
+        NotificationReviewDialog dialog = new NotificationReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, Constants.SERVICE_ID_REQUEST_MONEY,
+                new ReviewDialogFinishListener() {
             @Override
             public void onReviewFinish() {
                 refreshMoneyRequestList();
