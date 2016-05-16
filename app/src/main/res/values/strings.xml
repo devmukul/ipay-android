@@ -135,7 +135,7 @@
     <string name="invoices_sent">Sent Invoices</string>
     <string name="invoices_received">Invoices Received</string>
     <string name="request_from_other">Requests from others</string>
-    <string name="activity_log">Activity Log</string>
+    <string name="activity_log">Recent Activities</string>
     <string name="payments">Payments</string>
     <string name="whats_new">What\u0027s new in iPay</string>
     <string name="please_enter_an_account_name">Please provide your Account Name and try again</string>
@@ -355,11 +355,11 @@
     <string name="bank_accounts">Bank Accounts</string>
     <string name="bank_branch">Select Branch</string>
     <string name="logout">Log out</string>
-    <string name="topup">Mobile Recharge</string>
+    <string name="topup">Mobile Top up</string>
     <string name="transaction_history">Transaction History</string>
     <string name="notification">Notification</string>
     <string name="settings">Settings</string>
-    <string name="account_settings">Account Settings</string>
+    <string name="security_settings">Security Settings</string>
     <string name="participant_already_added">Participant already added.</string>
     <string name="select_an_operator">Select an operator</string>
     <string name="select_type">Select type</string>
@@ -443,7 +443,7 @@
     <string name="action_add">ADD</string>
     <string name="action_edit">EDIT</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="profile_basic_info">Basic Info</string>
+    <string name="profile_basic_info">Personal Info</string>
     <string name="profile_address">Address</string>
     <string name="profile_documents">Documents</string>
     <string name="profile_introducers">Introducers</string>
@@ -538,7 +538,7 @@
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="confirmation_set_trusted_member">This person can help you recover your account in case you forget your password or lose access to your account. Do you want to make them eligible for your account recovery?</string>
-    <string name="manage_banks">Manage Banks</string>
+    <string name="link_banks">Link Banks</string>
     <string name="select_one">Select One</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
     <string name="failed_loading_pin">Failed loading pin</string>
@@ -580,7 +580,7 @@
     <string name="introduced_list_header">You are introduced by</string>
     <string name="introducer_list_header">Your introducer</string>
     <string name="sent_requests_header">You have sent requests to</string>
-    <string name="invitation">Inivitaion</string>
+    <string name="invitation">Inivited</string>
     <string name="select_a_contact">Select a contact</string>
     <string name="progress_dialog_introducer_list">Fetching inroducer list...</string>
     <string name="progress_dialog_introduced_list">Fetching list of introduced people by me...</string>
