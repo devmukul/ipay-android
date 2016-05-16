@@ -65,6 +65,9 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
     private ProgressDialog mProgressDialog;
     private RecyclerView mRecyclerView;
     private TextView mEmptyListTextView;
+    private RelativeLayout mCompleteIntroducerHeaderLayout;
+    private TextView mIntroducerStatusTextView;
+    private Button mButtonAskForRecommendation;
     private IntroduceAdapter mIntroduceAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -88,6 +91,10 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.list_introducer_requests);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mCompleteIntroducerHeaderLayout = (RelativeLayout) v.findViewById(R.id.complete_introduction_header);
+        mIntroducerStatusTextView = (TextView) v.findViewById(R.id.intoduce_status);
+        mButtonAskForRecommendation = (Button) v.findViewById(R.id.button_ask_for_recommendation);
+
         mProgressDialog = new ProgressDialog(getActivity());
 
         if (Utilities.isConnectionAvailable(getActivity())) {
@@ -184,6 +191,22 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                         if (mIntroducerList == null) {
                             mIntroducerList = mIntroducerListResponse.getIntroducers();
                             MINIMUM_INTRODUCER_COUNT = mIntroducerListResponse.getRequiredForProfileCompletion();
+
+                            if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT) {
+                                mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
+                                mIntroducerStatusTextView.setText(getString(R.string.you_need_to_have) + MINIMUM_INTRODUCER_COUNT
+                                        + getString(R.string.introducers_to_complete_the_account_verification_process));
+                            } else mCompleteIntroducerHeaderLayout.setVisibility(View.GONE);
+
+                            mButtonAskForRecommendation.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
+                                    intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);                   // Get the verified iPay users only.
+                                    startActivityForResult(intent, PICK_CONTACT_REQUEST);
+                                }
+                            });
+
                         } else {
                             List<Introducer> tempIntroducerClasses;
                             tempIntroducerClasses = mIntroducerListResponse.getIntroducers();
@@ -312,9 +335,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             private RoundedImageView mIntroducerProfilePictureView;
 
             private TextView mIntroducedName;
-            private RelativeLayout mCompleteIntroducerHeaderLayout;
-            private TextView mIntroducerStatusTextView;
-            private Button mButtonAskForRecommendation;
             private TextView mIntroducedMobileNumber;
             private RoundedImageView mIntroducedProfilePictureView;
 
@@ -335,9 +355,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 mIntroducedName = (TextView) itemView.findViewById(R.id.introduced_name);
                 mIntroducedMobileNumber = (TextView) itemView.findViewById(R.id.introduced_mobile_number);
                 mIntroducedProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
-                mCompleteIntroducerHeaderLayout = (RelativeLayout) itemView.findViewById(R.id.complete_introduction_header);
-                mIntroducerStatusTextView = (TextView) itemView.findViewById(R.id.intoduce_status);
-                mButtonAskForRecommendation = (Button) itemView.findViewById(R.id.button_ask_for_recommendation);
 
                 mRequestedName = (TextView) itemView.findViewById(R.id.requested_name);
                 mRequestedMobileNumber = (TextView) itemView.findViewById(R.id.requested_mobile_number);
@@ -423,25 +440,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 setProfilePicture(imageUrl, mIntroducedProfilePictureView, introducedName);
                 mIntroducedName.setText(introducedName);
                 mIntroducedMobileNumber.setText(introducedMobileNumber);
-            }
-
-            public void bindViewForIntroducerListHeader(int pos) {
-
-                if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT) {
-                    mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
-                    mIntroducerStatusTextView.setText(getString(R.string.you_need_to_have) + MINIMUM_INTRODUCER_COUNT
-                            + getString(R.string.introducers_to_complete_the_account_verification_process));
-                } else mCompleteIntroducerHeaderLayout.setVisibility(View.GONE);
-
-                mButtonAskForRecommendation.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
-                        intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);                   // Get the verified iPay users only.
-                        startActivityForResult(intent, PICK_CONTACT_REQUEST);
-                    }
-                });
-
             }
 
             public void bindViewForSentRequestList(int pos) {
@@ -575,7 +573,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
 
                 } else if (holder instanceof IntroducerListHeaderViewHolder) {
                     IntroducerListHeaderViewHolder vh = (IntroducerListHeaderViewHolder) holder;
-                    vh.bindViewForIntroducerListHeader(position);
 
                 } else if (holder instanceof IntroducerListItemViewHolder) {
                     IntroducerListItemViewHolder vh = (IntroducerListItemViewHolder) holder;
