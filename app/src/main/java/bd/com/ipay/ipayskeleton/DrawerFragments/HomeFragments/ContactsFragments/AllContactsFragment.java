@@ -27,24 +27,11 @@ public class AllContactsFragment extends BaseContactsFragment {
     private HttpRequestGetAsyncTask mGetAllContactsTask;
     private List<FriendNode> mGetAllContactsResponse;
 
-    private RecyclerView mRecyclerView;
-    private ContactListAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    // Contacts will be filtered base on this field.
-    // It will be populated when the user types in the search bar.
-    protected String mQuery = "";
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = super.onCreateView(inflater, container, savedInstanceState);
-
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
 
         loadContacts();
 
@@ -66,12 +53,6 @@ public class AllContactsFragment extends BaseContactsFragment {
         return false;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mQuery = "";
-    }
-
     private void loadContacts() {
         if (mGetAllContactsTask != null) {
             return;
@@ -80,19 +61,6 @@ public class AllContactsFragment extends BaseContactsFragment {
         mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CONTACTS,
                 Constants.BASE_URL_FRIEND + Constants.URL_GET_CONTACTS, getActivity(), this);
         mGetAllContactsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void populateList(List<FriendNode> friends) {
-        mAdapter = new ContactListAdapter(friends);
-        mRecyclerView.setAdapter(mAdapter);
-        setContentShown(true);
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        mQuery = newText;
-
-        return true;
     }
 
     @Override

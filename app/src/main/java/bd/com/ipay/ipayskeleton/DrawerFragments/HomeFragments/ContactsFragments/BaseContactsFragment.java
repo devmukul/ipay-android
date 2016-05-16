@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +56,12 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         HttpResponseListener {
 
     private BottomSheetLayout mBottomSheetLayout;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    private MenuItem mSearchMenuItem;
+
+    private TextView mEmptyContactsTextView;
 
     protected final int[] PROFILE_PICTURE_BACKGROUNDS = {
             R.color.background_default,
@@ -99,6 +108,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
     private ProgressDialog mProgressDialog;
 
+    private ContactListAdapter mAdapter;
+
     protected abstract boolean isDialogFragment();
 
     @Override
@@ -106,6 +117,24 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         super.onCreate(savedInstanceState);
         if (!isDialogFragment())
             setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_contacts, container, false);
+        mProgressDialog = new ProgressDialog(getActivity());
+
+        if (!isDialogFragment()) {
+            if (mBottomSheetLayout != null)
+                setUpBottomSheet();
+        }
+
+        mEmptyContactsTextView = (TextView) v.findViewById(R.id.contact_list_empty);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        return v;
     }
 
     @Override
@@ -122,13 +151,13 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         if (!isDialogFragment()) {
             inflater.inflate(R.menu.contact, menu);
 
-            final MenuItem searchItem = menu.findItem(R.id.action_search_contacts);
-            final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+            mSearchMenuItem = menu.findItem(R.id.action_search_contacts);
+            final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
             searchView.setOnQueryTextListener(this);
             searchView.setOnSearchClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setItemsVisibility(menu, searchItem, false);
+                    setItemsVisibility(menu, mSearchMenuItem, false);
                     searchView.requestFocus();
                     if (mBottomSheetLayout != null && mBottomSheetLayout.isSheetShowing())
                         mBottomSheetLayout.dismissSheet();
@@ -139,7 +168,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 @Override
                 public boolean onClose() {
                     searchView.setQuery("", true);
-                    setItemsVisibility(menu, searchItem, true);
+                    setItemsVisibility(menu, mSearchMenuItem, true);
                     return false;
                 }
             });
@@ -153,17 +182,26 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_contacts, container, false);
-        mProgressDialog = new ProgressDialog(getActivity());
-
-        if (!isDialogFragment()) {
-            if (mBottomSheetLayout != null)
-                setUpBottomSheet();
+    protected void populateList(List<FriendNode> friends) {
+        setContentShown(true);
+        if (friends != null && !friends.isEmpty()) {
+            mAdapter = new ContactListAdapter(friends);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mEmptyContactsTextView.setVisibility(View.VISIBLE);
         }
+    }
 
-        return v;
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mAdapter.getFilter().filter(newText);
+        mAdapter.notifyDataSetChanged();
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return true;
     }
 
     /**
@@ -233,11 +271,6 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 .load(R.drawable.people)
                 .fitCenter()
                 .into(contactImage);
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return true;
     }
 
     public void setBottomSheetLayout(BottomSheetLayout bottomSheetLayout) {
@@ -465,7 +498,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     }
 
 
-    public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+                implements Filterable {
 
         private static final int EMPTY_VIEW = 10;
         private static final int FRIEND_VIEW = 100;
@@ -476,6 +510,36 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         public ContactListAdapter(List<FriendNode> friendList) {
             mAllFriendList = friendList;
             mFilteredFriendList = new ArrayList<>(mAllFriendList);
+        }
+
+        @Override
+        public Filter getFilter() {
+            Filter filter = new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    mFilteredFriendList.clear();
+
+                    String searchStr = constraint.toString().toLowerCase();
+                    for (FriendNode friend : mAllFriendList) {
+                        if (friend.getPhoneNumber().contains(searchStr) ||
+                                friend.getInfo().getName().toLowerCase().contains(searchStr))
+                            mFilteredFriendList.add(friend);
+                    }
+
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.count = mFilteredFriendList.size();
+                    filterResults.values = mFilteredFriendList;
+
+                    return null;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                }
+            };
+
+            return filter;
         }
 
         public class EmptyViewHolder extends RecyclerView.ViewHolder {
@@ -512,7 +576,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
             public void bindView(int pos) {
 
-                final FriendNode friend = mAllFriendList.get(pos);
+                final FriendNode friend = mFilteredFriendList.get(pos);
 
                 final String name = friend.getInfo().getName();
                 final String phoneNumber = friend.getPhoneNumber();

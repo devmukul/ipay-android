@@ -20,4 +20,12 @@ public class FriendNode {
     public FriendInfo getInfo() {
         return info;
     }
+
+    @Override
+    public String toString() {
+        return "FriendNode{" +
+                "phoneNumber='" + phoneNumber + '\'' +
+                ", info=" + info +
+                '}';
+    }
 }

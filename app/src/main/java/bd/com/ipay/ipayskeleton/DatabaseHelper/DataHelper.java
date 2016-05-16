@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -94,12 +95,12 @@ public class DataHelper {
                     DATABASE_VERSION);
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
-            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS;
-            if (query != null && !query.isEmpty())
-                    queryString += " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'";
+            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS
+                    + " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'";
             if (verifiedOnly)
                 queryString += " AND " + DBConstants.KEY_VERIFICATION_STATUS + " = " + DBConstants.VERIFIED_USER;
             queryString += " ORDER BY " + DBConstants.KEY_NAME + " COLLATE NOCASE";
+
             cursor = db.rawQuery(queryString, null);
 
             if (cursor != null) {
@@ -127,7 +128,7 @@ public class DataHelper {
                     + Constants.PICTURE_FOLDER);
             if (!dir.exists()) dir.mkdir();
 
-            while (cursor.moveToNext()) {
+            do {
                 String name = cursor.getString(nameIndex);
                 String mobileNumber = cursor.getString(mobileNumberIndex);
                 int verificationStatus = cursor.getInt(verificationStatusIndex);
@@ -142,8 +143,10 @@ public class DataHelper {
                 FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, true,
                         verificationStatus, name, profilePictureUrl));
                 friends.add(friend);
-            }
+            } while (cursor.moveToNext());
         }
+
+        System.out.println(friends);
 
         return friends;
     }

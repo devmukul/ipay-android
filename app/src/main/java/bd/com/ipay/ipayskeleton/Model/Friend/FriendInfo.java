@@ -44,4 +44,15 @@ public class FriendInfo {
     public String getProfilePictureUrl() {
         return profilePictureUrl;
     }
+
+    @Override
+    public String toString() {
+        return "FriendInfo{" +
+                "accountType=" + accountType +
+                ", isFriend=" + isFriend +
+                ", isVerified=" + isVerified +
+                ", name='" + name + '\'' +
+                ", profilePictureUrl='" + profilePictureUrl + '\'' +
+                '}';
+    }
 }
