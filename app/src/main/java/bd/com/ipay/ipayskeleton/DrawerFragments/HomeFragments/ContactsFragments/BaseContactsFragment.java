@@ -10,6 +10,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -143,6 +144,11 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         super.onResume();
         if (!isDialogFragment())
             getActivity().invalidateOptionsMenu();
+
+        if (mAdapter != null) {
+            mAdapter.getFilter().filter("");
+            mRecyclerView.setAdapter(mAdapter);
+        }
     }
 
     @Override
@@ -195,8 +201,9 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mAdapter.getFilter().filter(newText);
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mAdapter.getFilter().filter(newText);
+        }
         return true;
     }
 
@@ -209,7 +216,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
      * Must be called after show(Non)SubscriberSheet
      */
     protected void setContactInformationInSheet(String contactName, String contactNumber,
-                String imageUrl, final int backgroundColor, boolean isFriend, boolean isVerified, int accountType) {
+                String imageUrl, final int backgroundColor, boolean isMember, boolean isVerified, int accountType) {
         if (selectedBottomSheetView == null)
             return;
 
@@ -222,7 +229,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         contactImage.setBackgroundResource(backgroundColor);
         contactNameView.setText(contactName);
 
-        if (isFriend) {
+        if (isMember) {
             if (isVerified) {
                 isVerifiedView.setText(getString(R.string.verified).toUpperCase());
                 isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_verified);
@@ -515,6 +522,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
         @Override
         public Filter getFilter() {
+            System.out.println("Filter called");
+
             Filter filter = new Filter() {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
@@ -531,12 +540,14 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                     filterResults.count = mFilteredFriendList.size();
                     filterResults.values = mFilteredFriendList;
 
+                    System.out.println(mFilteredFriendList);
+
                     return null;
                 }
 
                 @Override
                 protected void publishResults(CharSequence constraint, FilterResults results) {
-
+                    notifyDataSetChanged();
                 }
             };
 
@@ -586,7 +597,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 mNameView.setText(name);
                 mMobileNumberView.setText(phoneNumber);
 
-                if (shouldShowIPayUserIcon() && friend.getInfo().isFriend()) {
+                if (shouldShowIPayUserIcon() && friend.getInfo().isMember()) {
                     isSubscriber.setVisibility(View.VISIBLE);
                 }
                 else {
@@ -634,10 +645,10 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                             public void run() {
                                 int randomProfileBackgroundColor = PROFILE_PICTURE_BACKGROUNDS[getAdapterPosition() % PROFILE_PICTURE_BACKGROUNDS.length];
                                 boolean isVerified = friend.getInfo().isVerified();
-                                boolean isFriend = friend.getInfo().isFriend();
+                                boolean isMember = friend.getInfo().isMember();
                                 int accountType = friend.getInfo().getAccountType();
 
-                                if (friend.getInfo().isFriend()) {
+                                if (friend.getInfo().isMember()) {
                                     showSubscriberSheet(isVerified);
                                 } else {
                                     showNonSubscriberSheet(phoneNumber);
@@ -645,7 +656,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
                                 setContactInformationInSheet(name,
                                         phoneNumber, profilePictureUrl, randomProfileBackgroundColor,
-                                        isFriend, isVerified, accountType);
+                                        isMember, isVerified, accountType);
                             }
                         }, 100);
                     }

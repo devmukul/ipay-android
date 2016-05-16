@@ -4,7 +4,7 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 
 public class FriendInfo {
     private int accountType;
-    private boolean isFriend;
+    private boolean isMember;
     private boolean isVerified;
     private String name;
     private String profilePictureUrl;
@@ -17,24 +17,24 @@ public class FriendInfo {
         this.name = name;
     }
 
-    public FriendInfo(int accountType, boolean isFriend, boolean isVerified, String name, String profilePictureUrl) {
+    public FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, String profilePictureUrl) {
         this.accountType = accountType;
-        this.isFriend = isFriend;
+        this.isMember = isMember;
         this.isVerified = isVerified;
         this.name = name;
         this.profilePictureUrl = profilePictureUrl;
     }
 
-    public FriendInfo(int accountType, boolean isFriend, int verificationStatus, String name, String profilePictureUrl) {
-        this(accountType, isFriend, verificationStatus == DBConstants.VERIFIED_USER, name, profilePictureUrl);
+    public FriendInfo(int accountType, boolean isMember, int verificationStatus, String name, String profilePictureUrl) {
+        this(accountType, isMember, verificationStatus == DBConstants.VERIFIED_USER, name, profilePictureUrl);
     }
 
     public int getAccountType() {
         return accountType;
     }
 
-    public boolean isFriend() {
-        return isFriend;
+    public boolean isMember() {
+        return isMember;
     }
 
     public boolean isVerified() {
@@ -53,7 +53,7 @@ public class FriendInfo {
     public String toString() {
         return "FriendInfo{" +
                 "accountType=" + accountType +
-                ", isFriend=" + isFriend +
+                ", isMember=" + isMember +
                 ", isVerified=" + isVerified +
                 ", name='" + name + '\'' +
                 ", profilePictureUrl='" + profilePictureUrl + '\'' +

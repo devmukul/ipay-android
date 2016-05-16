@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ContactsHolderFragment extends Fragment implements HttpResponseListener {
 
@@ -45,6 +46,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         mAllContactsSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utilities.hideKeyboard(getActivity());
                 switchToAllContacts();
             }
         });
@@ -52,6 +54,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         miPayContactsSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utilities.hideKeyboard(getActivity());
                 switchToiPayContacts();
             }
         });
