@@ -440,11 +440,18 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         mBottomSheetLayout.expandSheet();
     }
 
-    protected void showNonSubscriberSheet() {
+    protected void showNonSubscriberSheet(String mobileNumber) {
         if (mBottomSheetLayout == null)
             return;
 
         selectedBottomSheetView = mSheetViewNonSubscriber;
+
+        Button inviteButton = (Button) mSheetViewNonSubscriber.findViewById(R.id.button_invite);
+        if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(mobileNumber))
+            inviteButton.setEnabled(false);
+        else
+            inviteButton.setEnabled(true);
+
         mBottomSheetLayout.showWithSheetView(mSheetViewNonSubscriber);
         mBottomSheetLayout.expandSheet();
     }
@@ -568,7 +575,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                                 if (friend.getInfo().isFriend()) {
                                     showSubscriberSheet(isVerified);
                                 } else {
-                                    showNonSubscriberSheet();
+                                    showNonSubscriberSheet(phoneNumber);
                                 }
 
                                 setContactInformationInSheet(name,
