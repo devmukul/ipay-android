@@ -209,7 +209,8 @@ public class Constants {
 
     public static final String URL_GET_CONTACTS = "getfriends";
     public static final String URL_ADD_CONTACT = "addfriends";
-
+    public static final String URL_DELETE_CONTACT = "deletefriend";
+    public static final String URL_UPDATE_CONTACT = "updatefriend";
 
     public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
     public static final String HTTP_RESPONSE_STATUS_NOT_FOUND = "404";
@@ -305,8 +306,10 @@ public class Constants {
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
     public static final String COMMAND_GET_MONEY_REQUESTS = "COMMAND_GET_MONEY_REQUESTS";
     public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
-    public static final String COMMAND_GET_CONTACTS = "COMMAND_GET_CONTACTS";
-    public static final String COMMAND_ADD_CONTACT = "COMMAND_ADD_CONTACT";
+    public static final String COMMAND_GET_FRIENDS = "COMMAND_GET_FRIENDS";
+    public static final String COMMAND_ADD_FRIENDS = "COMMAND_ADD_FRIENDS";
+    public static final String COMMAND_UPDATE_FRIEND = "COMMAND_UPDATE_FRIEND";
+    public static final String COMMAND_DELETE_FRIENDS = "COMMAND_DELETE_FRIENDS";
 
 
     // Resource

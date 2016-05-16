@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +59,7 @@ public class AllContactsFragment extends BaseContactsFragment {
             return;
         }
 
-        mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CONTACTS,
+        mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_FRIENDS,
                 Constants.BASE_URL_FRIEND + Constants.URL_GET_CONTACTS, getActivity(), this);
         mGetAllContactsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -77,7 +76,7 @@ public class AllContactsFragment extends BaseContactsFragment {
         List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_CONTACTS)) {
+        if (resultList.get(0).equals(Constants.COMMAND_GET_FRIENDS)) {
             try {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     FriendNode[] friendNodeArray = gson.fromJson(resultList.get(2), FriendNode[].class);

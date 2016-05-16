@@ -247,7 +247,7 @@ public class HomeActivity extends BaseActivity
             return;
         }
 
-        mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CONTACTS,
+        mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_FRIENDS,
                 Constants.BASE_URL_FRIEND + Constants.URL_GET_CONTACTS, this, this);
         mGetAllContactsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -467,7 +467,7 @@ public class HomeActivity extends BaseActivity
 
             mGetProfileInfoTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_CONTACTS)) {
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_FRIENDS)) {
             try {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     FriendNode[] friendNodeArray = gson.fromJson(resultList.get(2), FriendNode[].class);
