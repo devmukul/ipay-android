@@ -42,7 +42,6 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivit
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationResponse;
@@ -111,6 +110,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     private ContactListAdapter mAdapter;
 
     protected abstract boolean isDialogFragment();
+
+    protected abstract boolean shouldShowIPayUserIcon();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -585,7 +586,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 mNameView.setText(name);
                 mMobileNumberView.setText(phoneNumber);
 
-                if (friend.getInfo().isFriend()) {
+                if (shouldShowIPayUserIcon() && friend.getInfo().isFriend()) {
                     isSubscriber.setVisibility(View.VISIBLE);
                 }
                 else {

@@ -48,7 +48,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.E
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.IntroducerFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.InvitationRequestsFragment;
-import bd.com.ipay.ipayskeleton.Model.FireBase.GetFireBaseTokenResponse;
+import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
@@ -74,8 +74,8 @@ public class HomeActivity extends BaseActivity
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
-    private HttpRequestGetAsyncTask mGetFireBaseTokenTask = null;
-    private GetFireBaseTokenResponse mGetFireBaseTokenResponse;
+    private HttpRequestGetAsyncTask mGetAllContactsTask;
+    private List<FriendNode> mGetAllContactsResponse;
 
     private TextView mMobileNumberView;
     private TextView mNameView;
@@ -91,7 +91,6 @@ public class HomeActivity extends BaseActivity
     public static String iPayRefreshToken = "";
     public static String fireBaseToken = "";
     public static boolean newsFeedLoadedOnce = false;
-    public static boolean contactsSyncedOnce = false;
     public static CountDownTimer tokenTimer;
     public static long iPayTokenTimeInMs = 60000;  // By default this is one minute
 
@@ -158,16 +157,15 @@ public class HomeActivity extends BaseActivity
         mMobileNumberView.setText(mUserID);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        // Get FireBase Token
-        if (!contactsSyncedOnce) getFireBaseToken();
 
         switchToDashBoard();
 
         setProfilePicture("");
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
-        // TODO: get userinfo here and set
         getProfileInfo();
+        syncContacts();
+
         if (Constants.DEBUG) {
             Log.w("Token", HomeActivity.iPayToken);
         }
@@ -243,6 +241,17 @@ public class HomeActivity extends BaseActivity
             e.printStackTrace();
         }
     }
+
+    private void syncContacts() {
+        if (mGetAllContactsTask != null) {
+            return;
+        }
+
+        mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CONTACTS,
+                Constants.BASE_URL_FRIEND + Constants.URL_GET_CONTACTS, this, this);
+        mGetAllContactsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
 
     public void switchToDashBoard() {
         mNavigationView.getMenu().getItem(0).setChecked(true);
@@ -370,23 +379,6 @@ public class HomeActivity extends BaseActivity
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void getFireBaseToken() {
-        if (mGetFireBaseTokenTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.please_wait));
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-
-        String mUri = Constants.BASE_URL_MM + "/" + Constants.URL_GET_FIREBASE_TOKEN;
-        mGetFireBaseTokenTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_FIREBASE_TOKEN,
-                mUri, HomeActivity.this);
-        mGetFireBaseTokenTask.mHttpResponseListener = this;
-
-        mGetFireBaseTokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     private void getProfileInfo() {
         if (mGetProfileInfoTask != null) {
             return;
@@ -413,7 +405,7 @@ public class HomeActivity extends BaseActivity
             mProgressDialog.dismiss();
             mLogoutTask = null;
             mGetProfileInfoTask = null;
-            mGetFireBaseTokenTask = null;
+            mGetAllContactsTask = null;
             Toast.makeText(HomeActivity.this, R.string.logout_failed, Toast.LENGTH_LONG).show();
             return;
         }
@@ -475,23 +467,20 @@ public class HomeActivity extends BaseActivity
 
             mGetProfileInfoTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_FIREBASE_TOKEN)) {
-
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_CONTACTS)) {
             try {
-                mGetFireBaseTokenResponse = gson.fromJson(resultList.get(2), GetFireBaseTokenResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    fireBaseToken = mGetFireBaseTokenResponse.getFirebaseToken();
+                    FriendNode[] friendNodeArray = gson.fromJson(resultList.get(2), FriendNode[].class);
+                    mGetAllContactsResponse = Arrays.asList(friendNodeArray);
 
-                    new SyncContactsAsyncTask(HomeActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(this, mGetAllContactsResponse);
+                    syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    Log.e("Contacts Sync Failed", resultList.get(1) + "");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(HomeActivity.this, R.string.could_not_sync_contact, Toast.LENGTH_SHORT).show();
             }
-
-            if (mProgressDialog != null) mProgressDialog.dismiss();
-            mGetFireBaseTokenTask = null;
-
         }
     }
 

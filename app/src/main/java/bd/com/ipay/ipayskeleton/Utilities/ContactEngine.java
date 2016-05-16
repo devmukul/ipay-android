@@ -29,10 +29,13 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 
 public class ContactEngine {
     private static final String TAG = "ContactEngine";
@@ -960,6 +963,50 @@ public class ContactEngine {
     }
 
     /**
+     * Pass phone contacts in the newContacts list and server contacts in the oldContacts list
+     * to get a list of newly added/updated contacts in the phone book
+     */
+    public static ContactDiff getContactDiff(List<FriendNode> newContacts, List<FriendNode> oldContacts) {
+        ContactDiff contactDiff = new ContactDiff();
+
+        Collections.sort(newContacts);
+        Collections.sort(oldContacts);
+
+        int oldIndex = 0;
+        int newIndex = 0;
+
+        while (oldIndex < oldContacts.size() && newIndex < newContacts.size()) {
+            FriendNode oldContact = oldContacts.get(oldIndex);
+            FriendNode newContact = newContacts.get(newIndex);
+
+            int compare = newContact.getPhoneNumber().compareTo(oldContact.getPhoneNumber());
+            if (compare == 0) {
+                if (!newContact.getInfo().getName().equals(oldContact.getInfo().getName())) {
+                    contactDiff.updatedFriends.add(newContact);
+                }
+
+                oldIndex++;
+                newIndex++;
+            }
+            else if (compare < 0) {
+                contactDiff.newFriends.add(newContact);
+                newIndex++;
+            }
+            else {
+                oldIndex++;
+            }
+        }
+
+        while (newIndex < newContacts.size()) {
+            FriendNode newContact = newContacts.get(newIndex);
+            contactDiff.newFriends.add(newContact);
+            newIndex++;
+        }
+
+        return contactDiff;
+    }
+
+    /**
      * Trim +880 (if exists) from the mobile number
      */
     public static String trimPrefix(String number) {
@@ -989,6 +1036,21 @@ public class ContactEngine {
             this.name = name;
             this.mobileNumber = mobileNumber;
             this.photoUri = photoUri;
+        }
+    }
+
+    public static class ContactDiff {
+        public List<FriendNode> newFriends;
+        public List<FriendNode> updatedFriends;
+
+        public ContactDiff() {
+            newFriends = new ArrayList<>();
+            updatedFriends = new ArrayList<>();
+        }
+
+        public ContactDiff(List<FriendNode> newFriends, List<FriendNode> updatedFriends) {
+            this.newFriends = newFriends;
+            this.updatedFriends = updatedFriends;
         }
     }
 

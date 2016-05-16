@@ -13,6 +13,10 @@ public class FriendInfo {
 
     }
 
+    public FriendInfo(String name) {
+        this.name = name;
+    }
+
     public FriendInfo(int accountType, boolean isFriend, boolean isVerified, String name, String profilePictureUrl) {
         this.accountType = accountType;
         this.isFriend = isFriend;

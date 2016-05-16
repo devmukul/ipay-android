@@ -193,8 +193,6 @@ public class Constants {
     public static final String URL_GET_INVITE_INFO = "settings/invitations";
     public static final String URL_SEND_INVITE = "settings/invitations";
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
-    public static final String URL_GET_FIREBASE_TOKEN = "friend/firebasetoken";
-    public static final String URL_UPDATE_FIREBASE_FRIEND_LIST = "friend/updatefriendlist";
     public static final String URL_SERVICE_CHARGE = "feecharge";
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_GET_PROFILE_COMPLETION_STATUS = "/user/profilecompletion";
@@ -294,7 +292,6 @@ public class Constants {
     public static final String COMMAND_RECOMMEND_ACTION = "COMMAND_RECOMMEND_ACTION";
     public static final String COMMAND_INVITEE_ACTION = "COMMAND_INVITEE_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
-    public static final String COMMAND_GET_FIREBASE_TOKEN = "COMMAND_GET_FIREBASE_TOKEN";
     public static final String COMMAND_GET_NEWS_FEED = "COMMAND_GET_NEWS_FEED";
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
     public static final String COMMAND_EVENT_CATEGORIES = "COMMAND_EVENT_CATEGORIES";
@@ -334,23 +331,6 @@ public class Constants {
     public static final String COMMAND_GET_TRUSTED_PERSONS = "COMMAND_GET_TRUSTED_PERSONS";
     public static final String COMMAND_ADD_TRUSTED_PERSON = "COMMAND_ADD_TRUSTED_PERSON";
     public static final String COMMAND_SET_ACCOUNT_RECOVERY_PERSON = "COMMAND_SET_ACCOUNT_RECOVERY_PERSON";
-
-
-    // FireBase
-    public static final String PATH_TO_FIREBASE_DATABASE;
-
-    static {
-        if (SERVER_TYPE == 2)
-            PATH_TO_FIREBASE_DATABASE = "https://ipaybdstage.firebaseio.com/";
-        else if (SERVER_TYPE == 3)
-            PATH_TO_FIREBASE_DATABASE = "https://ipaybd.firebaseio.com/";
-        else
-            PATH_TO_FIREBASE_DATABASE = "https://testingipay.firebaseio.com/";
-    }
-
-    public static final String FIREBASE_CONTACT_LIST = "ContactList";
-    public static final String FIREBASE_DIRTY = "dirty";
-    public static final String FIREBASE_SYNCED = "synced";
 
     public static final String COUNTRY_CODE_BANGLADESH = "+880";
     public static final int ACTIVITY_LOG_COUNT = 10;

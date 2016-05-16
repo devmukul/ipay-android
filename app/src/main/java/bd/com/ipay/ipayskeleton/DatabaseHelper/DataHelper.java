@@ -146,8 +146,6 @@ public class DataHelper {
             } while (cursor.moveToNext());
         }
 
-        System.out.println(friends);
-
         return friends;
     }
 
