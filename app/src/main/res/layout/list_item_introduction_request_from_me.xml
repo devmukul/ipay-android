@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/value5"
-    android:background="@android:color/white"
-    android:paddingLeft="@dimen/activity_horizontal_margin">
+    android:layout_height="match_parent"
+    android:background="@color/home_background"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_progress_container" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value5"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/activity_horizontal_margin">
 
         <include
             android:id="@+id/requested_profile_picture"
@@ -15,32 +24,32 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp" />
 
-    <TextView
-        android:id="@+id/requested_name"
-        style="@style/TextStylePrimaryMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/requested_profile_picture"
-        android:gravity="left"
-        android:paddingBottom="2dp"
-        android:paddingTop="14dp"
-        android:singleLine="true"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="Mohsin Khan"/>
+        <TextView
+            android:id="@+id/requested_name"
+            style="@style/TextStylePrimaryMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/requested_profile_picture"
+            android:gravity="left"
+            android:paddingBottom="2dp"
+            android:paddingTop="14dp"
+            android:singleLine="true"
+            android:text="Mohsin Khan"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/requested_mobile_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/requested_name"
-        android:layout_toRightOf="@+id/requested_profile_picture"
-        style="@style/TextStyleSecondaryMedium"
-        android:text="+8801919191919"
-        android:gravity="left"
-        android:paddingBottom="14dp"
-        android:singleLine="true"
-        android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/requested_mobile_number"
+            style="@style/TextStyleSecondaryMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/requested_name"
+            android:layout_toRightOf="@+id/requested_profile_picture"
+            android:gravity="left"
+            android:paddingBottom="14dp"
+            android:singleLine="true"
+            android:text="+8801919191919"
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/request_status"
@@ -48,8 +57,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_sync_problem_black_24dp"
-            android:paddingRight="@dimen/activity_horizontal_margin"/>
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_sync_problem_black_24dp" />
 
 
-</RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

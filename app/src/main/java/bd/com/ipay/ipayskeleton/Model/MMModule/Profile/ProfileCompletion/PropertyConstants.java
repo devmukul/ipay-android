@@ -13,6 +13,7 @@ public class PropertyConstants {
     public static final String TRUSTED_NETWORK = "TRUSTED_NETWORK";
     public static final String TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE = "TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE";
     public static final String INTRODUCER = "INTRODUCER";
+    public static final String INVITATION = "INVITATION";
     public static final String BASIC_PROFILE = "BASIC_PROFILE";
     public static final String ADDRESS = "ADDRESS";
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";

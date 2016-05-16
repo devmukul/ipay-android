@@ -303,16 +303,6 @@ public class HomeActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountSettingsFragment()).commit();
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_identification) {
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
-            switchedToHomeFragment = false;
-
-        }  else if (id == R.id.nav_invitation) {
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new InvitationRequestsFragment()).commit();
-            switchedToHomeFragment = false;
-
         } else if (id == R.id.nav_logout) {
 
             if (Utilities.isConnectionAvailable(HomeActivity.this)) attemptLogout();
@@ -343,7 +333,20 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_profile_completeness) {
 
             launchEditProfileActivity(PropertyConstants.PROFILE_COMPLETENESS, new Bundle());
+        } else if (id == R.id.nav_identification) {
+
+            launchEditProfileActivity(PropertyConstants.INTRODUCER, new Bundle());
+            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
+            //switchedToHomeFragment = false;
+
+        }  else if (id == R.id.nav_invitation) {
+
+            launchEditProfileActivity(PropertyConstants.INVITATION, new Bundle());
+            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new InvitationRequestsFragment()).commit();
+            //switchedToHomeFragment = false;
+
         }
+
     }
 
     private void launchEditProfileActivity(String type, Bundle bundle) {
