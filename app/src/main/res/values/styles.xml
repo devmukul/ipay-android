@@ -206,13 +206,17 @@
         <item name="android:visibility">gone</item>
     </style>
 
-
     <style name="MenuLabelsStyle">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">14sp</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ListHeaderStyle">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
 
     <style name="ButtonStyleSmall" parent="@android:style/Widget.Button">
@@ -386,6 +390,8 @@
     <style name="ReviewImageStyle.Dialog" parent="ReviewImageStyle">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
 
     <style name="ReviewItemLabelStyle">
@@ -432,6 +438,15 @@
         <item name="android:padding">8dp</item>
         <item name="android:layout_marginTop">4dp</item>
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="MicroButtonPrimary">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <style name="DialogButtonStyle" parent="@android:style/Widget.Holo.Button.Borderless">

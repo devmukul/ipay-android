@@ -122,8 +122,9 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
         mProgressDialog.show();
+        // TODO ask for pin
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
+                new RequestMoneyAcceptRejectOrCancelRequest(id, null);
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mCancelPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_PAYMENT_REQUEST,

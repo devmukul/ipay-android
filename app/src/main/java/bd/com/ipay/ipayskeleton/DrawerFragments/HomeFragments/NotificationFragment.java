@@ -2,12 +2,12 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,8 +33,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialog;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
@@ -42,8 +42,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.G
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendRequestClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendationActionRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendationActionResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -58,13 +58,8 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetNotificationsResponse mGetNotificationsResponse;
 
-    private HttpRequestPostAsyncTask mRejectRequestTask = null;
-    private HttpRequestPostAsyncTask mAcceptRequestTask = null;
-    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
-
-    private HttpRequestPostAsyncTask mRejectPaymentTask = null;
-    private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
-    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
+    private HttpRequestPostAsyncTask mServiceChargeTask = null;
+    private GetServiceChargeResponse mGetServiceChargeResponse;
 
     private HttpRequestPostAsyncTask mRecommendActionTask = null;
     private RecommendationActionResponse mRecommendationActionResponse;
@@ -84,6 +79,17 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
 
     private int pageCount = 0;
     private boolean hasNext = false;
+
+    // These variables hold the information needed to populate the review dialog
+    private BigDecimal mAmount;
+    private BigDecimal mServiceCharge;
+    private String mReceiverName;
+    private String mReceiverMobileNumber;
+    private String mPhotoUri;
+    private long mMoneyRequestId;
+    private String mTitle;
+    private String mDescription;
+    private int mServiceID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -167,6 +173,49 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    protected void attemptGetServiceCharge(int serviceId) {
+
+        if (mServiceChargeTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.show();
+
+        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
+
+        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
+        int accountClass = Constants.DEFAULT_USER_CLASS;
+
+        GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(serviceId, accountType, accountClass);
+        Gson gson = new Gson();
+        String json = gson.toJson(mServiceChargeRequest);
+        mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
+                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
+        mServiceChargeTask.mHttpResponseListener = this;
+        mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void showReviewDialog() {
+        NotificationReviewDialog dialog = new NotificationReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, mServiceID, new ReviewDialogFinishListener() {
+            @Override
+            public void onReviewFinish() {
+                refreshNotificationList();
+            }
+        });
+        dialog.show();
+    }
+
+    private void refreshNotificationList() {
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            pageCount = 0;
+            if (moneyRequestList != null)
+                moneyRequestList.clear();
+            getNotifications();
+        }
+    }
+
     private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
         if (requestID == 0) {
             if (getActivity() != null)
@@ -185,83 +234,11 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void rejectPaymentRequest(Long id) {
-
-        if (mRejectPaymentTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
-                new PaymentAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
-        mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
-        mRejectPaymentTask.mHttpResponseListener = this;
-        mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void acceptPaymentRequest(Long id) {
-
-        if (mAcceptPaymentTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_accepted));
-        mProgressDialog.show();
-        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
-                new PaymentAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
-        mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
-        mAcceptPaymentTask.mHttpResponseListener = this;
-        mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void rejectRequestMoney(Long id) {
-        if (mRejectRequestTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
-        mRejectRequestTask.mHttpResponseListener = this;
-        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void acceptRequestMoney(Long id) {
-        if (mAcceptRequestTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_accepted));
-        mProgressDialog.show();
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
-        mAcceptRequestTask.mHttpResponseListener = this;
-        mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     public void httpResponseReceiver(String result) {
 
         if (result == null) {
             mGetAllNotificationsTask = null;
-            mAcceptRequestTask = null;
-            mRejectRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
@@ -305,149 +282,41 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
             mSwipeRefreshLayout.setRefreshing(false);
             mGetAllNotificationsTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
-
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
-                                RequestMoneyAcceptRejectOrCancelResponse.class);
-                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
-                        // Refresh the pending list
-                        if (moneyRequestList != null)
-                            moneyRequestList.clear();
-                        moneyRequestList = null;
-                        pageCount = 0;
-
-                        // TODO: get this from notification table in sqlite
-                        getNotifications();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-
+        } else if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
             mProgressDialog.dismiss();
-            mRejectRequestTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
-
             if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
-                                RequestMoneyAcceptRejectOrCancelResponse.class);
-                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                try {
+                    mGetServiceChargeResponse = gson.fromJson(resultList.get(2), GetServiceChargeResponse.class);
 
-                        // Refresh the pending list
-                        if (moneyRequestList != null)
-                            moneyRequestList.clear();
-                        moneyRequestList = null;
-                        pageCount = 0;
-                        // TODO: get this from notification table in sqlite
-                        getNotifications();
+                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        if (mGetServiceChargeResponse != null) {
+                            mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                            if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
+                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            } else {
+                                showReviewDialog();
+                            }
+
+                        } else {
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
 
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+            } else if (getActivity() != null) {
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            }
 
-            mProgressDialog.dismiss();
-            mAcceptRequestTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_REJECT_PAYMENT_REQUEST)) {
-
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mPaymentAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
-                                PaymentAcceptRejectOrCancelResponse.class);
-                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
-                        // Refresh the pending list
-                        if (moneyRequestList != null)
-                            moneyRequestList.clear();
-                        moneyRequestList = null;
-                        pageCount = 0;
-
-                        // TODO: get this from notification table in sqlite
-                        getNotifications();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-
-            mProgressDialog.dismiss();
-            mRejectPaymentTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
-
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mPaymentAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
-                                PaymentAcceptRejectOrCancelResponse.class);
-                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
-                        // Refresh the pending list
-                        if (moneyRequestList != null)
-                            moneyRequestList.clear();
-                        moneyRequestList = null;
-                        pageCount = 0;
-
-                        // TODO: get this from notification table in sqlite
-                        getNotifications();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-
-            mProgressDialog.dismiss();
-            mAcceptPaymentTask = null;
-
+            mServiceChargeTask = null;
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS)) {
 
             if (resultList.size() > 2) {
@@ -510,53 +379,6 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         }
     }
 
-    private void showAlertDialogue(final Long id, String description, final Long serviceID, String imageUrl, final int action) {
-        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
-
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View dialogLayout = inflater.inflate(R.layout.dialog_notification_action_confirm, null);
-        alertDialogue.setView(dialogLayout);
-
-        TextView title = (TextView) dialogLayout.findViewById(R.id.title);
-        TextView msg = (TextView) dialogLayout.findViewById(R.id.message);
-        RoundedImageView mPortrait = (RoundedImageView) dialogLayout.findViewById(R.id.portrait);
-
-        title.setText(R.string.confirm_query);
-        msg.setText(description);
-
-        Glide.with(getActivity())
-                .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
-                .crossFade()
-                .error(R.drawable.ic_person)
-                .transform(new CircleTransform(getActivity()))
-                .into(mPortrait);
-
-        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-                if (action == ACCEPT) {
-                    if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) acceptRequestMoney(id);
-                    else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE)
-                        acceptPaymentRequest(id);
-                }
-
-                if (action == REJECT) {
-                    if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) rejectRequestMoney(id);
-                    else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE)
-                        rejectPaymentRequest(id);
-                }
-            }
-        });
-
-        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-            }
-        });
-
-        alertDialogue.show();
-    }
-
     private class NotificationAndRecommendationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
@@ -569,9 +391,9 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mDescription;
-            private TextView mTitle;
-            private TextView mTime;
+            private TextView mDescriptionView;
+            private TextView mTitleView;
+            private TextView mTimeView;
             private TextView loadMoreTextView;
             private RoundedImageView mPortrait;
             private LinearLayout optionsLayout;
@@ -592,10 +414,10 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                 super(itemView);
 
                 // Money request list items
-                mDescription = (TextView) itemView.findViewById(R.id.description);
-                mTime = (TextView) itemView.findViewById(R.id.time);
+                mDescriptionView = (TextView) itemView.findViewById(R.id.description);
+                mTimeView = (TextView) itemView.findViewById(R.id.time);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                mTitle = (TextView) itemView.findViewById(R.id.title);
+                mTitleView = (TextView) itemView.findViewById(R.id.title);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 acceptButton = (Button) itemView.findViewById(R.id.accept_button);
@@ -623,16 +445,17 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
 
                 final String imageUrl = moneyRequestList.get(pos).getOriginatorProfile().getUserProfilePicture();
                 final String name = moneyRequestList.get(pos).originatorProfile.getUserName();
+                final String mobileNumber = moneyRequestList.get(pos).originatorProfile.getUserMobileNumber();
                 final String description = moneyRequestList.get(pos).getDescription();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(moneyRequestList.get(pos).getRequestTime());
                 final String title = moneyRequestList.get(pos).getTitle();
-                final Long id = moneyRequestList.get(pos).getId();
+                final long id = moneyRequestList.get(pos).getId();
                 final BigDecimal amount = moneyRequestList.get(pos).getAmount();
-                final Long serviceID = moneyRequestList.get(pos).getServiceID();
+                final int serviceID = moneyRequestList.get(pos).getServiceID();
 
-                mDescription.setText(description);
-                mTime.setText(time);
-                mTitle.setText(title);
+                mDescriptionView.setText(description);
+                mTimeView.setText(time);
+                mTitleView.setText(title);
 
                 Glide.with(getActivity())
                         .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
@@ -641,39 +464,37 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
                         .transform(new CircleTransform(getActivity()))
                         .into(mPortrait);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (optionsLayout.getVisibility() == View.VISIBLE)
-                            optionsLayout.setVisibility(View.GONE);
-                        else optionsLayout.setVisibility(View.VISIBLE);
-                    }
-                });
-
                 if (serviceID == Constants.SERVICE_ID_RECOMMENDATION_REQUEST) {
                     viewBetweenRejectAndSpam.setVisibility(View.VISIBLE);
                     markAsSpamButton.setVisibility(View.VISIBLE);
+
+                    itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (optionsLayout.getVisibility() == View.VISIBLE)
+                                optionsLayout.setVisibility(View.GONE);
+                            else optionsLayout.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
 
-                acceptButton.setOnClickListener(new View.OnClickListener() {
+                itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String customDescription = "";
-                        if (serviceID != Constants.SERVICE_ID_RECOMMENDATION_REQUEST) {
-                            customDescription = "You're going to send " + amount + " Tk. to " + name;
-                            showAlertDialogue(id, customDescription, serviceID, imageUrl, ACCEPT);
-                        }
-                    }
-                });
 
-                rejectButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String customDescription = "";
-                        if (serviceID != Constants.SERVICE_ID_RECOMMENDATION_REQUEST) {
-                            customDescription = "You're going to cancel the request for " + amount + " Tk. from " + name;
-                            showAlertDialogue(id, customDescription, serviceID, imageUrl, REJECT);
-                        }
+                        mMoneyRequestId = id;
+                        mAmount = amount;
+                        mReceiverName = name;
+                        mReceiverMobileNumber = mobileNumber;
+                        mPhotoUri = imageUrl;
+                        mTitle = title;
+                        mDescription = description;
+                        mServiceID = serviceID;
+
+                        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+                            attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+                        else
+                            attemptGetServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
                     }
                 });
 

@@ -10,7 +10,7 @@ public class NotificationClass {
     public BigDecimal amount;
     public Long requestTime;
     public String title;
-    public Long serviceID;
+    public int serviceID;
     public String description;
     public UserProfile originatorProfile;
     public UserProfile receiverProfile;
@@ -45,7 +45,7 @@ public class NotificationClass {
         return receiverProfile;
     }
 
-    public Long getServiceID() {
+    public int getServiceID() {
         return serviceID;
     }
 

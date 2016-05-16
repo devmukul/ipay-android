@@ -339,6 +339,7 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_trusted_network) {
 
             launchEditProfileActivity(PropertyConstants.TRUSTED_NETWORK, new Bundle());
+
         } else if (id == R.id.nav_profile_completeness) {
 
             launchEditProfileActivity(PropertyConstants.PROFILE_COMPLETENESS, new Bundle());

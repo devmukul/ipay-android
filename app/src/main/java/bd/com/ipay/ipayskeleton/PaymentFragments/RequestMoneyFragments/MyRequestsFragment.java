@@ -122,8 +122,9 @@ public class MyRequestsFragment extends Fragment implements HttpResponseListener
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
         mProgressDialog.show();
+        // No PIN needed for now to place a request from me
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
+                new RequestMoneyAcceptRejectOrCancelRequest(id, null);
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mCancelRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_REQUESTS_MONEY,

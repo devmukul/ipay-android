@@ -8,8 +8,7 @@ import android.view.View;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MyRequestsFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.NewMoneyRequestFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 
 public class RequestMoneyActivity extends BaseActivity {
 
@@ -61,7 +60,7 @@ public class RequestMoneyActivity extends BaseActivity {
 
     public void switchToRequestMoneyFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new NewMoneyRequestFragment()).commit();
+                .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
         mFabRequestMoney.setVisibility(View.GONE);
         switchedToPendingList = false;
     }

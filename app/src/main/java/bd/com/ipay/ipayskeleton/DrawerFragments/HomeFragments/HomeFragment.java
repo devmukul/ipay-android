@@ -706,6 +706,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
+                    statusView.setColorFilter(Color.RED);
+                    statusView.setImageResource(R.drawable.ic_error_black_24dp);
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
