@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -41,7 +43,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class IntroducerFragment extends Fragment implements HttpResponseListener {
+public class IntroducerFragment extends ProgressFragment implements HttpResponseListener {
 
     private final int PICK_CONTACT_REQUEST = 100;
     private int MINIMUM_INTRODUCER_COUNT = 2;           // Default value
@@ -111,13 +113,17 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         return v;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
+    }
+
     private void getIntroducerList() {
         if (mGetIntroducersTask != null) {
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_introducer_list));
-        mProgressDialog.show();
         mGetIntroducersTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_INTRODUCER_LIST, getActivity());
         mGetIntroducersTask.mHttpResponseListener = this;
@@ -129,8 +135,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_introduced_list));
-        mProgressDialog.show();
         mGetIntroducedTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCED_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_INTRODUCED_LIST, getActivity());
         mGetIntroducedTask.mHttpResponseListener = this;
@@ -142,8 +146,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_sent_request_list));
-        mProgressDialog.show();
         mGetSentRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SENT_REQUEST_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_SENT_REQUEST_LIST, getActivity());
         mGetSentRequestTask.mHttpResponseListener = this;
@@ -182,7 +184,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
         Gson gson = new Gson();
 
         if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCER_LIST)) {
-
             if (resultList.size() > 2) {
                 try {
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -224,7 +225,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             } else if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
 
-            mProgressDialog.dismiss();
 
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCED_LIST)) {
             if (resultList.size() > 2) {
@@ -251,7 +251,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
             } else if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
 
-            mProgressDialog.dismiss();
 
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_SENT_REQUEST_LIST)) {
             if (resultList.size() > 2) {
@@ -277,7 +276,6 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                 }
             } else if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
-            mProgressDialog.dismiss();
 
         } else if (resultList.get(0).equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
             try {
@@ -301,11 +299,11 @@ public class IntroducerFragment extends Fragment implements HttpResponseListener
                     Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
                 }
             }
-
             mProgressDialog.dismiss();
             mAskForRecommendationTask = null;
         }
 
+        setContentShown(true);
         if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null
                 && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
             mEmptyListTextView.setVisibility(View.VISIBLE);

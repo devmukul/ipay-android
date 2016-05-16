@@ -94,7 +94,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_account_settings, container, false);
-        ((HomeActivity) getActivity()).setTitle(R.string.account_settings);
+        ((HomeActivity) getActivity()).setTitle(R.string.security_settings);
 
         mEnterPINEditText = (EditText) v.findViewById(R.id.new_pin);
         mEnterPasswordEditText = (EditText) v.findViewById(R.id.password);

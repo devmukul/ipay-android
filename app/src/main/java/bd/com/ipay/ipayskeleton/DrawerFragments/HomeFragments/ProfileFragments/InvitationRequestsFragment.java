@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -25,7 +27,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvitationRequestsFragment extends Fragment implements HttpResponseListener {
+public class InvitationRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetInvitationRequestsTask = null;
     private GetInviteInfoResponse mInvitationRequestsResponse;
@@ -68,6 +70,12 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
         return v;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
+    }
+
     private void getInvitationRequestsList() {
         if (mGetInvitationRequestsTask != null) {
             return;
@@ -97,6 +105,7 @@ public class InvitationRequestsFragment extends Fragment implements HttpResponse
         Gson gson = new Gson();
 
         if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
+            setContentShown(true);
             if (resultList.size() > 2) {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     try {

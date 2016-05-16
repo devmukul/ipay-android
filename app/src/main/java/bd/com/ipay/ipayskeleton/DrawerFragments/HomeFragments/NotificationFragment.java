@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -49,7 +51,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class NotificationFragment extends Fragment implements HttpResponseListener {
+public class NotificationFragment extends ProgressFragment implements HttpResponseListener {
 
     private final int ACCEPT = 0;
     private final int REJECT = 1;
@@ -133,6 +135,12 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         return v;
     }
 
+        @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -165,8 +173,6 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_recommendation_list));
-        mProgressDialog.show();
         mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
                 Constants.BASE_URL_MM + Constants.URL_GET_RECOMMENDATION_REQUESTS, getActivity());
         mGetRecommendationRequestsTask.mHttpResponseListener = this;
@@ -251,7 +257,7 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
         if (resultList.get(0).equals(Constants.COMMAND_GET_NOTIFICATIONS)) {
             if (resultList.size() > 2) {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-
+                    setContentShown(true);
                     try {
                         mGetNotificationsResponse = gson.fromJson(resultList.get(2), GetNotificationsResponse.class);
 
@@ -318,10 +324,10 @@ public class NotificationFragment extends Fragment implements HttpResponseListen
 
             mServiceChargeTask = null;
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS)) {
-
             if (resultList.size() > 2) {
                 try {
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                        setContentShown(true);
                         mRecommendationRequestsResponse = gson.fromJson(resultList.get(2), GetRecommendationRequestsResponse.class);
 
                         if (mRecommendationRequestList == null) {

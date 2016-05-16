@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:orientation="horizontal">
+    android:background="@android:color/white"
+    android:layout_marginTop="@dimen/value5"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/activity_horizontal_margin">
+
 
     <ImageView
-        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/imageView"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_person_add_black_24dp" />
+        android:src="@drawable/ic_person_add_black_24dp"/>
+
 
     <TextView
         android:id="@+id/invitee_mobile_number"
         style="@style/TextStyleSecondaryMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_margin="16dp"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
         android:gravity="left"
         android:paddingBottom="4dp"
         android:singleLine="true"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_toEndOf="@+id/imageView"
+        android:layout_centerVertical="true"
+        android:layout_margin="16dp"/>
 
     <View
         android:layout_width="match_parent"
@@ -35,6 +42,8 @@
         android:layout_marginRight="6dp"
         android:layout_toRightOf="@+id/contact_portrait_view"
         android:background="@color/colorDivider" />
+
+
 
 </RelativeLayout>
 
