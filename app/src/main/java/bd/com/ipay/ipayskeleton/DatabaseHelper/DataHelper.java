@@ -4,8 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
+import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.SubscriberEntry;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
@@ -86,8 +94,9 @@ public class DataHelper {
                     DATABASE_VERSION);
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
-            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS
-                    + " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'";
+            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS;
+            if (query != null && !query.isEmpty())
+                    queryString += " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'";
             if (verifiedOnly)
                 queryString += " AND " + DBConstants.KEY_VERIFICATION_STATUS + " = " + DBConstants.VERIFIED_USER;
             queryString += " ORDER BY " + DBConstants.KEY_NAME + " COLLATE NOCASE";
@@ -101,6 +110,46 @@ public class DataHelper {
         }
 
         return cursor;
+    }
+
+    public List<FriendNode> getSubscriberList(String query, boolean verifiedOnly) {
+        Cursor cursor = searchSubscribers(query, verifiedOnly);
+        List<FriendNode> friends = new ArrayList<>();
+
+        if (cursor.moveToFirst()) {
+            int nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
+            int mobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
+
+            int verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
+            int accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
+
+            File dir = new File(Environment.getExternalStorageDirectory().getPath()
+                    + Constants.PICTURE_FOLDER);
+            if (!dir.exists()) dir.mkdir();
+
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(nameIndex);
+                String mobileNumber = cursor.getString(mobileNumberIndex);
+                int verificationStatus = cursor.getInt(verificationStatusIndex);
+                int accountType = cursor.getInt(accountTypeIndex);
+                String profilePictureUrl = null;
+
+                File file = new File(dir, mobileNumber.replaceAll("[^0-9]", "") + ".jpg");
+                if (file.exists()) {
+                    profilePictureUrl = file.getAbsolutePath();
+                }
+
+                FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, true,
+                        verificationStatus, name, profilePictureUrl));
+                friends.add(friend);
+            }
+        }
+
+        return friends;
+    }
+
+    public List<FriendNode> getSubscriberList() {
+        return getSubscriberList("", false);
     }
 
     public boolean checkIfStringFieldExists(String tableName,

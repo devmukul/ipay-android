@@ -170,7 +170,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
      * Must be called after show(Non)SubscriberSheet
      */
     protected void setContactInformationInSheet(String contactName, String contactNumber,
-                String imageUrl, final int backgroundColor, int verificationStatus, int accountType) {
+                String imageUrl, final int backgroundColor, boolean isFriend, boolean isVerified, int accountType) {
         if (selectedBottomSheetView == null)
             return;
 
@@ -183,21 +183,23 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         contactImage.setBackgroundResource(backgroundColor);
         contactNameView.setText(contactName);
 
-        if (verificationStatus == DBConstants.VERIFIED_USER) {
-            isVerifiedView.setText(getString(R.string.verified).toUpperCase());
-            isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_verified);
-        } else if (verificationStatus == DBConstants.NOT_VERIFIED_USER) {
-            isVerifiedView.setText(getString(R.string.unverified).toUpperCase());
-            isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_unverified);
+        if (isFriend) {
+            if (isVerified) {
+                isVerifiedView.setText(getString(R.string.verified).toUpperCase());
+                isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_verified);
+            } else {
+                isVerifiedView.setText(getString(R.string.unverified).toUpperCase());
+                isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_unverified);
+            }
+
+            if (accountType == Constants.PERSONAL_ACCOUNT_TYPE) {
+                accountTypeView.setText(R.string.personal_account);
+            } else {
+                accountTypeView.setText(R.string.business_account);
+            }
+
         } else {
             isVerifiedView.setVisibility(View.GONE);
-        }
-
-        if (accountType == Constants.PERSONAL_ACCOUNT_TYPE) {
-            accountTypeView.setText(R.string.personal_account);
-        } else if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
-            accountTypeView.setText(R.string.business_account);
-        } else {
             accountTypeView.setVisibility(View.GONE);
         }
 
@@ -417,7 +419,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         }
     }
 
-    protected void showSubscriberSheet(int verificationStatus) {
+    protected void showSubscriberSheet(boolean isVerified) {
         if (mBottomSheetLayout == null)
             return;
 
@@ -425,11 +427,14 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
         // TODO: Show a green tick for the verified users
         Button askForConfirmationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_introduction);
-        if (verificationStatus == DBConstants.NOT_VERIFIED_USER) {
-            if (askForConfirmationButton != null) askForConfirmationButton.setVisibility(View.GONE);
+        if (!isVerified) {
+            if (askForConfirmationButton != null)
+                askForConfirmationButton.setVisibility(View.GONE);
 
-        } else if (askForConfirmationButton != null)
-            askForConfirmationButton.setVisibility(View.VISIBLE);
+        } else {
+            if (askForConfirmationButton != null)
+                askForConfirmationButton.setVisibility(View.VISIBLE);
+        }
 
         mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
         mBottomSheetLayout.expandSheet();
@@ -556,16 +561,19 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                             @Override
                             public void run() {
                                 int randomProfileBackgroundColor = PROFILE_PICTURE_BACKGROUNDS[getAdapterPosition() % PROFILE_PICTURE_BACKGROUNDS.length];
-                                int verificationStatus = (friend.getInfo().isVerified() ? DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
+                                boolean isVerified = friend.getInfo().isVerified();
+                                boolean isFriend = friend.getInfo().isFriend();
                                 int accountType = friend.getInfo().getAccountType();
 
-                                if (friend.getInfo().isVerified()) {
-                                    showNonSubscriberSheet();
+                                if (friend.getInfo().isFriend()) {
+                                    showSubscriberSheet(isVerified);
                                 } else {
-                                    showSubscriberSheet(verificationStatus);
+                                    showNonSubscriberSheet();
                                 }
+
                                 setContactInformationInSheet(name,
-                                        phoneNumber, profilePictureUrl, randomProfileBackgroundColor, verificationStatus, accountType);
+                                        phoneNumber, profilePictureUrl, randomProfileBackgroundColor,
+                                        isFriend, isVerified, accountType);
                             }
                         }, 100);
                     }

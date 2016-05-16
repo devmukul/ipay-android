@@ -31,6 +31,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private Button mAllContactsSelector;
     private Button miPayContactsSelector;
 
+    private AllContactsFragment allContactsFragment;
+    private IPayContactsFragment iPayContactsFragment;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contact_holder, container, false);
@@ -86,7 +89,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             public void run() {
                 try {
                     if (getActivity() != null) {
-                        AllContactsFragment allContactsFragment = new AllContactsFragment();
+                        if (allContactsFragment == null)
+                            allContactsFragment = new AllContactsFragment();
                         allContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, allContactsFragment).commit();
                     }
@@ -105,7 +109,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    IPayContactsFragment iPayContactsFragment = new IPayContactsFragment();
+                    if (iPayContactsFragment == null)
+                        iPayContactsFragment = new IPayContactsFragment();
                     iPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, iPayContactsFragment).commit();
                 }

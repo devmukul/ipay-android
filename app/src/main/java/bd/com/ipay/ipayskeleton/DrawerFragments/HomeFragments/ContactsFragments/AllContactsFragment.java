@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,11 @@ public class AllContactsFragment extends BaseContactsFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setContentShown(false);
+
+        if (mGetAllContactsResponse == null)
+            setContentShown(false);
+        else
+            setContentShown(true);
     }
 
     @Override
@@ -64,7 +69,6 @@ public class AllContactsFragment extends BaseContactsFragment {
     @Override
     public void onResume() {
         super.onResume();
-
         mQuery = "";
     }
 
@@ -76,6 +80,12 @@ public class AllContactsFragment extends BaseContactsFragment {
         mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_CONTACTS,
                 Constants.BASE_URL_FRIEND + Constants.URL_GET_CONTACTS, getActivity(), this);
         mGetAllContactsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void populateList(List<FriendNode> friends) {
+        mAdapter = new ContactListAdapter(friends);
+        mRecyclerView.setAdapter(mAdapter);
+        setContentShown(true);
     }
 
     @Override
@@ -102,9 +112,7 @@ public class AllContactsFragment extends BaseContactsFragment {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     FriendNode[] friendNodeArray = gson.fromJson(resultList.get(2), FriendNode[].class);
                     mGetAllContactsResponse = Arrays.asList(friendNodeArray);
-                    mAdapter = new ContactListAdapter(mGetAllContactsResponse);
-                    mRecyclerView.setAdapter(mAdapter);
-                    setContentShown(true);
+                    populateList(mGetAllContactsResponse);
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_loading_friends, Toast.LENGTH_LONG).show();
