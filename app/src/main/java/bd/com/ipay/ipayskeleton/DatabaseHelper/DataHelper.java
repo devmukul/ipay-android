@@ -40,7 +40,7 @@ public class DataHelper {
         instance = null;
     }
 
-    public void createSubscribers(SubscriberEntry mSubscriberEntry) {
+    public void createSubscriber(FriendNode friendNode) {
         SQLiteDatabase db = null;
 
         try {
@@ -48,39 +48,19 @@ public class DataHelper {
                     DATABASE_VERSION);
 
             ContentValues values = new ContentValues();
-            values.put(DBConstants.KEY_MOBILE_NUMBER, mSubscriberEntry.getMobileNumber());
-            values.put(DBConstants.KEY_NAME, mSubscriberEntry.getName());
-            values.put(DBConstants.KEY_ACCOUNT_TYPE, mSubscriberEntry.getAccountType());
-            values.put(DBConstants.KEY_PROFILE_PICTURE, mSubscriberEntry.getProfilePicture());
-            values.put(DBConstants.KEY_VERIFICATION_STATUS, mSubscriberEntry.getIsVerified());
+            values.put(DBConstants.KEY_MOBILE_NUMBER, friendNode.getPhoneNumber());
+            values.put(DBConstants.KEY_NAME, friendNode.getInfo().getName());
+            values.put(DBConstants.KEY_ACCOUNT_TYPE, friendNode.getInfo().getAccountType());
+            values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
+            values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
+                    DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
 
             db = dOpenHelper.getWritableDatabase();
-            db.insert(DBConstants.DB_TABLE_SUBSCRIBERS, null, values);
+            db.insertWithOnConflict(DBConstants.DB_TABLE_SUBSCRIBERS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public Cursor getSubscribers() {
-        SQLiteDatabase db = null;
-        Cursor cursor = null;
-
-        try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
-            db = dOpenHelper.getReadableDatabase();
-
-            cursor = db.rawQuery("SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS, null);
-
-            if (cursor != null) {
-                cursor.getCount();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return cursor;
     }
 
     public Cursor searchSubscribers(String query) {
@@ -120,7 +100,7 @@ public class DataHelper {
         if (cursor.moveToFirst()) {
             int nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
             int mobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
-
+            int profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
             int verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
             int accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
 
@@ -133,12 +113,7 @@ public class DataHelper {
                 String mobileNumber = cursor.getString(mobileNumberIndex);
                 int verificationStatus = cursor.getInt(verificationStatusIndex);
                 int accountType = cursor.getInt(accountTypeIndex);
-                String profilePictureUrl = null;
-
-                File file = new File(dir, mobileNumber.replaceAll("[^0-9]", "") + ".jpg");
-                if (file.exists()) {
-                    profilePictureUrl = file.getAbsolutePath();
-                }
+                String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
 
                 FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, true,
                         verificationStatus, name, profilePictureUrl));
