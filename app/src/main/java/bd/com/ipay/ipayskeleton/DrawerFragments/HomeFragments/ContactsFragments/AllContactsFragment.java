@@ -1,22 +1,11 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
-import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
 public class AllContactsFragment extends BaseContactsFragment {

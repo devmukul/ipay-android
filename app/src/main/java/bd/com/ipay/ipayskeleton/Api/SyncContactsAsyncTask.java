@@ -129,9 +129,9 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
         if (resultList.get(0).equals(Constants.COMMAND_ADD_FRIENDS)) {
             try {
-                mAddFriendResponse = gson.fromJson(resultList.get(2), AddFriendResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-
+                    if (resultList.size() > 2)
+                        mAddFriendResponse = gson.fromJson(resultList.get(2), AddFriendResponse.class);
                 } else {
                     Log.e(context.getString(R.string.failed_add_friend), mAddFriendResponse.getMessage());
                 }
@@ -140,11 +140,12 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             }
 
             mAddFriendResponse = null;
+
         } else if (resultList.get(0).equals(Constants.COMMAND_UPDATE_FRIEND)) {
             try {
-                mUpdateFriendResponse = gson.fromJson(resultList.get(2), UpdateFriendResponse.class);
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-
+                    if (resultList.size() > 2)
+                        mUpdateFriendResponse = gson.fromJson(resultList.get(2), UpdateFriendResponse.class);
                 } else {
                     Log.e(context.getString(R.string.failed_update_friend), mUpdateFriendResponse.getMessage());
                 }

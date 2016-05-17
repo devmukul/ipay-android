@@ -32,8 +32,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private Button mAllContactsSelector;
     private Button miPayContactsSelector;
 
-    private AllContactsFragment allContactsFragment;
-    private IPayContactsFragment iPayContactsFragment;
+    private AllContactsFragment mAllContactsFragment;
+    private IPayContactsFragment mIPayContactsFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,10 +92,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             public void run() {
                 try {
                     if (getActivity() != null) {
-                        if (allContactsFragment == null)
-                            allContactsFragment = new AllContactsFragment();
-                        allContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, allContactsFragment).commit();
+                        if (mAllContactsFragment == null)
+                            mAllContactsFragment = new AllContactsFragment();
+                        mAllContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mAllContactsFragment).commit();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -112,10 +112,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (iPayContactsFragment == null)
-                        iPayContactsFragment = new IPayContactsFragment();
-                    iPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, iPayContactsFragment).commit();
+                    if (mIPayContactsFragment == null)
+                        mIPayContactsFragment = new IPayContactsFragment();
+                    mIPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mIPayContactsFragment).commit();
                 }
             }, 300);
     }
@@ -129,8 +129,11 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
             if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
                 try {
-                    if (resultList.size() > 2)
+                    if (resultList.size() > 2) {
                         ContactsHolderFragment.mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
+                        if (mAllContactsFragment != null) mAllContactsFragment.updateInviteStatus();
+                    }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -344,6 +344,10 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         });
     }
 
+    public void updateInviteStatus() {
+        if (mAdapter != null) mAdapter.notifyDataSetChanged();
+    }
+
     protected void sendRecommendationRequest(String mobileNumber) {
         if (mAskForRecommendationTask != null) {
             return;
@@ -558,7 +562,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         }
 
         public boolean isInvited(String phoneNumber) {
-            if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
+            if (ContactsHolderFragment.mGetInviteInfoResponse == null) return false;
+            else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
                 return true;
             return false;
         }
