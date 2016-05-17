@@ -89,6 +89,7 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_documents, container, false);
+        getActivity().setTitle(R.string.identification_documents);
 
         mProgressDialog = new ProgressDialog(getActivity());
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
