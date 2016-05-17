@@ -27,6 +27,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -130,7 +131,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -140,39 +141,36 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_LOG_IN)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_LOG_IN)) {
 
-            if (resultList.size() > 2) {
 
-                try {
-                    mLoginResponseModel = gson.fromJson(resultList.get(2), LoginResponse.class);
-                    String message = mLoginResponseModel.getMessage();
+            try {
+                mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
+                String message = mLoginResponseModel.getMessage();
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
-                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
+                    pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
 
-                        if (mLoginResponseModel.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
-                            pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).commit();
-                        else
-                            pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).commit();
+                    if (mLoginResponseModel.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
+                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).commit();
+                    else
+                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).commit();
 
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mLoginTask = null;

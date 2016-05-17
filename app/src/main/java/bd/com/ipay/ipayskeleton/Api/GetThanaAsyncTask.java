@@ -25,11 +25,11 @@ public class GetThanaAsyncTask extends HttpRequestGetAsyncTask {
 
         this.mHttpResponseListener = new HttpResponseListener() {
             @Override
-            public void httpResponseReceiver(String result) {
-                String[] resultArr = result.split(";");
+            public void httpResponseReceiver(HttpResponseObject result) {
+
                 try {
                     Gson gson = new Gson();
-                    GetThanaResponse getThanaResponse = gson.fromJson(resultArr[2],
+                    GetThanaResponse getThanaResponse = gson.fromJson(result.getJsonString(),
                             GetThanaResponse.class);
 
                     List<Thana> thanas = getThanaResponse.getThanas();
@@ -42,7 +42,7 @@ public class GetThanaAsyncTask extends HttpRequestGetAsyncTask {
 
                     Log.i("Thana Ids", ids.toString());
                     Log.i("Thana Names", names.toString());
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

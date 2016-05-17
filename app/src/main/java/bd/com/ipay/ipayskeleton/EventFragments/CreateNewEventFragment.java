@@ -22,6 +22,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.CreateNewEventResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.GetEventCategoriesResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -110,7 +111,7 @@ public class CreateNewEventFragment extends Fragment implements HttpResponseList
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             mCreateEventTask = null;
@@ -120,28 +121,25 @@ public class CreateNewEventFragment extends Fragment implements HttpResponseList
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_EVENT_CATEGORIES)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_EVENT_CATEGORIES)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mGetEventCategoriesResponse = gson.fromJson(resultList.get(2), GetEventCategoriesResponse.class);
+            try {
+                mGetEventCategoriesResponse = gson.fromJson(result.getJsonString(), GetEventCategoriesResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        // TODO
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_to_fetch_categories, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    // TODO
+                } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_to_fetch_categories, Toast.LENGTH_SHORT).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_to_fetch_categories, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_to_fetch_categories, Toast.LENGTH_SHORT).show();
+            }
 
             mProgressDialog.dismiss();
             mGetEventCategoryTask = null;

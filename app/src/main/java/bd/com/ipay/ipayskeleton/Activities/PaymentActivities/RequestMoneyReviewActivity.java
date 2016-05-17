@@ -16,6 +16,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteFragment;
@@ -101,41 +102,37 @@ public class RequestMoneyReviewActivity extends BaseActivity implements HttpResp
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mGetProfileInfoTask = null;
             Toast.makeText(this, R.string.logout_failed, Toast.LENGTH_LONG).show();
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_USER_INFO)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
 
             try {
-                mGetUserInfoResponse = gson.fromJson(resultList.get(2), GetUserInfoResponse.class);
-                if (resultList.get(1) != null) {
-                    if (resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        String name = mGetUserInfoResponse.getName();
-                        String profilePicture = null;
-                        if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                            profilePicture = mGetUserInfoResponse
-                                    .getProfilePictures().get(0).getUrl();
-                        }
-
-                        switchToRequestReviewFragment(name, profilePicture);
-                    } else if (resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_FOUND)) {
-                        switchToSendInviteFragment();
-                    } else {
-                        Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
-                        finish();
+                mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String name = mGetUserInfoResponse.getName();
+                    String profilePicture = null;
+                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                        profilePicture = mGetUserInfoResponse
+                                .getProfilePictures().get(0).getUrl();
                     }
 
+                    switchToRequestReviewFragment(name, profilePicture);
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                    switchToSendInviteFragment();
                 } else {
                     Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
                     finish();
                 }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
 

@@ -16,6 +16,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -79,7 +80,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             if (getActivity() != null)
@@ -87,46 +88,42 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
         mProgressDialog.dismiss();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
-            if (resultList.size() > 2) {
-                try {
-                    mGetServiceChargeResponse = gson.fromJson(resultList.get(2), GetServiceChargeResponse.class);
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
+            try {
+                mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (mGetServiceChargeResponse != null) {
-                            if (mGetServiceChargeResponse.getServiceCharge(getAmount()).compareTo(BigDecimal.ZERO) < 0) {
-                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                                getActivity().finish();
-                            } else {
-                                onServiceChargeLoadFinished(mGetServiceChargeResponse.getServiceCharge(getAmount()));
-                            }
-
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (mGetServiceChargeResponse != null) {
+                        if (mGetServiceChargeResponse.getServiceCharge(getAmount()).compareTo(BigDecimal.ZERO) < 0) {
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            getActivity().finish();
                         } else {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                            getActivity().finish();
-                            return;
+                            onServiceChargeLoadFinished(mGetServiceChargeResponse.getServiceCharge(getAmount()));
                         }
-                    } else {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                            getActivity().finish();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
 
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
+                        return;
+                    }
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
+                    }
                 }
-            } else if (getActivity() != null) {
+            } catch (Exception e) {
+                e.printStackTrace();
+
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
+
 
             mServiceChargeTask = null;
         }

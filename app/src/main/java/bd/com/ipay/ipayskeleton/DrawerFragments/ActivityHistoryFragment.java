@@ -29,13 +29,12 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityRequest;
@@ -459,7 +458,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mUserActivityTask = null;
@@ -469,39 +468,36 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_USER_ACTIVITIES)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_ACTIVITIES)) {
 
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    try {
-                        mUserActivityResponse = gson.fromJson(resultList.get(2), UserActivityResponse.class);
+                try {
+                    mUserActivityResponse = gson.fromJson(result.getJsonString(), UserActivityResponse.class);
 
-                        if (userActivityResponsesList == null || userActivityResponsesList.size() == 0) {
-                            userActivityResponsesList = mUserActivityResponse.getActivities();
-                        } else {
-                            List<UserActivityClass> tempUserActivityResponsesList;
-                            tempUserActivityResponsesList = mUserActivityResponse.getActivities();
-                            userActivityResponsesList.addAll(tempUserActivityResponsesList);
-                        }
-
-                        hasNext = mUserActivityResponse.isHasNext();
-                        mActivityLogAdapter.notifyDataSetChanged();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG).show();
+                    if (userActivityResponsesList == null || userActivityResponsesList.size() == 0) {
+                        userActivityResponsesList = mUserActivityResponse.getActivities();
+                    } else {
+                        List<UserActivityClass> tempUserActivityResponsesList;
+                        tempUserActivityResponsesList = mUserActivityResponse.getActivities();
+                        userActivityResponsesList.addAll(tempUserActivityResponsesList);
                     }
 
-                } else {
+                    hasNext = mUserActivityResponse.isHasNext();
+                    mActivityLogAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG).show();
+            }
 
             mSwipeRefreshLayout.setRefreshing(false);
             mUserActivityTask = null;

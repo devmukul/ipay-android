@@ -22,6 +22,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -91,7 +92,7 @@ public class InvitationRequestsFragment extends ProgressFragment implements Http
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             mGetInvitationRequestsTask = null;
@@ -101,15 +102,14 @@ public class InvitationRequestsFragment extends ProgressFragment implements Http
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_INVITE_INFO)) {
             setContentShown(true);
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     try {
-                        mInvitationRequestsResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
+                        mInvitationRequestsResponse = gson.fromJson(result.getJsonString(), GetInviteInfoResponse.class);
 
                         if (mInvitations == null || mInvitations.size() == 0) {
                             mInvitations = mInvitationRequestsResponse.getInvitees();
@@ -136,8 +136,6 @@ public class InvitationRequestsFragment extends ProgressFragment implements Http
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
 
             mProgressDialog.dismiss();
         }

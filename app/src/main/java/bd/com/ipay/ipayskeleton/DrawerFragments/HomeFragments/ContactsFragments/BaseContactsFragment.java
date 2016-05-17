@@ -42,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivit
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationResponse;
@@ -344,10 +345,6 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         });
     }
 
-    public void updateInviteStatus() {
-        if (mAdapter != null) mAdapter.notifyDataSetChanged();
-    }
-
     protected void sendRecommendationRequest(String mobileNumber) {
         if (mAskForRecommendationTask != null) {
             return;
@@ -393,7 +390,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             mSendInviteTask = null;
@@ -404,27 +401,24 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_SEND_INVITE)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
             try {
-                if (resultList.size() > 2) {
-                    mSendInviteResponse = gson.fromJson(resultList.get(2), SendInviteResponse.class);
+                mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
-                        }
-
-                        ContactsHolderFragment.mGetInviteInfoResponse.invitees.add(mSelectedNumber);
-
-                    } else if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
                     }
+
+                    ContactsHolderFragment.mGetInviteInfoResponse.invitees.add(mSelectedNumber);
+
                 } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
@@ -435,21 +429,17 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
             mProgressDialog.dismiss();
             mSendInviteTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
             try {
 
-                if (resultList.size() > 2) {
-                    mAskForRecommendationResponse = gson.fromJson(resultList.get(2), AskForRecommendationResponse.class);
+                mAskForRecommendationResponse = gson.fromJson(result.getJsonString(), AskForRecommendationResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
-                        }
-                    } else if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mAskForRecommendationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
                     }
                 } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), mAskForRecommendationResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

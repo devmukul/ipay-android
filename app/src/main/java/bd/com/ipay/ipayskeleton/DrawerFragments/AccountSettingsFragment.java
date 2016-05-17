@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
@@ -349,7 +350,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -362,109 +363,99 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_SET_PIN)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_SET_PIN)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mSetPinResponse = gson.fromJson(resultList.get(2), SetPinResponse.class);
+            try {
+                mSetPinResponse = gson.fromJson(result.getJsonString(), SetPinResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mSavePINTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_CHANGE_PASSWORD)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_CHANGE_PASSWORD)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mChangePasswordResponse = gson.fromJson(resultList.get(2), ChangePasswordResponse.class);
+            try {
+                mChangePasswordResponse = gson.fromJson(result.getJsonString(), ChangePasswordResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.change_pass_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.change_pass_failed, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.change_pass_failed, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mChangePasswordTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mGetTrustedDeviceResponse = gson.fromJson(resultList.get(2), GetTrustedDeviceResponse.class);
+            try {
+                mGetTrustedDeviceResponse = gson.fromJson(result.getJsonString(), GetTrustedDeviceResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        ArrayList<TrustedDevice> mTrustedDeviceList = (ArrayList<TrustedDevice>) mGetTrustedDeviceResponse.getDevices();
-                        mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mTrustedDeviceList);
-                        mTrustedDevicesListView.setAdapter(mTrustedDeviceAdapter);
-                        Utilities.setUpNonScrollableListView(mTrustedDevicesListView);
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null) {
+                    ArrayList<TrustedDevice> mTrustedDeviceList = (ArrayList<TrustedDevice>) mGetTrustedDeviceResponse.getDevices();
+                    mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mTrustedDeviceList);
+                    mTrustedDevicesListView.setAdapter(mTrustedDeviceAdapter);
+                    Utilities.setUpNonScrollableListView(mTrustedDevicesListView);
+                } else {
+                    if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
 
             mProgressDialog.dismiss();
             mGetTrustedDeviceTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_REMOVE_TRUSTED_DEVICE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_TRUSTED_DEVICE)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mRemoveTrustedDeviceResponse = gson.fromJson(resultList.get(2), RemoveTrustedDeviceResponse.class);
+            try {
+                mRemoveTrustedDeviceResponse = gson.fromJson(result.getJsonString(), RemoveTrustedDeviceResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.success_device_removed, Toast.LENGTH_LONG).show();
-                        }
-
-                        mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
-                        mProgressDialog.show();
-
-                        loadTrustedDeviceList();
-                    } else {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        }
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.success_device_removed, Toast.LENGTH_LONG).show();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                    mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
+                    mProgressDialog.show();
+
+                    loadTrustedDeviceList();
+                } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -505,31 +496,26 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             String Android = "android";
             String IOS = "ios";
             String Computer = "browser";
-            if(DeviceID.toLowerCase().contains(Android.toLowerCase()))
-            {
+            if (DeviceID.toLowerCase().contains(Android.toLowerCase())) {
                 deviceimageView.setImageResource(images[1]);
 
-            } else if(DeviceID.toLowerCase().contains(IOS.toLowerCase()))
-            {
+            } else if (DeviceID.toLowerCase().contains(IOS.toLowerCase())) {
                 deviceimageView.setImageResource(images[2]);
 
-            } else if(DeviceID.toLowerCase().contains(Computer.toLowerCase()))
-            {
+            } else if (DeviceID.toLowerCase().contains(Computer.toLowerCase())) {
                 deviceimageView.setImageResource(images[0]);
 
             }
 
             TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-            String mDeviceID="mobile-android-";
-            mDeviceID=  mDeviceID.concat(telephonyManager.getDeviceId());
+            String mDeviceID = "mobile-android-";
+            mDeviceID = mDeviceID.concat(telephonyManager.getDeviceId());
 
-            if(mDeviceID.equals(DeviceID))
-            {
+            if (mDeviceID.equals(DeviceID)) {
                 removeButton.setVisibility(View.INVISIBLE);
                 currentDevice.setVisibility(View.VISIBLE);
                 deviceNameView.setTextColor(getResources().getColor(R.color.cardview_dark_background));
-            } else
-            {
+            } else {
                 removeButton.setVisibility(View.VISIBLE);
                 currentDevice.setVisibility(View.INVISIBLE);
 

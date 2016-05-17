@@ -26,6 +26,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsResponse;
@@ -134,7 +135,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -145,72 +146,67 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT)) {
 
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
 
-                        mGetPendingPaymentsResponse = gson.fromJson(resultList.get(2), GetPendingPaymentsResponse.class);
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
 
-                        if (pendingPaymentClasses == null) {
-                            pendingPaymentClasses = mGetPendingPaymentsResponse.getRequests();
-                        } else {
-                            List<PendingPaymentClass> tempPendingMoneyRequestClasses;
-                            tempPendingMoneyRequestClasses = mGetPendingPaymentsResponse.getRequests();
-                            pendingPaymentClasses.addAll(tempPendingMoneyRequestClasses);
-                        }
+                    mGetPendingPaymentsResponse = gson.fromJson(result.getJsonString(), GetPendingPaymentsResponse.class);
 
-                        mInvoicesSentAdapter.notifyDataSetChanged();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    if (pendingPaymentClasses == null) {
+                        pendingPaymentClasses = mGetPendingPaymentsResponse.getRequests();
+                    } else {
+                        List<PendingPaymentClass> tempPendingMoneyRequestClasses;
+                        tempPendingMoneyRequestClasses = mGetPendingPaymentsResponse.getRequests();
+                        pendingPaymentClasses.addAll(tempPendingMoneyRequestClasses);
                     }
 
-                } else {
+                    mInvoicesSentAdapter.notifyDataSetChanged();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+            }
 
             mSwipeRefreshLayout.setRefreshing(false);
             mPendingInvoicesTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_CANCEL_PAYMENT_REQUEST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_PAYMENT_REQUEST)) {
 
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mPaymentAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
-                                PaymentAcceptRejectOrCancelResponse.class);
-                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            PaymentAcceptRejectOrCancelResponse.class);
+                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
-                        // Refresh the pending list
-                        if (pendingPaymentClasses != null)
-                            pendingPaymentClasses.clear();
-                        pendingPaymentClasses = null;
-                        historyPageCount = 0;
-                        getInvoicesPendingRequests();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
+                    // Refresh the pending list
+                    if (pendingPaymentClasses != null)
+                        pendingPaymentClasses.clear();
+                    pendingPaymentClasses = null;
+                    historyPageCount = 0;
+                    getInvoicesPendingRequests();
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mCancelPaymentRequestTask = null;

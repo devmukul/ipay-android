@@ -28,6 +28,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -178,7 +179,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             mUploadIdentifierDocumentAsyncTask = null;
@@ -186,14 +187,14 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_UPLOAD_DOCUMENT)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_UPLOAD_DOCUMENT)) {
             try {
-                mUploadDocumentResponse = gson.fromJson(resultList.get(2), UploadDocumentResponse.class);
+                mUploadDocumentResponse = gson.fromJson(result.getJsonString(), UploadDocumentResponse.class);
 
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
                         ((ProfileActivity) getActivity()).switchToDocumentListFragment();

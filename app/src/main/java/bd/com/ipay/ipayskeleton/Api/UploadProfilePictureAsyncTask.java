@@ -25,7 +25,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, String> {
+public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpResponseObject> {
 
     private Context mContext;
     private String imagePath;
@@ -39,16 +39,16 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, String>
     }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected HttpResponseObject doInBackground(Void... params) {
 
-        String result = null;
+        HttpResponseObject mHttpResponseObject = null;
 
         if (Utilities.isConnectionAvailable(mContext))
-            result = uploadImage(imagePath);
+            mHttpResponseObject = uploadImage(imagePath);
         else
             Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
 
-        return result;
+        return mHttpResponseObject;
     }
 
     @Override
@@ -57,12 +57,12 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, String>
     }
 
     @Override
-    protected void onPostExecute(final String result) {
+    protected void onPostExecute(final HttpResponseObject result) {
 
         if (result != null) {
-            List<String> resultList = Arrays.asList(result.split(";"));
 
-            if (resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 // In case of un-authorization go to login activity
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
                 mContext.startActivity(intent);
@@ -74,7 +74,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, String>
 
     }
 
-    private String uploadImage(String selectedImagePath) {
+    private HttpResponseObject uploadImage(String selectedImagePath) {
 
         try {
             HttpClient client = new DefaultHttpClient();
@@ -96,11 +96,13 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, String>
             HttpEntity httpEntity = response.getEntity();
 
             int status = response.getStatusLine().getStatusCode();
-            String result = null;
 
-            result = API_COMMAND + ";" + status + ";" + EntityUtils.toString(httpEntity);
+            HttpResponseObject mHttpResponseObject = new HttpResponseObject();
+            mHttpResponseObject.setStatus(status);
+            mHttpResponseObject.setApiCommand(API_COMMAND);
+            mHttpResponseObject.setJsonString(EntityUtils.toString(httpEntity));
 
-            return result;
+            return mHttpResponseObject;
 
         } catch (Exception e) {
             e.printStackTrace();

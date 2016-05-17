@@ -19,6 +19,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenRequest;
@@ -122,7 +123,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mLogoutTask = null;
@@ -130,24 +131,22 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_LOG_OUT)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
 
             try {
-                if (resultList.size() > 2) {
-                    mLogOutResponse = gson.fromJson(resultList.get(2), LogoutResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        finish();
-                        Intent intent = new Intent(context, SignupOrLoginActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(context, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } else
+                mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    finish();
+                    Intent intent = new Intent(context, SignupOrLoginActivity.class);
+                    startActivity(intent);
+                } else {
                     Toast.makeText(context, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(context, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
@@ -155,26 +154,21 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
 
             mLogoutTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_REFRESH_TOKEN)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_TOKEN)) {
 
             try {
-                if (resultList.size() > 2) {
-                    HomeActivity.mGetRefreshTokenResponse = gson.fromJson(resultList.get(2), GetRefreshTokenResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                HomeActivity.mGetRefreshTokenResponse = gson.fromJson(result.getJsonString(), GetRefreshTokenResponse.class);
 
-                    } else {
-                        Toast.makeText(context, HomeActivity.mGetRefreshTokenResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        finish();
-                        Intent intent = new Intent(context, SignupOrLoginActivity.class);
-                        startActivity(intent);
-                    }
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    // Do nothing
                 } else {
-                    Toast.makeText(context, R.string.please_login_again, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, HomeActivity.mGetRefreshTokenResponse.getMessage(), Toast.LENGTH_LONG).show();
                     finish();
                     Intent intent = new Intent(context, SignupOrLoginActivity.class);
                     startActivity(intent);
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(context, R.string.please_login_again, Toast.LENGTH_LONG).show();

@@ -23,6 +23,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyRequest;
@@ -155,7 +156,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
 
         if (result == null) {
@@ -166,34 +167,30 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_REQUEST_MONEY)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_REQUEST_MONEY)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mRequestMoneyResponse = gson.fromJson(resultList.get(2), RequestMoneyResponse.class);
+            try {
+                mRequestMoneyResponse = gson.fromJson(result.getJsonString(), RequestMoneyResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
 
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            } else if (getActivity()
-                    != null)
-                Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT).show();
+            }
 
             mProgressDialog.dismiss();
             mRequestMoneyTask = null;

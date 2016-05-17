@@ -44,6 +44,7 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
@@ -447,10 +448,10 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
         else purposeLayout.setVisibility(View.GONE);
 
-        if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+        if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
             statusTextView.setText(getString(R.string.transaction_successful));
             statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
-        } else if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
+        } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
             statusTextView.setText(getString(R.string.in_progress));
         } else {
             statusTextView.setText(getString(R.string.transaction_failed));
@@ -460,7 +461,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mTransactionHistoryTask = null;
@@ -470,43 +471,41 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
 
-                    try {
-                        mTransactionHistoryResponse = gson.fromJson(resultList.get(2), TransactionHistoryResponse.class);
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-                            userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions();
-                        } else {
-                            List<TransactionHistoryClass> tempTransactionHistoryClasses;
-                            tempTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions();
-                            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
-                        }
+                try {
+                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
 
-                        hasNext = mTransactionHistoryResponse.isHasNext();
-                        if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
-                            mEmptyListTextView.setVisibility(View.GONE);
-                        else mEmptyListTextView.setVisibility(View.VISIBLE);
-
-                        mTransactionHistoryAdapter.notifyDataSetChanged();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                    if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
+                        userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions();
+                    } else {
+                        List<TransactionHistoryClass> tempTransactionHistoryClasses;
+                        tempTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions();
+                        userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
                     }
 
-                } else {
+                    hasNext = mTransactionHistoryResponse.isHasNext();
+                    if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
+                        mEmptyListTextView.setVisibility(View.GONE);
+                    else mEmptyListTextView.setVisibility(View.VISIBLE);
+
+                    mTransactionHistoryAdapter.notifyDataSetChanged();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+            }
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
@@ -558,14 +557,12 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 mTime.setText(time);
 
 
-                if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
-                        .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
                     statusView.setColorFilter(Color.GREEN);
                     statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
 
-                } else if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
-                        .equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
+                } else if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_cached_black_24dp);

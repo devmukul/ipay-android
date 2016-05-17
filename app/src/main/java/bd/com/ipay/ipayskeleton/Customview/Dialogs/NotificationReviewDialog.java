@@ -21,6 +21,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
@@ -59,7 +60,7 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
     private TextView mMobileNumberView;
-//    private TextView mDescriptionView;
+    //    private TextView mDescriptionView;
     private TextView mTitleView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
@@ -236,7 +237,7 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.show();
@@ -249,15 +250,15 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
 
             try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
+                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
                         RequestMoneyAcceptRejectOrCancelResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (context != null)
                         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
@@ -278,11 +279,11 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
             mProgressDialog.dismiss();
             mRejectRequestTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
             try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
+                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
                         RequestMoneyAcceptRejectOrCancelResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (context != null)
                         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
@@ -303,61 +304,55 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
             mProgressDialog.dismiss();
             mAcceptRequestTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_REJECT_PAYMENT_REQUEST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_PAYMENT_REQUEST)) {
 
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mPaymentAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
-                                PaymentAcceptRejectOrCancelResponse.class);
-                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                        if (context != null)
-                            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            PaymentAcceptRejectOrCancelResponse.class);
+                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                    if (context != null)
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 
-                        if (mReviewFinishListener != null)
-                            mReviewFinishListener.onReviewFinish();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (context != null)
-                            Toast.makeText(context, R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
+                    if (mReviewFinishListener != null)
+                        mReviewFinishListener.onReviewFinish();
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (context != null)
                         Toast.makeText(context, R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
                 }
-            } else if (context != null)
-                Toast.makeText(context, R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (context != null)
+                    Toast.makeText(context, R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mRejectPaymentTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
 
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mPaymentAcceptRejectOrCancelResponse = gson.fromJson(resultList.get(2),
-                                PaymentAcceptRejectOrCancelResponse.class);
-                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                        if (context != null)
-                            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            PaymentAcceptRejectOrCancelResponse.class);
+                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                    if (context != null)
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 
-                        if (mReviewFinishListener != null)
-                            mReviewFinishListener.onReviewFinish();
+                    if (mReviewFinishListener != null)
+                        mReviewFinishListener.onReviewFinish();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (context != null)
-                            Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (context != null)
                         Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
                 }
-            } else if (context != null)
-                Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (context != null)
+                    Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mAcceptPaymentTask = null;

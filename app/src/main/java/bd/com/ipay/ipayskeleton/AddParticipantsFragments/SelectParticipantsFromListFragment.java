@@ -26,6 +26,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.GetAllParticipantsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses.Participant;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingMoneyRequest;
@@ -150,7 +151,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -160,39 +161,36 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_ALL_PARTICIPANTS_LIST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_ALL_PARTICIPANTS_LIST)) {
 
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
 
-                        mGetAllParticipantsResponse = gson.fromJson(resultList.get(2), GetAllParticipantsResponse.class);
+                    mGetAllParticipantsResponse = gson.fromJson(result.getJsonString(), GetAllParticipantsResponse.class);
 
-                        if (listOfParticipants == null) {
-                            listOfParticipants = mGetAllParticipantsResponse.getParticipants();
-                        } else {
-                            List<Participant> tempParticipantsList;
-                            tempParticipantsList = mGetAllParticipantsResponse.getParticipants();
-                            listOfParticipants.addAll(tempParticipantsList);
-                        }
-
-                        mParticipantsListAdapter.notifyDataSetChanged();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.fetch_participants_failed, Toast.LENGTH_LONG).show();
+                    if (listOfParticipants == null) {
+                        listOfParticipants = mGetAllParticipantsResponse.getParticipants();
+                    } else {
+                        List<Participant> tempParticipantsList;
+                        tempParticipantsList = mGetAllParticipantsResponse.getParticipants();
+                        listOfParticipants.addAll(tempParticipantsList);
                     }
 
-                } else {
+                    mParticipantsListAdapter.notifyDataSetChanged();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.fetch_participants_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.fetch_participants_failed, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.fetch_participants_failed, Toast.LENGTH_LONG).show();
+            }
 
             mGetAllParticipantsTask = null;
 

@@ -34,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPassOTPConfirmationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPassOTPConfirmationResponse;
@@ -204,7 +205,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -214,31 +215,28 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_FORGET_PASSWORD_CONFIRM_OTP)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_FORGET_PASSWORD_CONFIRM_OTP)) {
 
-            if (resultList.size() > 2) {
 
-                try {
-                    mForgetPassOTPConfirmationResponse = gson.fromJson(resultList.get(2), ForgetPassOTPConfirmationResponse.class);
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mForgetPassOTPConfirmationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                            getActivity().finish();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mForgetPassOTPConfirmationResponse.getMessage(), Toast.LENGTH_LONG).show();
+            try {
+                mForgetPassOTPConfirmationResponse = gson.fromJson(result.getJsonString(), ForgetPassOTPConfirmationResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mForgetPassOTPConfirmationResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    getActivity().finish();
+                } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_to_reset_password, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mForgetPassOTPConfirmationResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_to_reset_password, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_to_reset_password, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mOTPConfirmationTask = null;

@@ -26,6 +26,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
@@ -55,7 +56,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         getActivity().setTitle(R.string.title_login_page);
     }
 
-    void putConstantStringInfront(final EditText edt, final String constString){
+    void putConstantStringInfront(final EditText edt, final String constString) {
         edt.setText(constString);
         Selection.setSelection(edt.getText(), edt.getText().length());
 
@@ -74,7 +75,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!s.toString().startsWith(constString)){
+                if (!s.toString().startsWith(constString)) {
                     edt.setText(constString);
                     Selection.setSelection(edt.getText(), edt.getText().length());
 
@@ -134,7 +135,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         // Auto Login
         if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
             mPasswordLoginView.setText("qqqqqqq1");
- //           mUserNameLoginView.setText("+8801677258077");
+            //           mUserNameLoginView.setText("+8801677258077");
             attemptLogin();
         }
 
@@ -204,7 +205,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
 //        Log.w("Result", result);
         if (result == null) {
@@ -215,53 +216,50 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_LOG_IN)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_LOG_IN)) {
             try {
-                if (resultList.size() > 2) {
-                    mLoginResponseModel = gson.fromJson(resultList.get(2), LoginResponse.class);
+                mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                        pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
-                        pref.edit().putString(Constants.USERID, mUserNameLogin).commit();
-                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
-                        mProgressDialog.dismiss();
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                    pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
+                    pref.edit().putString(Constants.USERID, mUserNameLogin).commit();
+                    pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
+                    mProgressDialog.dismiss();
+                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
-                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_ACCEPTED)) {
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
 //                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 //                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
 
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
 
-                        // First time login from this device. Verify OTP for secure login
-                        SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
-                        mProgressDialog.dismiss();
-                        ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
+                    // First time login from this device. Verify OTP for secure login
+                    SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
+                    mProgressDialog.dismiss();
+                    ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
-                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
 
-                        // OTP has not been expired yet
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                    // OTP has not been expired yet
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
 
-                        // Enter previous OTP
-                        SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
-                        mProgressDialog.dismiss();
+                    // Enter previous OTP
+                    SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
+                    mProgressDialog.dismiss();
 
-                        ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
+                    ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                }
 
-                } else if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
 
             } catch (Exception e) {
                 e.printStackTrace();

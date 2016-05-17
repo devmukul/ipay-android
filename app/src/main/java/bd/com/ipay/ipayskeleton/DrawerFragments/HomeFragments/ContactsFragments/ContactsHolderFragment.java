@@ -18,6 +18,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -121,19 +122,14 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         try {
-            List<String> resultList = Arrays.asList(result.split(";"));
             Gson gson = new Gson();
 
-            if (resultList.get(0).equals(Constants.COMMAND_GET_INVITE_INFO)) {
+            if (result.getApiCommand().equals(Constants.COMMAND_GET_INVITE_INFO)) {
                 try {
-                    if (resultList.size() > 2) {
-                        ContactsHolderFragment.mGetInviteInfoResponse = gson.fromJson(resultList.get(2), GetInviteInfoResponse.class);
-                        if (mAllContactsFragment != null) mAllContactsFragment.updateInviteStatus();
-                    }
-
+                    ContactsHolderFragment.mGetInviteInfoResponse = gson.fromJson(result.getJsonString(), GetInviteInfoResponse.class);
 
                 } catch (Exception e) {
                     e.printStackTrace();

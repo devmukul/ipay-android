@@ -22,6 +22,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.SendInviteRequest;
@@ -112,7 +113,7 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             mSendInviteTask = null;
@@ -123,26 +124,23 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_SEND_INVITE)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
             try {
-                if (resultList.size() > 2) {
-                    mSendInviteResponse = gson.fromJson(resultList.get(2), SendInviteResponse.class);
+                mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
-                            getActivity().finish();
-                        }
-
-                    } else if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
+                        getActivity().finish();
                     }
+
                 } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
@@ -153,12 +151,12 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
             mProgressDialog.dismiss();
             mSendInviteTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_USER_INFO)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             setContentShown(true);
 
             try {
-                mGetUserInfoResponse = gson.fromJson(resultList.get(2), GetUserInfoResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (mGetUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                         mInviteContainer.setVisibility(View.VISIBLE);
                     } else {

@@ -28,6 +28,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -176,7 +177,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -186,26 +187,22 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
 
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_CHECK_PROMO_CODE)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_CHECK_PROMO_CODE)) {
 
             String message = "";
-            if (resultList.size() > 2) {
-                try {
-                    mCheckPromoCodeResponse = gson.fromJson(resultList.get(2), CheckPromoCodeResponse.class);
-                    message = mCheckPromoCodeResponse.getMessage();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    message = getString(R.string.server_down);
-                }
-            } else {
+            try {
+                mCheckPromoCodeResponse = gson.fromJson(result.getJsonString(), CheckPromoCodeResponse.class);
+                message = mCheckPromoCodeResponse.getMessage();
+            } catch (Exception e) {
+                e.printStackTrace();
                 message = getString(R.string.server_down);
             }
 
-            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 // Move to step two
                 ((SignupOrLoginActivity) getActivity()).switchToBusinessStepTwoFragment();
 

@@ -25,11 +25,11 @@ public class GetDistrictAsyncTask extends HttpRequestGetAsyncTask {
 
         this.mHttpResponseListener = new HttpResponseListener() {
             @Override
-            public void httpResponseReceiver(String result) {
-                String[] resultArr = result.split(";");
+            public void httpResponseReceiver(HttpResponseObject result) {
+
                 try {
                     Gson gson = new Gson();
-                    GetDistrictResponse getDistrictResponse = gson.fromJson(resultArr[2],
+                    GetDistrictResponse getDistrictResponse = gson.fromJson(result.getJsonString(),
                             GetDistrictResponse.class);
                     List<District> districts = getDistrictResponse.getDistricts();
                     StringBuilder ids = new StringBuilder();
@@ -41,7 +41,7 @@ public class GetDistrictAsyncTask extends HttpRequestGetAsyncTask {
 
                     Log.i("District Ids", ids.toString());
                     Log.i("District Names", names.toString());
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

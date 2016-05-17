@@ -24,6 +24,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.CreateInvoiceRequest;
@@ -144,7 +145,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             mCreateInvoiceTask = null;
@@ -153,31 +154,28 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_CREATE_INVOICE)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_CREATE_INVOICE)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mCreateInvoiceResponse = gson.fromJson(resultList.get(2), CreateInvoiceResponse.class);
+            try {
+                mCreateInvoiceResponse = gson.fromJson(result.getJsonString(), CreateInvoiceResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        getActivity().setResult(Activity.RESULT_OK);
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mCreateInvoiceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        getActivity().finish();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mCreateInvoiceResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    getActivity().setResult(Activity.RESULT_OK);
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), mCreateInvoiceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    getActivity().finish();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mCreateInvoiceResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
+            }
 
             mProgressDialog.dismiss();
             mCreateInvoiceTask = null;

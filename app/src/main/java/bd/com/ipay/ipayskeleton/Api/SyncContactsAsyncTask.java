@@ -114,36 +114,35 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mAddFriendAsyncTask = null;
             mUpdateFriendAsyncTask = null;
-
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_ADD_FRIENDS)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_ADD_FRIENDS)) {
             try {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    if (resultList.size() > 2)
-                        mAddFriendResponse = gson.fromJson(resultList.get(2), AddFriendResponse.class);
+                mAddFriendResponse = gson.fromJson(result.getJsonString(), AddFriendResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    // Do nothing
                 } else {
-                    Log.e(context.getString(R.string.failed_add_friend), mAddFriendResponse.getMessage());
+                    if (mAddFriendResponse != null)
+                        Log.e(context.getString(R.string.failed_add_friend), mAddFriendResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            mAddFriendResponse = null;
+            mAddFriendAsyncTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_UPDATE_FRIEND)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_UPDATE_FRIEND)) {
             try {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    if (resultList.size() > 2)
-                        mUpdateFriendResponse = gson.fromJson(resultList.get(2), UpdateFriendResponse.class);
+                mUpdateFriendResponse = gson.fromJson(result.getJsonString(), UpdateFriendResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    // Do nothing
                 } else {
                     Log.e(context.getString(R.string.failed_update_friend), mUpdateFriendResponse.getMessage());
                 }
@@ -151,7 +150,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
                 e.printStackTrace();
             }
 
-            mAddFriendResponse = null;
+            mUpdateFriendAsyncTask = null;
         }
     }
 }

@@ -20,6 +20,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
@@ -245,8 +246,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         if (cancel) {
             focusedView.requestFocus();
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -266,7 +266,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
@@ -275,13 +275,13 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_THANA_LIST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_THANA_LIST)) {
             try {
-                mGetThanaResponse = gson.fromJson(resultList.get(2), GetThanaResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mThanaList = mGetThanaResponse.getThanas();
                     mThanaNames.clear();
                     mThanaNames.add(context.getString(R.string.select_one));
@@ -307,11 +307,11 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
             }
 
             mGetThanaListAsyncTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_DISTRICT_LIST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_DISTRICT_LIST)) {
             try {
-                mGetDistrictResponse = gson.fromJson(resultList.get(2), GetDistrictResponse.class);
+                mGetDistrictResponse = gson.fromJson(result.getJsonString(), GetDistrictResponse.class);
 
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mDistrictList = mGetDistrictResponse.getDistricts();
                     mDistrictNames.clear();
                     mDistrictNames.add(context.getString(R.string.select_one));

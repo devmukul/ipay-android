@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 /**
  * Asynchronously loads all supported banks supported by our systems.
  * Loaded bank accounts are saved into {@link CommonData}.
- *
+ * <p/>
  * If you want to do something with the result after loading the bank list, pass
  * a {@link bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask.BankLoadListener} to the constructor.
  */
@@ -26,15 +26,14 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
                 context);
 
         this.mHttpResponseListener = new HttpResponseListener() {
-                @Override
-                public void httpResponseReceiver(String result) {
+            @Override
+            public void httpResponseReceiver(HttpResponseObject result) {
                 if (result == null)
                     return;
 
                 try {
-                    String[] resultArr = result.split(";");
                     Gson gson = new Gson();
-                    GetAvailableBankResponse getAvailableBankResponse = gson.fromJson(resultArr[2],
+                    GetAvailableBankResponse getAvailableBankResponse = gson.fromJson(result.getJsonString(),
                             GetAvailableBankResponse.class);
 
                     List<Bank> availableBanks = getAvailableBankResponse.getAvailableBanks();
@@ -43,7 +42,7 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
                     if (listener != null) {
                         listener.onLoadSuccess(availableBanks);
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     if (listener != null) {
                         listener.onLoadFailed();
@@ -59,6 +58,7 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
 
     public interface BankLoadListener {
         public void onLoadSuccess(List<Bank> banks);
+
         public void onLoadFailed();
     }
 }

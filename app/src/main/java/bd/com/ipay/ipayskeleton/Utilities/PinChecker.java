@@ -14,6 +14,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.PinInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
@@ -77,7 +78,7 @@ public class PinChecker implements HttpResponseListener {
 
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         mProgressDialog.dismiss();
 
         if (result == null) {
@@ -88,14 +89,14 @@ public class PinChecker implements HttpResponseListener {
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_PIN_INFO)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PIN_INFO)) {
             if (!cancel) {
                 try {
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        mPinInfoResponse = gson.fromJson(resultList.get(2), PinInfoResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mPinInfoResponse = gson.fromJson(result.getJsonString(), PinInfoResponse.class);
 
                         if (mPinInfoResponse.isPinExists()) {
                             if (mPinCheckerListener != null) {

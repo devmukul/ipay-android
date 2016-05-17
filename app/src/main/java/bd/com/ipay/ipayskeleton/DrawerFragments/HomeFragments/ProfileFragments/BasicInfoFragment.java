@@ -27,6 +27,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
@@ -251,7 +252,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         mProgressDialog.dismiss();
 
         if (result == null) {
@@ -263,14 +264,14 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         }
 
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
 
             try {
-                mGetProfileInfoResponse = gson.fromJson(resultList.get(2), GetProfileInfoResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (mGetProfileInfoResponse.getName() != null)
                         mName = mGetProfileInfoResponse.getName();
                     if (mGetProfileInfoResponse.getMobileNumber() != null)
@@ -322,11 +323,11 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             }
 
             mGetProfileInfoTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
 
             try {
-                mGetOccupationResponse = gson.fromJson(resultList.get(2), GetOccupationResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String occupation = mGetOccupationResponse.getOccupation(mOccupation);
                     if (occupation != null)
                         mOccupationView.setText(occupation);

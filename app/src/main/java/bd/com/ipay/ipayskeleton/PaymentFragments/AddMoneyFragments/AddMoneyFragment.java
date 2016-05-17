@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActiv
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListRequest;
@@ -236,7 +237,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.show();
             mGetBankTask = null;
@@ -245,58 +246,55 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_BANK_LIST)) {
-            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                if (resultList.size() > 2) {
-                    try {
-                        mBankListResponse = gson.fromJson(resultList.get(2), GetBankListResponse.class);
+                try {
+                    mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
 
-                        mListUserBankClasses = new ArrayList<>();
+                    mListUserBankClasses = new ArrayList<>();
 
-                        for (UserBankClass bank : mBankListResponse.getBanks()) {
-                            if (bank.getAccountStatus() == Constants.BANK_ACCOUNT_STATUS_ACTIVE &&
-                                    bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
-                                mListUserBankClasses.add(bank);
-                            }
+                    for (UserBankClass bank : mBankListResponse.getBanks()) {
+                        if (bank.getAccountStatus() == Constants.BANK_ACCOUNT_STATUS_ACTIVE &&
+                                bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+                            mListUserBankClasses.add(bank);
                         }
-
-                        if (mListUserBankClasses == null) {
-                            mBankPicker.setEnabled(false);
-                            buttonAddMoney.setEnabled(false);
-                            if (getActivity() != null)
-                                Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
-                            mLinkABankNoteTextView.setVisibility(View.VISIBLE);
-
-                        } else if (mListUserBankClasses.size() == 0) {
-                            mBankPicker.setEnabled(false);
-                            buttonAddMoney.setEnabled(false);
-                            if (getActivity() != null)
-                                Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
-                            mLinkABankNoteTextView.setVisibility(View.VISIBLE);
-
-                        } else {
-                            mLinkABankNoteTextView.setVisibility(View.GONE);
-                            for (int i = 0; i < mListUserBankClasses.size(); i++) {
-                                mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
-                                mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                     }
 
-                } else {
+                    if (mListUserBankClasses == null) {
+                        mBankPicker.setEnabled(false);
+                        buttonAddMoney.setEnabled(false);
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
+                        mLinkABankNoteTextView.setVisibility(View.VISIBLE);
+
+                    } else if (mListUserBankClasses.size() == 0) {
+                        mBankPicker.setEnabled(false);
+                        buttonAddMoney.setEnabled(false);
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
+                        mLinkABankNoteTextView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        mLinkABankNoteTextView.setVisibility(View.GONE);
+                        for (int i = 0; i < mListUserBankClasses.size(); i++) {
+                            mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
+                            mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mGetBankTask = null;

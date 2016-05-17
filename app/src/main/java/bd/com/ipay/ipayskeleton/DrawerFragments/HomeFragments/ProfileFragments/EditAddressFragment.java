@@ -22,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressRequest;
@@ -99,7 +100,7 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             mSetUserAddressTask = null;
@@ -108,14 +109,14 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
         }
 
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_SET_USER_ADDRESS_REQUEST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_SET_USER_ADDRESS_REQUEST)) {
 
             try {
-                mSetUserAddressResponse = gson.fromJson(resultList.get(2), SetUserAddressResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mSetUserAddressResponse = gson.fromJson(result.getJsonString(), SetUserAddressResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ((ProfileActivity) getActivity()).switchToAddressFragment();
 

@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoResponse;
@@ -418,7 +419,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         void onProfilePictureChange(String imageUrl);
     }
 
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         mProgressDialog.dismiss();
 
         if (result == null) {
@@ -430,14 +431,14 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)) {
 
             try {
-                mSetProfileInfoResponse = gson.fromJson(resultList.get(2), SetProfileInfoResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                         ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
@@ -453,10 +454,10 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
 
             mSetProfileInfoTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
             try {
-                mSetProfilePictureResponse = gson.fromJson(resultList.get(2), SetProfilePictureResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mSetProfilePictureResponse = gson.fromJson(result.getJsonString(), SetProfilePictureResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
@@ -470,11 +471,11 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
 
             mUploadProfilePictureAsyncTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
 
             try {
-                mGetOccupationResponse = gson.fromJson(resultList.get(2), GetOccupationResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mOccupationList = mGetOccupationResponse.getOccupations();
 
                     mOccupationNameList.clear();

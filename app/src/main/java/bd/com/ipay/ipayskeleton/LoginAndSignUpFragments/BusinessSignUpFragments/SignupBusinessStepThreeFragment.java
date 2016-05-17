@@ -28,6 +28,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseBusinessSignup;
@@ -148,7 +149,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         boolean cancel = false;
         View focusView = null;
 
-       if (SignupOrLoginActivity.mBirthdayBusinessHolder == null || SignupOrLoginActivity.mBirthdayBusinessHolder.length() == 0) {
+        if (SignupOrLoginActivity.mBirthdayBusinessHolder == null || SignupOrLoginActivity.mBirthdayBusinessHolder.length() == 0) {
             cancel = true;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.please_select_your_birthday, Toast.LENGTH_LONG).show();
@@ -169,8 +170,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             cancel = true;
 
         } else if (!mPersonalAddressView.verifyUserInputs()) {
-           cancel = true;
-       }
+            cancel = true;
+        }
 
 
         if (cancel) {
@@ -195,7 +196,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     }
 
     private void setAccountHolderAddress() {
-            mPersonalAddressView.setInformation(SignupOrLoginActivity.mAddressBusiness);
+        mPersonalAddressView.setInformation(SignupOrLoginActivity.mAddressBusiness);
     }
 
     private void resetAccountHolderAddress() {
@@ -222,7 +223,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             };
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -232,30 +233,26 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
 
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_OTP_VERIFICATION)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
             String message = "";
-            if (resultList.size() > 2) {
-                try {
-                    mOtpResponseBusinessSignup = gson.fromJson(resultList.get(2), OTPResponseBusinessSignup.class);
-                    message = mOtpResponseBusinessSignup.getMessage();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    message = getString(R.string.server_down);
-                }
-            } else {
+            try {
+                mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
+                message = mOtpResponseBusinessSignup.getMessage();
+            } catch (Exception e) {
+                e.printStackTrace();
                 message = getString(R.string.server_down);
             }
 
-            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
-            } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST)) {
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 

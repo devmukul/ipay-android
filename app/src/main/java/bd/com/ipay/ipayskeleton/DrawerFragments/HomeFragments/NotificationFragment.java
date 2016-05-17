@@ -34,6 +34,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
@@ -237,7 +238,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mGetAllNotificationsTask = null;
@@ -247,135 +248,122 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_NOTIFICATIONS)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_NOTIFICATIONS)) {
             if (this.isAdded()) setContentShown(true);
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    try {
-                        mGetNotificationsResponse = gson.fromJson(resultList.get(2), GetNotificationsResponse.class);
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mGetNotificationsResponse = gson.fromJson(result.getJsonString(), GetNotificationsResponse.class);
 
-                        if (moneyRequestList == null || moneyRequestList.size() == 0) {
-                            moneyRequestList = mGetNotificationsResponse.getAllNotifications();
-                        } else {
-                            List<NotificationClass> tempNotificationList;
-                            tempNotificationList = mGetNotificationsResponse.getAllNotifications();
-                            moneyRequestList.addAll(tempNotificationList);
-                        }
-
-                        hasNext = mGetNotificationsResponse.isHasNext();
-                        mNotificationAndRecommendationListAdapter.notifyDataSetChanged();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                    if (moneyRequestList == null || moneyRequestList.size() == 0) {
+                        moneyRequestList = mGetNotificationsResponse.getAllNotifications();
+                    } else {
+                        List<NotificationClass> tempNotificationList;
+                        tempNotificationList = mGetNotificationsResponse.getAllNotifications();
+                        moneyRequestList.addAll(tempNotificationList);
                     }
 
-                } else {
+                    hasNext = mGetNotificationsResponse.isHasNext();
+                    mNotificationAndRecommendationListAdapter.notifyDataSetChanged();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+            }
 
             mSwipeRefreshLayout.setRefreshing(false);
             mGetAllNotificationsTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
             mProgressDialog.dismiss();
-            if (resultList.size() > 2) {
-                try {
-                    mGetServiceChargeResponse = gson.fromJson(resultList.get(2), GetServiceChargeResponse.class);
+            try {
+                mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (mGetServiceChargeResponse != null) {
-                            mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (mGetServiceChargeResponse != null) {
+                        mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
 
-                            if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                            } else {
-                                showReviewDialog();
-                            }
-
+                        if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                            return;
+                            showReviewDialog();
                         }
-                    } else {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
 
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    }
                 }
-            } else if (getActivity() != null) {
+            } catch (Exception e) {
+                e.printStackTrace();
+
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             }
 
             mServiceChargeTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS)) {
 
             if (this.isAdded()) setContentShown(true);
-            if (resultList.size() > 2) {
-                try {
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        mRecommendationRequestsResponse = gson.fromJson(resultList.get(2), GetRecommendationRequestsResponse.class);
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mRecommendationRequestsResponse = gson.fromJson(result.getJsonString(), GetRecommendationRequestsResponse.class);
 
-                        if (mRecommendationRequestList == null) {
-                            mRecommendationRequestList = mRecommendationRequestsResponse.getVerificationRequestList();
-                        } else {
-                            List<RecommendRequestClass> tempRecommendationRequestsClasses;
-                            tempRecommendationRequestsClasses = mRecommendationRequestsResponse.getVerificationRequestList();
-                            mRecommendationRequestList.clear();
-                            mRecommendationRequestList.addAll(tempRecommendationRequestsClasses);
-                        }
-
-                        if (mRecommendationRequestList != null && mRecommendationRequestList.size() > 0)
-                            mNotificationAndRecommendationListAdapter.notifyDataSetChanged();
-
+                    if (mRecommendationRequestList == null) {
+                        mRecommendationRequestList = mRecommendationRequestsResponse.getVerificationRequestList();
                     } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        List<RecommendRequestClass> tempRecommendationRequestsClasses;
+                        tempRecommendationRequestsClasses = mRecommendationRequestsResponse.getVerificationRequestList();
+                        mRecommendationRequestList.clear();
+                        mRecommendationRequestList.addAll(tempRecommendationRequestsClasses);
                     }
-                } catch (Exception e) {
+
+                    if (mRecommendationRequestList != null && mRecommendationRequestList.size() > 0)
+                        mNotificationAndRecommendationListAdapter.notifyDataSetChanged();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+            }
 
             mProgressDialog.dismiss();
             mGetRecommendationRequestsTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_RECOMMEND_ACTION)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_RECOMMEND_ACTION)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mRecommendationActionResponse = gson.fromJson(resultList.get(2), RecommendationActionResponse.class);
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRecommendationActionResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                        // Refresh recommendation requests list
-                        if (mRecommendationRequestList != null)
-                            mRecommendationRequestList.clear();
-                        mRecommendationRequestList = null;
-                        getRecommendationRequestsList();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRecommendationActionResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                mRecommendationActionResponse = gson.fromJson(result.getJsonString(), RecommendationActionResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mRecommendationActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    // Refresh recommendation requests list
+                    if (mRecommendationRequestList != null)
+                        mRecommendationRequestList.clear();
+                    mRecommendationRequestList = null;
+                    getRecommendationRequestsList();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mRecommendationActionResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mRecommendActionTask = null;

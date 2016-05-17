@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.DeleteEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.Email;
@@ -252,7 +253,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         mProgressDialog.dismiss();
 
@@ -268,13 +269,13 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_EMAILS)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_EMAILS)) {
             try {
-                mGetEmailResponse = gson.fromJson(resultList.get(2), GetEmailResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mGetEmailResponse = gson.fromJson(result.getJsonString(), GetEmailResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mEmails = mGetEmailResponse.getEmailAdressList();
 
                     Collections.sort(mEmails, new Comparator<Email>() {
@@ -310,10 +311,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             }
 
             mGetEmailsTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_ADD_NEW_EMAIL)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_NEW_EMAIL)) {
             try {
-                mAddNewEmailResponse = gson.fromJson(resultList.get(2), AddNewEmailResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mAddNewEmailResponse = gson.fromJson(result.getJsonString(), AddNewEmailResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     loadEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -336,10 +337,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             }
 
             mAddNewEmailTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_DELETE_EMAIL)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_DELETE_EMAIL)) {
             try {
-                mDeleteEmailResponse = gson.fromJson(resultList.get(2), DeleteEmailResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mDeleteEmailResponse = gson.fromJson(result.getJsonString(), DeleteEmailResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     loadEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mDeleteEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -357,10 +358,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             }
 
             mDeleteEmailTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_EMAIL_VERIFICATION)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_EMAIL_VERIFICATION)) {
             try {
-                mEmailVerificationResponse = gson.fromJson(resultList.get(2), EmailVerificationResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mEmailVerificationResponse = gson.fromJson(result.getJsonString(), EmailVerificationResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     loadEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mEmailVerificationResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -378,10 +379,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             }
 
             mEmailVerificationTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_EMAIL_MAKE_PRIMARY)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_EMAIL_MAKE_PRIMARY)) {
             try {
-                makePrimaryEmailResponse = gson.fromJson(resultList.get(2), MakePrimaryEmailResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                makePrimaryEmailResponse = gson.fromJson(result.getJsonString(), MakePrimaryEmailResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     loadEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), makePrimaryEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();

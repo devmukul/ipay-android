@@ -27,6 +27,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestBusinessSignup;
@@ -86,7 +87,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                         Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
                 } else {
                     ((SignupOrLoginActivity) getActivity()).switchToBusinessStepOneFragment();
-                   // ((SignupOrLoginActivity) getActivity()).switchToBusinessSignUpFragment();
+                    // ((SignupOrLoginActivity) getActivity()).switchToBusinessSignUpFragment();
                 }
             }
         });
@@ -199,7 +200,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -211,16 +212,16 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_SIGN_UP_BUSINESS)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_SIGN_UP_BUSINESS)) {
 
-            mSignupResponseBusiness = gson.fromJson(resultList.get(2), SignupResponseBusiness.class);
+            mSignupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
             String message = mSignupResponseBusiness.getMessage();
             String otp = mSignupResponseBusiness.getOtp();
 
-            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                 pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).commit();
                 pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPasswordBusiness).commit();
@@ -248,12 +249,12 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             mProgressDialog.dismiss();
             mSignUpTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_OTP_VERIFICATION)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
-            mOtpResponseBusinessSignup = gson.fromJson(resultList.get(2), OTPResponseBusinessSignup.class);
+            mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
             String message = mOtpResponseBusinessSignup.getMessage();
 
-            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_ACCEPTED)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
 
@@ -279,12 +280,12 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             mProgressDialog.dismiss();
             mRequestOTPTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_LOG_IN)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_LOG_IN)) {
 
-            mLoginResponseModel = gson.fromJson(resultList.get(2), LoginResponse.class);
+            mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
             String message = mLoginResponseModel.getMessage();
 
-            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 Toast.makeText(getActivity(), R.string.signup_successful, Toast.LENGTH_LONG).show();
                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();

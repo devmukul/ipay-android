@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceRequest;
@@ -300,7 +301,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 });
 
 
-
                 homeBottomSheet.showWithSheetView(sheetView);
             }
         });
@@ -461,10 +461,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
         else purposeLayout.setVisibility(View.GONE);
 
-        if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+        if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
             statusTextView.setText(getString(R.string.transaction_successful));
             statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
-        } else if (statusCode.toString().equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
+        } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
             statusTextView.setText(getString(R.string.in_progress));
         } else {
             statusTextView.setText(getString(R.string.transaction_failed));
@@ -474,7 +474,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -493,129 +493,117 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_REFRESH_BALANCE)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_BALANCE)) {
 
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    try {
-                        mRefreshBalanceResponse = gson.fromJson(resultList.get(2), RefreshBalanceResponse.class);
-                        String balance = mRefreshBalanceResponse.getBalance() + "";
-                        if (balance != null)
-                            balanceView.setText(balance);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG).show();
-                    }
-                } else {
+                try {
+                    mRefreshBalanceResponse = gson.fromJson(result.getJsonString(), RefreshBalanceResponse.class);
+                    String balance = mRefreshBalanceResponse.getBalance() + "";
+                    if (balance != null)
+                        balanceView.setText(balance);
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG).show();
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG).show();
             }
 
             refreshBalanceButton.clearAnimation();
             mRefreshBalanceTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_NEWS_FEED)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_NEWS_FEED)) {
 
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-
-                    try {
-                        mGetNewsFeedResponse = gson.fromJson(resultList.get(2), GetNewsFeedResponse.class);
-
-                        if (newsFeedResponsesList == null) {
-                            newsFeedResponsesList = mGetNewsFeedResponse.getNewsFeed();
-                        } else {
-                            List<News> tempUserActivityResponsesList;
-                            tempUserActivityResponsesList = mGetNewsFeedResponse.getNewsFeed();
-                            newsFeedResponsesList.addAll(tempUserActivityResponsesList);
-                        }
-
-                        HomeActivity.newsFeedLoadedOnce = true;
-                        // TODO: Handle news feed hasNext in future
-                        mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.news_feed_get_failed, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.news_feed_get_failed, Toast.LENGTH_LONG).show();
-                }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.news_feed_get_failed, Toast.LENGTH_LONG).show();
-
-            mGetNewsFeedTask = null;
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
-
-            if (resultList.size() > 2) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    mAddToTrustedDeviceResponse = gson.fromJson(resultList.get(2), AddToTrustedDeviceResponse.class);
+                    mGetNewsFeedResponse = gson.fromJson(result.getJsonString(), GetNewsFeedResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        String UUID = mAddToTrustedDeviceResponse.getUUID();
-                        pref.edit().putString(Constants.UUID, UUID).commit();
+                    if (newsFeedResponsesList == null) {
+                        newsFeedResponsesList = mGetNewsFeedResponse.getNewsFeed();
                     } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        List<News> tempUserActivityResponsesList;
+                        tempUserActivityResponsesList = mGetNewsFeedResponse.getNewsFeed();
+                        newsFeedResponsesList.addAll(tempUserActivityResponsesList);
                     }
+
+                    HomeActivity.newsFeedLoadedOnce = true;
+                    // TODO: Handle news feed hasNext in future
+                    mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.news_feed_get_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.news_feed_get_failed, Toast.LENGTH_LONG).show();
+            }
+
+
+            mGetNewsFeedTask = null;
+
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
+
+            try {
+                mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String UUID = mAddToTrustedDeviceResponse.getUUID();
+                    pref.edit().putString(Constants.UUID, UUID).commit();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+            }
+
 
             mAddTrustedDeviceTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    try {
-                        mTransactionHistoryResponse = gson.fromJson(resultList.get(2), TransactionHistoryResponse.class);
+                try {
+                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
 
-                        // Show only last 5 transactions
-                        userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
-                                0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
+                    // Show only last 5 transactions
+                    userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
+                            0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
 
-                        if (userTransactionHistoryClasses.size() == 0)
-                            userTransactionHistoryClasses = null;
-                        mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
+                    if (userTransactionHistoryClasses.size() == 0)
+                        userTransactionHistoryClasses = null;
+                    mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+            }
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
             try {
-                mProfileCompletionStatusResponse = gson.fromJson(resultList.get(2), ProfileCompletionStatusResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     promptForProfileCompletion();
 
                 } else {
@@ -692,14 +680,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
 
-                if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
-                        .equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
                     statusView.setColorFilter(Color.GREEN);
                     statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
 
-                } else if (userTransactionHistoryClasses.get(pos).getStatusCode().toString()
-                        .equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
+                } else if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_cached_black_24dp);

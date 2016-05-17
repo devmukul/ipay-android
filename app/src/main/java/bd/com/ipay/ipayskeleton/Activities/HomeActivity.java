@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
@@ -348,7 +349,7 @@ public class HomeActivity extends BaseActivity
             //getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
             //switchedToHomeFragment = false;
 
-        }  else if (id == R.id.nav_invitation) {
+        } else if (id == R.id.nav_invitation) {
 
             launchEditProfileActivity(PropertyConstants.INVITATION, new Bundle());
             //getSupportFragmentManager().beginTransaction().replace(R.id.container, new InvitationRequestsFragment()).commit();
@@ -403,7 +404,7 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             mLogoutTask = null;
@@ -413,24 +414,21 @@ public class HomeActivity extends BaseActivity
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_LOG_OUT)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
 
             try {
-                if (resultList.size() > 2) {
-                    mLogOutResponse = gson.fromJson(resultList.get(2), LogoutResponse.class);
+                mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        finish();
-                        Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } else
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    finish();
+                    Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
+                    startActivity(intent);
+                } else {
                     Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(HomeActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
@@ -439,11 +437,11 @@ public class HomeActivity extends BaseActivity
             mProgressDialog.dismiss();
             mLogoutTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_USER_INFO)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
 
             try {
-                mGetUserInfoResponse = gson.fromJson(resultList.get(2), GetUserInfoResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mNameView.setText(mGetUserInfoResponse.getName());
 
                     profilePictures = mGetUserInfoResponse.getProfilePictures();
@@ -470,16 +468,16 @@ public class HomeActivity extends BaseActivity
 
             mGetProfileInfoTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_FRIENDS)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_FRIENDS)) {
             try {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    FriendNode[] friendNodeArray = gson.fromJson(resultList.get(2), FriendNode[].class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    FriendNode[] friendNodeArray = gson.fromJson(result.getJsonString(), FriendNode[].class);
                     mGetAllContactsResponse = Arrays.asList(friendNodeArray);
 
                     SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(this, mGetAllContactsResponse);
                     syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
-                    Log.e("Contacts Sync Failed", resultList.get(1) + "");
+                    Log.e("Contacts Sync Failed", result.getStatus() + "");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

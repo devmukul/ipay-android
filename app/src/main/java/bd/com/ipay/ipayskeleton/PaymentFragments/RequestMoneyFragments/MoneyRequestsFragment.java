@@ -26,6 +26,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
@@ -151,16 +152,16 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
         NotificationReviewDialog dialog = new NotificationReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
                 mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, Constants.SERVICE_ID_REQUEST_MONEY,
                 new ReviewDialogFinishListener() {
-            @Override
-            public void onReviewFinish() {
-                refreshMoneyRequestList();
-            }
-        });
+                    @Override
+                    public void onReviewFinish() {
+                        refreshMoneyRequestList();
+                    }
+                });
         dialog.show();
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mGetAllNotificationsTask = null;
@@ -170,76 +171,70 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_MONEY_REQUESTS)) {
-            if (resultList.size() > 2) {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_MONEY_REQUESTS)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    try {
-                        mGetNotificationsResponse = gson.fromJson(resultList.get(2), GetNotificationsResponse.class);
+                try {
+                    mGetNotificationsResponse = gson.fromJson(result.getJsonString(), GetNotificationsResponse.class);
 
-                        if (moneyRequestList == null || moneyRequestList.size() == 0) {
-                            moneyRequestList = mGetNotificationsResponse.getAllNotifications();
-                        } else {
-                            List<NotificationClass> tempNotificationList;
-                            tempNotificationList = mGetNotificationsResponse.getAllNotifications();
-                            moneyRequestList.addAll(tempNotificationList);
-                        }
-
-                        hasNext = mGetNotificationsResponse.isHasNext();
-                        mNotificationListAdapter.notifyDataSetChanged();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
+                    if (moneyRequestList == null || moneyRequestList.size() == 0) {
+                        moneyRequestList = mGetNotificationsResponse.getAllNotifications();
+                    } else {
+                        List<NotificationClass> tempNotificationList;
+                        tempNotificationList = mGetNotificationsResponse.getAllNotifications();
+                        moneyRequestList.addAll(tempNotificationList);
                     }
 
-                } else {
+                    hasNext = mGetNotificationsResponse.isHasNext();
+                    mNotificationListAdapter.notifyDataSetChanged();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
+            }
 
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
             mProgressDialog.dismiss();
-            if (resultList.size() > 2) {
-                try {
-                    mGetServiceChargeResponse = gson.fromJson(resultList.get(2), GetServiceChargeResponse.class);
+            try {
+                mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (mGetServiceChargeResponse != null) {
-                            mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (mGetServiceChargeResponse != null) {
+                        mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
 
-                            if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                            } else {
-                                showReviewDialog();
-                            }
-
+                        if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                            return;
+                            showReviewDialog();
                         }
-                    } else {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
 
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    }
                 }
-            } else if (getActivity() != null) {
+            } catch (Exception e) {
+                e.printStackTrace();
+
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             }
+
 
             mServiceChargeTask = null;
         }
@@ -401,8 +396,7 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
         public int getItemCount() {
             if (moneyRequestList == null) {
                 return 0;
-            }
-            else {
+            } else {
                 return 1 + moneyRequestList.size() + 1; // header, money requests list, footer
             }
         }

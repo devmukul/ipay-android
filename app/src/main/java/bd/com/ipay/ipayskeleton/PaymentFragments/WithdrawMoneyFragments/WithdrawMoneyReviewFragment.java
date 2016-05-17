@@ -23,6 +23,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyResponse;
@@ -146,7 +147,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
 
         if (result == null) {
@@ -157,29 +158,25 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_WITHDRAW_MONEY)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_WITHDRAW_MONEY)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mWithdrawMoneyResponse = gson.fromJson(resultList.get(2), WithdrawMoneyResponse.class);
+            try {
+                mWithdrawMoneyResponse = gson.fromJson(result.getJsonString(), WithdrawMoneyResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.withdraw_money_failed, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             mProgressDialog.dismiss();
             mWithdrawMoneyTask = null;

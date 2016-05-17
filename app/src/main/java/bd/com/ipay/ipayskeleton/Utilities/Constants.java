@@ -212,13 +212,21 @@ public class Constants {
     public static final String URL_DELETE_CONTACT = "deletefriend";
     public static final String URL_UPDATE_CONTACT = "updatefriend";
 
-    public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
-    public static final String HTTP_RESPONSE_STATUS_NOT_FOUND = "404";
-    public static final String HTTP_RESPONSE_STATUS_OK = "200";
-    public static final String HTTP_RESPONSE_STATUS_PROCESSING = "102";
-    public static final String HTTP_RESPONSE_STATUS_UNAUTHORIZED = "401";
-    public static final String HTTP_RESPONSE_STATUS_BAD_REQUEST = "400";
-    public static final String HTTP_RESPONSE_STATUS_ACCEPTED = "202";
+//    public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
+//    public static final String HTTP_RESPONSE_STATUS_NOT_FOUND = "404";
+//    public static final String HTTP_RESPONSE_STATUS_OK = "200";
+//    public static final String HTTP_RESPONSE_STATUS_PROCESSING = "102";
+//    public static final String HTTP_RESPONSE_STATUS_UNAUTHORIZED = "401";
+//    public static final String HTTP_RESPONSE_STATUS_BAD_REQUEST = "400";
+//    public static final String HTTP_RESPONSE_STATUS_ACCEPTED = "202";
+
+    public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
+    public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
+    public static final int HTTP_RESPONSE_STATUS_OK = 200;
+    public static final int HTTP_RESPONSE_STATUS_PROCESSING = 102;
+    public static final int HTTP_RESPONSE_STATUS_UNAUTHORIZED = 401;
+    public static final int HTTP_RESPONSE_STATUS_BAD_REQUEST = 400;
+    public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 202;
 
     public static final int PERSONAL_ACCOUNT_TYPE = 1;
     public static final int BUSINESS_ACCOUNT_TYPE = 2;

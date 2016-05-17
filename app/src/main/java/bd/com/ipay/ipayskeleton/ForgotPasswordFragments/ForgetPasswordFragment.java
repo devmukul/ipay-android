@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Activities.ForgotPasswordActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPasswordResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -155,7 +156,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -165,31 +166,28 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_FORGET_PASSWORD_SEND_OTP)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_FORGET_PASSWORD_SEND_OTP)) {
             try {
-                if (resultList.size() > 2) {
-                    mForgetPasswordResponse = gson.fromJson(resultList.get(2), ForgetPasswordResponse.class);
+                mForgetPasswordResponse = gson.fromJson(result.getJsonString(), ForgetPasswordResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
-                        intent.putParcelableArrayListExtra(Constants.TRUSTED_OTP_RECEIVERS, mForgetPasswordResponse.getTrustedOtpReceiverList());
-                        startActivity(intent);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
+                    intent.putParcelableArrayListExtra(Constants.TRUSTED_OTP_RECEIVERS, mForgetPasswordResponse.getTrustedOtpReceiverList());
+                    startActivity(intent);
 
-                        // TODO Discuss with server team when "OTP has not been expired yet" message is received
-//                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
+                    // TODO Discuss with server team when "OTP has not been expired yet" message is received
+//                    } else if (resultList.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
 //                        Intent intent = new Intent(getActivity(), ForgotPasswordActivity.class);
 //                        intent.putParcelableArrayListExtra(Constants.TRUSTED_OTP_RECEIVERS, mForgetPasswordResponse.getTrustedOtpReceiverList());
 //                        startActivity(intent);
 
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mForgetPasswordResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                } else if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.otp_request_failed, Toast.LENGTH_SHORT).show();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mForgetPasswordResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();

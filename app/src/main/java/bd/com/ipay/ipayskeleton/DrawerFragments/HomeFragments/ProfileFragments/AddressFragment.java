@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
@@ -231,7 +232,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mGetUserAddressTask = null;
@@ -240,13 +241,13 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_USER_ADDRESS_REQUEST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_ADDRESS_REQUEST)) {
             try {
-                mGetUserAddressResponse = gson.fromJson(resultList.get(2), GetUserAddressResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mGetUserAddressResponse = gson.fromJson(result.getJsonString(), GetUserAddressResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mPresentAddress = mGetUserAddressResponse.getPresentAddress();
                     mPermanentAddress = mGetUserAddressResponse.getPermanentAddress();
                     mOfficeAddress = mGetUserAddressResponse.getOfficeAddress();
@@ -267,10 +268,10 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
             mGetUserAddressTask = null;
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_THANA_LIST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_THANA_LIST)) {
             try {
-                mGetThanaResponse = gson.fromJson(resultList.get(2), GetThanaResponse.class);
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mThanaList = mGetThanaResponse.getThanas();
                     getUserAddress();
 
@@ -287,11 +288,11 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
             }
 
             mGetThanaListAsyncTask = null;
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_DISTRICT_LIST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_DISTRICT_LIST)) {
             try {
-                mGetDistrictResponse = gson.fromJson(resultList.get(2), GetDistrictResponse.class);
+                mGetDistrictResponse = gson.fromJson(result.getJsonString(), GetDistrictResponse.class);
 
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mDistrictList = mGetDistrictResponse.getDistricts();
                     getThanaList();
 

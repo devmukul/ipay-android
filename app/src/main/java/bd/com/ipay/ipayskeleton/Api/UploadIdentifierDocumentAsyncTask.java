@@ -27,7 +27,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, String> {
+public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, HttpResponseObject> {
 
     private Context mContext;
     private String imagePath;
@@ -47,20 +47,20 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Str
     }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected HttpResponseObject doInBackground(Void... params) {
 
         Log.w("Document Upload", "Started");
 
-        String result = null;
+        HttpResponseObject mHttpResponseObject = new HttpResponseObject();
 
         if (Utilities.isConnectionAvailable(mContext))
-            result = uploadDocument(imagePath);
+            mHttpResponseObject = uploadDocument(imagePath);
         else
             Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
 
         Log.w("Document Upload", "Finished");
 
-        return result;
+        return mHttpResponseObject;
     }
 
     @Override
@@ -69,12 +69,10 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Str
     }
 
     @Override
-    protected void onPostExecute(final String result) {
+    protected void onPostExecute(final HttpResponseObject result) {
 
         if (result != null) {
-            List<String> resultList = Arrays.asList(result.split(";"));
-
-            if (resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 // In case of un-authorization go to login activity
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
                 mContext.startActivity(intent);
@@ -86,7 +84,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Str
 
     }
 
-    private String uploadDocument(String selectedImagePath) {
+    private HttpResponseObject uploadDocument(String selectedImagePath) {
 
         try {
             HttpClient client = new DefaultHttpClient();
@@ -112,13 +110,15 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Str
             Log.e("POST", post.toString());
 
             int status = response.getStatusLine().getStatusCode();
-            String result = null;
 
-            result = API_COMMAND + ";" + status + ";" + EntityUtils.toString(httpEntity);
+            HttpResponseObject mHttpResponseObject = new HttpResponseObject();
+            mHttpResponseObject.setStatus(status);
+            mHttpResponseObject.setApiCommand(API_COMMAND);
+            mHttpResponseObject.setJsonString(EntityUtils.toString(httpEntity));
 
-            Log.e("Result", result);
+            Log.e("Result", mHttpResponseObject.toString());
 
-            return result;
+            return mHttpResponseObject;
 
         } catch (Exception e) {
             e.printStackTrace();

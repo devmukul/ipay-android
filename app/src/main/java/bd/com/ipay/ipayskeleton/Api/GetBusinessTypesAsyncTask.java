@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 /**
  * Asynchronously loads all business types supported by our systems.
  * Loaded businesses are saved into {@link CommonData}.
- *
+ * <p/>
  * If you want to do something with the result after loading the list, pass
  * a {@link GetBusinessTypesAsyncTask.BusinessTypeLoadListener} to the constructor.
  */
@@ -26,12 +26,12 @@ public class GetBusinessTypesAsyncTask extends HttpRequestGetAsyncTask {
                 context);
 
         this.mHttpResponseListener = new HttpResponseListener() {
-                @Override
-                public void httpResponseReceiver(String result) {
-                String[] resultArr = result.split(";");
+            @Override
+            public void httpResponseReceiver(HttpResponseObject result) {
+
                 try {
                     Gson gson = new Gson();
-                    GetBusinessTypeResponse getBusinessTypeResponse = gson.fromJson(resultArr[2],
+                    GetBusinessTypeResponse getBusinessTypeResponse = gson.fromJson(result.getJsonString(),
                             GetBusinessTypeResponse.class);
 
                     List<BusinessType> businessTypes = getBusinessTypeResponse.getBusinesses();
@@ -40,7 +40,7 @@ public class GetBusinessTypesAsyncTask extends HttpRequestGetAsyncTask {
                     if (listener != null) {
                         listener.onLoadSuccess(businessTypes);
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     if (listener != null) {
                         listener.onLoadFailed();
@@ -56,6 +56,7 @@ public class GetBusinessTypesAsyncTask extends HttpRequestGetAsyncTask {
 
     public interface BusinessTypeLoadListener {
         public void onLoadSuccess(List<BusinessType> businessTypes);
+
         public void onLoadFailed();
     }
 }

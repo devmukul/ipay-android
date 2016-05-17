@@ -19,6 +19,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -29,12 +30,12 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
 
     private HttpRequestPostAsyncTask mSavePINTask = null;
     private SetPinResponse mSetPinResponse;
-    
+
     private ProgressDialog mProgressDialog;
 
     private EditText mPinField;
     private EditText mPasswordField;
-    
+
     private AddPinListener mAddPinListener;
 
     public AddPinDialogBuilder(Context context, AddPinListener addPinListener) {
@@ -45,25 +46,25 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
 
     private void initializeView() {
         customView(R.layout.dialog_add_pin, true);
-        
+
         View v = this.build().getCustomView();
 
         mPinField = (EditText) v.findViewById(R.id.new_pin);
         mPasswordField = (EditText) v.findViewById(R.id.password);
 
         title(R.string.dialog_prompt_add_pin);
-        
+
         positiveText(R.string.set_pin);
         negativeText(R.string.cancel);
 
         mProgressDialog = new ProgressDialog(context);
-        
+
         onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 String pin = mPinField.getText().toString();
                 String password = mPasswordField.getText().toString();
-                
+
                 if (pin.isEmpty()) {
                     Toast.makeText(context, R.string.failed_empty_pin, Toast.LENGTH_LONG).show();
                 } else if (!Utilities.isPasswordValid(password).isEmpty()) {
@@ -76,7 +77,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
             }
         });
     }
-    
+
     private void attemptSavePin(String pin, String password) {
         if (mSavePINTask != null) {
             return;
@@ -86,7 +87,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
         mProgressDialog.show();
 
         SetPinRequest setPinRequest = new SetPinRequest(pin, password);
-        
+
         Gson gson = new Gson();
         String json = gson.toJson(setPinRequest);
 
@@ -96,7 +97,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         mProgressDialog.dismiss();
 
@@ -107,31 +108,28 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_SET_PIN)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_SET_PIN)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mSetPinResponse = gson.fromJson(resultList.get(2), SetPinResponse.class);
+            try {
+                mSetPinResponse = gson.fromJson(result.getJsonString(), SetPinResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getContext() != null)
-                            Toast.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                        mAddPinListener.onPinAddSuccess(mSetPinResponse);
-                    } else {
-                        if (getContext() != null)
-                            Toast.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getContext() != null)
-                        Toast.makeText(getContext(), R.string.save_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    mAddPinListener.onPinAddSuccess(mSetPinResponse);
+                } else {
+                    if (getContext() != null)
+                        Toast.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            } else if (getContext() != null)
-                Toast.makeText(getContext(), R.string.save_failed, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), R.string.save_failed, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mSavePINTask = null;

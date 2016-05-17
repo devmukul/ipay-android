@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
+public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, HttpResponseObject> {
 
     public HttpResponseListener mHttpResponseListener;
 
@@ -54,7 +54,7 @@ public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected HttpResponseObject doInBackground(Void... params) {
         if (Constants.DEBUG) {
             Log.w(Constants.DELETE_URL, mUri);
         }
@@ -67,7 +67,7 @@ public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
         }
 
         InputStream inputStream = null;
-        String result = null;
+        HttpResponseObject mHttpResponseObject = null;
 
         try {
             HttpEntity entity = mHttpResponse.getEntity();
@@ -100,7 +100,11 @@ public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
-            result = API_COMMAND + ";" + status + ";" + sb.toString();
+
+            mHttpResponseObject = new HttpResponseObject();
+            mHttpResponseObject.setStatus(status);
+            mHttpResponseObject.setApiCommand(API_COMMAND);
+            mHttpResponseObject.setJsonString(sb.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,11 +116,11 @@ public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
             }
         }
 
-        return result;
+        return mHttpResponseObject;
     }
 
     @Override
-    protected void onPostExecute(final String result) {
+    protected void onPostExecute(final HttpResponseObject result) {
         if (error) {
             Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             return;
@@ -126,21 +130,19 @@ public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
             if (result == null)
                 Log.e(Constants.RESULT, API_COMMAND + " NULL");
             else
-                Log.w(Constants.RESULT, Constants.DELETE_REQUEST + result);
+                Log.w(Constants.RESULT, Constants.DELETE_REQUEST + result.toString());
         }
 
         if (result != null) {
-            List<String> resultList = Arrays.asList(result.split(";"));
 
-            if (resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 String message = mContext.getString(R.string.please_log_in_again);
-                if (resultList.size() > 2) {
-                    try {
-                        Gson gson = new Gson();
-                        message = gson.fromJson(resultList.get(2), LoginResponse.class).getMessage();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+
+                try {
+                    Gson gson = new Gson();
+                    message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 try {
@@ -149,7 +151,9 @@ public class HttpRequestDeleteAsyncTask extends AsyncTask<Void, Void, String> {
                     intent.putExtra(Constants.MESSAGE, message);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     mContext.startActivity(intent);
-                } catch (Exception e){e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             } else {
                 if (mHttpResponseListener != null)

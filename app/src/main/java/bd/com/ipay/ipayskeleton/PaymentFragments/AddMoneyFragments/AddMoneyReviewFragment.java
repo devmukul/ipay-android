@@ -23,6 +23,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyResponse;
@@ -146,7 +147,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
 
         if (result == null) {
@@ -157,33 +158,30 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_ADD_MONEY)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_ADD_MONEY)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mAddMoneyResponse = gson.fromJson(resultList.get(2), AddMoneyResponse.class);
+            try {
+                mAddMoneyResponse = gson.fromJson(result.getJsonString(), AddMoneyResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        getActivity().setResult(Activity.RESULT_OK);
-                        // Exit the Add money activity and return to HomeActivity
-                        getActivity().finish();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    getActivity().setResult(Activity.RESULT_OK);
+                    // Exit the Add money activity and return to HomeActivity
+                    getActivity().finish();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
+            }
 
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG).show();
 
             mProgressDialog.dismiss();
             mAddMoneyTask = null;

@@ -28,6 +28,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.AddressInputView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonalSignup;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersonalSignup;
@@ -177,7 +178,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             };
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
             mProgressDialog.dismiss();
@@ -187,33 +188,29 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
 
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_OTP_VERIFICATION)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
             String message = "";
-            if (resultList.size() > 2) {
-                try {
-                    mOtpResponsePersonalSignup = gson.fromJson(resultList.get(2), OTPResponsePersonalSignup.class);
-                    message = mOtpResponsePersonalSignup.getMessage();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    message = getString(R.string.server_down);
-                }
-            } else {
+            try {
+                mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
+                message = mOtpResponsePersonalSignup.getMessage();
+            } catch (Exception e) {
+                e.printStackTrace();
                 message = getString(R.string.server_down);
             }
 
-            if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.otp_going_to_send, Toast.LENGTH_LONG).show();
 
                 SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
 
-            } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)) {
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 

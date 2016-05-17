@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerActivity
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetRecommendationRequestsResponse;
@@ -170,7 +171,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
             mGetIntroducersTask = null;
@@ -180,14 +181,13 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCER_LIST)) {
-            if (resultList.size() > 2) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_INTRODUCER_LIST)) {
                 try {
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        mIntroducerListResponse = gson.fromJson(resultList.get(2), GetIntroducerListResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mIntroducerListResponse = gson.fromJson(result.getJsonString(), GetIntroducerListResponse.class);
 
                         if (mIntroducerList == null) {
                             mIntroducerList = mIntroducerListResponse.getIntroducers();
@@ -222,15 +222,12 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                     }
                 } catch (Exception e) {
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
 
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_INTRODUCED_LIST)) {
-            if (resultList.size() > 2) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_INTRODUCED_LIST)) {
                 try {
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        mIntroducedListResponse = gson.fromJson(resultList.get(2), GetIntroducedListResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mIntroducedListResponse = gson.fromJson(result.getJsonString(), GetIntroducedListResponse.class);
 
                         if (mIntroducedList == null) {
                             mIntroducedList = mIntroducedListResponse.getIntroducedList();
@@ -248,15 +245,11 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                     }
                 } catch (Exception e) {
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
 
-
-        } else if (resultList.get(0).equals(Constants.COMMAND_GET_SENT_REQUEST_LIST)) {
-            if (resultList.size() > 2) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SENT_REQUEST_LIST)) {
                 try {
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        mSentRequestListResponse = gson.fromJson(resultList.get(2), GetRecommendationRequestsResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mSentRequestListResponse = gson.fromJson(result.getJsonString(), GetRecommendationRequestsResponse.class);
 
                         if (mRecommendationRequestList == null) {
                             mRecommendationRequestList = mSentRequestListResponse.getSentRequestList();
@@ -274,25 +267,20 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                     }
                 } catch (Exception e) {
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
 
-        } else if (resultList.get(0).equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
             try {
 
-                if (resultList.size() > 2) {
-                    mAskForRecommendationResponse = gson.fromJson(resultList.get(2), AskForRecommendationResponse.class);
+                    mAskForRecommendationResponse = gson.fromJson(result.getJsonString(), AskForRecommendationResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
                         }
                     } else if (getActivity() != null) {
                         Toast.makeText(getActivity(), mAskForRecommendationResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
-                }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {

@@ -23,6 +23,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
@@ -130,7 +131,7 @@ public class TopupReviewFragment extends ReviewFragment implements HttpResponseL
     }
 
     @Override
-    public void httpResponseReceiver(String result) {
+    public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
 
         if (result == null) {
@@ -141,38 +142,35 @@ public class TopupReviewFragment extends ReviewFragment implements HttpResponseL
             return;
         }
 
-        List<String> resultList = Arrays.asList(result.split(";"));
+
         Gson gson = new Gson();
 
-        if (resultList.get(0).equals(Constants.COMMAND_TOPUP_REQUEST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_TOPUP_REQUEST)) {
 
-            if (resultList.size() > 2) {
-                try {
-                    mTopupResponse = gson.fromJson(resultList.get(2), TopupResponse.class);
+            try {
+                mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
 
-                    if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_PROCESSING)) {
-                        // TODO: Save transaction in database
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
-                    } else if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        // TODO: Save transaction in database
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+                    // TODO: Save transaction in database
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    // TODO: Save transaction in database
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
+                } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
                 }
-            } else if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
+            }
 
             mProgressDialog.dismiss();
             mTopupTask = null;

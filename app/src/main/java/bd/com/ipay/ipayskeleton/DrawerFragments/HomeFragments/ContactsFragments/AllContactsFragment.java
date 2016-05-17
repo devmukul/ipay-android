@@ -50,7 +50,7 @@ public class AllContactsFragment extends BaseContactsFragment {
 //    }
 //
 //    @Override
-//    public void httpResponseReceiver(String result) {
+//    public void httpResponseReceiver(HttpResponseObject result) {
 //        super.httpResponseReceiver(result);
 //
 //        if (result == null) {
@@ -58,13 +58,13 @@ public class AllContactsFragment extends BaseContactsFragment {
 //            return;
 //        }
 //
-//        List<String> resultList = Arrays.asList(result.split(";"));
+//
 //        Gson gson = new Gson();
 //
-//        if (resultList.get(0).equals(Constants.COMMAND_GET_FRIENDS)) {
+//        if (result.getApiCommand().equals(Constants.COMMAND_GET_FRIENDS)) {
 //            try {
-//                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-//                    FriendNode[] friendNodeArray = gson.fromJson(resultList.get(2), FriendNode[].class);
+//                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+//                    FriendNode[] friendNodeArray = gson.fromJson(result.getJsonString(), FriendNode[].class);
 //                    mGetAllContactsResponse = Arrays.asList(friendNodeArray);
 //                    populateList(mGetAllContactsResponse);
 //                } else {
