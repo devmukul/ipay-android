@@ -520,8 +520,6 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
         @Override
         public Filter getFilter() {
-            System.out.println("Filter called");
-
             Filter filter = new Filter() {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
@@ -538,9 +536,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                     filterResults.count = mFilteredFriendList.size();
                     filterResults.values = mFilteredFriendList;
 
-                    System.out.println(mFilteredFriendList);
-
-                    return null;
+                    return filterResults;
                 }
 
                 @Override
