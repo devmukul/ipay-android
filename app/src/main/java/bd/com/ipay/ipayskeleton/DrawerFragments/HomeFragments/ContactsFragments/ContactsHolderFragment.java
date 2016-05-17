@@ -137,6 +137,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 }
                 mGetInviteInfoTask = null;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

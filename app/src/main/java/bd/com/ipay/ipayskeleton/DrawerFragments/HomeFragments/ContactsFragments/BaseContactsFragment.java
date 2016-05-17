@@ -10,7 +10,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -216,7 +215,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
      * Must be called after show(Non)SubscriberSheet
      */
     protected void setContactInformationInSheet(String contactName, String contactNumber,
-                String imageUrl, final int backgroundColor, boolean isMember, boolean isVerified, int accountType) {
+                                                String imageUrl, final int backgroundColor, boolean isMember, boolean isVerified, int accountType) {
         if (selectedBottomSheetView == null)
             return;
 
@@ -466,7 +465,6 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
         selectedBottomSheetView = mSheetViewSubscriber;
 
-        // TODO: Show a green tick for the verified users
         Button askForConfirmationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_introduction);
         if (!isVerified) {
             if (askForConfirmationButton != null)
@@ -507,7 +505,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
 
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-                implements Filterable {
+            implements Filterable {
 
         private static final int EMPTY_VIEW = 10;
         private static final int FRIEND_VIEW = 100;
@@ -563,8 +561,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
             }
         }
 
-        public boolean isInvited(String phoneNumber)
-        {
+        public boolean isInvited(String phoneNumber) {
             if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
                 return true;
             return false;
@@ -579,7 +576,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
             private TextView mMobileNumberView;
             private ImageView isSubscriber;
             private ImageView mVerificationStatus;
-            private TextView isInvitedView;
+            private TextView inviteStatusTextView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -592,7 +589,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 isSubscriber = (ImageView) itemView.findViewById(R.id.is_subscriber);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
-                isInvitedView = (TextView) itemView.findViewById(R.id.invited);
+                inviteStatusTextView = (TextView) itemView.findViewById(R.id.invite_status);
             }
 
             public void bindView(int pos) {
@@ -605,22 +602,19 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
                 boolean isMember = friend.getInfo().isMember();
                 boolean isInvited = isInvited(phoneNumber);
-                
+
                 mNameView.setText(name);
                 mMobileNumberView.setText(phoneNumber);
 
-                if (!isMember && isInvited) {
-                        isInvitedView.setVisibility(View.VISIBLE);
-                        isInvitedView.setText(getString(R.string.invited).toUpperCase());
-                        isInvitedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_verified);
-                } else {
-                        isInvitedView.setVisibility(View.GONE);
-                }
+                if (!isMember && isInvited)
+                    inviteStatusTextView.setVisibility(View.VISIBLE);
+                else
+                    inviteStatusTextView.setVisibility(View.GONE);
+
 
                 if (shouldShowIPayUserIcon() && friend.getInfo().isMember()) {
                     isSubscriber.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     isSubscriber.setVisibility(View.GONE);
                 }
 
@@ -638,11 +632,12 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 int randomListItemBackgroundColor = LIST_ITEM_BACKGROUNDS[getAdapterPosition() % LIST_ITEM_BACKGROUNDS.length];
                 mPortraitTextView.setBackgroundResource(randomListItemBackgroundColor);
 
-                if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) Glide.with(getActivity())
-                        .load(profilePictureUrl)
-                        .crossFade()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(mPortrait);
+                if (profilePictureUrl != null && !profilePictureUrl.isEmpty())
+                    Glide.with(getActivity())
+                            .load(profilePictureUrl)
+                            .crossFade()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .into(mPortrait);
                 else Glide.with(getActivity())
                         .load(android.R.color.transparent)
                         .crossFade()
