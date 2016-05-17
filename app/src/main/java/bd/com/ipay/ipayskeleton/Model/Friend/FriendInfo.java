@@ -50,6 +50,26 @@ public class FriendInfo {
         return profilePictureUrl;
     }
 
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
+    }
+
+    public void setMember(boolean member) {
+        isMember = member;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
+
     @Override
     public String toString() {
         return "FriendInfo{" +

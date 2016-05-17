@@ -986,30 +986,30 @@ public class ContactEngine {
      * Pass phone contacts in the newContacts list and server contacts in the oldContacts list
      * to get a list of newly added/updated contacts in the phone book
      */
-    public static ContactDiff getContactDiff(List<FriendNode> newContacts, List<FriendNode> oldContacts) {
+    public static ContactDiff getContactDiff(List<FriendNode> phoneContacts, List<FriendNode> serverContacts) {
         ContactDiff contactDiff = new ContactDiff();
 
-        Collections.sort(newContacts);
-        Collections.sort(oldContacts);
+        Collections.sort(phoneContacts);
+        Collections.sort(serverContacts);
 
         int oldIndex = 0;
         int newIndex = 0;
 
-        while (oldIndex < oldContacts.size() && newIndex < newContacts.size()) {
-            FriendNode oldContact = oldContacts.get(oldIndex);
-            FriendNode newContact = newContacts.get(newIndex);
+        while (oldIndex < serverContacts.size() && newIndex < phoneContacts.size()) {
+            FriendNode serverContact = serverContacts.get(oldIndex);
+            FriendNode phoneContact = phoneContacts.get(newIndex);
 
-            int compare = newContact.getPhoneNumber().compareTo(oldContact.getPhoneNumber());
+            int compare = phoneContact.getPhoneNumber().compareTo(serverContact.getPhoneNumber());
             if (compare == 0) {
-                if (!newContact.getInfo().getName().equals(oldContact.getInfo().getName())) {
-                    contactDiff.updatedFriends.add(newContact);
+                if (!phoneContact.getInfo().getName().equals(serverContact.getInfo().getName())) {
+                    contactDiff.updatedFriends.add(serverContact);
                 }
 
                 oldIndex++;
                 newIndex++;
             }
             else if (compare < 0) {
-                contactDiff.newFriends.add(newContact);
+                contactDiff.newFriends.add(phoneContact);
                 newIndex++;
             }
             else {
@@ -1017,8 +1017,8 @@ public class ContactEngine {
             }
         }
 
-        while (newIndex < newContacts.size()) {
-            FriendNode newContact = newContacts.get(newIndex);
+        while (newIndex < phoneContacts.size()) {
+            FriendNode newContact = phoneContacts.get(newIndex);
             contactDiff.newFriends.add(newContact);
             newIndex++;
         }

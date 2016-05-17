@@ -54,14 +54,10 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         Log.d("New Contacts", contactDiff.newFriends.toString());
         Log.d("Updated Contacts", contactDiff.updatedFriends.toString());
 
-        for (FriendNode friend : contactDiff.newFriends) {
-            if (friend.getInfo().isMember())
+        for (FriendNode friend : serverContacts) {
+            if (friend.getInfo().isMember()) {
                 DataHelper.getInstance(context).createSubscriber(friend);
-        }
-
-        for (FriendNode friend : contactDiff.updatedFriends) {
-            if (friend.getInfo().isMember())
-                DataHelper.getInstance(context).createSubscriber(friend);
+            }
         }
 
         contactsSyncedOnce = true;
