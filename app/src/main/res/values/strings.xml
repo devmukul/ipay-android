@@ -472,6 +472,7 @@
     <string name="no_numbers_found">No numbers found</string>
     <string name="verified">Verified</string>
     <string name="unverified">Unverified</string>
+    <string name="invited">Invited</string>
     <string name="trusted_devices">Trusted Devices</string>
     <string name="progress_dialog_loading_trusted_devices">Loading trusted device list</string>
     <string name="failed_loading_trusted_devices">Failed to load trusted device list</string>

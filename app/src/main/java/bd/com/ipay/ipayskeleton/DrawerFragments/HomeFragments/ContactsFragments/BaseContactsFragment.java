@@ -563,6 +563,13 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
             }
         }
 
+        public boolean isInvited(String phoneNumber)
+        {
+            if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
+                return true;
+            return false;
+        }
+
         public class ViewHolder extends RecyclerView.ViewHolder {
             private View itemView;
 
@@ -572,6 +579,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
             private TextView mMobileNumberView;
             private ImageView isSubscriber;
             private ImageView mVerificationStatus;
+            private TextView isInvitedView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -584,6 +592,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 isSubscriber = (ImageView) itemView.findViewById(R.id.is_subscriber);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
+                isInvitedView = (TextView) itemView.findViewById(R.id.invited);
             }
 
             public void bindView(int pos) {
@@ -593,9 +602,20 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 final String name = friend.getInfo().getName();
                 final String phoneNumber = friend.getPhoneNumber();
                 final String profilePictureUrl = friend.getInfo().getProfilePictureUrl();
+
+                boolean isMember = friend.getInfo().isMember();
+                boolean isInvited = isInvited(phoneNumber);
                 
                 mNameView.setText(name);
                 mMobileNumberView.setText(phoneNumber);
+
+                if (!isMember && isInvited) {
+                        isInvitedView.setVisibility(View.VISIBLE);
+                        isInvitedView.setText(getString(R.string.invited).toUpperCase());
+                        isInvitedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_verified);
+                } else {
+                        isInvitedView.setVisibility(View.GONE);
+                }
 
                 if (shouldShowIPayUserIcon() && friend.getInfo().isMember()) {
                     isSubscriber.setVisibility(View.VISIBLE);
@@ -647,7 +667,6 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                                 boolean isVerified = friend.getInfo().isVerified();
                                 boolean isMember = friend.getInfo().isMember();
                                 int accountType = friend.getInfo().getAccountType();
-
                                 if (friend.getInfo().isMember()) {
                                     showSubscriberSheet(isVerified);
                                 } else {
