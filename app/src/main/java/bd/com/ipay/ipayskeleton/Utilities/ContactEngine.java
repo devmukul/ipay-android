@@ -30,11 +30,15 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 
 public class ContactEngine {
@@ -83,39 +87,6 @@ public class ContactEngine {
         return numbers;
     }
 
-    public static MyMultiMap<String, String> getContactNumbersAndNames(Context context) {
-        MyMultiMap<String, String> numbers = new MyMultiMap<String, String>();
-        if (context != null && context.getContentResolver() != null) {
-            Cursor cursor = context.getContentResolver().query(
-                    Phone.CONTENT_URI, null,
-                    Phone.HAS_PHONE_NUMBER + "=1", null, null);
-            if (cursor != null) {
-                try {
-                    int numberIndex = cursor.getColumnIndex(Phone.NUMBER);
-                    int nameIndex = cursor.getColumnIndex(Contacts.DISPLAY_NAME);
-                    while (cursor.moveToNext()) {
-                        try {
-                            String number = "";
-                            if (cursor.getString(numberIndex) != null)
-                                number = cursor.getString(numberIndex).replaceAll("\\D", "");
-                            if (number.length() > 0) {
-                                String name = cursor.getString(nameIndex);
-                                numbers.put(number, name);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                cursor.close();
-            }
-        }
-        return numbers;
-    }
 
     public static Cursor getContactNamesCursor(Context context) {
         // Run query
@@ -931,6 +902,51 @@ public class ContactEngine {
                 order);
 
         return cursor;
+    }
+
+    /**
+     * Read all contacts from the phone. If phone number already exists in the iPay contacts database,
+     * fetch the corresponding info from the database.
+     */
+    public static List<FriendNode> getAllContacts(Context context) {
+        List<FriendNode> phoneContacts = new ArrayList<>();
+        Cursor phoneContactsCursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                null, null, null, null);
+        if (phoneContactsCursor == null)
+            return null;
+
+        List<FriendNode> iPayContacts = DataHelper.getInstance(context).getSubscriberList();
+        Map<String, FriendInfo> iPayContactsMap = new HashMap<>();
+        for (FriendNode friendNode : iPayContacts) {
+            iPayContactsMap.put(friendNode.getPhoneNumber(), friendNode.getInfo());
+        }
+
+        if (phoneContactsCursor.moveToFirst()) {
+            int nameIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+            int phoneNumberIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+            do {
+                String name = phoneContactsCursor.getString(nameIndex);
+                String phoneNumber = phoneContactsCursor.getString(phoneNumberIndex).replaceAll("[^\\d]", "");
+
+                if (ContactEngine.isValidNumber(phoneNumber)) {
+                    phoneNumber = formatMobileNumberBD(phoneNumber);
+
+                    FriendInfo friendInfo;
+                    if (iPayContactsMap.containsKey(phoneNumber))
+                        friendInfo = iPayContactsMap.get(phoneNumber);
+                    else
+                        friendInfo = new FriendInfo(name);
+
+                    FriendNode contact = new FriendNode(phoneNumber, friendInfo);
+                    phoneContacts.add(contact);
+                }
+            } while (phoneContactsCursor.moveToNext());
+        }
+
+        phoneContactsCursor.close();
+
+        return phoneContacts;
     }
 
     public static String formatMobileNumberBD(String bdNumber) {

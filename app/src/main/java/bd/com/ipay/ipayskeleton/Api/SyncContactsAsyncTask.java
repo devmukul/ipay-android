@@ -47,30 +47,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         if (contactsSyncedOnce)
             return null;
 
-        Cursor phoneContactsCursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                null, null, null, null);
-        if (phoneContactsCursor == null)
-            return null;
-
-        List<FriendNode> phoneContacts = new ArrayList<>();
-
-        if (phoneContactsCursor.moveToFirst()) {
-            int nameIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-            int phoneNumberIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-
-            do {
-                String name = phoneContactsCursor.getString(nameIndex);
-                String phoneNumber = phoneContactsCursor.getString(phoneNumberIndex).replaceAll("[^\\d]", "");
-
-                if (ContactEngine.isValidNumber(phoneNumber)) {
-                    FriendNode contact = new FriendNode(ContactEngine.formatMobileNumberBD(phoneNumber),
-                            new FriendInfo(name));
-                    phoneContacts.add(contact);
-                }
-            } while (phoneContactsCursor.moveToNext());
-        }
-
-        phoneContactsCursor.close();
+        List<FriendNode> phoneContacts = ContactEngine.getAllContacts(context);
 
         ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
 

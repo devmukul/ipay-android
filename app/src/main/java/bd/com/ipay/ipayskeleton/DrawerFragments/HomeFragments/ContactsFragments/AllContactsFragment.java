@@ -17,23 +17,27 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
 public class AllContactsFragment extends BaseContactsFragment {
 
-    private HttpRequestGetAsyncTask mGetAllContactsTask;
-    private List<FriendNode> mGetAllContactsResponse;
+//    private HttpRequestGetAsyncTask mGetAllContactsTask;
+//    private List<FriendNode> mGetAllContactsResponse;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (mGetAllContactsResponse == null) {
-            loadContacts();
-            setContentShown(false);
-        }
-        else {
-            setContentShown(true);
-        }
+//        if (mGetAllContactsResponse == null) {
+//            loadContacts();
+//            setContentShown(false);
+//        }
+//        else {
+//            setContentShown(true);
+//        }
+
+        List<FriendNode> phoneContacts = ContactEngine.getAllContacts(getActivity());
+        populateList(phoneContacts);
     }
 
     @Override
@@ -46,46 +50,46 @@ public class AllContactsFragment extends BaseContactsFragment {
         return true;
     }
 
-    private void loadContacts() {
-        if (mGetAllContactsTask != null) {
-            return;
-        }
-
-        mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_GET_CONTACTS, getActivity(), this);
-        mGetAllContactsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    @Override
-    public void httpResponseReceiver(String result) {
-        super.httpResponseReceiver(result);
-
-        if (result == null) {
-            mGetAllContactsTask = null;
-            return;
-        }
-
-        List<String> resultList = Arrays.asList(result.split(";"));
-        Gson gson = new Gson();
-
-        if (resultList.get(0).equals(Constants.COMMAND_GET_FRIENDS)) {
-            try {
-                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    FriendNode[] friendNodeArray = gson.fromJson(resultList.get(2), FriendNode[].class);
-                    mGetAllContactsResponse = Arrays.asList(friendNodeArray);
-                    populateList(mGetAllContactsResponse);
-                } else {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_friends, Toast.LENGTH_LONG).show();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_loading_friends, Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
+//    private void loadContacts() {
+//        if (mGetAllContactsTask != null) {
+//            return;
+//        }
+//
+//        mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_FRIENDS,
+//                Constants.BASE_URL_FRIEND + Constants.URL_GET_CONTACTS, getActivity(), this);
+//        mGetAllContactsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//    }
+//
+//    @Override
+//    public void httpResponseReceiver(String result) {
+//        super.httpResponseReceiver(result);
+//
+//        if (result == null) {
+//            mGetAllContactsTask = null;
+//            return;
+//        }
+//
+//        List<String> resultList = Arrays.asList(result.split(";"));
+//        Gson gson = new Gson();
+//
+//        if (resultList.get(0).equals(Constants.COMMAND_GET_FRIENDS)) {
+//            try {
+//                if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
+//                    FriendNode[] friendNodeArray = gson.fromJson(resultList.get(2), FriendNode[].class);
+//                    mGetAllContactsResponse = Arrays.asList(friendNodeArray);
+//                    populateList(mGetAllContactsResponse);
+//                } else {
+//                    if (getActivity() != null) {
+//                        Toast.makeText(getActivity(), R.string.failed_loading_friends, Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//
+//                if (getActivity() != null) {
+//                    Toast.makeText(getActivity(), R.string.failed_loading_friends, Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }
+//    }
 }
