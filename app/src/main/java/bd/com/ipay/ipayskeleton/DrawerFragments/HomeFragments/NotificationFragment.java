@@ -76,8 +76,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private List<RecommendRequestClass> mRecommendationRequestList;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressDialog mProgressDialog;
-    private String mUserID;
-    private SharedPreferences pref;
 
     private int pageCount = 0;
     private boolean hasNext = false;
@@ -106,8 +104,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
         mProgressDialog = new ProgressDialog(getActivity());
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        mUserID = pref.getString(Constants.USERID, "");
 
         mNotificationAndRecommendationListAdapter = new NotificationAndRecommendationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -135,7 +131,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         return v;
     }
 
-        @Override
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
@@ -255,7 +251,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Gson gson = new Gson();
 
         if (resultList.get(0).equals(Constants.COMMAND_GET_NOTIFICATIONS)) {
-            if(this.isAdded()) setContentShown(true);
+            if (this.isAdded()) setContentShown(true);
             if (resultList.size() > 2) {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
                     try {
@@ -325,7 +321,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mServiceChargeTask = null;
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS)) {
 
-            if(this.isAdded()) setContentShown(true);
+            if (this.isAdded()) setContentShown(true);
             if (resultList.size() > 2) {
                 try {
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
@@ -404,8 +400,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             private TextView loadMoreTextView;
             private RoundedImageView mPortrait;
             private LinearLayout optionsLayout;
-            private Button acceptButton;
-            private Button rejectButton;
+            //            private Button acceptButton;
+//            private Button rejectButton;
             private Button markAsSpamButton;
             private View viewBetweenRejectAndSpam;
 
@@ -427,8 +423,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mTitleView = (TextView) itemView.findViewById(R.id.title);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                acceptButton = (Button) itemView.findViewById(R.id.accept_button);
-                rejectButton = (Button) itemView.findViewById(R.id.reject_button);
+//                acceptButton = (Button) itemView.findViewById(R.id.accept_button);
+//                rejectButton = (Button) itemView.findViewById(R.id.reject_button);
                 markAsSpamButton = (Button) itemView.findViewById(R.id.mark_as_spam_button);
                 viewBetweenRejectAndSpam = (View) itemView.findViewById(R.id.view_2);
 
