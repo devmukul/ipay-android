@@ -31,4 +31,13 @@ public class HttpResponseObject {
     public void setJsonString(String jsonString) {
         this.jsonString = jsonString;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "status=" + status +
+                ", apiCommand='" + apiCommand + '\'' +
+                ", jsonString='" + jsonString + '\'' +
+                '}';
+    }
 }
