@@ -651,7 +651,7 @@ public class ContactEngine {
         Cursor cursor = cr.query(uri, new String[]{
                 PhoneLookup._ID,
                 PhoneLookup.DISPLAY_NAME,
-                PhoneLookup.PHOTO_URI,
+                PhoneLookup.PHOTO_ID,
         }, null, null, null);
 
         ContactData contactData = null;
@@ -930,8 +930,6 @@ public class ContactEngine {
                 String name = phoneContactsCursor.getString(nameIndex);
                 String phoneNumber = phoneContactsCursor.getString(phoneNumberIndex).replaceAll("[^\\d]", "");
                 String photoUrl = phoneContactsCursor.getString(photoUrlIndex);
-
-                System.out.println(photoUrl);
 
                 if (ContactEngine.isValidNumber(phoneNumber)) {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
