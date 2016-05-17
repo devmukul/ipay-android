@@ -24,24 +24,16 @@ public class AllContactsFragment extends BaseContactsFragment {
     private List<FriendNode> mGetAllContactsResponse;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View v = super.onCreateView(inflater, container, savedInstanceState);
-
-        loadContacts();
-
-        return v;
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (mGetAllContactsResponse == null)
+        if (mGetAllContactsResponse == null) {
+            loadContacts();
             setContentShown(false);
-        else
+        }
+        else {
             setContentShown(true);
+        }
     }
 
     @Override
