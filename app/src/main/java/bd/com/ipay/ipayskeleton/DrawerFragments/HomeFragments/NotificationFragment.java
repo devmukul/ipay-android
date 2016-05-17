@@ -400,8 +400,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             private TextView loadMoreTextView;
             private RoundedImageView mPortrait;
             private LinearLayout optionsLayout;
-            //            private Button acceptButton;
-//            private Button rejectButton;
             private Button markAsSpamButton;
             private View viewBetweenRejectAndSpam;
 
@@ -423,8 +421,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mTitleView = (TextView) itemView.findViewById(R.id.title);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-//                acceptButton = (Button) itemView.findViewById(R.id.accept_button);
-//                rejectButton = (Button) itemView.findViewById(R.id.reject_button);
                 markAsSpamButton = (Button) itemView.findViewById(R.id.mark_as_spam_button);
                 viewBetweenRejectAndSpam = (View) itemView.findViewById(R.id.view_2);
 
