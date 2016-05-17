@@ -255,9 +255,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Gson gson = new Gson();
 
         if (resultList.get(0).equals(Constants.COMMAND_GET_NOTIFICATIONS)) {
+            if(this.isAdded()) setContentShown(true);
             if (resultList.size() > 2) {
                 if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                    setContentShown(true);
                     try {
                         mGetNotificationsResponse = gson.fromJson(resultList.get(2), GetNotificationsResponse.class);
 
@@ -324,10 +324,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
             mServiceChargeTask = null;
         } else if (resultList.get(0).equals(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS)) {
+
+            if(this.isAdded()) setContentShown(true);
             if (resultList.size() > 2) {
                 try {
                     if (resultList.get(1) != null && resultList.get(1).equals(Constants.HTTP_RESPONSE_STATUS_OK)) {
-                        setContentShown(true);
                         mRecommendationRequestsResponse = gson.fromJson(resultList.get(2), GetRecommendationRequestsResponse.class);
 
                         if (mRecommendationRequestList == null) {
