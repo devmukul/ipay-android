@@ -1002,7 +1002,7 @@ public class ContactEngine {
             int compare = phoneContact.getPhoneNumber().compareTo(serverContact.getPhoneNumber());
             if (compare == 0) {
                 if (!phoneContact.getInfo().getName().equals(serverContact.getInfo().getName())) {
-                    contactDiff.updatedFriends.add(serverContact);
+                    contactDiff.updatedFriends.add(phoneContact);
                 }
 
                 oldIndex++;
