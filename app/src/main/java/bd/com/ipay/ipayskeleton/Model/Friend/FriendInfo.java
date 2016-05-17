@@ -13,8 +13,9 @@ public class FriendInfo {
 
     }
 
-    public FriendInfo(String name) {
+    public FriendInfo(String name, String profilePictureUrl) {
         this.name = name;
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, String profilePictureUrl) {

@@ -924,10 +924,14 @@ public class ContactEngine {
         if (phoneContactsCursor.moveToFirst()) {
             int nameIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
             int phoneNumberIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            int photoUrlIndex = phoneContactsCursor.getColumnIndex(Phone.PHOTO_ID);
 
             do {
                 String name = phoneContactsCursor.getString(nameIndex);
                 String phoneNumber = phoneContactsCursor.getString(phoneNumberIndex).replaceAll("[^\\d]", "");
+                String photoUrl = phoneContactsCursor.getString(photoUrlIndex);
+
+                System.out.println(photoUrl);
 
                 if (ContactEngine.isValidNumber(phoneNumber)) {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
@@ -936,7 +940,7 @@ public class ContactEngine {
                     if (iPayContactsMap.containsKey(phoneNumber))
                         friendInfo = iPayContactsMap.get(phoneNumber);
                     else
-                        friendInfo = new FriendInfo(name);
+                        friendInfo = new FriendInfo(name, photoUrl);
 
                     FriendNode contact = new FriendNode(phoneNumber, friendInfo);
                     phoneContacts.add(contact);
