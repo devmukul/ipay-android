@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
@@ -27,6 +29,7 @@ public class AllContactsFragment extends BaseContactsFragment
     private String mQuery = "";
 
     private int nameIndex;
+    private int phoneNumberIndex;
     private int contactIdIndex;
     private int photoUrlIndex;
 
@@ -53,18 +56,19 @@ public class AllContactsFragment extends BaseContactsFragment
         }
 
         final String[] projection = new String[] {
-                ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.LOOKUP_KEY,
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.Contacts.PHOTO_URI
+                Phone._ID,
+                Phone.NUMBER,
+                Phone.HAS_PHONE_NUMBER,
+                Phone.PHOTO_URI,
+                Phone.DISPLAY_NAME,
         };
 
-        final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1"
-                + " AND " + ContactsContract.Contacts.DISPLAY_NAME
+        final String selection = Phone.HAS_PHONE_NUMBER + "=1"
+                + " AND " + Phone.DISPLAY_NAME
                 + " LIKE '%" + mQuery + "%'";
-        final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
+        final String order = Phone.DISPLAY_NAME + " COLLATE NOCASE ASC";
 
-        Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
+        Uri queryUri = Phone.CONTENT_URI;
 
         return new CursorLoader(
                 getActivity(),
@@ -81,9 +85,10 @@ public class AllContactsFragment extends BaseContactsFragment
         setContentShown(true);
 
         if (data != null) {
-            nameIndex = data.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-            contactIdIndex = data.getColumnIndex(ContactsContract.Contacts._ID);
-            photoUrlIndex = data.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
+            nameIndex = data.getColumnIndex(Phone.DISPLAY_NAME);
+            contactIdIndex = data.getColumnIndex(Phone._ID);
+            photoUrlIndex = data.getColumnIndex(Phone.PHOTO_URI);
+            phoneNumberIndex = data.getColumnIndex(Phone.NUMBER);
         }
 
         populateList(data, getString(R.string.no_contacts));
@@ -94,7 +99,9 @@ public class AllContactsFragment extends BaseContactsFragment
         cursor.moveToPosition(position);
 
         long contactId = cursor.getLong(contactIdIndex);
-        String phoneNumber = ContactEngine.getContactNumberFromId(getActivity(), contactId);
+//        String phoneNumber = ContactEngine.getContactNumberFromId(getActivity(), contactId);
+        String phoneNumber = cursor.getString(phoneNumberIndex);
+        phoneNumber = phoneNumber.replaceAll("[^\\d]", "");
         phoneNumber = ContactEngine.formatMobileNumberBD(phoneNumber);
 
         String name = cursor.getString(nameIndex);
