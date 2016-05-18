@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -110,6 +111,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     private ProgressDialog mProgressDialog;
 
     private ContactListAdapter mAdapter;
+    private Cursor mCursor;
 
     protected abstract boolean isDialogFragment();
 
@@ -119,9 +121,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
      * This method is called from the adapter to populate the adapter view at a specific position.
      * Return the friend information for the corresponding position.
      */
-    protected abstract FriendNode getFriendAtPosition(int position);
-
-    protected abstract int getFriendCount();
+    protected abstract FriendNode getFriendAtPosition(Cursor cursor, int position);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,6 +156,12 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         super.onResume();
         if (!isDialogFragment())
             getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mCursor = null;
+        super.onDestroyView();
     }
 
     @Override
@@ -196,12 +202,15 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         }
     }
 
-    protected void populateList() {
-        if (getFriendCount() > 0) {
+    protected void populateList(Cursor cursor, String emptyText) {
+        this.mCursor = cursor;
+
+        if (cursor != null && !cursor.isClosed() && cursor.getCount() > 0) {
             mAdapter = new ContactListAdapter();
             mRecyclerView.setAdapter(mAdapter);
             mEmptyContactsTextView.setVisibility(View.GONE);
         } else {
+            mEmptyContactsTextView.setText(emptyText);
             mEmptyContactsTextView.setVisibility(View.VISIBLE);
         }
     }
@@ -540,7 +549,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
             public void bindView(int pos) {
 
-                final FriendNode friend = getFriendAtPosition(pos);
+                final FriendNode friend = getFriendAtPosition(mCursor, pos);
 
                 final String name = friend.getInfo().getName();
                 final String phoneNumber = friend.getPhoneNumber();
@@ -668,7 +677,10 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
         @Override
         public int getItemCount() {
-            return getFriendCount();
+            if (mCursor == null || mCursor.isClosed())
+                return 0;
+            else
+                return mCursor.getCount();
         }
 
         @Override

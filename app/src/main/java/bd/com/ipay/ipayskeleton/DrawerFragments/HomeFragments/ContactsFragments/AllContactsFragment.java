@@ -7,19 +7,15 @@ import android.provider.ContactsContract;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataBaseOpenHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
 public class AllContactsFragment extends BaseContactsFragment
@@ -28,7 +24,6 @@ public class AllContactsFragment extends BaseContactsFragment
     private static final int CONTACTS_QUERY_LOADER = 0;
 
     private String mQuery = "";
-    private Cursor mCursor;
 
     private int nameIndex;
     private int contactIdIndex;
@@ -81,27 +76,25 @@ public class AllContactsFragment extends BaseContactsFragment
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         setContentShown(true);
 
-        mCursor = data;
-
         if (data != null) {
             nameIndex = data.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
             contactIdIndex = data.getColumnIndex(ContactsContract.Contacts._ID);
             photoUrlIndex = data.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
         }
 
-        populateList();
+        populateList(data, getString(R.string.no_contacts));
     }
 
     @Override
-    protected FriendNode getFriendAtPosition(int position) {
-        mCursor.moveToPosition(position);
+    protected FriendNode getFriendAtPosition(Cursor cursor, int position) {
+        cursor.moveToPosition(position);
 
-        long contactId = mCursor.getLong(contactIdIndex);
+        long contactId = cursor.getLong(contactIdIndex);
         String phoneNumber = ContactEngine.getContactNumberFromId(getActivity(), contactId);
         phoneNumber = ContactEngine.formatMobileNumberBD(phoneNumber);
 
-        String name = mCursor.getString(nameIndex);
-        String photoUrl = mCursor.getString(photoUrlIndex);
+        String name = cursor.getString(nameIndex);
+        String photoUrl = cursor.getString(photoUrlIndex);
 
         FriendInfo friendInfo;
         if (!friendInfoMap.containsKey(phoneNumber))
@@ -113,14 +106,6 @@ public class AllContactsFragment extends BaseContactsFragment
         }
 
         return new FriendNode(phoneNumber, friendInfo);
-    }
-
-    @Override
-    protected int getFriendCount() {
-        if (mCursor == null)
-            return 0;
-        else
-            return mCursor.getCount();
     }
 
     @Override
@@ -154,9 +139,7 @@ public class AllContactsFragment extends BaseContactsFragment
     @Override
     public void onDestroyView() {
         getLoaderManager().destroyLoader(CONTACTS_QUERY_LOADER);
-        mCursor = null;
-
-        super.onDestroy();
+        super.onDestroyView();
     }
 
 }

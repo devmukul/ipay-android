@@ -13,6 +13,7 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 /**
@@ -26,7 +27,6 @@ public class IPayContactsFragment extends BaseContactsFragment
 
     private boolean mShowVerifiedUsersOnly;
     private String mQuery = "";
-    private Cursor mCursor;
 
     private int nameIndex;
     private int phoneNumberIndex;
@@ -60,17 +60,17 @@ public class IPayContactsFragment extends BaseContactsFragment
         return new SQLiteCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
-                mCursor = DataHelper.getInstance(getActivity()).searchSubscribers(mQuery, mShowVerifiedUsersOnly);
+                Cursor cursor = DataHelper.getInstance(getActivity()).searchSubscribers(mQuery, mShowVerifiedUsersOnly);
 
-                if (mCursor != null) {
-                    nameIndex = mCursor.getColumnIndex(DBConstants.KEY_NAME);
-                    phoneNumberIndex = mCursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
-                    profilePictureUrlIndex = mCursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
-                    verificationStatusIndex = mCursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
-                    accountTypeIndex = mCursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
+                if (cursor != null) {
+                    nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
+                    phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
+                    profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
+                    verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
+                    accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
                 }
 
-                return mCursor;
+                return cursor;
             }
         };
     }
@@ -78,9 +78,9 @@ public class IPayContactsFragment extends BaseContactsFragment
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         setContentShown(true);
-        mCursor = data;
 
-        populateList();
+        populateList(data, mShowVerifiedUsersOnly ?
+                getString(R.string.no_verified_contacts) : getString(R.string.no_contacts));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class IPayContactsFragment extends BaseContactsFragment
     }
 
     @Override
-    protected FriendNode getFriendAtPosition(int position) {
+    protected FriendNode getFriendAtPosition(Cursor mCursor, int position) {
         mCursor.moveToPosition(position);
 
         String name = mCursor.getString(nameIndex);
@@ -102,14 +102,6 @@ public class IPayContactsFragment extends BaseContactsFragment
         FriendNode friend = new FriendNode(phoneNumber, friendInfo);
 
         return friend;
-    }
-
-    @Override
-    protected int getFriendCount() {
-        if (mCursor == null || mCursor.isClosed())
-            return 0;
-        else
-            return mCursor.getCount();
     }
 
     @Override
@@ -138,8 +130,7 @@ public class IPayContactsFragment extends BaseContactsFragment
 
     @Override
     public void onDestroyView() {
-        mCursor = null;
         getLoaderManager().destroyLoader(CONTACTS_QUERY_LOADER);
-        super.onDestroy();
+        super.onDestroyView();
     }
 }
