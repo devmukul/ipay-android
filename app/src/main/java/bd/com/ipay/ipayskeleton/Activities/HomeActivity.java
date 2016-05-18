@@ -48,7 +48,6 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.IntroducerFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.InvitationRequestsFragment;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
@@ -348,13 +347,6 @@ public class HomeActivity extends BaseActivity
             launchEditProfileActivity(PropertyConstants.INTRODUCER, new Bundle());
             //getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
             //switchedToHomeFragment = false;
-
-        } else if (id == R.id.nav_invitation) {
-
-            launchEditProfileActivity(PropertyConstants.INVITATION, new Bundle());
-            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new InvitationRequestsFragment()).commit();
-            //switchedToHomeFragment = false;
-
         }
 
     }
