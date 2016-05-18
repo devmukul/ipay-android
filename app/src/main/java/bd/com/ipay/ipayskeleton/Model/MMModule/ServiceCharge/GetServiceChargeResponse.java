@@ -16,11 +16,17 @@ public class GetServiceChargeResponse {
     }
 
     public BigDecimal getPerTransactionFlatFee() {
-        return perTransactionFlatFee;
+        if (perTransactionFlatFee == null)
+            return BigDecimal.ZERO;
+        else
+            return perTransactionFlatFee;
     }
 
     public BigDecimal getPerTransactionVeriableCharge() {
-        return perTransactionVeriableCharge;
+        if (perTransactionVeriableCharge == null)
+            return BigDecimal.ZERO;
+        else
+            return perTransactionVeriableCharge;
     }
 
     public BigDecimal getServiceCharge(BigDecimal amount) {
@@ -38,18 +44,18 @@ public class GetServiceChargeResponse {
         }
     }
 
-    public String getServiceChargeDescription(BigDecimal amount) {
-        BigDecimal calculatedServiceCharge = getPerTransactionFlatFee().add(((getPerTransactionVeriableCharge().multiply(amount))).divide(new BigDecimal(100)));
-        BigDecimal actualServiceCharge;
-
-        if (getMaxTransactionFee().compareTo(calculatedServiceCharge) > 0)
-            actualServiceCharge = calculatedServiceCharge;
-        else actualServiceCharge = getMaxTransactionFee();
-
-        if (actualServiceCharge.compareTo(new BigDecimal(0)) == 0)
-            return "There are no extra charges for this transaction!";
-        else if (actualServiceCharge.compareTo(new BigDecimal(0)) > 0)
-            return "You'll be charged " + actualServiceCharge + " Tk. for this transaction.";
-        else return null;
-    }
+//    public String getServiceChargeDescription(BigDecimal amount) {
+//        BigDecimal calculatedServiceCharge = getPerTransactionFlatFee().add(((getPerTransactionVeriableCharge().multiply(amount))).divide(new BigDecimal(100)));
+//        BigDecimal actualServiceCharge;
+//
+//        if (getMaxTransactionFee().compareTo(calculatedServiceCharge) > 0)
+//            actualServiceCharge = calculatedServiceCharge;
+//        else actualServiceCharge = getMaxTransactionFee();
+//
+//        if (actualServiceCharge.compareTo(new BigDecimal(0)) == 0)
+//            return "There are no extra charges for this transaction!";
+//        else if (actualServiceCharge.compareTo(new BigDecimal(0)) > 0)
+//            return "You'll be charged " + actualServiceCharge + " Tk. for this transaction.";
+//        else return null;
+//    }
 }
