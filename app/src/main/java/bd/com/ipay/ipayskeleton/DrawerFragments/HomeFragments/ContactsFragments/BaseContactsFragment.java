@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -114,6 +115,14 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
     protected abstract boolean shouldShowIPayUserIcon();
 
+    /**
+     * This method is called from the adapter to populate the adapter view at a specific position.
+     * Return the friend information for the corresponding position.
+     */
+    protected abstract FriendNode getFriendAtPosition(int position);
+
+    protected abstract int getFriendCount();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,6 +145,9 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        mAdapter = new ContactListAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+
         return v;
     }
 
@@ -144,11 +156,6 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         super.onResume();
         if (!isDialogFragment())
             getActivity().invalidateOptionsMenu();
-
-        if (mAdapter != null) {
-            mAdapter.getFilter().filter("");
-            mRecyclerView.setAdapter(mAdapter);
-        }
     }
 
     @Override
@@ -189,27 +196,14 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         }
     }
 
-    protected void populateList(List<FriendNode> friends) {
-        setContentShown(true);
-        if (friends != null && !friends.isEmpty()) {
-            mAdapter = new ContactListAdapter(friends);
+    protected void populateList() {
+        if (getFriendCount() > 0) {
+            mAdapter = new ContactListAdapter();
             mRecyclerView.setAdapter(mAdapter);
+            mEmptyContactsTextView.setVisibility(View.GONE);
         } else {
             mEmptyContactsTextView.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (mAdapter != null) {
-            mAdapter.getFilter().filter(newText);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return true;
     }
 
     /**
@@ -498,49 +492,10 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     }
 
 
-    public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-            implements Filterable {
+    public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int EMPTY_VIEW = 10;
         private static final int FRIEND_VIEW = 100;
-
-        private List<FriendNode> mAllFriendList;
-        private List<FriendNode> mFilteredFriendList;
-
-        public ContactListAdapter(List<FriendNode> friendList) {
-            mAllFriendList = friendList;
-            mFilteredFriendList = new ArrayList<>(mAllFriendList);
-        }
-
-        @Override
-        public Filter getFilter() {
-            Filter filter = new Filter() {
-                @Override
-                protected FilterResults performFiltering(CharSequence constraint) {
-                    mFilteredFriendList.clear();
-
-                    String searchStr = constraint.toString().toLowerCase();
-                    for (FriendNode friend : mAllFriendList) {
-                        if (friend.getPhoneNumber().contains(searchStr) ||
-                                friend.getInfo().getName().toLowerCase().contains(searchStr))
-                            mFilteredFriendList.add(friend);
-                    }
-
-                    FilterResults filterResults = new FilterResults();
-                    filterResults.count = mFilteredFriendList.size();
-                    filterResults.values = mFilteredFriendList;
-
-                    return filterResults;
-                }
-
-                @Override
-                protected void publishResults(CharSequence constraint, FilterResults results) {
-                    notifyDataSetChanged();
-                }
-            };
-
-            return filter;
-        }
 
         public class EmptyViewHolder extends RecyclerView.ViewHolder {
             public TextView mEmptyDescription;
@@ -585,7 +540,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
             public void bindView(int pos) {
 
-                final FriendNode friend = mFilteredFriendList.get(pos);
+                final FriendNode friend = getFriendAtPosition(pos);
 
                 final String name = friend.getInfo().getName();
                 final String phoneNumber = friend.getPhoneNumber();
@@ -638,32 +593,41 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        setSelectedName(name);
-                        setSelectedNumber(phoneNumber);
+                        if (isDialogFragment()) {
 
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
+                            Intent intent = new Intent();
+                            intent.putExtra(Constants.MOBILE_NUMBER, phoneNumber);
+                            getActivity().setResult(Activity.RESULT_OK, intent);
+                            getActivity().finish();
 
-                        // Add a delay to hide keyboard and then open up the bottom sheet
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                int randomProfileBackgroundColor = PROFILE_PICTURE_BACKGROUNDS[getAdapterPosition() % PROFILE_PICTURE_BACKGROUNDS.length];
-                                boolean isVerified = friend.getInfo().isVerified();
-                                boolean isMember = friend.getInfo().isMember();
-                                int accountType = friend.getInfo().getAccountType();
-                                if (friend.getInfo().isMember()) {
-                                    showSubscriberSheet(isVerified);
-                                } else {
-                                    showNonSubscriberSheet(phoneNumber);
+                        } else {
+                            setSelectedName(name);
+                            setSelectedNumber(phoneNumber);
+
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
+
+                            // Add a delay to hide keyboard and then open up the bottom sheet
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int randomProfileBackgroundColor = PROFILE_PICTURE_BACKGROUNDS[getAdapterPosition() % PROFILE_PICTURE_BACKGROUNDS.length];
+                                    boolean isVerified = friend.getInfo().isVerified();
+                                    boolean isMember = friend.getInfo().isMember();
+                                    int accountType = friend.getInfo().getAccountType();
+                                    if (friend.getInfo().isMember()) {
+                                        showSubscriberSheet(isVerified);
+                                    } else {
+                                        showNonSubscriberSheet(phoneNumber);
+                                    }
+
+                                    setContactInformationInSheet(name,
+                                            phoneNumber, profilePictureUrl, randomProfileBackgroundColor,
+                                            isMember, isVerified, accountType);
                                 }
-
-                                setContactInformationInSheet(name,
-                                        phoneNumber, profilePictureUrl, randomProfileBackgroundColor,
-                                        isMember, isVerified, accountType);
-                            }
-                        }, 100);
+                            }, 100);
+                        }
                     }
                 });
             }
@@ -704,19 +668,12 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
         @Override
         public int getItemCount() {
-
-            if (mFilteredFriendList == null) {
-                return 0;
-            }
-
-            return mFilteredFriendList.size();
+            return getFriendCount();
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (mFilteredFriendList == null)
-                return EMPTY_VIEW;
-            else if (mFilteredFriendList.size() == 0)
+            if (getItemCount() == 0)
                 return EMPTY_VIEW;
             else
                 return FRIEND_VIEW;

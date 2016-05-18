@@ -8,6 +8,13 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ContactsFragments.
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+/**
+ * Use this activity to pick an iPay friend. After launching the activity, get the value of
+ * Constants.MOBILE_NUMBER from the intent in onActivityResult.
+ *
+ * If want to show only verified users, pass (Constants.VERIFIED_USERS_ONLY, false) in the intent
+ * while starting the activity.
+ */
 public class FriendPickerActivity extends FragmentActivity {
 
     private boolean mShowVerifiedUsersOnly;

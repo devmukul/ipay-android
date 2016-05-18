@@ -620,7 +620,7 @@ public class ContactEngine {
         return phoneContactID;
     }
 
-    public static String getContactNamefromNumber(Context context, String contactNumber) {
+    public static String getContactNameFromNumber(Context context, String contactNumber) {
         if (contactNumber == null || contactNumber.equals(""))
             return null;
         String name = null;
@@ -684,8 +684,8 @@ public class ContactEngine {
 
         Cursor cursor = context.getContentResolver().query(uri, projection,
                 selection, selectionArgs, sortOrder);
-        if (BuildConfig.DEBUG)
-            Log.d("result found", "" + cursor.getCount());
+//        if (BuildConfig.DEBUG)
+//            Log.d("result found", "" + cursor.getCount());
 
         if (cursor != null && cursor.moveToNext()) {
             int numberIndex = cursor.getColumnIndex(Phone.NUMBER);
@@ -712,8 +712,8 @@ public class ContactEngine {
 
         Cursor cursor = context.getContentResolver().query(uri, projection,
                 selection, selectionArgs, sortOrder);
-        if (BuildConfig.DEBUG)
-            Log.d("result found", "" + cursor.getCount());
+//        if (BuildConfig.DEBUG)
+//            Log.d("result found", "" + cursor.getCount());
 
         if (cursor != null && cursor.moveToNext()) {
             int mailIndex = cursor
@@ -910,8 +910,20 @@ public class ContactEngine {
      */
     public static List<FriendNode> getAllContacts(Context context) {
         List<FriendNode> phoneContacts = new ArrayList<>();
-        Cursor phoneContactsCursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                null, null, null, null);
+        final String[] projection = new String[] {
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.LOOKUP_KEY,
+                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.Contacts.PHOTO_URI
+        };
+
+        final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1"
+                + " AND " + ContactsContract.Contacts.DISPLAY_NAME;
+
+        final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
+
+        Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
+        Cursor phoneContactsCursor = context.getContentResolver().query(queryUri, projection, selection, null, order);
         if (phoneContactsCursor == null)
             return null;
 
@@ -923,12 +935,13 @@ public class ContactEngine {
 
         if (phoneContactsCursor.moveToFirst()) {
             int nameIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-            int phoneNumberIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            int contactIdIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID);
             int photoUrlIndex = phoneContactsCursor.getColumnIndex(Phone.PHOTO_ID);
 
             do {
+                long contactId = phoneContactsCursor.getLong(contactIdIndex);
                 String name = phoneContactsCursor.getString(nameIndex);
-                String phoneNumber = phoneContactsCursor.getString(phoneNumberIndex).replaceAll("[^\\d]", "");
+                String phoneNumber = getContactNumberFromId(context, contactId).replaceAll("[^\\d]", "");
                 String photoUrl = phoneContactsCursor.getString(photoUrlIndex);
 
                 if (ContactEngine.isValidNumber(phoneNumber)) {
@@ -987,38 +1000,23 @@ public class ContactEngine {
     public static ContactDiff getContactDiff(List<FriendNode> phoneContacts, List<FriendNode> serverContacts) {
         ContactDiff contactDiff = new ContactDiff();
 
-        Collections.sort(phoneContacts);
-        Collections.sort(serverContacts);
-
-        int oldIndex = 0;
-        int newIndex = 0;
-
-        while (oldIndex < serverContacts.size() && newIndex < phoneContacts.size()) {
-            FriendNode serverContact = serverContacts.get(oldIndex);
-            FriendNode phoneContact = phoneContacts.get(newIndex);
-
-            int compare = phoneContact.getPhoneNumber().compareTo(serverContact.getPhoneNumber());
-            if (compare == 0) {
-                if (!phoneContact.getInfo().getName().equals(serverContact.getInfo().getName())) {
-                    contactDiff.updatedFriends.add(phoneContact);
-                }
-
-                oldIndex++;
-                newIndex++;
-            }
-            else if (compare < 0) {
-                contactDiff.newFriends.add(phoneContact);
-                newIndex++;
-            }
-            else {
-                oldIndex++;
-            }
+        Map<String, FriendInfo> serverContactMap = new HashMap<>();
+        for (FriendNode serverContact : serverContacts) {
+            serverContactMap.put(serverContact.getPhoneNumber(), serverContact.getInfo());
         }
 
-        while (newIndex < phoneContacts.size()) {
-            FriendNode newContact = phoneContacts.get(newIndex);
-            contactDiff.newFriends.add(newContact);
-            newIndex++;
+        for (FriendNode phoneContact : phoneContacts) {
+
+            if (serverContactMap.containsKey(phoneContact.getPhoneNumber())) {
+                String serverName = serverContactMap.get(phoneContact.getPhoneNumber()).getName();
+                String phoneName = phoneContact.getInfo().getName();
+
+                if (!serverName.equals(phoneName)) {
+                    contactDiff.updatedFriends.add(phoneContact);
+                }
+            } else {
+                contactDiff.newFriends.add(phoneContact);
+            }
         }
 
         return contactDiff;

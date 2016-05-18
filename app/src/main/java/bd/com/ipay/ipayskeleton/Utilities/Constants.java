@@ -112,6 +112,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
+//            BASE_URL_FRIEND = "http://10.10.10.10:1337/friend/v1/";
 
         } else if (SERVER_TYPE == 2) {
 
