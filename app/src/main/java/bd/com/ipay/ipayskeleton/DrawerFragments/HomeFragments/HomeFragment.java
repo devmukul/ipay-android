@@ -374,11 +374,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
         String mDeviceID = telephonyManager.getDeviceId();
         String mDeviceName = android.os.Build.MANUFACTURER + "-" + android.os.Build.PRODUCT + " -" + Build.MODEL;
 
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
-                Constants.MOBILE_ANDROID + mDeviceID);
+                Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,

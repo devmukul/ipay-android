@@ -160,8 +160,12 @@ public class HttpRequestPostAsyncTask extends AsyncTask<Void, Void, HttpResponse
                 }
 
             } else {
-                if (mHttpResponseListener != null)
-                    mHttpResponseListener.httpResponseReceiver(result);
+                try {
+                    if (mHttpResponseListener != null)
+                        mHttpResponseListener.httpResponseReceiver(result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         } else {

@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "799721005986",
+    "project_id": "ipay-772e8"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799721005986:android:7dcef9bb4cb24e14",
+        "android_client_info": {
+          "package_name": "bd.com.ipay.ipayskeleton"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6fiY1MTe0DBchx0-SJtiB7PoIe9cyzh4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

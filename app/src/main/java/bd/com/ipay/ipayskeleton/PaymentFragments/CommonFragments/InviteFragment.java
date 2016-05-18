@@ -152,9 +152,9 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
             mSendInviteTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
-            setContentShown(true);
 
             try {
+                setContentShown(true);
                 mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (mGetUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {

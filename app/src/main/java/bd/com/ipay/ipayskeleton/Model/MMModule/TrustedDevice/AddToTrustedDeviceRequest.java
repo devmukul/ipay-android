@@ -10,10 +10,12 @@ public class AddToTrustedDeviceRequest {
     private String deviceId;
     private boolean isMobileBrowser;
     private String osName;
+    private String pushRegistrationId;
 
-    public AddToTrustedDeviceRequest(String deviceName, String deviceId) {
+    public AddToTrustedDeviceRequest(String deviceName, String deviceId, String pushRegistrationId) {
         this.deviceName = deviceName;
         this.deviceId = deviceId;
+        this.pushRegistrationId = pushRegistrationId;
         isMobileBrowser = false;
         osName = Constants.ANDROID + " " + Build.VERSION.RELEASE;
     }

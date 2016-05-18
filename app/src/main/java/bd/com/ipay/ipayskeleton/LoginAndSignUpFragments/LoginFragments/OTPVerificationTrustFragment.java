@@ -117,10 +117,12 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         } else {
 
             String otp = mOTPEditText.getText().toString().trim();
+            String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
 
             mProgressDialog.show();
+
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                    Constants.MOBILE_ANDROID + mDeviceID, null, otp, null);
+                    Constants.MOBILE_ANDROID + mDeviceID, null, otp, pushRegistrationID, null);
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,

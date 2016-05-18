@@ -188,9 +188,12 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             return;
         }
 
+        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+
         mProgressDialog.show();
         LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                Constants.MOBILE_ANDROID + mDeviceID, null, otp, null);
+                Constants.MOBILE_ANDROID + mDeviceID, null, otp, pushRegistrationID, null);
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
         mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,

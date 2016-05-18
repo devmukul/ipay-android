@@ -16,6 +16,8 @@ public class Constants {
     public static final String USER_AGENT = "User-Agent";
     public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
     public static final String LOGGEDIN = "LOGGEDIN";
+    public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
+    public static final String GCM_REGISTRATION_COMPLETE = "GCM_REGISTRATION_COMPLETE";
     public static final String PASSWORD = "PASSWORD";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
@@ -212,14 +214,6 @@ public class Constants {
     public static final String URL_ADD_CONTACT = "addfriends";
     public static final String URL_DELETE_CONTACT = "deletefriend";
     public static final String URL_UPDATE_CONTACT = "updatefriend";
-
-//    public static final String HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = "406";
-//    public static final String HTTP_RESPONSE_STATUS_NOT_FOUND = "404";
-//    public static final String HTTP_RESPONSE_STATUS_OK = "200";
-//    public static final String HTTP_RESPONSE_STATUS_PROCESSING = "102";
-//    public static final String HTTP_RESPONSE_STATUS_UNAUTHORIZED = "401";
-//    public static final String HTTP_RESPONSE_STATUS_BAD_REQUEST = "400";
-//    public static final String HTTP_RESPONSE_STATUS_ACCEPTED = "202";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -428,5 +422,10 @@ public class Constants {
     public static final String ADDRESS_TYPE_PRESENT = "PRESENT";
     public static final String ADDRESS_TYPE_PERMANENT = "PERMANENT";
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
+
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "message";
+    public static final String PUSH_NOTIFICATION_TAG_TITLE = "title";
+    public static final String PUSH_NOTIFICATION_TAG_MESSAGE = "message";
+    public static final String PUSH_NOTIFICATION_TOKEN = "token";
 
 }

@@ -22,7 +22,9 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepTwoFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupOrLoginActivity extends AppCompatActivity {
 
@@ -72,6 +74,13 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             String message = getIntent().getStringExtra(Constants.MESSAGE);
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             switchToLoginFragment();
+        }
+
+        // Start service for GCM
+        if (Utilities.checkPlayServices(SignupOrLoginActivity.this)) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
         }
     }
 

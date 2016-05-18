@@ -171,7 +171,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(HttpResponseObject result) throws RuntimeException {
         if (result == null) {
             mProgressDialog.dismiss();
             mGetIntroducersTask = null;
@@ -181,105 +181,104 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_INTRODUCER_LIST)) {
-                try {
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mIntroducerListResponse = gson.fromJson(result.getJsonString(), GetIntroducerListResponse.class);
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mIntroducerListResponse = gson.fromJson(result.getJsonString(), GetIntroducerListResponse.class);
 
-                        if (mIntroducerList == null) {
-                            mIntroducerList = mIntroducerListResponse.getIntroducers();
-                            MINIMUM_INTRODUCER_COUNT = mIntroducerListResponse.getRequiredForProfileCompletion();
+                    if (mIntroducerList == null) {
+                        mIntroducerList = mIntroducerListResponse.getIntroducers();
+                        MINIMUM_INTRODUCER_COUNT = mIntroducerListResponse.getRequiredForProfileCompletion();
 
-                            if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT) {
-                                mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
-                                mIntroducerStatusTextView.setText(getString(R.string.you_need_to_have) + MINIMUM_INTRODUCER_COUNT
-                                        + getString(R.string.introducers_to_complete_the_account_verification_process));
-                            } else mCompleteIntroducerHeaderLayout.setVisibility(View.GONE);
+                        if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT) {
+                            mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
+                            mIntroducerStatusTextView.setText(getString(R.string.you_need_to_have) + MINIMUM_INTRODUCER_COUNT
+                                    + getString(R.string.introducers_to_complete_the_account_verification_process));
+                        } else mCompleteIntroducerHeaderLayout.setVisibility(View.GONE);
 
-                            mButtonAskForRecommendation.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
-                                    intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);                   // Get the verified iPay users only.
-                                    startActivityForResult(intent, PICK_CONTACT_REQUEST);
-                                }
-                            });
-
-                        } else {
-                            List<Introducer> tempIntroducerClasses;
-                            tempIntroducerClasses = mIntroducerListResponse.getIntroducers();
-                            mIntroducerList.clear();
-                            mIntroducerList.addAll(tempIntroducerClasses);
-                        }
-                        mIntroduceAdapter.notifyDataSetChanged();
+                        mButtonAskForRecommendation.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
+                                intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);                   // Get the verified iPay users only.
+                                startActivityForResult(intent, PICK_CONTACT_REQUEST);
+                            }
+                        });
 
                     } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        List<Introducer> tempIntroducerClasses;
+                        tempIntroducerClasses = mIntroducerListResponse.getIntroducers();
+                        mIntroducerList.clear();
+                        mIntroducerList.addAll(tempIntroducerClasses);
                     }
-                } catch (Exception e) {
+                    mIntroduceAdapter.notifyDataSetChanged();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
+            } catch (Exception e) {
+            }
 
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_INTRODUCED_LIST)) {
-                try {
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mIntroducedListResponse = gson.fromJson(result.getJsonString(), GetIntroducedListResponse.class);
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mIntroducedListResponse = gson.fromJson(result.getJsonString(), GetIntroducedListResponse.class);
 
-                        if (mIntroducedList == null) {
-                            mIntroducedList = mIntroducedListResponse.getIntroducedList();
-                        } else {
-                            List<Introduced> tempIntroducedClasses;
-                            tempIntroducedClasses = mIntroducedListResponse.getIntroducedList();
-                            mIntroducedList.clear();
-                            mIntroducedList.addAll(tempIntroducedClasses);
-                        }
-                        mIntroduceAdapter.notifyDataSetChanged();
-
+                    if (mIntroducedList == null) {
+                        mIntroducedList = mIntroducedListResponse.getIntroducedList();
                     } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        List<Introduced> tempIntroducedClasses;
+                        tempIntroducedClasses = mIntroducedListResponse.getIntroducedList();
+                        mIntroducedList.clear();
+                        mIntroducedList.addAll(tempIntroducedClasses);
                     }
-                } catch (Exception e) {
+                    mIntroduceAdapter.notifyDataSetChanged();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
+            } catch (Exception e) {
+            }
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SENT_REQUEST_LIST)) {
-                try {
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mSentRequestListResponse = gson.fromJson(result.getJsonString(), GetRecommendationRequestsResponse.class);
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mSentRequestListResponse = gson.fromJson(result.getJsonString(), GetRecommendationRequestsResponse.class);
 
-                        if (mRecommendationRequestList == null) {
-                            mRecommendationRequestList = mSentRequestListResponse.getSentRequestList();
-                        } else {
-                            List<RecommendationRequest> tempIntroducerClasses;
-                            tempIntroducerClasses = mSentRequestListResponse.getSentRequestList();
-                            mRecommendationRequestList.clear();
-                            mRecommendationRequestList.addAll(tempIntroducerClasses);
-                        }
-                        mIntroduceAdapter.notifyDataSetChanged();
-
+                    if (mRecommendationRequestList == null) {
+                        mRecommendationRequestList = mSentRequestListResponse.getSentRequestList();
                     } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        List<RecommendationRequest> tempIntroducerClasses;
+                        tempIntroducerClasses = mSentRequestListResponse.getSentRequestList();
+                        mRecommendationRequestList.clear();
+                        mRecommendationRequestList.addAll(tempIntroducerClasses);
                     }
-                } catch (Exception e) {
+                    mIntroduceAdapter.notifyDataSetChanged();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
+            } catch (Exception e) {
+            }
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
             try {
 
-                    mAskForRecommendationResponse = gson.fromJson(result.getJsonString(), AskForRecommendationResponse.class);
+                mAskForRecommendationResponse = gson.fromJson(result.getJsonString(), AskForRecommendationResponse.class);
 
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
-                        }
-                    } else if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mAskForRecommendationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
                     }
+                } else if (getActivity() != null) {
+                    Toast.makeText(getActivity(), mAskForRecommendationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -291,11 +290,15 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             mAskForRecommendationTask = null;
         }
 
-        setContentShown(true);
-        if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null
-                && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
-            mEmptyListTextView.setVisibility(View.VISIBLE);
-        else mEmptyListTextView.setVisibility(View.GONE);
+        try {
+            setContentShown(true);
+            if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null
+                    && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
+                mEmptyListTextView.setVisibility(View.VISIBLE);
+            else mEmptyListTextView.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -307,7 +310,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         private static final int INTRODUCED_LIST_HEADER_VIEW = 4;
         private static final int SENT_REQUEST_LIST_ITEM_VIEW = 5;
         private static final int SENT_REQUEST_LIST_HEADER_VIEW = 6;
-
 
         public IntroduceAdapter() {
         }

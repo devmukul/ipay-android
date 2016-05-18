@@ -655,7 +655,7 @@ public class ContactEngine {
         }, null, null, null);
 
         ContactData contactData = null;
-        if(cursor != null && cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             long id = cursor.getLong(cursor.getColumnIndex(PhoneLookup._ID));
             String name = cursor.getString(cursor.getColumnIndex(PhoneLookup.DISPLAY_NAME));
             String photoUri = cursor.getString(cursor.getColumnIndex(PhoneLookup.PHOTO_URI));
@@ -911,7 +911,7 @@ public class ContactEngine {
     public static List<FriendNode> getAllContacts(Context context) {
         List<FriendNode> phoneContacts = new ArrayList<>();
 
-        final String[] projection = new String[] {
+        final String[] projection = new String[]{
                 Phone._ID,
                 Phone.NUMBER,
                 Phone.HAS_PHONE_NUMBER,
@@ -948,7 +948,7 @@ public class ContactEngine {
                 String phoneNumber = phoneContactsCursor.getString(numberIndex);
                 String photoUrl = phoneContactsCursor.getString(photoUrlIndex);
 
-                phoneNumber = phoneNumber.replaceAll("[^\\d]", "");
+                if (phoneNumber != null) phoneNumber = phoneNumber.replaceAll("[^\\d]", "");
 
                 if (ContactEngine.isValidNumber(phoneNumber)) {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
@@ -957,7 +957,7 @@ public class ContactEngine {
 //                    if (iPayContactsMap.containsKey(phoneNumber))
 //                        friendInfo = iPayContactsMap.get(phoneNumber);
 //                    else
-                        friendInfo = new FriendInfo(name, photoUrl);
+                    friendInfo = new FriendInfo(name, photoUrl);
 
                     FriendNode contact = new FriendNode(phoneNumber, friendInfo);
                     phoneContacts.add(contact);
@@ -989,6 +989,9 @@ public class ContactEngine {
     }
 
     public static boolean isValidNumber(String number) {
+
+        if (number != null) return false;
+
         number = number.trim();
         if (number.length() == 11 && number.startsWith("0"))
             return true;

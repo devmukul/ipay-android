@@ -24,6 +24,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -38,12 +40,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
 import bd.com.ipay.ipayskeleton.R;
 
 public class Utilities {
 
     public static boolean isConnectionAvailable(Context context) {
+        if (context == null) return false;
+
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         return info != null && info.isConnected();
@@ -251,7 +256,7 @@ public class Utilities {
 
     public static String isPasswordValid(String password) {
         // Return empty string if the password is valid
-        if(password.length() ==0) return "Enter a password";
+        if (password.length() == 0) return "Enter a password";
         if (password.length() < 8) return "This password is too short";
         if (!password.matches(".*[a-zA-Z]+.*")) return "Password should contain an alphabet";
         if (!password.matches(".*[0-9]+.*")) return "Password should contain a number";
@@ -301,6 +306,15 @@ public class Utilities {
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
+    }
+
+    public static boolean checkPlayServices(Context context) {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
+
+        if (resultCode == ConnectionResult.SUCCESS)
+            return true;
+        else return false;
     }
 
 }
