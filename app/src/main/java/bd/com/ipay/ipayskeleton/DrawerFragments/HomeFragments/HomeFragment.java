@@ -308,14 +308,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private void promptForProfileCompletion() {
         mProfileCompletionStatusResponse.analyzeProfileCompletionData();
-        if (!mProfileCompletionStatusResponse.isProfileCompleted()) {
+        if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
             ((HomeActivity) getActivity()).changeMenuVisibility(R.id.nav_profile_completeness, true);
         }
 
         if (!profileCompletionPromptShown) {
             profileCompletionPromptShown = true;
 
-            if (!mProfileCompletionStatusResponse.isProfileCompleted()) {
+            if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
 
                 CircularProgressBar progressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.progress_bar);
                 TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);

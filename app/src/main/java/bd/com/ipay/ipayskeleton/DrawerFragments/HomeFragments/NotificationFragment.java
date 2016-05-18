@@ -248,7 +248,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_NOTIFICATIONS)) {

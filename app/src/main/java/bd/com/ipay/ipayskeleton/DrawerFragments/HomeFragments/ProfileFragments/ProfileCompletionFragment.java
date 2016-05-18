@@ -3,22 +3,18 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -36,6 +32,9 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
 
+    private TextView mProfileCompletionStatusView;
+    private ProgressBar mProfileCompletionStatusProgressBar;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,6 +45,9 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         mProfileCompletionRecyclerView = (RecyclerView) v.findViewById(R.id.list_profile_completion);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
+
+        mProfileCompletionStatusView = (TextView) v.findViewById(R.id.textview_profile_completion_status);
+        mProfileCompletionStatusProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar_profile_completion_status);
 
         getProfileCompletionStatus();
 
@@ -58,10 +60,15 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         setContentShown(false);
     }
 
-    private void populateList() {
+    private void populateView() {
         mProfileCompletionStatusResponse.analyzeProfileCompletionData();
         mProfileCompletionAdapter = new ProfileCompletionAdapter();
         mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
+
+        mProfileCompletionStatusView.setText("Your profile is " + mProfileCompletionStatusResponse.getCompletionPercentage()
+            + "% complete");
+        mProfileCompletionStatusProgressBar.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+
         setContentShown(true);
     }
 
@@ -93,7 +100,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    populateList();
+                    populateView();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG).show();

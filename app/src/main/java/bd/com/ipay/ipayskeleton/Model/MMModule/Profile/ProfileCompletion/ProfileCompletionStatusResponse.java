@@ -12,6 +12,7 @@ public class ProfileCompletionStatusResponse {
     private List<String> tagList;
     private List<Integer> tagwiseScorePercentage;
     private int completionPercentage;
+    public boolean completedMandetoryFields;
 
     private int basicInfoItemCount = 0;
     private int addressItemCount = 0;
@@ -64,10 +65,6 @@ public class ProfileCompletionStatusResponse {
         return completionPercentage;
     }
 
-    public boolean isProfileCompleted() {
-        return getCompletionPercentage() >= 100;
-    }
-
     public int getBasicInfoCompletionPercentage() {
         return (int) Math.round(basicInfoCompletionSum / basicInfoItemCount);
     }
@@ -89,6 +86,10 @@ public class ProfileCompletionStatusResponse {
             return 100;
         else
             return (double) value / threshold * 100;
+    }
+
+    public boolean isCompletedMandetoryFields() {
+        return completedMandetoryFields;
     }
 
     public void analyzeProfileCompletionData() {
