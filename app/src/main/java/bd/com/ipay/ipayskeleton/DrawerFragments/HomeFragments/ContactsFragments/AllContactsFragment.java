@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
@@ -41,7 +42,10 @@ public class AllContactsFragment extends BaseContactsFragment
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        List<FriendNode> friends = DataHelper.getInstance(getActivity()).getSubscriberList();
+        DataHelper dataHelper = DataHelper.getInstance(getActivity());
+        List<FriendNode> friends = dataHelper.getSubscriberList();
+        dataHelper.closeDbOpenHelper();
+
         friendInfoMap = new HashMap<>();
 
         for (FriendNode friend : friends) {
@@ -110,7 +114,6 @@ public class AllContactsFragment extends BaseContactsFragment
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        System.out.println("LOader reset");
     }
 
     @Override

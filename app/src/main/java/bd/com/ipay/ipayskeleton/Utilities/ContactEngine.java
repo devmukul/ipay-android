@@ -917,8 +917,7 @@ public class ContactEngine {
                 ContactsContract.Contacts.PHOTO_URI
         };
 
-        final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1"
-                + " AND " + ContactsContract.Contacts.DISPLAY_NAME;
+        final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1";
 
         final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
 
@@ -927,16 +926,19 @@ public class ContactEngine {
         if (phoneContactsCursor == null)
             return null;
 
-        List<FriendNode> iPayContacts = DataHelper.getInstance(context).getSubscriberList();
-        Map<String, FriendInfo> iPayContactsMap = new HashMap<>();
-        for (FriendNode friendNode : iPayContacts) {
-            iPayContactsMap.put(friendNode.getPhoneNumber(), friendNode.getInfo());
-        }
+//        DataHelper dataHelper = DataHelper.getInstance(context);
+//        List<FriendNode> iPayContacts = dataHelper.getSubscriberList();
+//        dataHelper.closeDbOpenHelper();
+
+//        Map<String, FriendInfo> iPayContactsMap = new HashMap<>();
+//        for (FriendNode friendNode : iPayContacts) {
+//            iPayContactsMap.put(friendNode.getPhoneNumber(), friendNode.getInfo());
+//        }
 
         if (phoneContactsCursor.moveToFirst()) {
             int nameIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
             int contactIdIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID);
-            int photoUrlIndex = phoneContactsCursor.getColumnIndex(Phone.PHOTO_ID);
+            int photoUrlIndex = phoneContactsCursor.getColumnIndex(Phone.PHOTO_URI);
 
             do {
                 long contactId = phoneContactsCursor.getLong(contactIdIndex);
@@ -948,9 +950,9 @@ public class ContactEngine {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
 
                     FriendInfo friendInfo;
-                    if (iPayContactsMap.containsKey(phoneNumber))
-                        friendInfo = iPayContactsMap.get(phoneNumber);
-                    else
+//                    if (iPayContactsMap.containsKey(phoneNumber))
+//                        friendInfo = iPayContactsMap.get(phoneNumber);
+//                    else
                         friendInfo = new FriendInfo(name, photoUrl);
 
                     FriendNode contact = new FriendNode(phoneNumber, friendInfo);
@@ -1007,6 +1009,7 @@ public class ContactEngine {
 
         for (FriendNode phoneContact : phoneContacts) {
 
+//            Log.e("Contact", phoneContact.toString() + " : " + serverContactMap.get(phoneContact.getPhoneNumber()));
             if (serverContactMap.containsKey(phoneContact.getPhoneNumber())) {
                 String serverName = serverContactMap.get(phoneContact.getPhoneNumber()).getName();
                 String phoneName = phoneContact.getInfo().getName();

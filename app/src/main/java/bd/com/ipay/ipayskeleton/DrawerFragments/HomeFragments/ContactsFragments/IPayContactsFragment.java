@@ -60,7 +60,9 @@ public class IPayContactsFragment extends BaseContactsFragment
         return new SQLiteCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
-                Cursor cursor = DataHelper.getInstance(getActivity()).searchSubscribers(mQuery, mShowVerifiedUsersOnly);
+                DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                Cursor cursor = dataHelper.searchSubscribers(mQuery, mShowVerifiedUsersOnly);
+                dataHelper.closeDbOpenHelper();
 
                 if (cursor != null) {
                     nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
@@ -68,6 +70,8 @@ public class IPayContactsFragment extends BaseContactsFragment
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
                     accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
+
+                    this.registerContentObserver(cursor, DBConstants.DB_TABLE_SUBSCRIBERS_URI);
                 }
 
                 return cursor;
