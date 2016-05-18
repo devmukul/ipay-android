@@ -910,18 +910,19 @@ public class ContactEngine {
      */
     public static List<FriendNode> getAllContacts(Context context) {
         List<FriendNode> phoneContacts = new ArrayList<>();
+
         final String[] projection = new String[] {
-                ContactsContract.Contacts._ID,
-                ContactsContract.Contacts.LOOKUP_KEY,
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.Contacts.PHOTO_URI
+                Phone._ID,
+                Phone.NUMBER,
+                Phone.HAS_PHONE_NUMBER,
+                Phone.PHOTO_URI,
+                Phone.DISPLAY_NAME,
         };
 
-        final String selection = ContactsContract.Contacts.HAS_PHONE_NUMBER + "=1";
+        final String selection = Phone.HAS_PHONE_NUMBER + "=1";
+        final String order = Phone.DISPLAY_NAME + " COLLATE NOCASE ASC";
+        Uri queryUri = Phone.CONTENT_URI;
 
-        final String order = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
-
-        Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
         Cursor phoneContactsCursor = context.getContentResolver().query(queryUri, projection, selection, null, order);
         if (phoneContactsCursor == null)
             return null;
@@ -936,15 +937,18 @@ public class ContactEngine {
 //        }
 
         if (phoneContactsCursor.moveToFirst()) {
-            int nameIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-            int contactIdIndex = phoneContactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID);
+            int nameIndex = phoneContactsCursor.getColumnIndex(Phone.DISPLAY_NAME);
+            int contactIdIndex = phoneContactsCursor.getColumnIndex(Phone._ID);
             int photoUrlIndex = phoneContactsCursor.getColumnIndex(Phone.PHOTO_URI);
+            int numberIndex = phoneContactsCursor.getColumnIndex(Phone.NUMBER);
 
             do {
                 long contactId = phoneContactsCursor.getLong(contactIdIndex);
                 String name = phoneContactsCursor.getString(nameIndex);
-                String phoneNumber = getContactNumberFromId(context, contactId).replaceAll("[^\\d]", "");
+                String phoneNumber = phoneContactsCursor.getString(numberIndex);
                 String photoUrl = phoneContactsCursor.getString(photoUrlIndex);
+
+                phoneNumber = phoneNumber.replaceAll("[^\\d]", "");
 
                 if (ContactEngine.isValidNumber(phoneNumber)) {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
@@ -1008,7 +1012,6 @@ public class ContactEngine {
         }
 
         for (FriendNode phoneContact : phoneContacts) {
-
 //            Log.e("Contact", phoneContact.toString() + " : " + serverContactMap.get(phoneContact.getPhoneNumber()));
             if (serverContactMap.containsKey(phoneContact.getPhoneNumber())) {
                 String serverName = serverContactMap.get(phoneContact.getPhoneNumber()).getName();
