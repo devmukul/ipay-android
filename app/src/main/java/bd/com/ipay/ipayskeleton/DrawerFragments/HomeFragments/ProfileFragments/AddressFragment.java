@@ -263,7 +263,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
-                ((HomeActivity) getActivity()).switchToDashBoard();
+                getActivity().finish();
             }
 
             mGetUserAddressTask = null;
@@ -278,13 +278,13 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
-                    ((HomeActivity) getActivity()).switchToDashBoard();
+                    getActivity().finish();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
-                ((HomeActivity) getActivity()).switchToDashBoard();
+                getActivity().finish();
             }
 
             mGetThanaListAsyncTask = null;
@@ -299,13 +299,13 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
-                    ((HomeActivity) getActivity()).switchToDashBoard();
+                    getActivity().finish();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
-                ((HomeActivity) getActivity()).switchToDashBoard();
+                getActivity().finish();
             }
 
             mGetDistrictListAsyncTask = null;

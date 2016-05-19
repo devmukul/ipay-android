@@ -137,10 +137,12 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
             return;
         }
 
+        mobileNumber = ContactEngine.formatMobileNumberBD(mobileNumber);
+
         mProgressDialog.setMessage(getString(R.string.sending_otp));
         mProgressDialog.show();
         ForgetPasswordRequest mForgetPasswordRequest = new ForgetPasswordRequest(name,
-                ContactEngine.formatMobileNumberBD(mobileNumber), dob, deviceID);
+                mobileNumber, dob, deviceID);
 
         Gson gson = new Gson();
         String json = gson.toJson(mForgetPasswordRequest);
