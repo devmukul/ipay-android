@@ -3,10 +3,8 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -22,25 +20,17 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -48,7 +38,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mGetBankTask = null;
+    private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
 
     private static final int WITHDRAW_MONEY_REVIEW_REQUEST = 101;
@@ -144,11 +134,8 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
-        GetBankListRequest mGetBankListRequest = new GetBankListRequest(Constants.DUMMY);
-        Gson gson = new Gson();
-        String json = gson.toJson(mGetBankListRequest);
-        mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_SM + Constants.URL_GET_BANK, json, getActivity());
+        mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
+                Constants.BASE_URL_SM + Constants.URL_GET_BANK, getActivity());
         mGetBankTask.mHttpResponseListener = this;
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

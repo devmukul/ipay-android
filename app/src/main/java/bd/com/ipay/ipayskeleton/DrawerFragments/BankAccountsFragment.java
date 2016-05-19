@@ -47,7 +47,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.DisableBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.EnableBankAccountResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
@@ -88,7 +87,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private HttpRequestPutAsyncTask mDisableBankAccountTask = null;
     private DisableBankAccountResponse mDisableBankAccountResponse;
 
-    private HttpRequestPostAsyncTask mGetBankTask = null;
+    private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
 
     private ProgressDialog mProgressDialog;
@@ -183,11 +182,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
-        GetBankListRequest mGetBankListRequest = new GetBankListRequest(Constants.DUMMY);
-        Gson gson = new Gson();
-        String json = gson.toJson(mGetBankListRequest);
-        mGetBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, json, getActivity());
+        mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
         mGetBankTask.mHttpResponseListener = this;
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
