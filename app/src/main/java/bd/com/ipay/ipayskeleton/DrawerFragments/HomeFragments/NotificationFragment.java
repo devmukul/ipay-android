@@ -129,10 +129,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    pageCount = 0;
-                    if (moneyRequestList != null)
-                        moneyRequestList.clear();
-                    getNotifications();
+                    refreshNotificationList();
+                    refreshIntroductionRequestList();
                 }
             }
         });
@@ -224,6 +222,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             if (moneyRequestList != null)
                 moneyRequestList.clear();
             getNotifications();
+        }
+    }
+
+    private void refreshIntroductionRequestList() {
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            if (mRecommendationRequestList != null)
+                mRecommendationRequestList.clear();
+            getRecommendationRequestsList();
         }
     }
 
@@ -395,7 +401,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     if (mRecommendationRequestList != null)
                         mRecommendationRequestList.clear();
                     mRecommendationRequestList = null;
-                    getRecommendationRequestsList();
+                    refreshIntroductionRequestList();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -629,14 +635,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mSenderMobileNumber.setText(senderMobileNumber);
                 mDate.setText(time);
 
-                if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_PENDING)) {
+                if (recommendationStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
                     mRecommendationStatus.setImageResource(R.drawable.ic_sync_problem_black_24dp);
-                } else if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_APPROVED)) {
+                } else if (recommendationStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_APPROVED)) {
                     mRecommendationStatus.setImageResource(R.drawable.ic_verified_user_black_24dp);
-                } else if (recommendationStatus.equals(Constants.RECOMMENDATION_STATUS_SPAM)) {
+                } else if (recommendationStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_SPAM)) {
                     mRecommendationStatus.setImageResource(R.drawable.ic_error_black_24dp);
                 } else {
-                    // RECOMMENDATION_STATUS_REJECTED
+                    // INTRODUCTION_REQUEST_STATUS_REJECTED
                     mRecommendationStatus.setImageResource(R.drawable.ic_warning_black_24dp);
                 }
 
@@ -645,7 +651,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.RECOMMENDATION_STATUS_PENDING)) {
+                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
                             if (optionsLayout.getVisibility() == View.VISIBLE)
                                 optionsLayout.setVisibility(View.GONE);
                             else optionsLayout.setVisibility(View.VISIBLE);
@@ -656,12 +662,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 verifyButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.RECOMMENDATION_STATUS_PENDING))
+                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
                             new android.app.AlertDialog.Builder(getActivity())
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            attemptSetRecommendationStatus(requestID, Constants.RECOMMENDATION_STATUS_APPROVED);
+                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -676,12 +682,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 rejectRecommendationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.RECOMMENDATION_STATUS_PENDING))
+                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
                             new android.app.AlertDialog.Builder(getActivity())
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            attemptSetRecommendationStatus(requestID, Constants.RECOMMENDATION_STATUS_REJECTED);
+                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -696,12 +702,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 markAsSpamRecommendationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.RECOMMENDATION_STATUS_PENDING))
+                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
                             new android.app.AlertDialog.Builder(getActivity())
                                     .setTitle(R.string.are_you_sure)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            attemptSetRecommendationStatus(requestID, Constants.RECOMMENDATION_STATUS_SPAM);
+                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM);
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

@@ -447,14 +447,14 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 mRequestedName.setText(RequestedName);
                 mRequestedMobileNumber.setText(RequestedMobileNumber);
 
-                if (requestStatus.equals(Constants.RECOMMENDATION_STATUS_PENDING)) {
+                if (requestStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
                     mSentRequestStatus.setImageResource(R.drawable.ic_sync_problem_black_24dp);
-                } else if (requestStatus.equals(Constants.RECOMMENDATION_STATUS_APPROVED)) {
+                } else if (requestStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_APPROVED)) {
                     mSentRequestStatus.setImageResource(R.drawable.ic_verified_user_black_24dp);
-                } else if (requestStatus.equals(Constants.RECOMMENDATION_STATUS_SPAM)) {
+                } else if (requestStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_SPAM)) {
                     mSentRequestStatus.setImageResource(R.drawable.ic_error_black_24dp);
                 } else {
-                    // RECOMMENDATION_STATUS_REJECTED
+                    // INTRODUCTION_REQUEST_STATUS_REJECTED
                     mSentRequestStatus.setImageResource(R.drawable.ic_warning_black_24dp);
                 }
 

@@ -419,10 +419,14 @@ public class Constants {
     public static final int EVENT_STATUS_ACTIVE = 1;
     public static final int EVENT_STATUS_INACTIVE = 2;
 
-    public static final String RECOMMENDATION_STATUS_PENDING = "PENDING";
-    public static final String RECOMMENDATION_STATUS_REJECTED = "REJECTED";
-    public static final String RECOMMENDATION_STATUS_APPROVED = "APPROVED";
-    public static final String RECOMMENDATION_STATUS_SPAM = "MARKED_SPAM";
+    public static final String INTRODUCTION_REQUEST_STATUS_PENDING = "PENDING";
+    public static final String INTRODUCTION_REQUEST_STATUS_REJECTED = "REJECTED";
+    public static final String INTRODUCTION_REQUEST_STATUS_APPROVED = "APPROVED";
+    public static final String INTRODUCTION_REQUEST_STATUS_SPAM = "MARKED_SPAM";
+
+    public static final String INTRODUCTION_REQUEST_ACTION_APPROVE = "approve";
+    public static final String INTRODUCTION_REQUEST_ACTION_REJECT = "reject";
+    public static final String INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM = "mark-spam";
 
     public static final int EVENT_PARTICIPANT_TYPE_ANYONE = 0;
     public static final int EVENT_PARTICIPANT_TYPE_FROM_LIST = 3;
