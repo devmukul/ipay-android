@@ -118,8 +118,8 @@ public class Constants {
 
         } else if (SERVER_TYPE == 2) {
 
-            BASE_URL_MM = "http://stage.ipay.com.bd:8085/api/v1/";
-            BASE_URL_SM = "http://10.40.10.11:8085/api/v1/money/";
+            BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
+            BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
             BASE_URL_FRIEND = "http://stage.ipay.com.bd/friend/v1/";
 
