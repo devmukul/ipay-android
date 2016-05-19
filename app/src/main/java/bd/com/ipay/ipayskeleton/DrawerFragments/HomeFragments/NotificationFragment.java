@@ -441,7 +441,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mDescriptionView.setText(description);
                 mTimeView.setText(time);
-                mTitleView.setText(title);
+                if( !title.equals("") ) mTitleView.setText(title);
+                else mTitleView.setVisibility(View.GONE);
 
                 Glide.with(getActivity())
                         .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
