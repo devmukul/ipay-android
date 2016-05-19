@@ -990,7 +990,7 @@ public class ContactEngine {
 
     public static boolean isValidNumber(String number) {
 
-        if (number != null) return false;
+        if (number == null) return false;
 
         number = number.trim();
         if (number.length() == 11 && number.startsWith("0"))
