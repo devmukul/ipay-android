@@ -197,7 +197,7 @@ public class Constants {
     public static final String URL_REQUEST_MONEY = "requestmoney";
 
     // News Feed REST
-    public static final String URL_GET_NEWS_FEED = "news";
+    public static final String URL_GET_NEWS_FEED = "resource/news";
 
     // Request Rest
     public static final String URL_GET_NOTIFICATIONS = "requests/received";
