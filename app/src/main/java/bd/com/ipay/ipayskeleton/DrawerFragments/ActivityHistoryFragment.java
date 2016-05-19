@@ -462,7 +462,7 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
         }
 
         String url = GetActivityRequestBuilder.generateUri(type,
-                fromDate.getTimeInMillis(), toDate.getTimeInMillis(), historyPageCount, Constants.ACTIVITY_LOG_COUNT);
+                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
         mUserActivityTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,
                 url, getActivity());
         mUserActivityTask.mHttpResponseListener = this;
