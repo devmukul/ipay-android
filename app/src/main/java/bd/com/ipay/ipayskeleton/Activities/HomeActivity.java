@@ -2,19 +2,15 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -57,7 +52,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.PropertyConstants;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
@@ -113,7 +108,6 @@ public class HomeActivity extends BaseActivity
         mUserID = pref.getString(Constants.USERID, "");
         mProgressDialog = new ProgressDialog(HomeActivity.this);
         profilePictures = new ArrayList<>();
-        Firebase.setAndroidContext(this);
 
         // Initialize token timer
         tokenTimer = new CountDownTimer(iPayTokenTimeInMs, 1000) {
@@ -333,29 +327,29 @@ public class HomeActivity extends BaseActivity
             }
         } else if (id == R.id.nav_profile_basic_info) {
 
-            launchEditProfileActivity(PropertyConstants.BASIC_PROFILE, new Bundle());
+            launchEditProfileActivity(ProfileCompletionPropertyConstants.BASIC_PROFILE, new Bundle());
         } else if (id == R.id.nav_profile_addresses) {
 
-            launchEditProfileActivity(PropertyConstants.ADDRESS, new Bundle());
+            launchEditProfileActivity(ProfileCompletionPropertyConstants.ADDRESS, new Bundle());
 
         } else if (id == R.id.nav_profile_documents) {
 
-            launchEditProfileActivity(PropertyConstants.VERIFICATION_DOCUMENT, new Bundle());
+            launchEditProfileActivity(ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT, new Bundle());
 
         } else if (id == R.id.nav_email_addresses) {
 
-            launchEditProfileActivity(PropertyConstants.VERIFIED_EMAIL, new Bundle());
+            launchEditProfileActivity(ProfileCompletionPropertyConstants.VERIFIED_EMAIL, new Bundle());
 
         } else if (id == R.id.nav_trusted_network) {
 
-            launchEditProfileActivity(PropertyConstants.TRUSTED_NETWORK, new Bundle());
+            launchEditProfileActivity(ProfileCompletionPropertyConstants.TRUSTED_NETWORK, new Bundle());
 
         } else if (id == R.id.nav_profile_completeness) {
 
-            launchEditProfileActivity(PropertyConstants.PROFILE_COMPLETENESS, new Bundle());
+            launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS, new Bundle());
         } else if (id == R.id.nav_identification) {
 
-            launchEditProfileActivity(PropertyConstants.INTRODUCER, new Bundle());
+            launchEditProfileActivity(ProfileCompletionPropertyConstants.INTRODUCER, new Bundle());
             //getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
             //switchedToHomeFragment = false;
         }
