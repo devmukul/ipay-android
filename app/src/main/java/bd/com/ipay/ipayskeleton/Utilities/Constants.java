@@ -157,13 +157,13 @@ public class Constants {
     public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "bank-verify/check";
 
     // Trusted device CRUD operations
-    public static final String URL_ADD_TRUSTED_DEVICE = "/device";
-    public static final String URL_GET_TRUSTED_DEVICES = "/device";
-    public static final String URL_REMOVE_TRUSTED_DEVICE = "/device/";
+    public static final String URL_ADD_TRUSTED_DEVICE = "device";
+    public static final String URL_GET_TRUSTED_DEVICES = "device";
+    public static final String URL_REMOVE_TRUSTED_DEVICE = "device/";
 
     // Documents Rest
-    public static final String URL_GET_DOCUMENTS = "/docs/identification/documents";
-    public static final String URL_UPLOAD_DOCUMENTS = "/docs/identification/documents";
+    public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
+    public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
 
     // Event Controller
     public static final String URL_EVENT_LIST = "events/user/eventList/";
@@ -173,16 +173,16 @@ public class Constants {
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
     // Introducer REST
-    public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
-    public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "/introducer/downstream/notapproved";
-    public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "/introducer/downstream/approved";
-    public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "/introducer/upstream/notapproved";
-    public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "/introducer/upstream/approved";
+    public static final String URL_ASK_FOR_INTRODUCTION = "/ntroducer/introduceme/";
+    public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/notapproved";
+    public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/approved";
+    public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/notapproved";
+    public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/approved";
     public static final String URL_INTRODUCE_ACTION = "introducer/";
 
     // Invite Rest
-    public static final String URL_GET_INVITE_INFO = "/invitation";
-    public static final String URL_SEND_INVITE = "/invitation/invite/";
+    public static final String URL_GET_INVITE_INFO = "invitation";
+    public static final String URL_SEND_INVITE = "invitation/invite/";
 
 
     // Mobile Topup Request REST

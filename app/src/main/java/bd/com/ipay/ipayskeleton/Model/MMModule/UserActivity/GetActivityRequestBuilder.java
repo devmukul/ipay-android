@@ -17,7 +17,7 @@ public class GetActivityRequestBuilder {
     private final static String PARAM_COUNT = "count";
 
     public static String generateUri(Integer type, Calendar fromDate, Calendar toDate, Integer page, Integer count) {
-        Uri.Builder uri = Uri.parse(Constants.BASE_URL_MM + "/" + Constants.URL_USER_ACTIVITY)
+        Uri.Builder uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_USER_ACTIVITY)
                 .buildUpon();
 
         if (type != null)

@@ -102,7 +102,7 @@ public class CreateNewEventFragment extends Fragment implements HttpResponseList
             return;
         }
 
-        String mUri = Constants.BASE_URL_SM + "/" + Constants.URL_EVENT_CATEGORIES;
+        String mUri = Constants.BASE_URL_SM + Constants.URL_EVENT_CATEGORIES;
         mGetEventCategoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_EVENT_CATEGORIES,
                 mUri, getActivity());
         mGetEventCategoryTask.mHttpResponseListener = this;
