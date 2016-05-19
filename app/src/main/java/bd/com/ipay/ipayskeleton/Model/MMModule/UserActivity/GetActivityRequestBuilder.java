@@ -12,7 +12,7 @@ public class GetActivityRequestBuilder {
 
     private final static String PARAM_TYPE = "type";
     private final static String PARAM_FROM_DATE = "fromDate";
-    private final static String PARAM_TO_DATE = "fromDate";
+    private final static String PARAM_TO_DATE = "toDate";
     private final static String PARAM_PAGE = "page";
     private final static String PARAM_COUNT = "count";
 
