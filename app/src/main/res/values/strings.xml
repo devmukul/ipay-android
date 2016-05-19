@@ -596,6 +596,7 @@
     <string name="failed_loading_friends">Failed to load friend list</string>
     <string name="failed_add_friend">Add friend failed</string>
     <string name="failed_update_friend">Update friend failed</string>
+    <string name="total_amount">Total Amount</string>
 
     <string-array name="account_types">
         <item>Personal</item>

@@ -143,7 +143,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mTotalView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
+        mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
     }
 
     @Override
