@@ -32,7 +32,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TopupReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class MobileTopupReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mTopupTask = null;
     private TopupResponse mTopupResponse;
@@ -127,7 +127,7 @@ public class TopupReviewFragment extends ReviewFragment implements HttpResponseL
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mTotalView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
+        mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
     }
 
     @Override

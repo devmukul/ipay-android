@@ -358,7 +358,7 @@
     <string name="bank_accounts">Bank Accounts</string>
     <string name="bank_branch">Select Branch</string>
     <string name="logout">Log out</string>
-    <string name="topup">Mobile Top up</string>
+    <string name="topup">Mobile Top Up</string>
     <string name="transaction_history">Transaction History</string>
     <string name="notification">Notification</string>
     <string name="settings">Settings</string>
@@ -497,7 +497,7 @@
     <string name="send_now">Send Now</string>
     <string name="total">Total</string>
     <string name="service_charge">Service Charge</string>
-    <string name="topup_amount">Topup Amount</string>
+    <string name="topup_received">Topup Received</string>
     <string name="recharge_now">Recharge Now</string>
     <string name="enter_pin">Enter Pin</string>
     <string name="ok">OK</string>
