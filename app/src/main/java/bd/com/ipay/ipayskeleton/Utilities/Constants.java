@@ -139,81 +139,134 @@ public class Constants {
         }
     }
 
-    public static final String URL_SIGN_UP = "signup/activation";
-    public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
-    public static final String URL_OTP_REQUEST = "signup";
-    public static final String URL_CHECK_PROMO_CODE = "signup/checkpromocode";
-    public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
-    public static final String URL_LOGIN = "signin";
-    public static final String URL_ASK_FOR_RECOMMENDATION = "kyc/verificationRequest";
-    public static final String URL_GET_RECOMMENDATION_REQUESTS = "kyc/verificationRequestList";
-    public static final String URL_RECOMMEND_ACTION = "kyc/verifyRequest";
+
+    // Bank Operation REST
+    public static final String URL_ADD_A_BANK = "bank/add";
+    public static final String URL_DISABLE_A_BANK = "bank/disable";
+    public static final String URL_ENABLE_A_BANK = "bank/enable";
+    public static final String URL_GET_BANK = "bank/get";
+    public static final String URL_REMOVE_A_BANK = "bank/remove";
+
+    // Bank Transaction REST
+    public static final String URL_ADD_MONEY = "banktransaction/cashin";
+    public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
+
+    // Bank Verify Rest
+    public static final String URL_SEND_FOR_VERIFICATION_BANK = "bank-verify";
+    public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "bank-verify/check";
+
+    // Event Controller
+    public static final String URL_EVENT_LIST = "events/user/eventList/";
+    public static final String URL_EVENT_CATEGORIES = "categories";
+
+    // Fee Charge REST
+    public static final String URL_SERVICE_CHARGE = "feecharge";
+
+    // Mobile Topup Request REST
+    public static final String URL_TOPUP_REQUEST = "topup/dotopup";
+
+    // Money Request REST
+    public static final String URL_REQUEST_MONEY = "requestmoney";
+
+    // News Feed REST
+    public static final String URL_GET_NEWS_FEED = "news";
+
+    // Reports REST
+    public static final String URL_USER_ACTIVITY = "report/activities";
+
+    // Request Rest
+    public static final String URL_GET_NOTIFICATIONS = "requests/received";
+    public static final String URL_GET_SENT_REQUESTS = "requests/sent";
+    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
+    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
+
+    // Settings REST
     public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
     public static final String URL_ADD_TRUSTED_DEVICE = "settings/device/add";
     public static final String URL_GET_TRUSTED_DEVICES = "settings/devices";
     public static final String URL_REMOVE_TRUSTED_DEVICE = "settings/device/remove";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
-    public static final String URL_SEND_MONEY = "transaction/send";
-    public static final String URL_SEND_MONEY_QUERY = "transaction/send/query";
-    public static final String URL_REFRESH_BALANCE = "user/balance";
-    public static final String URL_GET_USER_INFO = "user/userinfo";
-    public static final String URL_RESOURCE = "resource";
-    public static final String URL_GET_NEWS_FEED = "news";
-    public static final String URL_TOPUP_REQUEST = "topup/dotopup";
     public static final String URL_SET_PIN = "settings/pin/change";
     public static final String URL_CHANGE_PASSWORD = "settings/password/change";
-    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
-    public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address";
-    public static final String URL_GET_DOCUMENTS = "user/identification/documents";
+    public static final String URL_GET_INVITE_INFO = "settings/invitations";
+    public static final String URL_SEND_INVITE = "settings/invitations";
+    public static final String URL_GET_PIN_INFO = "settings/pin";
+
+    // Signin Rest
+    public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
+    public static final String URL_LOGIN = "signin";
+
+    // Signout Rest
+    public static final String URL_LOG_OUT = "signout";
+
+    // Signup Rest
+    public static final String URL_SIGN_UP = "signup/activation";
+    public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
+    public static final String URL_OTP_REQUEST = "signup";
+    public static final String URL_CHECK_PROMO_CODE = "signup/checkpromocode";
+    public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
+
+    // SM Payment REST
+    public static final String URL_PAYMENT_CREATE_INVOICE = "payment/invoice";
+
+    // SM Reports REST
+    public static final String URL_TRANSACTION_HISTORY = "report/transactions";
+
+    // SM User Rest
+    public static final String URL_REFRESH_BALANCE = "user/balance";
+
+    // Static Resource REST
+    public static final String URL_RESOURCE = "resource";
+
+    // Transaction REST
+    public static final String URL_SEND_MONEY = "transaction/send";
+
+    // Trusted Network REST
+    public static final String URL_GET_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
+    public static final String URL_POST_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
+    public static final String URL_SET_RECOVERY_PERSON = "/recovery";
+
+    // User Kyc REST
+    public static final String URL_ASK_FOR_RECOMMENDATION = "kyc/verificationRequest";
+    public static final String URL_GET_RECOMMENDATION_REQUESTS = "kyc/verificationRequestList";
+    public static final String URL_RECOMMEND_ACTION = "kyc/verifyRequest";
     public static final String URL_GET_INTRODUCER_LIST = "kyc/introducerList";
     public static final String URL_GET_INTRODUCED_LIST = "kyc/introducedlist";
     public static final String URL_GET_SENT_REQUEST_LIST = "kyc/sentRequestList";
-    public static final String URL_UPLOAD_DOCUMENTS = "/user/identification/documents";
+
+    // User Rest
+    public static final String URL_GET_USER_INFO = "user/userinfo";
+    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";;
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
-    public static final String URL_SET_USER_ADDRESS_REQUEST = "user/profile/address";
-    public static final String URL_LOG_OUT = "signout";
-    public static final String URL_USER_ACTIVITY = "report/activities";
-    public static final String URL_TRANSACTION_HISTORY = "report/transactions";
-    public static final String URL_GET_NOTIFICATIONS = "requests/received";
-    public static final String URL_GET_SENT_REQUESTS = "requests/sent";
-    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
-    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
-    public static final String URL_REQUEST_MONEY = "requestmoney";
-    public static final String URL_PAYMENT_CREATE_INVOICE = "payment/invoice";
-    public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/set";
-    public static final String URL_ADD_A_BANK = "bank/add";
-    public static final String URL_SEND_FOR_VERIFICATION_BANK = "bank-verify";
-    public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "bank-verify/check";
-    public static final String URL_REMOVE_A_BANK = "bank/remove";
-    public static final String URL_DISABLE_A_BANK = "bank/disable";
-    public static final String URL_ENABLE_A_BANK = "bank/enable";
-    public static final String URL_GET_BANK = "bank/get";
-    public static final String URL_ADD_MONEY = "banktransaction/cashin";
-    public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
-    public static final String URL_EVENT_LIST = "events/user/eventList/";
-    public static final String URL_EVENT_CATEGORIES = "categories";
-    public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
-    public static final String URL_GET_INVITE_INFO = "settings/invitations";
-    public static final String URL_SEND_INVITE = "settings/invitations";
-    public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
-    public static final String URL_SERVICE_CHARGE = "feecharge";
-    public static final String URL_GET_PIN_INFO = "settings/pin";
+
+    // User Rest (Profile Completion)
     public static final String URL_GET_PROFILE_COMPLETION_STATUS = "/user/profilecompletion";
 
+    // User Rest (Documents)
+    public static final String URL_GET_DOCUMENTS = "user/identification/documents";
+    public static final String URL_UPLOAD_DOCUMENTS = "/user/identification/documents";
+
+    // User Rest (Profile Picture)
+    public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/set";
+
+    // User Rest (Address)
+    public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address";
+    public static final String URL_SET_USER_ADDRESS_REQUEST = "user/profile/address";
+
+    // User Rest (Email)
     public static final String URL_GET_EMAIL = "/user/emails/";
     public static final String URL_POST_EMAIL = "/user/emails/";
     public static final String URL_DELETE_EMAIL = "/user/emails/";
     public static final String URL_MAKE_EMAIL_VERIFIED = "/verification/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
-    public static final String URL_GET_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
-    public static final String URL_POST_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
-    public static final String URL_SET_RECOVERY_PERSON = "/recovery";
-
+    // User Rest (Friends)
     public static final String URL_GET_CONTACTS = "getfriends";
     public static final String URL_ADD_CONTACT = "addfriends";
     public static final String URL_DELETE_CONTACT = "deletefriend";
     public static final String URL_UPDATE_CONTACT = "updatefriend";
+
+    public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
