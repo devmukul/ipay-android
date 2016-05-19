@@ -68,21 +68,6 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/enable_disable_button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:padding="@dimen/value5"
-                        android:text="@string/enable"
-                        android:textSize="12sp" />
-
-                    <View
-                        android:layout_width="1px"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorDivider" />
-
-                    <Button
                         android:id="@+id/remove_button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

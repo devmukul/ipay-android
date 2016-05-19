@@ -32,21 +32,16 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.DisableBankAccountResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.EnableBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
@@ -80,12 +75,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
     private HttpRequestPostAsyncTask mSendForVerificationWithAmountTask = null;
     private VerifyBankWithAmountResponse mVerifyBankWithAmountResponse;
-
-    private HttpRequestPutAsyncTask mEnableBankAccountTask = null;
-    private EnableBankAccountResponse mEnableBankAccountResponse;
-
-    private HttpRequestPutAsyncTask mDisableBankAccountTask = null;
-    private DisableBankAccountResponse mDisableBankAccountResponse;
 
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
@@ -359,36 +348,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mRemoveBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void attemptEnableBank(long bankAccountID) {
-        if (bankAccountID == 0) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.enabling_bank));
-        mProgressDialog.show();
-        mEnableBankAccountTask = new HttpRequestPutAsyncTask(Constants.COMMAND_ENABLE_A_BANK,
-                Constants.BASE_URL_SM + Constants.URL_ENABLE_A_BANK_PREFIX + bankAccountID + Constants.URL_ENABLE_A_BANK_SUFFIX, null, getActivity());
-        mEnableBankAccountTask.mHttpResponseListener = this;
-        mEnableBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void attemptDisableBank(long bankAccountID) {
-        if (bankAccountID == 0) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.disabling_bank));
-        mProgressDialog.show();
-        mDisableBankAccountTask = new HttpRequestPutAsyncTask(Constants.COMMAND_DISABLE_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_DISABLE_A_BANK_PREFIX + bankAccountID + Constants.URL_DISABLE_A_BANK_SUFFIX, null, getActivity());
-        mDisableBankAccountTask.mHttpResponseListener = this;
-        mDisableBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
@@ -396,8 +355,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             mAddBankTask = null;
             mGetBankTask = null;
             mRemoveBankAccountTask = null;
-            mEnableBankAccountTask = null;
-            mDisableBankAccountTask = null;
             mSendForVerificationTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
@@ -452,9 +409,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                         mListUserBankClasses.addAll(tempBankClasses);
                     }
 
-                    // Sort bank list by active banks to come first
-                    sortBankList();
-
                     if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
                         mEmptyListTextView.setVisibility(View.GONE);
                     else mEmptyListTextView.setVisibility(View.VISIBLE);
@@ -497,60 +451,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
             mProgressDialog.dismiss();
             mRemoveBankAccountTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_DISABLE_A_BANK)) {
-
-            try {
-                mDisableBankAccountResponse = gson.fromJson(result.getJsonString(), DisableBankAccountResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mDisableBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Refresh bank list
-                    if (mListUserBankClasses != null)
-                        mListUserBankClasses.clear();
-                    mListUserBankClasses = null;
-                    getBankList();
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mDisableBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_disable_bank, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mDisableBankAccountTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ENABLE_A_BANK)) {
-
-            try {
-                mEnableBankAccountResponse = gson.fromJson(result.getJsonString(), EnableBankAccountResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mEnableBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Refresh bank list
-                    if (mListUserBankClasses != null)
-                        mListUserBankClasses.clear();
-                    mListUserBankClasses = null;
-                    getBankList();
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mEnableBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_enable_bank, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mEnableBankAccountTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_BRANCH_LIST)) {
 
@@ -638,16 +538,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         }
     }
 
-    private void sortBankList() {
-        Collections.sort(mListUserBankClasses, new Comparator<UserBankClass>() {
-            @Override
-            public int compare(UserBankClass lhs, UserBankClass rhs) {
-                if (lhs.getAccountStatus() == Constants.BANK_ACCOUNT_STATUS_ACTIVE) return -1;
-                else return +1;
-            }
-        });
-    }
-
     public class UserBankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public UserBankListAdapter() {
@@ -659,7 +549,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             private ImageView mBankVerifiedStatus;
             private TextView mBranchName;
             private LinearLayout optionsLayout;
-            private Button enableDisableButton;
             private Button removeButton;
             private Button verifyButton;
             private View verifyDivider;
@@ -673,7 +562,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 mBankVerifiedStatus = (ImageView) itemView.findViewById(R.id.bank_account_verify_status);
                 mBranchName = (TextView) itemView.findViewById(R.id.bank_branch_name);
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                enableDisableButton = (Button) itemView.findViewById(R.id.enable_disable_button);
                 removeButton = (Button) itemView.findViewById(R.id.remove_button);
                 verifyButton = (Button) itemView.findViewById(R.id.verify_button);
                 verifyDivider = (View) itemView.findViewById(R.id.verify_divider);
@@ -691,22 +579,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 mBankName.setText(bankName);
                 mBranchName.setText(branchName);
                 optionsLayout.setVisibility(View.GONE);
-
-                if (bankStatus == Constants.BANK_ACCOUNT_STATUS_ACTIVE) {
-                    enableDisableButton.setText(R.string.disable);
-                    mBankCard.setCardBackgroundColor(getResources().getColor(android.R.color.white));
-
-                } else if (bankStatus == Constants.BANK_ACCOUNT_STATUS_INACTIVE) {
-                    enableDisableButton.setText(R.string.enable);
-                    mBankCard.setCardBackgroundColor(getResources().getColor(R.color.home_background));
-
-                } else {
-                    enableDisableButton.setText(R.string.enable);
-                    enableDisableButton.setEnabled(false);
-                    removeButton.setEnabled(false);
-                    optionsLayout.setEnabled(false);
-                    mBankCard.setCardBackgroundColor(getResources().getColor(R.color.home_background));
-                }
 
                 if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
                     mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
@@ -731,29 +603,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     verifyDivider.setVisibility(View.VISIBLE);
                     verifyButton.setVisibility(View.VISIBLE);
                 }
-
-                enableDisableButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle(R.string.are_you_sure)
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (bankStatus == Constants.BANK_ACCOUNT_STATUS_ACTIVE) {
-                                            attemptDisableBank(bankAccountID);
-                                        } else if (bankStatus == Constants.BANK_ACCOUNT_STATUS_INACTIVE) {
-                                            attemptEnableBank(bankAccountID);
-                                        }
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // Do nothing
-                                    }
-                                })
-                                .show();
-                    }
-                });
 
                 removeButton.setOnClickListener(new View.OnClickListener() {
                     @Override

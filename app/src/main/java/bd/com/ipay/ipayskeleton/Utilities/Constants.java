@@ -148,11 +148,6 @@ public class Constants {
     public static final String URL_GET_BANK = "bank/";
     public static final String URL_REMOVE_A_BANK = "bank/";
 
-    public static final String URL_ENABLE_A_BANK_PREFIX = "bank/";
-    public static final String URL_ENABLE_A_BANK_SUFFIX = "/enable";
-    public static final String URL_DISABLE_A_BANK_PREFIX = "bank/";
-    public static final String URL_DISABLE_A_BANK_SUFFIX = "/disable";
-
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
@@ -290,9 +285,6 @@ public class Constants {
     public static final String BANK_ACCOUNT_STATUS_VERIFIED = "VERIFIED";
     public static final String BANK_ACCOUNT_STATUS_PENDING = "PENDING";
     public static final String BANK_ACCOUNT_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
-    public static final int BANK_ACCOUNT_STATUS_ACTIVE = 0;
-    public static final int BANK_ACCOUNT_STATUS_INACTIVE = 1;
-    public static final int BANK_ACCOUNT_STATUS_DELETED = 2;
 
     public static final int MOBILE_TYPE_PREPAID = 1;
     public static final int MOBILE_TYPE_POSTPAID = 2;
@@ -335,8 +327,6 @@ public class Constants {
     public static final String COMMAND_SEND_FOR_VERIFICATION_BANK = "COMMAND_SEND_FOR_VERIFICATION_BANK";
     public static final String COMMAND_VERIFICATION_BANK_WITH_AMOUNT = "COMMAND_VERIFICATION_BANK_WITH_AMOUNT";
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
-    public static final String COMMAND_DISABLE_A_BANK = "COMMAND_DISABLE_A_BANK";
-    public static final String COMMAND_ENABLE_A_BANK = "COMMAND_ENABLE_A_BANK";
     public static final String COMMAND_GET_PROFILE_PICTURE_URL = "COMMAND_GET_PROFILE_PICTURE_URL";
     public static final String COMMAND_DOWNLOAD_PROFILE_PICTURE = "COMMAND_DOWNLOAD_PROFILE_PICTURE";
     public static final String COMMAND_TOPUP_REQUEST = "COMMAND_TOPUP_REQUEST";

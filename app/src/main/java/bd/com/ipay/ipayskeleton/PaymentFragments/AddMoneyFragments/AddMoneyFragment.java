@@ -246,8 +246,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     mListUserBankClasses = new ArrayList<>();
 
                     for (UserBankClass bank : mBankListResponse.getBanks()) {
-                        if (bank.getAccountStatus() == Constants.BANK_ACCOUNT_STATUS_ACTIVE &&
-                                bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+                        if (bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
                             mListUserBankClasses.add(bank);
                         }
                     }
