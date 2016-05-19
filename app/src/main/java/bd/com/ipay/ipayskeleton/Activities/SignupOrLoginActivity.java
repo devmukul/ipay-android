@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 
 import bd.com.ipay.ipayskeleton.ForgotPasswordFragments.ForgetPasswordFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepOneFragment;
@@ -58,8 +57,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_or_login);
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        Firebase.setAndroidContext(this);
-
 
         if (pref.contains(Constants.USERID)) {
             getSupportFragmentManager().beginTransaction()

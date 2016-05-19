@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion;
 import java.util.ArrayList;
 import java.util.List;
 
-import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.PropertyConstants.*;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.*;
 
 public class ProfileCompletionStatusResponse {
 
@@ -178,6 +178,10 @@ public class ProfileCompletionStatusResponse {
 
         public Integer getPropertyIcon() {
             return PROPERTY_NAME_TO_ICON_MAP.get(propertyName);
+        }
+
+        public String getActionName() {
+            return PROPERTY_NAME_TO_ACTION_NAME_MAP.get(propertyName);
         }
 
         /**

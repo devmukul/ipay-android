@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.R;
 
-public class PropertyConstants {
+public class ProfileCompletionPropertyConstants {
 
     public static final String PROFILE_COMPLETENESS = "PROFILE_COMPLETENESS";
 
@@ -35,17 +35,18 @@ public class PropertyConstants {
 
     public static final HashMap<String, String> PROPERTY_NAME_TO_TITLE_MAP = new HashMap<>();
     public static final HashMap<String, Integer> PROPERTY_NAME_TO_ICON_MAP = new HashMap<>();
+    public static final HashMap<String, String> PROPERTY_NAME_TO_ACTION_NAME_MAP = new HashMap<>();
 
     static {
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFY_BANK, "Verify Bank Account");
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_PIN, "Set up PIN");
-        PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK, "Setup Trusted Network");
-        PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add People Eligible for Password Recovery");
+        PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK, "Setup trusted network");
+        PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add people eligible for password recovery");
         PROPERTY_NAME_TO_TITLE_MAP.put(INTRODUCER, "Get Introduced by Other iPay Users");
         PROPERTY_NAME_TO_TITLE_MAP.put(BASIC_PROFILE, "Complete Basic Profile Information");
         PROPERTY_NAME_TO_TITLE_MAP.put(ADDRESS, "Add Present, Permanent and Office Addresses");
         PROPERTY_NAME_TO_TITLE_MAP.put(PROFILE_PICTURE, "Add a Profile Picture");
-        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a Verified Email");
+        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a verified email");
         PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Photo Identification");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_BANK, "Add Bank Account");
@@ -66,5 +67,12 @@ public class PropertyConstants {
         PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_photo_id);
         PROPERTY_NAME_TO_ICON_MAP.put(ADD_BANK, R.drawable.ic_banks);
         PROPERTY_NAME_TO_ICON_MAP.put(PARENT, R.drawable.ic_parent_info);
+    }
+
+    static {
+        PROPERTY_NAME_TO_ACTION_NAME_MAP.put(ADD_PIN, "Setup Now");
+        PROPERTY_NAME_TO_ACTION_NAME_MAP.put(TRUSTED_NETWORK, "Setup Now");
+        PROPERTY_NAME_TO_ACTION_NAME_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add Now");
+        PROPERTY_NAME_TO_ACTION_NAME_MAP.put(VERIFIED_EMAIL, "Add Now");
     }
 }

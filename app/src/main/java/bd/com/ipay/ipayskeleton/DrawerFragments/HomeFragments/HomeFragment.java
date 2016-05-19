@@ -35,8 +35,10 @@ import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
@@ -52,11 +54,13 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.News;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
@@ -315,12 +319,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         if (!profileCompletionPromptShown) {
             profileCompletionPromptShown = true;
 
-            if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
+            CircularProgressBar progressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.progress_bar);
+            TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
+            Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
+            Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
 
-                CircularProgressBar progressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.progress_bar);
-                TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
-                Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
-                Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
+            if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
 
                 profileCompletionMessageView.setText("Your profile is " +
                         mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
@@ -346,6 +350,70 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 progressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
 
                 homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
+            } else {
+                // "Good to have" properties
+                List<ProfileCompletionStatusResponse.PropertyDetails> otherCompletionDetails =
+                        mProfileCompletionStatusResponse.getOtherCompletionDetails();
+                final List<ProfileCompletionStatusResponse.PropertyDetails> incompleteOtherCompletionDetails = new ArrayList<>();
+                for (ProfileCompletionStatusResponse.PropertyDetails propertyDetails : otherCompletionDetails) {
+                    if (!propertyDetails.isCompleted()) {
+                        incompleteOtherCompletionDetails.add(propertyDetails);
+                    }
+                }
+
+                if (incompleteOtherCompletionDetails.size() > 0) {
+                    Random random = new Random();
+
+                    /**
+                     * We want to show the prompt once in every five launch on average.
+                     */
+                    if (random.nextInt(5) == 0) {
+                        int index = random.nextInt(incompleteOtherCompletionDetails.size());
+                        final ProfileCompletionStatusResponse.PropertyDetails incompletePropertyDetails = incompleteOtherCompletionDetails.get(index);
+
+                        String profileCompletionMessage = "Your profile is " +
+                                mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
+                                + "complete.\n"
+                                + incompletePropertyDetails.getPropertyTitle()
+                                + " to improve your profile";
+                        String completeButtonMessage = incompletePropertyDetails.getActionName();
+
+                        profileCompletionMessageView.setText(profileCompletionMessage);
+                        completeProfileButton.setText(completeButtonMessage);
+
+                        /**
+                         * For ADD_PIN, we show a PIN input dialog to the user.
+                         * For other cases, we forward the user to the corresponding fragment
+                         * in the ProfileActivity.
+                         */
+                        completeProfileButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                homeBottomSheet.dismissSheet();
+
+                                if (incompletePropertyDetails.getPropertyName().equals(ProfileCompletionPropertyConstants.ADD_PIN)) {
+                                    AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity(), null);
+                                    addPinDialogBuilder.show();
+                                } else {
+                                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                                    intent.putExtra(Constants.TARGET_FRAGMENT, incompletePropertyDetails.getPropertyName());
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+
+                        completeLaterButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                homeBottomSheet.dismissSheet();
+                            }
+                        });
+
+                        progressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
+
+                        homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
+                    }
+                }
             }
         }
     }

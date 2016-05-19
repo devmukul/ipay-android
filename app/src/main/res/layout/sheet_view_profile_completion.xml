@@ -46,19 +46,19 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/complete_profile"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/complete_now"
-            android:textColor="@color/colorAccent" />
-
-        <Button
             android:id="@+id/complete_later"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/later"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/complete_profile"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/complete_now"
             android:textColor="@color/colorAccent" />
     </LinearLayout>
 </RelativeLayout>

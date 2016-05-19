@@ -143,7 +143,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mTotalView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
+        mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
     }
 
     @Override

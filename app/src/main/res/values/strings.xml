@@ -505,9 +505,9 @@
     <string name="request_now">Request Now</string>
     <string name="you_will_receive">You will receive</string>
     <string name="confirm_ipay_invitation">Invite him/her to iPay?</string>
-    <string name="amount_to_receive">Amount to Receive</string>
+    <string name="amount_to_transfer">Amount to Transfer</string>
     <string name="amount_to_withdraw">Amount to Withdraw</string>
-    <string name="total_transferred">Total Transferred</string>
+    <string name="total_received">Total Received</string>
     <string name="vat">VAT</string>
     <string name="date_of_birth">Date of Birth</string>
     <string name="fathers_name">Father\'s Name</string>
