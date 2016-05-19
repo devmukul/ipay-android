@@ -11,6 +11,7 @@ android {
         targetSdkVersion 22
         versionCode 4
         versionName "0.0.4"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -67,4 +68,5 @@ dependencies {
     compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
     compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
     compile 'com.google.android.gms:play-services:9.0.0'
+    compile 'com.android.support:multidex:1.0.0'
 }

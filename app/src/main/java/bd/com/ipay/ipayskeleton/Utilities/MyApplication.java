@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import org.acra.*;
 import org.acra.annotation.*;
@@ -21,5 +23,10 @@ public class MyApplication extends Application {
 
         if (!Constants.DEBUG)
             ACRA.init(this);
+    }
+
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }
