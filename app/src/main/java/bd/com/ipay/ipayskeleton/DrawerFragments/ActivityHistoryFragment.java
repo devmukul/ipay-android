@@ -29,13 +29,16 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.GetActivityRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityResponse;
@@ -45,7 +48,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ActivityHistoryFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mUserActivityTask = null;
+    private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;
 
     private String[] activityLogTypes;
@@ -75,8 +78,8 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
 
     private int historyPageCount = 0;
     private Integer type = null;
-    private String fromDate = null;
-    private String toDate = null;
+    private Calendar fromDate = null;
+    private Calendar toDate = null;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -218,8 +221,6 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
             @Override
             public void onClick(View v) {
                 dateFilterLayout.setVisibility(View.GONE);
-                fromDate = mFromDateEditText.getText().toString().trim();
-                toDate = mToDateEditText.getText().toString().trim();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -412,6 +413,12 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
                     mMonth = monthOfYear + 1;
                     mDay = dayOfMonth;
 
+                    fromDate = Calendar.getInstance();
+                    fromDate.clear();
+                    fromDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    fromDate.set(Calendar.MONTH, monthOfYear);
+                    fromDate.set(Calendar.YEAR, year);
+
                     String fromDatePicker, fromMonthPicker, fromYearPicker;
                     if (mDay < 10) fromDatePicker = "0" + mDay;
                     else fromDatePicker = mDay + "";
@@ -431,6 +438,13 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
                     mMonth = monthOfYear + 1;
                     mDay = dayOfMonth;
 
+                    toDate = Calendar.getInstance();
+                    toDate.clear();
+                    toDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    toDate.set(Calendar.MONTH, monthOfYear);
+                    toDate.set(Calendar.YEAR, year);
+                    toDate.add(Calendar.DATE, 1);
+
                     String toDatePicker, toMonthPicker, toYearPicker;
                     if (mDay < 10) toDatePicker = "0" + mDay;
                     else toDatePicker = mDay + "";
@@ -447,11 +461,10 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
             return;
         }
 
-        UserActivityRequest mUserActivityRequest = new UserActivityRequest(type, historyPageCount, fromDate, toDate, Constants.ACTIVITY_LOG_COUNT);
-        Gson gson = new Gson();
-        String json = gson.toJson(mUserActivityRequest);
-        mUserActivityTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,
-                Constants.BASE_URL_MM + Constants.URL_USER_ACTIVITY, json, getActivity());
+        String url = GetActivityRequestBuilder.generateUri(type,
+                fromDate.getTimeInMillis(), toDate.getTimeInMillis(), historyPageCount, Constants.ACTIVITY_LOG_COUNT);
+        mUserActivityTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,
+                url, getActivity());
         mUserActivityTask.mHttpResponseListener = this;
 
         mUserActivityTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

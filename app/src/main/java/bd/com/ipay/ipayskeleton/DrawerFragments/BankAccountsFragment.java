@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,7 +12,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -38,21 +36,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.DisableBankAccountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.DisableBankAccountResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.EnableBankAccountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.EnableBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankAccountRequest;
@@ -77,7 +73,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private HttpRequestPostAsyncTask mAddBankTask = null;
     private AddBankResponse mAddBankResponse;
 
-    private HttpRequestPostAsyncTask mRemoveBankAccountTask = null;
+    private HttpRequestDeleteAsyncTask mRemoveBankAccountTask = null;
     private RemoveBankAccountResponse mRemoveBankAccountResponse;
 
     private HttpRequestPostAsyncTask mSendForVerificationTask = null;
@@ -86,10 +82,10 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private HttpRequestPostAsyncTask mSendForVerificationWithAmountTask = null;
     private VerifyBankWithAmountResponse mVerifyBankWithAmountResponse;
 
-    private HttpRequestPostAsyncTask mEnableBankAccountTask = null;
+    private HttpRequestPutAsyncTask mEnableBankAccountTask = null;
     private EnableBankAccountResponse mEnableBankAccountResponse;
 
-    private HttpRequestPostAsyncTask mDisableBankAccountTask = null;
+    private HttpRequestPutAsyncTask mDisableBankAccountTask = null;
     private DisableBankAccountResponse mDisableBankAccountResponse;
 
     private HttpRequestPostAsyncTask mGetBankTask = null;
@@ -361,11 +357,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
         mProgressDialog.setMessage(getString(R.string.removing_bank));
         mProgressDialog.show();
-        RemoveBankAccountRequest mRemoveBankAccountRequest = new RemoveBankAccountRequest(bankAccountID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mRemoveBankAccountRequest);
-        mRemoveBankAccountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REMOVE_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_A_BANK, json, getActivity());
+        mRemoveBankAccountTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_A_BANK,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_A_BANK + bankAccountID, getActivity());
         mRemoveBankAccountTask.mHttpResponseListener = this;
         mRemoveBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -379,11 +372,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
         mProgressDialog.setMessage(getString(R.string.enabling_bank));
         mProgressDialog.show();
-        EnableBankAccountRequest mEnableBankAccountRequest = new EnableBankAccountRequest(bankAccountID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mEnableBankAccountRequest);
-        mEnableBankAccountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ENABLE_A_BANK,
-                Constants.BASE_URL_SM + Constants.URL_ENABLE_A_BANK, json, getActivity());
+        mEnableBankAccountTask = new HttpRequestPutAsyncTask(Constants.COMMAND_ENABLE_A_BANK,
+                Constants.BASE_URL_SM + Constants.URL_ENABLE_A_BANK_PREFIX + bankAccountID + Constants.URL_ENABLE_A_BANK_SUFFIX, null, getActivity());
         mEnableBankAccountTask.mHttpResponseListener = this;
         mEnableBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -397,11 +387,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
         mProgressDialog.setMessage(getString(R.string.disabling_bank));
         mProgressDialog.show();
-        DisableBankAccountRequest mDisableBankAccountRequest = new DisableBankAccountRequest(bankAccountID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mDisableBankAccountRequest);
-        mDisableBankAccountTask = new HttpRequestPostAsyncTask(Constants.COMMAND_DISABLE_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_DISABLE_A_BANK, json, getActivity());
+        mDisableBankAccountTask = new HttpRequestPutAsyncTask(Constants.COMMAND_DISABLE_A_BANK,
+                Constants.BASE_URL_MM + Constants.URL_DISABLE_A_BANK_PREFIX + bankAccountID + Constants.URL_DISABLE_A_BANK_SUFFIX, null, getActivity());
         mDisableBankAccountTask.mHttpResponseListener = this;
         mDisableBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

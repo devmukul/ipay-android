@@ -20,8 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,20 +34,14 @@ import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.AskForRecommendationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.SendInviteRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.SendInviteResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.AskForIntroductionResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -106,7 +98,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     private SendInviteResponse mSendInviteResponse;
 
     private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
-    private AskForRecommendationResponse mAskForRecommendationResponse;
+    private AskForIntroductionResponse mAskForIntroductionResponse;
 
     private ProgressDialog mProgressDialog;
 
@@ -355,12 +347,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_recommendation));
         mProgressDialog.show();
-        AskForRecommendationRequest mAskForRecommendationRequest =
-                new AskForRecommendationRequest(mobileNumber);
-        Gson gson = new Gson();
-        String json = gson.toJson(mAskForRecommendationRequest);
         mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
-                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_RECOMMENDATION, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber, null, getActivity());
         mAskForRecommendationTask.mHttpResponseListener = this;
         mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -383,11 +371,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
             mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
             mProgressDialog.show();
 
-            SendInviteRequest sendInviteRequest = new SendInviteRequest(phoneNumber);
-            Gson gson = new Gson();
-            String json = gson.toJson(sendInviteRequest);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
+                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE + phoneNumber, null, getActivity(), this);
             mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -435,14 +420,14 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         } else if (result.getApiCommand().equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
             try {
 
-                mAskForRecommendationResponse = gson.fromJson(result.getJsonString(), AskForRecommendationResponse.class);
+                mAskForIntroductionResponse = gson.fromJson(result.getJsonString(), AskForIntroductionResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
                     }
                 } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), mAskForRecommendationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), mAskForIntroductionResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

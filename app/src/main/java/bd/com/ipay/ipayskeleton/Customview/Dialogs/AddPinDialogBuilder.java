@@ -18,6 +18,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
@@ -28,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mSavePINTask = null;
+    private HttpRequestPutAsyncTask mSavePINTask = null;
     private SetPinResponse mSetPinResponse;
 
     private ProgressDialog mProgressDialog;
@@ -91,7 +92,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
         Gson gson = new Gson();
         String json = gson.toJson(setPinRequest);
 
-        mSavePINTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PIN,
+        mSavePINTask = new HttpRequestPutAsyncTask(Constants.COMMAND_SET_PIN,
                 Constants.BASE_URL_MM + Constants.URL_SET_PIN, json, getContext(), this);
         mSavePINTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

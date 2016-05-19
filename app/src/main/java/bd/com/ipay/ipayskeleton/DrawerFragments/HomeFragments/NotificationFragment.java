@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,7 +26,6 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -41,10 +38,9 @@ import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.GetRecommendationRequestsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendRequestClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendationActionRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.RecommendationActionResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -65,16 +61,16 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private GetServiceChargeResponse mGetServiceChargeResponse;
 
     private HttpRequestPostAsyncTask mRecommendActionTask = null;
-    private RecommendationActionResponse mRecommendationActionResponse;
+    private IntroduceActionResponse mIntroduceActionResponse;
 
     private HttpRequestGetAsyncTask mGetRecommendationRequestsTask = null;
-    private GetRecommendationRequestsResponse mRecommendationRequestsResponse;
+    private GetIntroductionRequestsResponse mRecommendationRequestsResponse;
 
     private RecyclerView mNotificationsRecyclerView;
     private NotificationAndRecommendationListAdapter mNotificationAndRecommendationListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<NotificationClass> moneyRequestList;
-    private List<RecommendRequestClass> mRecommendationRequestList;
+    private List<IntroductionRequestClass> mRecommendationRequestList;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressDialog mProgressDialog;
 
@@ -171,7 +167,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
 
         mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
-                Constants.BASE_URL_MM + Constants.URL_GET_RECOMMENDATION_REQUESTS, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity());
         mGetRecommendationRequestsTask.mHttpResponseListener = this;
         mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -228,11 +224,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         mProgressDialog.setMessage(getString(R.string.verifying_user));
         mProgressDialog.show();
-        RecommendationActionRequest mRecommendationActionRequest = new RecommendationActionRequest(requestID, recommendationStatus);
-        Gson gson = new Gson();
-        String json = gson.toJson(mRecommendationActionRequest);
         mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_RECOMMEND_ACTION,
-                Constants.BASE_URL_MM + Constants.URL_RECOMMEND_ACTION, json, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity());
         mRecommendActionTask.mHttpResponseListener = this;
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -317,12 +310,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             if (this.isAdded()) setContentShown(true);
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mRecommendationRequestsResponse = gson.fromJson(result.getJsonString(), GetRecommendationRequestsResponse.class);
+                    mRecommendationRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
 
                     if (mRecommendationRequestList == null) {
                         mRecommendationRequestList = mRecommendationRequestsResponse.getVerificationRequestList();
                     } else {
-                        List<RecommendRequestClass> tempRecommendationRequestsClasses;
+                        List<IntroductionRequestClass> tempRecommendationRequestsClasses;
                         tempRecommendationRequestsClasses = mRecommendationRequestsResponse.getVerificationRequestList();
                         mRecommendationRequestList.clear();
                         mRecommendationRequestList.addAll(tempRecommendationRequestsClasses);
@@ -344,10 +337,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         } else if (result.getApiCommand().equals(Constants.COMMAND_RECOMMEND_ACTION)) {
 
             try {
-                mRecommendationActionResponse = gson.fromJson(result.getJsonString(), RecommendationActionResponse.class);
+                mIntroduceActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRecommendationActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     // Refresh recommendation requests list
                     if (mRecommendationRequestList != null)
@@ -356,7 +349,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     getRecommendationRequestsList();
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRecommendationActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

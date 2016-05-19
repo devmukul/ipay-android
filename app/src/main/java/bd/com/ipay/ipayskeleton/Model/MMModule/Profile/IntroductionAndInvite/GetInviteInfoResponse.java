@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite;
 
 import java.util.List;
 

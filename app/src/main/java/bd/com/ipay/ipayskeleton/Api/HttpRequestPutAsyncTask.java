@@ -35,7 +35,8 @@ public class HttpRequestPutAsyncTask extends HttpRequestAsyncTask {
         HttpPut httpPut = new HttpPut(mUri);
 
         try {
-            httpPut.setEntity(new StringEntity(mJsonString));
+            if (mJsonString != null)
+                httpPut.setEntity(new StringEntity(mJsonString));
         } catch (Exception e) {
             e.printStackTrace();
         }

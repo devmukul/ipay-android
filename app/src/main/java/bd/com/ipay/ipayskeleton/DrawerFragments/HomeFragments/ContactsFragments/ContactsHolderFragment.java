@@ -13,13 +13,10 @@ import android.widget.Button;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.GetInviteInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;

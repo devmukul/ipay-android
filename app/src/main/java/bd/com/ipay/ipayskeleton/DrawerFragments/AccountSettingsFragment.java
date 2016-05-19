@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -25,12 +24,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordRequest;
@@ -38,7 +38,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordR
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
@@ -47,16 +46,16 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountSettingsFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mSavePINTask = null;
+    private HttpRequestPutAsyncTask mSavePINTask = null;
     private SetPinResponse mSetPinResponse;
 
-    private HttpRequestPostAsyncTask mChangePasswordTask = null;
+    private HttpRequestPutAsyncTask mChangePasswordTask = null;
     private ChangePasswordResponse mChangePasswordResponse;
 
     private HttpRequestGetAsyncTask mGetTrustedDeviceTask = null;
     private GetTrustedDeviceResponse mGetTrustedDeviceResponse = null;
 
-    private HttpRequestPostAsyncTask mRemoveTrustedDeviceTask = null;
+    private HttpRequestDeleteAsyncTask mRemoveTrustedDeviceTask = null;
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
 
     private EditText mEnterPINEditText;
@@ -244,7 +243,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             SetPinRequest mSetPinRequest = new SetPinRequest(pin, password);
             Gson gson = new Gson();
             String json = gson.toJson(mSetPinRequest);
-            mSavePINTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PIN,
+            mSavePINTask = new HttpRequestPutAsyncTask(Constants.COMMAND_SET_PIN,
                     Constants.BASE_URL_MM + Constants.URL_SET_PIN, json, getActivity());
             mSavePINTask.mHttpResponseListener = this;
             mSavePINTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -297,7 +296,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             ChangePasswordRequest mChangePasswordRequest = new ChangePasswordRequest(password, newPassword);
             Gson gson = new Gson();
             String json = gson.toJson(mChangePasswordRequest);
-            mChangePasswordTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
+            mChangePasswordTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
                     Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, getActivity());
             mChangePasswordTask.mHttpResponseListener = this;
             mChangePasswordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -340,12 +339,8 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         mProgressDialog.setMessage("Removing device from your trusted device list");
         mProgressDialog.show();
 
-        RemoveTrustedDeviceRequest removeTrustedDeviceRequest = new RemoveTrustedDeviceRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(removeTrustedDeviceRequest);
-
-        mRemoveTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_DEVICE,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_TRUSTED_DEVICE, json, getActivity(), this);
+        mRemoveTrustedDeviceTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_DEVICE,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_TRUSTED_DEVICE + id, getActivity(), this);
         mRemoveTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

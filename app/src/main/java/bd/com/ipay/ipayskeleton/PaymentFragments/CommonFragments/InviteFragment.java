@@ -16,17 +16,13 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.SendInviteRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite.SendInviteResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -104,11 +100,8 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
         mProgressDialog.show();
 
-        SendInviteRequest sendInviteRequest = new SendInviteRequest(phoneNumber);
-        Gson gson = new Gson();
-        String json = gson.toJson(sendInviteRequest);
         mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_SEND_INVITE + phoneNumber, null, getActivity(), this);
         mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

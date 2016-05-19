@@ -1,6 +1,6 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.RecommendationAndInvite;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite;
 
-public class RecommendRequestClass {
+public class IntroductionRequestClass {
     public long id;
     public String senderMobileNumber;
     public String senderName;

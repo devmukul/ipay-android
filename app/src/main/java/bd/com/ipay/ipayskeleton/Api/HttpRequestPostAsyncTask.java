@@ -56,7 +56,8 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
         HttpPost httpPost = new HttpPost(mUri);
 
         try {
-            httpPost.setEntity(new StringEntity(mJsonString));
+            if (mJsonString != null)
+                httpPost.setEntity(new StringEntity(mJsonString));
         } catch (Exception e) {
             e.printStackTrace();
         }

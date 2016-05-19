@@ -140,12 +140,18 @@ public class Constants {
     }
 
 
+    // Activity REST
+    public static final String URL_USER_ACTIVITY = "/activity";
+
     // Bank Operation REST
-    public static final String URL_ADD_A_BANK = "bank/add";
-    public static final String URL_DISABLE_A_BANK = "bank/disable";
-    public static final String URL_ENABLE_A_BANK = "bank/enable";
-    public static final String URL_GET_BANK = "bank/get";
-    public static final String URL_REMOVE_A_BANK = "bank/remove";
+    public static final String URL_ADD_A_BANK = "bank/";
+    public static final String URL_GET_BANK = "bank/";
+    public static final String URL_REMOVE_A_BANK = "bank/";
+
+    public static final String URL_ENABLE_A_BANK_PREFIX = "bank/";
+    public static final String URL_ENABLE_A_BANK_SUFFIX = "/enable";
+    public static final String URL_DISABLE_A_BANK_PREFIX = "bank/";
+    public static final String URL_DISABLE_A_BANK_SUFFIX = "/disable";
 
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin";
@@ -155,12 +161,34 @@ public class Constants {
     public static final String URL_SEND_FOR_VERIFICATION_BANK = "bank-verify";
     public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "bank-verify/check";
 
+    // Trusted device CRUD operations
+    public static final String URL_ADD_TRUSTED_DEVICE = "/device";
+    public static final String URL_GET_TRUSTED_DEVICES = "/device";
+    public static final String URL_REMOVE_TRUSTED_DEVICE = "/device/";
+
+    // Documents Rest
+    public static final String URL_GET_DOCUMENTS = "/docs/identification/documents";
+    public static final String URL_UPLOAD_DOCUMENTS = "/docs/identification/documents";
+
     // Event Controller
     public static final String URL_EVENT_LIST = "events/user/eventList/";
     public static final String URL_EVENT_CATEGORIES = "categories";
 
     // Fee Charge REST
     public static final String URL_SERVICE_CHARGE = "feecharge";
+
+    // Introducer REST
+    public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
+    public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "/introducer/downstream/notapproved";
+    public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "/introducer/downstream/approved";
+    public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "/introducer/upstream/notapproved";
+    public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "/introducer/upstream/approved";
+    public static final String URL_INTRODUCE_ACTION = "introducer/";
+
+    // Invite Rest
+    public static final String URL_GET_INVITE_INFO = "/invitation";
+    public static final String URL_SEND_INVITE = "/invitation/invite/";
+
 
     // Mobile Topup Request REST
     public static final String URL_TOPUP_REQUEST = "topup/dotopup";
@@ -171,9 +199,6 @@ public class Constants {
     // News Feed REST
     public static final String URL_GET_NEWS_FEED = "news";
 
-    // Reports REST
-    public static final String URL_USER_ACTIVITY = "report/activities";
-
     // Request Rest
     public static final String URL_GET_NOTIFICATIONS = "requests/received";
     public static final String URL_GET_SENT_REQUESTS = "requests/sent";
@@ -181,16 +206,12 @@ public class Constants {
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
 
     // Settings REST
+    public static final String URL_CHANGE_PASSWORD = "settings/password";
     public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
-    public static final String URL_ADD_TRUSTED_DEVICE = "settings/device/add";
-    public static final String URL_GET_TRUSTED_DEVICES = "settings/devices";
-    public static final String URL_REMOVE_TRUSTED_DEVICE = "settings/device/remove";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
-    public static final String URL_SET_PIN = "settings/pin/change";
-    public static final String URL_CHANGE_PASSWORD = "settings/password/change";
-    public static final String URL_GET_INVITE_INFO = "settings/invitations";
-    public static final String URL_SEND_INVITE = "settings/invitations";
+
     public static final String URL_GET_PIN_INFO = "settings/pin";
+    public static final String URL_SET_PIN = "settings/pin";
 
     // Signin Rest
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
@@ -226,14 +247,6 @@ public class Constants {
     public static final String URL_POST_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
     public static final String URL_SET_RECOVERY_PERSON = "/recovery";
 
-    // User Kyc REST
-    public static final String URL_ASK_FOR_RECOMMENDATION = "kyc/verificationRequest";
-    public static final String URL_GET_RECOMMENDATION_REQUESTS = "kyc/verificationRequestList";
-    public static final String URL_RECOMMEND_ACTION = "kyc/verifyRequest";
-    public static final String URL_GET_INTRODUCER_LIST = "kyc/introducerList";
-    public static final String URL_GET_INTRODUCED_LIST = "kyc/introducedlist";
-    public static final String URL_GET_SENT_REQUEST_LIST = "kyc/sentRequestList";
-
     // User Rest
     public static final String URL_GET_USER_INFO = "user/userinfo";
     public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";;
@@ -242,12 +255,8 @@ public class Constants {
     // User Rest (Profile Completion)
     public static final String URL_GET_PROFILE_COMPLETION_STATUS = "/user/profilecompletion";
 
-    // User Rest (Documents)
-    public static final String URL_GET_DOCUMENTS = "user/identification/documents";
-    public static final String URL_UPLOAD_DOCUMENTS = "/user/identification/documents";
-
     // User Rest (Profile Picture)
-    public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/set";
+    public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/";
 
     // User Rest (Address)
     public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address";
