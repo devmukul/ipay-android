@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,12 +30,14 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
+import bd.com.ipay.ipayskeleton.Api.DownloadImageFromUrlAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -155,13 +159,18 @@ public class HomeActivity extends BaseActivity
         mMobileNumberView.setText(mUserID);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-
         switchToDashBoard();
 
+        // Set the inital profile picture
         setProfilePicture("");
+
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
-        getProfileInfo();
+
+        // Check if there's anything new from the server
+        checkForUpdateFromPush();
+
+        // Sync contacts
         syncContacts();
 
         // Start service for GCM
@@ -230,17 +239,35 @@ public class HomeActivity extends BaseActivity
 
     private void setProfilePicture(String imageUrl) {
         try {
-            if (!imageUrl.equals(""))
+
+            File dir = new File(Environment.getExternalStorageDirectory().getPath()
+                    + Constants.PICTURE_FOLDER);
+            if (!dir.exists()) dir.mkdir();
+            File file = new File(dir, mUserID.replaceAll("[^0-9]", "") + ".jpg");
+
+            Uri imageUri = null;
+            if (file.exists()) imageUri = Uri.fromFile(file);
+
+            if (imageUri != null) {
                 Glide.with(HomeActivity.this)
                         .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
                         .error(R.drawable.ic_person)
                         .crossFade()
                         .transform(new CircleTransform(HomeActivity.this))
                         .into(mPortrait);
-            else Glide.with(HomeActivity.this)
-                    .load(R.drawable.ic_person)
-                    .transform(new CircleTransform(HomeActivity.this))
-                    .into(mPortrait);
+            } else {
+                if (!imageUrl.equals(""))
+                    Glide.with(HomeActivity.this)
+                            .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                            .error(R.drawable.ic_person)
+                            .crossFade()
+                            .transform(new CircleTransform(HomeActivity.this))
+                            .into(mPortrait);
+                else Glide.with(HomeActivity.this)
+                        .load(R.drawable.ic_person)
+                        .transform(new CircleTransform(HomeActivity.this))
+                        .into(mPortrait);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -373,6 +400,10 @@ public class HomeActivity extends BaseActivity
         LogoutRequest mLogoutModel = new LogoutRequest(pref.getString(Constants.USERID, ""));
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
+
+        // Set the preference
+        pref.edit().putBoolean(Constants.LOGGEDIN, false).commit();
+
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
         mLogoutTask.mHttpResponseListener = this;
@@ -391,13 +422,28 @@ public class HomeActivity extends BaseActivity
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 mUri, HomeActivity.this);
         mGetProfileInfoTask.mHttpResponseListener = this;
-
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getAvailableBankList() {
         GetAvailableBankAsyncTask getAvailableBanksTask = new GetAvailableBankAsyncTask(this);
         getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void checkForUpdateFromPush() {
+        SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+
+        // Get the changes
+        boolean isProfilePictureUpdated = true;
+        if (pref.contains(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE))
+            isProfilePictureUpdated = pref.getBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+
+        // Take actions
+        if (isProfilePictureUpdated) {
+            // Set the preference to false again to set the update action is resolved
+            pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false).commit();
+            getProfileInfo();
+        }
     }
 
     @Override
@@ -454,7 +500,12 @@ public class HomeActivity extends BaseActivity
 
                     pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
 
+                    // Download the profile picture and store it in local storage
+                    new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
+                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
                     setProfilePicture(imageUrl);
+
                 } else {
                     Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
                 }
@@ -474,7 +525,7 @@ public class HomeActivity extends BaseActivity
                     SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(this, mGetAllContactsResponse);
                     syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
-                    Log.e("Contacts Sync Failed", result.getStatus() + "");
+                    Log.e(getString(R.string.contacts_sync_failed), result.getStatus() + "");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

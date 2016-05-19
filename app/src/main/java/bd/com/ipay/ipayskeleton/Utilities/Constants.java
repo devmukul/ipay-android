@@ -479,9 +479,10 @@ public class Constants {
     public static final String ADDRESS_TYPE_PERMANENT = "PERMANENT";
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
-    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "message";
-    public static final String PUSH_NOTIFICATION_TAG_TITLE = "title";
-    public static final String PUSH_NOTIFICATION_TAG_MESSAGE = "message";
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
+    public static final String PUSH_NOTIFICATION_TAG = "tag";
+    public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
+    public static final String PUSH_NOTIFICATION_BODY = "notification";
 
 }

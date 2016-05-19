@@ -9,7 +9,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class LauncherActivity extends BaseActivity {
 
-    public static boolean isLoggedIn = false;
+    private boolean firstLaunch = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,15 +17,14 @@ public class LauncherActivity extends BaseActivity {
         Intent i = null;
 
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
+        pref.edit().putBoolean(Constants.LOGGEDIN, false).commit();
 
-        if (pref.contains(Constants.LOGGEDIN) && pref.getBoolean(Constants.LOGGEDIN, false)) {
-            isLoggedIn = true;
+        if (!pref.contains(Constants.FIRST_LAUNCH)) {
+            firstLaunch = true;
+            pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).commit();
         }
 
-        // TODO: remove this ...
-//        isLoggedIn = true;
-
-        if (!isLoggedIn) {
+        if (firstLaunch) {
             i = new Intent(LauncherActivity.this, TourActivity.class);
             startActivity(i);
             finish();

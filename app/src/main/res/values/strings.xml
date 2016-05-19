@@ -598,6 +598,8 @@
     <string name="failed_update_friend">Update friend failed</string>
     <string name="total_amount">Total Amount</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
+    <string name="profile_picture_updated">Profile picture changed</string>
+    <string name="profile_picture_updated_message">You have changed your profile picture.</string>
 
     <string-array name="account_types">
         <item>Personal</item>
