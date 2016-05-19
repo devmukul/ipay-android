@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,9 +13,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -30,9 +35,13 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -51,6 +60,9 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
 
     private HttpRequestPostAsyncTask mServiceChargeTask = null;
     private GetServiceChargeResponse mGetServiceChargeResponse;
+
+    private HttpRequestPostAsyncTask mRejectRequestTask = null;
+    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
     private RecyclerView mNotificationsRecyclerView;
     private NotificationListAdapter mNotificationListAdapter;
@@ -148,6 +160,23 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
         mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void rejectRequestMoney(long id) {
+        if (mRejectRequestTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
+        mProgressDialog.show();
+        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
+                new RequestMoneyAcceptRejectOrCancelRequest(id);
+        Gson gson = new Gson();
+        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+        mRejectRequestTask.mHttpResponseListener = this;
+        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void showReviewDialog() {
         NotificationReviewDialog dialog = new NotificationReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
                 mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, Constants.SERVICE_ID_REQUEST_MONEY,
@@ -164,6 +193,7 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
+            mRejectRequestTask = null;
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
@@ -237,6 +267,31 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
 
 
             mServiceChargeTask = null;
+        }else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+
+            try {
+                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                        RequestMoneyAcceptRejectOrCancelResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        refreshMoneyRequestList();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mRejectRequestTask = null;
+
         }
     }
 
@@ -256,6 +311,11 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
             private TextView loadMoreTextView;
             private RoundedImageView mPortrait;
 
+            private LinearLayout optionsLayout;
+            private Button acceptButton;
+            private Button rejectButton;
+            private Button markAsSpamButton;
+
             public ViewHolder(final View itemView) {
                 super(itemView);
 
@@ -265,6 +325,10 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mTitleView = (TextView) itemView.findViewById(R.id.title);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+
+                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
+                acceptButton = (Button) itemView.findViewById(R.id.accept_button);
+                rejectButton = (Button) itemView.findViewById(R.id.reject_button);
             }
 
             public void bindViewMoneyRequestList(int pos) {
@@ -298,6 +362,15 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (optionsLayout.getVisibility() == View.VISIBLE)
+                            optionsLayout.setVisibility(View.GONE);
+                        else optionsLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                acceptButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
                         mMoneyRequestId = id;
                         mAmount = amount;
@@ -308,6 +381,24 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                         mDescription = description;
 
                         attemptGetServiceCharge();
+                    }
+                });
+
+
+                rejectButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                        rejectDialog.content(R.string.confirm_request_rejection);
+                        rejectDialog.positiveText(R.string.yes);
+                        rejectDialog.negativeText(R.string.no);
+                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                rejectRequestMoney(id);
+                            }
+                        });
+                        rejectDialog.show();
                     }
                 });
 

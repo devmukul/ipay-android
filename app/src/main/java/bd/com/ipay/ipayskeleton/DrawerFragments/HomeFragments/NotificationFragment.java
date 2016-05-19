@@ -1,11 +1,11 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
@@ -35,12 +37,16 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroductionRequestClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -65,6 +71,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private HttpRequestGetAsyncTask mGetRecommendationRequestsTask = null;
     private GetIntroductionRequestsResponse mRecommendationRequestsResponse;
+    
+    private HttpRequestPostAsyncTask mRejectRequestTask = null;
+    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
+    
+    private HttpRequestPostAsyncTask mRejectPaymentTask = null;
+    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
 
     private RecyclerView mNotificationsRecyclerView;
     private NotificationAndRecommendationListAdapter mNotificationAndRecommendationListAdapter;
@@ -181,7 +193,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
 
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, getActivity().MODE_PRIVATE);
 
         int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
         int accountClass = Constants.DEFAULT_USER_CLASS;
@@ -230,10 +242,47 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void rejectRequestMoney(long id) {
+        if (mRejectRequestTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
+        mProgressDialog.show();
+        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
+                new RequestMoneyAcceptRejectOrCancelRequest(id);
+        Gson gson = new Gson();
+        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+        mRejectRequestTask.mHttpResponseListener = this;
+        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void rejectPaymentRequest(long id) {
+
+        if (mRejectPaymentTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
+        mProgressDialog.show();
+        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
+                new PaymentAcceptRejectOrCancelRequest(id);
+        Gson gson = new Gson();
+        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
+        mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+        mRejectPaymentTask.mHttpResponseListener = this;
+        mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null) {
+            mRejectRequestTask = null;
+            mRejectPaymentTask = null;
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
@@ -359,6 +408,56 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
             mProgressDialog.dismiss();
             mRecommendActionTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+
+            try {
+                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                        RequestMoneyAcceptRejectOrCancelResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        refreshNotificationList();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mRejectRequestTask = null;
+
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_PAYMENT_REQUEST)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            PaymentAcceptRejectOrCancelResponse.class);
+                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        refreshNotificationList();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mRejectPaymentTask = null;
+
         }
     }
 
@@ -380,6 +479,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             private TextView loadMoreTextView;
             private RoundedImageView mPortrait;
             private LinearLayout optionsLayout;
+            private Button acceptButton;
+            private Button rejectButton;
             private Button markAsSpamButton;
             private View viewBetweenRejectAndSpam;
 
@@ -401,6 +502,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mTitleView = (TextView) itemView.findViewById(R.id.title);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
+                acceptButton = (Button) itemView.findViewById(R.id.accept_button);
+                rejectButton = (Button) itemView.findViewById(R.id.reject_button);
                 markAsSpamButton = (Button) itemView.findViewById(R.id.mark_as_spam_button);
                 viewBetweenRejectAndSpam = (View) itemView.findViewById(R.id.view_2);
 
@@ -451,18 +554,18 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 if (serviceID == Constants.SERVICE_ID_RECOMMENDATION_REQUEST) {
                     viewBetweenRejectAndSpam.setVisibility(View.VISIBLE);
                     markAsSpamButton.setVisibility(View.VISIBLE);
-
-                    itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (optionsLayout.getVisibility() == View.VISIBLE)
-                                optionsLayout.setVisibility(View.GONE);
-                            else optionsLayout.setVisibility(View.VISIBLE);
-                        }
-                    });
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (optionsLayout.getVisibility() == View.VISIBLE)
+                            optionsLayout.setVisibility(View.GONE);
+                        else optionsLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                acceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -479,6 +582,26 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
                         else
                             attemptGetServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
+                    }
+                });
+
+                rejectButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                        rejectDialog.content(R.string.confirm_request_rejection);
+                        rejectDialog.positiveText(R.string.yes);
+                        rejectDialog.negativeText(R.string.no);
+                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+                                    rejectRequestMoney(id);
+                                else
+                                    rejectPaymentRequest(id);
+                            }
+                        });
+                        rejectDialog.show();
                     }
                 });
 

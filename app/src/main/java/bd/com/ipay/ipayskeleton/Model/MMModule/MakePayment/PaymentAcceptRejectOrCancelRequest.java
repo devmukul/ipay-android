@@ -9,4 +9,8 @@ public class PaymentAcceptRejectOrCancelRequest {
         this.requestId = requestId;
         this.pin = pin;
     }
+
+    public PaymentAcceptRejectOrCancelRequest(long requestId) {
+        this.requestId = requestId;
+    }
 }

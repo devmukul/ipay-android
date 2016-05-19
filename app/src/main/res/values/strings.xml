@@ -597,6 +597,7 @@
     <string name="failed_add_friend">Add friend failed</string>
     <string name="failed_update_friend">Update friend failed</string>
     <string name="total_amount">Total Amount</string>
+    <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
 
     <string-array name="account_types">
         <item>Personal</item>

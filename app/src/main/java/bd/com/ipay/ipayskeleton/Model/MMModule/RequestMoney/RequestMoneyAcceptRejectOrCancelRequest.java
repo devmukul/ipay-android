@@ -9,4 +9,8 @@ public class RequestMoneyAcceptRejectOrCancelRequest {
         this.requestId = requestId;
         this.pin = pin;
     }
+
+    public RequestMoneyAcceptRejectOrCancelRequest(long requestId) {
+        this.requestId = requestId;
+    }
 }

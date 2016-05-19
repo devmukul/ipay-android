@@ -33,11 +33,9 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationReviewDialog extends MaterialDialog.Builder implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mRejectRequestTask = null;
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
-    private HttpRequestPostAsyncTask mRejectPaymentTask = null;
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
     private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
 
@@ -133,7 +131,7 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
         mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(mServiceCharge)));
 
         positiveText(R.string.send_money);
-        negativeText(R.string.reject);
+        negativeText(R.string.cancel);
 
         onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
@@ -153,15 +151,7 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
         onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                String pin = mPinField.getText().toString();
-                if (pin.isEmpty())
-                    Toast.makeText(context, R.string.failed_empty_pin, Toast.LENGTH_LONG).show();
-                else {
-                    if (mServiceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                        rejectRequestMoney(requestId, pin);
-                    else
-                        rejectPaymentRequest(requestId, pin);
-                }
+
             }
         });
     }
@@ -181,41 +171,6 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
                 Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context);
         mAcceptRequestTask.mHttpResponseListener = this;
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void rejectRequestMoney(long id, String pin) {
-        if (mRejectRequestTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(context.getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id, pin);
-        Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, context);
-        mRejectRequestTask.mHttpResponseListener = this;
-        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void rejectPaymentRequest(long id, String pin) {
-
-        if (mRejectPaymentTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(context.getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
-                new PaymentAcceptRejectOrCancelRequest(id, pin);
-        Gson gson = new Gson();
-        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
-        mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, context);
-        mRejectPaymentTask.mHttpResponseListener = this;
-        mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void acceptPaymentRequest(long id, String pin) {
@@ -242,9 +197,7 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
         if (result == null) {
             mProgressDialog.show();
             mAcceptRequestTask = null;
-            mRejectRequestTask = null;
             mAcceptPaymentTask = null;
-            mRejectPaymentTask = null;
             if (context != null)
                 Toast.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
             return;
@@ -253,33 +206,7 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
-
-            try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                        RequestMoneyAcceptRejectOrCancelResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (context != null)
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-
-                    if (mReviewFinishListener != null)
-                        mReviewFinishListener.onReviewFinish();
-
-                } else {
-                    if (context != null)
-                        Toast.makeText(context, mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (context != null)
-                    Toast.makeText(context, R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mRejectRequestTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
             try {
                 mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
                         RequestMoneyAcceptRejectOrCancelResponse.class);
@@ -303,32 +230,6 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
 
             mProgressDialog.dismiss();
             mAcceptRequestTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_PAYMENT_REQUEST)) {
-
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                try {
-                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                            PaymentAcceptRejectOrCancelResponse.class);
-                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                    if (context != null)
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-
-                    if (mReviewFinishListener != null)
-                        mReviewFinishListener.onReviewFinish();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (context != null)
-                        Toast.makeText(context, R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                }
-
-            } else {
-                if (context != null)
-                    Toast.makeText(context, R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mRejectPaymentTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
 
