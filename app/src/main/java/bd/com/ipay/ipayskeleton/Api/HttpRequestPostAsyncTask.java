@@ -50,7 +50,8 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
     protected HttpRequestBase getRequest() {
         if (Constants.DEBUG) {
             Log.w("POST_URL", mUri);
-            Log.w("json", mJsonString);
+            if (mJsonString != null)
+                Log.w("json", mJsonString);
         }
 
         HttpPost httpPost = new HttpPost(mUri);

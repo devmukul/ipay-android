@@ -29,7 +29,8 @@ public class HttpRequestPutAsyncTask extends HttpRequestAsyncTask {
     protected HttpRequestBase getRequest() {
         if (Constants.DEBUG) {
             Log.w("PUT_URL", mUri);
-            Log.w("json", mJsonString);
+            if (mJsonString != null)
+                Log.w("json", mJsonString);
         }
 
         HttpPut httpPut = new HttpPut(mUri);
