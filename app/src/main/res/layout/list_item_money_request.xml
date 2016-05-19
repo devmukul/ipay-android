@@ -37,8 +37,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/portrait"
                     android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/portrait"
                     android:orientation="vertical">
 
                     <TextView
@@ -46,8 +46,6 @@
                         style="@style/TextStylePrimarySmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_toRightOf="@+id/portrait"
                         android:textStyle="bold" />
 
                     <TextView
@@ -55,17 +53,13 @@
                         style="@style/TextStylePrimarySmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/title"
-                        android:layout_toRightOf="@+id/portrait"
                         android:gravity="left" />
 
                     <TextView
                         android:id="@+id/time"
                         style="@style/TextStylePrimarySmall"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/description"
-                        android:layout_toRightOf="@+id/portrait" />
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
