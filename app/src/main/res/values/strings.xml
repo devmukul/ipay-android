@@ -600,6 +600,7 @@
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
     <string name="profile_picture_updated">Profile picture changed</string>
     <string name="profile_picture_updated_message">You have changed your profile picture.</string>
+    <string name="contacts_sync_failed">Contacts Sync Failed</string>
 
     <string-array name="account_types">
         <item>Personal</item>
