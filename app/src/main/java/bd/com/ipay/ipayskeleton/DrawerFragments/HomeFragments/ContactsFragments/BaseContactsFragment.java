@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -583,17 +584,19 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 int randomListItemBackgroundColor = LIST_ITEM_BACKGROUNDS[getAdapterPosition() % LIST_ITEM_BACKGROUNDS.length];
                 mPortraitTextView.setBackgroundResource(randomListItemBackgroundColor);
 
-                if (profilePictureUrl != null && !profilePictureUrl.isEmpty())
+                if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
                     Glide.with(getActivity())
                             .load(profilePictureUrl)
                             .crossFade()
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .into(mPortrait);
-                else Glide.with(getActivity())
-                        .load(android.R.color.transparent)
-                        .crossFade()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(mPortrait);
+                } else {
+                    Glide.with(getActivity())
+                            .load(android.R.color.transparent)
+                            .crossFade()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .into(mPortrait);
+                }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.Friend;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class FriendInfo {
     private int accountType;
@@ -47,7 +48,11 @@ public class FriendInfo {
     }
 
     public String getProfilePictureUrl() {
-        return profilePictureUrl;
+        // If the profile picture is taken from the server, then append the base url with it
+        if (profilePictureUrl != null && profilePictureUrl.startsWith("/"))
+            return Constants.BASE_URL_IMAGE_SERVER + profilePictureUrl;
+        else
+            return profilePictureUrl;
     }
 
     public void setAccountType(int accountType) {
