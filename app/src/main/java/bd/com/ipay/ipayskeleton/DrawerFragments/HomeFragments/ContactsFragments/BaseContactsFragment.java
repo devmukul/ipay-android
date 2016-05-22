@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,6 +93,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     private View mSheetViewNonSubscriber;
     private View mSheetViewSubscriber;
     private View selectedBottomSheetView;
+    private SearchView mSearchView;
 
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
@@ -140,6 +141,14 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         mAdapter = new ContactListAdapter();
         mRecyclerView.setAdapter(mAdapter);
 
+        mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
+        if (isDialogFragment()) {
+            mSearchView.setIconified(false);
+            mSearchView.setOnQueryTextListener(this);
+        } else {
+            mSearchView.setVisibility(View.GONE);
+        }
+
         return v;
     }
 
@@ -175,6 +184,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                         mBottomSheetLayout.dismissSheet();
                 }
             });
+            searchView.setQueryHint(getString(R.string.search));
 
             searchView.setOnCloseListener(new SearchView.OnCloseListener() {
                 @Override
