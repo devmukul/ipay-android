@@ -9,8 +9,8 @@ android {
         applicationId "bd.com.ipay.ipayskeleton"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 4
-        versionName "0.0.4"
+        versionCode 5
+        versionName "0.21.1"
         multiDexEnabled true
     }
     buildTypes {
