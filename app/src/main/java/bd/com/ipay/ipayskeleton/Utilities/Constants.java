@@ -24,6 +24,7 @@ public class Constants {
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
 
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
+    public static final String PROFILE_INFO_UPDATED = "PROFILE_INFO_UPDATED";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
     public static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";
@@ -102,10 +103,11 @@ public class Constants {
     public static final String BASE_URL_IMAGE_SERVER;
 
     // Server Type 1 -> dev server
-    // Server Type 2 -> staging server
-    // Server Type 3 -> live server
-    // Server Type 4 -> local server
-    public static final int SERVER_TYPE = 1;
+    // Server Type 2 -> test server
+    // Server Type 3 -> stage server
+    // Server Type 4 -> live server
+    // Server Type 5 -> local server
+    public static final int SERVER_TYPE = 2;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -118,12 +120,19 @@ public class Constants {
 
         } else if (SERVER_TYPE == 2) {
 
+            BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
+            BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
+            BASE_URL_IMAGE_SERVER = "http://10.15.40.14";
+            BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
+
+        } else if (SERVER_TYPE == 3) {
+
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
-            BASE_URL_FRIEND = "http://stage.ipay.com.bd/friend/v1/";
+            BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
 
-        } else if (SERVER_TYPE == 3) {
+        } else if (SERVER_TYPE == 4) {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";

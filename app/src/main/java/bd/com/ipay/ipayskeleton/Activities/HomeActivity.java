@@ -65,8 +65,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener,
-        EditBasicInfoFragment.ProfilePictureChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -531,11 +530,6 @@ public class HomeActivity extends BaseActivity
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void onProfilePictureChange(String imageUrl) {
-        setProfilePicture(imageUrl);
     }
 
     @Override

@@ -379,7 +379,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
         mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        ((ProfilePictureChangeListener) getActivity()).onProfilePictureChange(selectedOImagePath);
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener =
@@ -413,10 +412,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             default:
                 super.onActivityResult(requestCode, resultCode, intent);
         }
-    }
-
-    public interface ProfilePictureChangeListener {
-        void onProfilePictureChange(String imageUrl);
     }
 
     public void httpResponseReceiver(HttpResponseObject result) {

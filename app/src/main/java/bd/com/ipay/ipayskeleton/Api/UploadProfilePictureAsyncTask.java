@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Api;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -60,7 +61,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
     protected void onPostExecute(final HttpResponseObject result) {
 
         if (result != null) {
-
+            Log.w("Image Upload", result.toString());
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 // In case of un-authorization go to login activity
@@ -70,7 +71,11 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
             } else
                 mHttpResponseListener.httpResponseReceiver(result);
 
-        } else mHttpResponseListener.httpResponseReceiver(null);
+        } else {
+            Log.w("Image Upload", "NULL");
+
+            mHttpResponseListener.httpResponseReceiver(null);
+        }
 
     }
 
