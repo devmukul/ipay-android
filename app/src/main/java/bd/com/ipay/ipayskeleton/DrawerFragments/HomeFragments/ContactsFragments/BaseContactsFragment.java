@@ -511,7 +511,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         }
 
         public boolean isInvited(String phoneNumber) {
-            if (ContactsHolderFragment.mGetInviteInfoResponse == null) return false;
+            if (ContactsHolderFragment.mGetInviteInfoResponse == null ||
+                    ContactsHolderFragment.mGetInviteInfoResponse.getInvitees() == null) return false;
             else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
                 return true;
             return false;
