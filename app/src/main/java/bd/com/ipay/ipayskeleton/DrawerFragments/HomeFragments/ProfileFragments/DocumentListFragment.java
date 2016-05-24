@@ -196,7 +196,7 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
 
         if (mIdentificationDocuments.size() < DOCUMENT_TYPES.length) {
-            String accountVerificationStatus = pref.gepush tString(
+            String accountVerificationStatus = pref.getString(
                     Constants.VERIFICATION_STATUS, Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED);
             if (accountVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                 mDocumentUploadInfoView.setText(R.string.upload_identification_documents_to_confirm_identity);
