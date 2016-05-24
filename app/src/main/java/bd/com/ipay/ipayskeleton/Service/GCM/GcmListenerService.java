@@ -21,57 +21,53 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.DownloadImageFromUrlAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.GetIdentificationDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
+    private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
+    private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
+
     private String tag;
+    private PushNotificationStatusHolder mPushNotificationStatusHolder;
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
         Log.i("Push Found", "From: " + from + ", data: " + data);
 
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
+        boolean isLoggedIn = pref.getBoolean(Constants.LOGGEDIN, false);
 
         tag = data.getString(Constants.PUSH_NOTIFICATION_EVENT);
 
-        if (tag.equals(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
+        mPushNotificationStatusHolder = new PushNotificationStatusHolder(this);
 
-            if (isForeground(Constants.ApplicationPackage)) {
-
-                // Application is in foreground
-                if (pref.getBoolean(Constants.LOGGEDIN, false)) {
-                    // If the user is logged in
+        if (isForeground() && isLoggedIn) {
+            switch (tag) {
+                case Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
                     getProfileInfo();
-
-                } else {
-                    // If the user is in LauncherActivity
-                    pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true).commit();
-                    // Create notification for profile picture update
-                    createNotification(getString(R.string.profile_picture_updated), getString(R.string.profile_picture_updated_message));
-                }
-
-            } else {
-                // Application is not active.
-                pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true).commit();
-                Log.d("PUSH", "PUSH found");
-                // Create notification for profile picture update
-                createNotification(getString(R.string.profile_picture_updated), getString(R.string.profile_picture_updated_message));
+                    break;
             }
+        } else {
+            mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
         }
+
+
     }
 
     private void createNotification(String title, String message) {
@@ -97,11 +93,11 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         notificationManager.notify(notificationID, notificationBuilder.build());
     }
 
-    private boolean isForeground(String myPackage) {
+    private boolean isForeground() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
         ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
-        return componentInfo.getPackageName().equals(myPackage);
+        return componentInfo.getPackageName().equals(Constants.ApplicationPackage);
     }
 
     private void getProfileInfo() {
@@ -119,6 +115,16 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getIdentificationDocuments() {
+        if (mGetIdentificationDocumentsTask != null) {
+            return;
+        }
+
+        mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENTS, this, this);
+        mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
@@ -126,6 +132,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             return;
         }
 
+        DataHelper dataHelper = DataHelper.getInstance(this);
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
@@ -153,6 +160,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
                             .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+                    mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -160,6 +169,11 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
             mGetProfileInfoTask = null;
 
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK)
+                dataHelper.updatePushEvents(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST, result.getJsonString());
         }
+
+        dataHelper.closeDbOpenHelper();
     }
 }

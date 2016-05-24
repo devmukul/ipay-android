@@ -107,6 +107,8 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
+            dataHelper.closeDbOpenHelper();
+
             if (json == null)
                 getIdentificationDocuments();
             else {
