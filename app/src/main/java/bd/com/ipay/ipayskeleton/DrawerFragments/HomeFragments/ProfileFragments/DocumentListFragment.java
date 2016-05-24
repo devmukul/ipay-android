@@ -33,11 +33,13 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.GetIdentificationDocumentResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 
 public class DocumentListFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -99,7 +101,18 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
 
-        getIdentificationDocuments();
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE))
+            getIdentificationDocuments();
+        else {
+            DataHelper dataHelper = DataHelper.getInstance(getActivity());
+            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
+            if (json == null)
+                getIdentificationDocuments();
+            else {
+                processGetDocumentListResponse(json);
+            }
+        }
 
         return v;
     }
@@ -154,28 +167,8 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         
         if (result.getApiCommand().equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
             try {
-                mIdentificationDocumentResponse = gson.fromJson(result.getJsonString(), GetIdentificationDocumentResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mIdentificationDocuments = mIdentificationDocumentResponse.getDocuments();
-                    loadDocumentInfo();
-
-                    mDocumentListAdapter = new DocumentListAdapter();
-                    mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
-
-                    if (mIdentificationDocuments.size() < DOCUMENT_TYPES.length) {
-                        String accountVerificationStatus = pref.getString(
-                                Constants.VERIFICATION_STATUS, Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED);
-                        if (accountVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-                            mDocumentUploadInfoView.setText(R.string.upload_identification_documents_to_confirm_identity);
-                        } else {
-                            mDocumentUploadInfoView.setText(R.string.you_need_to_upload_identification_documents_to_get_verified);
-                        }
-                    } else {
-                        mDocumentUploadInfoView.setVisibility(View.GONE);
-                    }
-
-                    setContentShown(true);
-
+                    processGetDocumentListResponse(result.getJsonString());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
@@ -190,6 +183,35 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         }
 
         mProgressDialog.dismiss();
+    }
+
+    private void processGetDocumentListResponse(String json) {
+        Gson gson = new Gson();
+        mIdentificationDocumentResponse = gson.fromJson(json, GetIdentificationDocumentResponse.class);
+
+        mIdentificationDocuments = mIdentificationDocumentResponse.getDocuments();
+        loadDocumentInfo();
+
+        mDocumentListAdapter = new DocumentListAdapter();
+        mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
+
+        if (mIdentificationDocuments.size() < DOCUMENT_TYPES.length) {
+            String accountVerificationStatus = pref.getString(
+                    Constants.VERIFICATION_STATUS, Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED);
+            if (accountVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                mDocumentUploadInfoView.setText(R.string.upload_identification_documents_to_confirm_identity);
+            } else {
+                mDocumentUploadInfoView.setText(R.string.you_need_to_upload_identification_documents_to_get_verified);
+            }
+        } else {
+            mDocumentUploadInfoView.setVisibility(View.GONE);
+        }
+
+        setContentShown(true);
+
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+
     }
 
     public class DocumentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
