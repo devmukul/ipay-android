@@ -85,6 +85,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private List<IntroductionRequestClass> mRecommendationRequestList;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressDialog mProgressDialog;
+    private TextView mEmptyListTextView;
 
     private int pageCount = 0;
     private boolean hasNext = false;
@@ -113,6 +114,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
         mProgressDialog = new ProgressDialog(getActivity());
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
         mNotificationAndRecommendationListAdapter = new NotificationAndRecommendationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -465,6 +467,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mRejectPaymentTask = null;
 
         }
+
+        if (moneyRequestList != null && moneyRequestList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0 ) {
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        }
+        else mEmptyListTextView.setVisibility(View.GONE);
     }
 
     private class NotificationAndRecommendationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
