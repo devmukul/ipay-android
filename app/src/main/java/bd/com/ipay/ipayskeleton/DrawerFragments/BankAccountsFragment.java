@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
@@ -56,6 +58,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetBankBranchesResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
@@ -141,13 +144,34 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         return v;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
+            getBankList();
+        else {
+            DataHelper dataHelper = DataHelper.getInstance(getActivity());
+            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
+            dataHelper.closeDbOpenHelper();
+
+            if (json == null)
+                getBankList();
+            else {
+                processGetBankListResponse(json);
+            }
+        }
+
+    }
+
     private void attemptRefreshAvailableBankNames() {
         GetAvailableBankAsyncTask mGetAvailableBankAsyncTask = new GetAvailableBankAsyncTask(getActivity(),
                 new GetAvailableBankAsyncTask.BankLoadListener() {
                     @Override
                     public void onLoadSuccess(List<Bank> banks) {
                         mProgressDialog.dismiss();
-                        getBankList();
+                        //getBankList();
                     }
 
                     @Override
@@ -398,22 +422,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
 
-                    if (mListUserBankClasses == null) {
-                        mListUserBankClasses = mBankListResponse.getBanks();
-                    } else {
-                        List<UserBankClass> tempBankClasses;
-                        tempBankClasses = mBankListResponse.getBanks();
-                        mListUserBankClasses.clear();
-                        mListUserBankClasses.addAll(tempBankClasses);
-                    }
-
-                    if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
-                        mEmptyListTextView.setVisibility(View.GONE);
-                    else mEmptyListTextView.setVisibility(View.VISIBLE);
-                    mUserBankListAdapter.notifyDataSetChanged();
-
+                    processGetBankListResponse(result.getJsonString());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
@@ -536,6 +546,29 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             mSendForVerificationWithAmountTask = null;
 
         }
+    }
+
+    private void processGetBankListResponse(String json) {
+        Gson gson = new Gson();
+        mBankListResponse = gson.fromJson(json, GetBankListResponse.class);
+
+        if (mListUserBankClasses == null) {
+            mListUserBankClasses = mBankListResponse.getBanks();
+        } else {
+            List<UserBankClass> tempBankClasses;
+            tempBankClasses = mBankListResponse.getBanks();
+            mListUserBankClasses.clear();
+            mListUserBankClasses.addAll(tempBankClasses);
+        }
+
+        if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
+            mEmptyListTextView.setVisibility(View.GONE);
+        else mEmptyListTextView.setVisibility(View.VISIBLE);
+        mUserBankListAdapter.notifyDataSetChanged();
+
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
+
     }
 
     public class UserBankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

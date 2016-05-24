@@ -47,6 +47,9 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
     private HttpRequestGetAsyncTask mGetEmailsTask = null;
     private GetEmailResponse mGetEmailResponse;
 
+    private HttpRequestGetAsyncTask mGetBankTask = null;
+    private GetEmailResponse mGetBankResponse;
+
     private String tag;
     private PushNotificationStatusHolder mPushNotificationStatusHolder;
 
@@ -71,6 +74,9 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     break;
                 case Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE:
                     getEmails();
+                    break;
+                case Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE:
+                    getBankList();
                     break;
 
             }
@@ -146,6 +152,17 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getBankList() {
+        if (mGetBankTask != null) {
+            return;
+        }
+
+        mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, this);
+        mGetBankTask.mHttpResponseListener = this;
+        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
@@ -202,6 +219,12 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
                 mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
+            }
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
             }
         }
 
