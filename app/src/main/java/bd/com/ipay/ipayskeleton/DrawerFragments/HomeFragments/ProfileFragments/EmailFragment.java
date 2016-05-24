@@ -291,6 +291,13 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 mGetEmailResponse = gson.fromJson(result.getJsonString(), GetEmailResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     processGetEmailListResponse(result.getJsonString());
+
+                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                    dataHelper.closeDbOpenHelper();
+
+                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mGetEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -423,9 +430,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         setContentShown(true);
 
         mEmailListAdapter.notifyDataSetChanged();
-
-        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
-        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
 
     }
 

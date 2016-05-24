@@ -171,6 +171,13 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     processGetDocumentListResponse(result.getJsonString());
+
+                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+                    dataHelper.closeDbOpenHelper();
+
+                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
@@ -210,9 +217,6 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         }
 
         setContentShown(true);
-
-        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
-        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
 
     }
 

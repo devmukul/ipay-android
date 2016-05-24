@@ -69,6 +69,9 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 case Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
                     getProfileInfo();
                     break;
+                case Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE:
+                    getProfileInfo();
+                    break;
                 case Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE:
                     getIdentificationDocuments();
                     break;
@@ -198,7 +201,9 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
                             .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
                     mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                    mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
 
                 }
             } catch (Exception e) {
@@ -210,7 +215,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                dataHelper.updatePushEvents(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST, result.getJsonString());
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
                 mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
             }
 
