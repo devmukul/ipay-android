@@ -93,6 +93,24 @@ public class DataHelper {
         return cursor;
     }
 
+    public void updatePushEvents(String tagName, String jsonString) {
+
+        try {
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
+            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
+
+            String queryString = "INSERT OR REPLACE INTO " + DBConstants.DB_TABLE_PUSH_EVENTS + " ("
+                    + DBConstants.KEY_TAG_NAME + ", " + DBConstants.KEY_JSON + ") VALUES ("
+                    + tagName + ", " + jsonString + ")";
+
+            db.rawQuery(queryString, null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<FriendNode> getSubscriberList(String query, boolean verifiedOnly) {
         Cursor cursor = searchSubscribers(query, verifiedOnly);
         List<FriendNode> friends = new ArrayList<>();

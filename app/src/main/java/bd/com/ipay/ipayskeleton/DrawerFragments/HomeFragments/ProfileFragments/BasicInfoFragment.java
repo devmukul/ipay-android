@@ -20,9 +20,7 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -68,7 +66,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private String mName = "";
     private String mMobileNumber = "";
-    private String mProfilePicture = "";
+    private String profileImageUrl = "";
 
     private String mDateOfBirth = "";
 
@@ -166,7 +164,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         bundle.putString(Constants.MOTHERS_MOBILE_NUMBER, mMothersMobileNumber);
         bundle.putString(Constants.SPOUSES_MOBILE_NUMBER, mSpouseMobileNumber);
         bundle.putString(Constants.DATE_OF_BIRTH, mDateOfBirth);
-        bundle.putString(Constants.PROFILE_PICTURE, mProfilePicture);
+        bundle.putString(Constants.PROFILE_PICTURE, profileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
 
@@ -174,7 +172,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     }
 
     private void setProfileInformation() {
-        setProfilePicture(mProfilePicture);
+        setProfilePicture(profileImageUrl);
 
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
@@ -203,6 +201,21 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
                 mVerificationStatusView.setBackgroundResource(R.drawable.background_not_verified);
                 mVerificationStatusView.setText(R.string.unverified);
             }
+        }
+    }
+
+    private void checkForUpdateFromPush() {
+
+        // Get the changes
+        boolean isProfileInfoUpdated = true;
+        if (pref.contains(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE))
+            isProfileInfoUpdated = pref.getBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+
+        // Take actions
+        if (isProfileInfoUpdated) {
+            // Set the preference to false again to set the update action is resolved
+            pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false).commit();
+            getProfileInfo();
         }
     }
 
@@ -264,7 +277,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         }
 
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
@@ -303,7 +315,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
                         for (Iterator<UserProfilePictureClass> it = mGetProfileInfoResponse.getProfilePictures().iterator(); it.hasNext(); ) {
                             UserProfilePictureClass userProfilePictureClass = it.next();
-                            mProfilePicture = userProfilePictureClass.getUrl();
+                            profileImageUrl = userProfilePictureClass.getUrl();
                             break;
                         }
                     }

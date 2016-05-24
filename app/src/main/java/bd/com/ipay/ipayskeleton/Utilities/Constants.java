@@ -90,7 +90,7 @@ public class Constants {
      * required only for the first time when user tries to login. After that, login request will be
      * automatically sent to the server using the previously used mobile number and default password
      * (qqqqqqq1).
-     * <p/>
+     * <p>
      * *** Set it to false if you are not using the default password ***
      */
     public static final boolean AUTO_LOGIN = false;
@@ -253,7 +253,8 @@ public class Constants {
 
     // User Rest
     public static final String URL_GET_USER_INFO = "user/userinfo";
-    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";;
+    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
+    ;
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
 
     // User Rest (Profile Completion)
@@ -489,6 +490,14 @@ public class Constants {
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
     public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "PROFILE_PICTURE";
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE = "PROFILE_INFO";
+    public static final String PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE = "IDENTIFICATION_DOCUMENT";
+    public static final String PUSH_NOTIFICATION_TAG_EMAIL_UPDATE = "EMAIL";
+    public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "BANK";
+    public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "DEVICE";
+    public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "TRUSTED_PERSON";
+    public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "SEND_MONEY";
+    public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "REQUEST_MONEY";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
     public static final String PUSH_NOTIFICATION_TAG = "tag";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
