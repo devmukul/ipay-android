@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.*;
 
 public class ProfileActivity extends BaseActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +46,9 @@ public class ProfileActivity extends BaseActivity {
         if (item.getItemId() == android.R.id.home) {
             if (getSupportFragmentManager().getBackStackEntryCount() > 0)
                 getSupportFragmentManager().popBackStack();
-            else
+            else {
                 finish();
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);

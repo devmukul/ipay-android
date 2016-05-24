@@ -28,11 +28,11 @@ public abstract class ResourceRequestBuilder {
 
     private void generateUri() {
         Uri uri;
-        if (filter == -1) uri = Uri.parse(Constants.BASE_URL_MM + "/" + Constants.URL_RESOURCE)
+        if (filter == -1) uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_RESOURCE)
                 .buildUpon()
                 .appendQueryParameter(PARAM_TYPE, getResourceType())
                 .build();
-        else uri = Uri.parse(Constants.BASE_URL_MM + "/" + Constants.URL_RESOURCE)
+        else uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_RESOURCE)
                 .buildUpon()
                 .appendQueryParameter(PARAM_TYPE, getResourceType())
                 .appendQueryParameter(PARAM_FILTER, filter + "")

@@ -22,7 +22,7 @@ public class GetNewsFeedRequestBuilder {
     }
 
     private void generateUri(int page) {
-        Uri uri = Uri.parse(Constants.BASE_URL_MM + "/" + Constants.URL_GET_NEWS_FEED)
+        Uri uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_GET_NEWS_FEED)
                     .buildUpon()
                     .appendQueryParameter(PARAM_PAGE, page + "")
                     .build();

@@ -30,7 +30,7 @@ public class GetEventListPersonalUserRequestBuilder {
     }
 
     private void generateUri(long categoryId, long startTime, long endTime) {
-        Uri uri = Uri.parse(Constants.BASE_URL_SM + "/" + Constants.URL_EVENT_LIST)
+        Uri uri = Uri.parse(Constants.BASE_URL_SM + Constants.URL_EVENT_LIST)
                 .buildUpon()
                 .appendQueryParameter(PARAM_CATEGORY_ID, categoryId + "")
                 .appendQueryParameter(PARAM_START_TIME, startTime + "")

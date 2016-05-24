@@ -116,6 +116,10 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         LogoutRequest mLogoutModel = new LogoutRequest(mUserID);
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
+
+        // Set the preference
+        pref.edit().putBoolean(Constants.LOGGEDIN, false).commit();
+
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, context);
         mLogoutTask.mHttpResponseListener = this;

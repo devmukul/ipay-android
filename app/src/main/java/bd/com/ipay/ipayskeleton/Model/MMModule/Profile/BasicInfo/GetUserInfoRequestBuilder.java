@@ -23,7 +23,7 @@ public class GetUserInfoRequestBuilder {
     }
 
     private void generateUri(String loginId) {
-        Uri uri = Uri.parse(Constants.BASE_URL_MM + "/" + Constants.URL_GET_USER_INFO)
+        Uri uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_GET_USER_INFO)
                 .buildUpon()
                 .appendQueryParameter(PARAM_LOGIN_ID, loginId)
                 .build();

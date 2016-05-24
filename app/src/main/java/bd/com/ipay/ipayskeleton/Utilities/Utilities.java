@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -40,9 +39,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
-import bd.com.ipay.ipayskeleton.R;
 
 public class Utilities {
 
@@ -316,5 +313,4 @@ public class Utilities {
             return true;
         else return false;
     }
-
 }

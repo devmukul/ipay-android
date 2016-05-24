@@ -227,7 +227,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         }
 
         mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
-                Constants.BASE_URL_MM + "/" + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this);
         mGetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

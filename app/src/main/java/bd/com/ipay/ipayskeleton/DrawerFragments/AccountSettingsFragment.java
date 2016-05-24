@@ -309,7 +309,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         }
 
         mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
-                Constants.BASE_URL_MM + "/" + Constants.URL_GET_TRUSTED_DEVICES, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_DEVICES, getActivity(), this);
         mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

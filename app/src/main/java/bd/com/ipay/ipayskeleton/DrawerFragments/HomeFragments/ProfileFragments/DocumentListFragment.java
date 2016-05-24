@@ -136,7 +136,7 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         }
 
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
-                Constants.BASE_URL_MM + "/" + Constants.URL_GET_DOCUMENTS, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENTS, getActivity(), this);
         mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

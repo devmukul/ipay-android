@@ -21,8 +21,8 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (!Constants.DEBUG)
-            ACRA.init(this);
+//        if (!Constants.DEBUG)
+//            ACRA.init(this);
     }
 
     protected void attachBaseContext(Context base) {

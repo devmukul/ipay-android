@@ -11,7 +11,8 @@ import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.util.Log;
+import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,6 +94,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     private View mSheetViewNonSubscriber;
     private View mSheetViewSubscriber;
     private View selectedBottomSheetView;
+    private SearchView mSearchView;
 
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
@@ -140,6 +142,14 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         mAdapter = new ContactListAdapter();
         mRecyclerView.setAdapter(mAdapter);
 
+        mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
+        if (isDialogFragment()) {
+            mSearchView.setIconified(false);
+            mSearchView.setOnQueryTextListener(this);
+        } else {
+            mSearchView.setVisibility(View.GONE);
+        }
+
         return v;
     }
 
@@ -175,6 +185,7 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                         mBottomSheetLayout.dismissSheet();
                 }
             });
+            searchView.setQueryHint(getString(R.string.search));
 
             searchView.setOnCloseListener(new SearchView.OnCloseListener() {
                 @Override
@@ -501,7 +512,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         }
 
         public boolean isInvited(String phoneNumber) {
-            if (ContactsHolderFragment.mGetInviteInfoResponse == null) return false;
+            if (ContactsHolderFragment.mGetInviteInfoResponse == null ||
+                    ContactsHolderFragment.mGetInviteInfoResponse.getInvitees() == null) return false;
             else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
                 return true;
             return false;
@@ -572,17 +584,19 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
                 int randomListItemBackgroundColor = LIST_ITEM_BACKGROUNDS[getAdapterPosition() % LIST_ITEM_BACKGROUNDS.length];
                 mPortraitTextView.setBackgroundResource(randomListItemBackgroundColor);
 
-                if (profilePictureUrl != null && !profilePictureUrl.isEmpty())
+                if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
                     Glide.with(getActivity())
                             .load(profilePictureUrl)
                             .crossFade()
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .into(mPortrait);
-                else Glide.with(getActivity())
-                        .load(android.R.color.transparent)
-                        .crossFade()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(mPortrait);
+                } else {
+                    Glide.with(getActivity())
+                            .load(android.R.color.transparent)
+                            .crossFade()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .into(mPortrait);
+                }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

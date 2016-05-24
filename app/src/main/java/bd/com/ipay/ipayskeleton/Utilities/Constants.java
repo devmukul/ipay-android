@@ -24,6 +24,7 @@ public class Constants {
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
 
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
+    public static final String PROFILE_INFO_UPDATED = "PROFILE_INFO_UPDATED";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
     public static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";
@@ -89,7 +90,7 @@ public class Constants {
      * required only for the first time when user tries to login. After that, login request will be
      * automatically sent to the server using the previously used mobile number and default password
      * (qqqqqqq1).
-     * <p/>
+     * <p>
      * *** Set it to false if you are not using the default password ***
      */
     public static final boolean AUTO_LOGIN = false;
@@ -102,9 +103,10 @@ public class Constants {
     public static final String BASE_URL_IMAGE_SERVER;
 
     // Server Type 1 -> dev server
-    // Server Type 2 -> staging server
-    // Server Type 3 -> live server
-    // Server Type 4 -> local server
+    // Server Type 2 -> test server
+    // Server Type 3 -> stage server
+    // Server Type 4 -> live server
+    // Server Type 5 -> local server
     public static final int SERVER_TYPE = 1;
 
     static {
@@ -113,17 +115,24 @@ public class Constants {
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
-            BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
-//            BASE_URL_FRIEND = "http://10.10.10.10:1337/friend/v1/";
+//            BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
+            BASE_URL_FRIEND = "http://10.10.10.14:1337/v1";
 
         } else if (SERVER_TYPE == 2) {
 
-            BASE_URL_MM = "http://stage.ipay.com.bd:8085/api/v1/";
-            BASE_URL_SM = "http://10.40.10.11:8085/api/v1/money/";
-            BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
-            BASE_URL_FRIEND = "http://stage.ipay.com.bd/friend/v1/";
+            BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
+            BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
+            BASE_URL_IMAGE_SERVER = "http://10.15.40.14";
+            BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
 
         } else if (SERVER_TYPE == 3) {
+
+            BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
+            BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
+            BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
+            BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
+
+        } else if (SERVER_TYPE == 4) {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
@@ -157,13 +166,13 @@ public class Constants {
     public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "bank-verify/check";
 
     // Trusted device CRUD operations
-    public static final String URL_ADD_TRUSTED_DEVICE = "/device";
-    public static final String URL_GET_TRUSTED_DEVICES = "/device";
-    public static final String URL_REMOVE_TRUSTED_DEVICE = "/device/";
+    public static final String URL_ADD_TRUSTED_DEVICE = "device";
+    public static final String URL_GET_TRUSTED_DEVICES = "device";
+    public static final String URL_REMOVE_TRUSTED_DEVICE = "device/";
 
     // Documents Rest
-    public static final String URL_GET_DOCUMENTS = "/docs/identification/documents";
-    public static final String URL_UPLOAD_DOCUMENTS = "/docs/identification/documents";
+    public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
+    public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
 
     // Event Controller
     public static final String URL_EVENT_LIST = "events/user/eventList/";
@@ -173,16 +182,16 @@ public class Constants {
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
     // Introducer REST
-    public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
-    public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "/introducer/downstream/notapproved";
-    public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "/introducer/downstream/approved";
-    public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "/introducer/upstream/notapproved";
-    public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "/introducer/upstream/approved";
+    public static final String URL_ASK_FOR_INTRODUCTION = "/ntroducer/introduceme/";
+    public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/notapproved";
+    public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/approved";
+    public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/notapproved";
+    public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/approved";
     public static final String URL_INTRODUCE_ACTION = "introducer/";
 
     // Invite Rest
-    public static final String URL_GET_INVITE_INFO = "/invitation";
-    public static final String URL_SEND_INVITE = "/invitation/invite/";
+    public static final String URL_GET_INVITE_INFO = "invitation";
+    public static final String URL_SEND_INVITE = "invitation/invite/";
 
 
     // Mobile Topup Request REST
@@ -244,7 +253,8 @@ public class Constants {
 
     // User Rest
     public static final String URL_GET_USER_INFO = "user/userinfo";
-    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";;
+    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
+    ;
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
 
     // User Rest (Profile Completion)
@@ -479,9 +489,18 @@ public class Constants {
     public static final String ADDRESS_TYPE_PERMANENT = "PERMANENT";
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
-    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "message";
-    public static final String PUSH_NOTIFICATION_TAG_TITLE = "title";
-    public static final String PUSH_NOTIFICATION_TAG_MESSAGE = "message";
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "PROFILE_PICTURE";
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE = "PROFILE_INFO";
+    public static final String PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE = "IDENTIFICATION_DOCUMENT";
+    public static final String PUSH_NOTIFICATION_TAG_EMAIL_UPDATE = "EMAIL";
+    public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "BANK";
+    public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "DEVICE";
+    public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "TRUSTED_PERSON";
+    public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "SEND_MONEY";
+    public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "REQUEST_MONEY";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
+    public static final String PUSH_NOTIFICATION_TAG = "tag";
+    public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
+    public static final String PUSH_NOTIFICATION_BODY = "notification";
 
 }
