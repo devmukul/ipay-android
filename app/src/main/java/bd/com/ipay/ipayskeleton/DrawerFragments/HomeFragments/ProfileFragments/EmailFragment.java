@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +28,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -40,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.DeleteEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.Email;
@@ -51,6 +50,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryEmailRes
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmailFragment extends ProgressFragment implements HttpResponseListener {
@@ -116,7 +116,18 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             }
         });
 
-        loadEmails();
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
+            loadEmails();
+        else {
+            DataHelper dataHelper = DataHelper.getInstance(getActivity());
+            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
+            if (json == null)
+                loadEmails();
+            else {
+                processGetEmailListResponse(json);
+            }
+        }
 
         return v;
     }
@@ -276,26 +287,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 mGetEmailResponse = gson.fromJson(result.getJsonString(), GetEmailResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mEmails = mGetEmailResponse.getEmailAdressList();
-
-                    Collections.sort(mEmails, new Comparator<Email>() {
-                        @Override
-                        public int compare(Email lhs, Email rhs) {
-
-                            if ((lhs.isPrimary() && !rhs.isPrimary()) || (!lhs.isPrimary() && rhs.isPrimary())) {
-                                if (lhs.isPrimary())
-                                    return -1;
-                                else
-                                    return 1;
-                            } else {
-                                return (int) (lhs.getEmailId() - rhs.getEmailId());
-                            }
-                        }
-                    });
-
-                    setContentShown(true);
-
-                    mEmailListAdapter.notifyDataSetChanged();
+                    processGetEmailListResponse(result.getJsonString());
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mGetEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -401,6 +393,36 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
             mMakePrimaryEmailTask = null;
         }
+
+    }
+
+    private void processGetEmailListResponse(String json) {
+        Gson gson = new Gson();
+        mGetEmailResponse = gson.fromJson(json, GetEmailResponse.class);
+
+        mEmails = mGetEmailResponse.getEmailAdressList();
+
+        Collections.sort(mEmails, new Comparator<Email>() {
+            @Override
+            public int compare(Email lhs, Email rhs) {
+
+                if ((lhs.isPrimary() && !rhs.isPrimary()) || (!lhs.isPrimary() && rhs.isPrimary())) {
+                    if (lhs.isPrimary())
+                        return -1;
+                    else
+                        return 1;
+                } else {
+                    return (int) (lhs.getEmailId() - rhs.getEmailId());
+                }
+            }
+        });
+
+        setContentShown(true);
+
+        mEmailListAdapter.notifyDataSetChanged();
+
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
 
     }
 
