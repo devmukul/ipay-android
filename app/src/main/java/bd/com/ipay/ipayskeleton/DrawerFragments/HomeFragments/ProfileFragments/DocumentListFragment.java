@@ -100,6 +100,12 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         mDocumentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_documents);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
+        return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
         if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE))
@@ -116,14 +122,6 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
             }
         }
 
-        return v;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setContentShown(false);
     }
 
     private void loadDocumentInfo() {
@@ -149,6 +147,8 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         if (mGetIdentificationDocumentsTask != null) {
             return;
         }
+
+        setContentShown(false);
 
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
                 Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENTS, getActivity(), this);

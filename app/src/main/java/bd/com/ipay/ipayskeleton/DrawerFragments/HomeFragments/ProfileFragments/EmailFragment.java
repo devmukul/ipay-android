@@ -116,19 +116,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             }
         });
 
-        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
-        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
-            loadEmails();
-        else {
-            DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
-            if (json == null)
-                loadEmails();
-            else {
-                processGetEmailListResponse(json);
-            }
-        }
-
         return v;
     }
 
@@ -136,7 +123,21 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setContentShown(false);
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
+            getEmails();
+        else {
+            DataHelper dataHelper = DataHelper.getInstance(getActivity());
+            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
+            dataHelper.closeDbOpenHelper();
+
+            if (json == null)
+                getEmails();
+            else {
+                processGetEmailListResponse(json);
+            }
+        }
+
     }
 
     private void showAddNewEmailDialog() {
@@ -185,10 +186,12 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         dialog.show();
     }
 
-    private void loadEmails() {
+    private void getEmails() {
         if (mGetEmailsTask != null) {
             return;
         }
+
+        setContentShown(false);
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
                 Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this);
@@ -307,7 +310,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 mAddNewEmailResponse = gson.fromJson(result.getJsonString(), AddNewEmailResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    loadEmails();
+                    getEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -333,7 +336,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 mDeleteEmailResponse = gson.fromJson(result.getJsonString(), DeleteEmailResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    loadEmails();
+                    getEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mDeleteEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -354,7 +357,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 mEmailVerificationResponse = gson.fromJson(result.getJsonString(), EmailVerificationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    loadEmails();
+                    getEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mEmailVerificationResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -375,7 +378,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 makePrimaryEmailResponse = gson.fromJson(result.getJsonString(), MakePrimaryEmailResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    loadEmails();
+                    getEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), makePrimaryEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }

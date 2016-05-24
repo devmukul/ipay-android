@@ -100,11 +100,11 @@ public class DataHelper {
                     DATABASE_VERSION);
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
-            String queryString = "INSERT OR REPLACE INTO " + DBConstants.DB_TABLE_PUSH_EVENTS + " ("
-                    + DBConstants.KEY_TAG_NAME + ", " + DBConstants.KEY_JSON + ") VALUES ("
-                    + tagName + ", " + jsonString + ")";
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DBConstants.KEY_TAG_NAME, tagName);
+            contentValues.put(DBConstants.KEY_JSON, jsonString);
 
-            db.rawQuery(queryString, null);
+            db.replace(DBConstants.DB_TABLE_PUSH_EVENTS, null, contentValues);
 
         } catch (Exception e) {
             e.printStackTrace();

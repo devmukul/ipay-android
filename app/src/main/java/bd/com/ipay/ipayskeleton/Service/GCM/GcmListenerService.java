@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequ
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.GetIdentificationDocumentResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
@@ -42,6 +43,9 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
     private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
     private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
+
+    private HttpRequestGetAsyncTask mGetEmailsTask = null;
+    private GetEmailResponse mGetEmailResponse;
 
     private String tag;
     private PushNotificationStatusHolder mPushNotificationStatusHolder;
@@ -62,6 +66,13 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 case Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
                     getProfileInfo();
                     break;
+                case Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE:
+                    getIdentificationDocuments();
+                    break;
+                case Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE:
+                    getEmails();
+                    break;
+
             }
         } else {
             mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
@@ -125,6 +136,16 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getEmails() {
+        if (mGetEmailsTask != null) {
+            return;
+        }
+
+        mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
+                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, this, this);
+        mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
@@ -170,8 +191,18 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             mGetProfileInfoTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK)
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 dataHelper.updatePushEvents(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+            }
+
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_EMAILS)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
+            }
         }
 
         dataHelper.closeDbOpenHelper();

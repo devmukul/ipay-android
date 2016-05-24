@@ -9,7 +9,7 @@ public class PushNotificationStatusHolder {
     private SharedPreferences pref;
 
     public PushNotificationStatusHolder(Context context) {
-        SharedPreferences pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
     public boolean isUpdateNeeded(String tag) {
