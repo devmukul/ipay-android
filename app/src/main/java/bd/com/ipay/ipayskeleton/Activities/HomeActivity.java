@@ -452,7 +452,7 @@ public class HomeActivity extends BaseActivity
             mLogoutTask = null;
             mGetProfileInfoTask = null;
             mGetAllContactsTask = null;
-            Toast.makeText(HomeActivity.this, R.string.logout_failed, Toast.LENGTH_LONG).show();
+            Toast.makeText(HomeActivity.this, R.string.request_failed, Toast.LENGTH_LONG).show();
             return;
         }
 

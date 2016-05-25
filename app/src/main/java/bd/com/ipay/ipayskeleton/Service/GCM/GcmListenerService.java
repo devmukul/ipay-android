@@ -34,6 +34,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResp
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.GetIdentificationDocumentResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.GetEmailResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.GetTrustedPersonsResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
@@ -54,6 +56,12 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetEmailResponse mGetBankResponse;
+
+    private HttpRequestGetAsyncTask mGetTrustedDeviceTask = null;
+    private GetTrustedDeviceResponse mGetTrustedDeviceResponse = null;
+
+    private HttpRequestGetAsyncTask mGetTrustedPersonsTask = null;
+    private GetTrustedPersonsResponse mGetTrustedPersonsResponse = null;
 
     private String tag;
     private PushNotificationStatusHolder mPushNotificationStatusHolder;
@@ -86,7 +94,12 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 case Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE:
                     getBankList();
                     break;
-
+                case Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE:
+                    getTrustedDeviceList();
+                    break;
+                case Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE:
+                    getTrustedPersons();
+                    break;
             }
         } else {
             mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
@@ -180,6 +193,26 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getTrustedDeviceList() {
+        if (mGetTrustedDeviceTask != null) {
+            return;
+        }
+
+        mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
+                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_DEVICES, this, this);
+        mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getTrustedPersons() {
+        if (mGetTrustedPersonsTask != null) {
+            return;
+        }
+
+        mGetTrustedPersonsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_PERSONS,
+                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_PERSONS, this, this);
+        mGetTrustedPersonsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
@@ -214,6 +247,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     // Download the profile picture and store it in local storage
                     new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
                             .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
                 }
             } catch (Exception e) {
@@ -254,6 +288,22 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             }
 
             mGetBankTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
+            }
+
+            mGetTrustedDeviceTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_PERSONS)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, false);
+            }
+
+            mGetTrustedPersonsTask = null;
         }
 
         dataHelper.closeDbOpenHelper();

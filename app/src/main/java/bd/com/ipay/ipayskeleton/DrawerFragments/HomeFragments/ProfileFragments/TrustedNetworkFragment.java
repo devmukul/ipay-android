@@ -1,13 +1,11 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +13,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,7 +25,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
@@ -37,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.AddTrustedPersonRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.AddTrustedPersonResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.GetTrustedPersonsResponse;
@@ -46,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.TrustedPer
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TrustedNetworkFragment extends ProgressFragment implements HttpResponseListener {
@@ -106,8 +103,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             }
         });
 
-        loadTrustedPersons();
-
         return v;
     }
 
@@ -115,13 +110,28 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setContentShown(false);
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE))
+            getTrustedPersons();
+        else {
+            DataHelper dataHelper = DataHelper.getInstance(getActivity());
+            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE);
+            dataHelper.closeDbOpenHelper();
+
+            if (json == null)
+                getTrustedPersons();
+            else {
+                processGetTrustedPersonList(json);
+            }
+        }
     }
 
-    private void loadTrustedPersons() {
+    private void getTrustedPersons() {
         if (mGetTrustedPersonsTask != null) {
             return;
         }
+
+        setContentShown(false);
 
         mGetTrustedPersonsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_PERSONS,
                 Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_PERSONS, getActivity(), this);
@@ -247,7 +257,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_PERSONS)) {
@@ -255,11 +264,14 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 mGetTrustedPersonsResponse = gson.fromJson(result.getJsonString(), GetTrustedPersonsResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    processGetTrustedPersonList(result.getJsonString());
 
-                    mTrustedPersons = mGetTrustedPersonsResponse.getTrustedPersons();
-                    mTrustedPersonListAdapter.notifyDataSetChanged();
+                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, result.getJsonString());
+                    dataHelper.closeDbOpenHelper();
 
-                    setContentShown(true);
+                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, false);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedPersonsResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -280,7 +292,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    loadTrustedPersons();
+                    getTrustedPersons();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -299,7 +311,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetAccountRecoveryPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    loadTrustedPersons();
+                    getTrustedPersons();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetAccountRecoveryPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -312,6 +324,16 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
             mSetAccountRecoveryPersonTask = null;
         }
+    }
+
+    private void processGetTrustedPersonList(String json) {
+        Gson gson = new Gson();
+        mGetTrustedPersonsResponse = gson.fromJson(json, GetTrustedPersonsResponse.class);
+
+        mTrustedPersons = mGetTrustedPersonsResponse.getTrustedPersons();
+        mTrustedPersonListAdapter.notifyDataSetChanged();
+
+        setContentShown(true);
     }
 
 

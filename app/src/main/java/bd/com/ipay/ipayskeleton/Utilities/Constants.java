@@ -93,7 +93,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = true;
+    public static final boolean AUTO_LOGIN = false;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
@@ -115,7 +115,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 //            BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
-            BASE_URL_FRIEND = "http://10.10.10.14:1337/v1";
+            BASE_URL_FRIEND = "http://10.10.10.10:1337/v1";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {

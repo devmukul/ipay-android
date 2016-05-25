@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
@@ -29,10 +30,10 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
@@ -42,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDevice
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountSettingsFragment extends Fragment implements HttpResponseListener {
@@ -190,9 +192,27 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             setPINHeader.performClick();
         }
 
-        loadTrustedDeviceList();
-
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE))
+            getTrustedDeviceList();
+        else {
+            DataHelper dataHelper = DataHelper.getInstance(getActivity());
+            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE);
+            dataHelper.closeDbOpenHelper();
+
+            if (json == null)
+                getTrustedDeviceList();
+            else {
+                processTrustedDeviceList(json);
+            }
+        }
     }
 
     @Override
@@ -303,7 +323,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         }
     }
 
-    private void loadTrustedDeviceList() {
+    private void getTrustedDeviceList() {
         if (mGetTrustedDeviceTask != null) {
             return;
         }
@@ -334,7 +354,6 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private void removeTrustedDevice(long id) {
         if (mRemoveTrustedDeviceTask != null)
             return;
-        ;
 
         mProgressDialog.setMessage("Removing device from your trusted device list");
         mProgressDialog.show();
@@ -409,11 +428,14 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
                 mGetTrustedDeviceResponse = gson.fromJson(result.getJsonString(), GetTrustedDeviceResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    processTrustedDeviceList(result.getJsonString());
 
-                    ArrayList<TrustedDevice> mTrustedDeviceList = (ArrayList<TrustedDevice>) mGetTrustedDeviceResponse.getDevices();
-                    mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mTrustedDeviceList);
-                    mTrustedDevicesListView.setAdapter(mTrustedDeviceAdapter);
-                    Utilities.setUpNonScrollableListView(mTrustedDevicesListView);
+                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
+                    dataHelper.closeDbOpenHelper();
+
+                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -441,7 +463,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
                     mProgressDialog.show();
 
-                    loadTrustedDeviceList();
+                    getTrustedDeviceList();
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -457,6 +479,16 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             mProgressDialog.cancel();
             mRemoveTrustedDeviceTask = null;
         }
+    }
+
+    private void processTrustedDeviceList(String json) {
+        Gson gson = new Gson();
+        mGetTrustedDeviceResponse = gson.fromJson(json, GetTrustedDeviceResponse.class);
+
+        ArrayList<TrustedDevice> mTrustedDeviceList = (ArrayList<TrustedDevice>) mGetTrustedDeviceResponse.getDevices();
+        mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mTrustedDeviceList);
+        mTrustedDevicesListView.setAdapter(mTrustedDeviceAdapter);
+        Utilities.setUpNonScrollableListView(mTrustedDevicesListView);
     }
 
     public class TrustedDeviceAdapter extends ArrayAdapter<TrustedDevice> {
