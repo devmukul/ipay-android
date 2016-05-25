@@ -119,16 +119,17 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-                pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        attemptRequestMoney(pinInputDialogBuilder.getPin());
-                    }
-                });
-
-                pinInputDialogBuilder.show();
+//                final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+//
+//                pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        attemptRequestMoney(pinInputDialogBuilder.getPin());
+//                    }
+//                });
+//
+//                pinInputDialogBuilder.show();
+                attemptRequestMoney();
             }
         });
 
@@ -137,7 +138,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         return v;
     }
 
-    private void attemptRequestMoney(String pin) {
+    private void attemptRequestMoney() {
         if (mRequestMoneyTask != null) {
             return;
         }
@@ -146,7 +147,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mProgressDialog.setMessage(getString(R.string.requesting_money));
         mProgressDialog.show();
         RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(mReceiverMobileNumber,
-                mAmount.doubleValue(), mTitle, mDescription, pin);
+                mAmount.doubleValue(), mTitle, mDescription);
         Gson gson = new Gson();
         String json = gson.toJson(mRequestMoneyRequest);
         mRequestMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY,
