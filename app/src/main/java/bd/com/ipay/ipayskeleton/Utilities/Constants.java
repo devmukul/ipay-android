@@ -2,7 +2,7 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 public class Constants {
     public static final String ApplicationTag = "iPay";
-    public static final String ApplicationPackage = "bd.com.ipay.ipayskeleton";
+    public static final String ApplicationPackage = "bd.com.ipay.android";
     public static final String PICTURE_FOLDER = "/iPay";
     public static final String GENDER_MALE = "M";
     public static final String GENDER_FEMALE = "F";
@@ -93,7 +93,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;

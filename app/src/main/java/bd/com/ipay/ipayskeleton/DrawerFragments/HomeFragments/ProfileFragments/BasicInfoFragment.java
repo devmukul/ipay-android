@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -160,11 +161,11 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
             dataHelper.closeDbOpenHelper();
 
-//            if (json == null)
+            if (json == null)
                 getProfileInfo();
-//            else {
-//                processProfileInfoResponse(json);
-//            }
+            else {
+                processProfileInfoResponse(json);
+            }
         }
 
     }
