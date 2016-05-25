@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -45,6 +48,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private Button mButtonForgetPassword;
     private String mPasswordLogin;
     private String mUserNameLogin;
+    private TextView mServerNameView;
+    private TextView mBuildNumberView;
 
     private ProgressDialog mProgressDialog;
     private String mDeviceID;
@@ -54,35 +59,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
-    }
-
-    void putConstantStringInfront(final EditText edt, final String constString) {
-        edt.setText(constString);
-        Selection.setSelection(edt.getText(), edt.getText().length());
-
-
-        edt.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!s.toString().startsWith(constString)) {
-                    edt.setText(constString);
-                    Selection.setSelection(edt.getText(), edt.getText().length());
-
-                }
-
-            }
-        });
     }
 
     @Override
@@ -99,6 +75,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
         mUserNameLoginView = (EditText) v.findViewById(R.id.login_mobile_number);
         mPasswordLoginView = (EditText) v.findViewById(R.id.login_password);
+        mServerNameView = (TextView) v.findViewById(R.id.textview_server_name);
+        mBuildNumberView = (TextView) v.findViewById(R.id.textview_build_number);
 
         putConstantStringInfront(mUserNameLoginView, "+880");
 
@@ -132,6 +110,18 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + userIdWithoutPrefix);
         }
 
+        try {
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            String version = pInfo.versionName;
+            mBuildNumberView.setText("Build " + version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        mServerNameView.setText("Connected to the " + Constants.SERVER_NAME + " server");
+
+
+
         // Auto Login
         if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
             mPasswordLoginView.setText("qqqqqqq1");
@@ -140,6 +130,35 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         }
 
         return v;
+    }
+
+    void putConstantStringInfront(final EditText edt, final String constString) {
+        edt.setText(constString);
+        Selection.setSelection(edt.getText(), edt.getText().length());
+
+
+        edt.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().startsWith(constString)) {
+                    edt.setText(constString);
+                    Selection.setSelection(edt.getText(), edt.getText().length());
+
+                }
+
+            }
+        });
     }
 
     private void attemptLogin() {
