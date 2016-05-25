@@ -77,32 +77,72 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
         mPushNotificationStatusHolder = new PushNotificationStatusHolder(this);
 
-        if (isForeground() && isLoggedIn) {
-            switch (tag) {
-                case Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
+        switch (tag) {
+            case Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
+                if (isForeground() && isLoggedIn)
                     getUserInfo();
-                    break;
-                case Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE:
+                else {
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                    createNotification(getString(R.string.push_profile_picture_updated_title),
+                            getString(R.string.push_profile_picture_updated_message));
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE:
+                if (isForeground() && isLoggedIn)
                     getProfileInfo();
-                    break;
-                case Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE:
+                else {
+                    createNotification(getString(R.string.push_profile_info_updated_title),
+                            getString(R.string.push_profile_info_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE:
+                if (isForeground() && isLoggedIn)
                     getIdentificationDocuments();
-                    break;
-                case Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE:
+                else {
+                    createNotification(getString(R.string.push_identification_document_updated_title),
+                            getString(R.string.push_identification_document_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE:
+                if (isForeground() && isLoggedIn)
                     getEmails();
-                    break;
-                case Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE:
+                else {
+                    createNotification(getString(R.string.push_email_updated_title),
+                            getString(R.string.push_email_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE:
+                if (isForeground() && isLoggedIn)
                     getBankList();
-                    break;
-                case Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE:
+                else {
+                    createNotification(getString(R.string.push_bank_updated_title),
+                            getString(R.string.push_bank_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE:
+                if (isForeground() && isLoggedIn)
                     getTrustedDeviceList();
-                    break;
-                case Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE:
+                else {
+                    createNotification(getString(R.string.push_device_updated_title),
+                            getString(R.string.push_device_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE:
+                if (isForeground() && isLoggedIn)
                     getTrustedPersons();
-                    break;
-            }
-        } else {
-            mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                else {
+                    createNotification(getString(R.string.push_trusted_person_updated_title),
+                            getString(R.string.push_trusted_person_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_SEND_MONEY:
+            case Constants.PUSH_NOTIFICATION_TAG_REQUEST_MONEY:
         }
 
     }
