@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,10 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 
 public class WalletFragment extends Fragment {
@@ -30,10 +35,13 @@ public class WalletFragment extends Fragment {
 
     private List<WalletAction> mWalletActionList;
 
+    private SharedPreferences pref;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_wallet, container, false);
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mWalletActionList = new ArrayList<>();
         mWalletActionList.add(new WalletAction(getString(R.string.add_money)));
@@ -124,9 +132,12 @@ public class WalletFragment extends Fragment {
 
                             // Request Money
                             case 3:
-                                Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
-                                startActivity(intent);
+                                Intent requestMoneyActivityIntent = new Intent(getActivity(), RequestMoneyActivity.class);
+                                startActivity(requestMoneyActivityIntent);
                                 break;
+
+                            // Create Invoice / Make Payment
+                            case 4:
 
                         }
                     }

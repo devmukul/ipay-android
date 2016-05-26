@@ -506,7 +506,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             View view = convertView;
             if (view == null)
-                view = inflater.inflate(R.layout.list_item_trsuted_device, null);
+                view = inflater.inflate(R.layout.list_item_trusted_device, null);
             ImageView deviceimageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
             TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
             TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);
