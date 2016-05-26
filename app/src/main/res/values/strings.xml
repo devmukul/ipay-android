@@ -227,6 +227,7 @@
     <string name="password_recovery">Password Recovery</string>
     <string name="add_a_bank">Add a Bank</string>
     <string name="transaction_details">Transaction Details</string>
+    <string name="invoice_details">Invoice Details</string>
     <string name="adding_bank">Bank is being added...</string>
     <string name="removing_bank">Bank is being removed...</string>
     <string name="sending_for_verification">Sending for verification...</string>
@@ -298,21 +299,28 @@
     <string name="login_with_existing_account">Login with existing account</string>
     <string name="signup_second_stage_note">Just a few more information!</string>
     <string name="have_an_existing_account">Have an existing account?</string>
-    <string name="enter_amount">Enter an amount in BDT</string>
+    <string name="enter_rate">Enter rate per item in BDT</string>
     <string name="event_name">Name of the event</string>
     <string name="event_category">Category</string>
     <string name="event_status">Event status</string>
     <string name="transaction_status">Transaction status</string>
     <string name="transaction_id">Transaction ID: </string>
+    <string name="invoice_status">Invoice status</string>
+    <string name="invoice_id">Invoice ID: </string>
     <string name="event_select_participants_type">Select participants</string>
     <string name="event_location">Event location</string>
-    <string name="enter_vat">VAT in BDT</string>
+    <string name="enter_vat">VAT in BDT(%) (optional)</string>
+    <string name="enter_amount">Enter an amount in BDT</string>
+    <string name="enter_discount">Discount in BDT(%) (optional)</string>
     <string name="description">Add a purpose (Optional)</string>
     <string name="send_money_description">Write a note (Optional)</string>
     <string name="description_mandatory">Add a purpose</string>
     <string name="description_event">Event description</string>
     <string name="item_description">Item description</string>
+    <string name="item_quantity">Item quantity</string>
+    <string name="item_name">Item name</string>
     <string name="please_add_description">Please add a purpose</string>
+    <string name="please_add_item_name">Please add item name</string>
     <string name="add_title">Add a title</string>
     <string name="please_add_title">Please add a title</string>
     <string name="otp_sent">OTP sent. Please wait...</string>
@@ -379,6 +387,7 @@
     <string name="introduce">Introduce</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
+    <string name="draft">Saved but not send</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_event">Filter by event</string>
     <string name="filter_verification">Verification Events</string>
@@ -410,6 +419,27 @@
     all you have to do is click OK.</string>
     <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
     <string name="crash_dialog_ok_toast">Thank you!</string>
+
+    <!-- PUSH -->
+    <string name="push_profile_picture_updated_title">Profile Picture Changed</string>
+    <string name="push_profile_picture_updated_message">You have changed your profile picture</string>
+    <string name="push_profile_info_updated_title">Profile Info Updated</string>
+    <string name="push_profile_info_updated_message">You have updated your profile information</string>
+    <string name="push_identification_document_updated_title">Identification Document Updated</string>
+    <string name="push_identification_document_updated_message">Your identification documents have been updated</string>
+    <string name="push_email_updated_title">Email Updated</string>
+    <string name="push_email_updated_message">You have updated your emails</string>
+    <string name="push_bank_updated_title">Bank Updated</string>
+    <string name="push_bank_updated_message">You have updated your bank information</string>
+    <string name="push_device_updated_title">Trusted Device Updated</string>
+    <string name="push_device_updated_message">You have updated your trusted device list</string>
+    <string name="push_trusted_person_updated_title">Trusted Person Updated</string>
+    <string name="push_trusted_person_updated_message">You have updated your list of trusted persons</string>
+    <string name="push_send_money_title">Money Sent</string>
+    <string name="push_send_money_message">You have sent money to an iPay user</string>
+    <string name="push_request_money_title">Money Request Received</string>
+    <string name="push_request_money_message">Someone has requested for money from you on iPay</string>
+
     <string name="reopen_application">Please re-open the application.</string>
     <string name="failed_available_bank_list_loading">Failed to load bank lists. Please try again later</string>
     <string name="invite_to_ipay">Invite to iPay</string>
@@ -492,7 +522,9 @@
     <string name="review_and_withdraw_money"><![CDATA[Review & Withdraw Money]]></string>
     <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
     <string name="amount">Amount</string>
+    <string name="item">ITEM</string>
     <string name="fee">Fee</string>
+    <string name="description1">DESCRIPTION</string>
     <string name="net_received">Net Received</string>
     <string name="send_now">Send Now</string>
     <string name="total">Total</string>
@@ -508,7 +540,11 @@
     <string name="amount_to_transfer">Amount to Transfer</string>
     <string name="amount_to_withdraw">Amount to Withdraw</string>
     <string name="total_received">Total Received</string>
-    <string name="vat">VAT</string>
+    <string name="vat">(+) vat</string>
+    <string name="quantity">Quantity</string>
+    <string name="rate">Rate</string>
+    <string name="AMOUNT">Amount</string>
+    <string name="TOTAL">Total</string>
     <string name="date_of_birth">Date of Birth</string>
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
@@ -598,8 +634,6 @@
     <string name="failed_update_friend">Update friend failed</string>
     <string name="total_amount">Total Amount</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
-    <string name="profile_picture_updated">Profile picture changed</string>
-    <string name="profile_picture_updated_message">You have changed your profile picture.</string>
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
     <string name="search">Search</string>
 

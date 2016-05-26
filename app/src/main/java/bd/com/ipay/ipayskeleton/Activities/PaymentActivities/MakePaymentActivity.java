@@ -8,7 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.CreateInvoiceFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.CreateInvoiceFragmentStepOne;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoicesSentFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -55,7 +55,7 @@ public class MakePaymentActivity extends BaseActivity {
     public void switchToCreateInvoiceFragment() {
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new CreateInvoiceFragment()).commit();
+                .replace(R.id.fragment_container, new CreateInvoiceFragmentStepOne()).commit();
         mFabCreateInvoice.setVisibility(View.GONE);
         switchedToInvoicesList = false;
     }

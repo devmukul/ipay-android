@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,47 +19,37 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CreateInvoiceReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.CreateInvoiceRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.CreateInvoiceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class CreateInvoiceFragment extends Fragment {
+public class CreateInvoiceFragmentStepOne extends Fragment {
 
     private static final int REQUEST_PICK_CONTACT = 100;
-    private static final int REQUEST_CREATE_INVOICE_REVIEW = 101;
 
     private Button buttonCreateInvoice;
     private ImageView buttonSelectFromContacts;
     private EditText mMobileNumberEditText;
+    private EditText mNameEditText;
     private EditText mDescriptionEditText;
-    private EditText mAmountEditText;
-    private EditText mVATEditText;
+    private EditText mQuantityEditText;
     private ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_create_invoice, container, false);
+        View v = inflater.inflate(R.layout.fragment_create_invoice_step_one, container, false);
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonCreateInvoice = (Button) v.findViewById(R.id.button_request_money);
+        mNameEditText = (EditText) v.findViewById(R.id.item_name);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
-        mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        mVATEditText = (EditText) v.findViewById(R.id.vat);
+        mQuantityEditText = (EditText) v.findViewById(R.id.quantity);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
@@ -75,8 +66,9 @@ public class CreateInvoiceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    if (verifyUserInputs())
-                        launchReviewPage();
+                    if (verifyUserInputs()) {
+                        goToNextPage();
+                    }
                 }
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -91,20 +83,20 @@ public class CreateInvoiceFragment extends Fragment {
         View focusView = null;
 
         String receiver = mMobileNumberEditText.getText().toString();
+        String name = mNameEditText.getText().toString();
         String description = mDescriptionEditText.getText().toString();
-        String amount = mAmountEditText.getText().toString();
-        String vat = mVATEditText.getText().toString();
+        String quantity =  mQuantityEditText.getText().toString();
 
         // Check for a validation
-        if (!(amount.length() > 0 && Double.parseDouble(amount) > 0)) {
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            focusView = mAmountEditText;
+        if (!(quantity.length() > 0 && Double.parseDouble(quantity) > 0)) {
+            mQuantityEditText.setError(getString(R.string.please_enter_amount));
+            focusView =  mQuantityEditText;
             cancel = true;
         }
 
-        if (!(vat.length() > 0 && Double.parseDouble(vat) > 0)) {
-            mVATEditText.setError(getString(R.string.please_enter_vat_amount));
-            focusView = mVATEditText;
+        if (name.length() == 0) {
+            mNameEditText.setError(getString(R.string.please_add_item_name));
+            focusView = mNameEditText;
             cancel = true;
         }
 
@@ -128,19 +120,23 @@ public class CreateInvoiceFragment extends Fragment {
         }
     }
 
-    private void launchReviewPage() {
-        String receiver = mMobileNumberEditText.getText().toString().trim();
+    private void goToNextPage() {
+        String receiver = mMobileNumberEditText.getText().toString();
+        String item_name = mNameEditText.getText().toString();
         String description = mDescriptionEditText.getText().toString();
-        String amount = mAmountEditText.getText().toString();
-        String vat = mVATEditText.getText().toString().trim();
+        String quantity =  mQuantityEditText.getText().toString();
 
-        Intent intent = new Intent(getActivity(), CreateInvoiceReviewActivity.class);
-        intent.putExtra(Constants.AMOUNT, amount);
-        intent.putExtra(Constants.RECEIVER, ContactEngine.formatMobileNumberBD(receiver));
-        intent.putExtra(Constants.DESCRIPTION, description);
-        intent.putExtra(Constants.VAT, vat);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.RECEIVER, receiver);
+        bundle.putString(Constants.ITEM_NAME, item_name);
+        bundle.putString(Constants.DESCRIPTION, description);
+        bundle.putString(Constants.QUANTITY, quantity);
 
-        startActivityForResult(intent, REQUEST_CREATE_INVOICE_REVIEW);
+        CreateInvoiceFragmentStepTwo frag = new CreateInvoiceFragmentStepTwo();
+        frag.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, frag).commit();
+
     }
 
     @Override
@@ -183,9 +179,6 @@ public class CreateInvoiceFragment extends Fragment {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
                         Toast.LENGTH_SHORT).show();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CREATE_INVOICE_REVIEW) {
-            if (getActivity() != null)
-                ((MakePaymentActivity) getActivity()).switchToInvoicesSentFragment();
         }
     }
 

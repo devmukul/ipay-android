@@ -19,44 +19,61 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 
+
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.CreateInvoiceRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.CreateInvoiceResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SaveInvoiceResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SaveInvoiceRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.invoiceItemList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateInvoiceReviewFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mCreateInvoiceTask = null;
-    private CreateInvoiceResponse mCreateInvoiceResponse;
+    private HttpRequestPostAsyncTask mSaveInvoiceTask = null;
+    private SaveInvoiceResponse mSaveInvoiceResponse;
+
+
+    private HttpRequestPostAsyncTask mSendInvoiceTask = null;
+    private SendInvoiceResponse mSendInvoiceResponse;
 
     private ProgressDialog mProgressDialog;
 
     private SharedPreferences pref;
 
-    private BigDecimal mAmount;
-    private BigDecimal mVat;
-    private String mReceiverName;
     private String mReceiverMobileNumber;
-    private String mPhotoUri;
+    private String mItemName;
     private String mDescription;
+    private BigDecimal mQuantity;
+    private BigDecimal mRate;
+    private BigDecimal mVat;
+    private BigDecimal mTotal;
+    private BigDecimal mAmount;
+
+    private String mReceiverName;
+    private String mPhotoUri;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
     private TextView mMobileNumberView;
-    private TextView mDescriptionView;
-    private View mDescriptionHolder;
+    private TextView mQuantityView;
+    private TextView mRateView;
     private TextView mAmountView;
     private TextView mVatView;
     private TextView mTotalView;
+
+    private TextView mTitleView;
+    private TextView mDescriptionView;
+
+
     private Button mCreateInvoiceButton;
 
 
@@ -64,10 +81,14 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_create_invoice_review, container, false);
 
-        mAmount = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.AMOUNT));
-        mVat = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.VAT));
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER);
+        mItemName = getActivity().getIntent().getStringExtra(Constants.ITEM_NAME);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
+        mQuantity = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.QUANTITY));
+        mRate = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.RATE));
+        if (getActivity().getIntent().getStringExtra(Constants.VAT).equals("")) mVat = new BigDecimal(0);
+        else mVat = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.VAT));
+        mTotal = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.TOTAL));
 
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
@@ -75,12 +96,16 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mDescriptionHolder = v.findViewById(R.id.description_holder);
+        mQuantityView = (TextView) v.findViewById(R.id.textview_quantity);
+        mRateView = (TextView) v.findViewById(R.id.textview_rate);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mVatView = (TextView) v.findViewById(R.id.textview_vat);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
+
+        mTitleView = (TextView) v.findViewById(R.id.textview_title);
+        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mCreateInvoiceButton = (Button) v.findViewById(R.id.button_create_invoice);
+
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -94,53 +119,66 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
             mNameView.setText(mReceiverName);
         }
 
+        mAmount = mQuantity.multiply(mRate);
+        mNameView.setText(mReceiverName);
         mMobileNumberView.setText(mReceiverMobileNumber);
-
-        if (mDescription == null || mDescription.isEmpty()) {
-            mDescriptionHolder.setVisibility(View.GONE);
-        } else {
-            mDescriptionView.setText(mDescription);
-        }
-
+        mQuantityView.setText(Utilities.formatTaka(mQuantity));
+        mRateView.setText(Utilities.formatTaka(mRate));
         mAmountView.setText(Utilities.formatTaka(mAmount));
         mVatView.setText(Utilities.formatTaka(mVat));
-        mTotalView.setText(Utilities.formatTaka(mAmount.add(mVat)));
+
+
+        mTotalView.setText(Utilities.formatTaka(mTotal));
+        mTitleView.setText(mItemName);
+        mDescriptionView.setText(mDescription);
+
 
         mCreateInvoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+                attemptSaveInvoice();
 
-                pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        attemptSendInvoice(pinInputDialogBuilder.getPin());
-                    }
-                });
-
-                pinInputDialogBuilder.build().show();
             }
         });
 
         return v;
     }
 
-    private void attemptSendInvoice(String pin) {
-        if (mCreateInvoiceTask != null) {
+    private void attemptSendInvoice(int requestId) {
+        if (mSendInvoiceTask != null) {
             return;
         }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invoice));
         mProgressDialog.show();
 
-        CreateInvoiceRequest mCreateInvoiceRequest = new CreateInvoiceRequest(mDescription,
-                mAmount, mVat, mReceiverMobileNumber, pin);
+        SendInvoiceRequest mCreateInvoiceRequest = new SendInvoiceRequest(mTotal, mReceiverMobileNumber, mDescription, requestId, mVat );
         Gson gson = new Gson();
         String json = gson.toJson(mCreateInvoiceRequest);
-        mCreateInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_INVOICE,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT_CREATE_INVOICE, json, getActivity());
-        mCreateInvoiceTask.mHttpResponseListener = this;
-        mCreateInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mSendInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVOICE,
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT_SEND_INVOICE, json, getActivity());
+        mSendInvoiceTask.mHttpResponseListener = this;
+        mSendInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
+    private void attemptSaveInvoice() {
+        if (mSaveInvoiceTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invoice));
+        mProgressDialog.show();
+
+        invoiceItemList[] invoiceItemList = new invoiceItemList[1];
+        invoiceItemList[0]= new invoiceItemList( mDescription,"", Integer.valueOf(mQuantity.intValue()), Integer.valueOf(mRate.intValue()) ,Integer.valueOf(mTotal.intValue()));
+        SaveInvoiceRequest mSaveInvoiceRequest = new SaveInvoiceRequest("",mReceiverMobileNumber,"",Integer.valueOf(mVat.intValue()),invoiceItemList) ;
+        Gson gson = new Gson();
+        String json = gson.toJson(mSaveInvoiceRequest);
+        mSaveInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SAVE_INVOICE,
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT_SAVE_INVOICE, json, getActivity());
+        mSaveInvoiceTask.mHttpResponseListener = this;
+        mSaveInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
@@ -148,7 +186,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
             mProgressDialog.dismiss();
-            mCreateInvoiceTask = null;
+            mSaveInvoiceTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
             return;
@@ -157,19 +195,20 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_CREATE_INVOICE)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_SAVE_INVOICE)) {
 
             try {
-                mCreateInvoiceResponse = gson.fromJson(result.getJsonString(), CreateInvoiceResponse.class);
+                mSaveInvoiceResponse = gson.fromJson(result.getJsonString(), SaveInvoiceResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     getActivity().setResult(Activity.RESULT_OK);
+                    int requestId = mSaveInvoiceResponse.getInvoiceId();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mCreateInvoiceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    getActivity().finish();
+                        Toast.makeText(getActivity(), mSaveInvoiceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        attemptSendInvoice(requestId);
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mCreateInvoiceResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), mSaveInvoiceResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -177,9 +216,32 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
                     Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
             }
 
-            mProgressDialog.dismiss();
-            mCreateInvoiceTask = null;
+            mSaveInvoiceTask = null;
         }
+
+        if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVOICE)) {
+
+            try {
+                mSendInvoiceResponse = gson.fromJson(result.getJsonString(), SendInvoiceResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    getActivity().setResult(Activity.RESULT_OK);
+                   if (getActivity() != null)
+                        Toast.makeText(getActivity(), mSendInvoiceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    getActivity().finish();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mSendInvoiceResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_invoice_creation, Toast.LENGTH_SHORT).show();
+            }
+            mSendInvoiceTask = null;
+        }
+
+        mProgressDialog.dismiss();
     }
 
 }

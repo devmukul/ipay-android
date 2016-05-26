@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,14 +21,13 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 
 public class BasicInfoFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -68,7 +69,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private String mName = "";
     private String mMobileNumber = "";
-    private String mProfilePicture = "";
+    private String profileImageUrl = "";
 
     private String mDateOfBirth = "";
 
@@ -143,7 +144,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mProgressDialog = new ProgressDialog(getActivity());
 
         setProfilePicture("");
-        getProfileInfo();
 
         return v;
     }
@@ -152,7 +152,22 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setContentShown(false);
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)) {
+            getProfileInfo();
+        }
+        else {
+            DataHelper dataHelper = DataHelper.getInstance(getActivity());
+            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
+            dataHelper.closeDbOpenHelper();
+
+            if (json == null)
+                getProfileInfo();
+            else {
+                processProfileInfoResponse(json);
+            }
+        }
+
     }
 
     private void launchEditFragment() {
@@ -166,7 +181,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         bundle.putString(Constants.MOTHERS_MOBILE_NUMBER, mMothersMobileNumber);
         bundle.putString(Constants.SPOUSES_MOBILE_NUMBER, mSpouseMobileNumber);
         bundle.putString(Constants.DATE_OF_BIRTH, mDateOfBirth);
-        bundle.putString(Constants.PROFILE_PICTURE, mProfilePicture);
+        bundle.putString(Constants.PROFILE_PICTURE, profileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
 
@@ -174,7 +189,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     }
 
     private void setProfileInformation() {
-        setProfilePicture(mProfilePicture);
+        setProfilePicture(profileImageUrl);
 
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
@@ -210,6 +225,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         if (mGetProfileInfoTask != null) {
             return;
         }
+
+        setContentShown(false);
 
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
                 Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
@@ -263,55 +280,21 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             return;
         }
 
-
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
 
             try {
-                mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (mGetProfileInfoResponse.getName() != null)
-                        mName = mGetProfileInfoResponse.getName();
-                    if (mGetProfileInfoResponse.getMobileNumber() != null)
-                        mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
-                    if (mGetProfileInfoResponse.getDateOfBirth() != null)
-                        mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
+                    processProfileInfoResponse(result.getJsonString());
 
-                    if (mGetProfileInfoResponse.getFather() != null)
-                        mFathersName = mGetProfileInfoResponse.getFather();
-                    if (mGetProfileInfoResponse.getMother() != null)
-                        mMothersName = mGetProfileInfoResponse.getMother();
-                    if (mGetProfileInfoResponse.getSpouse() != null)
-                        mSpouseName = mGetProfileInfoResponse.getSpouse();
+                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
+                    dataHelper.closeDbOpenHelper();
 
-                    if (mGetProfileInfoResponse.getFatherMobileNumber() != null)
-                        mFathersMobileNumber = mGetProfileInfoResponse.getFatherMobileNumber();
-                    if (mGetProfileInfoResponse.getMotherMobileNumber() != null)
-                        mMothersMobileNumber = mGetProfileInfoResponse.getMotherMobileNumber();
-                    if (mGetProfileInfoResponse.getSpouseMobileNumber() != null)
-                        mSpouseMobileNumber = mGetProfileInfoResponse.getSpouseMobileNumber();
+                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
 
-                    if (mGetProfileInfoResponse.getGender() != null)
-                        mGender = mGetProfileInfoResponse.getGender();
-
-                    mOccupation = mGetProfileInfoResponse.getOccupation();
-                    mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
-
-                    if (mGetProfileInfoResponse.getProfilePictures().size() > 0) {
-
-                        for (Iterator<UserProfilePictureClass> it = mGetProfileInfoResponse.getProfilePictures().iterator(); it.hasNext(); ) {
-                            UserProfilePictureClass userProfilePictureClass = it.next();
-                            mProfilePicture = userProfilePictureClass.getUrl();
-                            break;
-                        }
-                    }
-
-                    setProfileInformation();
-                    getOccupationList();
-
-                    setContentShown(true);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
@@ -343,5 +326,51 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
             mGetOccupationTask = null;
         }
+    }
+
+    private void processProfileInfoResponse(String json) {
+        Gson gson = new Gson();
+        mGetProfileInfoResponse = gson.fromJson(json, GetProfileInfoResponse.class);
+
+        if (mGetProfileInfoResponse.getName() != null)
+            mName = mGetProfileInfoResponse.getName();
+        if (mGetProfileInfoResponse.getMobileNumber() != null)
+            mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
+        if (mGetProfileInfoResponse.getDateOfBirth() != null)
+            mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
+
+        if (mGetProfileInfoResponse.getFather() != null)
+            mFathersName = mGetProfileInfoResponse.getFather();
+        if (mGetProfileInfoResponse.getMother() != null)
+            mMothersName = mGetProfileInfoResponse.getMother();
+        if (mGetProfileInfoResponse.getSpouse() != null)
+            mSpouseName = mGetProfileInfoResponse.getSpouse();
+
+        if (mGetProfileInfoResponse.getFatherMobileNumber() != null)
+            mFathersMobileNumber = mGetProfileInfoResponse.getFatherMobileNumber();
+        if (mGetProfileInfoResponse.getMotherMobileNumber() != null)
+            mMothersMobileNumber = mGetProfileInfoResponse.getMotherMobileNumber();
+        if (mGetProfileInfoResponse.getSpouseMobileNumber() != null)
+            mSpouseMobileNumber = mGetProfileInfoResponse.getSpouseMobileNumber();
+
+        if (mGetProfileInfoResponse.getGender() != null)
+            mGender = mGetProfileInfoResponse.getGender();
+
+        mOccupation = mGetProfileInfoResponse.getOccupation();
+        mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
+
+        if (mGetProfileInfoResponse.getProfilePictures().size() > 0) {
+
+            for (Iterator<UserProfilePictureClass> it = mGetProfileInfoResponse.getProfilePictures().iterator(); it.hasNext(); ) {
+                UserProfilePictureClass userProfilePictureClass = it.next();
+                profileImageUrl = userProfilePictureClass.getUrl();
+                break;
+            }
+        }
+
+        setProfileInformation();
+        getOccupationList();
+
+        setContentShown(true);
     }
 }

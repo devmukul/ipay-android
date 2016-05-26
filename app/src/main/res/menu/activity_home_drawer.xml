@@ -20,14 +20,13 @@
             android:icon="@drawable/ic_drawer_activity"
             android:title="@string/activity_log" />
         <item
+            android:id="@+id/nav_transaction_history"
+            android:icon="@drawable/ic_drawer_transaction_history"
+            android:title="@string/transaction_history" />
+        <item
             android:id="@+id/nav_support"
             android:icon="@drawable/ic_drawer_transaction_history"
             android:title="@string/support"
-            android:visible="false" />
-        <item
-            android:id="@+id/nav_topup"
-            android:icon="@drawable/ic_drawer_topup"
-            android:title="@string/topup"
             android:visible="false" />
         <item
             android:id="@+id/nav_event"

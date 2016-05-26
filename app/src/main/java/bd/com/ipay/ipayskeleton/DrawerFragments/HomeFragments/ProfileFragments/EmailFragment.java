@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +28,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -40,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.DeleteEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.Email;
@@ -51,6 +50,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryEmailRes
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmailFragment extends ProgressFragment implements HttpResponseListener {
@@ -116,8 +116,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             }
         });
 
-        loadEmails();
-
         return v;
     }
 
@@ -125,7 +123,21 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setContentShown(false);
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
+            getEmails();
+        else {
+            DataHelper dataHelper = DataHelper.getInstance(getActivity());
+            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
+            dataHelper.closeDbOpenHelper();
+
+            if (json == null)
+                getEmails();
+            else {
+                processGetEmailListResponse(json);
+            }
+        }
+
     }
 
     private void showAddNewEmailDialog() {
@@ -174,10 +186,12 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         dialog.show();
     }
 
-    private void loadEmails() {
+    private void getEmails() {
         if (mGetEmailsTask != null) {
             return;
         }
+
+        setContentShown(false);
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
                 Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this);
@@ -276,26 +290,14 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 mGetEmailResponse = gson.fromJson(result.getJsonString(), GetEmailResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mEmails = mGetEmailResponse.getEmailAdressList();
+                    processGetEmailListResponse(result.getJsonString());
 
-                    Collections.sort(mEmails, new Comparator<Email>() {
-                        @Override
-                        public int compare(Email lhs, Email rhs) {
+                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                    dataHelper.closeDbOpenHelper();
 
-                            if ((lhs.isPrimary() && !rhs.isPrimary()) || (!lhs.isPrimary() && rhs.isPrimary())) {
-                                if (lhs.isPrimary())
-                                    return -1;
-                                else
-                                    return 1;
-                            } else {
-                                return (int) (lhs.getEmailId() - rhs.getEmailId());
-                            }
-                        }
-                    });
-
-                    setContentShown(true);
-
-                    mEmailListAdapter.notifyDataSetChanged();
+                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mGetEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -315,7 +317,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 mAddNewEmailResponse = gson.fromJson(result.getJsonString(), AddNewEmailResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    loadEmails();
+                    getEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -341,7 +343,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 mDeleteEmailResponse = gson.fromJson(result.getJsonString(), DeleteEmailResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    loadEmails();
+                    getEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mDeleteEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -362,7 +364,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 mEmailVerificationResponse = gson.fromJson(result.getJsonString(), EmailVerificationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    loadEmails();
+                    getEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mEmailVerificationResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -383,7 +385,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             try {
                 makePrimaryEmailResponse = gson.fromJson(result.getJsonString(), MakePrimaryEmailResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    loadEmails();
+                    getEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), makePrimaryEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -401,6 +403,33 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
             mMakePrimaryEmailTask = null;
         }
+
+    }
+
+    private void processGetEmailListResponse(String json) {
+        Gson gson = new Gson();
+        mGetEmailResponse = gson.fromJson(json, GetEmailResponse.class);
+
+        mEmails = mGetEmailResponse.getEmailAdressList();
+
+        Collections.sort(mEmails, new Comparator<Email>() {
+            @Override
+            public int compare(Email lhs, Email rhs) {
+
+                if ((lhs.isPrimary() && !rhs.isPrimary()) || (!lhs.isPrimary() && rhs.isPrimary())) {
+                    if (lhs.isPrimary())
+                        return -1;
+                    else
+                        return 1;
+                } else {
+                    return (int) (lhs.getEmailId() - rhs.getEmailId());
+                }
+            }
+        });
+
+        setContentShown(true);
+
+        mEmailListAdapter.notifyDataSetChanged();
 
     }
 

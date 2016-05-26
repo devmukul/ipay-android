@@ -93,6 +93,47 @@ public class DataHelper {
         return cursor;
     }
 
+    public void updatePushEvents(String tagName, String jsonString) {
+
+        try {
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
+            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DBConstants.KEY_TAG_NAME, tagName);
+            contentValues.put(DBConstants.KEY_JSON, jsonString);
+
+            db.replace(DBConstants.DB_TABLE_PUSH_EVENTS, null, contentValues);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getPushEvent(String tag) {
+        Cursor cursor = null;
+
+        try {
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
+            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
+
+            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_PUSH_EVENTS
+                    + " WHERE " + DBConstants.KEY_TAG_NAME + " = '" + tag + "'";
+            cursor = db.rawQuery(queryString, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                return cursor.getString(cursor.getColumnIndex(DBConstants.KEY_JSON));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
     public List<FriendNode> getSubscriberList(String query, boolean verifiedOnly) {
         Cursor cursor = searchSubscribers(query, verifiedOnly);
         List<FriendNode> friends = new ArrayList<>();

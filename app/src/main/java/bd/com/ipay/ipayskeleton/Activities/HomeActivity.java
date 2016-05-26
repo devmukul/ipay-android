@@ -48,6 +48,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.DashBoardFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
@@ -194,10 +195,16 @@ public class HomeActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_transaction_history:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
+            case R.id.action_profile:
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.action_notification:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new NotificationFragment()).commit();
                 switchedToHomeFragment = false;
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -328,10 +335,10 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_support) {
 
-        } else if (id == R.id.nav_topup) {
+        } else if (id == R.id.nav_transaction_history) {
 
-            Intent intent = new Intent(HomeActivity.this, TopUpActivity.class);
-            startActivity(intent);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_event) {
 
@@ -452,7 +459,7 @@ public class HomeActivity extends BaseActivity
             mLogoutTask = null;
             mGetProfileInfoTask = null;
             mGetAllContactsTask = null;
-            Toast.makeText(HomeActivity.this, R.string.logout_failed, Toast.LENGTH_LONG).show();
+            Toast.makeText(HomeActivity.this, R.string.request_failed, Toast.LENGTH_LONG).show();
             return;
         }
 

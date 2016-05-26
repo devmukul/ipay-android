@@ -21,7 +21,6 @@ import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -129,7 +128,7 @@ public class MyRequestsFragment extends Fragment implements HttpResponseListener
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mCancelRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
         mCancelRequestTask.mHttpResponseListener = this;
         mCancelRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

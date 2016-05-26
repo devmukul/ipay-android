@@ -6,13 +6,11 @@ public class RequestMoneyRequest {
     public double amount;
     public String title;
     public String description;
-    public String pin;
 
-    public RequestMoneyRequest(String receiver, double amount, String title, String description, String pin) {
+    public RequestMoneyRequest(String receiver, double amount, String title, String description) {
         this.receiver = receiver;
         this.amount = amount;
         this.title = title;
         this.description = description;
-        this.pin = pin;
     }
 }

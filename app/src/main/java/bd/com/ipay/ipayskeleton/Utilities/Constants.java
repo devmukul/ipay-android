@@ -2,7 +2,7 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 public class Constants {
     public static final String ApplicationTag = "iPay";
-    public static final String ApplicationPackage = "bd.com.ipay.ipayskeleton";
+    public static final String ApplicationPackage = "bd.com.ipay.android";
     public static final String PICTURE_FOLDER = "/iPay";
     public static final String GENDER_MALE = "M";
     public static final String GENDER_FEMALE = "F";
@@ -67,8 +67,14 @@ public class Constants {
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
     public static final String BANK_ACCOUNT_ID = "bank_account_id";
     public static final String DESCRIPTION = "description";
+    public static final String QUANTITY = "quantity";
+    public static final String RATE = "rate";
+    public static final String DISCOUNT = "discount";
+    public static final String TOTAL = "total";
     public static final String TITLE = "title";
     public static final String RECEIVER = "receiver";
+    public static final String ITEM_NAME = "item_name";
+
     public static final String SERVICE_CHARGE = "service_charge";
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
@@ -82,7 +88,7 @@ public class Constants {
      * All requests and responses to$ server, and token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     /**
      * If set to true (with DEBUG flag also being set to true),
@@ -90,24 +96,23 @@ public class Constants {
      * required only for the first time when user tries to login. After that, login request will be
      * automatically sent to the server using the previously used mobile number and default password
      * (qqqqqqq1).
-     * <p/>
+     * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
     public static final String BASE_URL_FRIEND;
-
-    // For Images
     public static final String BASE_URL_IMAGE_SERVER;
+    public static final String SERVER_NAME;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 4;
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -115,8 +120,9 @@ public class Constants {
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
-            BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
-//            BASE_URL_FRIEND = "http://10.10.10.10:1337/friend/v1/";
+//            BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
+            BASE_URL_FRIEND = "http://10.10.10.10:1337/v1";
+            SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
 
@@ -124,6 +130,7 @@ public class Constants {
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
+            SERVER_NAME = "test";
 
         } else if (SERVER_TYPE == 3) {
 
@@ -131,6 +138,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
+            SERVER_NAME = "stage";
 
         } else if (SERVER_TYPE == 4) {
 
@@ -138,6 +146,7 @@ public class Constants {
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
+            SERVER_NAME = "live";
 
         } else {
 
@@ -145,6 +154,7 @@ public class Constants {
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
+            SERVER_NAME = "local";
         }
     }
 
@@ -182,7 +192,7 @@ public class Constants {
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
     // Introducer REST
-    public static final String URL_ASK_FOR_INTRODUCTION = "/ntroducer/introduceme/";
+    public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
     public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/notapproved";
     public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/approved";
     public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/notapproved";
@@ -207,7 +217,8 @@ public class Constants {
     public static final String URL_GET_NOTIFICATIONS = "requests/received";
     public static final String URL_GET_SENT_REQUESTS = "requests/sent";
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
-    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
+    public static final String URL_CANCEL_NOTIFICATION_REQUEST = "requests/cancel";
+    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/reject";
 
     // Settings REST
     public static final String URL_CHANGE_PASSWORD = "settings/password";
@@ -232,7 +243,8 @@ public class Constants {
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
 
     // SM Payment REST
-    public static final String URL_PAYMENT_CREATE_INVOICE = "payment/invoice";
+    public static final String URL_PAYMENT_SEND_INVOICE = "payment/invoice/send";
+    public static final String URL_PAYMENT_SAVE_INVOICE = "payment/invoice/save";
 
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
@@ -253,7 +265,8 @@ public class Constants {
 
     // User Rest
     public static final String URL_GET_USER_INFO = "user/userinfo";
-    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";;
+    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
+    ;
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
 
     // User Rest (Profile Completion)
@@ -288,6 +301,9 @@ public class Constants {
     public static final int HTTP_RESPONSE_STATUS_UNAUTHORIZED = 401;
     public static final int HTTP_RESPONSE_STATUS_BAD_REQUEST = 400;
     public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 202;
+    public static final int HTTP_RESPONSE_STATUS_CANCELED = 2;
+    public static final int HTTP_RESPONSE_STATUS_REJECTED = 3;
+    public static final int HTTP_RESPONSE_STATUS_DRAFT = 4;
 
     public static final int PERSONAL_ACCOUNT_TYPE = 1;
     public static final int BUSINESS_ACCOUNT_TYPE = 2;
@@ -330,7 +346,8 @@ public class Constants {
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
     public static final String COMMAND_GET_ALL_PARTICIPANTS_LIST = "COMMAND_GET_ALL_PARTICIPANTS_LIST";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
-    public static final String COMMAND_CREATE_INVOICE = "COMMAND_CREATE_INVOICE";
+    public static final String COMMAND_SEND_INVOICE = "COMMAND_SEND_INVOICE";
+    public static final String COMMAND_SAVE_INVOICE = "COMMAND_SAVE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
     public static final String COMMAND_SEND_FOR_VERIFICATION_BANK = "COMMAND_SEND_FOR_VERIFICATION_BANK";
@@ -489,6 +506,14 @@ public class Constants {
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
     public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "PROFILE_PICTURE";
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE = "PROFILE_INFO";
+    public static final String PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE = "IDENTIFICATION_DOCUMENT";
+    public static final String PUSH_NOTIFICATION_TAG_EMAIL_UPDATE = "EMAIL";
+    public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "BANK";
+    public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "DEVICE";
+    public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "TRUSTED_PERSON";
+    public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "SEND_MONEY";
+    public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "REQUEST_MONEY";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
     public static final String PUSH_NOTIFICATION_TAG = "tag";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";

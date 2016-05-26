@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -21,56 +22,129 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.DownloadImageFromUrlAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.GetIdentificationDocumentResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.GetEmailResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.GetTrustedPersonsResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
+    private HttpRequestGetAsyncTask mUserInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
+    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
+    private GetProfileInfoResponse mGetProfileInfoResponse;
+
+    private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
+    private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
+
+    private HttpRequestGetAsyncTask mGetEmailsTask = null;
+    private GetEmailResponse mGetEmailResponse;
+
+    private HttpRequestGetAsyncTask mGetBankTask = null;
+    private GetEmailResponse mGetBankResponse;
+
+    private HttpRequestGetAsyncTask mGetTrustedDeviceTask = null;
+    private GetTrustedDeviceResponse mGetTrustedDeviceResponse = null;
+
+    private HttpRequestGetAsyncTask mGetTrustedPersonsTask = null;
+    private GetTrustedPersonsResponse mGetTrustedPersonsResponse = null;
+
     private String tag;
+    private PushNotificationStatusHolder mPushNotificationStatusHolder;
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
+        Log.i("Push Found", "From: " + from + ", data: " + data);
 
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
+        boolean isLoggedIn = pref.getBoolean(Constants.LOGGEDIN, false);
 
         tag = data.getString(Constants.PUSH_NOTIFICATION_EVENT);
 
-        if (tag.equals(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
+        mPushNotificationStatusHolder = new PushNotificationStatusHolder(this);
 
-            if (isForeground(Constants.ApplicationPackage)) {
-
-                // Application is in foreground
-                if (pref.getBoolean(Constants.LOGGEDIN, false)) {
-                    // If the user is logged in
-                    getProfileInfo();
-
-                } else {
-                    // If the user is in LauncherActivity
-                    pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true).commit();
-                    // Create notification for profile picture update
-                    createNotification(getString(R.string.profile_picture_updated), getString(R.string.profile_picture_updated_message));
+        switch (tag) {
+            case Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
+                if (isForeground() && isLoggedIn)
+                    getUserInfo();
+                else {
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                    createNotification(getString(R.string.push_profile_picture_updated_title),
+                            getString(R.string.push_profile_picture_updated_message));
                 }
-
-            } else {
-                // Application is not active.
-                pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true).commit();
-                Log.d("PUSH", "PUSH found");
-                // Create notification for profile picture update
-                createNotification(getString(R.string.profile_picture_updated), getString(R.string.profile_picture_updated_message));
-            }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE:
+                if (isForeground() && isLoggedIn)
+                    getProfileInfo();
+                else {
+                    createNotification(getString(R.string.push_profile_info_updated_title),
+                            getString(R.string.push_profile_info_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE:
+                if (isForeground() && isLoggedIn)
+                    getIdentificationDocuments();
+                else {
+                    createNotification(getString(R.string.push_identification_document_updated_title),
+                            getString(R.string.push_identification_document_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE:
+                if (isForeground() && isLoggedIn)
+                    getEmails();
+                else {
+                    createNotification(getString(R.string.push_email_updated_title),
+                            getString(R.string.push_email_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE:
+                if (isForeground() && isLoggedIn)
+                    getBankList();
+                else {
+                    createNotification(getString(R.string.push_bank_updated_title),
+                            getString(R.string.push_bank_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE:
+                if (isForeground() && isLoggedIn)
+                    getTrustedDeviceList();
+                else {
+                    createNotification(getString(R.string.push_device_updated_title),
+                            getString(R.string.push_device_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE:
+                if (isForeground() && isLoggedIn)
+                    getTrustedPersons();
+                else {
+                    createNotification(getString(R.string.push_trusted_person_updated_title),
+                            getString(R.string.push_trusted_person_updated_message));
+                    mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
+                }
+                break;
+            case Constants.PUSH_NOTIFICATION_TAG_SEND_MONEY:
+            case Constants.PUSH_NOTIFICATION_TAG_REQUEST_MONEY:
         }
+
     }
 
     private void createNotification(String title, String message) {
@@ -84,7 +158,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.icon_ipay)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
@@ -96,15 +170,15 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         notificationManager.notify(notificationID, notificationBuilder.build());
     }
 
-    private boolean isForeground(String myPackage) {
+    private boolean isForeground() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
         ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
-        return componentInfo.getPackageName().equals(myPackage);
+        return componentInfo.getPackageName().equals(Constants.ApplicationPackage);
     }
 
-    private void getProfileInfo() {
-        if (mGetProfileInfoTask != null) {
+    private void getUserInfo() {
+        if (mUserInfoTask != null) {
             return;
         }
 
@@ -112,19 +186,81 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(pref.getString(Constants.USERID, ""));
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
-        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+        mUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 mUri, this);
-        mGetProfileInfoTask.mHttpResponseListener = this;
+        mUserInfoTask.mHttpResponseListener = this;
+        mUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getProfileInfo() {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, this, this);
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getIdentificationDocuments() {
+        if (mGetIdentificationDocumentsTask != null) {
+            return;
+        }
+
+        mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENTS, this, this);
+        mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getEmails() {
+        if (mGetEmailsTask != null) {
+            return;
+        }
+
+        mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
+                Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, this, this);
+        mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getBankList() {
+        if (mGetBankTask != null) {
+            return;
+        }
+
+        mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, this);
+        mGetBankTask.mHttpResponseListener = this;
+        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getTrustedDeviceList() {
+        if (mGetTrustedDeviceTask != null) {
+            return;
+        }
+
+        mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
+                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_DEVICES, this, this);
+        mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getTrustedPersons() {
+        if (mGetTrustedPersonsTask != null) {
+            return;
+        }
+
+        mGetTrustedPersonsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_PERSONS,
+                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_PERSONS, this, this);
+        mGetTrustedPersonsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null) {
-            mGetProfileInfoTask = null;
+            mUserInfoTask = null;
             return;
         }
 
+        DataHelper dataHelper = DataHelper.getInstance(this);
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
@@ -151,14 +287,65 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     // Download the profile picture and store it in local storage
                     new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
                             .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            mGetProfileInfoTask = null;
+            mUserInfoTask = null;
 
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+            }
+
+            mGetProfileInfoTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+            }
+
+            mGetIdentificationDocumentsTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_EMAILS)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
+            }
+
+            mGetEmailsTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
+            }
+
+            mGetBankTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
+            }
+
+            mGetTrustedDeviceTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_PERSONS)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, result.getJsonString());
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, false);
+            }
+
+            mGetTrustedPersonsTask = null;
         }
+
+        dataHelper.closeDbOpenHelper();
     }
 }
