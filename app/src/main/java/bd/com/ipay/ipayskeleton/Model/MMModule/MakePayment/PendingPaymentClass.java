@@ -15,6 +15,38 @@ public class PendingPaymentClass {
     public String description;
     public UserProfile originatorProfile;
     public UserProfile receiverProfile;
+    public int status;
+    public BigDecimal vat;
+    public BigDecimal total;
+    public BigDecimal rate;
+    public BigDecimal quantity;
+    public String item;
+    public String ItemDescription;
+
+
+    public String getItem() {
+        return item;
+    }
+
+    public String getItemDescription() {
+        return ItemDescription;
+    }
+
+    public BigDecimal getVat() {
+        return vat;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
 
     public PendingPaymentClass() {
     }
@@ -50,6 +82,8 @@ public class PendingPaymentClass {
         return serviceID;
     }
 
+    public int getStatus() { return status; }
+
     public String getDescription() {
 
         String customDescription = "";
@@ -57,7 +91,7 @@ public class PendingPaymentClass {
         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
             customDescription = getOriginatorProfile().getUserName() + " requested " + amount + " Tk.";
         } else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) {
-            customDescription = description + ": " + getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
+            customDescription = getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk. to " + getReceiverProfile().getUserName();
         }
 
         return customDescription;

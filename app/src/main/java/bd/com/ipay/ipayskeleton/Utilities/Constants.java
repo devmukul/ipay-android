@@ -67,8 +67,14 @@ public class Constants {
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
     public static final String BANK_ACCOUNT_ID = "bank_account_id";
     public static final String DESCRIPTION = "description";
+    public static final String QUANTITY = "quantity";
+    public static final String RATE = "rate";
+    public static final String DISCOUNT = "discount";
+    public static final String TOTAL = "total";
     public static final String TITLE = "title";
     public static final String RECEIVER = "receiver";
+    public static final String ITEM_NAME = "item_name";
+
     public static final String SERVICE_CHARGE = "service_charge";
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
@@ -211,7 +217,8 @@ public class Constants {
     public static final String URL_GET_NOTIFICATIONS = "requests/received";
     public static final String URL_GET_SENT_REQUESTS = "requests/sent";
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
-    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/cancel";
+    public static final String URL_CANCEL_NOTIFICATION_REQUEST = "requests/cancel";
+    public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/reject";
 
     // Settings REST
     public static final String URL_CHANGE_PASSWORD = "settings/password";
@@ -236,7 +243,8 @@ public class Constants {
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
 
     // SM Payment REST
-    public static final String URL_PAYMENT_CREATE_INVOICE = "payment/invoice";
+    public static final String URL_PAYMENT_SEND_INVOICE = "payment/invoice/send";
+    public static final String URL_PAYMENT_SAVE_INVOICE = "payment/invoice/save";
 
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
@@ -293,6 +301,9 @@ public class Constants {
     public static final int HTTP_RESPONSE_STATUS_UNAUTHORIZED = 401;
     public static final int HTTP_RESPONSE_STATUS_BAD_REQUEST = 400;
     public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 202;
+    public static final int HTTP_RESPONSE_STATUS_CANCELED = 2;
+    public static final int HTTP_RESPONSE_STATUS_REJECTED = 3;
+    public static final int HTTP_RESPONSE_STATUS_DRAFT = 4;
 
     public static final int PERSONAL_ACCOUNT_TYPE = 1;
     public static final int BUSINESS_ACCOUNT_TYPE = 2;
@@ -335,7 +346,8 @@ public class Constants {
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
     public static final String COMMAND_GET_ALL_PARTICIPANTS_LIST = "COMMAND_GET_ALL_PARTICIPANTS_LIST";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
-    public static final String COMMAND_CREATE_INVOICE = "COMMAND_CREATE_INVOICE";
+    public static final String COMMAND_SEND_INVOICE = "COMMAND_SEND_INVOICE";
+    public static final String COMMAND_SAVE_INVOICE = "COMMAND_SAVE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
     public static final String COMMAND_SEND_FOR_VERIFICATION_BANK = "COMMAND_SEND_FOR_VERIFICATION_BANK";
