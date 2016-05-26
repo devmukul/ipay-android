@@ -6,6 +6,7 @@
         android:id="@+id/action_profile"
         android:icon="@drawable/ic_account_circle_white_24dp"
         android:title="@string/profile"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item

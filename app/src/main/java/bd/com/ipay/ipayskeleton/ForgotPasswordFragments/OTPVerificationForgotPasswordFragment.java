@@ -25,17 +25,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.ForgotPasswordActivity;
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPassOTPConfirmationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPassOTPConfirmationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.TrustedOtp;

@@ -33,4 +33,5 @@
     <dimen name="action_bar_default_elevation">4dp</dimen>
     <dimen name="list_item_icon_size">40dp</dimen>
     <dimen name="review_item_vertical_spacing_dialog">12dp</dimen>
+    <dimen name="list_item_action_row_padding">20dp</dimen>
 </resources>

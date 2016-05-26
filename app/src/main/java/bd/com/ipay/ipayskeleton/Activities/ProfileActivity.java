@@ -1,23 +1,22 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.AddressFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.BasicInfoFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.DocumentListFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.DocumentUploadFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditBasicInfoFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EmailFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.EditAddressFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.IntroducerFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.ProfileCompletionFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.HomeFragments.ProfileFragments.TrustedNetworkFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.BasicInfoFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.DocumentListFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.DocumentUploadFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.EditBasicInfoFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.EditAddressFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IntroducerFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.*;
