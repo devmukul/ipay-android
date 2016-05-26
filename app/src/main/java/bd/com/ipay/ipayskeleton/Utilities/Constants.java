@@ -99,7 +99,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
@@ -192,7 +192,7 @@ public class Constants {
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
     // Introducer REST
-    public static final String URL_ASK_FOR_INTRODUCTION = "/ntroducer/introduceme/";
+    public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
     public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/notapproved";
     public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/approved";
     public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/notapproved";
