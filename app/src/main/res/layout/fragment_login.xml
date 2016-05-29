@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin"
-    android:fillViewport="true">
+    android:background="@color/colorPrimary"
+    android:fillViewport="true"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -52,6 +52,7 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:text="+880"
+                        android:textColor="@android:color/white"
                         android:textSize="26sp">
 
                         <requestFocus />
@@ -60,44 +61,65 @@
                 </android.support.design.widget.TextInputLayout>
             </RelativeLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/login_password"
+                <ImageView
+                    android:id="@+id/dummy_flag"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/flag_bd"
+                    android:visibility="invisible" />
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textSize="26sp" />
+                    android:layout_toRightOf="@+id/dummy_flag">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/login_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_password"
+                        android:imeActionId="@+id/login"
+                        android:imeActionLabel="@string/action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="26sp" />
+
+                </android.support.design.widget.TextInputLayout>
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/login_button"
-                style="@style/ButtonStyleMedium"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:background="@color/colorAmber"
+                android:fontFamily="sans-serif"
                 android:text="@string/action_login"
-                android:textStyle="bold" />
+                android:textAllCaps="false" />
 
             <Button
                 android:id="@+id/forget_password_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:text="@string/forgot_password"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
         </LinearLayout>

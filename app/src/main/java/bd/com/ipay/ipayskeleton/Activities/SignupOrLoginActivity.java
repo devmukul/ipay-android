@@ -71,7 +71,16 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             String message = getIntent().getStringExtra(Constants.MESSAGE);
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             switchToLoginFragment();
+        } else if (getIntent().hasExtra(Constants.TARGET_FRAGMENT)) {
+            String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
+            if (targetFragment.equals(Constants.SIGN_IN)) {
+                switchToLoginFragment();
+            } else if (targetFragment.equals(Constants.SIGN_UP)) {
+                switchToAccountSelectionFragment();
+            }
         }
+
+
 
         // Start service for GCM
         if (Utilities.checkPlayServices(SignupOrLoginActivity.this)) {
@@ -152,15 +161,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).commit();
         switchedToAccountSelection = false;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-        } else if (switchedToAccountSelection) {
-            super.onBackPressed();
-        } else switchToAccountSelectionFragment();
     }
 }
 

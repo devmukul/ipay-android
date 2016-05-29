@@ -84,7 +84,7 @@
     <string name="accept_money_request_confirm">Are you sure you want to accept this request for sending money?</string>
     <string name="reject_money_request_confirm">Are you sure you want to reject this request for sending money?</string>
     <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
-    <string name="account_type_personal">Personal</string>
+    <string name="account_type_personal">Personal Account</string>
     <string name="create_invoice">Create Invoice</string>
     <string name="create_event">Create Event</string>
     <string name="no_contacts">No Contacts Available</string>
@@ -120,7 +120,7 @@
     <string name="profile_picture_get_failed">Failed to fetch profile picture.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
     <string name="profile_info_get_failed">Failed to fetch profile information.</string>
-    <string name="account_type_business">Business</string>
+    <string name="account_type_business">Business Account</string>
     <string name="upload_documents">UPLOAD DOCUMENTS</string>
     <string name="transition_image">newsImage</string>
     <string name="transition_title">newsTitle</string>
@@ -154,6 +154,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="get_started">Get Started</string>
+    <string name="join_ipay">Join</string>
     <string name="could_not_load_image">Could not load image</string>
     <string name="could_not_load_document">Could not load document</string>
     <string name="could_not_sync_contact">Could not sync contacts.</string>
@@ -295,6 +296,7 @@
     <string name="privacy_policy"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
+    <string name="or">Or</string>
     <string name="try_again_later">Could not connect to iPay. Please try again later.</string>
     <string name="login_with_existing_account">Login with existing account</string>
     <string name="signup_second_stage_note">Just a few more information!</string>
@@ -331,6 +333,7 @@
     <string name="start_date">Start date (dd/mm/yyyy)</string>
     <string name="end_date">End date (dd/mm/yyyy)</string>
     <string name="sign_up_with_ipay">Sign up with iPay</string>
+    <string name="sign_in">Sign In</string>
     <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
     <string name="please_fill_up_the_following">Please fill up the following information</string>
     <string name="please_enter_document_number">Please enter the document number</string>

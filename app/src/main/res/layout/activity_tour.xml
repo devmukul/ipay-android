@@ -3,28 +3,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".Activities.TourActivity">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/tour_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!--<android.support.v4.view.ViewPager-->
+        <!--android:id="@+id/tour_pager"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
 
-    <bd.com.ipay.ipayskeleton.Customview.PagerIndicator
-        android:id="@+id/pager_indicator"
-        android:layout_width="60dp"
-        android:layout_height="20dp"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="30dp" />
+    <!--<bd.com.ipay.ipayskeleton.Customview.PagerIndicator-->
+        <!--android:id="@+id/pager_indicator"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_margin="30dp" />-->
 
-    <Button
-        android:id="@+id/tour_button_start"
-        style="@style/ButtonStyleMedium"
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/logo_ipay_full_size" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/get_started" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_join_now"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_double"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDarkTransparent"
+            android:fontFamily="sans-serif"
+            android:text="@string/join_ipay"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/button_sign_in"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_double"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:fontFamily="sans-serif"
+            android:text="@string/sign_in"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -1,43 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/account_selection_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
+    android:background="@color/colorPrimary"
     android:padding="@dimen/activity_vertical_margin">
-
-    <!--<TextView-->
-    <!--style="@style/TextStylePrimarySmall"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginBottom="@dimen/activity_horizontal_margin"-->
-    <!--android:text="@string/select_account_type" />-->
 
     <TextView
         style="@style/TextStylePrimarySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:text="@string/sign_up_with_ipay" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:fontFamily="sans-serif"
+        android:text="@string/sign_up_with_ipay"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/button_account_type_personal"
-        style="@style/ButtonStyleMedium"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:text="@string/account_type_personal" />
-
-    <Button
-        android:id="@+id/button_account_type_business"
-        style="@style/ButtonStyleMedium"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:text="@string/account_type_business" />
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <TextView
+        <Button
+            android:id="@+id/button_account_type_personal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:background="@color/colorAmber"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="@dimen/activity_horizontal_margin_double"
+            android:paddingRight="@dimen/activity_horizontal_margin_double"
+            android:text="@string/account_type_personal"
+            android:textAllCaps="false" />
+
+
+        <TextView
+            style="@style/TextStylePrimarySmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:fontFamily="sans-serif"
+            android:text="@string/or"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/button_account_type_business"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:background="@color/colorAmber"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="@dimen/activity_horizontal_margin_double"
+            android:paddingRight="@dimen/activity_horizontal_margin_double"
+            android:text="@string/account_type_business"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <!--<TextView
         style="@style/TextStylePrimarySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,6 +72,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:text="@string/login_with_existing_account" />
+        android:text="@string/login_with_existing_account" />-->
 
-</LinearLayout>
+</RelativeLayout>

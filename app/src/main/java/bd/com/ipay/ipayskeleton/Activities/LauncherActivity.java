@@ -30,6 +30,7 @@ public class LauncherActivity extends BaseActivity {
             finish();
         } else {
             i = new Intent(LauncherActivity.this, SignupOrLoginActivity.class);
+            i.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
             // Test
             // TODO: remove for test
 //            pref.edit().putString(Constants.USERID, "+8801782182129").commit();

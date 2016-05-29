@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +20,15 @@ import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Customview.PagerIndicator;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class TourActivity extends BaseActivity implements View.OnClickListener {
+public class TourActivity extends BaseActivity {
 
     private ViewPager tourPager;
     private TourPagerAdapter mAdapter;
     private ArrayList<Fragment> fragments;
-    Button buttonStart;
+    private Button buttonLogin;
+    private Button buttonSignUp;
     private PagerIndicator mPagerIndicator;
 
     private int[] tourBackgroundDrawables = {R.drawable.tour01,
@@ -40,34 +41,52 @@ public class TourActivity extends BaseActivity implements View.OnClickListener {
 
         getSupportActionBar().hide();
 
-        buttonStart = (Button) findViewById(R.id.tour_button_start);
-        buttonStart.setOnClickListener(this);
+        buttonLogin = (Button) findViewById(R.id.button_sign_in);
+        buttonSignUp = (Button) findViewById(R.id.button_join_now);
 
-        initFragments();
-        tourPager = (ViewPager) findViewById(R.id.tour_pager);
-        mAdapter = new TourPagerAdapter(getSupportFragmentManager(), fragments);
-        tourPager.setAdapter(mAdapter);
-
-        mPagerIndicator = (PagerIndicator) findViewById(R.id.pager_indicator);
-        mPagerIndicator.setup(R.drawable.pager_indicator_selected,
-                R.drawable.pager_indicator_unselected,
-                tourBackgroundDrawables.length);
-
-        tourPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageSelected(int position) {
-                mPagerIndicator.setSelectedPosition(position);
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
+            public void onClick(View v) {
+                Intent intent = new Intent(TourActivity.this, SignupOrLoginActivity.class);
+                intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
+                startActivity(intent);
             }
         });
+
+        buttonSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TourActivity.this, SignupOrLoginActivity.class);
+                intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_UP);
+                startActivity(intent);
+            }
+        });
+
+//        initFragments();
+//        tourPager = (ViewPager) findViewById(R.id.tour_pager);
+//        mAdapter = new TourPagerAdapter(getSupportFragmentManager(), fragments);
+//        tourPager.setAdapter(mAdapter);
+//
+//        mPagerIndicator = (PagerIndicator) findViewById(R.id.pager_indicator);
+//        mPagerIndicator.setup(R.drawable.pager_indicator_selected,
+//                R.drawable.pager_indicator_unselected,
+//                tourBackgroundDrawables.length);
+//
+//        tourPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                mPagerIndicator.setSelectedPosition(position);
+//            }
+//
+//            @Override
+//            public void onPageScrolled(int arg0, float arg1, int arg2) {
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int arg0) {
+//            }
+//        });
     }
 
     @Override
@@ -97,13 +116,6 @@ public class TourActivity extends BaseActivity implements View.OnClickListener {
             fragments.add(TourFragment.getInstance(tourBackgroundDrawables[i],
                     isLast));
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent(TourActivity.this, SignupOrLoginActivity.class);
-        startActivity(intent);
-        this.finish();
     }
 
     public static class TourFragment extends Fragment {

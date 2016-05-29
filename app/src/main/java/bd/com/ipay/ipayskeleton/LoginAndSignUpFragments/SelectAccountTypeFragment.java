@@ -15,7 +15,6 @@ public class SelectAccountTypeFragment extends Fragment {
 
     private Button buttonAccountTypePersonal;
     private Button buttonAccountTypeBusiness;
-    private Button buttonLoginWithExistingAccount;
 
     @Override
     public void onResume() {
@@ -30,7 +29,6 @@ public class SelectAccountTypeFragment extends Fragment {
 
         buttonAccountTypePersonal = (Button) v.findViewById(R.id.button_account_type_personal);
         buttonAccountTypeBusiness = (Button) v.findViewById(R.id.button_account_type_business);
-        buttonLoginWithExistingAccount = (Button) v.findViewById(R.id.login_with_existing_account);
 
         buttonAccountTypePersonal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,13 +42,6 @@ public class SelectAccountTypeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((SignupOrLoginActivity) getActivity()).switchToBusinessStepOneFragment();
-            }
-        });
-
-        buttonLoginWithExistingAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
             }
         });
 
