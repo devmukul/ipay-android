@@ -86,7 +86,8 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
         mQuantity = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.QUANTITY));
         mRate = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.RATE));
-        if (getActivity().getIntent().getStringExtra(Constants.VAT).equals("")) mVat = new BigDecimal(0);
+        if (getActivity().getIntent().getStringExtra(Constants.VAT).equals(""))
+            mVat = new BigDecimal(0);
         else mVat = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.VAT));
         mTotal = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.TOTAL));
 
@@ -152,7 +153,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invoice));
         mProgressDialog.show();
 
-        SendInvoiceRequest mCreateInvoiceRequest = new SendInvoiceRequest(mTotal, mReceiverMobileNumber, mDescription, requestId, mVat );
+        SendInvoiceRequest mCreateInvoiceRequest = new SendInvoiceRequest(mTotal, mReceiverMobileNumber, mDescription, requestId, mVat);
         Gson gson = new Gson();
         String json = gson.toJson(mCreateInvoiceRequest);
         mSendInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVOICE,
@@ -171,8 +172,8 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mProgressDialog.show();
 
         invoiceItemList[] invoiceItemList = new invoiceItemList[1];
-        invoiceItemList[0]= new invoiceItemList( mDescription,"", Integer.valueOf(mQuantity.intValue()), Integer.valueOf(mRate.intValue()) ,Integer.valueOf(mTotal.intValue()));
-        SaveInvoiceRequest mSaveInvoiceRequest = new SaveInvoiceRequest("",mReceiverMobileNumber,"",Integer.valueOf(mVat.intValue()),invoiceItemList) ;
+        invoiceItemList[0] = new invoiceItemList(mDescription, "", Integer.valueOf(mQuantity.intValue()), Integer.valueOf(mRate.intValue()), Integer.valueOf(mTotal.intValue()));
+        SaveInvoiceRequest mSaveInvoiceRequest = new SaveInvoiceRequest("", mReceiverMobileNumber, "", Integer.valueOf(mVat.intValue()), invoiceItemList);
         Gson gson = new Gson();
         String json = gson.toJson(mSaveInvoiceRequest);
         mSaveInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SAVE_INVOICE,
@@ -205,7 +206,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
                     int requestId = mSaveInvoiceResponse.getInvoiceId();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSaveInvoiceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        attemptSendInvoice(requestId);
+                    attemptSendInvoice(requestId);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSaveInvoiceResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -226,7 +227,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     getActivity().setResult(Activity.RESULT_OK);
-                   if (getActivity() != null)
+                    if (getActivity() != null)
                         Toast.makeText(getActivity(), mSendInvoiceResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().finish();
                 } else {

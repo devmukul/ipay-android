@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -138,10 +139,15 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             UUID = pref.getString(Constants.UUID, null);
 
         TextView makePaymentOrRechargeLabel = (TextView) v.findViewById(R.id.textview_make_payment_or_recharge);
-        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
+        ImageView createInvoiceOrRechargeLabel = (ImageView) v.findViewById(R.id.button_make_payment);
+        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
+            createInvoiceOrRechargeLabel.setImageResource(R.drawable.cell_phone);
             makePaymentOrRechargeLabel.setText(getString(R.string.topup));
-        else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
+        }
+        else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+            createInvoiceOrRechargeLabel.setImageResource(R.drawable.ic_invoice);
             makePaymentOrRechargeLabel.setText(getString(R.string.create_invoice));
+        }
 
         homeBottomSheet = (BottomSheetLayout) v.findViewById(R.id.home_bottomsheet);
         mProfileCompletionPromptView = getActivity().getLayoutInflater().inflate(R.layout.sheet_view_profile_completion, null);
@@ -149,6 +155,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mSendMoneyButtonView = (RelativeLayout) v.findViewById(R.id.layout_send_money);
         mRequestMoneyView = (RelativeLayout) v.findViewById(R.id.layout_request_money);
         mCreateInvoiceOrMobileRechargeButtonView = (RelativeLayout) v.findViewById(R.id.layout_create_invoice_or_mobile_recharge);
+        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
+
+        }
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         balanceView = (TextView) v.findViewById(R.id.balance);

@@ -69,8 +69,7 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
                     if (verifyUserInputs()) {
                         goToNextPage();
                     }
-                }
-                else if (getActivity() != null)
+                } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
@@ -85,12 +84,12 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
         String receiver = mMobileNumberEditText.getText().toString();
         String name = mNameEditText.getText().toString();
         String description = mDescriptionEditText.getText().toString();
-        String quantity =  mQuantityEditText.getText().toString();
+        String quantity = mQuantityEditText.getText().toString();
 
         // Check for a validation
         if (!(quantity.length() > 0 && Double.parseDouble(quantity) > 0)) {
             mQuantityEditText.setError(getString(R.string.please_enter_amount));
-            focusView =  mQuantityEditText;
+            focusView = mQuantityEditText;
             cancel = true;
         }
 
@@ -124,7 +123,7 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
         String receiver = mMobileNumberEditText.getText().toString();
         String item_name = mNameEditText.getText().toString();
         String description = mDescriptionEditText.getText().toString();
-        String quantity =  mQuantityEditText.getText().toString();
+        String quantity = mQuantityEditText.getText().toString();
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.RECEIVER, receiver);
@@ -151,30 +150,29 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_numbers_found,
                             Toast.LENGTH_LONG).show();
+            } else if (size == 1) {
+
+                // Format the number
+                String bdNumberStr = numbers[0].toString();
+                bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
+                mMobileNumberEditText.setText(bdNumberStr);
+
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getString(R.string.pick_a_number));
+                builder.setItems(numbers, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Format the number
+                        String bdNumberStr = numbers[which].toString();
+                        bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
+                        mMobileNumberEditText.setText(bdNumberStr);
+
+                    }
+                });
+                builder.show();
             }
-                else if (size == 1) {
-
-                    // Format the number
-                    String bdNumberStr = numbers[0].toString();
-                    bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
-                    mMobileNumberEditText.setText(bdNumberStr);
-
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getString(R.string.pick_a_number));
-                    builder.setItems(numbers, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            // Format the number
-                            String bdNumberStr = numbers[which].toString();
-                            bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
-                            mMobileNumberEditText.setText(bdNumberStr);
-
-                        }
-                    });
-                    builder.show();
-                }
         } else if (resultCode == Activity.RESULT_CANCELED && requestCode == REQUEST_PICK_CONTACT) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), getString(R.string.no_contact_selected),

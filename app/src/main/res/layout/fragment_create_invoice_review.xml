@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,9 +12,9 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.CardView
+            style="@style/ReviewCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ReviewCardStyle"
             app:cardElevation="4dp">
 
             <LinearLayout
@@ -39,23 +38,23 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/textview_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
                             android:layout_marginBottom="6dp"
-                            android:textStyle="bold"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textSize="20sp"
-                            android:id="@+id/textview_name" />
+                            android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/textview_mobile_number"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:id="@+id/textview_mobile_number" />
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     </LinearLayout>
 
@@ -67,9 +66,9 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
+            style="@style/ReviewCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ReviewCardStyle"
             app:cardElevation="4dp">
 
             <LinearLayout
@@ -84,16 +83,16 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/ReviewItemLabelStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemLabelStyle"
-                        android:text="@string/quantity"/>
+                        android:text="@string/quantity" />
 
                     <TextView
                         android:id="@+id/textview_quantity"
+                        style="@style/ReviewItemStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemStyle"
                         android:gravity="right" />
 
                 </LinearLayout>
@@ -102,20 +101,20 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/elevation_high">
+                    android:layout_marginTop="@dimen/elevation_high"
+                    android:orientation="horizontal">
 
                     <TextView
+                        style="@style/ReviewItemLabelStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemLabelStyle"
-                        android:text="@string/rate"/>
+                        android:text="@string/rate" />
 
                     <TextView
                         android:id="@+id/textview_rate"
+                        style="@style/ReviewItemStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemStyle"
                         android:gravity="right" />
 
                 </LinearLayout>
@@ -123,20 +122,20 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/elevation_high">
+                    android:layout_marginTop="@dimen/elevation_high"
+                    android:orientation="horizontal">
 
                     <TextView
+                        style="@style/ReviewItemLabelStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemLabelStyle"
-                        android:text="@string/AMOUNT"/>
+                        android:text="@string/AMOUNT" />
 
                     <TextView
                         android:id="@+id/textview_amount"
+                        style="@style/ReviewItemStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemStyle"
                         android:gravity="right" />
 
                 </LinearLayout>
@@ -144,20 +143,20 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/elevation_high">
+                    android:layout_marginTop="@dimen/elevation_high"
+                    android:orientation="horizontal">
 
                     <TextView
+                        style="@style/ReviewItemLabelStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemLabelStyle"
-                        android:text="@string/vat"/>
+                        android:text="@string/vat" />
 
                     <TextView
                         android:id="@+id/textview_vat"
+                        style="@style/ReviewItemStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemStyle"
                         android:gravity="right" />
 
                 </LinearLayout>
@@ -165,20 +164,20 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/elevation_high">
+                    android:layout_marginTop="@dimen/elevation_high"
+                    android:orientation="horizontal">
 
                     <TextView
+                        style="@style/ReviewItemLabelStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemLabelStyle"
-                        android:text="@string/TOTAL"/>
+                        android:text="@string/TOTAL" />
 
                     <TextView
                         android:id="@+id/textview_total"
+                        style="@style/ReviewItemStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/ReviewItemStyle"
                         android:gravity="right" />
 
                 </LinearLayout>
@@ -188,26 +187,26 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/description_holder"
+            style="@style/ReviewCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ReviewCardStyle"
             app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginBottom="12dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="12dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textview_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
                     android:layout_marginBottom="2dp"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textview_description"
