@@ -17,26 +17,28 @@ import bd.com.ipay.ipayskeleton.R;
 public class DashBoardFragment extends Fragment {
 
     private final int HOME_TAB = 0;
-    private final int WALLET_TAB = 1;
-    private final int SERVICES_TAB = 2;
-    private final int CONTACTS_TAB = 3;
+    //private final int WALLET_TAB = 1;
+    private final int SERVICES_TAB = 1;
+    private final int CONTACTS_TAB = 2;
+    private final int NOTIFICATION_TAB = 3;
 
     private final int TOTAL_PAGE_COUNT = 4;
 
     private HomeFragment mHomeFragment;
-    private WalletFragment mWalletFragment;
+    //private WalletFragment mWalletFragment;
+    private NotificationFragment mNotificationFragment;
     private ServiceFragment mServiceFragment;
     private ContactsHolderFragment mContactsHolderFragment;
 
     private TabLayout.Tab homeTab;
     private TabLayout.Tab contactsTab;
-    private TabLayout.Tab walletTab;
+    //private TabLayout.Tab walletTab;
+    private TabLayout.Tab notificationTab;
     private TabLayout.Tab servicesTab;
 
-    private static final int[] ICONS_STATE_SELECTED = {R.drawable.ic_home_white_24dp, R.drawable.ic_wallet,
-            R.drawable.ic_service, R.drawable.ic_people_white_24dp};
-    private static final int[] ICONS_STATE_UNSELECTED = {R.drawable.ic_home_white_outline_24dp, R.drawable.ic_wallet_outline,
-            R.drawable.ic_service_outline, R.drawable.ic_people_outline_white_24dp};
+    private static final int[] ICONS_STATE_SELECTED = {R.drawable.ic_home_white_24dp, R.drawable.ic_service, R.drawable.ic_people_white_24dp, R.drawable.ic_notifications_white_24dp};
+    private static final int[] ICONS_STATE_UNSELECTED = {R.drawable.ic_home_white_outline_24dp, R.drawable.ic_service_outline, R.drawable.ic_people_outline_white_24dp,
+                                                            R.drawable.ic_notifications_none_white_24dp};
 
     private ViewPager viewPager;
 
@@ -45,7 +47,8 @@ public class DashBoardFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
         mHomeFragment = new HomeFragment();
-        mWalletFragment = new WalletFragment();
+        //mWalletFragment = new WalletFragment();
+        mNotificationFragment = new NotificationFragment();
         mServiceFragment = new ServiceFragment();
         mContactsHolderFragment = new ContactsHolderFragment();
 
@@ -57,12 +60,14 @@ public class DashBoardFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
 
         homeTab = tabLayout.getTabAt(HOME_TAB);
-        walletTab = tabLayout.getTabAt(WALLET_TAB);
+        //walletTab = tabLayout.getTabAt(WALLET_TAB);
+        notificationTab = tabLayout.getTabAt(NOTIFICATION_TAB);
         servicesTab = tabLayout.getTabAt(SERVICES_TAB);
         contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
 
         homeTab.setIcon(ICONS_STATE_SELECTED[HOME_TAB]);
-        walletTab.setIcon(ICONS_STATE_UNSELECTED[WALLET_TAB]);
+        //walletTab.setIcon(ICONS_STATE_UNSELECTED[WALLET_TAB]);
+        notificationTab.setIcon(ICONS_STATE_UNSELECTED[NOTIFICATION_TAB]);
         servicesTab.setIcon(ICONS_STATE_UNSELECTED[SERVICES_TAB]);
         contactsTab.setIcon(ICONS_STATE_UNSELECTED[CONTACTS_TAB]);
 
@@ -130,11 +135,11 @@ public class DashBoardFragment extends Fragment {
                 case 0:
                     return mHomeFragment;
                 case 1:
-                    return mWalletFragment;
-                case 2:
                     return mServiceFragment;
-                case 3:
+                case 2:
                     return mContactsHolderFragment;
+                case 3:
+                    return mNotificationFragment;
                 default:
                     return new Fragment();
             }
