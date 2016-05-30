@@ -287,10 +287,10 @@ public class Constants {
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
     // User Rest (Friends)
-    public static final String URL_GET_CONTACTS = "getfriends";
-    public static final String URL_ADD_CONTACT = "addfriends";
-    public static final String URL_DELETE_CONTACT = "deletefriend";
-    public static final String URL_UPDATE_CONTACT = "updatefriend";
+    public static final String URL_GET_FRIENDS = "getfriends";
+    public static final String URL_ADD_FRIENDS = "addfriends";
+    public static final String URL_DELETE_FRIEND = "deletefriend";
+    public static final String URL_UPDATE_FRIENDS = "updatefriends";
 
     public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
 
@@ -389,7 +389,7 @@ public class Constants {
     public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
     public static final String COMMAND_GET_FRIENDS = "COMMAND_GET_FRIENDS";
     public static final String COMMAND_ADD_FRIENDS = "COMMAND_ADD_FRIENDS";
-    public static final String COMMAND_UPDATE_FRIEND = "COMMAND_UPDATE_FRIEND";
+    public static final String COMMAND_UPDATE_FRIENDS = "COMMAND_UPDATE_FRIENDS";
     public static final String COMMAND_DELETE_FRIENDS = "COMMAND_DELETE_FRIENDS";
 
 

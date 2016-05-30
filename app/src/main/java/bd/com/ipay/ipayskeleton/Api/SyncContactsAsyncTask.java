@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendInfo;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendResponse;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoUpdateFriend;
 import bd.com.ipay.ipayskeleton.Model.Friend.UpdateFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.UpdateFriendResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -63,9 +64,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
     protected void onPostExecute(ContactEngine.ContactDiff contactDiff) {
         if (contactDiff != null) {
             addFriends(contactDiff.newFriends);
-            for (FriendNode friendNode : contactDiff.updatedFriends) {
-                updateFriend(friendNode);
-            }
+            updateFriends(contactDiff.updatedFriends);
         }
     }
 
@@ -77,9 +76,9 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         if (friends.isEmpty())
             return;
 
-        List<AddFriendInfo> newFriends = new ArrayList<>();
+        List<InfoAddFriend> newFriends = new ArrayList<>();
         for (FriendNode friendNode : friends) {
-            newFriends.add(new AddFriendInfo(friendNode.getPhoneNumber(), friendNode.getInfo().getName()));
+            newFriends.add(new InfoAddFriend(friendNode.getPhoneNumber(), friendNode.getInfo().getName()));
         }
 
         AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
@@ -87,23 +86,29 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         String json = gson.toJson(addFriendRequest);
 
         mAddFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_CONTACT, json, context, this);
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, context, this);
         mAddFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
-    private void updateFriend(FriendNode friend) {
+    private void updateFriends(List<FriendNode> friends) {
         if (mUpdateFriendResponse != null) {
             return;
         }
 
-        UpdateFriendRequest updateFriendRequest = new UpdateFriendRequest(
-                friend.getPhoneNumber(), friend.getInfo().getName());
+        List<InfoUpdateFriend> updateFriends = new ArrayList<>();
+        for (FriendNode friend : friends) {
+            InfoUpdateFriend infoUpdateFriend = new InfoUpdateFriend(
+                    friend.getPhoneNumber(), friend.getInfo().getName());
+            updateFriends.add(infoUpdateFriend);
+        }
+
+        UpdateFriendRequest updateFriendRequest = new UpdateFriendRequest(updateFriends);
         Gson gson = new Gson();
         String json = gson.toJson(updateFriendRequest);
 
-        mUpdateFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_FRIEND,
-                Constants.BASE_URL_FRIEND + Constants.URL_UPDATE_CONTACT, json, context, this);
+        mUpdateFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_FRIENDS,
+                Constants.BASE_URL_FRIEND + Constants.URL_UPDATE_FRIENDS, json, context, this);
         mUpdateFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -132,7 +137,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
             mAddFriendAsyncTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_UPDATE_FRIEND)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_UPDATE_FRIENDS)) {
             try {
                 mUpdateFriendResponse = gson.fromJson(result.getJsonString(), UpdateFriendResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
