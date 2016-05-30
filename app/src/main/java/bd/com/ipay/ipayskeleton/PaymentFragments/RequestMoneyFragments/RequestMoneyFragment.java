@@ -123,8 +123,8 @@ public class RequestMoneyFragment extends Fragment {
 
         Intent intent = new Intent(getActivity(), RequestMoneyReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
-        intent.putExtra(Constants.RECEIVER, ContactEngine.formatMobileNumberBD(receiver));
-        intent.putExtra(Constants.DESCRIPTION, description);
+        intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
+        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
         intent.putExtra(Constants.INVOICE_TITLE_TAG, title);
 
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);

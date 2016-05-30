@@ -18,8 +18,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -62,7 +60,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         View v = inflater.inflate(R.layout.fragment_withdraw_money_review, container, false);
 
         mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
         mBankAccountId = getActivity().getIntent().getLongExtra(Constants.BANK_ACCOUNT_ID, -1);
         mBankName = getActivity().getIntent().getStringExtra(Constants.BANK_NAME);
         mBankAccountNumber = getActivity().getIntent().getStringExtra(Constants.BANK_ACCOUNT_NUMBER);

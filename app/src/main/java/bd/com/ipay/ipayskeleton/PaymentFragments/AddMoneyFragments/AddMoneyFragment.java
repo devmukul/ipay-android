@@ -177,7 +177,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         intent.putExtra(Constants.BANK_NAME, bankName);
         intent.putExtra(Constants.BANK_ACCOUNT_ID, bankAccountId);
         intent.putExtra(Constants.BANK_ACCOUNT_NUMBER, accountNumber);
-        intent.putExtra(Constants.DESCRIPTION, description);
+        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
 
         startActivityForResult(intent, ADD_MONEY_REVIEW_REQUEST);
     }

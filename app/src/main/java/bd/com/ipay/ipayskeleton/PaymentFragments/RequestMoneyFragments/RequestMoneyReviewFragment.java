@@ -60,8 +60,8 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         View v = inflater.inflate(R.layout.fragment_request_money_review, container, false);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
         mTitle = getActivity().getIntent().getStringExtra(Constants.INVOICE_TITLE_TAG);
 
         mReceiverName = getArguments().getString(Constants.NAME);

@@ -89,7 +89,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private boolean hasNext = false;
 
     // These variables hold the information needed to populate the review dialog
-    private ItemList mItemList[];
+    private List<ItemList> mItemList;
     private BigDecimal mAmount;
     private BigDecimal mVat;
     private BigDecimal mServiceCharge;
@@ -545,7 +545,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final BigDecimal amount = moneyRequestList.get(pos).getAmount();
                 final int serviceID = moneyRequestList.get(pos).getServiceID();
                 final BigDecimal vat = moneyRequestList.get(pos).getVat();
-                final ItemList[] itemList = moneyRequestList.get(pos).getItemList();
+                final List<ItemList> itemList = moneyRequestList.get(pos).getItemList();
 
 
                 mDescriptionView.setText(description);

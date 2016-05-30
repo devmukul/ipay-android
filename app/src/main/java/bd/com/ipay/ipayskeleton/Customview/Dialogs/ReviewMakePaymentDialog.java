@@ -18,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -44,7 +45,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
     private PaymentReviewAdapter paymentReviewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ItemList mItemList[];
+    private List<ItemList> mItemList;
     public BigDecimal mAmount;
     private BigDecimal mNetAmount;
     private BigDecimal mVat;
@@ -68,7 +69,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
     private EditText mPinField;
 
     public ReviewMakePaymentDialog(Context context, long moneyRequestId, String receiverMobileNumber, String receiverName, String photoUri, BigDecimal amount,
-                                   String title, int serviceID, BigDecimal vat, ItemList[] itemList, ReviewDialogFinishListener reviewFinishListener) {
+                                   String title, int serviceID, BigDecimal vat, List<ItemList> itemList, ReviewDialogFinishListener reviewFinishListener) {
         super(context);
 
         this.requestId = moneyRequestId;
@@ -264,9 +265,9 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
-                mItemNameView.setText(mItemList[pos].getItem());
-                mQuantityView.setText(Utilities.formatTaka(mItemList[pos].getQuantity()));
-                mAmountView.setText(Utilities.formatTaka(mItemList[pos].getAmount()));
+                mItemNameView.setText(mItemList.get(pos).getItem());
+                mQuantityView.setText(Utilities.formatTaka(mItemList.get(pos).getQuantity()));
+                mAmountView.setText(Utilities.formatTaka(mItemList.get(pos).getAmount()));
             }
 
             public void bindViewForHeader(int pos) {
@@ -359,8 +360,8 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
         @Override
         public int getItemCount() {
             if (mItemList == null) return 0;
-            if (mItemList.length > 0)
-                return 1 + mItemList.length + 1;
+            if (mItemList.size() > 0)
+                return 1 + mItemList.size() + 1;
             else return 0;
         }
 
@@ -368,10 +369,10 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
         public int getItemViewType(int position) {
             if (mItemList == null) return super.getItemViewType(position);
 
-            if (mItemList.length > 0) {
+            if (mItemList.size() > 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
 
-                else if (position == mItemList.length + 1)
+                else if (position == mItemList.size() + 1)
                     return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
 
                 else return NOTIFICATION_REVIEW_LIST_ITEM_VIEW;

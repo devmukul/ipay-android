@@ -18,8 +18,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -66,8 +64,8 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         View v = inflater.inflate(R.layout.fragment_send_money_review, container, false);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
 
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);

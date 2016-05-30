@@ -10,9 +10,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -42,7 +39,7 @@ public class RequestMoneyReviewActivity extends BaseActivity implements HttpResp
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mReceiverMobileNumber = getIntent().getStringExtra(Constants.RECEIVER);
+        mReceiverMobileNumber = getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
 
         getProfileInfo(mReceiverMobileNumber);
     }
