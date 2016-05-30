@@ -5,13 +5,13 @@ public class SaveInvoiceRequest {
     private String clientUserMobileNumber;
     private String message;
     private int vat;
-    invoiceItemList[] invoiceItemList;
+    InvoiceItemList[] InvoiceItemList;
 
-    public SaveInvoiceRequest(String clientEmailAddress, String clientUserMobileNumber, String message, int vat, invoiceItemList[] invoiceItemList) {
+    public SaveInvoiceRequest(String clientEmailAddress, String clientUserMobileNumber, String message, int vat, InvoiceItemList[] invoiceItemList) {
         this.clientEmailAddress = clientEmailAddress;
         this.clientUserMobileNumber = clientUserMobileNumber;
         this.message = message;
         this.vat = vat;
-        this.invoiceItemList = invoiceItemList;
+        this.InvoiceItemList = invoiceItemList;
     }
 }

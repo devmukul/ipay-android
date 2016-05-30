@@ -18,18 +18,11 @@ public class PendingPaymentClass {
     public int status;
     public BigDecimal vat;
     public BigDecimal total;
-    public BigDecimal rate;
-    public BigDecimal quantity;
-    public String item;
-    public String ItemDescription;
+    public ItemList[] itemList;
 
 
-    public String getItem() {
-        return item;
-    }
-
-    public String getItemDescription() {
-        return ItemDescription;
+    public ItemList[] getItemList() {
+        return itemList;
     }
 
     public BigDecimal getVat() {
@@ -40,13 +33,6 @@ public class PendingPaymentClass {
         return total;
     }
 
-    public BigDecimal getRate() {
-        return rate;
-    }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
 
     public PendingPaymentClass() {
     }
@@ -65,9 +51,7 @@ public class PendingPaymentClass {
     }
 
     public String getTitle() {
-        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Invoice received";
-        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return title;
-        else return title;
+        return title;
     }
 
     public UserProfile getOriginatorProfile() {
@@ -82,7 +66,9 @@ public class PendingPaymentClass {
         return serviceID;
     }
 
-    public int getStatus() { return status; }
+    public int getStatus() {
+        return status;
+    }
 
     public String getDescription() {
 

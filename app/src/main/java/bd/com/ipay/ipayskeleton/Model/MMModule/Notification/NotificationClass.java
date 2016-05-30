@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Notification;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class NotificationClass {
@@ -14,9 +15,21 @@ public class NotificationClass {
     public String description;
     public UserProfile originatorProfile;
     public UserProfile receiverProfile;
+    public BigDecimal vat;
+    public ItemList[] itemList;
+
 
     public NotificationClass() {
     }
+
+    public ItemList[] getItemList() {
+        return itemList;
+    }
+
+    public BigDecimal getVat() {
+        return vat;
+    }
+
 
     public Long getId() {
         return id;
@@ -56,7 +69,7 @@ public class NotificationClass {
         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
             customDescription = getOriginatorProfile().getUserName() + " requested " + amount + " Tk.";
         } else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) {
-            customDescription = description + ": " + getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
+            customDescription = getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
         }
 
         return customDescription;

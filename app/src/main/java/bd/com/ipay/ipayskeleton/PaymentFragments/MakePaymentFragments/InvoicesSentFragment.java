@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -34,8 +35,10 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.InvoicesHistoryDialogue;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
@@ -141,68 +144,6 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         mCancelPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void showInvoicesHistoryDialogue(String title, String description, String time, long id, String item, String itemDecription,
-                                             BigDecimal rate, BigDecimal quantity, BigDecimal amount, BigDecimal vat, BigDecimal total, int status) {
-        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.invoice_details)
-                .customView(R.layout.dialog_sent_invoice_details, true)
-                .negativeText(R.string.ok)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-
-        View view = dialog.getCustomView();
-        final TextView titleTextView = (TextView) view.findViewById(R.id.title);
-        final TextView descriptionTextView = (TextView) view.findViewById(R.id.description);
-        final TextView timeTextView = (TextView) view.findViewById(R.id.time);
-        final TextView invoiceIDTextView = (TextView) view.findViewById(R.id.invoice_id);
-        final TextView itemTextView = (TextView) view.findViewById(R.id.item);
-        final TextView itemDescriptionTextView = (TextView) view.findViewById(R.id.description1);
-        final TextView rateTextView = (TextView) view.findViewById(R.id.rate);
-        final TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
-        final TextView amountTextView = (TextView) view.findViewById(R.id.amount);
-        final TextView vatTextView = (TextView) view.findViewById(R.id.vat);
-        final TextView totalTextView = (TextView) view.findViewById(R.id.total);
-        final TextView statusTextView = (TextView) view.findViewById(R.id.status);
-
-        titleTextView.setText(title);
-        descriptionTextView.setText(description);
-        timeTextView.setText(time);
-        invoiceIDTextView.setText(getString(R.string.invoice_id) + " " + String.valueOf(id));
-        itemTextView.setText(item);
-        itemDescriptionTextView.setText(itemDecription);
-        rateTextView.setText(Utilities.formatTaka(rate));
-        quantityTextView.setText(Utilities.formatTaka(quantity));
-        amountTextView.setText(Utilities.formatTaka(total));
-        vatTextView.setText(Utilities.formatTaka(vat));
-        totalTextView.setText(Utilities.formatTaka(amount));
-
-        if (status == Constants.HTTP_RESPONSE_STATUS_OK) {
-            statusTextView.setText(getString(R.string.transaction_successful));
-            statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
-
-        } else if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-            statusTextView.setText(getString(R.string.in_progress));
-            statusTextView.setTextColor(getResources().getColor(R.color.background_yellow));
-
-        } else if (status == Constants.HTTP_RESPONSE_STATUS_REJECTED) {
-            statusTextView.setText(getString(R.string.transaction_failed));
-            statusTextView.setTextColor(getResources().getColor(R.color.background_red));
-        } else if (status == Constants.HTTP_RESPONSE_STATUS_CANCELED) {
-            statusTextView.setText(getString(R.string.transaction_failed));
-            statusTextView.setTextColor(Color.GRAY);
-        }
-        else if (status == Constants.HTTP_RESPONSE_STATUS_DRAFT) {
-            statusTextView.setText(getString(R.string.draft));
-            statusTextView.setTextColor(Color.GRAY);
-        }
-    }
-
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
@@ -281,6 +222,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
             mProgressDialog.dismiss();
             mCancelPaymentRequestTask = null;
         }
+
     }
 
     public class PendingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -374,14 +316,11 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 final int status = pendingPaymentClasses.get(pos).getStatus();
                 final BigDecimal amount = pendingPaymentClasses.get(pos).getAmount();
                 final BigDecimal vat = pendingPaymentClasses.get(pos).getVat();
-                final BigDecimal rate = pendingPaymentClasses.get(pos).getRate();
                 final BigDecimal total = pendingPaymentClasses.get(pos).getTotal();
-                final BigDecimal quantity = pendingPaymentClasses.get(pos).getQuantity();
                 final String description = pendingPaymentClasses.get(pos).getDescription();
                 final String title = pendingPaymentClasses.get(pos).getTitle();
-                final String itemDescription = pendingPaymentClasses.get(pos).getItemDescription();
-                final String item = pendingPaymentClasses.get(pos).getItem();
                 final long id = pendingPaymentClasses.get(pos).getId();
+                final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
 
                 setProfilePicture(imageUrl, mPortrait, name);
 
@@ -405,15 +344,19 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                     mSenderName.setTextColor(Color.GRAY);
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
+                }  else if (status == Constants.HTTP_RESPONSE_STATUS_DRAFT) {
+                    mSenderName.setTextColor(getResources().getColor(R.color.background_red));
+                    statusView.setColorFilter(Color.RED);
+                    statusView.setImageResource(R.drawable.ic_error_black_24dp);
                 }
-
 
 
                 mAmount.setText(pendingPaymentClasses.get(pos).getAmount().toBigInteger().toString());
                 mDescription.setText(description);
                 mTime.setText(time);
 
-                if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING) mCancel.setVisibility(View.VISIBLE);
+                if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING)
+                    mCancel.setVisibility(View.VISIBLE);
                 else mCancel.setVisibility(View.INVISIBLE);
 
                 mCancel.setOnClickListener(new View.OnClickListener() {
@@ -433,12 +376,13 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!mSwipeRefreshLayout.isRefreshing())
-                            showInvoicesHistoryDialogue(title, description, time, id, item, itemDescription, rate, quantity, amount, vat, total, status);
+                        if (!mSwipeRefreshLayout.isRefreshing()) {
+                           InvoicesHistoryDialogue dialog = new InvoicesHistoryDialogue(getActivity(), title, description, time, id, amount, vat, itemList, status);
+                        }
                     }
                 });
-
             }
+
 
             public void bindViewFooter(int pos) {
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
@@ -518,7 +462,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         @Override
         public int getItemCount() {
             if (pendingPaymentClasses != null)
-                return pendingPaymentClasses.size()+1;
+                return pendingPaymentClasses.size() + 1;
             else return 0;
         }
 

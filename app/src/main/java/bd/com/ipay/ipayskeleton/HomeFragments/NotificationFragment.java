@@ -36,9 +36,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialog;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialogChanged;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
@@ -91,7 +93,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private boolean hasNext = false;
 
     // These variables hold the information needed to populate the review dialog
+    private ItemList mItemList[];
     private BigDecimal mAmount;
+    private BigDecimal mVat;
     private BigDecimal mServiceCharge;
     private String mReceiverName;
     private String mReceiverMobileNumber;
@@ -357,7 +361,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             }
 
@@ -545,6 +548,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final long id = moneyRequestList.get(pos).getId();
                 final BigDecimal amount = moneyRequestList.get(pos).getAmount();
                 final int serviceID = moneyRequestList.get(pos).getServiceID();
+                final BigDecimal vat = moneyRequestList.get(pos).getVat();
+                final ItemList[] itemList = moneyRequestList.get(pos).getItemList();
+
 
                 mDescriptionView.setText(description);
                 mTimeView.setText(time);
@@ -588,11 +594,23 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mTitle = title;
                         mDescription = description;
                         mServiceID = serviceID;
+                        mVat = vat;
+                        mItemList = itemList;
 
                         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
                             attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
                         else
-                            attemptGetServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
+                        {
+                            NotificationReviewDialogChanged dialog = new NotificationReviewDialogChanged(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                                    mReceiverName, mPhotoUri, mAmount, mTitle , Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                                    new ReviewDialogFinishListener() {
+                                        @Override
+                                        public void onReviewFinish() {
+                                            refreshNotificationList();
+                                        }
+                                    });
+                            dialog.show();
+                        }
                     }
                 });
 
