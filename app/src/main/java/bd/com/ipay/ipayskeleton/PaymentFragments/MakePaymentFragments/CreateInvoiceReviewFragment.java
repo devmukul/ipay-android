@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,24 +13,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Customview.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SaveInvoiceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SaveInvoiceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.invoiceItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItemList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -171,8 +166,8 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invoice));
         mProgressDialog.show();
 
-        invoiceItemList[] invoiceItemList = new invoiceItemList[1];
-        invoiceItemList[0] = new invoiceItemList(mDescription, "", Integer.valueOf(mQuantity.intValue()), Integer.valueOf(mRate.intValue()), Integer.valueOf(mTotal.intValue()));
+        InvoiceItemList[] invoiceItemList = new InvoiceItemList[1];
+        invoiceItemList[0] = new InvoiceItemList(mDescription,mItemName, Integer.valueOf(mQuantity.intValue()), Integer.valueOf(mRate.intValue()), Integer.valueOf(mTotal.intValue()));
         SaveInvoiceRequest mSaveInvoiceRequest = new SaveInvoiceRequest("", mReceiverMobileNumber, "", Integer.valueOf(mVat.intValue()), invoiceItemList);
         Gson gson = new Gson();
         String json = gson.toJson(mSaveInvoiceRequest);

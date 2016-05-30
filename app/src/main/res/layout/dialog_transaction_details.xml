@@ -87,7 +87,7 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin_card"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="@string/net_amount" />
+            android:text="@string/total_amount" />
 
         <TextView
             android:id="@+id/netAmount"

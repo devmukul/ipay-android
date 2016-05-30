@@ -185,7 +185,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
                     if (mVat != null) {
                         mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
                     }
-                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
+                    mTotalTextView.setText(mTotal.toString());
                 }
             }
         });
