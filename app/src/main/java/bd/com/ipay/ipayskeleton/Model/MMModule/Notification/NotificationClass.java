@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Notification;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -16,13 +17,13 @@ public class NotificationClass {
     public UserProfile originatorProfile;
     public UserProfile receiverProfile;
     public BigDecimal vat;
-    public ItemList[] itemList;
+    public List<ItemList> itemList;
 
 
     public NotificationClass() {
     }
 
-    public ItemList[] getItemList() {
+    public List<ItemList> getItemList() {
         return itemList;
     }
 

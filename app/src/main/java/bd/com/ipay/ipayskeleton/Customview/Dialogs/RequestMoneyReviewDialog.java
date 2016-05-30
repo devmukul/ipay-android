@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class NotificationReviewDialog extends MaterialDialog.Builder implements HttpResponseListener {
+public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
@@ -65,7 +65,7 @@ public class NotificationReviewDialog extends MaterialDialog.Builder implements 
     private TextView mNetReceivedView;
     private EditText mPinField;
 
-    public NotificationReviewDialog(Context context, long moneyRequestId, String receiverMobileNumber,
+    public RequestMoneyReviewDialog(Context context, long moneyRequestId, String receiverMobileNumber,
                                     String receiverName, String photoUri, BigDecimal amount, BigDecimal serviceCharge,
                                     String title, String description, int serviceID, ReviewDialogFinishListener reviewFinishListener) {
         super(context);

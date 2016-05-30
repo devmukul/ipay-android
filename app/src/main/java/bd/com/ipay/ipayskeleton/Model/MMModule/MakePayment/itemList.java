@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment;
 
 import java.math.BigDecimal;
 
-
 public class ItemList {
     public Long id;
     public BigDecimal rate;

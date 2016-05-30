@@ -125,7 +125,7 @@ public class RequestMoneyFragment extends Fragment {
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.RECEIVER, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.DESCRIPTION, description);
-        intent.putExtra(Constants.TITLE, title);
+        intent.putExtra(Constants.INVOICE_TITLE_TAG, title);
 
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
     }

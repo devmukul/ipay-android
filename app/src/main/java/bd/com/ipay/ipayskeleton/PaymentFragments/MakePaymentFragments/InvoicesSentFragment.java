@@ -1,12 +1,10 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -16,12 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -133,7 +128,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
         mProgressDialog.show();
-        // TODO ask for pin
+
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, null);
         Gson gson = new Gson();
@@ -340,10 +335,12 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                     mSenderName.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setColorFilter(Color.RED);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
+
                 } else if (status == Constants.HTTP_RESPONSE_STATUS_CANCELED) {
                     mSenderName.setTextColor(Color.GRAY);
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
+
                 }  else if (status == Constants.HTTP_RESPONSE_STATUS_DRAFT) {
                     mSenderName.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setColorFilter(Color.RED);
@@ -377,7 +374,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                     @Override
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
-                           InvoicesHistoryDialogue dialog = new InvoicesHistoryDialogue(getActivity(), title, description, time, id, amount, vat, itemList, status);
+                           new InvoicesHistoryDialogue(getActivity(), title, description, time, id, amount, vat, itemList, status);
                         }
                     }
                 });

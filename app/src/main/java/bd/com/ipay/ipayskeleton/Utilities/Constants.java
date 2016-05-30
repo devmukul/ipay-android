@@ -68,14 +68,6 @@ public class Constants {
     public static final String BANK_NAME = "bank_name";
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
     public static final String BANK_ACCOUNT_ID = "bank_account_id";
-    public static final String DESCRIPTION = "description";
-    public static final String QUANTITY = "quantity";
-    public static final String RATE = "rate";
-    public static final String DISCOUNT = "discount";
-    public static final String TOTAL = "total";
-    public static final String TITLE = "title";
-    public static final String RECEIVER = "receiver";
-    public static final String ITEM_NAME = "item_name";
 
     public static final String SERVICE_CHARGE = "service_charge";
     public static final String PHOTO_URI = "photo_uri";
@@ -90,7 +82,7 @@ public class Constants {
      * All requests and responses to$ server, and token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     /**
      * If set to true (with DEBUG flag also being set to true),
@@ -114,7 +106,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = 4;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -520,5 +512,13 @@ public class Constants {
     public static final String PUSH_NOTIFICATION_TAG = "tag";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
     public static final String PUSH_NOTIFICATION_BODY = "notification";
+
+    public static final String TOTAL = "total";
+    public static final String INVOICE_RECEIVER_TAG = "receiver";
+    public static final String INVOICE_ITEM_NAME_TAG = "item_name";
+    public static final String INVOICE_DESCRIPTION_TAG = "description";
+    public static final String INVOICE_QUANTITY_TAG = "quantity";
+    public static final String INVOICE_RATE_TAG = "rate";
+    public static final String INVOICE_TITLE_TAG = "title";
 
 }

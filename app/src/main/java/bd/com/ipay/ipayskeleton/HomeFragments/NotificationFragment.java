@@ -35,8 +35,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialog;
-import bd.com.ipay.ipayskeleton.Customview.Dialogs.NotificationReviewDialogChanged;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.RequestMoneyReviewDialog;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
@@ -57,10 +57,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationFragment extends ProgressFragment implements HttpResponseListener {
-
-    private final int ACCEPT = 0;
-    private final int REJECT = 1;
-    private final int MARK_SPAM = 2;
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetNotificationsResponse mGetNotificationsResponse;
@@ -212,7 +208,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void showReviewDialog() {
-        NotificationReviewDialog dialog = new NotificationReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+        RequestMoneyReviewDialog dialog = new RequestMoneyReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
                 mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, mServiceID, new ReviewDialogFinishListener() {
             @Override
             public void onReviewFinish() {
@@ -601,7 +597,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
                         else
                         {
-                            NotificationReviewDialogChanged dialog = new NotificationReviewDialogChanged(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                            ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
                                     mReceiverName, mPhotoUri, mAmount, mTitle , Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
                                     new ReviewDialogFinishListener() {
                                         @Override

@@ -18,7 +18,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class DashBoardFragment extends Fragment {
 
     private final int HOME_TAB = 0;
-    //private final int WALLET_TAB = 1;
     private final int SERVICES_TAB = 1;
     private final int CONTACTS_TAB = 2;
     private final int NOTIFICATION_TAB = 3;
@@ -26,14 +25,12 @@ public class DashBoardFragment extends Fragment {
     private final int TOTAL_PAGE_COUNT = 4;
 
     private HomeFragment mHomeFragment;
-    //private WalletFragment mWalletFragment;
     private NotificationFragment mNotificationFragment;
     private ServiceFragment mServiceFragment;
     private ContactsHolderFragment mContactsHolderFragment;
 
     private TabLayout.Tab homeTab;
     private TabLayout.Tab contactsTab;
-    //private TabLayout.Tab walletTab;
     private TabLayout.Tab notificationTab;
     private TabLayout.Tab servicesTab;
 
@@ -48,7 +45,6 @@ public class DashBoardFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
         mHomeFragment = new HomeFragment();
-        //mWalletFragment = new WalletFragment();
         mNotificationFragment = new NotificationFragment();
         mServiceFragment = new ServiceFragment();
         mContactsHolderFragment = new ContactsHolderFragment();
@@ -61,13 +57,11 @@ public class DashBoardFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
 
         homeTab = tabLayout.getTabAt(HOME_TAB);
-        //walletTab = tabLayout.getTabAt(WALLET_TAB);
         notificationTab = tabLayout.getTabAt(NOTIFICATION_TAB);
         servicesTab = tabLayout.getTabAt(SERVICES_TAB);
         contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
 
         homeTab.setIcon(ICONS_STATE_SELECTED[HOME_TAB]);
-        //walletTab.setIcon(ICONS_STATE_UNSELECTED[WALLET_TAB]);
         notificationTab.setIcon(ICONS_STATE_UNSELECTED[NOTIFICATION_TAB]);
         servicesTab.setIcon(ICONS_STATE_UNSELECTED[SERVICES_TAB]);
         contactsTab.setIcon(ICONS_STATE_UNSELECTED[CONTACTS_TAB]);

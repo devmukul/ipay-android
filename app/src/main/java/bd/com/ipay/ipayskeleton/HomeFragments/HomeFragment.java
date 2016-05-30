@@ -96,11 +96,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private TextView balanceView;
     public static List<News> newsFeedResponsesList;
 
+    private Button mSendMoneyButton;
+    private Button mRequestMoneyButton;
+    private Button mMobileTopUpButton;
+    private Button mMakePaymentButton;
+
     private ImageView refreshBalanceButton;
     private ImageView addWithdrawMoneyButton;
-    private RelativeLayout mSendMoneyButtonView;
-    private RelativeLayout mRequestMoneyView;
-    private RelativeLayout mCreateInvoiceOrMobileRechargeButtonView;
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -138,29 +140,58 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         if (pref.contains(Constants.UUID))
             UUID = pref.getString(Constants.UUID, null);
 
-        TextView makePaymentOrRechargeLabel = (TextView) v.findViewById(R.id.textview_make_payment_or_recharge);
-        ImageView createInvoiceOrRechargeLabel = (ImageView) v.findViewById(R.id.button_make_payment);
-        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
-            createInvoiceOrRechargeLabel.setImageResource(R.drawable.cell_phone);
-            makePaymentOrRechargeLabel.setText(getString(R.string.topup));
-        }
-        else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
-            createInvoiceOrRechargeLabel.setImageResource(R.drawable.ic_invoice);
-            makePaymentOrRechargeLabel.setText(getString(R.string.create_invoice));
-        }
 
         homeBottomSheet = (BottomSheetLayout) v.findViewById(R.id.home_bottomsheet);
         mProfileCompletionPromptView = getActivity().getLayoutInflater().inflate(R.layout.sheet_view_profile_completion, null);
 
-        mSendMoneyButtonView = (RelativeLayout) v.findViewById(R.id.layout_send_money);
-        mRequestMoneyView = (RelativeLayout) v.findViewById(R.id.layout_request_money);
-        mCreateInvoiceOrMobileRechargeButtonView = (RelativeLayout) v.findViewById(R.id.layout_create_invoice_or_mobile_recharge);
+
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
         addWithdrawMoneyButton = (ImageView) v.findViewById(R.id.iv_balance_overflow);
+
+        mSendMoneyButton = (Button) v.findViewById(R.id.send_money_button);
+        mRequestMoneyButton = (Button) v.findViewById(R.id.request_money_button);
+        mMobileTopUpButton = (Button) v.findViewById(R.id.mobile_recharge_button);
+        mMakePaymentButton = (Button) v.findViewById(R.id.make_payment_button);
+
+        mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PinChecker sendMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                sendMoneyPinChecker.execute();
+            }
+        });
+
+        mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent requestMoneyActivityIntent = new Intent(getActivity(), RequestMoneyActivity.class);
+                startActivity(requestMoneyActivityIntent);
+            }
+        });
+
+        mMobileTopUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PinChecker topUpPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                topUpPinChecker.execute();
+            }
+        });
 
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
 
@@ -224,47 +255,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     private void setButtonActions() {
-        mSendMoneyButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                pinChecker.execute();
-            }
-        });
-
-        mCreateInvoiceOrMobileRechargeButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent;
-                        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
-                            intent = new Intent(getActivity(), TopUpActivity.class);
-                            startActivity(intent);
-                        } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
-                            intent = new Intent(getActivity(), MakePaymentActivity.class);
-                            startActivity(intent);
-                        }
-                    }
-                });
-                pinChecker.execute();
-            }
-        });
-
-        mRequestMoneyView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
-                    startActivity(intent);
-            }
-        });
 
         addWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override

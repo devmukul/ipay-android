@@ -38,9 +38,6 @@ public class InvoicesHistoryDialogue extends MaterialDialog.Builder {
     private Context context;
     private String mTitle;
 
-
-
-
     public InvoicesHistoryDialogue(Context context,String title, String description, String time, long id, BigDecimal amount, BigDecimal vat, ItemList[] itemList, int status) {
         super(context);
 
@@ -77,7 +74,6 @@ public class InvoicesHistoryDialogue extends MaterialDialog.Builder {
         mLayoutManager = new LinearLayoutManager(this.getContext());
         mReviewRecyclerView.setLayoutManager(mLayoutManager);
         mReviewRecyclerView.setAdapter(invoiceReviewAdapter);
-
     }
 
 private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

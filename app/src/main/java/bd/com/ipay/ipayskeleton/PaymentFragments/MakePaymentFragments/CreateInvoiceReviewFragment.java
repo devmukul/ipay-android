@@ -16,17 +16,18 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SaveInvoiceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SaveInvoiceRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SaveInvoiceRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SaveInvoiceResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -76,11 +77,11 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_create_invoice_review, container, false);
 
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER);
-        mItemName = getActivity().getIntent().getStringExtra(Constants.ITEM_NAME);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION);
-        mQuantity = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.QUANTITY));
-        mRate = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.RATE));
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
+        mItemName = getActivity().getIntent().getStringExtra(Constants.INVOICE_ITEM_NAME_TAG);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
+        mQuantity = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.INVOICE_QUANTITY_TAG));
+        mRate = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.INVOICE_RATE_TAG));
         if (getActivity().getIntent().getStringExtra(Constants.VAT).equals(""))
             mVat = new BigDecimal(0);
         else mVat = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.VAT));
@@ -166,8 +167,11 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invoice));
         mProgressDialog.show();
 
-        InvoiceItemList[] invoiceItemList = new InvoiceItemList[1];
-        invoiceItemList[0] = new InvoiceItemList(mDescription,mItemName, Integer.valueOf(mQuantity.intValue()), Integer.valueOf(mRate.intValue()), Integer.valueOf(mTotal.intValue()));
+        ArrayList<InvoiceItemList> invoiceItemList = new ArrayList<InvoiceItemList>();
+        InvoiceItemList tempInvoiceItemList = new InvoiceItemList(mDescription, mItemName, Integer.valueOf(mQuantity.intValue()),
+                Integer.valueOf(mRate.intValue()), Integer.valueOf(mTotal.intValue()));
+        invoiceItemList.add(tempInvoiceItemList);
+
         SaveInvoiceRequest mSaveInvoiceRequest = new SaveInvoiceRequest("", mReceiverMobileNumber, "", Integer.valueOf(mVat.intValue()), invoiceItemList);
         Gson gson = new Gson();
         String json = gson.toJson(mSaveInvoiceRequest);

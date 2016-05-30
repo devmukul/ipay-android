@@ -32,7 +32,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class NotificationReviewDialogChanged extends MaterialDialog.Builder implements HttpResponseListener {
+public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
@@ -67,8 +67,8 @@ public class NotificationReviewDialogChanged extends MaterialDialog.Builder impl
     private TextView mTotalView;
     private EditText mPinField;
 
-    public NotificationReviewDialogChanged(Context context, long moneyRequestId, String receiverMobileNumber, String receiverName, String photoUri, BigDecimal amount,
-                                           String title, int serviceID, BigDecimal vat, ItemList[] itemList, ReviewDialogFinishListener reviewFinishListener) {
+    public ReviewMakePaymentDialog(Context context, long moneyRequestId, String receiverMobileNumber, String receiverName, String photoUri, BigDecimal amount,
+                                   String title, int serviceID, BigDecimal vat, ItemList[] itemList, ReviewDialogFinishListener reviewFinishListener) {
         super(context);
 
         this.requestId = moneyRequestId;
@@ -171,7 +171,6 @@ public class NotificationReviewDialogChanged extends MaterialDialog.Builder impl
                 Toast.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         Gson gson = new Gson();
 

@@ -126,10 +126,10 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
         String quantity = mQuantityEditText.getText().toString();
 
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.RECEIVER, receiver);
-        bundle.putString(Constants.ITEM_NAME, item_name);
-        bundle.putString(Constants.DESCRIPTION, description);
-        bundle.putString(Constants.QUANTITY, quantity);
+        bundle.putString(Constants.INVOICE_RECEIVER_TAG, receiver);
+        bundle.putString(Constants.INVOICE_ITEM_NAME_TAG, item_name);
+        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, description);
+        bundle.putString(Constants.INVOICE_QUANTITY_TAG, quantity);
 
         CreateInvoiceFragmentStepTwo frag = new CreateInvoiceFragmentStepTwo();
         frag.setArguments(bundle);

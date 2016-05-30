@@ -74,7 +74,4 @@
             android:text="@string/amount" />
 
     </LinearLayout>
-
-
-
 </LinearLayout>

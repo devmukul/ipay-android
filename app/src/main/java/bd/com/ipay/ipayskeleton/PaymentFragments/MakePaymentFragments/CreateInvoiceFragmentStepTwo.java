@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +22,6 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-
 
 public class CreateInvoiceFragmentStepTwo extends Fragment {
     private static final int REQUEST_CREATE_INVOICE_REVIEW = 101;
@@ -57,20 +54,19 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
 
         Bundle args = getArguments();
-        if (args != null && args.containsKey("receiver")) {
-            mMobileNumber = args.getString("receiver");
+        if (args != null && args.containsKey(Constants.INVOICE_RECEIVER_TAG)) {
+            mMobileNumber = args.getString(Constants.INVOICE_RECEIVER_TAG);
         }
-        if (args != null && args.containsKey("item_name")) {
-            mItemName = args.getString("item_name");
+        if (args != null && args.containsKey(Constants.INVOICE_ITEM_NAME_TAG)) {
+            mItemName = args.getString(Constants.INVOICE_ITEM_NAME_TAG);
         }
-        if (args != null && args.containsKey("description")) {
-            mDescription = args.getString("description");
+        if (args != null && args.containsKey(Constants.INVOICE_DESCRIPTION_TAG)) {
+            mDescription = args.getString(Constants.INVOICE_DESCRIPTION_TAG);
         }
-        if (args != null && args.containsKey("quantity")) {
-            mQuantity = new BigDecimal(args.getString("quantity"));
+        if (args != null && args.containsKey(Constants.INVOICE_QUANTITY_TAG)) {
+            mQuantity = new BigDecimal(args.getString(Constants.INVOICE_QUANTITY_TAG));
             mQuantityTextView.setText(" * " + mQuantity);
         }
-
 
         mRateEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -229,13 +225,13 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
         String vat = mVatEditText.getText().toString();
         String total = mTotalTextView.getText().toString();
 
-
         Intent intent = new Intent(getActivity(), CreateInvoiceReviewActivity.class);
-        intent.putExtra(Constants.ITEM_NAME, mItemName);
-        intent.putExtra(Constants.RECEIVER, ContactEngine.formatMobileNumberBD(mMobileNumber));
-        intent.putExtra(Constants.DESCRIPTION, mDescription);
-        intent.putExtra(Constants.QUANTITY, mQuantity.toString());
-        intent.putExtra(Constants.RATE, rate);
+        intent.putExtra(Constants.INVOICE_ITEM_NAME_TAG, mItemName);
+        intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mMobileNumber));
+        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
+        intent.putExtra(Constants.INVOICE_QUANTITY_TAG, mQuantity.toString());
+        intent.putExtra(Constants.INVOICE_RATE_TAG, rate);
+
         if (vat != null) intent.putExtra(Constants.VAT, vat);
         else intent.putExtra(Constants.VAT, "0");
         intent.putExtra(Constants.TOTAL, total);
