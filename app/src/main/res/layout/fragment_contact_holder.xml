@@ -26,7 +26,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:background="@drawable/drawable_contact_selector_background">
+            android:background="@drawable/drawable_contact_selector_background"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/button_contacts_all"

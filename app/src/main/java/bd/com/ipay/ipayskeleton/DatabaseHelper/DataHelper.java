@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class DataHelper {
      * then consider setting it to false and calling notifyChange after all friends have been
      * created.
      */
-    public void createFriend(FriendNode friendNode, boolean notifyChange) {
+    public void createFriend(FriendNode friendNode) {
 
         try {
             dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
@@ -66,19 +67,46 @@ public class DataHelper {
             SQLiteDatabase db = dOpenHelper.getWritableDatabase();
             db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
-            if (notifyChange)
-                context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void createFriends(List<FriendNode> friendNodes) {
-        for (FriendNode friendNode : friendNodes) {
-            createFriend(friendNode, false);
-        }
+        if (friendNodes != null && !friendNodes.isEmpty()) {
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
 
-        context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
+            SQLiteDatabase db = dOpenHelper.getWritableDatabase();
+            db.beginTransaction();
+
+            try {
+                for (FriendNode friendNode : friendNodes) {
+                    ContentValues values = new ContentValues();
+                    values.put(DBConstants.KEY_MOBILE_NUMBER, friendNode.getPhoneNumber());
+                    values.put(DBConstants.KEY_NAME, friendNode.getInfo().getName());
+                    values.put(DBConstants.KEY_ACCOUNT_TYPE, friendNode.getInfo().getAccountType());
+                    values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
+                    values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
+                            DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
+                    values.put(DBConstants.KEY_IS_MEMBER, friendNode.getInfo().isMember() ?
+                            DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
+
+                    db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
+            context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
+
+            Log.i("Friends", "Inserted into the database");
+
+            dOpenHelper.close();
+        }
     }
 
     public Cursor searchSubscribers(String query) {

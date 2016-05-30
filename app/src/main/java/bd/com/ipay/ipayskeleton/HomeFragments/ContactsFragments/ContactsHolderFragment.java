@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,9 +59,19 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         });
 
         getInviteInfo();
-        switchToAllContacts();
+        switchToiPayContacts();
 
         return v;
+    }
+
+    // Called when the user navigates to this fragment.
+    // We can't use onResume because onResume does not get called when the user switch between tabs.
+    public void onFocus() {
+        if (mAllContactsFragment != null)
+            mAllContactsFragment.onFocus();
+        if (mIPayContactsFragment != null)
+            mIPayContactsFragment.onFocus();
+
     }
 
     private void setEnabled(Button button, boolean isEnabled) {

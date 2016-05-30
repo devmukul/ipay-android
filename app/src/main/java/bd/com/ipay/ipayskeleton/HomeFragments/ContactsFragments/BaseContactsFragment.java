@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,7 +54,8 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private MenuItem mSearchMenuItem;
+    protected MenuItem mSearchMenuItem;
+    protected SearchView mSearchView;
 
     private TextView mEmptyContactsTextView;
 
@@ -93,7 +95,6 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     private View mSheetViewNonSubscriber;
     private View mSheetViewSubscriber;
     private View selectedBottomSheetView;
-    private SearchView mSearchView;
 
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
@@ -128,9 +129,19 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
 
+        // If the fragment is a dialog fragment, we are using the searchview at the bottom.
+        // Otherwise, we are using the searchview from the action bar.
         if (!isDialogFragment()) {
             if (mBottomSheetLayout != null)
                 setUpBottomSheet();
+
+            v.findViewById(R.id.search_contacts).setVisibility(View.GONE);
+
+            // mSearchView will be populated from the onCreateOptionsMenu
+        } else {
+            mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
+            mSearchView.setIconified(false);
+            mSearchView.setOnQueryTextListener(this);
         }
 
         mEmptyContactsTextView = (TextView) v.findViewById(R.id.contact_list_empty);
@@ -141,20 +152,19 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         mAdapter = new ContactListAdapter();
         mRecyclerView.setAdapter(mAdapter);
 
-        mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
-        if (isDialogFragment()) {
-            mSearchView.setIconified(false);
-            mSearchView.setOnQueryTextListener(this);
-        } else {
-            mSearchView.setVisibility(View.GONE);
-        }
-
         return v;
+    }
+
+    public void onFocus() {
+        if (mSearchView != null) {
+            mSearchView.setQuery("", false);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         if (!isDialogFragment())
             getActivity().invalidateOptionsMenu();
     }
@@ -173,27 +183,28 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
             inflater.inflate(R.menu.contact, menu);
 
             mSearchMenuItem = menu.findItem(R.id.action_search_contacts);
-            final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-            searchView.setOnQueryTextListener(this);
-            searchView.setOnSearchClickListener(new View.OnClickListener() {
+            mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+            mSearchView.setOnQueryTextListener(this);
+            mSearchView.setOnSearchClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     setItemsVisibility(menu, mSearchMenuItem, false);
-                    searchView.requestFocus();
+                    mSearchView.requestFocus();
                     if (mBottomSheetLayout != null && mBottomSheetLayout.isSheetShowing())
                         mBottomSheetLayout.dismissSheet();
                 }
             });
-            searchView.setQueryHint(getString(R.string.search));
+            mSearchView.setQueryHint(getString(R.string.search));
 
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
                 @Override
                 public boolean onClose() {
-                    searchView.setQuery("", true);
+                    mSearchView.setQuery("", true);
                     setItemsVisibility(menu, mSearchMenuItem, true);
                     return false;
                 }
             });
+
         }
     }
 

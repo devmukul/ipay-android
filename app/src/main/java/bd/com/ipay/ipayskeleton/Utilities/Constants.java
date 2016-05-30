@@ -112,7 +112,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -121,7 +121,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 //            BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
-            BASE_URL_FRIEND = "http://10.10.10.10:1337/v1";
+            BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {

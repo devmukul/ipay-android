@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,6 @@ public class IPayContactsFragment extends BaseContactsFragment
     private static final int CONTACTS_QUERY_LOADER = 0;
 
     private boolean mShowVerifiedUsersOnly;
-    private String mQuery = "";
 
     private int nameIndex;
     private int phoneNumberIndex;
@@ -51,7 +51,6 @@ public class IPayContactsFragment extends BaseContactsFragment
     public void onResume() {
         super.onResume();
 
-        mQuery = "";
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
     }
 
@@ -62,7 +61,14 @@ public class IPayContactsFragment extends BaseContactsFragment
             @Override
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                Cursor cursor = dataHelper.searchSubscribers(mQuery, mShowVerifiedUsersOnly);
+                String query;
+
+                if (mSearchView == null)
+                    query = "";
+                else
+                    query = mSearchView.getQuery().toString();
+
+                Cursor cursor = dataHelper.searchSubscribers(query, mShowVerifiedUsersOnly);
                 dataHelper.closeDbOpenHelper();
 
                 if (cursor != null) {
@@ -118,7 +124,7 @@ public class IPayContactsFragment extends BaseContactsFragment
 
     @Override
     protected boolean shouldShowIPayUserIcon() {
-        return false;
+        return true;
     }
 
 
@@ -129,7 +135,6 @@ public class IPayContactsFragment extends BaseContactsFragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mQuery = newText;
         getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
         return true;
