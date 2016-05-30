@@ -1,14 +1,14 @@
 package bd.com.ipay.ipayskeleton.Model.Friend;
 
-public class AddFriendInfo {
+public class InfoAddFriend {
     private String friendsNumber;
     private String friendsName;
 
-    public AddFriendInfo() {
+    public InfoAddFriend() {
 
     }
 
-    public AddFriendInfo(String friendsNumber, String friendsName) {
+    public InfoAddFriend(String friendsNumber, String friendsName) {
         this.friendsNumber = friendsNumber;
         this.friendsName = friendsName;
     }

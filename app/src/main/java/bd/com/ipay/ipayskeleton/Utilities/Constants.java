@@ -123,7 +123,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
 //            BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
-            BASE_URL_FRIEND = "http://10.10.10.10:1337/v1";
+            BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
@@ -289,10 +289,10 @@ public class Constants {
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
     // User Rest (Friends)
-    public static final String URL_GET_CONTACTS = "getfriends";
-    public static final String URL_ADD_CONTACT = "addfriends";
-    public static final String URL_DELETE_CONTACT = "deletefriend";
-    public static final String URL_UPDATE_CONTACT = "updatefriend";
+    public static final String URL_GET_FRIENDS = "getfriends";
+    public static final String URL_ADD_FRIENDS = "addfriends";
+    public static final String URL_DELETE_FRIEND = "deletefriend";
+    public static final String URL_UPDATE_FRIENDS = "updatefriends";
 
     public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
 
@@ -391,7 +391,7 @@ public class Constants {
     public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
     public static final String COMMAND_GET_FRIENDS = "COMMAND_GET_FRIENDS";
     public static final String COMMAND_ADD_FRIENDS = "COMMAND_ADD_FRIENDS";
-    public static final String COMMAND_UPDATE_FRIEND = "COMMAND_UPDATE_FRIEND";
+    public static final String COMMAND_UPDATE_FRIENDS = "COMMAND_UPDATE_FRIENDS";
     public static final String COMMAND_DELETE_FRIENDS = "COMMAND_DELETE_FRIENDS";
 
 

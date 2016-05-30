@@ -27,8 +27,8 @@ public class FriendInfo {
         this.profilePictureUrl = profilePictureUrl;
     }
 
-    public FriendInfo(int accountType, boolean isMember, int verificationStatus, String name, String profilePictureUrl) {
-        this(accountType, isMember, verificationStatus == DBConstants.VERIFIED_USER, name, profilePictureUrl);
+    public FriendInfo(int accountType, int isMember, int verificationStatus, String name, String profilePictureUrl) {
+        this(accountType, isMember == DBConstants.IPAY_MEMBER, verificationStatus == DBConstants.VERIFIED_USER, name, profilePictureUrl);
     }
 
     public int getAccountType() {

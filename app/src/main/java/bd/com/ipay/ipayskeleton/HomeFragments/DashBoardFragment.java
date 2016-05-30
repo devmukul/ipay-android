@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class DashBoardFragment extends Fragment {
 
@@ -51,7 +52,7 @@ public class DashBoardFragment extends Fragment {
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         viewPager.setAdapter(new DashBoardTabAdapter(getChildFragmentManager()));
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
 
         final TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -92,6 +93,14 @@ public class DashBoardFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
+
+                Utilities.hideKeyboard(getActivity());
+
+                if (position == CONTACTS_TAB) {
+                    if ((mContactsHolderFragment != null)) {
+                        mContactsHolderFragment.onFocus();
+                    }
+                }
 
                 for (int i = 0; i < TOTAL_PAGE_COUNT; i++) {
                     TabLayout.Tab tab = tabLayout.getTabAt(i);

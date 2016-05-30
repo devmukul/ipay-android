@@ -17,21 +17,35 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        createFriendsTable(db);
+        createPushNotificationTable(db);
+    }
 
-        db.execSQL("create table if not exists "
-                + DBConstants.DB_TABLE_SUBSCRIBERS
-                + "(_id integer primary key autoincrement, mobile_number text unique not null, "
-                + "name text, account_type integer default 1, profile_picture text, verification_status integer default 0)");
+    private void createFriendsTable(SQLiteDatabase db) {
+        db.execSQL("create table if not exists " +
+                DBConstants.DB_TABLE_FRIENDS +
+                "(_id integer primary key autoincrement, " +
+                DBConstants.KEY_MOBILE_NUMBER + " text unique not null, " +
+                DBConstants.KEY_NAME + " text, " +
+                DBConstants.KEY_ACCOUNT_TYPE + " integer default 1, " +
+                DBConstants.KEY_PROFILE_PICTURE + " text, " +
+                DBConstants.KEY_VERIFICATION_STATUS + " integer default 0, " +
+                DBConstants.KEY_IS_MEMBER + " integer default 0)");
+    }
 
+    private void createPushNotificationTable(SQLiteDatabase db) {
         db.execSQL("create table if not exists "
                 + DBConstants.DB_TABLE_PUSH_EVENTS
                 + "(tag_name text unique not null, "
                 + "json text)");
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        // TODO migration code - remove this later
+        if (oldVersion == 1) {
+            db.execSQL("drop table if exists " + DBConstants.DB_TABLE_FRIENDS);
+            createFriendsTable(db);
+        }
     }
 }

@@ -13,12 +13,11 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
-import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.SubscriberEntry;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private Context context;
     private static DataHelper instance = null;
@@ -40,8 +39,16 @@ public class DataHelper {
         instance = null;
     }
 
-    public void createSubscriber(FriendNode friendNode) {
-        SQLiteDatabase db = null;
+    /**
+     * Inserts a friends' information into the database.
+     * If notifyChange is set to true, and if we use
+     * registerContentObserver(cursor, DBConstants.DB_TABLE_SUBSCRIBERS_URI)
+     * somewhere in the code where cursor points to the friends table, then the cursor will be
+     * updated. As a rule of thumb, you should set it to true. But if you batch create friends,
+     * then consider setting it to false and calling notifyChange after all friends have been
+     * created.
+     */
+    public void createFriend(FriendNode friendNode) {
 
         try {
             dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
@@ -54,12 +61,51 @@ public class DataHelper {
             values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
             values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
                     DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
+            values.put(DBConstants.KEY_IS_MEMBER, friendNode.getInfo().isMember() ?
+                    DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
 
-            db = dOpenHelper.getWritableDatabase();
-            db.insertWithOnConflict(DBConstants.DB_TABLE_SUBSCRIBERS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-            context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
+            SQLiteDatabase db = dOpenHelper.getWritableDatabase();
+            db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void createFriends(List<FriendNode> friendNodes) {
+        if (friendNodes != null && !friendNodes.isEmpty()) {
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
+
+            SQLiteDatabase db = dOpenHelper.getWritableDatabase();
+            db.beginTransaction();
+
+            try {
+                for (FriendNode friendNode : friendNodes) {
+                    ContentValues values = new ContentValues();
+                    values.put(DBConstants.KEY_MOBILE_NUMBER, friendNode.getPhoneNumber());
+                    values.put(DBConstants.KEY_NAME, friendNode.getInfo().getName());
+                    values.put(DBConstants.KEY_ACCOUNT_TYPE, friendNode.getInfo().getAccountType());
+                    values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
+                    values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
+                            DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
+                    values.put(DBConstants.KEY_IS_MEMBER, friendNode.getInfo().isMember() ?
+                            DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
+
+                    db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
+            context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
+
+            Log.i("Friends", "Inserted into the database");
+
+            dOpenHelper.close();
         }
     }
 
@@ -75,11 +121,12 @@ public class DataHelper {
                     DATABASE_VERSION);
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
-            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_SUBSCRIBERS
+            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_FRIENDS
                     + " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'";
             if (verifiedOnly)
                 queryString += " AND " + DBConstants.KEY_VERIFICATION_STATUS + " = " + DBConstants.VERIFIED_USER;
-            queryString += " ORDER BY " + DBConstants.KEY_NAME + " COLLATE NOCASE";
+            queryString += " ORDER BY " + DBConstants.KEY_IS_MEMBER + " DESC, "
+                    + DBConstants.KEY_NAME + " COLLATE NOCASE";
 
             cursor = db.rawQuery(queryString, null);
 
@@ -144,6 +191,7 @@ public class DataHelper {
             int profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
             int verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
             int accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
+            int isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
 
             File dir = new File(Environment.getExternalStorageDirectory().getPath()
                     + Constants.PICTURE_FOLDER);
@@ -155,8 +203,9 @@ public class DataHelper {
                 int verificationStatus = cursor.getInt(verificationStatusIndex);
                 int accountType = cursor.getInt(accountTypeIndex);
                 String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
+                int isMember = cursor.getInt(isMemberIndex);
 
-                FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, true,
+                FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, isMember,
                         verificationStatus, name, profilePictureUrl));
                 friends.add(friend);
             } while (cursor.moveToNext());

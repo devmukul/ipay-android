@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +27,13 @@ public class IPayContactsFragment extends BaseContactsFragment
     private static final int CONTACTS_QUERY_LOADER = 0;
 
     private boolean mShowVerifiedUsersOnly;
-    private String mQuery = "";
 
     private int nameIndex;
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int verificationStatusIndex;
     private int accountTypeIndex;
+    private int isMemberIndex;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,7 +51,6 @@ public class IPayContactsFragment extends BaseContactsFragment
     public void onResume() {
         super.onResume();
 
-        mQuery = "";
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
     }
 
@@ -61,7 +61,14 @@ public class IPayContactsFragment extends BaseContactsFragment
             @Override
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                Cursor cursor = dataHelper.searchSubscribers(mQuery, mShowVerifiedUsersOnly);
+                String query;
+
+                if (mSearchView == null)
+                    query = "";
+                else
+                    query = mSearchView.getQuery().toString();
+
+                Cursor cursor = dataHelper.searchSubscribers(query, mShowVerifiedUsersOnly);
                 dataHelper.closeDbOpenHelper();
 
                 if (cursor != null) {
@@ -70,6 +77,7 @@ public class IPayContactsFragment extends BaseContactsFragment
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
                     accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
+                    isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
 
                     this.registerContentObserver(cursor, DBConstants.DB_TABLE_SUBSCRIBERS_URI);
                 }
@@ -101,8 +109,9 @@ public class IPayContactsFragment extends BaseContactsFragment
         String profilePictureUrl = mCursor.getString(profilePictureUrlIndex);
         int verificationStatus = mCursor.getInt(verificationStatusIndex);
         int accountType = mCursor.getInt(accountTypeIndex);
+        int isMember = mCursor.getInt(isMemberIndex);
 
-        FriendInfo friendInfo = new FriendInfo(accountType, true, verificationStatus, name, profilePictureUrl);
+        FriendInfo friendInfo = new FriendInfo(accountType, isMember, verificationStatus, name, profilePictureUrl);
         FriendNode friend = new FriendNode(phoneNumber, friendInfo);
 
         return friend;
@@ -115,7 +124,7 @@ public class IPayContactsFragment extends BaseContactsFragment
 
     @Override
     protected boolean shouldShowIPayUserIcon() {
-        return false;
+        return true;
     }
 
 
@@ -126,7 +135,6 @@ public class IPayContactsFragment extends BaseContactsFragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mQuery = newText;
         getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
         return true;

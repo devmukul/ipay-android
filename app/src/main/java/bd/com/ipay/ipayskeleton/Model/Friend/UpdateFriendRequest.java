@@ -1,11 +1,15 @@
 package bd.com.ipay.ipayskeleton.Model.Friend;
 
-public class UpdateFriendRequest {
-    private String friendsNumber;
-    private String friendsName;
+import java.util.List;
 
-    public UpdateFriendRequest(String friendsNumber, String friendsName) {
-        this.friendsNumber = friendsNumber;
-        this.friendsName = friendsName;
+public class UpdateFriendRequest {
+    private List<InfoUpdateFriend> updateFriends;
+
+    public UpdateFriendRequest(List<InfoUpdateFriend> updateFriends) {
+        this.updateFriends = updateFriends;
+    }
+
+    public List<InfoUpdateFriend> getUpdateFriends() {
+        return updateFriends;
     }
 }

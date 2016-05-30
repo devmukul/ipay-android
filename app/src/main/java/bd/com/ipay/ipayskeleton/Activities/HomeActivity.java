@@ -284,7 +284,7 @@ public class HomeActivity extends BaseActivity
         }
 
         mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_GET_CONTACTS, this, this);
+                Constants.BASE_URL_FRIEND + Constants.URL_GET_FRIENDS, this, this);
         mGetAllContactsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
