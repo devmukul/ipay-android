@@ -305,6 +305,11 @@ public class Utilities {
         }
     }
 
+    public static void showKeyboard(Context context, View v) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+    }
+
     public static boolean checkPlayServices(Context context) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);

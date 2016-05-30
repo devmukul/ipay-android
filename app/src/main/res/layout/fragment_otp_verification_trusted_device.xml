@@ -30,10 +30,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:hint="@string/enter_otp"
-                android:imeOptions="actionUnspecified"
                 android:inputType="number"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true" >
+
+                <requestFocus/>
+            </EditText>
 
         </android.support.design.widget.TextInputLayout>
 

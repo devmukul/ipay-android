@@ -80,8 +80,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             }
         }
 
-
-
         // Start service for GCM
         if (Utilities.checkPlayServices(SignupOrLoginActivity.this)) {
             // Start IntentService to register this application with GCM.

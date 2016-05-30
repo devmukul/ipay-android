@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -94,6 +95,13 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         }.start();
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Utilities.showKeyboard(getActivity(), mOTPEditText);
     }
 
     private void attemptLogin(String mUserNameLogin, String mPasswordLogin) {

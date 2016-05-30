@@ -48,7 +48,7 @@
                         android:inputType="phone"
                         android:maxLength="14"
                         android:text="+880"
-                        style="@style/LoginButtonStyle">
+                        style="@style/LoginEditTextStyle">
 
                         <requestFocus />
                     </EditText>
@@ -85,7 +85,7 @@
                         android:imeActionId="@+id/login"
                         android:imeActionLabel="@string/action_sign_in_short"
                         android:inputType="textPassword"
-                        style="@style/LoginButtonStyle" />
+                        style="@style/LoginEditTextStyle" />
 
                 </android.support.design.widget.TextInputLayout>
             </RelativeLayout>

@@ -458,7 +458,7 @@
         <item name="android:padding">10dp</item>
     </style>
 
-    <style name="LoginButtonStyle" parent="@android:style/Widget.Holo.EditText">
+    <style name="LoginEditTextStyle" parent="@android:style/Widget.Holo.EditText">
         <item name="android:drawablePadding">@dimen/value5</item>
         <item name="android:maxLines">1</item>
         <item name="android:textColor">@android:color/white</item>

@@ -12,6 +12,7 @@ import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -71,6 +72,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
+
+        Utilities.showKeyboard(getActivity(), mOTPEditText);
 
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         mDeviceID = telephonyManager.getDeviceId();
