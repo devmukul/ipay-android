@@ -33,6 +33,7 @@ public class IPayContactsFragment extends BaseContactsFragment
     private int profilePictureUrlIndex;
     private int verificationStatusIndex;
     private int accountTypeIndex;
+    private int isMemberIndex;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +71,7 @@ public class IPayContactsFragment extends BaseContactsFragment
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
                     accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
+                    isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
 
                     this.registerContentObserver(cursor, DBConstants.DB_TABLE_SUBSCRIBERS_URI);
                 }
@@ -101,8 +103,9 @@ public class IPayContactsFragment extends BaseContactsFragment
         String profilePictureUrl = mCursor.getString(profilePictureUrlIndex);
         int verificationStatus = mCursor.getInt(verificationStatusIndex);
         int accountType = mCursor.getInt(accountTypeIndex);
+        int isMember = mCursor.getInt(isMemberIndex);
 
-        FriendInfo friendInfo = new FriendInfo(accountType, true, verificationStatus, name, profilePictureUrl);
+        FriendInfo friendInfo = new FriendInfo(accountType, isMember, verificationStatus, name, profilePictureUrl);
         FriendNode friend = new FriendNode(phoneNumber, friendInfo);
 
         return friend;

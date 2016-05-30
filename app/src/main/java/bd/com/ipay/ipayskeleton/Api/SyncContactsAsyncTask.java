@@ -1,22 +1,18 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendResponse;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.Friend.UpdateFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.UpdateFriendResponse;
@@ -55,11 +51,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         Log.i("Updated Contacts", contactDiff.updatedFriends.toString());
 
         DataHelper dataHelper = DataHelper.getInstance(context);
-        for (FriendNode friend : serverContacts) {
-            if (friend.getInfo().isMember()) {
-                dataHelper.createSubscriber(friend);
-            }
-        }
+        dataHelper.createFriends(serverContacts);
         dataHelper.closeDbOpenHelper();
 
         contactsSyncedOnce = true;
