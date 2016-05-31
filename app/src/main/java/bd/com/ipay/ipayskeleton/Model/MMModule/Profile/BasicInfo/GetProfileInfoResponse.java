@@ -1,5 +1,8 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,15 +19,9 @@ public class GetProfileInfoResponse {
     public int verifiedByCount;
     public String father;
     public String mother;
-    public String spouse;
-    public String fatherMobileNumber;
-    public String motherMobileNumber;
-    public String spouseMobileNumber;
+    public long signupTime;
 
     public Set<UserProfilePictureClass> profilePictures = new HashSet<>();
-
-    public GetProfileInfoResponse() {
-    }
 
     public String getMessage() {
         return message;
@@ -70,23 +67,15 @@ public class GetProfileInfoResponse {
         return mother;
     }
 
-    public String getSpouse() {
-        return spouse;
+    public String getSignUpTime() {
+        Date date = new Date();
+        date.setTime(signupTime);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return simpleDateFormat.format(date);
     }
 
     public Set<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
-    }
-
-    public String getFatherMobileNumber() {
-        return fatherMobileNumber;
-    }
-
-    public String getMotherMobileNumber() {
-        return motherMobileNumber;
-    }
-
-    public String getSpouseMobileNumber() {
-        return spouseMobileNumber;
     }
 }

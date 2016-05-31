@@ -69,11 +69,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
     private EditText mFathersNameEditText;
     private EditText mMothersNameEditText;
-    private EditText mSpouseNameEditText;
-
-    private EditText mFathersMobileNumberEditText;
-    private EditText mMothersMobileNumberEditText;
-    private EditText mSpouseMobileNumberEditText;
 
     private EditText mDateOfBirthEditText;
     private Spinner mOccupationSpinner;
@@ -93,11 +88,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
     private String mFathersName = "";
     private String mMothersName = "";
-    private String mSpouseName = "";
-
-    private String mFathersMobileNumber = "";
-    private String mMothersMobileNumber = "";
-    private String mSpouseMobileNumber = "";
 
     private int mOccupation = 0;
     private String mGender = "";
@@ -149,10 +139,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mName = bundle.getString(Constants.NAME);
         mFathersName = bundle.getString(Constants.FATHERS_NAME);
         mMothersName = bundle.getString(Constants.MOTHERS_NAME);
-        mSpouseName = bundle.getString(Constants.SPOUSES_NAME);
-        mFathersMobileNumber = bundle.getString(Constants.FATHERS_MOBILE_NUMBER);
-        mMothersMobileNumber = bundle.getString(Constants.MOTHERS_MOBILE_NUMBER);
-        mSpouseMobileNumber = bundle.getString(Constants.SPOUSES_MOBILE_NUMBER);
         mProfilePicture = bundle.getString(Constants.PROFILE_PICTURE);
         mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
         mGender = bundle.getString(Constants.GENDER);
@@ -164,11 +150,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         mFathersNameEditText = (EditText) v.findViewById(R.id.fathers_name);
         mMothersNameEditText = (EditText) v.findViewById(R.id.mothers_name);
-        mSpouseNameEditText = (EditText) v.findViewById(R.id.spouse_name);
-
-        mFathersMobileNumberEditText = (EditText) v.findViewById(R.id.fathers_mobile_number);
-        mMothersMobileNumberEditText = (EditText) v.findViewById(R.id.mothers_mobile_number);
-        mSpouseMobileNumberEditText = (EditText) v.findViewById(R.id.spouse_mobile_number);
 
         mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
 
@@ -230,11 +211,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         mFathersName = mFathersNameEditText.getText().toString().trim();
         mMothersName = mMothersNameEditText.getText().toString().trim();
-        mSpouseName = mSpouseNameEditText.getText().toString().trim();
-
-        mFathersMobileNumber = mFathersMobileNumberEditText.getText().toString().trim();
-        mMothersMobileNumber = mMothersMobileNumberEditText.getText().toString().trim();
-        mSpouseMobileNumber = mSpouseMobileNumberEditText.getText().toString().trim();
 
         mGender = GenderList.genderNameToCodeMap.get(
                 mGenderSpinner.getSelectedItem().toString());
@@ -254,24 +230,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             mNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameEditText;
             cancel = true;
-        }
-
-        if (!ContactEngine.isValidNumber(mFathersMobileNumber)) {
-            focusView = mFathersMobileNumberEditText;
-            cancel = true;
-            mFathersMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
-        }
-
-        if (!ContactEngine.isValidNumber(mMothersMobileNumber)) {
-            focusView = mMothersMobileNumberEditText;
-            cancel = true;
-            mMothersMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
-        }
-
-        if (!ContactEngine.isValidNumber(mSpouseMobileNumber)) {
-            focusView = mSpouseMobileNumberEditText;
-            cancel = true;
-            mSpouseMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
         }
 
         if (!Utilities.isDateOfBirthValid(mDateOfBirth)) {
@@ -304,11 +262,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         Gson gson = new Gson();
         
-        SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(
-                pref.getString(Constants.USERID, ""), mName, mGender, mDateOfBirth,
-                mOccupation, mFathersName,
-                mMothersName, mSpouseName,
-                mFathersMobileNumber, mMothersMobileNumber, mSpouseMobileNumber);
+        SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, mDateOfBirth,
+                mOccupation, mFathersName, mMothersName);
 
         String profileInfoJson = gson.toJson(setProfileInfoRequest);
         mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
@@ -322,11 +277,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         mFathersNameEditText.setText(mFathersName);
         mMothersNameEditText.setText(mMothersName);
-        mSpouseNameEditText.setText(mSpouseName);
-
-        mFathersMobileNumberEditText.setText(mFathersMobileNumber);
-        mMothersMobileNumberEditText.setText(mMothersMobileNumber);
-        mSpouseMobileNumberEditText.setText(mSpouseMobileNumber);
 
         mDateOfBirthEditText.setText(mDateOfBirth);
 

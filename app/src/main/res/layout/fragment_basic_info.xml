@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -103,67 +103,18 @@
                     style="@style/ProfileTextStyle"
                     android:layout_below="@+id/textview_fathers_name" />
 
-                <TextView
-                    android:id="@+id/textview_spouse_name_label"
-                    style="@style/ProfileLabelStyle"
-                    android:layout_below="@+id/textview_mothers_name"
-                    android:layout_toLeftOf="@+id/textview_spouse_name"
-                    android:text="@string/spouses_name" />
-
-                <TextView
-                    android:id="@+id/textview_spouse_name"
-                    style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_mothers_name" />
-
-
-                <!-- Relative mobile number -->
-                <TextView
-                    android:id="@+id/textview_fathers_mobile_number_label"
-                    style="@style/ProfileLabelStyle"
-                    android:layout_below="@+id/textview_spouse_name"
-                    android:layout_toLeftOf="@+id/textview_fathers_mobile_number"
-                    android:text="@string/fathers_mobile_number" />
-
-                <TextView
-                    android:id="@+id/textview_fathers_mobile_number"
-                    style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_spouse_name" />
-
-                <TextView
-                    android:id="@+id/textview_mothers_mobile_number_label"
-                    style="@style/ProfileLabelStyle"
-                    android:layout_below="@+id/textview_fathers_mobile_number"
-                    android:layout_toLeftOf="@+id/textview_mothers_mobile_number"
-                    android:text="@string/mothers_mobile_number" />
-
-                <TextView
-                    android:id="@+id/textview_mothers_mobile_number"
-                    style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_fathers_mobile_number" />
-
-                <TextView
-                    android:id="@+id/textview_spouse_mobile_number_label"
-                    style="@style/ProfileLabelStyle"
-                    android:layout_below="@+id/textview_mothers_mobile_number"
-                    android:layout_toLeftOf="@+id/textview_spouse_mobile_number"
-                    android:text="@string/spouses_mobile_number" />
-
-                <TextView
-                    android:id="@+id/textview_spouse_mobile_number"
-                    style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_mothers_mobile_number" />
 
                 <TextView
                     android:id="@+id/textview_dob_label"
                     style="@style/ProfileLabelStyle"
-                    android:layout_below="@+id/textview_spouse_mobile_number"
+                    android:layout_below="@+id/textview_mothers_name"
                     android:layout_toLeftOf="@+id/textview_dob"
                     android:text="@string/date_of_birth" />
 
                 <TextView
                     android:id="@+id/textview_dob"
                     style="@style/ProfileTextStyle"
-                    android:layout_below="@+id/textview_spouse_mobile_number" />
+                    android:layout_below="@+id/textview_mothers_name" />
 
 
                 <!-- Spinners -->
@@ -190,8 +141,20 @@
                     android:id="@+id/textview_gender"
                     style="@style/ProfileTextStyle"
                     android:layout_below="@+id/textview_occupation" />
+
+                <TextView
+                    android:id="@+id/textview_signup_label"
+                    style="@style/ProfileLabelStyle"
+                    android:layout_below="@+id/textview_gender"
+                    android:layout_toLeftOf="@+id/textview_signup"
+                    android:text="@string/member_since" />
+
+                <TextView
+                    android:id="@+id/textview_signup"
+                    style="@style/ProfileTextStyle"
+                    android:layout_below="@+id/textview_gender" />
             </RelativeLayout>
 
         </LinearLayout>
     </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+</ScrollView>

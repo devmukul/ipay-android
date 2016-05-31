@@ -8,38 +8,13 @@ public class SetProfileInfoRequest {
     public int occupation;
     public String father;
     public String mother;
-    public String spouse;
-    public String mobileNumber;
-    public String fatherMobileNumber;
-    public String motherMobileNumber;
-    public String spouseMobileNumber;
 
-    public SetProfileInfoRequest(String mobileNumber, String name, String gender, String dob,
-                                 int occupation, String father, String mother,
-                                 String spouse, String fatherMobileNumber,
-                                 String motherMobileNumber, String spouseMobileNumber) {
-
-        this.mobileNumber = mobileNumber;
+    public SetProfileInfoRequest(String name, String gender, String dob, int occupation, String father, String mother) {
         this.name = name;
         this.gender = gender;
         this.dob = dob;
         this.occupation = occupation;
-
-        // Empty values not allowed
-        if (father != null && !father.isEmpty())
-            this.father = father;
-        if (mother != null && !mother.isEmpty())
-            this.mother = mother;
-        if (spouse != null && !spouse.isEmpty())
-            this.spouse = spouse;
-
-        if (fatherMobileNumber != null && !fatherMobileNumber.isEmpty())
-            this.fatherMobileNumber = fatherMobileNumber;
-        if (motherMobileNumber != null && !motherMobileNumber.isEmpty())
-            this.motherMobileNumber = motherMobileNumber;
-        if (spouseMobileNumber != null && !spouseMobileNumber.isEmpty())
-            this.spouseMobileNumber = spouseMobileNumber;
+        this.father = father;
+        this.mother = mother;
     }
 }
-
-

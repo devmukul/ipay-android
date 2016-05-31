@@ -54,15 +54,11 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private TextView mFathersNameView;
     private TextView mMothersNameView;
-    private TextView mSpouseNameView;
-
-    private TextView mFathersMobileNumberView;
-    private TextView mMothersMobileNumberView;
-    private TextView mSpouseMobileNumberView;
 
     private TextView mDateOfBirthView;
     private TextView mOccupationView;
     private TextView mGenderView;
+    private TextView mSignUpTimeView;
 
     private SharedPreferences pref;
 
@@ -74,14 +70,10 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private String mFathersName = "";
     private String mMothersName = "";
-    private String mSpouseName = "";
-
-    private String mFathersMobileNumber = "";
-    private String mMothersMobileNumber = "";
-    private String mSpouseMobileNumber = "";
 
     private int mOccupation = 0;
     private String mGender = "";
+    private String mSignUpTime = "";
     private String mVerificationStatus = null;
 
     @Override
@@ -126,15 +118,11 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
         mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
-        mSpouseNameView = (TextView) v.findViewById(R.id.textview_spouse_name);
-
-        mFathersMobileNumberView = (TextView) v.findViewById(R.id.textview_fathers_mobile_number);
-        mMothersMobileNumberView = (TextView) v.findViewById(R.id.textview_mothers_mobile_number);
-        mSpouseMobileNumberView = (TextView) v.findViewById(R.id.textview_spouse_mobile_number);
 
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
         mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
         mGenderView = (TextView) v.findViewById(R.id.textview_gender);
+        mSignUpTimeView = (TextView) v.findViewById(R.id.textview_signup);
 
         mMobileNumber = pref.getString(Constants.USERID, "");
         mGender = pref.getString(Constants.GENDER, "");
@@ -175,10 +163,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         bundle.putString(Constants.NAME, mName);
         bundle.putString(Constants.FATHERS_NAME, mFathersName);
         bundle.putString(Constants.MOTHERS_NAME, mMothersName);
-        bundle.putString(Constants.SPOUSES_NAME, mSpouseName);
-        bundle.putString(Constants.FATHERS_MOBILE_NUMBER, mFathersMobileNumber);
-        bundle.putString(Constants.MOTHERS_MOBILE_NUMBER, mMothersMobileNumber);
-        bundle.putString(Constants.SPOUSES_MOBILE_NUMBER, mSpouseMobileNumber);
         bundle.putString(Constants.DATE_OF_BIRTH, mDateOfBirth);
         bundle.putString(Constants.PROFILE_PICTURE, profileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
@@ -198,13 +182,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
         mFathersNameView.setText(mFathersName);
         mMothersNameView.setText(mMothersName);
-        mSpouseNameView.setText(mSpouseName);
-
-        mFathersMobileNumberView.setText(mFathersMobileNumber);
-        mMothersMobileNumberView.setText(mMothersMobileNumber);
-        mSpouseMobileNumberView.setText(mSpouseMobileNumber);
-
-        mDateOfBirthView.setText(mDateOfBirth);
+        mSignUpTimeView.setText(mSignUpTime);
 
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
@@ -335,25 +313,21 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             mName = mGetProfileInfoResponse.getName();
         if (mGetProfileInfoResponse.getMobileNumber() != null)
             mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
-        if (mGetProfileInfoResponse.getDateOfBirth() != null)
-            mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
 
         if (mGetProfileInfoResponse.getFather() != null)
             mFathersName = mGetProfileInfoResponse.getFather();
         if (mGetProfileInfoResponse.getMother() != null)
             mMothersName = mGetProfileInfoResponse.getMother();
-        if (mGetProfileInfoResponse.getSpouse() != null)
-            mSpouseName = mGetProfileInfoResponse.getSpouse();
 
-        if (mGetProfileInfoResponse.getFatherMobileNumber() != null)
-            mFathersMobileNumber = mGetProfileInfoResponse.getFatherMobileNumber();
-        if (mGetProfileInfoResponse.getMotherMobileNumber() != null)
-            mMothersMobileNumber = mGetProfileInfoResponse.getMotherMobileNumber();
-        if (mGetProfileInfoResponse.getSpouseMobileNumber() != null)
-            mSpouseMobileNumber = mGetProfileInfoResponse.getSpouseMobileNumber();
+        if (mGetProfileInfoResponse.getDateOfBirth() != null)
+            mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
 
         if (mGetProfileInfoResponse.getGender() != null)
             mGender = mGetProfileInfoResponse.getGender();
+
+        if (mGetProfileInfoResponse.getSignUpTime() != null) {
+            mSignUpTime = mGetProfileInfoResponse.getSignUpTime();
+        }
 
         mOccupation = mGetProfileInfoResponse.getOccupation();
         mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();

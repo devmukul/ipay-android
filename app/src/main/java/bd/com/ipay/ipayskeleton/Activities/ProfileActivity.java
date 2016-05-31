@@ -54,6 +54,14 @@ public class ProfileActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+        else
+            super.onBackPressed();
+    }
+
     public void switchToFragment(String targetFragment, Bundle bundle, boolean addToBackStack) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment fragment;
@@ -102,52 +110,85 @@ public class ProfileActivity extends BaseActivity {
     }
 
     public void switchToBasicInfoFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BasicInfoFragment()).commit();
     }
 
     public void switchToProfileCompletionFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileCompletionFragment()).commit();
     }
 
     public void switchToEditBasicInfoFragment(Bundle bundle) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         EditBasicInfoFragment editBasicInfoFragment = new EditBasicInfoFragment();
         editBasicInfoFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, editBasicInfoFragment).addToBackStack(null).commit();
     }
 
     public void switchToAddressFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddressFragment()).commit();
     }
 
     public void switchToEditAddressFragment(Bundle bundle) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         EditAddressFragment editAddressFragment = new EditAddressFragment();
         editAddressFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, editAddressFragment).addToBackStack(null).commit();
     }
 
     public void switchToEmailFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EmailFragment()).commit();
     }
 
     public void switchToTrustedNetworkFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TrustedNetworkFragment()).commit();
     }
 
     public void switchToDocumentUploadFragment(Bundle bundle) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         DocumentUploadFragment documentUploadFragment = new DocumentUploadFragment();
         documentUploadFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, documentUploadFragment).addToBackStack(null).commit();
     }
 
     public void switchToDocumentListFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new DocumentListFragment()).commit();
     }
 
     public void switchToBankFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BankAccountsFragment()).commit();
     }
 
     public void switchToIntroducerFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IntroducerFragment()).commit();
     }
 
