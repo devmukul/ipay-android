@@ -6,17 +6,22 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -27,6 +32,7 @@ public class MobileTopupFragment extends Fragment {
 
     private EditText mMobileNumberEditText;
     private EditText mAmountEditText;
+    private ImageView mSelectReceiverButton;
     private Spinner mSelectOperator;
     private Button mRechargeButton;
 
@@ -38,6 +44,7 @@ public class MobileTopupFragment extends Fragment {
     private SharedPreferences pref;
 
     private static final int MOBILE_TOPUP_REVIEW_REQUEST = 100;
+    private final int PICK_CONTACT_REQUEST = 100;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +55,7 @@ public class MobileTopupFragment extends Fragment {
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mSelectOperator = (Spinner) v.findViewById(R.id.operator_list_spinner);
+        mSelectReceiverButton = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
 
         mSelectType = (RadioGroup) v.findViewById(R.id.mobile_number_type_selector);
@@ -82,18 +90,52 @@ public class MobileTopupFragment extends Fragment {
             }
         });
 
+        String verificationStatus = pref.getString(Constants.VERIFICATION_STATUS, Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED);
         String userMobileNumber = pref.getString(Constants.USERID, "");
-        setPhoneNumber(userMobileNumber);
+        mMobileNumberEditText.setText(userMobileNumber);
+
+        if (!verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+            mMobileNumberEditText.setEnabled(false);
+            mMobileNumberEditText.setFocusable(false);
+
+            mSelectOperator.setEnabled(false);
+            mSelectReceiverButton.setVisibility(View.GONE);
+            mAmountEditText.requestFocus();
+
+        } else {
+            mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
+                    startActivityForResult(intent, PICK_CONTACT_REQUEST);
+                }
+            });
+
+            mMobileNumberEditText.requestFocus();
+
+            mMobileNumberEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    setOperator(s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+        }
 
         return v;
     }
 
-    private void setPhoneNumber(String phoneNumber) {
+    private void setOperator(String phoneNumber) {
         phoneNumber = ContactEngine.trimPrefix(phoneNumber);
-        mMobileNumberEditText.setText(phoneNumber);
-
-        mMobileNumberEditText.setEnabled(false);
-        mMobileNumberEditText.setFocusable(false);
 
         final String[] OPERATOR_PREFIXES = {"17", "18", "16", "19", "15"};
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
@@ -102,7 +144,6 @@ public class MobileTopupFragment extends Fragment {
                 break;
             }
         }
-        mSelectOperator.setEnabled(false);
     }
 
     private boolean verifyUserInputs() {
@@ -125,9 +166,10 @@ public class MobileTopupFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == MOBILE_TOPUP_REVIEW_REQUEST) {
-            if (getActivity() != null)
-                getActivity().finish();
+        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+            String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+            if (mobileNumber != null)
+                mMobileNumberEditText.setText(mobileNumber);
         }
     }
 
