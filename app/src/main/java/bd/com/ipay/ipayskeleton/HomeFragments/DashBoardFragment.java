@@ -34,9 +34,18 @@ public class DashBoardFragment extends Fragment {
     private TabLayout.Tab notificationTab;
     private TabLayout.Tab servicesTab;
 
-    private static final int[] ICONS_STATE_SELECTED = {R.drawable.ic_home_white_24dp, R.drawable.ic_service, R.drawable.ic_people_white_24dp, R.drawable.ic_notifications_white_24dp};
-    private static final int[] ICONS_STATE_UNSELECTED = {R.drawable.ic_home_white_outline_24dp, R.drawable.ic_service_outline, R.drawable.ic_people_outline_white_24dp,
-                                                            R.drawable.ic_notifications_none_white_24dp};
+    private View homeTabView;
+    private View homeTabSelectedView;
+    private View contactsTabView;
+    private View contactsTabSelectedView;
+    private View notificationTabView;
+    private View notificationTabSelectedView;
+    private View servicesTabView;
+    private View servicesTabSelectedView;
+
+//    private static final int[] ICONS_STATE_SELECTED = {R.drawable.ic_home_white_24dp, R.drawable.ic_service, R.drawable.ic_people_white_24dp, R.drawable.ic_notifications_white_24dp};
+//    private static final int[] ICONS_STATE_UNSELECTED = {R.drawable.ic_home_white_outline_24dp, R.drawable.ic_service_outline, R.drawable.ic_people_outline_white_24dp,
+//            R.drawable.ic_notifications_none_white_24dp};
 
     private ViewPager viewPager;
 
@@ -51,20 +60,19 @@ public class DashBoardFragment extends Fragment {
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         viewPager.setAdapter(new DashBoardTabAdapter(getChildFragmentManager()));
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(3);    // TODO: Change upon number of tabs
 
         final TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        setupCustomViewsForTabLayout();
 
         homeTab = tabLayout.getTabAt(HOME_TAB);
         notificationTab = tabLayout.getTabAt(NOTIFICATION_TAB);
         servicesTab = tabLayout.getTabAt(SERVICES_TAB);
         contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
 
-        homeTab.setIcon(ICONS_STATE_SELECTED[HOME_TAB]);
-        notificationTab.setIcon(ICONS_STATE_UNSELECTED[NOTIFICATION_TAB]);
-        servicesTab.setIcon(ICONS_STATE_UNSELECTED[SERVICES_TAB]);
-        contactsTab.setIcon(ICONS_STATE_UNSELECTED[CONTACTS_TAB]);
+        setHomeTabSelected();
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -107,10 +115,10 @@ public class DashBoardFragment extends Fragment {
                     if (tab != null) {
                         if (i == position) {
                             // Selected tab
-                            tab.setIcon(ICONS_STATE_SELECTED[i]);
-                        } else {
-                            // Unselected tab
-                            tab.setIcon(ICONS_STATE_UNSELECTED[i]);
+                            if (position == HOME_TAB) setHomeTabSelected();
+                            else if (position == CONTACTS_TAB) setContactsTabSelected();
+                            else if (position == NOTIFICATION_TAB) setNotificationTabSelected();
+                            else if (position == SERVICES_TAB) setServicesTabSelected();
                         }
                     }
                 }
@@ -125,6 +133,55 @@ public class DashBoardFragment extends Fragment {
         return v;
     }
 
+    private void setupCustomViewsForTabLayout() {
+        homeTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
+        homeTabSelectedView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        homeTabSelectedView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_24dp);
+
+        contactsTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
+        contactsTabSelectedView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        contactsTabSelectedView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_white_24dp);
+
+        notificationTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
+        notificationTabSelectedView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        notificationTabSelectedView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_white_24dp);
+
+        servicesTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
+        servicesTabSelectedView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        servicesTabSelectedView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service);
+    }
+
+    private void setHomeTabSelected() {
+        homeTab.setCustomView(homeTabSelectedView);
+        contactsTab.setCustomView(contactsTabView);
+        notificationTab.setCustomView(notificationTabView);
+        servicesTab.setCustomView(servicesTabView);
+    }
+
+    private void setContactsTabSelected() {
+        homeTab.setCustomView(homeTabView);
+        contactsTab.setCustomView(contactsTabSelectedView);
+        notificationTab.setCustomView(notificationTabView);
+        servicesTab.setCustomView(servicesTabView);
+    }
+
+    private void setNotificationTabSelected() {
+        homeTab.setCustomView(homeTabView);
+        contactsTab.setCustomView(contactsTabView);
+        notificationTab.setCustomView(notificationTabSelectedView);
+        servicesTab.setCustomView(servicesTabView);
+    }
+
+    private void setServicesTabSelected() {
+        homeTab.setCustomView(homeTabView);
+        contactsTab.setCustomView(contactsTabView);
+        notificationTab.setCustomView(notificationTabView);
+        servicesTab.setCustomView(servicesTabSelectedView);
+    }
 
     private class DashBoardTabAdapter extends FragmentPagerAdapter {
 
