@@ -113,13 +113,11 @@ public class DashBoardFragment extends Fragment {
                     TabLayout.Tab tab = tabLayout.getTabAt(i);
 
                     if (tab != null) {
-                        if (i == position) {
-                            // Selected tab
-                            if (position == HOME_TAB) setHomeTabSelected();
-                            else if (position == CONTACTS_TAB) setContactsTabSelected();
-                            else if (position == NOTIFICATION_TAB) setNotificationTabSelected();
-                            else if (position == SERVICES_TAB) setServicesTabSelected();
-                        }
+                        // Selected tab
+                        if (position == HOME_TAB) setHomeTabSelected();
+                        else if (position == CONTACTS_TAB) setContactsTabSelected();
+                        else if (position == NOTIFICATION_TAB) setNotificationTabSelected();
+                        else if (position == SERVICES_TAB) setServicesTabSelected();
                     }
                 }
             }
