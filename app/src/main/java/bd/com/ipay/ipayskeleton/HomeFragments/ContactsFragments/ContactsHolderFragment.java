@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -59,18 +60,26 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         });
 
         getInviteInfo();
-        switchToiPayContacts();
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        switchToiPayContacts();
     }
 
     // Called when the user navigates to this fragment.
     // We can't use onResume because onResume does not get called when the user switch between tabs.
     public void onFocus() {
-        if (mAllContactsFragment != null)
+        if (mAllContactsFragment != null) {
             mAllContactsFragment.onFocus();
-        if (mIPayContactsFragment != null)
+        }
+        if (mIPayContactsFragment != null) {
             mIPayContactsFragment.onFocus();
+        }
 
     }
 
@@ -96,37 +105,30 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         setEnabled(mAllContactsSelector, true);
         setEnabled(miPayContactsSelector, false);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (getActivity() != null) {
-                        if (mAllContactsFragment == null)
-                            mAllContactsFragment = new AllContactsFragment();
-                        mAllContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mAllContactsFragment).commit();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        try {
+            if (getActivity() != null) {
+                if (mAllContactsFragment == null)
+                    mAllContactsFragment = new AllContactsFragment();
+                mAllContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mAllContactsFragment).commit();
             }
-        }, 300);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void switchToiPayContacts() {
         setEnabled(miPayContactsSelector, true);
         setEnabled(mAllContactsSelector, false);
 
-        if (getActivity() != null)
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mIPayContactsFragment == null)
-                        mIPayContactsFragment = new IPayContactsFragment();
-                    mIPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mIPayContactsFragment).commit();
-                }
-            }, 300);
+        try {
+            if (mIPayContactsFragment == null)
+                mIPayContactsFragment = new IPayContactsFragment();
+            mIPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mIPayContactsFragment).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

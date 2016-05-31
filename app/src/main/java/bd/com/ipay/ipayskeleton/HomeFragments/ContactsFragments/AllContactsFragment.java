@@ -24,8 +24,6 @@ public class AllContactsFragment extends BaseContactsFragment
 
     private static final int CONTACTS_QUERY_LOADER = 0;
 
-    private String mQuery = "";
-
     private int nameIndex;
     private int phoneNumberIndex;
     private int contactIdIndex;
@@ -37,7 +35,6 @@ public class AllContactsFragment extends BaseContactsFragment
     public void onResume() {
         super.onResume();
 
-        mQuery = "";
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
     }
 
@@ -63,7 +60,7 @@ public class AllContactsFragment extends BaseContactsFragment
 
         final String selection = Phone.HAS_PHONE_NUMBER + "=1"
                 + " AND " + Phone.DISPLAY_NAME
-                + " LIKE '%" + mQuery + "%'";
+                + " LIKE '%" + getQuery() + "%'";
         final String order = Phone.DISPLAY_NAME + " COLLATE NOCASE ASC";
 
         Uri queryUri = Phone.CONTENT_URI;
@@ -80,8 +77,6 @@ public class AllContactsFragment extends BaseContactsFragment
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        setContentShown(true);
-
         if (data != null) {
             nameIndex = data.getColumnIndex(Phone.DISPLAY_NAME);
             contactIdIndex = data.getColumnIndex(Phone._ID);
@@ -138,7 +133,7 @@ public class AllContactsFragment extends BaseContactsFragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mQuery = newText;
+        setQuery(newText);
         getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
         return true;

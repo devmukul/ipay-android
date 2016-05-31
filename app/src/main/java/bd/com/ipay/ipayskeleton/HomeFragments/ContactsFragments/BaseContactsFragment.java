@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,7 +47,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.Sen
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public abstract class BaseContactsFragment extends ProgressFragment implements
+public abstract class BaseContactsFragment extends Fragment implements
         SearchView.OnQueryTextListener,
         HttpResponseListener {
 
@@ -54,10 +55,12 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    protected MenuItem mSearchMenuItem;
-    protected SearchView mSearchView;
+    private MenuItem mSearchMenuItem;
+    private SearchView mSearchView;
 
     private TextView mEmptyContactsTextView;
+
+    private String mQuery;
 
     protected final int[] PROFILE_PICTURE_BACKGROUNDS = {
             R.color.background_default,
@@ -155,8 +158,19 @@ public abstract class BaseContactsFragment extends ProgressFragment implements
         return v;
     }
 
+    public String getQuery() {
+        if (mQuery == null)
+            return "";
+        else
+            return mQuery;
+    }
+
+    public void setQuery(String query) {
+        mQuery = query;
+    }
+
     public void onFocus() {
-        if (mSearchView != null) {
+        if (mSearchView != null && !getQuery().isEmpty()) {
             mSearchView.setQuery("", false);
         }
     }
