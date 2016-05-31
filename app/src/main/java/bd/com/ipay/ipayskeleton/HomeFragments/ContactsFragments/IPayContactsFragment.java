@@ -44,31 +44,21 @@ public class IPayContactsFragment extends BaseContactsFragment
         if (getArguments() != null)
             mShowVerifiedUsersOnly = getArguments().getBoolean(Constants.VERIFIED_USERS_ONLY, false);
 
+        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
+
         return v;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d("Loader", "Started");
 
         return new SQLiteCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                String query;
 
-                if (mSearchView == null)
-                    query = "";
-                else
-                    query = mSearchView.getQuery().toString();
-
-                Cursor cursor = dataHelper.searchSubscribers(query, mShowVerifiedUsersOnly);
+                Cursor cursor = dataHelper.searchSubscribers(getQuery(), mShowVerifiedUsersOnly);
                 dataHelper.closeDbOpenHelper();
 
                 if (cursor != null) {
@@ -89,8 +79,7 @@ public class IPayContactsFragment extends BaseContactsFragment
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        setContentShown(true);
-
+        Log.d("Loader", "Finished");
         populateList(data, mShowVerifiedUsersOnly ?
                 getString(R.string.no_verified_contacts) : getString(R.string.no_contacts));
     }
@@ -135,6 +124,7 @@ public class IPayContactsFragment extends BaseContactsFragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        setQuery(newText);
         getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
         return true;
