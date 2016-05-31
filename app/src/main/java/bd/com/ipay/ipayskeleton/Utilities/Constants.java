@@ -106,7 +106,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 4;
+    public static final int SERVER_TYPE = 1;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -520,5 +520,12 @@ public class Constants {
     public static final String INVOICE_QUANTITY_TAG = "quantity";
     public static final String INVOICE_RATE_TAG = "rate";
     public static final String INVOICE_TITLE_TAG = "title";
+
+
+    public static final int INVOICE_STATUS_OK = 200;
+    public static final int INVOICE_STATUS_PROCESSING = 102;
+    public static final int INVOICE_STATUS_CANCELED = 2;
+    public static final int INVOICE_STATUS_REJECTED = 3;
+    public static final int INVOICE_STATUS_DRAFT = 4;
 
 }

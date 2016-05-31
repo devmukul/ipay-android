@@ -157,6 +157,29 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mMobileTopUpButton = (Button) v.findViewById(R.id.mobile_recharge_button);
         mMakePaymentButton = (Button) v.findViewById(R.id.make_payment_button);
 
+        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
+            mMakePaymentButton.setText(getString(R.string.make_payment));
+        else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
+            mMakePaymentButton.setText(getString(R.string.create_invoice));
+
+        mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
+                    PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                        @Override
+                        public void ifPinAdded() {
+                            //TODO : start an activity
+                        }
+                    });
+                    makePaymentPinChecker.execute();
+                } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+                    Intent intent = new Intent(getActivity(), MakePaymentActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

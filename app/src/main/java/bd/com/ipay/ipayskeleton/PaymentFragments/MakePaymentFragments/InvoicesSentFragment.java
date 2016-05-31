@@ -321,27 +321,27 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
                 mSenderName.setText(name);
 
-                if (status == Constants.HTTP_RESPONSE_STATUS_OK) {
+                if (status == Constants.INVOICE_STATUS_OK) {
                     mSenderName.setTextColor(Color.GREEN);
                     statusView.setColorFilter(Color.GREEN);
                     statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
 
-                } else if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+                } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
                     mSenderName.setTextColor(getResources().getColor(R.color.background_yellow));
                     statusView.setColorFilter(getResources().getColor(R.color.background_yellow));
                     statusView.setImageResource(R.drawable.ic_cached_black_24dp);
 
-                } else if (status == Constants.HTTP_RESPONSE_STATUS_REJECTED) {
+                } else if (status == Constants.INVOICE_STATUS_REJECTED) {
                     mSenderName.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setColorFilter(Color.RED);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
 
-                } else if (status == Constants.HTTP_RESPONSE_STATUS_CANCELED) {
+                } else if (status == Constants.INVOICE_STATUS_CANCELED) {
                     mSenderName.setTextColor(Color.GRAY);
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
 
-                }  else if (status == Constants.HTTP_RESPONSE_STATUS_DRAFT) {
+                }  else if (status == Constants.INVOICE_STATUS_DRAFT) {
                     mSenderName.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setColorFilter(Color.RED);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
