@@ -18,8 +18,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -54,6 +52,9 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private TextView mTotalView;
     private Button mTopupButton;
 
+    private View mServiceChargeHolder;
+    private View mTopUpHolder;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +70,9 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
         mTopupButton = (Button) v.findViewById(R.id.button_topup);
+
+        mServiceChargeHolder = v.findViewById(R.id.service_charge_holder);
+        mTopUpHolder = v.findViewById(R.id.topup_holder);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -126,8 +130,13 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+        if (serviceCharge == null || serviceCharge.equals(BigDecimal.ZERO)) {
+            mServiceChargeHolder.setVisibility(View.GONE);
+            mTopUpHolder.setVisibility(View.GONE);
+        } else {
+            mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+            mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+        }
     }
 
     @Override
