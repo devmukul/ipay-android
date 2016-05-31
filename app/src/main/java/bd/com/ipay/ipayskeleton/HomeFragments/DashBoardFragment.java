@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
 
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
@@ -35,17 +36,9 @@ public class DashBoardFragment extends Fragment {
     private TabLayout.Tab servicesTab;
 
     private View homeTabView;
-    private View homeTabSelectedView;
     private View contactsTabView;
-    private View contactsTabSelectedView;
     private View notificationTabView;
-    private View notificationTabSelectedView;
     private View servicesTabView;
-    private View servicesTabSelectedView;
-
-//    private static final int[] ICONS_STATE_SELECTED = {R.drawable.ic_home_white_24dp, R.drawable.ic_service, R.drawable.ic_people_white_24dp, R.drawable.ic_notifications_white_24dp};
-//    private static final int[] ICONS_STATE_UNSELECTED = {R.drawable.ic_home_white_outline_24dp, R.drawable.ic_service_outline, R.drawable.ic_people_outline_white_24dp,
-//            R.drawable.ic_notifications_none_white_24dp};
 
     private ViewPager viewPager;
 
@@ -133,52 +126,72 @@ public class DashBoardFragment extends Fragment {
 
     private void setupCustomViewsForTabLayout() {
         homeTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        homeTabSelectedView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        homeTabSelectedView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_24dp);
 
         contactsTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        contactsTabSelectedView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        contactsTabSelectedView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_white_24dp);
 
         notificationTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
-        notificationTabSelectedView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        notificationTabSelectedView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_white_24dp);
 
         servicesTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-        servicesTabSelectedView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        servicesTabSelectedView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service);
     }
 
     private void setHomeTabSelected() {
-        homeTab.setCustomView(homeTabSelectedView);
+
+        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_24dp);
+        homeTab.setCustomView(homeTabView);
+
+        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
         contactsTab.setCustomView(contactsTabView);
+
+        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
         notificationTab.setCustomView(notificationTabView);
+
+        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
         servicesTab.setCustomView(servicesTabView);
     }
 
     private void setContactsTabSelected() {
+
+        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
         homeTab.setCustomView(homeTabView);
-        contactsTab.setCustomView(contactsTabSelectedView);
+
+        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_white_24dp);
+        contactsTab.setCustomView(contactsTabView);
+
+        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
         notificationTab.setCustomView(notificationTabView);
+
+        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
         servicesTab.setCustomView(servicesTabView);
     }
 
     private void setNotificationTabSelected() {
+
+        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
         homeTab.setCustomView(homeTabView);
+
+        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
         contactsTab.setCustomView(contactsTabView);
-        notificationTab.setCustomView(notificationTabSelectedView);
+
+        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_white_24dp);
+        notificationTab.setCustomView(notificationTabView);
+
+        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
         servicesTab.setCustomView(servicesTabView);
     }
 
     private void setServicesTabSelected() {
+
+        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
         homeTab.setCustomView(homeTabView);
+
+        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
         contactsTab.setCustomView(contactsTabView);
+
+        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
         notificationTab.setCustomView(notificationTabView);
-        servicesTab.setCustomView(servicesTabSelectedView);
+
+        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service);
+        servicesTab.setCustomView(servicesTabView);
     }
 
     private class DashBoardTabAdapter extends FragmentPagerAdapter {
