@@ -142,22 +142,22 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
                 mVatView.setText(Utilities.formatTaka(mVat));
                 mTotalView.setText(Utilities.formatTaka(mAmount));
-                if (status == Constants.HTTP_RESPONSE_STATUS_OK) {
+                if (status == Constants.INVOICE_STATUS_ACCEPTED) {
                     mStatusView.setText(context.getString(R.string.transaction_successful));
                     mStatusView.setTextColor(context.getResources().getColor(R.color.bottle_green));
 
-                } else if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+                } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
                     mStatusView.setText(context.getString(R.string.in_progress));
                     mStatusView.setTextColor(context.getResources().getColor(R.color.background_yellow));
 
-                } else if (status == Constants.HTTP_RESPONSE_STATUS_REJECTED) {
+                } else if (status == Constants.INVOICE_STATUS_REJECTED) {
                     mStatusView.setText(context.getString(R.string.transaction_failed));
                     mStatusView.setTextColor(context.getResources().getColor(R.color.background_red));
-                } else if (status == Constants.HTTP_RESPONSE_STATUS_CANCELED) {
+                } else if (status == Constants.INVOICE_STATUS_CANCELED) {
                     mStatusView.setText(context.getString(R.string.transaction_failed));
                     mStatusView.setTextColor(Color.GRAY);
                 }
-                else if (status == Constants.HTTP_RESPONSE_STATUS_DRAFT) {
+                else if (status == Constants.INVOICE_STATUS_DRAFT) {
                     mStatusView.setText(context.getString(R.string.draft));
                     mStatusView.setTextColor(Color.GRAY);
                 }

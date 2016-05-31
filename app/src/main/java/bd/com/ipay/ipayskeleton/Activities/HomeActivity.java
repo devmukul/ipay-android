@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
+import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
@@ -338,7 +339,12 @@ public class HomeActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_event) {
+        } else if (id == R.id.nav_about) {
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new AboutFragment()).commit();
+            switchedToHomeFragment = false;
+
+        }  else if (id == R.id.nav_event) {
 
             Intent intent = new Intent(HomeActivity.this, EventActivity.class);
             startActivity(intent);

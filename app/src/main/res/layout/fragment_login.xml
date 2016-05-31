@@ -42,13 +42,13 @@
 
                     <EditText
                         android:id="@+id/login_mobile_number"
+                        style="@style/LoginEditTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/mobile_number"
                         android:inputType="phone"
                         android:maxLength="14"
-                        android:text="+880"
-                        style="@style/LoginEditTextStyle">
+                        android:text="+880">
 
                         <requestFocus />
                     </EditText>
@@ -79,13 +79,13 @@
 
                     <EditText
                         android:id="@+id/login_password"
+                        style="@style/LoginEditTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_password"
                         android:imeActionId="@+id/login"
                         android:imeActionLabel="@string/action_sign_in_short"
-                        android:inputType="textPassword"
-                        style="@style/LoginEditTextStyle" />
+                        android:inputType="textPassword" />
 
                 </android.support.design.widget.TextInputLayout>
             </RelativeLayout>
@@ -114,26 +114,5 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/textview_server_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/textview_build_number"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="2dp"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/textview_build_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
     </RelativeLayout>
-
-
 </ScrollView>

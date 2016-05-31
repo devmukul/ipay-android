@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
+    tools:context=".Activities.TourActivity">
+
+    <ImageView
+        android:id="@+id/iPay_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value64"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo_ipay_full_size" />
+
+    <TextView
+        android:id="@+id/iPay_name"
+        android:layout_below="@+id/iPay_logo"
+        style="@style/TextStylePrimaryLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value30"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_double"
+        android:gravity="center"
+        android:text="iPay Systems Ltd."
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textview_build_number"
+        style="@style/TextStyleSecondaryMedium"
+        android:layout_below="@+id/iPay_name"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/list_item_transaction_history_height"
+        android:gravity="center" />
+
+</RelativeLayout>

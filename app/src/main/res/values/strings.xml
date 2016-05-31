@@ -371,6 +371,7 @@
     <string name="logout">Log out</string>
     <string name="topup">Mobile Top Up</string>
     <string name="transaction_history">Transaction History</string>
+    <string name="about">About</string>
     <string name="notification">Notification</string>
     <string name="settings">Settings</string>
     <string name="security_settings">Security Settings</string>

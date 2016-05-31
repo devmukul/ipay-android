@@ -321,7 +321,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
                 mSenderName.setText(name);
 
-                if (status == Constants.INVOICE_STATUS_OK) {
+                if (status == Constants.INVOICE_STATUS_ACCEPTED) {
                     mSenderName.setTextColor(Color.GREEN);
                     statusView.setColorFilter(Color.GREEN);
                     statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);

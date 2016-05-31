@@ -522,7 +522,7 @@ public class Constants {
     public static final String INVOICE_TITLE_TAG = "title";
 
 
-    public static final int INVOICE_STATUS_OK = 200;
+    public static final int INVOICE_STATUS_ACCEPTED = 200;
     public static final int INVOICE_STATUS_PROCESSING = 102;
     public static final int INVOICE_STATUS_CANCELED = 2;
     public static final int INVOICE_STATUS_REJECTED = 3;

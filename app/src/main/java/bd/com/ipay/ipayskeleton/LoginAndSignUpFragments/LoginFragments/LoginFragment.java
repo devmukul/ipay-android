@@ -48,8 +48,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private Button mButtonForgetPassword;
     private String mPasswordLogin;
     private String mUserNameLogin;
-    private TextView mServerNameView;
-    private TextView mBuildNumberView;
 
     private ProgressDialog mProgressDialog;
     private String mDeviceID;
@@ -75,8 +73,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
         mUserNameLoginView = (EditText) v.findViewById(R.id.login_mobile_number);
         mPasswordLoginView = (EditText) v.findViewById(R.id.login_password);
-        mServerNameView = (TextView) v.findViewById(R.id.textview_server_name);
-        mBuildNumberView = (TextView) v.findViewById(R.id.textview_build_number);
 
         putConstantStringInfront(mUserNameLoginView, "+880");
 
@@ -109,18 +105,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             String userIdWithoutPrefix = ContactEngine.trimPrefix(pref.getString(Constants.USERID, ""));
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + userIdWithoutPrefix);
         }
-
-//        try {
-//            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-//            String version = pInfo.versionName;
-//            mBuildNumberView.setText("Build " + version);
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//        mServerNameView.setText("Connected to the " + Constants.SERVER_NAME + " server");
-
-
 
         // Auto Login
         if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
