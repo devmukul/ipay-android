@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBasicInfoFragment extends Fragment implements HttpResponseListener {
@@ -386,6 +387,13 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                         ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
+
+                        // We need to update the basic info page when user navigates to that page from the current edit page.
+                        // But by default, the basic info stored in our database is refreshed only when a push is received.
+                        // It might be the case that push notification is not yet received on the phone and user already
+                        // navigated to the basic info page. To handle this case, we are setting updateNeeded to true.
+                        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+                        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, true);
                     }
                 } else {
                     if (getActivity() != null)
@@ -404,6 +412,9 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
