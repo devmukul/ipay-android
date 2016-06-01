@@ -33,7 +33,9 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
@@ -89,9 +91,14 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private RecyclerView.LayoutManager mLayoutManager;
     private Button addNewBankButton;
     private List<UserBankClass> mListUserBankClasses;
-    private ArrayList<BankBranch> bankBranches;
-    private ArrayList<String> bankBranchNames;
-    ArrayAdapter<String> mBranchAdapter;
+    // Contains a list of bank branch corresponding to each district
+    private Map<String, ArrayList<BankBranch>> bankDistrictToBranchMap;
+    private ArrayList<String> mDistrictNames;
+    private ArrayList<BankBranch> mBranches;
+    private ArrayList<String> mBranchNames;
+
+    private ArrayAdapter<String> mDistrictAdapter;
+    private ArrayAdapter<String> mBranchAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,9 +124,14 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bank_accounts, container, false);
         getActivity().setTitle(R.string.bank_accounts);
-        bankBranches = new ArrayList<BankBranch>();
-        bankBranchNames = new ArrayList<>();
-        mBranchAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, bankBranchNames);
+
+        mDistrictNames = new ArrayList<>();
+        mBranches = new ArrayList<>();
+        mBranchNames = new ArrayList<>();
+
+        mDistrictAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mDistrictNames);
+        mDistrictAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        mBranchAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mBranchNames);
         mBranchAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
         mBankListRecyclerView = (RecyclerView) v.findViewById(R.id.list_bank);
@@ -213,11 +225,13 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                         dialog.dismiss();
                     }
                 })
+                .autoDismiss(false)
                 .show();
 
         View view = dialog.getCustomView();
         final Spinner mBankListSpinner = (Spinner) view.findViewById(R.id.spinner_default_bank_accounts);
         final Spinner mAccountTypesSpinner = (Spinner) view.findViewById(R.id.spinner_default_account_types);
+        final Spinner mDistrictSpinner = (Spinner) view.findViewById(R.id.spinner_branch_districts);
         final Spinner mBankBranchSpinner = (Spinner) view.findViewById(R.id.spinner_bank_branch);
         final EditText mAccountNameEditText = (EditText) view.findViewById(R.id.bank_account_name);
         final EditText mAccountNumberEditText = (EditText) view.findViewById(R.id.bank_account_number);
@@ -235,6 +249,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 R.array.default_bank_account_types, android.R.layout.simple_spinner_item);
         mAccountTypesSpinner.setAdapter(mAdapterAccountTypes);
 
+        mDistrictSpinner.setAdapter(mDistrictAdapter);
         mBankBranchSpinner.setAdapter(mBranchAdapter);
 
         mBankListSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -243,8 +258,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 // First position is "Select One"
                 if (position != 0) {
                     Bank bank = CommonData.getAvailableBanks().get(position - 1);
-                    getBankBranch(bank.getId());
-                    mBankBranchSpinner.setSelection(0);
+                    getBankBranches(bank.getId());
+                    mDistrictSpinner.setSelection(0);
                 }
             }
 
@@ -254,19 +269,50 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             }
         });
 
+        mDistrictSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // First position is "Select One"
+                if (position != 0) {
+                    String selectedDistrict = mDistrictNames.get(position);
+
+                    mBranches = new ArrayList<>();
+                    if (bankDistrictToBranchMap.containsKey(selectedDistrict)) {
+                        mBranches.addAll(bankDistrictToBranchMap.get(selectedDistrict));
+                    }
+
+                    mBranchNames.clear();
+                    mBranchNames.add(getString(R.string.select_one));
+                    for (BankBranch bankBranch : mBranches) {
+                        mBranchNames.add(bankBranch.getName());
+                    }
+
+                    mBankBranchSpinner.setSelection(0);
+                    mBranchAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 // The first position is "Select One"
-                if (mBankBranchSpinner.getSelectedItemPosition() == 0) {
+                if (mBankListSpinner.getSelectedItemPosition() <= 0) {
+                    ((TextView) mBankListSpinner.getSelectedView()).setError("");
+                }
+                else if (mDistrictSpinner.getSelectedItemPosition() <= 0) {
+                    ((TextView) mDistrictSpinner.getSelectedView()).setError("");
+                }
+                else if (mBankBranchSpinner.getSelectedItemPosition() <= 0) {
                     ((TextView) mBankBranchSpinner.getSelectedView()).setError("");
-
-                } else if (mBankBranchSpinner.getSelectedItemPosition() < 0) {
-                    //item position is -1
-                    Toast.makeText(getActivity(), R.string.bank_branch_not_selected, Toast.LENGTH_LONG).show();
-
                 } else {
-                    BankBranch bankBranch = bankBranches.get(mBankBranchSpinner.getSelectedItemPosition() - 1);
+                    BankBranch bankBranch = mBranches.get(mBankBranchSpinner.getSelectedItemPosition() - 1);
                     attemptAddBank(bankBranch.getRoutingNumber(), mAccountTypesSpinner.getSelectedItemPosition(),
                             mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
                     dialog.dismiss();
@@ -274,9 +320,10 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             }
         });
 
+
     }
 
-    private void getBankBranch(long bankID) {
+    private void getBankBranches(long bankID) {
         if (mGetBankBranchesTask != null) {
             return;
         }
@@ -467,16 +514,20 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             try {
                 mGetBankBranchesResponse = gson.fromJson(result.getJsonString(), GetBankBranchesResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    bankBranches.clear();
-                    bankBranchNames.clear();
-                    bankBranchNames.add(getString(R.string.select_one));
+                    mDistrictNames.clear();
+                    mDistrictNames.add(getString(R.string.select_one));
 
-                    bankBranches = (ArrayList) mGetBankBranchesResponse.getAvailableBranches();
-                    for (BankBranch branch : bankBranches) {
-                        bankBranchNames.add(branch.getName());
+                    bankDistrictToBranchMap = new HashMap<>();
+
+                    for (BankBranch branch : mGetBankBranchesResponse.getAvailableBranches()) {
+                        if (!bankDistrictToBranchMap.containsKey(branch.getDistrict())) {
+                            bankDistrictToBranchMap.put(branch.getDistrict(), new ArrayList<BankBranch>());
+                            mDistrictNames.add(branch.getDistrict());
+                        }
+                        bankDistrictToBranchMap.get(branch.getDistrict()).add(branch);
                     }
 
-                    mBranchAdapter.notifyDataSetChanged();
+                    mDistrictAdapter.notifyDataSetChanged();
 
                 } else {
                     if (getActivity() != null)

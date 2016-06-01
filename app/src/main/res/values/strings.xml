@@ -642,6 +642,7 @@
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
     <string name="search">Search</string>
     <string name="member_since">Member Since</string>
+    <string name="select_district">Select Disctrict</string>
 
     <string-array name="account_types">
         <item>Personal</item>
