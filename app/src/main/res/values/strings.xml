@@ -247,7 +247,6 @@
     <string name="withdraw_money">Withdraw Money</string>
     <string name="events">Events</string>
     <string name="add_participants">Participants</string>
-    <string name="make_payment">Make Payment</string>
     <string name="zxinglib_msg_default_status">Place a barcode inside the viewfinder rectangle to scan it. </string>
     <string name="qr_code">QR Code</string>
     <string name="scan_the_qr_code">Please scan the QR Code to send money to this person</string>
@@ -370,6 +369,7 @@
     <string name="bank_branch">Select Branch</string>
     <string name="logout">Log out</string>
     <string name="topup">Mobile Top Up</string>
+    <string name="make_payment">Make Payment</string>
     <string name="transaction_history">Transaction History</string>
     <string name="about">About</string>
     <string name="notification">Notification</string>
@@ -544,7 +544,7 @@
     <string name="amount_to_transfer">Amount to Transfer</string>
     <string name="amount_to_withdraw">Amount to Withdraw</string>
     <string name="total_received">Total Received</string>
-    <string name="vat">(+) vat</string>
+    <string name="vat">(+) Vat</string>
     <string name="quantity">Quantity</string>
     <string name="rate">Rate</string>
     <string name="AMOUNT">Amount</string>

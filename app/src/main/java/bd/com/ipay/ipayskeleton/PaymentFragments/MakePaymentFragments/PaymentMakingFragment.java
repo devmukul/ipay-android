@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,6 +34,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.RequestMoneyReviewDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
+import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewMakePaymentDialog;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
@@ -46,14 +48,10 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MoneyRequestsFragment extends Fragment implements HttpResponseListener {
-
+public class PaymentMakingFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetNotificationsResponse mGetNotificationsResponse;
-
-    private HttpRequestPostAsyncTask mServiceChargeTask = null;
-    private GetServiceChargeResponse mGetServiceChargeResponse;
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
@@ -70,7 +68,9 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
     private boolean hasNext = false;
 
     // These variables hold the information needed to populate the review dialog
+    private List<ItemList> mItemList;
     private BigDecimal mAmount;
+    private BigDecimal mVat;
     private BigDecimal mServiceCharge;
     private String mReceiverName;
     private String mReceiverMobileNumber;
@@ -94,64 +94,42 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            getMoneyRequests();
+            getMakePaymentRequests();
         }
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshMoneyRequestList();
+                refreshNotificationList();
             }
         });
 
         return v;
     }
 
-    private void refreshMoneyRequestList() {
+    private void refreshNotificationList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
             pageCount = 0;
             if (moneyRequestList != null)
                 moneyRequestList.clear();
-            getMoneyRequests();
+            getMakePaymentRequests();
         }
     }
 
-    private void getMoneyRequests() {
+
+    private void getMakePaymentRequests() {
         if (mGetAllNotificationsTask != null) {
             return;
         }
 
         GetNotificationsRequest mTransactionHistoryRequest = new GetNotificationsRequest(
-                pageCount, Constants.SERVICE_ID_REQUEST_MONEY);
+                pageCount, Constants.SERVICE_ID_REQUEST_INVOICE);
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
                 Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mGetAllNotificationsTask.mHttpResponseListener = this;
         mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    protected void attemptGetServiceCharge() {
-
-        if (mServiceChargeTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.loading));
-        mProgressDialog.show();
-
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
-
-        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
-        int accountClass = Constants.DEFAULT_USER_CLASS;
-
-        GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(Constants.SERVICE_ID_SEND_MONEY, accountType, accountClass);
-        Gson gson = new Gson();
-        String json = gson.toJson(mServiceChargeRequest);
-        mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
-        mServiceChargeTask.mHttpResponseListener = this;
-        mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void rejectRequestMoney(long id) {
@@ -169,18 +147,6 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                 Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void showReviewDialog() {
-        RequestMoneyReviewDialog dialog = new RequestMoneyReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, Constants.SERVICE_ID_REQUEST_MONEY,
-                new ReviewDialogFinishListener() {
-                    @Override
-                    public void onReviewFinish() {
-                        refreshMoneyRequestList();
-                    }
-                });
-        dialog.show();
     }
 
     @Override
@@ -229,39 +195,7 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
-            mProgressDialog.dismiss();
-            try {
-                mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (mGetServiceChargeResponse != null) {
-                        mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
-
-                        if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        } else {
-                            showReviewDialog();
-                        }
-
-                    } else {
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } else {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            }
-
-
-            mServiceChargeTask = null;
-        }else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
 
             try {
                 mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
@@ -270,7 +204,7 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        refreshMoneyRequestList();
+                        refreshNotificationList();
                     }
 
                 } else {
@@ -336,6 +270,8 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(moneyRequest.getRequestTime());
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
+                final BigDecimal vat = moneyRequest.getVat();
+                final List<ItemList> itemList = moneyRequest.getItemList();
 
                 mDescriptionView.setText(description);
                 mTimeView.setText(time);
@@ -373,8 +309,18 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                         mPhotoUri = imageUrl;
                         mTitle = title;
                         mDescription = description;
+                        mVat = vat;
+                        mItemList = itemList;
 
-                        attemptGetServiceCharge();
+                        ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                                mReceiverName, mPhotoUri, mAmount, mTitle , Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                                new ReviewDialogFinishListener() {
+                                    @Override
+                                    public void onReviewFinish() {
+                                        refreshNotificationList();
+                                    }
+                                });
+                        dialog.show();
                     }
                 });
 
@@ -414,7 +360,7 @@ public class MoneyRequestsFragment extends Fragment implements HttpResponseListe
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
-                            getMoneyRequests();
+                            getMakePaymentRequests();
                         }
                     }
                 });

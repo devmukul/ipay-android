@@ -266,7 +266,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                 pos = pos - 1;
 
                 mItemNameView.setText(mItemList.get(pos).getItem());
-                mQuantityView.setText(Utilities.formatTaka(mItemList.get(pos).getQuantity()));
+                mQuantityView.setText(mItemList.get(pos).getQuantity().toString());
                 mAmountView.setText(Utilities.formatTaka(mItemList.get(pos).getAmount()));
             }
 

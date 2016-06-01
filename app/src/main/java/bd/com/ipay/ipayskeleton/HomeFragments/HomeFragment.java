@@ -43,6 +43,7 @@ import java.util.Random;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
@@ -67,6 +68,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHis
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentMakingFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
@@ -169,7 +172,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                         @Override
                         public void ifPinAdded() {
-                            //TODO : start an activity
+                            Intent intent = new Intent(getActivity(), PaymentMakingActivity.class);
+                            startActivity(intent);
                         }
                     });
                     makePaymentPinChecker.execute();

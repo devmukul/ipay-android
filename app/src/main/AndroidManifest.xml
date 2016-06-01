@@ -117,6 +117,13 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
+            android:name=".Activities.PaymentActivities.PaymentMakingActivity"
+            android:label="@string/make_payment"
+            android:parentActivityName=".Activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
             android:name=".Activities.EventActivity"
             android:label="@string/events"
             android:parentActivityName=".Activities.HomeActivity"

@@ -103,7 +103,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
                     if (mVat != null) {
                         mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
                     }
-                    mTotalTextView.setText(mTotal.toString());
+                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
                 }
             }
 
@@ -122,7 +122,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
                     if (mVat != null) {
                         mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
                     }
-                    mTotalTextView.setText(mTotal.toString());
+                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
                 }
             }
         });
@@ -143,7 +143,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
                     if (mVat != null) {
                         mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
                     }
-                    mTotalTextView.setText(mTotal.toString());
+                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
                 }
             }
 
@@ -162,7 +162,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
                     if (mVat != null) {
                         mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
                     }
-                    mTotalTextView.setText(mTotal.toString());
+                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
                 }
             }
 
@@ -181,7 +181,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
                     if (mVat != null) {
                         mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
                     }
-                    mTotalTextView.setText(mTotal.toString());
+                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
                 }
             }
         });
@@ -223,7 +223,6 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
     private void launchReviewPage() {
         String rate = mRateEditText.getText().toString();
         String vat = mVatEditText.getText().toString();
-        String total = mTotalTextView.getText().toString();
 
         Intent intent = new Intent(getActivity(), CreateInvoiceReviewActivity.class);
         intent.putExtra(Constants.INVOICE_ITEM_NAME_TAG, mItemName);
@@ -234,7 +233,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
 
         if (vat != null) intent.putExtra(Constants.VAT, vat);
         else intent.putExtra(Constants.VAT, "0");
-        intent.putExtra(Constants.TOTAL, total);
+        intent.putExtra(Constants.TOTAL, mTotal+"");
 
         startActivityForResult(intent, REQUEST_CREATE_INVOICE_REVIEW);
     }
