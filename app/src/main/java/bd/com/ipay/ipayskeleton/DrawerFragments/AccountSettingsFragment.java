@@ -61,6 +61,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
 
     private EditText mEnterPINEditText;
+    private EditText mConfirmPINEditText;
     private EditText mEnterPasswordEditText;
 
     private View setPINHeader;
@@ -99,6 +100,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         ((HomeActivity) getActivity()).setTitle(R.string.security_settings);
 
         mEnterPINEditText = (EditText) v.findViewById(R.id.new_pin);
+        mConfirmPINEditText = (EditText) v.findViewById(R.id.confirm_pin);
         mEnterPasswordEditText = (EditText) v.findViewById(R.id.password);
 
         mEnterCurrentPasswordEditText = (EditText) v.findViewById(R.id.current_password);
@@ -240,15 +242,23 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         boolean cancel = false;
         View focusView = null;
 
+        String passwordValidationMsg = Utilities.isPasswordValid(mEnterPasswordEditText.getText().toString());
+
         if (mEnterPINEditText.getText().toString().trim().length() != 4) {
-            Toast.makeText(getActivity(), R.string.error_invalid_pin, Toast.LENGTH_LONG).show();
+            mEnterPINEditText.setError(getString(R.string.error_invalid_pin));
             focusView = mEnterPINEditText;
             cancel = true;
-        } else if (mEnterPasswordEditText.getText().toString().trim().length() == 0) {
-            Toast.makeText(getActivity(), R.string.error_invalid_password, Toast.LENGTH_LONG).show();
+        } else if (mConfirmPINEditText.getText().toString().length() !=4
+                || !(mEnterPINEditText.getText().toString().equals(mConfirmPINEditText.getText().toString()))) {
+            mConfirmPINEditText.setError(getString(R.string.confirm_pin_not_matched));
+            focusView = mConfirmPINEditText;
+            cancel = true;
+        } else if (passwordValidationMsg.length() > 0) {
+            mEnterPasswordEditText.setError(passwordValidationMsg);
             focusView = mEnterPasswordEditText;
             cancel = true;
         }
+
 
         if (cancel) {
             // There was an error; don't attempt and focus the first
@@ -285,7 +295,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         String passwordValidationMsg = Utilities.isPasswordValid(mEnterNewPasswordEditText.getText().toString().trim());
 
         if (mEnterCurrentPasswordEditText.getText().toString().length() < 5) {
-            Toast.makeText(getActivity(), R.string.error_invalid_password, Toast.LENGTH_LONG).show();
+            mEnterCurrentPasswordEditText.setError(getString(R.string.error_invalid_password));
             focusView = mEnterCurrentPasswordEditText;
             cancel = true;
 
@@ -295,9 +305,9 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             cancel = true;
 
         } else if (mEnterConfirmNewPasswordEditText.getText().toString().length() < 5
-                || !(mEnterConfirmNewPasswordEditText.getText().toString()
+                || !(mEnterNewPasswordEditText.getText().toString()
                 .equals(mEnterConfirmNewPasswordEditText.getText().toString()))) {
-            Toast.makeText(getActivity(), R.string.confirm_password_not_matched, Toast.LENGTH_LONG).show();
+            mEnterConfirmNewPasswordEditText.setError(getString(R.string.confirm_password_not_matched));
             focusView = mEnterConfirmNewPasswordEditText;
             cancel = true;
         }

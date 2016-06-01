@@ -28,6 +28,7 @@
     <string name="name">Name</string>
     <string name="enter_current_pin">Enter your current PIN</string>
     <string name="enter_your_pin">Enter your PIN</string>
+    <string name="confirm_your_pin">Confirm your PIN</string>
     <string name="enter_new_pin">Enter a new PIN</string>
     <string name="enter_new_pass">Enter a new password</string>
     <string name="confirm_new_pass">Confirm new password</string>
@@ -55,6 +56,7 @@
     <string name="contact_person_mobile_number">Mobile number of contact person</string>
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>
+    <string name="confirm_pin_not_matched">Pin did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
     <string name="empty_events_list">No recent events found.</string>
     <string name="empty_recommendation_request_list">No request to introduce right now.</string>

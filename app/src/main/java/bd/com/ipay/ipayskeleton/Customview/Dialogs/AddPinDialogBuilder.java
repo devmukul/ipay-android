@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Customview.Dialogs;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -35,6 +36,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
     private ProgressDialog mProgressDialog;
 
     private EditText mPinField;
+    private EditText mConfirmPinField;
     private EditText mPasswordField;
 
     private AddPinListener mAddPinListener;
@@ -49,8 +51,10 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
         customView(R.layout.dialog_add_pin, true);
 
         View v = this.build().getCustomView();
+        autoDismiss(false);
 
         mPinField = (EditText) v.findViewById(R.id.new_pin);
+        mConfirmPinField = (EditText) v.findViewById(R.id.confirm_pin);
         mPasswordField = (EditText) v.findViewById(R.id.password);
 
         title(R.string.dialog_prompt_add_pin);
@@ -63,20 +67,40 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
         onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                View focusView;
                 String pin = mPinField.getText().toString();
                 String password = mPasswordField.getText().toString();
+                String passwordValidationMsg = Utilities.isPasswordValid(password);
 
-                if (pin.isEmpty()) {
-                    Toast.makeText(context, R.string.failed_empty_pin, Toast.LENGTH_LONG).show();
-                } else if (!Utilities.isPasswordValid(password).isEmpty()) {
-                    Toast.makeText(context, Utilities.isPasswordValid(password), Toast.LENGTH_LONG).show();
+                if (pin.trim().length() != 4) {
+                    mPinField.setError(getContext().getString(R.string.error_invalid_pin));
+                    focusView = mPinField;
+                    focusView.requestFocus();
+                } else if (mConfirmPinField.getText().toString().length() !=4
+                        || !(mPinField.getText().toString().equals(mConfirmPinField.getText().toString()))) {
+                    mConfirmPinField.setError(getContext().getString(R.string.confirm_pin_not_matched));
+                    focusView = mConfirmPinField;
+                    focusView.requestFocus();
+                }else if (passwordValidationMsg.length() > 0) {
+                    mPasswordField.setError(passwordValidationMsg);
+                    focusView = mPasswordField;
+                    focusView.requestFocus();
                 } else {
+                    dialog.dismiss();
                     attemptSavePin(pin, password);
                 }
 
                 Utilities.hideKeyboard(getContext(), mPasswordField);
             }
         });
+
+        onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+               dialog.dismiss();
+            }
+        });
+
     }
 
     private void attemptSavePin(String pin, String password) {
