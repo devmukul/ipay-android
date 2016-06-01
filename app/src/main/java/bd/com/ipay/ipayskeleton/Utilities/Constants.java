@@ -130,7 +130,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
-            BASE_URL_IMAGE_SERVER = "https://stage.ipay.com.bd";
+            BASE_URL_IMAGE_SERVER = "http://10.10.40.14";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
             SERVER_NAME = "stage";
 
