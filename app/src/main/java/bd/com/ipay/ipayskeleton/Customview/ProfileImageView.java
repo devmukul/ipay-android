@@ -12,6 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileImageView extends FrameLayout {
     private Context context;
@@ -50,7 +51,7 @@ public class ProfileImageView extends FrameLayout {
 //            mProfileFirstLetterView.setVisibility(View.GONE);
 
         Glide.with(context)
-                .load(photoUri)
+                .load(Constants.BASE_URL_IMAGE_SERVER + photoUri)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(mProfilePictureView);
