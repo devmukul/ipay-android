@@ -311,12 +311,32 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 }
                 else if (mBankBranchSpinner.getSelectedItemPosition() <= 0) {
                     ((TextView) mBankBranchSpinner.getSelectedView()).setError("");
-                } else {
+                }else if (mAccountNameEditText.getText().toString().trim().length() == 0) {
+                    if (getActivity() != null) {
+                        mAccountNameEditText.setError(getContext().getString( R.string.please_enter_an_account_name));
+                        View focusView = mAccountNameEditText;
+                        focusView.requestFocus();
+                    }
+                }else if (mAccountNumberEditText.getText().toString().trim().length() == 0) {
+                    if (getActivity() != null) {
+                        mAccountNumberEditText.setError(getContext().getString( R.string.please_enter_an_account_number));
+                        View focusView = mAccountNumberEditText;
+                        focusView.requestFocus();
+                    }
+                }
+                else {
                     BankBranch bankBranch = mBranches.get(mBankBranchSpinner.getSelectedItemPosition() - 1);
                     attemptAddBank(bankBranch.getRoutingNumber(), mAccountTypesSpinner.getSelectedItemPosition(),
                             mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
                     dialog.dismiss();
                 }
+            }
+        });
+
+        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
             }
         });
 
@@ -339,17 +359,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     }
 
     private void attemptAddBank(String branchRoutingNumber, int accountType, String accountName, String accountNumber) {
-        if (accountName.length() == 0) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.please_enter_an_account_name, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (accountNumber.length() == 0) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.please_enter_an_account_number, Toast.LENGTH_LONG).show();
-            return;
-        }
 
         mProgressDialog.setMessage(getString(R.string.adding_bank));
         mProgressDialog.show();
@@ -738,6 +747,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
                                     if (mAmountEditText.getText().toString().trim().length() == 0) {
                                         mAmountEditText.setError(getString(R.string.please_enter_amount));
+                                        View focusView = mAmountEditText;
+                                        focusView.requestFocus();
                                         Toast.makeText(getActivity(), R.string.please_enter_amount, Toast.LENGTH_LONG).show();
 
                                     } else {
