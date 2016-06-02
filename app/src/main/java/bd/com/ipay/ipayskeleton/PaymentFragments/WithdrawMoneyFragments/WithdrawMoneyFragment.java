@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Customview.BankListValidator;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
@@ -125,8 +127,6 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         mGetAvailableBankAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    ;
-
     private void getBankList() {
         if (mGetBankTask != null) {
             return;
@@ -135,7 +135,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
         mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_SM + Constants.URL_GET_BANK, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
         mGetBankTask.mHttpResponseListener = this;
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -234,12 +234,10 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
 
                 try {
                     mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
@@ -252,20 +250,11 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                         }
                     }
 
-                    if (mListUserBankClasses == null) {
-                        mBankPicker.setEnabled(false);
-                        buttonWithdrawMoney.setEnabled(false);
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
-                        mLinkABankNoteTextView.setVisibility(View.VISIBLE);
-
-                    } else if (mListUserBankClasses.size() == 0) {
-                        mBankPicker.setEnabled(false);
-                        buttonWithdrawMoney.setEnabled(false);
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
-                        mLinkABankNoteTextView.setVisibility(View.VISIBLE);
-
+                    BankListValidator bankListValidator = new BankListValidator(mBankListResponse.getBanks());
+                    if (!bankListValidator.isBankAdded()) {
+                        bankListValidator.showAddBankDialog(getActivity());
+                    } else if (!bankListValidator.isVerifiedBankAdded()) {
+                        bankListValidator.showVerifiedBankDialog(getActivity());
                     } else {
                         mLinkABankNoteTextView.setVisibility(View.GONE);
                         for (int i = 0; i < mListUserBankClasses.size(); i++) {
