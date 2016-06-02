@@ -216,32 +216,6 @@ public class HomeActivity extends BaseActivity
         // TODO: refresh balance in the navigation drawer here
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-        } else if (!switchedToHomeFragment)
-            switchToDashBoard();
-        else {
-            new AlertDialog.Builder(HomeActivity.this)
-                    .setMessage(R.string.are_you_sure_to_exit)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
-                    .show();
-        }
-    }
-
     private void setProfilePicture(String imageUrl) {
         try {
 
@@ -391,6 +365,32 @@ public class HomeActivity extends BaseActivity
             //switchedToHomeFragment = false;
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else if (!switchedToHomeFragment)
+            switchToDashBoard();
+        else {
+            new AlertDialog.Builder(HomeActivity.this)
+                    .setMessage(R.string.are_you_sure_to_exit)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .show();
+        }
     }
 
     private void launchEditProfileActivity(String type, Bundle bundle) {

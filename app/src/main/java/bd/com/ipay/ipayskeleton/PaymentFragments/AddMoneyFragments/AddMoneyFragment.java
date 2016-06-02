@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Customview.BankListValidator;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
@@ -251,20 +252,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                         }
                     }
 
-                    if (mListUserBankClasses == null) {
-                        mBankPicker.setEnabled(false);
-                        buttonAddMoney.setEnabled(false);
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
-                        mLinkABankNoteTextView.setVisibility(View.VISIBLE);
-
-                    } else if (mListUserBankClasses.size() == 0) {
-                        mBankPicker.setEnabled(false);
-                        buttonAddMoney.setEnabled(false);
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.no_linked_bank_found, Toast.LENGTH_LONG).show();
-                        mLinkABankNoteTextView.setVisibility(View.VISIBLE);
-
+                    BankListValidator bankListValidator = new BankListValidator(mBankListResponse.getBanks());
+                    if (!bankListValidator.isBankAdded()) {
+                        bankListValidator.showAddBankDialog(getActivity());
+                    } else if (!bankListValidator.isVerifiedBankAdded()) {
+                        bankListValidator.showVerifiedBankDialog(getActivity());
                     } else {
                         mLinkABankNoteTextView.setVisibility(View.GONE);
                         for (int i = 0; i < mListUserBankClasses.size(); i++) {
