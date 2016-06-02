@@ -640,6 +640,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
             mEmptyListTextView.setVisibility(View.GONE);
         else mEmptyListTextView.setVisibility(View.VISIBLE);
+
         mUserBankListAdapter.notifyDataSetChanged();
 
         PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
