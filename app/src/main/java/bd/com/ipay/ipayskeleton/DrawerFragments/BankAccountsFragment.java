@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
@@ -100,6 +101,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private ArrayAdapter<String> mDistrictAdapter;
     private ArrayAdapter<String> mBranchAdapter;
 
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +128,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         View v = inflater.inflate(R.layout.fragment_bank_accounts, container, false);
         getActivity().setTitle(R.string.bank_accounts);
 
+
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
         mBranchNames = new ArrayList<>();
@@ -134,6 +138,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mBranchAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mBranchNames);
         mBranchAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
+
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mBankListRecyclerView = (RecyclerView) v.findViewById(R.id.list_bank);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         addNewBankButton = (Button) v.findViewById(R.id.button_add_bank);
@@ -152,6 +158,15 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mLayoutManager = new LinearLayoutManager(getActivity());
         mBankListRecyclerView.setLayoutManager(mLayoutManager);
         mBankListRecyclerView.setAdapter(mUserBankListAdapter);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    getBankList();
+                }
+            }
+        });
 
         return v;
     }
@@ -488,6 +503,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 e.printStackTrace();
             }
 
+            mSwipeRefreshLayout.setRefreshing(false);
             mProgressDialog.dismiss();
             mGetBankTask = null;
 

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,6 +64,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     private Button mAddTrustedPersonButton;
     private RecyclerView mTrustedPersonListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ProgressDialog mProgressDialog;
 
@@ -88,6 +90,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
         mAddTrustedPersonButton = (Button) v.findViewById(R.id.button_add_trusted_person);
         mTrustedPersonListRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_person);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -100,6 +103,15 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             @Override
             public void onClick(View v) {
                 showAddTrustedPersonDialog();
+            }
+        });
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    getTrustedPersons();
+                }
             }
         });
 
@@ -284,6 +296,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 ((HomeActivity) getActivity()).switchToDashBoard();
             }
 
+            mSwipeRefreshLayout.setRefreshing(false);
             mGetTrustedPersonsTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_TRUSTED_PERSON)) {
             try {

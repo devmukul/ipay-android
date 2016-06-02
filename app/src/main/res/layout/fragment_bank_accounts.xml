@@ -14,14 +14,24 @@
         android:textSize="@dimen/text_size_medium"
         android:textStyle="bold" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_bank"
+    <bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/button_add_bank"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/activity_horizontal_margin_double" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_add_bank">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_bank"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/button_add_bank"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/activity_horizontal_margin_double" />
+
+
+    </bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout>
 
     <TextView
         android:id="@+id/empty_list_text"
