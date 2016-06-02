@@ -88,6 +88,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         customView(R.layout.dialog_notification_review, true);
 
         View v = this.build().getCustomView();
+        autoDismiss(false);
 
         mProgressDialog = new ProgressDialog(context);
 
@@ -137,9 +138,13 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 String pin = mPinField.getText().toString();
-                if (pin.isEmpty())
-                    Toast.makeText(context, R.string.failed_empty_pin, Toast.LENGTH_LONG).show();
+                if (pin.isEmpty()){
+                    mPinField.setError(getContext().getString(R.string.failed_empty_pin));
+                    View focusView = mPinField;
+                    focusView.requestFocus();
+                }
                 else {
+                    dialog.dismiss();
                     if (mServiceID == Constants.SERVICE_ID_REQUEST_MONEY)
                         acceptRequestMoney(requestId, pin);
                     else
@@ -151,7 +156,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
+                dialog.dismiss();
             }
         });
     }

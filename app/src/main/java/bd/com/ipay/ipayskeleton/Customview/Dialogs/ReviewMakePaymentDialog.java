@@ -90,6 +90,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
         customView(R.layout.dialog_make_payment_notification_review, true);
 
         View v = this.build().getCustomView();
+        autoDismiss(false);
 
         mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
         paymentReviewAdapter = new PaymentReviewAdapter();
@@ -106,9 +107,13 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 String pin = mPinField.getText().toString();
-                if (pin.isEmpty())
-                    Toast.makeText(context, R.string.failed_empty_pin, Toast.LENGTH_LONG).show();
+                if (pin.isEmpty()){
+                    mPinField.setError(getContext().getString(R.string.failed_empty_pin));
+                    View focusView = mPinField;
+                    focusView.requestFocus();
+                }
                 else {
+                    dialog.dismiss();
                     if (mServiceID == Constants.SERVICE_ID_REQUEST_MONEY)
                         acceptRequestMoney(requestId, pin);
                     else
@@ -120,7 +125,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
         onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
+                dialog.dismiss();
             }
         });
 

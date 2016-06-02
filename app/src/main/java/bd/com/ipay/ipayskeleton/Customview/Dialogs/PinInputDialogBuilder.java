@@ -31,6 +31,7 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
 
     private void initializeView() {
         customView(R.layout.dialog_enter_pin, true);
+        autoDismiss(false);
         mPinField = (EditText) this.build().getCustomView().findViewById(R.id.enter_pin);
         positiveText(R.string.ok);
         negativeText(R.string.cancel);
@@ -46,9 +47,19 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
                 if (!getPin().isEmpty()) {
                     onSubmitListener.onClick(dialog, which);
                     build().dismiss();
+                    dialog.dismiss();
                 } else {
-                    Toast.makeText(mContext, R.string.failed_empty_pin, Toast.LENGTH_LONG).show();
+                    mPinField.setError(getContext().getString(R.string.failed_empty_pin));
+                    View focusView = mPinField;
+                    focusView.requestFocus();
                 }
+            }
+        });
+
+        onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
             }
         });
     }
