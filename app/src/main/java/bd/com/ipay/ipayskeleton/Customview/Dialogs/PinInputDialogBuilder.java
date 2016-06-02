@@ -19,13 +19,9 @@ import bd.com.ipay.ipayskeleton.R;
 public class PinInputDialogBuilder extends MaterialDialog.Builder {
 
     private EditText mPinField;
-    private Context mContext;
 
     public PinInputDialogBuilder(Context context) {
         super(context);
-
-        mContext = context;
-
         initializeView();
     }
 

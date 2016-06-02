@@ -43,8 +43,6 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
 
     private ProgressDialog mProgressDialog;
 
-    private SharedPreferences pref;
-
     private String mReceiverMobileNumber;
     private String mItemName;
     private String mDescription;
@@ -68,10 +66,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
 
     private TextView mTitleView;
     private TextView mDescriptionView;
-
-
     private Button mCreateInvoiceButton;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -103,10 +98,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mCreateInvoiceButton = (Button) v.findViewById(R.id.button_create_invoice);
 
-
         mProgressDialog = new ProgressDialog(getActivity());
-
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mProfileImageView.setInformation(mPhotoUri, mReceiverName);
 
@@ -124,11 +116,9 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mAmountView.setText(Utilities.formatTaka(mAmount));
         mVatView.setText(Utilities.formatTaka(mVat));
 
-
         mTotalView.setText(Utilities.formatTaka(mTotal));
         mTitleView.setText(mItemName);
         mDescriptionView.setText(mDescription);
-
 
         mCreateInvoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +146,6 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
                 Constants.BASE_URL_SM + Constants.URL_PAYMENT_SEND_INVOICE, json, getActivity());
         mSendInvoiceTask.mHttpResponseListener = this;
         mSendInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void attemptSaveInvoice() {
@@ -179,7 +168,6 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
                 Constants.BASE_URL_SM + Constants.URL_PAYMENT_SAVE_INVOICE, json, getActivity());
         mSaveInvoiceTask.mHttpResponseListener = this;
         mSaveInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     @Override

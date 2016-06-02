@@ -35,9 +35,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mAcceptRequestTask = null;
-    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
-
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
     private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
 
@@ -58,15 +55,6 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
 
     private ProgressDialog mProgressDialog;
     private ReviewDialogFinishListener mReviewFinishListener;
-
-    private ProfileImageView mProfileImageView;
-    private TextView mNameView;
-    private TextView mMobileNumberView;
-    private TextView mTitleView;
-    private TextView mNetAmountView;
-    private TextView mVatView;
-    private TextView mTotalView;
-    private EditText mPinField;
 
     public ReviewMakePaymentDialog(Context context, long moneyRequestId, String receiverMobileNumber, String receiverName, String photoUri, BigDecimal amount,
                                    String title, int serviceID, BigDecimal vat, List<ItemList> itemList, ReviewDialogFinishListener reviewFinishListener) {
@@ -102,22 +90,27 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
 
         positiveText(R.string.make_payment);
         negativeText(R.string.cancel);
+    }
 
+    void initializeButtonActions(final EditText mPinFieldView) {
         onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                String pin = mPinField.getText().toString();
-                if (pin.isEmpty()){
-                    mPinField.setError(getContext().getString(R.string.failed_empty_pin));
-                    View focusView = mPinField;
+                String pin = mPinFieldView.getText().toString();
+
+                if (pin.isEmpty()) {
+
+                    // We had a problem with focusing the error view. The error message was shown in wrong place instead of the PIN field.
+                    // So when the MAKE PAYMENT button is clicked we force scroll to top to make the views attached to the list items to refresh their reference again
+                    mLayoutManager.scrollToPosition(0);
+
+                    View focusView = mPinFieldView;
                     focusView.requestFocus();
-                }
-                else {
+                    mPinFieldView.setError(getContext().getString(R.string.failed_empty_pin));
+
+                } else {
                     dialog.dismiss();
-                    if (mServiceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                        acceptRequestMoney(requestId, pin);
-                    else
-                        acceptPaymentRequest(requestId, pin);
+                    acceptPaymentRequest(requestId, pin);
                 }
             }
         });
@@ -128,24 +121,6 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                 dialog.dismiss();
             }
         });
-
-    }
-
-    private void acceptRequestMoney(long id, String pin) {
-        if (mAcceptRequestTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(context.getString(R.string.progress_dialog_accepted));
-        mProgressDialog.show();
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id, pin);
-        Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, context);
-        mAcceptRequestTask.mHttpResponseListener = this;
-        mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void acceptPaymentRequest(long id, String pin) {
@@ -171,7 +146,6 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
 
         if (result == null) {
             mProgressDialog.show();
-            mAcceptRequestTask = null;
             mAcceptPaymentTask = null;
             if (context != null)
                 Toast.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
@@ -180,32 +154,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
-            try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                        RequestMoneyAcceptRejectOrCancelResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (context != null)
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-
-                    if (mReviewFinishListener != null)
-                        mReviewFinishListener.onReviewFinish();
-
-                } else {
-                    if (context != null)
-                        Toast.makeText(context, mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (context != null)
-                    Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mAcceptRequestTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
 
             try {
                 mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
@@ -247,6 +196,14 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
             private TextView mItemNameView;
             private TextView mQuantityView;
             private TextView mAmountView;
+            private EditText mPinField;
+            private ProfileImageView mProfileImageView;
+            private TextView mNameView;
+            private TextView mMobileNumberView;
+            private TextView mTitleView;
+            private TextView mNetAmountView;
+            private TextView mVatView;
+            private TextView mTotalView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -263,7 +220,6 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                 mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
                 mTotalView = (TextView) itemView.findViewById(R.id.textview_total);
                 mPinField = (EditText) itemView.findViewById(R.id.pin);
-
             }
 
             public void bindViewForListItem(int pos) {
@@ -298,8 +254,10 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                 mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
                 mVatView.setText(Utilities.formatTaka(mVat));
                 mTotalView.setText(Utilities.formatTaka(mAmount));
-            }
 
+                mPinField = (EditText) itemView.findViewById(R.id.pin);
+                initializeButtonActions(mPinField);
+            }
         }
 
         public class ListFooterViewHolder extends ViewHolder {
