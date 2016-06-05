@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.SqLiteDatabase;
 
-public class SubscriberEntry {
+public class FriendEntry {
 
     private String mobileNumber;
     private String name;
@@ -8,7 +8,7 @@ public class SubscriberEntry {
     private String profilePicture;
     private int isVerified;
 
-    public SubscriberEntry(String mobileNumber, String name, int accountType, String profilePicture, int isVerified) {
+    public FriendEntry(String mobileNumber, String name, int accountType, String profilePicture, int isVerified) {
         this.mobileNumber = mobileNumber;
         this.name = name;
         this.accountType = accountType;
