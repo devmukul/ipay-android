@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -76,6 +77,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private Button mAddNewEmailButton;
     private RecyclerView mEmailListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ProgressDialog mProgressDialog;
 
@@ -101,6 +103,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         mAddNewEmailButton = (Button) v.findViewById(R.id.button_add_email);
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -113,6 +116,15 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             @Override
             public void onClick(View v) {
                 showAddNewEmailDialog();
+            }
+        });
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    getEmails();
+                }
             }
         });
 
@@ -311,7 +323,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     ((HomeActivity) getActivity()).switchToDashBoard();
                 }
             }
-
+            mSwipeRefreshLayout.setRefreshing(false);
             mGetEmailsTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_NEW_EMAIL)) {
             try {
