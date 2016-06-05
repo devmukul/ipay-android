@@ -43,7 +43,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.TrustedPer
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TrustedNetworkFragment extends ProgressFragment implements HttpResponseListener {

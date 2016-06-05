@@ -51,7 +51,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryEmailRes
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmailFragment extends ProgressFragment implements HttpResponseListener {

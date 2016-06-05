@@ -61,7 +61,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetBankBranchesResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 

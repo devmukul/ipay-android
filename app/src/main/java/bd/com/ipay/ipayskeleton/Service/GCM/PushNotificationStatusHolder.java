@@ -1,8 +1,10 @@
-package bd.com.ipay.ipayskeleton.Utilities;
+package bd.com.ipay.ipayskeleton.Service.GCM;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class PushNotificationStatusHolder {
 

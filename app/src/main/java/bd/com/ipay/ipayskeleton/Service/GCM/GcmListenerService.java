@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -38,7 +37,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.GetTrusted
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService implements HttpResponseListener {
 

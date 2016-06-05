@@ -35,7 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.GetIdentificati
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 
 public class DocumentListFragment extends ProgressFragment implements HttpResponseListener {
 

@@ -25,7 +25,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressReq
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
 
 public class EditAddressFragment extends Fragment implements HttpResponseListener {
 

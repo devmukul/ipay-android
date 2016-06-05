@@ -43,7 +43,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDevice
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountSettingsFragment extends Fragment implements HttpResponseListener {
