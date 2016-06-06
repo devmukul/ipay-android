@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,7 +30,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.Customview.Dialogs.RequestMoneyReviewDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
@@ -41,8 +38,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResp
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -283,7 +278,7 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
                 } else mTitleView.setVisibility(View.GONE);
 
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
                         .crossFade()
                         .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))

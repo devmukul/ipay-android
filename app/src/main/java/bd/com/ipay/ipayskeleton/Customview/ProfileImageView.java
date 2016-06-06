@@ -51,7 +51,7 @@ public class ProfileImageView extends FrameLayout {
 //            mProfileFirstLetterView.setVisibility(View.GONE);
 
         Glide.with(context)
-                .load(Constants.BASE_URL_IMAGE_SERVER + photoUri)
+                .load(Constants.BASE_URL_FTP_SERVER + photoUri)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(mProfilePictureView);

@@ -60,7 +60,7 @@ public class CreateInvoiceReviewActivity extends BaseActivity {
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NAME, name);
-        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_IMAGE_SERVER + profilePictureUrl);
+        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + profilePictureUrl);
         createInvoiceReviewFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()

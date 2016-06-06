@@ -60,7 +60,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NAME, name);
-        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_IMAGE_SERVER + profilePictureUrl);
+        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + profilePictureUrl);
         sendMoneyReviewFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()

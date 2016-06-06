@@ -229,7 +229,7 @@ public class HomeActivity extends BaseActivity
 
             if (imageUri != null) {
                 Glide.with(HomeActivity.this)
-                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
                         .error(R.drawable.ic_person)
                         .crossFade()
                         .transform(new CircleTransform(HomeActivity.this))
@@ -237,7 +237,7 @@ public class HomeActivity extends BaseActivity
             } else {
                 if (!imageUrl.equals(""))
                     Glide.with(HomeActivity.this)
-                            .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                            .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
                             .error(R.drawable.ic_person)
                             .crossFade()
                             .transform(new CircleTransform(HomeActivity.this))

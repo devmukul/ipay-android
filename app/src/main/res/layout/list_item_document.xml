@@ -58,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/info_layout"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <View
@@ -65,13 +66,35 @@
                     android:layout_height="1px"
                     android:background="@color/colorDivider" />
 
-                <Button
-                    android:id="@+id/button_upload"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="@string/upload"
-                    style="@style/RowButton" />
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_upload"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:text="@string/upload"
+                        style="@style/RowButton" />
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorDivider" />
+
+                    <Button
+                        android:id="@+id/button_preview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@style/RowButton"
+                        android:text="@string/preview" />
+
+                </LinearLayout>
             </LinearLayout>
 
 

@@ -6,8 +6,6 @@ public class Constants {
     public static final String PICTURE_FOLDER = "/iPay";
     public static final String GENDER_MALE = "M";
     public static final String GENDER_FEMALE = "F";
-    public static final String TOKEN = "token";
-    public static final String REFRESH_TOKEN = "refresh-token";
     public static final String EMAIL = "EMAIL";
     public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
     public static final String USERID = "USERID";
@@ -24,6 +22,12 @@ public class Constants {
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
+    public static final String DOCUMENT_URL = "DOCUMENT_URL";
+    public static final String FILE_EXTENSION = "FILE_EXTENSION";
+
+    public static final String TOKEN = "token";
+    public static final String REFRESH_TOKEN = "refresh-token";
+    public static final String RESOURCE_TOKEN = "resource-token";
 
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String PROFILE_INFO_UPDATED = "PROFILE_INFO_UPDATED";
@@ -95,25 +99,25 @@ public class Constants {
      */
     public static final boolean AUTO_LOGIN = true;
 
-    public static final String BASE_URL_MM;
-    public static final String BASE_URL_SM;
-    public static final String BASE_URL_FRIEND;
-    public static final String BASE_URL_IMAGE_SERVER;
-    public static final String SERVER_NAME;
-
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
     // Server Type 3 -> stage server
-    // Server Type 4 -> live server1
+    // Server Type 4 -> live server
     // Server Type 5 -> local server
     public static final int SERVER_TYPE = 1;
+
+    public static final String BASE_URL_MM;
+    public static final String BASE_URL_SM;
+    public static final String BASE_URL_FRIEND;
+    public static final String BASE_URL_FTP_SERVER;
+    public static final String SERVER_NAME;
 
     static {
         if (SERVER_TYPE == 1) {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
-            BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
+            BASE_URL_FTP_SERVER = "http://10.10.10.10";
 //            BASE_URL_FRIEND = "http://192.168.1.105:1337/v1/";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
             SERVER_NAME = "dev";
@@ -122,7 +126,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
-            BASE_URL_IMAGE_SERVER = "http://10.15.40.14";
+            BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
             SERVER_NAME = "test";
 
@@ -130,7 +134,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
-            BASE_URL_IMAGE_SERVER = "http://10.10.40.14";
+            BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
             SERVER_NAME = "stage";
 
@@ -138,7 +142,7 @@ public class Constants {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
-            BASE_URL_IMAGE_SERVER = "https://www.ipay.com.bd";
+            BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
             SERVER_NAME = "live";
 
@@ -146,7 +150,7 @@ public class Constants {
 
             BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
-            BASE_URL_IMAGE_SERVER = "http://10.10.10.10";
+            BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
             SERVER_NAME = "local";
         }
@@ -177,6 +181,7 @@ public class Constants {
     // Documents Rest
     public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
     public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
+    public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
 
     // Event Controller
     public static final String URL_EVENT_LIST = "events/user/eventList/";
@@ -373,6 +378,7 @@ public class Constants {
     public static final String COMMAND_EVENT_CATEGORIES = "COMMAND_EVENT_CATEGORIES";
     public static final String COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND = "COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND";
     public static final String COMMAND_UPLOAD_DOCUMENT = "COMMAND_UPLOAD_DOCUMENT";
+    public static final String COMMAND_GET_DOCUMENT_ACCESS_TOKEN = "COMMAND_GET_DOCUMENT_ACCESS_TOKEN";
     public static final String COMMAND_UPLOAD_NATIONAL_ID = "COMMAND_UPLOAD_NATIONAL_ID";
     public static final String COMMAND_UPLOAD_PASSPORT = "COMMAND_UPLOAD_PASSPORT";
     public static final String COMMAND_UPLOAD_DRIVING_LICENSE = "COMMAND_UPLOAD_DRIVING_LICENSE";

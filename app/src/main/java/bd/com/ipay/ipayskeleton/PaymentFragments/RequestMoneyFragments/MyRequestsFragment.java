@@ -250,7 +250,7 @@ public class MyRequestsFragment extends Fragment implements HttpResponseListener
                 });
 
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
                         .crossFade()
                         .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))

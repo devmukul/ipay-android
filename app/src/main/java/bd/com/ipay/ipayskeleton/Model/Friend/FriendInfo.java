@@ -50,7 +50,7 @@ public class FriendInfo {
     public String getProfilePictureUrl() {
         // If the profile picture is taken from the server, then append the base url with it
         if (profilePictureUrl != null && profilePictureUrl.startsWith("/"))
-            return Constants.BASE_URL_IMAGE_SERVER + profilePictureUrl;
+            return Constants.BASE_URL_FTP_SERVER + profilePictureUrl;
         else
             return profilePictureUrl;
     }

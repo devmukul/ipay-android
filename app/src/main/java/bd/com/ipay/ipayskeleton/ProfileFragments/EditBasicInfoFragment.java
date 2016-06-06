@@ -297,7 +297,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         try {
             if (!url.equals("")) {
                 if (!url.startsWith("content:"))
-                    url = Constants.BASE_URL_IMAGE_SERVER + url;
+                    url = Constants.BASE_URL_FTP_SERVER + url;
 
                 Glide.with(getActivity())
                         .load(url)

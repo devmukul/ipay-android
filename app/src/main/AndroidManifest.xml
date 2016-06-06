@@ -193,6 +193,7 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="bd.com.ipay.ipayskeleton" />
             </intent-filter>
         </receiver>
@@ -214,6 +215,8 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
+
+        <activity android:name=".Activities.DocumentPreviewActivity"></activity>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,21 +28,26 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.DocumentPreviewRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.GetIdentificationDocumentResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class DocumentListFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
     private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
+
+    private HttpRequestGetAsyncTask mGetDocumentAccessTokenTask = null;
 
     private TextView mDocumentUploadInfoView;
     private DocumentListAdapter mDocumentListAdapter;
@@ -48,6 +55,7 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
     private RecyclerView.LayoutManager mLayoutManager;
 
     private List<IdentificationDocument> mIdentificationDocuments = new ArrayList<>();
+    private IdentificationDocumentDetails mSelectedIdentificationDocument;
 
     private ProgressDialog mProgressDialog;
 
@@ -126,16 +134,18 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         for (int i = 0; i < DOCUMENT_TYPES.length; i++) {
             String documentId = "";
             String verificationStatus = null;
+            String documentUrl = null;
 
             for (IdentificationDocument identificationDocument : mIdentificationDocuments) {
                 if (identificationDocument.getDocumentType().equals(DOCUMENT_TYPES[i])) {
                     documentId = identificationDocument.getDocumentIdNumber();
                     verificationStatus = identificationDocument.getDocumentVerificationStatus();
+                    documentUrl = identificationDocument.getDocumentUrl();
                 }
             }
 
             mIdentificationDocumentDetails[i] = new IdentificationDocumentDetails(DOCUMENT_TYPES[i],
-                    getString(DOCUMENT_TYPE_NAMES[i]), documentId, verificationStatus);
+                    getString(DOCUMENT_TYPE_NAMES[i]), documentId, verificationStatus, documentUrl);
         }
     }
 
@@ -149,6 +159,19 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
                 Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENTS, getActivity(), this);
         mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getDocumentAccessToken() {
+        if (mGetDocumentAccessTokenTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_document_preview));
+        mProgressDialog.show();
+
+        mGetDocumentAccessTokenTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DOCUMENT_ACCESS_TOKEN,
+                Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENT_ACCESS_TOKEN, getActivity(), this);
+        mGetDocumentAccessTokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -185,6 +208,30 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
             }
 
             mGetIdentificationDocumentsTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_DOCUMENT_ACCESS_TOKEN)) {
+            try {
+                String resourceToken = result.getResourceToken();
+                String documentUrl = DocumentPreviewRequestBuilder.generateUri(resourceToken,
+                        mSelectedIdentificationDocument.getDocumentUrl(),
+                        mSelectedIdentificationDocument.getDocumentId(),
+                        mSelectedIdentificationDocument.getDocumentType());
+
+                if (Constants.DEBUG)
+                    Log.w("Loading document", documentUrl);
+
+                Intent intent = new Intent(getActivity(), DocumentPreviewActivity.class);
+                intent.putExtra(Constants.FILE_EXTENSION, Utilities.getExtension(mSelectedIdentificationDocument.getDocumentUrl()));
+                intent.putExtra(Constants.DOCUMENT_URL, documentUrl);
+                intent.putExtra(Constants.DOCUMENT_TYPE_NAME, mSelectedIdentificationDocument.getDocumentTypeName());
+                startActivity(intent);
+
+                mProgressDialog.dismiss();
+                mGetDocumentAccessTokenTask = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_document_preview_loading, Toast.LENGTH_SHORT).show();
+            }
         }
 
         mProgressDialog.dismiss();
@@ -224,6 +271,8 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
             private ImageView mVerificationStatus;
             private LinearLayout mOptionsLayout;
             private Button mUploadButton;
+            private Button mPreviewButton;
+            private View mDivider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -234,38 +283,65 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
 
                 mOptionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 mUploadButton = (Button) itemView.findViewById(R.id.button_upload);
+                mPreviewButton = (Button) itemView.findViewById(R.id.button_preview);
+                mDivider = itemView.findViewById(R.id.divider);
+
             }
 
-            public void bindView(int pos) {
+            public void bindView(final int pos) {
 
                 final IdentificationDocumentDetails identificationDocumentDetail = mIdentificationDocumentDetails[pos];
 
-                String verificationStatus = identificationDocumentDetail.getVerificationStatus();
+                final String verificationStatus = identificationDocumentDetail.getVerificationStatus();
 
+                // Unverified, document not yet uploaded
                 if (verificationStatus == null) {
                     mVerificationStatus.setVisibility(View.GONE);
                     mDocumentIdView.setText(R.string.not_submitted);
 
-                    mOptionsLayout.setVisibility(View.VISIBLE);
+//                    mOptionsLayout.setVisibility(View.VISIBLE);
                     mUploadButton.setText(getString(R.string.upload));
+
+                    mPreviewButton.setVisibility(View.GONE);
+                    mDivider.setVisibility(View.GONE);
                 }
+                // Document uploaded and verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                     mVerificationStatus.setVisibility(View.VISIBLE);
                     mVerificationStatus.setImageResource(R.drawable.ic_verified);
                     mVerificationStatus.setColorFilter(null);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
 
-                    mOptionsLayout.setVisibility(View.GONE);
-                } else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
+//                    mOptionsLayout.setVisibility(View.GONE);
+
+                    mPreviewButton.setVisibility(View.VISIBLE);
+                    mDivider.setVisibility(View.VISIBLE);
+                }
+                // Document uploaded but not verified
+                else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
                     mVerificationStatus.setVisibility(View.VISIBLE);
                     mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
                     mVerificationStatus.setColorFilter(Color.GRAY);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
 
-                    mOptionsLayout.setVisibility(View.VISIBLE);
+//                    mOptionsLayout.setVisibility(View.GONE);
                     mUploadButton.setText(getString(R.string.upload_again));
+
+                    mPreviewButton.setVisibility(View.VISIBLE);
+                    mDivider.setVisibility(View.VISIBLE);
                 }
                 mDocumentTypeNameView.setText(identificationDocumentDetail.getDocumentTypeName());
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    if (mOptionsLayout.getVisibility() == View.VISIBLE) {
+                        mOptionsLayout.setVisibility(View.GONE);
+                    } else {
+                        mOptionsLayout.setVisibility(View.VISIBLE);
+                    }
+                    }
+                });
 
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -275,6 +351,14 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
                         bundle.putString(Constants.DOCUMENT_TYPE_NAME, identificationDocumentDetail.getDocumentTypeName());
                         bundle.putString(Constants.DOCUMENT_ID, identificationDocumentDetail.getDocumentId());
                         ((ProfileActivity) getActivity()).switchToDocumentUploadFragment(bundle);
+                    }
+                });
+
+                mPreviewButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getDocumentAccessToken();
+                        mSelectedIdentificationDocument = identificationDocumentDetail;
                     }
                 });
             }
@@ -321,12 +405,14 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
         private String documentTypeName;
         private String documentId;
         private String verificationStatus;
+        private String documentUrl;
 
-        public IdentificationDocumentDetails(String documentType, String documentTypeName, String documentId, String verificationStatus) {
+        public IdentificationDocumentDetails(String documentType, String documentTypeName, String documentId, String verificationStatus, String documentUrl) {
             this.documentType = documentType;
             this.documentTypeName = documentTypeName;
             this.documentId = documentId;
             this.verificationStatus = verificationStatus;
+            this.documentUrl = documentUrl;
         }
 
         public String getDocumentType() {
@@ -343,6 +429,10 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
 
         public String getVerificationStatus() {
             return verificationStatus;
+        }
+
+        public String getDocumentUrl() {
+            return documentUrl;
         }
     }
 }

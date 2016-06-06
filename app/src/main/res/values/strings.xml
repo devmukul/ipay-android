@@ -648,6 +648,9 @@
     <string name="verify_bank_prompt">You need to have at least one verified bank account to add or withdraw money. Do you want to verify a bank account now?</string>
     <string name="add_bank">Add Bank</string>
     <string name="verify_bank">Verify Bank</string>
+    <string name="preview">Preview</string>
+    <string name="progress_dialog_loading_document_preview">Loading document preview...</string>
+    <string name="failed_document_preview_loading">Failed to load document preview</string>
 
     <string-array name="account_types">
         <item>Personal</item>

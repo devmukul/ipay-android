@@ -18,6 +18,8 @@ import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -317,5 +319,12 @@ public class Utilities {
         if (resultCode == ConnectionResult.SUCCESS)
             return true;
         else return false;
+    }
+
+    public static String getExtension(String filePath) {
+        if (filePath != null && filePath.lastIndexOf('.') >= 0)
+            return filePath.substring(0, filePath.lastIndexOf('.'));
+        else
+            return "";
     }
 }

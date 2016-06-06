@@ -381,7 +381,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                     mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_azure);
 
                 if (url != null) {
-                    url = Constants.BASE_URL_IMAGE_SERVER + url;
+                    url = Constants.BASE_URL_FTP_SERVER + url;
                     Glide.with(getActivity())
                             .load(url)
                             .crossFade()

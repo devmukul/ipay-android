@@ -6,21 +6,14 @@ public class IdentificationDocument {
     public String documentType;
     public String documentIdNumber;
     public String documentVerificationStatus;
+    public String documentUrl;
 
-    public IdentificationDocument() {
-
+    public String getDocumentUrl() {
+        return documentUrl;
     }
 
-    public IdentificationDocument(String documentType, String documentIdNumber, String documentVerificationStatus) {
-        this.documentType = documentType;
-        this.documentIdNumber = documentIdNumber;
-        this.documentVerificationStatus = documentVerificationStatus;
-    }
-
-    public IdentificationDocument(String documentType, String documentIdNumber) {
-        this.documentType = documentType;
-        this.documentIdNumber = documentIdNumber;
-        this.documentVerificationStatus = Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED;
+    public void setDocumentUrl(String documentUrl) {
+        this.documentUrl = documentUrl;
     }
 
     public String getDocumentType() {

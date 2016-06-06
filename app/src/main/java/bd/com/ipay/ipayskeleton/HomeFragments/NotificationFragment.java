@@ -558,7 +558,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 } else mTitleView.setVisibility(View.GONE);
 
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
                         .crossFade()
                         .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))

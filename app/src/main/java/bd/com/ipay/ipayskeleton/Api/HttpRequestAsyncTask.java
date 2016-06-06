@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
@@ -100,6 +101,8 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             mHttpResponseObject.setStatus(status);
             mHttpResponseObject.setApiCommand(API_COMMAND);
             mHttpResponseObject.setJsonString(sb.toString());
+            mHttpResponseObject.setHeaders(Arrays.asList(mHttpResponse.getAllHeaders()));
+
 
         } catch (Exception e) {
             e.printStackTrace();

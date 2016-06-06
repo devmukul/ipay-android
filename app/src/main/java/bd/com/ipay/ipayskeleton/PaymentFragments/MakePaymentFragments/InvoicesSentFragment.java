@@ -286,7 +286,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                     mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_azure);
 
                 if (url != null) {
-                    url = Constants.BASE_URL_IMAGE_SERVER + url;
+                    url = Constants.BASE_URL_FTP_SERVER + url;
                     Glide.with(getActivity())
                             .load(url)
                             .crossFade()
@@ -364,7 +364,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 });
 
                 Glide.with(getActivity())
-                        .load(Constants.BASE_URL_IMAGE_SERVER + imageUrl)
+                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
                         .crossFade()
                         .error(R.drawable.ic_person)
                         .transform(new CircleTransform(getActivity()))
