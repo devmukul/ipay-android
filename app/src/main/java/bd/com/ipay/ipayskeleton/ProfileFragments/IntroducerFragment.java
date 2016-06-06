@@ -431,6 +431,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             }
 
             public void bindViewForSentRequestList(int pos) {
+
                 if (mIntroducerList == null && mIntroducedList == null) pos = pos - 1;
                 else if (mIntroducedList == null) {
                     if (mIntroducerList.size() == 0) pos = pos - 1;
@@ -513,11 +514,10 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 IntroducerListItemViewHolder vh = new IntroducerListItemViewHolder(v);
                 return vh;
 
-            } else if (viewType == INTRODUCER_LIST_HEADER_VIEW) {
+            } else if(viewType == INTRODUCER_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introducer_list_header, parent, false);
                 IntroducerListHeaderViewHolder vh = new IntroducerListHeaderViewHolder(v);
                 return vh;
-
             } else if (viewType == INTRODUCED_LIST_ITEM_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduced_list, parent, false);
                 IntroducedListItemViewHolder vh = new IntroducedListItemViewHolder(v);
@@ -537,6 +537,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me, parent, false);
                 SentRequestListItemViewHolder vh = new SentRequestListItemViewHolder(v);
                 return vh;
+
             }
         }
 
