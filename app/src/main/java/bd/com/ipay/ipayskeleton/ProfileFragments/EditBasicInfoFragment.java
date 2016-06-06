@@ -195,7 +195,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 android.R.layout.simple_list_item_1, mOccupationNameList);
         mOccupationSpinner.setAdapter(mAdapterOccupation);
 
-        setProfilePicture("");
         setProfileInformation();
         getOccupationList();
 
