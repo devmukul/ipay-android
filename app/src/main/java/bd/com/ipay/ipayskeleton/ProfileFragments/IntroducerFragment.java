@@ -410,8 +410,8 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 setProfilePicture(imageUrl, mIntroducerProfilePictureView, introducerName);
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
-                if(introducedTime == 0 ) mTimeView.setVisibility(View.GONE);
-                else mTimeView.setText("Introduced on: "+time);
+                if (introducedTime == 0) mTimeView.setVisibility(View.GONE);
+                else mTimeView.setText("Introduced on: " + time);
             }
 
             public void bindViewForIntroducedList(int pos) {
@@ -514,7 +514,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 IntroducerListItemViewHolder vh = new IntroducerListItemViewHolder(v);
                 return vh;
 
-            } else if(viewType == INTRODUCER_LIST_HEADER_VIEW) {
+            } else if (viewType == INTRODUCER_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introducer_list_header, parent, false);
                 IntroducerListHeaderViewHolder vh = new IntroducerListHeaderViewHolder(v);
                 return vh;
@@ -533,7 +533,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 SentRequestListHeaderViewHolder vh = new SentRequestListHeaderViewHolder(v);
                 return vh;
 
-            } else {
+            } else  {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me, parent, false);
                 SentRequestListItemViewHolder vh = new SentRequestListItemViewHolder(v);
                 return vh;
@@ -670,8 +670,10 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             } else if (recommendationRequestsListSize == 0 && introducerListSize > 0 && introducedListSize == 0) {
                 if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
                 else return INTRODUCER_LIST_ITEM_VIEW;
+            } else if (recommendationRequestsListSize == 0 && introducerListSize == 0 && introducedListSize > 0) {
+                if (position == 0) return INTRODUCED_LIST_HEADER_VIEW;
+                else return INTRODUCED_LIST_ITEM_VIEW;
             }
-
             return super.getItemViewType(position);
         }
     }
