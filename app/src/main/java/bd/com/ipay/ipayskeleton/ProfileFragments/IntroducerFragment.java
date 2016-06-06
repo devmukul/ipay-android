@@ -23,6 +23,7 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerActivity;
@@ -323,6 +324,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             private TextView mRequestedMobileNumber;
             private RoundedImageView mRequestedProfilePictureView;
             private ImageView mSentRequestStatus;
+            private TextView mTimeView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -341,6 +343,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 mRequestedMobileNumber = (TextView) itemView.findViewById(R.id.requested_mobile_number);
                 mRequestedProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 mSentRequestStatus = (ImageView) itemView.findViewById(R.id.request_status);
+                mTimeView = (TextView) itemView.findViewById(R.id.time);
 
             }
 
@@ -401,10 +404,14 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
                 final String introducerName = mIntroducerList.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
+                final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
+                final String time = new SimpleDateFormat("EEE, MMM d, ''yy").format(mIntroducerList.get(pos).getIntroducedDate());
                 String imageUrl = mIntroducerList.get(pos).getprofilePictureUrl();
                 setProfilePicture(imageUrl, mIntroducerProfilePictureView, introducerName);
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
+                if(introducedTime == 0 ) mTimeView.setVisibility(View.GONE);
+                else mTimeView.setText("Introduced on: "+time);
             }
 
             public void bindViewForIntroducedList(int pos) {
@@ -424,7 +431,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             }
 
             public void bindViewForSentRequestList(int pos) {
-
                 if (mIntroducerList == null && mIntroducedList == null) pos = pos - 1;
                 else if (mIntroducedList == null) {
                     if (mIntroducerList.size() == 0) pos = pos - 1;

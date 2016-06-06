@@ -1,47 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="@dimen/value5"
+    android:layout_marginBottom="@dimen/value5"
     android:background="@android:color/white"
-    android:paddingLeft="@dimen/activity_horizontal_margin">
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
-        <include
-            android:id="@+id/profile_picture"
-            layout="@layout/contact_portrait_view"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp" />
+    <include
+        android:id="@+id/profile_picture"
+        layout="@layout/contact_portrait_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="16dp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/introducer_name"
             style="@style/TextStylePrimaryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/profile_picture"
             android:gravity="left"
             android:paddingBottom="2dp"
-            android:paddingTop="14dp"
             android:singleLine="true"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="Mohsin Khan"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/introducer_mobile_number"
+            style="@style/TextStyleSecondaryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/introducer_name"
-            android:layout_toRightOf="@+id/profile_picture"
-            style="@style/TextStyleSecondaryMedium"
-            android:text="+8801919191919"
             android:gravity="left"
-            android:paddingBottom="14dp"
             android:singleLine="true"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/time"
+            style="@style/TextStyleSecondarySmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

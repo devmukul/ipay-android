@@ -627,6 +627,7 @@
     <string name="you_need_to_have">You need to have at least&#160;</string>
     <string name="introducers_to_complete_the_account_verification_process">&#160;introducers to complete the account verification process.</string>
     <string name="introduced_list_header">You have introduced</string>
+    <string name="introduced_time">Introduced Time: </string>
     <string name="introducer_list_header">Your introducer</string>
     <string name="sent_requests_header">You have sent requests to</string>
     <string name="invitation">Inivited</string>
