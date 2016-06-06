@@ -18,12 +18,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
@@ -44,6 +41,11 @@ public class ServiceFragment extends Fragment {
 
         mServiceActionList = new ArrayList<>();
         mServiceActionList.add(new ServiceAction(getString(R.string.topup)));
+        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
+            mServiceActionList.add(new ServiceAction(getString(R.string.make_payment)));
+        } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+            mServiceActionList.add(new ServiceAction(getString(R.string.create_invoice)));
+        }
 
         mServiceActionListView = (ListView) v.findViewById(R.id.list_services);
         mServiceActionListAdapter = new WalletActionListAdapter(getActivity(), R.layout.list_item_services, mServiceActionList);
@@ -95,9 +97,19 @@ public class ServiceFragment extends Fragment {
                                 PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
+                                        Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                                pinChecker.execute();
+                                break;
+                            case 1:
+                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                                    @Override
+                                    public void ifPinAdded() {
                                         Intent intent;
                                         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
-                                            intent = new Intent(getActivity(), TopUpActivity.class);
+                                            intent = new Intent(getActivity(), PaymentMakingActivity.class);
                                             startActivity(intent);
                                         } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
                                             intent = new Intent(getActivity(), MakePaymentActivity.class);
