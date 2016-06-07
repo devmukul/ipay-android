@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -289,14 +290,14 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
         }
 
-        setProfilePicture(mProfilePicture);
+        setProfilePicture(mProfilePicture, true);
 
     }
 
-    private void setProfilePicture(String url) {
+    private void setProfilePicture(String url, boolean fromServer) {
         try {
             if (!url.equals("")) {
-                if (!url.startsWith("content:"))
+                if (fromServer)
                     url = Constants.BASE_URL_FTP_SERVER + url;
 
                 Glide.with(getActivity())
@@ -351,7 +352,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                                     R.string.could_not_load_image,
                                     Toast.LENGTH_SHORT).show();
                     } else {
-                        setProfilePicture(uri.toString());
+                        setProfilePicture(uri.toString(), false);
                         updateProfilePicture(uri);
                     }
 
