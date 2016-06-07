@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -37,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MyRequestsFragment extends Fragment implements HttpResponseListener {
+public class MyRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 
@@ -78,6 +80,12 @@ public class MyRequestsFragment extends Fragment implements HttpResponseListener
         });
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
     }
 
     @Override
@@ -176,6 +184,8 @@ public class MyRequestsFragment extends Fragment implements HttpResponseListener
                     Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
             }
 
+
+            if (this.isAdded()) setContentShown(true);
             mSwipeRefreshLayout.setRefreshing(false);
             mPendingRequestTask = null;
 
