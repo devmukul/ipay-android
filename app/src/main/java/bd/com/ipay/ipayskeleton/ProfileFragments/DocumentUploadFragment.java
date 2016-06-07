@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 
@@ -193,8 +194,14 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
+                        // If push is delayed, we would not see the updated document list when we back
+                        // to the document list fragment. Setting the update flag to true to force load
+                        // the list.
+                        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+                        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
+
                         Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((ProfileActivity) getActivity()).switchToDocumentListFragment();
+                        ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
                     }
 
                 } else {

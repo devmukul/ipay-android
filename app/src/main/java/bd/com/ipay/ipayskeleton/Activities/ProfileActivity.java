@@ -171,7 +171,7 @@ public class ProfileActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, documentUploadFragment).addToBackStack(null).commit();
     }
 
-    public void switchToDocumentListFragment() {
+    public void switchToIdentificationDocumentListFragment() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStack();
 

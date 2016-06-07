@@ -314,8 +314,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
 //                    mOptionsLayout.setVisibility(View.GONE);
 
-                    mPreviewButton.setVisibility(View.VISIBLE);
-                    mDivider.setVisibility(View.VISIBLE);
+                    mPreviewButton.setVisibility(View.GONE);
+                    mDivider.setVisibility(View.GONE);
                 }
                 // Document uploaded but not verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
