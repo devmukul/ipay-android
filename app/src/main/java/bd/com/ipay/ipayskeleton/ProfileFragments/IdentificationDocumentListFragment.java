@@ -42,7 +42,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class DocumentListFragment extends ProgressFragment implements HttpResponseListener {
+public class IdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
     private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
@@ -94,7 +94,7 @@ public class DocumentListFragment extends ProgressFragment implements HttpRespon
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_documents, container, false);
+        View v = inflater.inflate(R.layout.fragment_identification_documents, container, false);
         getActivity().setTitle(R.string.identification_documents);
 
         mProgressDialog = new ProgressDialog(getActivity());

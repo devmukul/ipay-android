@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BasicInfoFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.DocumentListFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentListFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.DocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
@@ -91,7 +91,7 @@ public class ProfileActivity extends BaseActivity {
                 break;
             case VERIFICATION_DOCUMENT:
             case PHOTOID:
-                fragment = new DocumentListFragment();
+                fragment = new IdentificationDocumentListFragment();
                 break;
             case PROFILE_COMPLETENESS:
                 fragment = new ProfileCompletionFragment();
@@ -175,7 +175,7 @@ public class ProfileActivity extends BaseActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStack();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new DocumentListFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IdentificationDocumentListFragment()).commit();
     }
 
     public void switchToBankFragment() {
