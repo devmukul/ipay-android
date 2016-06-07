@@ -59,7 +59,6 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
     public ReviewMakePaymentDialog(Context context, long moneyRequestId, String receiverMobileNumber, String receiverName, String photoUri, BigDecimal amount,
                                    String title, int serviceID, BigDecimal vat, List<ItemList> itemList, ReviewDialogFinishListener reviewFinishListener) {
         super(context);
-
         this.requestId = moneyRequestId;
         this.mReceiverMobileNumber = receiverMobileNumber;
         this.mReceiverName = receiverName;
@@ -184,8 +183,8 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
 
     private class PaymentReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private static final int NOTIFICATION_REVIEW_LIST_ITEM_VIEW = 1;
-        private static final int NOTIFICATION_REVIEW_LIST_HEADER_VIEW = 2;
+        private static final int NOTIFICATION_REVIEW_LIST_ITEM_VIEW = 2;
+        private static final int NOTIFICATION_REVIEW_LIST_HEADER_VIEW = 1;
         private static final int NOTIFICATION_REVIEW_LIST_FOOTER_VIEW = 3;
 
         public PaymentReviewAdapter() {
@@ -232,8 +231,6 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
             }
 
             public void bindViewForHeader(int pos) {
-                mProfileImageView.setInformation(mPhotoUri, mReceiverName);
-
                 if (mReceiverName == null || mReceiverName.isEmpty()) {
                     mNameView.setVisibility(View.GONE);
                 } else {
@@ -247,6 +244,8 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                 } else {
                     mTitleView.setText(mTitle);
                 }
+
+                mProfileImageView.setInformation(mPhotoUri, mReceiverName);
             }
 
             public void bindViewForFooter(int pos) {
@@ -323,6 +322,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
         @Override
         public int getItemCount() {
             if (mItemList == null) return 0;
+            if (mItemList.size() == 0) return 2;
             if (mItemList.size() > 0)
                 return 1 + mItemList.size() + 1;
             else return 0;
@@ -332,12 +332,16 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
         public int getItemViewType(int position) {
             if (mItemList == null) return super.getItemViewType(position);
 
+            if (mItemList.size() == 0) {
+                if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
+                else return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
+
+            }
+
             if (mItemList.size() > 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
-
                 else if (position == mItemList.size() + 1)
                     return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
-
                 else return NOTIFICATION_REVIEW_LIST_ITEM_VIEW;
             }
 

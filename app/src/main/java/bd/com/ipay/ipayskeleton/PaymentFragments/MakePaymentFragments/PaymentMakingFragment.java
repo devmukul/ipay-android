@@ -232,6 +232,8 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
             private TextView mTitleView;
             private TextView mTimeView;
             private TextView loadMoreTextView;
+
+            private TextView headerView;
             private RoundedImageView mPortrait;
 
             private LinearLayout optionsLayout;
@@ -248,6 +250,7 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mTitleView = (TextView) itemView.findViewById(R.id.title);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                headerView = (TextView) itemView.findViewById(R.id.money_request_header);
 
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 acceptButton = (Button) itemView.findViewById(R.id.accept_button);
@@ -339,6 +342,10 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
 
             }
 
+            public void bindViewHeader() {
+                headerView.setText(R.string.invoice_requests_header);
+            }
+
             public void bindViewFooter() {
                 if (hasNext)
                     loadMoreTextView.setText(R.string.load_more);
@@ -413,6 +420,7 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
 
                 } else if (holder instanceof MoneyRequestHeaderViewHolder) {
                     MoneyRequestHeaderViewHolder vh = (MoneyRequestHeaderViewHolder) holder;
+                    vh.bindViewHeader();
 
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
