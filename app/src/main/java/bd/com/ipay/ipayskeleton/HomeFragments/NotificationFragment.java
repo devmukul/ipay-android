@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -221,16 +222,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private void refreshNotificationList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
             pageCount = 0;
-            if (moneyRequestList != null)
-                moneyRequestList.clear();
             getNotifications();
         }
     }
 
     private void refreshIntroductionRequestList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
-            if (mRecommendationRequestList != null)
-                mRecommendationRequestList.clear();
             getRecommendationRequestsList();
         }
     }
@@ -306,6 +303,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 try {
                     mGetNotificationsResponse = gson.fromJson(result.getJsonString(), GetNotificationsResponse.class);
 
+                    if (moneyRequestList != null)
+                        moneyRequestList.clear();
+
                     if (moneyRequestList == null || moneyRequestList.size() == 0) {
                         moneyRequestList = mGetNotificationsResponse.getAllNotifications();
                     } else {
@@ -367,6 +367,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mRecommendationRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
+
+                    if (mRecommendationRequestList != null)
+                        mRecommendationRequestList.clear();
 
                     if (mRecommendationRequestList == null) {
                         mRecommendationRequestList = mRecommendationRequestsResponse.getVerificationRequestList();
