@@ -19,6 +19,10 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         createFriendsTable(db);
         createPushNotificationTable(db);
+        createActivityLogTable(db);
+
+        // Run Triggers here
+        createActivityLogTableTrigger(db);
     }
 
     private void createFriendsTable(SQLiteDatabase db) {
@@ -36,8 +40,35 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private void createPushNotificationTable(SQLiteDatabase db) {
         db.execSQL("create table if not exists "
                 + DBConstants.DB_TABLE_PUSH_EVENTS
-                + "(tag_name text unique not null, "
-                + "json text)");
+                + "(" + DBConstants.KEY_TAG_NAME + "text unique not null, "
+                + DBConstants.KEY_JSON + " text)");
+    }
+
+    private void createActivityLogTable(SQLiteDatabase db) {
+        db.execSQL("create table if not exists " +
+                DBConstants.DB_TABLE_ACTIVITY_LOG +
+                "(" +
+                DBConstants.KEY_ACTIVITY_LOG_ID + " integer unique not null, " +
+                DBConstants.KEY_ACTIVITY_LOG_ACCOUNT_ID + " integer, " +
+                DBConstants.KEY_ACTIVITY_LOG_DESCRIPTION + " text, " +
+                DBConstants.KEY_ACTIVITY_LOG_TYPE + " integer, " +
+                DBConstants.KEY_ACTIVITY_LOG_TIME + " integer)");
+    }
+
+    private void createActivityLogTableTrigger(SQLiteDatabase db) {
+        db.execSQL("CREATE TRIGGER " + DBConstants.DB_TRIGGER_ACTIVITY_LOG + " INSERT ON "
+                + DBConstants.DB_TABLE_ACTIVITY_LOG + " WHEN (select count(*) from "
+                + DBConstants.DB_TABLE_ACTIVITY_LOG + ")>"
+                + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG +
+                " BEGIN DELETE FROM "
+                + DBConstants.DB_TABLE_ACTIVITY_LOG
+                + " WHERE " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_ID
+                + " IN (SELECT " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_ID
+                + " FROM " + DBConstants.DB_TABLE_ACTIVITY_LOG
+                + " ORDER BY " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_TIME
+                + " desc limit(select count(*) - " + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG
+                + " from " + DBConstants.DB_TABLE_ACTIVITY_LOG + ")); END;");
+
     }
 
     @Override
