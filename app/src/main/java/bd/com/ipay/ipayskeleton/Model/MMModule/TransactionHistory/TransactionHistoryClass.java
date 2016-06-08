@@ -17,8 +17,8 @@ public class TransactionHistoryClass {
     private String purpose;
     private String statusDescription;
     private String description;
-    private long time;
     private String transactionID;
+    private long time;
     private long requestTime;
     private long responseTime;
     private TransactionHistoryAdditionalInfo additionalInfo;

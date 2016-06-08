@@ -238,7 +238,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             if (!HomeActivity.newsFeedLoadedOnce) getNewsFeed();
 
             refreshBalance();
-            getTransactionHistory();
+//            getTransactionHistory();
             getProfileCompletionStatus();
         }
 

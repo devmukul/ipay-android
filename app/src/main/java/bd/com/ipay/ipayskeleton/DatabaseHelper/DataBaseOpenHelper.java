@@ -20,6 +20,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         createFriendsTable(db);
         createPushNotificationTable(db);
         createActivityLogTable(db);
+        createTransactionHistoryTable(db);
 
         // Run Triggers here
         createActivityLogTableTrigger(db);
@@ -71,12 +72,41 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     }
 
+    private void createTransactionHistoryTable(SQLiteDatabase db) {
+        db.execSQL("create table if not exists " +
+                DBConstants.DB_TABLE_TRANSACTION_HISTORY + "(" +
+                DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID + " text primary key, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_ORIGINATING_MOBILE_NUMBER + " text not null, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_RECEIVER_INFO + " text," +
+                DBConstants.KEY_TRANSACTION_HISTORY_AMOUNT + " text, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_FEE + " double, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_NET_AMOUNT + " double, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_BALANCE + " double, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_SERVICE_ID + " integer, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_STATUS_CODE + " integer, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_PURPOSE + " text, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_STATUS_DESCRIPTION + " text, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_DESCRIPTION + " text, " +
+                DBConstants.KEY_TRANSACTION_TIME + " long, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_REQUEST_TIME + " long, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME + " long, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_USER_NAME + " text, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_USER_MOBILE_NUMBER + " text, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_USER_PROFILE_PIC + " text, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER + " text, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME + " text)");
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO migration code - remove this later
-        if (oldVersion == 1) {
+        if (oldVersion < 2) {
             db.execSQL("drop table if exists " + DBConstants.DB_TABLE_FRIENDS);
             createFriendsTable(db);
+        }
+
+        if (oldVersion < 3) {
+            createTransactionHistoryTable(db);
         }
     }
 }

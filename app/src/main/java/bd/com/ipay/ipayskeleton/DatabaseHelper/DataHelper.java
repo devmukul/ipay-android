@@ -17,7 +17,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private Context context;
     private static DataHelper instance = null;
