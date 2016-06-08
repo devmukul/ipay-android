@@ -16,6 +16,12 @@
             android:id="@+id/profile_picture"
             style="@style/ReviewImageStyle.Dialog" />
 
+        <ImageView
+            android:id="@+id/other_image"
+            style="@style/ReviewImageStyle.Dialog"
+            android:layout_height="50dp"
+            android:layout_width="50dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -181,7 +187,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
             android:layout_weight="1"
-            android:gravity="left" />
+            android:gravity="right" />
     </LinearLayout>
 
     <LinearLayout
@@ -203,7 +209,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
             android:layout_weight="1"
-            android:gravity="left" />
+            android:gravity="right"  />
     </LinearLayout>
 
 </LinearLayout>

@@ -382,6 +382,8 @@
     <string name="select_an_operator">Select an operator</string>
     <string name="select_type">Select type</string>
     <string name="recharge">Recharge</string>
+    <string name="recharge_to">Recharge to</string>
+    <string name="opening_balance_to">Opening balance to</string>
     <string name="edit">Edit</string>
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
     <string name="purpose">Purpose</string>

@@ -416,7 +416,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     }
 
     private void showTransactionHistoryDialogue( double amount, double fee, double netAmount,double balance, String purpose, String time, Integer statusCode,
-                                                 String description, String transactionID, String receiverMobileNumber, String receiverName, String photoUri) {
+                                                 String description, String transactionID, String receiverMobileNumber, String receiverName, String photoUri,
+                                                 int serviceId, String mBankName, String mBankAccountNumber) {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.transaction_details)
                 .customView(R.layout.dialog_transaction_details, true)
@@ -442,6 +443,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         final LinearLayout purposeLayout = (LinearLayout) view.findViewById(R.id.purpose_layout);
 
         final ProfileImageView mProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_picture);
+        final ImageView otherImageView = (ImageView) view.findViewById(R.id.other_image);
         final TextView mNameView = (TextView) view.findViewById(R.id.textview_name);
         final TextView mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
 
@@ -455,15 +457,53 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
         else purposeLayout.setVisibility(View.GONE);
 
-        mProfileImageView.setInformation(photoUri, receiverName);
-        if (receiverName == null || receiverName.isEmpty()) {
-            mNameView.setVisibility(View.GONE);
+        if(serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+            mNameView.setVisibility(View.VISIBLE);
+            mNameView.setText(mBankName);
+            mMobileNumberView.setText(mBankAccountNumber);
+            mProfileImageView.setVisibility(View.GONE);
+            otherImageView.setVisibility(View.VISIBLE);
+            otherImageView.setImageResource(R.drawable.ic_add_money_large);
+
+        } else if(serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
+            mNameView.setVisibility(View.VISIBLE);
+            mNameView.setText(mBankName);
+            mMobileNumberView.setText(mBankAccountNumber);
+            mProfileImageView.setVisibility(View.GONE);
+            otherImageView.setVisibility(View.VISIBLE);
+            otherImageView.setImageResource(R.drawable.ic_withdraw_money_large);
+
+        } else if(serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
+            mNameView.setVisibility(View.VISIBLE);
+            mNameView.setText(R.string.opening_balance_to);
+            mMobileNumberView.setText(mMobileNumber);
+            mProfileImageView.setVisibility(View.GONE);
+            otherImageView.setVisibility(View.VISIBLE);
+            otherImageView.setImageResource(R.drawable.ic_opening_balance);
+
+        } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
+            mNameView.setVisibility(View.VISIBLE);
+            mNameView.setText(R.string.recharge_to);
+            mMobileNumberView.setText(mMobileNumber);
+            mProfileImageView.setVisibility(View.GONE);
+            otherImageView.setVisibility(View.VISIBLE);
+            otherImageView.setImageResource(R.drawable.ic_mobile_recharge_large);
 
         } else {
-            mNameView.setText(receiverName);
+            if (receiverName == null || receiverName.isEmpty()) {
+                mNameView.setVisibility(View.GONE);
+
+            } else {
+                mNameView.setVisibility(View.VISIBLE);
+                mNameView.setText(receiverName);
+
+            }
+            mMobileNumberView.setText(receiverMobileNumber);
+            otherImageView.setVisibility(View.GONE);
+            mProfileImageView.setVisibility(View.VISIBLE);
+            mProfileImageView.setInformation(photoUri, receiverName);
 
         }
-        mMobileNumberView.setText(receiverMobileNumber);
 
 
         if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -543,6 +583,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             private TextView loadMoreTextView;
             private TextView mAmountTextView;
             private ImageView statusView;
+            private ImageView otherImageView;
             private ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
@@ -554,6 +595,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
+                otherImageView = (ImageView) itemView.findViewById(R.id.other_image);
             }
 
             public void bindView(int pos) {
@@ -571,12 +613,35 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 final String imageUrl = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserProfilePic();
                 final String name = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserName();
                 final String mobileNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserMobileNumber();
-                mProfileImageView.setInformation(imageUrl, name);
+                final String bankName = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountName();
+                final String bankAccountNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountNumber();
+                final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
                 mAmountTextView.setText(Utilities.formatTaka(amount));
 
                 mTransactionDescription.setText(description);
                 mTime.setText(time);
 
+                if(serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    otherImageView.setVisibility(View.VISIBLE);
+                    otherImageView.setImageResource(R.drawable.ic_add_money_large);
+                } else if(serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    otherImageView.setVisibility(View.VISIBLE);
+                    otherImageView.setImageResource(R.drawable.ic_withdraw_money_large);
+                } else if(serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    otherImageView.setVisibility(View.VISIBLE);
+                    otherImageView.setImageResource(R.drawable.ic_opening_balance);
+                } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    otherImageView.setVisibility(View.VISIBLE);
+                    otherImageView.setImageResource(R.drawable.ic_mobile_recharge_large);
+                } else {
+                    otherImageView.setVisibility(View.INVISIBLE);
+                    mProfileImageView.setVisibility(View.VISIBLE);
+                    mProfileImageView.setInformation(imageUrl, name);
+                }
 
                 if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
@@ -598,8 +663,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                     @Override
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing())
-                            showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount,
-                                    balance, purpose, time, statusCode, description, transactionID,mobileNumber,name,imageUrl);
+                            showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount, balance, purpose, time,
+                                    statusCode, description, transactionID,mobileNumber,name,imageUrl,serviceId,bankName,bankAccountNumber);
                     }
                 });
 

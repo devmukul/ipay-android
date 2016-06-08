@@ -16,6 +16,12 @@
         android:layout_width="50dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
+    <ImageView
+        android:id="@+id/other_image"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
     <LinearLayout
         android:id="@+id/description_layout"
         android:layout_width="match_parent"
