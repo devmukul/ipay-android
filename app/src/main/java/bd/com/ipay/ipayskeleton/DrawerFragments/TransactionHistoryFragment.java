@@ -468,7 +468,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         } else if(serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
             mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(mBankName);
-            mMobileNumberView.setText(mBankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
             otherImageView.setImageResource(R.drawable.ic_withdraw_money_large);
