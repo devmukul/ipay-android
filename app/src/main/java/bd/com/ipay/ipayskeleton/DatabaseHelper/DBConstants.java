@@ -52,7 +52,7 @@ public class DBConstants {
     public static final String KEY_TRANSACTION_HISTORY_PURPOSE = "purpose";
     public static final String KEY_TRANSACTION_HISTORY_STATUS_DESCRIPTION = "status_description";
     public static final String KEY_TRANSACTION_HISTORY_DESCRIPTION = "description";
-    public static final String KEY_TRANSACTION_TIME = "time";
+    public static final String KEY_TRANSACTION_HISTORY_TIME = "time";
     public static final String KEY_TRANSACTION_HISTORY_REQUEST_TIME = "request_time";
     public static final String KEY_TRANSACTION_HISTORY_RESPONSE_TIME = "response_time";
 

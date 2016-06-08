@@ -7,6 +7,18 @@ public class TransactionHistoryAdditionalInfo {
     private String bankAccountNumber;
     private String bankAccountName;
 
+    public TransactionHistoryAdditionalInfo() {
+
+    }
+
+    public TransactionHistoryAdditionalInfo(String userName, String userMobileNumber, String userProfilePic, String bankAccountNumber, String bankAccountName) {
+        this.userName = userName;
+        this.userMobileNumber = userMobileNumber;
+        this.userProfilePic = userProfilePic;
+        this.bankAccountNumber = bankAccountNumber;
+        this.bankAccountName = bankAccountName;
+    }
+
     public String getUserName() {
         return userName;
     }

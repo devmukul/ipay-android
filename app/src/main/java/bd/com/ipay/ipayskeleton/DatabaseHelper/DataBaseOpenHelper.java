@@ -87,7 +87,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_TRANSACTION_HISTORY_PURPOSE + " text, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_STATUS_DESCRIPTION + " text, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_DESCRIPTION + " text, " +
-                DBConstants.KEY_TRANSACTION_TIME + " long, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_TIME + " long, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_REQUEST_TIME + " long, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME + " long, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_USER_NAME + " text, " +

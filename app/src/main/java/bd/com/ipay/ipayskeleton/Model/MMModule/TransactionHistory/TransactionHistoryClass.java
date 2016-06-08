@@ -23,6 +23,33 @@ public class TransactionHistoryClass {
     private long responseTime;
     private TransactionHistoryAdditionalInfo additionalInfo;
 
+    public TransactionHistoryClass() {
+
+    }
+
+    public TransactionHistoryClass(String originatingMobileNumber, String receiverInfo, double amount,
+                                   double fee, double netAmount, double balance, int serviceID, int statusCode,
+                                   String purpose, String statusDescription, String description,
+                                   String transactionID, long time, long requestTime, long responseTime,
+                                   TransactionHistoryAdditionalInfo additionalInfo) {
+        this.originatingMobileNumber = originatingMobileNumber;
+        this.receiverInfo = receiverInfo;
+        this.amount = amount;
+        this.fee = fee;
+        this.netAmount = netAmount;
+        this.balance = balance;
+        this.serviceID = serviceID;
+        this.statusCode = statusCode;
+        this.purpose = purpose;
+        this.statusDescription = statusDescription;
+        this.description = description;
+        this.transactionID = transactionID;
+        this.time = time;
+        this.requestTime = requestTime;
+        this.responseTime = responseTime;
+        this.additionalInfo = additionalInfo;
+    }
+
     public String getOriginatingMobileNumber() {
         return originatingMobileNumber;
     }
