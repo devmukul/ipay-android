@@ -534,4 +534,6 @@ public class Constants {
     public static final int INVOICE_STATUS_REJECTED = 3;
     public static final int INVOICE_STATUS_DRAFT = 4;
 
+    public static final int TRANSACTION_STATUS_ACCEPTED = 200;
+    public static final int TRANSACTION_STATUS_PROCESSING = 102;
 }

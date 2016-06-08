@@ -541,7 +541,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             public void bindView(int pos) {
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
 
-                final String description = userTransactionHistoryClasses.get(pos).getDescription();
+                final String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
                 final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
                 final double fee = userTransactionHistoryClasses.get(pos).getFee();
