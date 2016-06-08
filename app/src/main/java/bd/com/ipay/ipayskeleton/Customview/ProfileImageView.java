@@ -85,7 +85,6 @@ public class ProfileImageView extends FrameLayout {
             setProfileFirstLetter(name);
             setProfilePicture(photoUri);
 
-            Log.w("Profile Picture", photoUri);
         } else if (photoUri != null){
             setProfileFirstLetter(photoUri);
         } else {

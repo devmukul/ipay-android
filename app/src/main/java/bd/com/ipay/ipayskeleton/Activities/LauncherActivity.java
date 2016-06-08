@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class LauncherActivity extends BaseActivity {
@@ -22,6 +23,11 @@ public class LauncherActivity extends BaseActivity {
         if (!pref.contains(Constants.FIRST_LAUNCH)) {
             firstLaunch = true;
             pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).commit();
+
+            // We need to populate the transaction history database for the first time when the app
+            // is launched. Therefore, setting the update flag to true
+            PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(this);
+            pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY, true);
         }
 
         if (firstLaunch) {

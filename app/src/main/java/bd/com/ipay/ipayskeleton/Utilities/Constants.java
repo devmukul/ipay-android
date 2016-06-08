@@ -97,7 +97,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = true;
+    public static final boolean AUTO_LOGIN = false;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -514,6 +514,7 @@ public class Constants {
     public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "TRUSTED_PERSON";
     public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "SEND_MONEY";
     public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "REQUEST_MONEY";
+    public static final String PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY = "TRANSACTION_HISTORY";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
     public static final String PUSH_NOTIFICATION_TAG = "tag";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
