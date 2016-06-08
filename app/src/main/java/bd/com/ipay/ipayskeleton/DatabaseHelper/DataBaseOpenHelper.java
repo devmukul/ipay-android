@@ -40,7 +40,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
     private void createPushNotificationTable(SQLiteDatabase db) {
         db.execSQL("create table if not exists "
                 + DBConstants.DB_TABLE_PUSH_EVENTS
-                + "(" + DBConstants.KEY_TAG_NAME + "text unique not null, "
+                + "(" + DBConstants.KEY_TAG_NAME + " text unique not null, "
                 + DBConstants.KEY_JSON + " text)");
     }
 
