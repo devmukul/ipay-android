@@ -41,7 +41,7 @@ public class AllContactsFragment extends BaseContactsFragment
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         DataHelper dataHelper = DataHelper.getInstance(getActivity());
-        List<FriendNode> friends = dataHelper.getSubscriberList();
+        List<FriendNode> friends = dataHelper.getFriendList();
         dataHelper.closeDbOpenHelper();
 
         friendInfoMap = new HashMap<>();

@@ -928,7 +928,7 @@ public class ContactEngine {
             return null;
 
 //        DataHelper dataHelper = DataHelper.getInstance(context);
-//        List<FriendNode> iPayContacts = dataHelper.getSubscriberList();
+//        List<FriendNode> iPayContacts = dataHelper.getFriendList();
 //        dataHelper.closeDbOpenHelper();
 
 //        Map<String, FriendInfo> iPayContactsMap = new HashMap<>();

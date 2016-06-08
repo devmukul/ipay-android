@@ -520,6 +520,8 @@ public class Constants {
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
     public static final String PUSH_NOTIFICATION_BODY = "notification";
 
+    public static final String TRANSACTION_HISTORY_HAS_NEXT = "TRANSACTION_HISTORY_HAS_NEXT";
+
     public static final String TOTAL = "total";
     public static final String INVOICE_RECEIVER_TAG = "receiver";
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";

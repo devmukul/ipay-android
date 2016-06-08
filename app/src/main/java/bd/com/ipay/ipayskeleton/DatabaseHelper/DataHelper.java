@@ -13,6 +13,8 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryAdditionalInfo;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
@@ -181,7 +183,7 @@ public class DataHelper {
     }
 
 
-    public List<FriendNode> getSubscriberList(String query, boolean verifiedOnly) {
+    public List<FriendNode> getFriendList(String query, boolean verifiedOnly) {
         Cursor cursor = searchSubscribers(query, verifiedOnly);
         List<FriendNode> friends = new ArrayList<>();
 
@@ -214,8 +216,162 @@ public class DataHelper {
         return friends;
     }
 
-    public List<FriendNode> getSubscriberList() {
-        return getSubscriberList("", false);
+    public List<FriendNode> getFriendList() {
+        return getFriendList("", false);
+    }
+
+    public long getLastTransactionTime() {
+        Cursor cursor = null;
+        SQLiteDatabase db = null;
+
+        try {
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
+
+            db = dOpenHelper.getReadableDatabase();
+            cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, null, null, null,
+                    null, null, null, DBConstants.KEY_TRANSACTION_HISTORY_TIME + " DESC LIMIT 1");
+            if (cursor.moveToFirst()) {
+                long time = cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_TIME));
+                return time;
+            }
+
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            if (db != null)
+                db.close();
+        }
+
+        return 0;
+    }
+
+    public List<TransactionHistoryClass> getAllTransactionHistory() {
+
+        List<TransactionHistoryClass> transactionHistoryClasses = new ArrayList<>();
+        Cursor cursor = null;
+        SQLiteDatabase db = null;
+
+        try {
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
+
+            db = dOpenHelper.getReadableDatabase();
+            cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, null, null, null,
+                    null, null, null, DBConstants.KEY_TRANSACTION_HISTORY_TIME + " DESC");
+
+            int transactionIdIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID);
+            int originatingMobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_ORIGINATING_MOBILE_NUMBER);
+            int receiverInfoIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_RECEIVER_INFO);
+            int amountIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_AMOUNT);
+            int feeIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_FEE);
+            int netAmountIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_NET_AMOUNT);
+            int balanceIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BALANCE);
+            int serviceIdIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_SERVICE_ID);
+            int statusCodeIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_STATUS_CODE);
+            int purposeIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_PURPOSE);
+            int statusDescriptionIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_STATUS_DESCRIPTION);
+            int descriptionIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_DESCRIPTION);
+            int timeIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_TIME);
+            int requestTimeIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_REQUEST_TIME);
+            int responseTimeIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME);
+            int userNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_USER_NAME);
+            int userMobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_USER_MOBILE_NUMBER);
+            int userProfilePicIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_USER_PROFILE_PIC);
+            int bankAccountNumberIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER);
+            int bankAccountNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME);
+
+            if (cursor.moveToFirst()) {
+                TransactionHistoryAdditionalInfo additionalInfo = new TransactionHistoryAdditionalInfo(
+                        cursor.getString(userNameIndex),
+                        cursor.getString(userMobileNumberIndex),
+                        cursor.getString(userProfilePicIndex),
+                        cursor.getString(bankAccountNumberIndex),
+                        cursor.getString(bankAccountNameIndex)
+                );
+
+                TransactionHistoryClass transactionHistoryClass = new TransactionHistoryClass(
+                        cursor.getString(originatingMobileNumberIndex),
+                        cursor.getString(receiverInfoIndex),
+                        cursor.getDouble(amountIndex),
+                        cursor.getDouble(feeIndex),
+                        cursor.getDouble(netAmountIndex),
+                        cursor.getDouble(balanceIndex),
+                        cursor.getInt(serviceIdIndex),
+                        cursor.getInt(statusCodeIndex),
+                        cursor.getString(purposeIndex),
+                        cursor.getString(statusDescriptionIndex),
+                        cursor.getString(descriptionIndex),
+                        cursor.getString(transactionIdIndex),
+                        cursor.getLong(timeIndex),
+                        cursor.getLong(requestTimeIndex),
+                        cursor.getLong(responseTimeIndex),
+                        additionalInfo
+                );
+
+                transactionHistoryClasses.add(transactionHistoryClass);
+                cursor.moveToNext();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            if (db != null)
+                db.close();
+        }
+
+        return transactionHistoryClasses;
+    }
+
+    public void createTransactionHistories(List<TransactionHistoryClass> transactionHistoryClasses) {
+        SQLiteDatabase db = null;
+
+        try {
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
+
+            db = dOpenHelper.getWritableDatabase();
+            db.beginTransaction();
+
+            for (TransactionHistoryClass transactionHistoryClass : transactionHistoryClasses) {
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID, transactionHistoryClass.getTransactionID());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_ORIGINATING_MOBILE_NUMBER, transactionHistoryClass.getOriginatingMobileNumber());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_RECEIVER_INFO, transactionHistoryClass.getReceiverInfo());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_AMOUNT, transactionHistoryClass.getAmount());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_FEE, transactionHistoryClass.getFee());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_NET_AMOUNT, transactionHistoryClass.getNetAmount());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BALANCE, transactionHistoryClass.getBalance());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_SERVICE_ID, transactionHistoryClass.getBalance());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_STATUS_CODE, transactionHistoryClass.getStatusCode());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_PURPOSE, transactionHistoryClass.getPurpose());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_STATUS_DESCRIPTION, transactionHistoryClass.getStatusDescription());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_DESCRIPTION, transactionHistoryClass.getDescription());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_TIME, transactionHistoryClass.getTime());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_REQUEST_TIME, transactionHistoryClass.getTime());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME, transactionHistoryClass.getResponseTime());
+
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_USER_NAME, transactionHistoryClass.getAdditionalInfo().getUserName());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_USER_MOBILE_NUMBER, transactionHistoryClass.getAdditionalInfo().getUserMobileNumber());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_USER_PROFILE_PIC, transactionHistoryClass.getAdditionalInfo().getUserProfilePic());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER, transactionHistoryClass.getAdditionalInfo().getBankAccountNumber());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME, transactionHistoryClass.getAdditionalInfo().getBankAccountName());
+
+                db.insertWithOnConflict(DBConstants.DB_TABLE_TRANSACTION_HISTORY, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (db != null)
+                db.close();
+        }
     }
 
     public boolean checkIfStringFieldExists(String tableName,
