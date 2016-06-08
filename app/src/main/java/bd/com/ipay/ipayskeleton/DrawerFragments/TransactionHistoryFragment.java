@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -46,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
@@ -412,8 +415,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,
-                                                double balance, String purpose, String time, Integer statusCode, String description, String transactionID) {
+    private void showTransactionHistoryDialogue( double amount, double fee, double netAmount,double balance, String purpose, String time, Integer statusCode,
+                                                 String description, String transactionID, String receiverMobileNumber, String receiverName, String photoUri) {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.transaction_details)
                 .customView(R.layout.dialog_transaction_details, true)
@@ -438,6 +441,10 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         final TextView statusTextView = (TextView) view.findViewById(R.id.status);
         final LinearLayout purposeLayout = (LinearLayout) view.findViewById(R.id.purpose_layout);
 
+        final ProfileImageView mProfileImageView = (ProfileImageView) view.findViewById(R.id.profile_picture);
+        final TextView mNameView = (TextView) view.findViewById(R.id.textview_name);
+        final TextView mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
+
         descriptionTextView.setText(description);
         timeTextView.setText(time);
         amountTextView.setText(Utilities.formatTaka(amount));
@@ -447,6 +454,17 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         balanceTextView.setText(Utilities.formatTaka(balance));
         if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
         else purposeLayout.setVisibility(View.GONE);
+
+        mProfileImageView.setInformation(photoUri, receiverName);
+        if (receiverName == null || receiverName.isEmpty()) {
+            mNameView.setVisibility(View.GONE);
+
+        } else {
+            mNameView.setText(receiverName);
+
+        }
+        mMobileNumberView.setText(receiverMobileNumber);
+
 
         if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
             statusTextView.setText(getString(R.string.transaction_successful));
@@ -523,9 +541,9 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             private TextView mTransactionDescription;
             private TextView mTime;
             private TextView loadMoreTextView;
-            private RoundedImageView mPortrait;
             private TextView mAmountTextView;
             private ImageView statusView;
+            private ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -535,7 +553,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
-                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
             }
 
             public void bindView(int pos) {
@@ -550,7 +568,10 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 final String purpose = userTransactionHistoryClasses.get(pos).getPurpose();
                 final Integer statusCode = userTransactionHistoryClasses.get(pos).getStatusCode();
                 final double balance = userTransactionHistoryClasses.get(pos).getBalance();
-
+                final String imageUrl = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserProfilePic();
+                final String name = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserName();
+                final String mobileNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserMobileNumber();
+                mProfileImageView.setInformation(imageUrl, name);
                 mAmountTextView.setText(Utilities.formatTaka(amount));
 
                 mTransactionDescription.setText(description);
@@ -578,28 +599,9 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing())
                             showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount,
-                                    balance, purpose, time, statusCode, description, transactionID);
+                                    balance, purpose, time, statusCode, description, transactionID,mobileNumber,name,imageUrl);
                     }
                 });
-
-                // TODO: uncomment this when pro pic will be available
-//                Set<UserProfilePictureClass> userProfilePictureClassSet = userTransactionHistoryClasses.
-//                        get(pos).getOtherUserprofilePictures();
-
-
-//                if (userProfilePictureClassSet.size() > 0) {
-//                    for (Iterator<UserProfilePictureClass> it = userProfilePictureClassSet.iterator(); it.hasNext(); ) {
-//                        UserProfilePictureClass temp = it.next();
-//                        Glide.with(getActivity())
-//                                .load(Constants.BASE_URL_IMAGE + temp.getUrl())
-//                                .into(mPortrait);
-//                        break;
-//                    }
-//                } else {
-//                    Glide.with(getActivity())
-//                            .load(R.drawable.ic_transaction_history)
-//                            .into(mPortrait);
-//                }
 
             }
 
