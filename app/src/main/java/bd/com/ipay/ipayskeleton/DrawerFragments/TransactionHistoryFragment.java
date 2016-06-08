@@ -53,6 +53,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHis
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.TransactionHistoryCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -101,6 +102,8 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
     private boolean hasNext = false;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
+
+    TransactionHistoryCacheManager transactionHistoryCacheManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -188,9 +191,20 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
 
-        // Refresh balance each time home page appears
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getTransactionHistory();
+        transactionHistoryCacheManager = new TransactionHistoryCacheManager(getActivity());
+        if (transactionHistoryCacheManager.isUpdateNeeded()) {
+            transactionHistoryCacheManager.updateCache(new TransactionHistoryCacheManager.OnUpdateCacheListener() {
+                @Override
+                public void onUpdateCache() {
+                    List<TransactionHistoryClass> transactionHistoryClasses = transactionHistoryCacheManager.getTransactions();
+                    boolean hasNext = transactionHistoryCacheManager.hasNext();
+                    loadTransactionHistory(transactionHistoryClasses, hasNext);
+                }
+            });
+        } else {
+            List<TransactionHistoryClass> transactionHistoryClasses = transactionHistoryCacheManager.getTransactions();
+            boolean hasNext = transactionHistoryCacheManager.hasNext();
+            loadTransactionHistory(transactionHistoryClasses, hasNext);
         }
 
         setActionsForEventTypeFilter();
@@ -221,7 +235,16 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                     if (userTransactionHistoryClasses != null)
                         userTransactionHistoryClasses.clear();
 
-                    getTransactionHistory();
+                    transactionHistoryCacheManager.updateCache(new TransactionHistoryCacheManager.OnUpdateCacheListener() {
+                        @Override
+                        public void onUpdateCache() {
+                            List<TransactionHistoryClass> transactionHistoryClasses = transactionHistoryCacheManager.getTransactions();
+                            boolean hasNext = transactionHistoryCacheManager.hasNext();
+                            loadTransactionHistory(transactionHistoryClasses, hasNext);
+
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
+                    });
                 }
             }
         });
@@ -518,6 +541,23 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
     }
 
+    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
+        if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
+            userTransactionHistoryClasses = transactionHistoryClasses;
+        } else {
+            List<TransactionHistoryClass> tempTransactionHistoryClasses;
+            tempTransactionHistoryClasses = transactionHistoryClasses;
+            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+        }
+
+        this.hasNext = hasNext;
+        if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
+            mEmptyListTextView.setVisibility(View.GONE);
+        else mEmptyListTextView.setVisibility(View.VISIBLE);
+
+        mTransactionHistoryAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
@@ -539,20 +579,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 try {
                     mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
 
-                    if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-                        userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions();
-                    } else {
-                        List<TransactionHistoryClass> tempTransactionHistoryClasses;
-                        tempTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions();
-                        userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
-                    }
-
-                    hasNext = mTransactionHistoryResponse.isHasNext();
-                    if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
-                        mEmptyListTextView.setVisibility(View.GONE);
-                    else mEmptyListTextView.setVisibility(View.VISIBLE);
-
-                    mTransactionHistoryAdapter.notifyDataSetChanged();
+                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
 
                 } catch (Exception e) {
                     e.printStackTrace();

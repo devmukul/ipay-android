@@ -242,4 +242,26 @@ public class TransactionHistoryClass {
 
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return "TransactionHistoryClass{" +
+                "originatingMobileNumber='" + originatingMobileNumber + '\'' +
+                ", receiverInfo='" + receiverInfo + '\'' +
+                ", amount=" + amount +
+                ", fee=" + fee +
+                ", netAmount=" + netAmount +
+                ", balance=" + balance +
+                ", serviceID=" + serviceID +
+                ", statusCode=" + statusCode +
+                ", purpose='" + purpose + '\'' +
+                ", statusDescription='" + statusDescription + '\'' +
+                ", description='" + description + '\'' +
+                ", transactionID='" + transactionID + '\'' +
+                ", time=" + time +
+                ", requestTime=" + requestTime +
+                ", responseTime=" + responseTime +
+                ", additionalInfo=" + additionalInfo +
+                '}';
+    }
 }

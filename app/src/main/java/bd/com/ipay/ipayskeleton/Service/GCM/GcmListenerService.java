@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.GetTrustedPersonsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.TransactionHistoryCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService implements HttpResponseListener {
@@ -141,6 +142,12 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 break;
             case Constants.PUSH_NOTIFICATION_TAG_SEND_MONEY:
             case Constants.PUSH_NOTIFICATION_TAG_REQUEST_MONEY:
+                TransactionHistoryCacheManager transactionHistoryCacheManager = new TransactionHistoryCacheManager(this);
+                if (isForeground() && isLoggedIn)
+                    transactionHistoryCacheManager.updateCache(null);
+                else {
+                    transactionHistoryCacheManager.setUpdateNeeded(true);
+                }
         }
 
     }
