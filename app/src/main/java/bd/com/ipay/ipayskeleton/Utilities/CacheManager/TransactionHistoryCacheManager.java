@@ -34,20 +34,17 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
     private OnUpdateCacheListener mOnUpdateCacheListener;
 
     public TransactionHistoryCacheManager(Context context) {
-        this(context, null);
-    }
-    
-    public TransactionHistoryCacheManager(Context context, OnUpdateCacheListener onUpdateCacheListener) {
         mContext = context;
-        mOnUpdateCacheListener = onUpdateCacheListener;
 
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
     
-    public void updateCache() {
+    public void updateCache(OnUpdateCacheListener onUpdateCacheListener) {
+
+        mOnUpdateCacheListener = onUpdateCacheListener;
 
         DataHelper dataHelper = DataHelper.getInstance(mContext);
-        long fromDate = dataHelper.getLastTransactionTime();
+        long fromDate = dataHelper.getLastTransactionTime() + 1;
         dataHelper.closeDbOpenHelper();
 
         long toDate = Calendar.getInstance().getTimeInMillis();
@@ -55,8 +52,8 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
         getTransactionHistory(fromDate, toDate);
     }
 
-    public boolean isUpdateNeeded(String tag) {
-        return pref.getBoolean(tag, true);
+    public boolean isUpdateNeeded() {
+        return pref.getBoolean(Constants.PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY, true);
     }
 
     public void setUpdateNeeded(boolean isUpdateNeeded) {
@@ -69,6 +66,12 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
 
     public boolean hasNext() {
         return pref.getBoolean(Constants.TRANSACTION_HISTORY_HAS_NEXT, false);
+    }
+
+    public List<TransactionHistoryClass> getTransactions() {
+        DataHelper dataHelper = DataHelper.getInstance(mContext);
+        List<TransactionHistoryClass> transactionHistoryClasses = dataHelper.getAllTransactionHistory();
+        return transactionHistoryClasses;
     }
 
     private void getTransactionHistory(long fromDate, long toDate) {
@@ -113,7 +116,9 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
                     setHasNext(mTransactionHistoryResponse.isHasNext());
 
                     if (mOnUpdateCacheListener != null)
-                        mOnUpdateCacheListener.onUpdateCache(mTransactionHistoryResponse);
+                        mOnUpdateCacheListener.onUpdateCache();
+
+                    setUpdateNeeded(false);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -131,6 +136,6 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
     }
 
     public interface OnUpdateCacheListener {
-        void onUpdateCache(TransactionHistoryResponse transactionHistoryResponse);
+        void onUpdateCache();
     }
 }

@@ -229,8 +229,8 @@ public class DataHelper {
                     DATABASE_VERSION);
 
             db = dOpenHelper.getReadableDatabase();
-            cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, null, null, null,
-                    null, null, null, DBConstants.KEY_TRANSACTION_HISTORY_TIME + " DESC LIMIT 1");
+            cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, new String[] {DBConstants.KEY_TRANSACTION_HISTORY_TIME}, null, null,
+                    null, null, DBConstants.KEY_TRANSACTION_HISTORY_TIME + " DESC", "1");
             if (cursor.moveToFirst()) {
                 long time = cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_TIME));
                 return time;
@@ -258,7 +258,7 @@ public class DataHelper {
 
             db = dOpenHelper.getReadableDatabase();
             cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, null, null, null,
-                    null, null, null, DBConstants.KEY_TRANSACTION_HISTORY_TIME + " DESC");
+                    null, null, DBConstants.KEY_TRANSACTION_HISTORY_TIME + " DESC");
 
             int transactionIdIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID);
             int originatingMobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_ORIGINATING_MOBILE_NUMBER);
@@ -282,35 +282,36 @@ public class DataHelper {
             int bankAccountNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME);
 
             if (cursor.moveToFirst()) {
-                TransactionHistoryAdditionalInfo additionalInfo = new TransactionHistoryAdditionalInfo(
-                        cursor.getString(userNameIndex),
-                        cursor.getString(userMobileNumberIndex),
-                        cursor.getString(userProfilePicIndex),
-                        cursor.getString(bankAccountNumberIndex),
-                        cursor.getString(bankAccountNameIndex)
-                );
+                do {
+                    TransactionHistoryAdditionalInfo additionalInfo = new TransactionHistoryAdditionalInfo(
+                            cursor.getString(userNameIndex),
+                            cursor.getString(userMobileNumberIndex),
+                            cursor.getString(userProfilePicIndex),
+                            cursor.getString(bankAccountNumberIndex),
+                            cursor.getString(bankAccountNameIndex)
+                    );
 
-                TransactionHistoryClass transactionHistoryClass = new TransactionHistoryClass(
-                        cursor.getString(originatingMobileNumberIndex),
-                        cursor.getString(receiverInfoIndex),
-                        cursor.getDouble(amountIndex),
-                        cursor.getDouble(feeIndex),
-                        cursor.getDouble(netAmountIndex),
-                        cursor.getDouble(balanceIndex),
-                        cursor.getInt(serviceIdIndex),
-                        cursor.getInt(statusCodeIndex),
-                        cursor.getString(purposeIndex),
-                        cursor.getString(statusDescriptionIndex),
-                        cursor.getString(descriptionIndex),
-                        cursor.getString(transactionIdIndex),
-                        cursor.getLong(timeIndex),
-                        cursor.getLong(requestTimeIndex),
-                        cursor.getLong(responseTimeIndex),
-                        additionalInfo
-                );
+                    TransactionHistoryClass transactionHistoryClass = new TransactionHistoryClass(
+                            cursor.getString(originatingMobileNumberIndex),
+                            cursor.getString(receiverInfoIndex),
+                            cursor.getDouble(amountIndex),
+                            cursor.getDouble(feeIndex),
+                            cursor.getDouble(netAmountIndex),
+                            cursor.getDouble(balanceIndex),
+                            cursor.getInt(serviceIdIndex),
+                            cursor.getInt(statusCodeIndex),
+                            cursor.getString(purposeIndex),
+                            cursor.getString(statusDescriptionIndex),
+                            cursor.getString(descriptionIndex),
+                            cursor.getString(transactionIdIndex),
+                            cursor.getLong(timeIndex),
+                            cursor.getLong(requestTimeIndex),
+                            cursor.getLong(responseTimeIndex),
+                            additionalInfo
+                    );
 
-                transactionHistoryClasses.add(transactionHistoryClass);
-                cursor.moveToNext();
+                    transactionHistoryClasses.add(transactionHistoryClass);
+                } while (cursor.moveToNext());
             }
 
         } catch (Exception e) {
@@ -345,7 +346,7 @@ public class DataHelper {
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_FEE, transactionHistoryClass.getFee());
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_NET_AMOUNT, transactionHistoryClass.getNetAmount());
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BALANCE, transactionHistoryClass.getBalance());
-                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_SERVICE_ID, transactionHistoryClass.getBalance());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_SERVICE_ID, transactionHistoryClass.getServiceID());
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_STATUS_CODE, transactionHistoryClass.getStatusCode());
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_PURPOSE, transactionHistoryClass.getPurpose());
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_STATUS_DESCRIPTION, transactionHistoryClass.getStatusDescription());
