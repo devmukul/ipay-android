@@ -351,6 +351,5 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             mGetTrustedPersonsTask = null;
         }
 
-        dataHelper.closeDbOpenHelper();
     }
 }

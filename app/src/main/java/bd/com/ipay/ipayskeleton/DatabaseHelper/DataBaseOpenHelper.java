@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DatabaseHelper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
@@ -24,6 +25,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
 
         // Run Triggers here
         createActivityLogTableTrigger(db);
+        createTransactionHistoryTrigger(db);
     }
 
     private void createFriendsTable(SQLiteDatabase db) {
@@ -56,24 +58,8 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_ACTIVITY_LOG_TIME + " integer)");
     }
 
-    private void createActivityLogTableTrigger(SQLiteDatabase db) {
-        db.execSQL("CREATE TRIGGER " + DBConstants.DB_TRIGGER_ACTIVITY_LOG + " INSERT ON "
-                + DBConstants.DB_TABLE_ACTIVITY_LOG + " WHEN (select count(*) from "
-                + DBConstants.DB_TABLE_ACTIVITY_LOG + ")>"
-                + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG +
-                " BEGIN DELETE FROM "
-                + DBConstants.DB_TABLE_ACTIVITY_LOG
-                + " WHERE " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_ID
-                + " IN (SELECT " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_ID
-                + " FROM " + DBConstants.DB_TABLE_ACTIVITY_LOG
-                + " ORDER BY " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_TIME
-                + " desc limit(select count(*) - " + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG
-                + " from " + DBConstants.DB_TABLE_ACTIVITY_LOG + ")); END;");
-
-    }
-
     private void createTransactionHistoryTable(SQLiteDatabase db) {
-        db.execSQL("create table if not exists " +
+        String sql = "create table if not exists " +
                 DBConstants.DB_TABLE_TRANSACTION_HISTORY + "(" +
                 DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID + " text primary key, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_ORIGINATING_MOBILE_NUMBER + " text not null, " +
@@ -96,7 +82,43 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER + " text, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME + " text, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_BANK_NAME + " text, " +
-                DBConstants.KEY_TRANSACTION_HISTORY_BRANCH_NAME + "text" + ")");
+                DBConstants.KEY_TRANSACTION_HISTORY_BRANCH_NAME + " text)";
+        Log.d("Creating Table", sql);
+        db.execSQL(sql);
+    }
+
+    private void createActivityLogTableTrigger(SQLiteDatabase db) {
+        db.execSQL("CREATE TRIGGER " + DBConstants.DB_TRIGGER_ACTIVITY_LOG + " INSERT ON "
+                + DBConstants.DB_TABLE_ACTIVITY_LOG + " WHEN (select count(*) from "
+                + DBConstants.DB_TABLE_ACTIVITY_LOG + ")>"
+                + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG +
+                " BEGIN DELETE FROM "
+                + DBConstants.DB_TABLE_ACTIVITY_LOG
+                + " WHERE " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_ID
+                + " IN (SELECT " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_ID
+                + " FROM " + DBConstants.DB_TABLE_ACTIVITY_LOG
+                + " ORDER BY " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_TIME
+                + " desc limit(select count(*) - " + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG
+                + " from " + DBConstants.DB_TABLE_ACTIVITY_LOG + ")); END;");
+
+    }
+
+    private void createTransactionHistoryTrigger(SQLiteDatabase db) {
+        String sql = "CREATE TRIGGER " + DBConstants.DB_TRIGGER_TRANSACTION_HISTORY + " AFTER INSERT ON "
+                + DBConstants.DB_TABLE_TRANSACTION_HISTORY + " WHEN (select count(*) from "
+                + DBConstants.DB_TABLE_TRANSACTION_HISTORY + ") > "
+                + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG
+                + " BEGIN DELETE FROM "
+                + DBConstants.DB_TABLE_TRANSACTION_HISTORY
+                + " WHERE " + DBConstants.DB_TABLE_TRANSACTION_HISTORY + "." + DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID
+                + " IN (SELECT " + DBConstants.DB_TABLE_TRANSACTION_HISTORY + "." + DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID
+                + " FROM " + DBConstants.DB_TABLE_TRANSACTION_HISTORY
+                + " ORDER BY " + DBConstants.DB_TABLE_TRANSACTION_HISTORY + "." + DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME
+                + " DESC LIMIT (SELECT count(*) - " + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_TRANSACTION_HISTORY
+                + " FROM " + DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID + ")); END;";
+        Log.d("Creating Trigger", sql);
+        db.execSQL(sql);
+
     }
 
     @Override
@@ -108,8 +130,12 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion < 3) {
-            db.execSQL("drop table if exists " + DBConstants.DB_TABLE_TRANSACTION_HISTORY);
             createTransactionHistoryTable(db);
+        }
+
+        if (oldVersion < 4) {
+            db.execSQL("drop table if exists " + DBConstants.DB_TABLE_TRANSACTION_HISTORY);
+            createTransactionHistoryTrigger(db);
         }
     }
 }

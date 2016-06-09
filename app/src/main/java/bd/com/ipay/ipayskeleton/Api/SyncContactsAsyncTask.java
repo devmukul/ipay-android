@@ -53,7 +53,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
         DataHelper dataHelper = DataHelper.getInstance(context);
         dataHelper.createFriends(serverContacts);
-        dataHelper.closeDbOpenHelper();
 
         contactsSyncedOnce = true;
 

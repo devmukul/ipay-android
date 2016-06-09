@@ -23,7 +23,7 @@ public class DataHelper {
 
     private Context context;
     private static DataHelper instance = null;
-    DataBaseOpenHelper dOpenHelper;
+    private static DataBaseOpenHelper dOpenHelper;
 
     private DataHelper(Context context) {
         this.context = context.getApplicationContext();
@@ -32,6 +32,8 @@ public class DataHelper {
     public static synchronized DataHelper getInstance(Context context) {
         if (instance == null) {
             instance = new DataHelper(context);
+            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
+                    DATABASE_VERSION);
         }
         return instance;
     }
@@ -53,9 +55,6 @@ public class DataHelper {
     public void createFriend(FriendNode friendNode) {
 
         try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
-
             ContentValues values = new ContentValues();
             values.put(DBConstants.KEY_MOBILE_NUMBER, friendNode.getPhoneNumber());
             values.put(DBConstants.KEY_NAME, friendNode.getInfo().getName());
@@ -76,8 +75,6 @@ public class DataHelper {
 
     public void createFriends(List<FriendNode> friendNodes) {
         if (friendNodes != null && !friendNodes.isEmpty()) {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
 
             SQLiteDatabase db = dOpenHelper.getWritableDatabase();
             db.beginTransaction();
@@ -119,8 +116,6 @@ public class DataHelper {
         Cursor cursor = null;
 
         try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_FRIENDS
@@ -145,8 +140,6 @@ public class DataHelper {
     public void updatePushEvents(String tagName, String jsonString) {
 
         try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
             ContentValues contentValues = new ContentValues();
@@ -164,8 +157,6 @@ public class DataHelper {
         Cursor cursor = null;
 
         try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_PUSH_EVENTS
@@ -225,8 +216,6 @@ public class DataHelper {
         SQLiteDatabase db = null;
 
         try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
 
             db = dOpenHelper.getReadableDatabase();
             cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, new String[] {DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME}, null, null,
@@ -239,8 +228,6 @@ public class DataHelper {
         } finally {
             if (cursor != null)
                 cursor.close();
-            if (db != null)
-                db.close();
         }
 
         return 0;
@@ -253,8 +240,6 @@ public class DataHelper {
         SQLiteDatabase db = null;
 
         try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
 
             db = dOpenHelper.getReadableDatabase();
             cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, null, null, null,
@@ -324,8 +309,6 @@ public class DataHelper {
         } finally {
             if (cursor != null)
                 cursor.close();
-            if (db != null)
-                db.close();
         }
 
         return transactionHistoryClasses;
@@ -335,8 +318,6 @@ public class DataHelper {
         SQLiteDatabase db = null;
 
         try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
 
             db = dOpenHelper.getWritableDatabase();
             db.beginTransaction();
@@ -376,9 +357,6 @@ public class DataHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (db != null)
-                db.close();
         }
     }
 
@@ -388,8 +366,6 @@ public class DataHelper {
         Cursor cursor = null;
 
         try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
             db = dOpenHelper.getReadableDatabase();
             String query = "SELECT * FROM " + tableName + " WHERE " + DBField + " = '" + fieldValue + "'";
             cursor = db.rawQuery(query, null);
@@ -409,8 +385,6 @@ public class DataHelper {
         Cursor cursor = null;
 
         try {
-            dOpenHelper = new DataBaseOpenHelper(context, DBConstants.DB_IPAY,
-                    DATABASE_VERSION);
             db = dOpenHelper.getReadableDatabase();
             String query = "Select * from " + TableName + " where " + DBField + " = " + fieldValue;
             cursor = db.rawQuery(query, null);

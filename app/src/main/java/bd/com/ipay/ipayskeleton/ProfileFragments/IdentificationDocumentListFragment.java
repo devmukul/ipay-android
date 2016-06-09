@@ -117,7 +117,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
-            dataHelper.closeDbOpenHelper();
 
             if (json == null)
                 getIdentificationDocuments();
@@ -193,7 +192,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                     DataHelper dataHelper = DataHelper.getInstance(getActivity());
                     dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
-                    dataHelper.closeDbOpenHelper();
 
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
                     pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);

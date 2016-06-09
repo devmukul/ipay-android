@@ -72,4 +72,5 @@ public class DBConstants {
     public static final int NOT_IPAY_MEMBER = 0;
 
     public static final int MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG = 50;
+    public static final int MAXIMUM_NUMBER_OF_ENTRIES_IN_TRANSACTION_HISTORY = 5;
 }

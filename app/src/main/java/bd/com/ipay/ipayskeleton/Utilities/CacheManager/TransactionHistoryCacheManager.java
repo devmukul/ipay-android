@@ -45,7 +45,6 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
 
         DataHelper dataHelper = DataHelper.getInstance(mContext);
         long fromDate = dataHelper.getLastTransactionTime() + 1;
-        dataHelper.closeDbOpenHelper();
 
         long toDate = Calendar.getInstance().getTimeInMillis();
 
@@ -111,7 +110,6 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
 
                     DataHelper dataHelper = DataHelper.getInstance(mContext);
                     dataHelper.createTransactionHistories(mTransactionHistoryResponse.getTransactions());
-                    dataHelper.closeDbOpenHelper();
 
                     setHasNext(mTransactionHistoryResponse.isHasNext());
 

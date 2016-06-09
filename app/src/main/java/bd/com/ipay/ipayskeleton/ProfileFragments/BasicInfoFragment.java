@@ -146,7 +146,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
-            dataHelper.closeDbOpenHelper();
 
             if (json == null)
                 getProfileInfo();
@@ -267,7 +266,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
                     DataHelper dataHelper = DataHelper.getInstance(getActivity());
                     dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
-                    dataHelper.closeDbOpenHelper();
 
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
                     pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);

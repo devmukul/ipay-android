@@ -141,7 +141,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
-            dataHelper.closeDbOpenHelper();
 
             if (json == null)
                 getEmails();
@@ -306,7 +305,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
                     DataHelper dataHelper = DataHelper.getInstance(getActivity());
                     dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
-                    dataHelper.closeDbOpenHelper();
 
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
                     pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);

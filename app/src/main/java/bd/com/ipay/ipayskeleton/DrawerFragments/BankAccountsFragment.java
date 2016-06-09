@@ -181,7 +181,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE);
-            dataHelper.closeDbOpenHelper();
 
             if (json == null)
                 getBankList();

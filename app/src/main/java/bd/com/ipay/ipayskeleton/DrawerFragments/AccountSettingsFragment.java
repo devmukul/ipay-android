@@ -207,7 +207,6 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE);
-            dataHelper.closeDbOpenHelper();
 
             if (json == null)
                 getTrustedDeviceList();
@@ -442,7 +441,6 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
                     DataHelper dataHelper = DataHelper.getInstance(getActivity());
                     dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
-                    dataHelper.closeDbOpenHelper();
 
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
                     pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
