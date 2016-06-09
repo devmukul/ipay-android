@@ -115,7 +115,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 + " FROM " + DBConstants.DB_TABLE_TRANSACTION_HISTORY
                 + " ORDER BY " + DBConstants.DB_TABLE_TRANSACTION_HISTORY + "." + DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME
                 + " DESC LIMIT (SELECT count(*) - " + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_TRANSACTION_HISTORY
-                + " FROM " + DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID + ")); END;";
+                + " FROM " + DBConstants.DB_TABLE_TRANSACTION_HISTORY + ")); END;";
         Log.d("Creating Trigger", sql);
         db.execSQL(sql);
 
