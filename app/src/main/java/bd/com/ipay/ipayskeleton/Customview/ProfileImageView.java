@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Customview;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonDrawableList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileImageView extends FrameLayout {
@@ -71,6 +74,9 @@ public class ProfileImageView extends FrameLayout {
 //            mProfileFirstLetterView.setVisibility(View.VISIBLE);
 
             mProfileFirstLetterView.setText(String.valueOf(name.toUpperCase().charAt(0)));
+
+            int backgroundDrawable = CommonDrawableList.getProfilePictureBackgroundBasedOnName(name);
+            mProfileFirstLetterView.setBackgroundResource(backgroundDrawable);
         }
     }
 

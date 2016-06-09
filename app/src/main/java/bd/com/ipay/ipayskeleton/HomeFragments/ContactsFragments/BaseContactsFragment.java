@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,7 +30,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.devspark.progressfragment.ProgressFragment;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -47,6 +45,9 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.Sen
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
+import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonDrawableList.LIST_ITEM_BACKGROUNDS;
+
 public abstract class BaseContactsFragment extends Fragment implements
         SearchView.OnQueryTextListener,
         HttpResponseListener {
@@ -61,34 +62,6 @@ public abstract class BaseContactsFragment extends Fragment implements
     private TextView mEmptyContactsTextView;
 
     private String mQuery;
-
-    protected final int[] PROFILE_PICTURE_BACKGROUNDS = {
-            R.color.background_default,
-            R.color.background_blue,
-            R.color.background_bright_pink,
-            R.color.background_cyan,
-            R.color.background_magenta,
-            R.color.background_orange,
-            R.color.background_red,
-            R.color.background_spring_green,
-            R.color.background_violet,
-            R.color.background_yellow,
-            R.color.background_azure
-    };
-
-    protected final int[] LIST_ITEM_BACKGROUNDS = {
-            R.drawable.background_portrait_circle,
-            R.drawable.background_portrait_circle_blue,
-            R.drawable.background_portrait_circle_brightpink,
-            R.drawable.background_portrait_circle_cyan,
-            R.drawable.background_portrait_circle_megenta,
-            R.drawable.background_portrait_circle_orange,
-            R.drawable.background_portrait_circle_red,
-            R.drawable.background_portrait_circle_springgreen,
-            R.drawable.background_portrait_circle_violet,
-            R.drawable.background_portrait_circle_yellow,
-            R.drawable.background_portrait_circle_azure
-    };
 
     // When a contact item is clicked, we need to access its name and number from the sheet view.
     // So saving these in these two variables.
