@@ -61,11 +61,11 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
     }
 
     public void setHasNext(boolean hasNext) {
-        pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY, hasNext).apply();
+        pref.edit().putBoolean(Constants.TRANSACTION_HISTORY_HAS_NEXT, hasNext).apply();
     }
 
     public boolean hasNext() {
-        return pref.getBoolean(Constants.TRANSACTION_HISTORY_HAS_NEXT, false);
+        return pref.getBoolean(Constants.TRANSACTION_HISTORY_HAS_NEXT, true);
     }
 
     public List<TransactionHistoryClass> getTransactions() {

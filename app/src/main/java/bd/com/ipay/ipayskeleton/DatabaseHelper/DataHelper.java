@@ -229,10 +229,10 @@ public class DataHelper {
                     DATABASE_VERSION);
 
             db = dOpenHelper.getReadableDatabase();
-            cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, new String[] {DBConstants.KEY_TRANSACTION_HISTORY_TIME}, null, null,
-                    null, null, DBConstants.KEY_TRANSACTION_HISTORY_TIME + " DESC", "1");
+            cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, new String[] {DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME}, null, null,
+                    null, null, DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME + " DESC", "1");
             if (cursor.moveToFirst()) {
-                long time = cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_TIME));
+                long time = cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME));
                 return time;
             }
 
@@ -258,7 +258,7 @@ public class DataHelper {
 
             db = dOpenHelper.getReadableDatabase();
             cursor = db.query(DBConstants.DB_TABLE_TRANSACTION_HISTORY, null, null, null,
-                    null, null, DBConstants.KEY_TRANSACTION_HISTORY_TIME + " DESC");
+                    null, null, DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME + " DESC");
 
             int transactionIdIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID);
             int originatingMobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_ORIGINATING_MOBILE_NUMBER);

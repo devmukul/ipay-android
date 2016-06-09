@@ -628,7 +628,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
 
                 final String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
-                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
+                final String responseTime = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getResponseTime());
                 final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
                 final double fee = userTransactionHistoryClasses.get(pos).getFee();
                 final double netAmount = userTransactionHistoryClasses.get(pos).getNetAmount();
@@ -645,7 +645,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 mAmountTextView.setText(Utilities.formatTaka(amount));
 
                 mTransactionDescription.setText(description);
-                mTime.setText(time);
+                mTime.setText(responseTime);
 
                 if(serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
@@ -689,7 +689,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                     @Override
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing())
-                            showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount, balance, purpose, time,
+                            showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount, balance, purpose, responseTime,
                                     statusCode, description, transactionID,mobileNumber,name,imageUrl,serviceId,bankName,bankAccountNumber);
                     }
                 });
