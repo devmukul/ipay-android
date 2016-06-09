@@ -642,7 +642,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 final String bankName = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountName();
                 final String bankAccountNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountNumber();
                 final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
-                mAmountTextView.setText(Utilities.formatTaka(amount));
+                mAmountTextView.setText(Utilities.formatTaka(balance));
 
                 mTransactionDescription.setText(description);
                 mTime.setText(responseTime);
@@ -670,18 +670,15 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                 }
 
                 if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
                     statusView.setColorFilter(Color.GREEN);
                     statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
 
                 } else if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-                    mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_cached_black_24dp);
 
                 } else {
-                    mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
-                    statusView.setColorFilter(Color.RED);
+                   statusView.setColorFilter(Color.RED);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
                 }
 

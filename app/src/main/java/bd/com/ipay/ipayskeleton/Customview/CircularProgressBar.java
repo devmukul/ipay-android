@@ -36,10 +36,6 @@ public class CircularProgressBar extends FrameLayout {
         initView(context);
     }
 
-    public void setDuration() {
-        this.duration = duration;
-    }
-
     private void initView(Context context) {
         this.context = context;
 
@@ -47,13 +43,11 @@ public class CircularProgressBar extends FrameLayout {
 
         mProgressBar = (ProgressBar) v.findViewById(R.id.circular_progress_bar);
         mPercentageView = (TextView) v.findViewById(R.id.text_view_percentage);
-
         addView(v);
     }
 
     public void startAnimation(final int finish) {
         ObjectAnimator anim = ObjectAnimator.ofInt(mProgressBar, "progress", 0, finish);
-        anim.setDuration(duration);
         anim.setInterpolator(new DecelerateInterpolator());
         anim.start();
         progressStatus = 0;

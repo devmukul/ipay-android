@@ -291,6 +291,7 @@
     <string name="check_if_addresses_are_same">Check if address of account holder is same as business address.</string>
     <string name="ipay_balance">Balance:</string>
     <string name="balance">Balance</string>
+    <string name="current_balance">Current Balance: </string>
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="submit">Submit</string>
