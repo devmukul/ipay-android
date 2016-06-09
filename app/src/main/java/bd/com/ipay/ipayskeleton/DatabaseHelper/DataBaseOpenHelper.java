@@ -94,7 +94,9 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_TRANSACTION_HISTORY_USER_MOBILE_NUMBER + " text, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_USER_PROFILE_PIC + " text, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER + " text, " +
-                DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME + " text)");
+                DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME + " text, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_BANK_NAME + " text, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_BRANCH_NAME + "text" + ")");
     }
 
     @Override
@@ -106,6 +108,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion < 3) {
+            db.execSQL("drop table if exists " + DBConstants.DB_TABLE_TRANSACTION_HISTORY);
             createTransactionHistoryTable(db);
         }
     }

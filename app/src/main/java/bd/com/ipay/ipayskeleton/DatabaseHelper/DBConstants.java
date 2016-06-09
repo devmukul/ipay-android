@@ -62,7 +62,7 @@ public class DBConstants {
     public static final String KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER = "bank_account_number";
     public static final String KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME = "bank_account_name";
     public static final String KEY_TRANSACTION_HISTORY_BANK_NAME = "bank_name";
-    public static final String KEY_TRANSACTION_HISTORY_BANK_BRANCH_NAME = "bank_branch_name";
+    public static final String KEY_TRANSACTION_HISTORY_BRANCH_NAME = "branch_name";
 
 
     public static final int VERIFIED_USER = 1;

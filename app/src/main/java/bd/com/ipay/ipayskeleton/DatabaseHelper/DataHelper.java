@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     private Context context;
     private static DataHelper instance = null;
@@ -282,7 +282,7 @@ public class DataHelper {
             int bankAccountNumberIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER);
             int bankAccountNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME);
             int bankNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_NAME);
-            int bankBranchNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_BRANCH_NAME);
+            int bankBranchNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BRANCH_NAME);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -366,7 +366,7 @@ public class DataHelper {
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER, transactionHistoryClass.getAdditionalInfo().getBankAccountNumber());
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME, transactionHistoryClass.getAdditionalInfo().getBankAccountName());
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_NAME, transactionHistoryClass.getAdditionalInfo().getBankName());
-                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_BRANCH_NAME, transactionHistoryClass.getAdditionalInfo().getBranchName());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BRANCH_NAME, transactionHistoryClass.getAdditionalInfo().getBranchName());
 
                 db.insertWithOnConflict(DBConstants.DB_TABLE_TRANSACTION_HISTORY, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             }
