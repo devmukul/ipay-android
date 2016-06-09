@@ -275,11 +275,14 @@ public class DataHelper {
             int timeIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_TIME);
             int requestTimeIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_REQUEST_TIME);
             int responseTimeIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME);
+
             int userNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_USER_NAME);
             int userMobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_USER_MOBILE_NUMBER);
             int userProfilePicIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_USER_PROFILE_PIC);
             int bankAccountNumberIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER);
             int bankAccountNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME);
+            int bankNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_NAME);
+            int bankBranchNameIndex = cursor.getColumnIndex(DBConstants.KEY_TRANSACTION_HISTORY_BANK_BRANCH_NAME);
 
             if (cursor.moveToFirst()) {
                 do {
@@ -288,7 +291,9 @@ public class DataHelper {
                             cursor.getString(userMobileNumberIndex),
                             cursor.getString(userProfilePicIndex),
                             cursor.getString(bankAccountNumberIndex),
-                            cursor.getString(bankAccountNameIndex)
+                            cursor.getString(bankAccountNameIndex),
+                            cursor.getString(bankNameIndex),
+                            cursor.getString(bankBranchNameIndex)
                     );
 
                     TransactionHistoryClass transactionHistoryClass = new TransactionHistoryClass(
@@ -360,6 +365,8 @@ public class DataHelper {
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_USER_PROFILE_PIC, transactionHistoryClass.getAdditionalInfo().getUserProfilePic());
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NUMBER, transactionHistoryClass.getAdditionalInfo().getBankAccountNumber());
                 contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_ACCOUNT_NAME, transactionHistoryClass.getAdditionalInfo().getBankAccountName());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_NAME, transactionHistoryClass.getAdditionalInfo().getBankName());
+                contentValues.put(DBConstants.KEY_TRANSACTION_HISTORY_BANK_BRANCH_NAME, transactionHistoryClass.getAdditionalInfo().getBranchName());
 
                 db.insertWithOnConflict(DBConstants.DB_TABLE_TRANSACTION_HISTORY, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             }

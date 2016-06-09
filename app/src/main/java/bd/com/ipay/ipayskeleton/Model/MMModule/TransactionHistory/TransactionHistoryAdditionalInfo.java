@@ -6,17 +6,22 @@ public class TransactionHistoryAdditionalInfo {
     private String userProfilePic;
     private String bankAccountNumber;
     private String bankAccountName;
+    private String bankName;
+    private String branchName;
 
     public TransactionHistoryAdditionalInfo() {
 
     }
 
-    public TransactionHistoryAdditionalInfo(String userName, String userMobileNumber, String userProfilePic, String bankAccountNumber, String bankAccountName) {
+    public TransactionHistoryAdditionalInfo(String userName, String userMobileNumber, String userProfilePic,
+                String bankAccountNumber, String bankAccountName, String bankName, String branchName) {
         this.userName = userName;
         this.userMobileNumber = userMobileNumber;
         this.userProfilePic = userProfilePic;
         this.bankAccountNumber = bankAccountNumber;
         this.bankAccountName = bankAccountName;
+        this.bankName = bankName;
+        this.branchName = branchName;
     }
 
     public String getUserName() {
@@ -37,5 +42,13 @@ public class TransactionHistoryAdditionalInfo {
 
     public String getBankAccountName() {
         return bankAccountName;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public String getBranchName() {
+        return branchName;
     }
 }
