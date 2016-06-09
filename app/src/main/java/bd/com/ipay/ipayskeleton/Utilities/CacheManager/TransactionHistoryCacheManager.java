@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -14,6 +15,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
@@ -22,6 +24,8 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class TransactionHistoryCacheManager implements HttpResponseListener {
+
+    public static final int TRANSACTION_HISTORY_PER_PAGE_ENTRY = 10;
 
     private SharedPreferences pref;
 
@@ -59,18 +63,37 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
         pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY, isUpdateNeeded).apply();
     }
 
-    public void setHasNext(boolean hasNext) {
-        pref.edit().putBoolean(Constants.TRANSACTION_HISTORY_HAS_NEXT, hasNext).apply();
-    }
-
-    public boolean hasNext() {
-        return pref.getBoolean(Constants.TRANSACTION_HISTORY_HAS_NEXT, true);
+    public void loadTransactions() {
+        DataHelper dataHelper = DataHelper.getInstance(mContext);
+        userTransactionHistoryClasses = dataHelper.getAllTransactionHistory();
+        Log.d("Number of transactions", userTransactionHistoryClasses.size() + "");
     }
 
     public List<TransactionHistoryClass> getTransactions() {
-        DataHelper dataHelper = DataHelper.getInstance(mContext);
-        List<TransactionHistoryClass> transactionHistoryClasses = dataHelper.getAllTransactionHistory();
-        return transactionHistoryClasses;
+        if (userTransactionHistoryClasses == null)
+            throw new RuntimeException("Call loadTransactions() first");
+
+        if (userTransactionHistoryClasses.size() >= DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_TRANSACTION_HISTORY)
+            return userTransactionHistoryClasses.subList(0, userTransactionHistoryClasses.size() - 1);
+        else
+            return userTransactionHistoryClasses;
+    }
+
+    public boolean hasNext() {
+        if (userTransactionHistoryClasses == null)
+            throw new RuntimeException("Call loadTransactions() first");
+
+        if (userTransactionHistoryClasses.size() >= DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_TRANSACTION_HISTORY)
+            return true;
+        else
+            return false;
+    }
+
+    public int getPageCount() {
+        if (userTransactionHistoryClasses == null)
+            throw new RuntimeException("Call loadTransactions() first");
+
+        return (userTransactionHistoryClasses.size() / TRANSACTION_HISTORY_PER_PAGE_ENTRY) - 1;
     }
 
     private void getTransactionHistory(long fromDate, long toDate) {
@@ -110,8 +133,6 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
 
                     DataHelper dataHelper = DataHelper.getInstance(mContext);
                     dataHelper.createTransactionHistories(mTransactionHistoryResponse.getTransactions());
-
-                    setHasNext(mTransactionHistoryResponse.isHasNext());
 
                     if (mOnUpdateCacheListener != null)
                         mOnUpdateCacheListener.onUpdateCache();

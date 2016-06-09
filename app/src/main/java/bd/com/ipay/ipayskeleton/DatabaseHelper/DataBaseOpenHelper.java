@@ -98,7 +98,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 + " IN (SELECT " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_ID
                 + " FROM " + DBConstants.DB_TABLE_ACTIVITY_LOG
                 + " ORDER BY " + DBConstants.DB_TABLE_ACTIVITY_LOG + "." + DBConstants.KEY_ACTIVITY_LOG_TIME
-                + " desc limit(select count(*) - " + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG
+                + " asc limit(select count(*) - " + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG
                 + " from " + DBConstants.DB_TABLE_ACTIVITY_LOG + ")); END;");
 
     }
@@ -107,14 +107,14 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         String sql = "CREATE TRIGGER " + DBConstants.DB_TRIGGER_TRANSACTION_HISTORY + " AFTER INSERT ON "
                 + DBConstants.DB_TABLE_TRANSACTION_HISTORY + " WHEN (select count(*) from "
                 + DBConstants.DB_TABLE_TRANSACTION_HISTORY + ") > "
-                + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_ACTIVITY_LOG
+                + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_TRANSACTION_HISTORY
                 + " BEGIN DELETE FROM "
                 + DBConstants.DB_TABLE_TRANSACTION_HISTORY
                 + " WHERE " + DBConstants.DB_TABLE_TRANSACTION_HISTORY + "." + DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID
                 + " IN (SELECT " + DBConstants.DB_TABLE_TRANSACTION_HISTORY + "." + DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID
                 + " FROM " + DBConstants.DB_TABLE_TRANSACTION_HISTORY
                 + " ORDER BY " + DBConstants.DB_TABLE_TRANSACTION_HISTORY + "." + DBConstants.KEY_TRANSACTION_HISTORY_RESPONSE_TIME
-                + " DESC LIMIT (SELECT count(*) - " + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_TRANSACTION_HISTORY
+                + " ASC LIMIT (SELECT count(*) - " + DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_TRANSACTION_HISTORY
                 + " FROM " + DBConstants.DB_TABLE_TRANSACTION_HISTORY + ")); END;";
         Log.d("Creating Trigger", sql);
         db.execSQL(sql);

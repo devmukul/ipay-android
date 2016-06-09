@@ -19,17 +19,7 @@ public class LauncherActivity extends BaseActivity {
         Intent i = null;
 
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
-        pref.edit().putBoolean(Constants.LOGGEDIN, false).commit();
-
-        if (!pref.contains(Constants.FIRST_LAUNCH)) {
-            firstLaunch = true;
-            pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).commit();
-
-            // We need to populate the transaction history database for the first time when the app
-            // is launched. Therefore, setting the update flag to true
-            TransactionHistoryCacheManager transactionHistoryCacheManager = new TransactionHistoryCacheManager(this);
-            transactionHistoryCacheManager.setUpdateNeeded(true);
-        }
+        firstLaunch = pref.getBoolean(Constants.FIRST_LAUNCH, true);
 
         if (firstLaunch) {
             i = new Intent(LauncherActivity.this, TourActivity.class);

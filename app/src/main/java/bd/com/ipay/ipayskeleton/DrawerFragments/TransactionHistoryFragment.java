@@ -10,13 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,14 +28,10 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -196,15 +190,11 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             transactionHistoryCacheManager.updateCache(new TransactionHistoryCacheManager.OnUpdateCacheListener() {
                 @Override
                 public void onUpdateCache() {
-                    List<TransactionHistoryClass> transactionHistoryClasses = transactionHistoryCacheManager.getTransactions();
-                    boolean hasNext = transactionHistoryCacheManager.hasNext();
-                    loadTransactionHistory(transactionHistoryClasses, hasNext);
+                    readTransactionHistoryFromCache();
                 }
             });
         } else {
-            List<TransactionHistoryClass> transactionHistoryClasses = transactionHistoryCacheManager.getTransactions();
-            boolean hasNext = transactionHistoryCacheManager.hasNext();
-            loadTransactionHistory(transactionHistoryClasses, hasNext);
+            readTransactionHistoryFromCache();
         }
 
         setActionsForEventTypeFilter();
@@ -238,9 +228,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
                     transactionHistoryCacheManager.updateCache(new TransactionHistoryCacheManager.OnUpdateCacheListener() {
                         @Override
                         public void onUpdateCache() {
-                            List<TransactionHistoryClass> transactionHistoryClasses = transactionHistoryCacheManager.getTransactions();
-                            boolean hasNext = transactionHistoryCacheManager.hasNext();
-                            loadTransactionHistory(transactionHistoryClasses, hasNext);
+                            readTransactionHistoryFromCache();
 
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
@@ -538,6 +526,15 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             statusTextView.setTextColor(getResources().getColor(R.color.background_red));
         }
 
+    }
+
+    private void readTransactionHistoryFromCache() {
+        transactionHistoryCacheManager.loadTransactions();
+        List<TransactionHistoryClass> transactionHistoryClasses = transactionHistoryCacheManager.getTransactions();
+        hasNext = transactionHistoryCacheManager.hasNext();
+        historyPageCount = transactionHistoryCacheManager.getPageCount();
+
+        loadTransactionHistory(transactionHistoryClasses, hasNext);
     }
 
     private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {

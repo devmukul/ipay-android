@@ -7,13 +7,13 @@ public class Constants {
     public static final String GENDER_MALE = "M";
     public static final String GENDER_FEMALE = "F";
     public static final String EMAIL = "EMAIL";
-    public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
     public static final String USERID = "USERID";
     public static final String UUID = "UUID";
     public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String USER_AGENT = "User-Agent";
     public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
     public static final String LOGGEDIN = "LOGGEDIN";
+    public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
     public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
     public static final String GCM_REGISTRATION_COMPLETE = "GCM_REGISTRATION_COMPLETE";
     public static final String PASSWORD = "PASSWORD";
@@ -104,7 +104,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 1;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
@@ -519,8 +519,6 @@ public class Constants {
     public static final String PUSH_NOTIFICATION_TAG = "tag";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
     public static final String PUSH_NOTIFICATION_BODY = "notification";
-
-    public static final String TRANSACTION_HISTORY_HAS_NEXT = "TRANSACTION_HISTORY_HAS_NEXT";
 
     public static final String TOTAL = "total";
     public static final String INVOICE_RECEIVER_TAG = "receiver";

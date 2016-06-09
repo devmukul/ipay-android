@@ -109,6 +109,8 @@ public class HomeActivity extends BaseActivity
         toolbar.setLogo(R.drawable.logo_ipay);
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = pref.getString(Constants.USERID, "");
+        pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
+
         mProgressDialog = new ProgressDialog(HomeActivity.this);
         profilePictures = new ArrayList<>();
 
@@ -412,7 +414,7 @@ public class HomeActivity extends BaseActivity
         String json = gson.toJson(mLogoutModel);
 
         // Set the preference
-        pref.edit().putBoolean(Constants.LOGGEDIN, false).commit();
+        pref.edit().putBoolean(Constants.LOGGEDIN, false).apply();
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
