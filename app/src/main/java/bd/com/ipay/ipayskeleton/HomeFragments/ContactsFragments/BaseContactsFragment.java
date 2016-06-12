@@ -241,10 +241,10 @@ public abstract class BaseContactsFragment extends Fragment implements
                 isVerifiedView.setBackgroundResource(R.drawable.brackgound_bottom_sheet_unverified);
             }
 
-            if (accountType == Constants.PERSONAL_ACCOUNT_TYPE) {
-                accountTypeView.setText(R.string.personal_account);
-            } else {
+            if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
                 accountTypeView.setText(R.string.business_account);
+            } else {
+                accountTypeView.setText(R.string.personal_account);
             }
 
         } else {
