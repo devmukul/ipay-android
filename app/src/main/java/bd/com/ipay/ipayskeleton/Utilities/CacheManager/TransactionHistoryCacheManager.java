@@ -101,7 +101,8 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
             return;
         }
 
-        TransactionHistoryRequest mTransactionHistoryRequest = new TransactionHistoryRequest(null, 0, fromDate, toDate);
+        TransactionHistoryRequest mTransactionHistoryRequest = new TransactionHistoryRequest(null, 0,
+                fromDate, toDate, DBConstants.MAXIMUM_NUMBER_OF_ENTRIES_IN_TRANSACTION_HISTORY);
 
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);

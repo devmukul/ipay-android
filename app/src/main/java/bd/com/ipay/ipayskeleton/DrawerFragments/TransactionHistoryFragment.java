@@ -413,7 +413,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         TransactionHistoryRequest mTransactionHistoryRequest;
         if (fromDate != null && toDate != null) {
             mTransactionHistoryRequest = new TransactionHistoryRequest(
-                    type, historyPageCount, fromDate.getTimeInMillis(), toDate.getTimeInMillis());
+                    type, historyPageCount, fromDate.getTimeInMillis(), toDate.getTimeInMillis(), null);
         } else {
             mTransactionHistoryRequest = new TransactionHistoryRequest(type, historyPageCount);
         }
