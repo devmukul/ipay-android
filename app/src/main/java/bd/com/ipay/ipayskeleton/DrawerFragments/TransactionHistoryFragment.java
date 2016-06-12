@@ -247,6 +247,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     }
 
     private void refreshTransactionHistory() {
+        setContentShown(false);
+
         historyPageCount = 0;
         if (userTransactionHistoryClasses != null) userTransactionHistoryClasses.clear();
         getTransactionHistory();
@@ -432,7 +434,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void showTransactionHistoryDialogue( double amount, double fee, double netAmount,double balance, String purpose, String time, Integer statusCode,
+    private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,double balance, String purpose, String time, Integer statusCode,
                                                  String description, String transactionID, String receiverMobileNumber, String receiverName, String photoUri,
                                                  int serviceId, String mBankName, String mBankAccountNumber) {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
@@ -597,6 +599,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
+            setContentShown(true);
         }
     }
 
