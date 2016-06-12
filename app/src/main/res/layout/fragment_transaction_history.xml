@@ -5,6 +5,8 @@
     android:background="@color/home_background"
     android:orientation="vertical">
 
+    <include layout="@layout/layout_progress_container" />
+
     <LinearLayout
         android:id="@+id/date_filter_layout"
         android:layout_width="match_parent"
@@ -198,33 +200,40 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/value5"
-        android:layout_marginTop="@dimen/value10"
-        android:text="@string/transaction_history"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/empty_list_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/empty_transaction_history" />
-
-    <bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <LinearLayout
+        android:id="@+id/content_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_transaction_history"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/value5"
+            android:layout_marginTop="@dimen/value10"
+            android:text="@string/transaction_history"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/empty_list_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:text="@string/empty_transaction_history" />
+
+        <bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content">
 
-    </bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_transaction_history"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout>
+    </LinearLayout>
 
 </LinearLayout>

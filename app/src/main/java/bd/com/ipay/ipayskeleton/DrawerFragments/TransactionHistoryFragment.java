@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -51,7 +53,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.TransactionHistoryCacheMa
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionHistoryFragment extends Fragment implements HttpResponseListener {
+public class TransactionHistoryFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
@@ -97,7 +99,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
-    TransactionHistoryCacheManager transactionHistoryCacheManager;
+    private TransactionHistoryCacheManager transactionHistoryCacheManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -185,18 +187,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
 
-        transactionHistoryCacheManager = new TransactionHistoryCacheManager(getActivity());
-        if (transactionHistoryCacheManager.isUpdateNeeded()) {
-            transactionHistoryCacheManager.updateCache(new TransactionHistoryCacheManager.OnUpdateCacheListener() {
-                @Override
-                public void onUpdateCache() {
-                    readTransactionHistoryFromCache();
-                }
-            });
-        } else {
-            readTransactionHistoryFromCache();
-        }
-
         setActionsForEventTypeFilter();
         setActionsForDateFilter();
 
@@ -221,9 +211,6 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    historyPageCount = 0;
-                    if (userTransactionHistoryClasses != null)
-                        userTransactionHistoryClasses.clear();
 
                     transactionHistoryCacheManager.updateCache(new TransactionHistoryCacheManager.OnUpdateCacheListener() {
                         @Override
@@ -238,6 +225,25 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         });
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setContentShown(false);
+
+        transactionHistoryCacheManager = new TransactionHistoryCacheManager(getActivity());
+        if (transactionHistoryCacheManager.isUpdateNeeded()) {
+            transactionHistoryCacheManager.updateCache(new TransactionHistoryCacheManager.OnUpdateCacheListener() {
+                @Override
+                public void onUpdateCache() {
+                    readTransactionHistoryFromCache();
+                }
+            });
+        } else {
+            readTransactionHistoryFromCache();
+        }
     }
 
     private void refreshTransactionHistory() {
@@ -535,6 +541,7 @@ public class TransactionHistoryFragment extends Fragment implements HttpResponse
         historyPageCount = transactionHistoryCacheManager.getPageCount();
 
         loadTransactionHistory(transactionHistoryClasses, hasNext);
+        setContentShown(true);
     }
 
     private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
