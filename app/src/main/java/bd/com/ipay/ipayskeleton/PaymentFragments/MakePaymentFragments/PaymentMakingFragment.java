@@ -34,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewMakePaymentDialog;
+import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
@@ -248,7 +249,7 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
             private LinearLayout optionsLayout;
             private Button acceptButton;
             private Button rejectButton;
-            private Button markAsSpamButton;
+            private ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -258,7 +259,7 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mTitleView = (TextView) itemView.findViewById(R.id.title);
-                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 headerView = (TextView) itemView.findViewById(R.id.money_request_header);
 
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
@@ -289,12 +290,7 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
 
                 } else mTitleView.setVisibility(View.GONE);
 
-                Glide.with(getActivity())
-                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
-                        .crossFade()
-                        .error(R.drawable.ic_person)
-                        .transform(new CircleTransform(getActivity()))
-                        .into(mPortrait);
+                mProfileImageView.setInformation(imageUrl, name);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

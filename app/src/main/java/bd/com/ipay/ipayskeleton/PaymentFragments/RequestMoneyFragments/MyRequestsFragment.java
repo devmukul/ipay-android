@@ -251,7 +251,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                 String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);
-                mSenderNumber.setText(pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName());
+                mSenderNumber.setText(name);
                 mDescription.setText(pendingMoneyRequestClasses.get(pos).getDescription());
 
                 mCancel.setOnClickListener(new View.OnClickListener() {

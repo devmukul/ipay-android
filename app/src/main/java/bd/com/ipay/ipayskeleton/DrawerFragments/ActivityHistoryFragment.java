@@ -168,7 +168,6 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     historyPageCount = 0;
-                    if (userActivityResponsesList != null) userActivityResponsesList.clear();
                     getUserActivities();
                 }
             }
@@ -490,6 +489,8 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
 
                 try {
                     mUserActivityResponse = gson.fromJson(result.getJsonString(), UserActivityResponse.class);
+
+                    if (userActivityResponsesList != null) userActivityResponsesList.clear();
 
                     if (userActivityResponsesList == null || userActivityResponsesList.size() == 0) {
                         userActivityResponsesList = mUserActivityResponse.getActivities();
