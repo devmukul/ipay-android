@@ -26,7 +26,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -195,7 +195,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                         mButtonAskForRecommendation.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
+                                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
                                 intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);                   // Get the verified iPay users only.
                                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
                             }

@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.R;
@@ -60,7 +60,7 @@ public class RequestMoneyFragment extends Fragment {
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
+                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });

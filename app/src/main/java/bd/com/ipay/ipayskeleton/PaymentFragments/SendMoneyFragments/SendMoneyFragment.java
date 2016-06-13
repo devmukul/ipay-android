@@ -21,7 +21,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -66,7 +66,7 @@ public class SendMoneyFragment extends Fragment {
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FriendPickerActivity.class);
+                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });
