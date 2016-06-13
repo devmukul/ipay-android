@@ -1,7 +1,10 @@
 package bd.com.ipay.ipayskeleton.Api;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -44,19 +47,25 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         if (contactsSyncedOnce)
             return null;
 
-        List<FriendNode> phoneContacts = ContactEngine.getAllContacts(context);
-
-        ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
-
-        Log.i("New Contacts", contactDiff.newFriends.toString());
-        Log.i("Updated Contacts", contactDiff.updatedFriends.toString());
-
         DataHelper dataHelper = DataHelper.getInstance(context);
         dataHelper.createFriends(serverContacts);
 
         contactsSyncedOnce = true;
 
-        return contactDiff;
+        if (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            List<FriendNode> phoneContacts = ContactEngine.getAllContacts(context);
+
+            ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
+
+            Log.i("New Contacts", contactDiff.newFriends.toString());
+            Log.i("Updated Contacts", contactDiff.updatedFriends.toString());
+
+            return contactDiff;
+        } else {
+            return null;
+        }
+
     }
 
     @Override

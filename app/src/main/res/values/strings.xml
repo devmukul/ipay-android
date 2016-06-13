@@ -655,6 +655,9 @@
     <string name="preview">Preview</string>
     <string name="progress_dialog_loading_document_preview">Loading document preview...</string>
     <string name="failed_document_preview_loading">Failed to load document preview</string>
+    <string name="allow_access">Allow Access</string>
+    <string name="exit">Exit</string>
+    <string name="request_for_permission">The app needs to access your files to function properly. Please allow it to access your files.</string>
 
     <string-array name="account_types">
         <item>Personal</item>

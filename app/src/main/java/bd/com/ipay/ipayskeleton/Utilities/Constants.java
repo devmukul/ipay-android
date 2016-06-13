@@ -24,6 +24,7 @@ public class Constants {
     public static final String SIGN_UP = "SIGN_UP";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
+    public static final String DEVICE_ID = "DEVICE_ID";
 
     public static final String SMS_reader_braodcast_receiver_pdus = "pdus";
 
@@ -88,7 +89,7 @@ public class Constants {
      * All requests and responses to$ server, and token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     /**
      * If set to true (with DEBUG flag also being set to true),

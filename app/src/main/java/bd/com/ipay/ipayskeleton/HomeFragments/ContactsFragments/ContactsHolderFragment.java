@@ -110,7 +110,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 if (mAllContactsFragment == null)
                     mAllContactsFragment = new AllContactsFragment();
                 mAllContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mAllContactsFragment).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mAllContactsFragment).commit();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,7 +125,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             if (mIPayContactsFragment == null)
                 mIPayContactsFragment = new IPayContactsFragment();
             mIPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mIPayContactsFragment).commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mIPayContactsFragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }

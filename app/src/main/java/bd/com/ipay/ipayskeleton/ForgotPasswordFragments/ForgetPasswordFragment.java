@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPasswordResp
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ForgetPasswordFragment extends Fragment implements HttpResponseListener {
@@ -88,8 +89,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 if (verifyUserInputs()) {
-                    TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-                    String deviceId = telephonyManager.getDeviceId();
+                    String deviceId = DeviceIdFactory.getDeviceId(getActivity());
 
                     attemptSendOTPForgetPassword(mNameEditText.getText().toString(),
                             mMobileNumberEditText.getText().toString().trim(),

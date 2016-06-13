@@ -44,6 +44,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountSettingsFragment extends Fragment implements HttpResponseListener {
@@ -527,26 +528,25 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
                     R.drawable.ic_phone_android_black_24dp,
                     R.drawable.ic_phone_iphone_black_24dp
             };
-            String DeviceID = trustedDevice.getDeviceId();
+            String deviceID = trustedDevice.getDeviceId();
             String Android = "android";
             String IOS = "ios";
             String Computer = "browser";
-            if (DeviceID.toLowerCase().contains(Android.toLowerCase())) {
+            if (deviceID.toLowerCase().contains(Android.toLowerCase())) {
                 deviceimageView.setImageResource(images[1]);
 
-            } else if (DeviceID.toLowerCase().contains(IOS.toLowerCase())) {
+            } else if (deviceID.toLowerCase().contains(IOS.toLowerCase())) {
                 deviceimageView.setImageResource(images[2]);
 
-            } else if (DeviceID.toLowerCase().contains(Computer.toLowerCase())) {
+            } else if (deviceID.toLowerCase().contains(Computer.toLowerCase())) {
                 deviceimageView.setImageResource(images[0]);
 
             }
 
-            TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
             String mDeviceID = "mobile-android-";
-            mDeviceID = mDeviceID.concat(telephonyManager.getDeviceId());
+            mDeviceID = mDeviceID.concat(DeviceIdFactory.getDeviceId(getActivity()));
 
-            if (mDeviceID.equals(DeviceID)) {
+            if (mDeviceID.equals(deviceID)) {
                 removeButton.setVisibility(View.INVISIBLE);
                 currentDevice.setVisibility(View.VISIBLE);
                 deviceNameView.setTextColor(getResources().getColor(R.color.cardview_dark_background));

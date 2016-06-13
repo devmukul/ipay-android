@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeRequ
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupPersonalStepOneFragment extends Fragment implements HttpResponseListener {
@@ -106,8 +107,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             }
         });
 
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        mDeviceID = telephonyManager.getDeviceId();
+        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.TrustedOtp;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.TrustedOtpReceiver;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationForgotPasswordFragment extends Fragment implements HttpResponseListener {
@@ -78,8 +79,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
         mNewPasswordEditText = (EditText) v.findViewById(R.id.new_pass_edittext);
         mTrustedOtpReceiverLayout = (LinearLayout) v.findViewById(R.id.trusted_people_otp_containers);
 
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        mDeviceID = telephonyManager.getDeviceId();
+        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
         mTrustedOtpReceivers = getActivity().getIntent().getParcelableArrayListExtra(Constants.TRUSTED_OTP_RECEIVERS);
 
         List<String> trustedOtpReceiverInfos = new ArrayList<>();

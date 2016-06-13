@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.SignupRequestPerso
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.SignupResponsePersonal;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationPersonalFragment extends Fragment implements HttpResponseListener {
@@ -76,8 +77,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         Utilities.showKeyboard(getActivity(), mOTPEditText);
 
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        mDeviceID = telephonyManager.getDeviceId();
+        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
