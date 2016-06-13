@@ -29,6 +29,8 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableReceiver;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.TextMessageReader;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonalSignup;
@@ -58,6 +60,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
 
+    private EnableDisableReceiver receiver;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -80,6 +84,16 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
+
+        //enable broadcast receiver to get the text message to get the OTP
+        receiver = new EnableDisableReceiver();
+        receiver.enableBroadcastReceiver(getContext(), new TextMessageReader.OnTextMessageReceivedListener() {
+            @Override
+            public void onTextMessageReceive(String otp) {
+                mOTPEditText.setText(otp);
+                mActivateButton.performClick();
+            }
+        });
 
         mResendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +132,12 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         }.start();
 
         return v;
+    }
+
+    @Override
+    public void onDestroy() {
+        receiver.disableBroadcastReceiver(getContext());
+        super.onDestroy();
     }
 
     private void resendOTP() {
