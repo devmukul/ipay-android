@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
@@ -231,7 +232,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
             private TextView mTime;
             private TextView mDescription;
             private ImageView mCancel;
-            private RoundedImageView mPortrait;
+            private ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -240,13 +241,14 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mDescription = (TextView) itemView.findViewById(R.id.description);
                 mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
-                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
             }
 
             public void bindView(int pos) {
 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
+                String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);
                 mSenderNumber.setText(pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName());
@@ -259,12 +261,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                     }
                 });
 
-                Glide.with(getActivity())
-                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
-                        .crossFade()
-                        .error(R.drawable.ic_person)
-                        .transform(new CircleTransform(getActivity()))
-                        .into(mPortrait);
+                mProfileImageView.setInformation(imageUrl, name);
 
             }
         }

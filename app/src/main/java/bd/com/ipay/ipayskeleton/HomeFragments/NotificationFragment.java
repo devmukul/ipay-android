@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.RequestMoneyReviewDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.ReviewDialogFinishListener;
+import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
@@ -490,7 +491,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             private TextView mTitleView;
             private TextView mTimeView;
             private TextView loadMoreTextView;
-            private RoundedImageView mPortrait;
             private LinearLayout optionsLayout;
             private Button acceptButton;
             private Button rejectButton;
@@ -504,6 +504,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             private Button verifyButton;
             private Button rejectRecommendationButton;
             private Button markAsSpamRecommendationButton;
+            private ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -513,7 +514,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mTitleView = (TextView) itemView.findViewById(R.id.title);
-                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 acceptButton = (Button) itemView.findViewById(R.id.accept_button);
                 rejectButton = (Button) itemView.findViewById(R.id.reject_button);
@@ -550,6 +551,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final BigDecimal vat = moneyRequestList.get(pos).getVat();
                 final List<ItemList> itemList = moneyRequestList.get(pos).getItemList();
 
+                mProfileImageView.setInformation(imageUrl, name);
 
                 mDescriptionView.setText(description);
                 mTimeView.setText(time);
@@ -559,13 +561,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     mTitleView.setText(title);
 
                 } else mTitleView.setVisibility(View.GONE);
-
-                Glide.with(getActivity())
-                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
-                        .crossFade()
-                        .error(R.drawable.ic_person)
-                        .transform(new CircleTransform(getActivity()))
-                        .into(mPortrait);
 
                 if (serviceID == Constants.SERVICE_ID_RECOMMENDATION_REQUEST) {
                     viewBetweenRejectAndSpam.setVisibility(View.VISIBLE);

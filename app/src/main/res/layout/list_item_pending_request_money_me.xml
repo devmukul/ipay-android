@@ -7,24 +7,22 @@
     android:background="@android:color/white"
     android:padding="@dimen/activity_horizontal_margin_card">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/portrait"
-        android:layout_width="50dp"
+
+    <bd.com.ipay.ipayskeleton.Customview.ProfileImageView
+        android:id="@+id/profile_picture"
         android:layout_height="50dp"
-        android:layout_centerVertical="true"
+        android:layout_width="50dp"
         android:layout_marginRight="@dimen/activity_vertical_margin_card"
-        android:scaleType="centerCrop"
-        app:riv_border_color="@color/colorPrimary"
-        app:riv_border_width="1dip"
-        app:riv_corner_radius="50dip"
-        app:riv_oval="false" />
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"/>
+
 
     <TextView
         android:id="@+id/request_number"
         style="@style/TextStylePrimarySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/portrait"
+        android:layout_toRightOf="@+id/profile_picture"
         android:textStyle="bold" />
 
     <TextView
@@ -33,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/request_number"
-        android:layout_toRightOf="@+id/portrait"
+        android:layout_toRightOf="@+id/profile_picture"
         android:gravity="left"
         android:visibility="gone" />
 
@@ -43,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/amount"
-        android:layout_toRightOf="@+id/portrait"
+        android:layout_toRightOf="@+id/profile_picture"
         android:visibility="visible" />
 
     <TextView
@@ -52,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/description"
-        android:layout_toRightOf="@+id/portrait" />
+        android:layout_toRightOf="@+id/profile_picture" />
 
     <ImageView
         android:id="@+id/cancel_request"
