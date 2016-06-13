@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Customview.Dialogs.InvoicesHistoryDialogue;
+import bd.com.ipay.ipayskeleton.Customview.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
@@ -98,9 +99,6 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         if (Utilities.isConnectionAvailable(getActivity())) {
 
             historyPageCount = 0;
-            if (pendingPaymentClasses != null)
-                pendingPaymentClasses.clear();
-            pendingPaymentClasses = null;
             getInvoicesPendingRequests();
 
         } else if (getActivity() != null)
@@ -162,13 +160,12 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
                     mGetPendingPaymentsResponse = gson.fromJson(result.getJsonString(), GetPendingPaymentsResponse.class);
 
-                    if (pendingPaymentClasses == null) {
-                        pendingPaymentClasses = mGetPendingPaymentsResponse.getRequests();
-                    } else {
-                        List<PendingPaymentClass> tempPendingMoneyRequestClasses;
-                        tempPendingMoneyRequestClasses = mGetPendingPaymentsResponse.getRequests();
-                        pendingPaymentClasses.addAll(tempPendingMoneyRequestClasses);
-                    }
+                    if (pendingPaymentClasses != null)
+                        pendingPaymentClasses.clear();
+                    pendingPaymentClasses = null;
+
+                    pendingPaymentClasses = mGetPendingPaymentsResponse.getRequests();
+
                     hasNext = mGetPendingPaymentsResponse.isHasNext();
 
                     mInvoicesSentAdapter.notifyDataSetChanged();
@@ -233,10 +230,9 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
             private TextView mDescription;
             private TextView mTime;
             private ImageView mCancel;
-            private RoundedImageView mPortrait;
             private ImageView statusView;
-            private TextView mPortraitTextView;
             private TextView loadMoreTextView;
+            private ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -246,61 +242,11 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 mDescription = (TextView) itemView.findViewById(R.id.description);
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
-                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
-                mPortraitTextView = (TextView) itemView.findViewById(R.id.portraitTxt);
+                mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
-            private void setProfilePicture(String url, RoundedImageView pictureView, String name) {
-
-                int position = getAdapterPosition();
-                final int randomColor = position % 10;
-
-                if (name.startsWith("+") && name.length() > 1)
-                    mPortraitTextView.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
-                else mPortraitTextView.setText(String.valueOf(name.charAt(0)).toUpperCase());
-
-
-                if (randomColor == 0)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle);
-                else if (randomColor == 1)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_blue);
-                else if (randomColor == 2)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_brightpink);
-                else if (randomColor == 3)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_cyan);
-                else if (randomColor == 4)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_megenta);
-                else if (randomColor == 5)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_orange);
-                else if (randomColor == 6)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_red);
-                else if (randomColor == 7)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_springgreen);
-                else if (randomColor == 8)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_violet);
-                else if (randomColor == 9)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_yellow);
-                else
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_azure);
-
-                if (url != null) {
-                    url = Constants.BASE_URL_FTP_SERVER + url;
-                    Glide.with(getActivity())
-                            .load(url)
-                            .crossFade()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .into(pictureView);
-                } else {
-                    Glide.with(getActivity())
-                            .load(android.R.color.transparent)
-                            .crossFade()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .into(pictureView);
-                }
-
-            }
 
 
             public void bindView(int pos) {
@@ -317,7 +263,8 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 final long id = pendingPaymentClasses.get(pos).getId();
                 final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
 
-                setProfilePicture(imageUrl, mPortrait, name);
+
+                mProfileImageView.setInformation(imageUrl, name);
 
                 mSenderName.setText(name);
 
@@ -362,13 +309,6 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                         showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
                     }
                 });
-
-                Glide.with(getActivity())
-                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
-                        .crossFade()
-                        .error(R.drawable.ic_person)
-                        .transform(new CircleTransform(getActivity()))
-                        .into(mPortrait);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -33,7 +33,6 @@ public class SelectAccountTypeFragment extends Fragment {
         buttonAccountTypePersonal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ((SignupOrLoginActivity) getActivity()).switchToPersonalSignUpFragment();
                 ((SignupOrLoginActivity) getActivity()).switchToSignupPersonalStepOneFragment();
             }
         });

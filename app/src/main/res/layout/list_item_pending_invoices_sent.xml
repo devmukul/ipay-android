@@ -7,14 +7,12 @@
     android:background="@android:color/white"
     android:padding="@dimen/activity_horizontal_margin_card">
 
-    <include
+    <bd.com.ipay.ipayskeleton.Customview.ProfileImageView
         android:id="@+id/profile_picture"
-        layout="@layout/contact_portrait_view"
-        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="16dp" />
+        android:layout_width="50dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_centerVertical="true"/>
 
     <TextView
         android:id="@+id/request_name"

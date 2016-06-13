@@ -49,6 +49,7 @@ public class TourActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(TourActivity.this, SignupOrLoginActivity.class);
                 intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
+                finish();
                 startActivity(intent);
             }
         });
@@ -58,6 +59,7 @@ public class TourActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(TourActivity.this, SignupOrLoginActivity.class);
                 intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_UP);
+                finish();
                 startActivity(intent);
             }
         });
