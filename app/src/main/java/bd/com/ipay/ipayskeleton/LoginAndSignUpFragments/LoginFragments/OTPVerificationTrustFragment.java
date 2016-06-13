@@ -21,16 +21,14 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.TextMessageReader;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBraodcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -50,7 +48,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
 
-    private EnableDisableReceiver receiver;
+    private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
     @Override
     public void onResume() {
@@ -74,8 +72,8 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
 
         //enable broadcast receiver to get the text message to get the OTP
-        receiver = new EnableDisableReceiver();
-        receiver.enableBroadcastReceiver(getContext(), new TextMessageReader.OnTextMessageReceivedListener() {
+        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
+        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBraodcastReceiver.OnTextMessageReceivedListener() {
             @Override
             public void onTextMessageReceive(String otp) {
                 mOTPEditText.setText(otp);
@@ -119,7 +117,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
     @Override
     public void onDestroy() {
-        receiver.disableBroadcastReceiver(getContext());
+        mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(getContext());
         super.onDestroy();
     }
 

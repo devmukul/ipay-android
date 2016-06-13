@@ -4,27 +4,27 @@ package bd.com.ipay.ipayskeleton.BroadcastReceiverClass;
 import android.content.Context;
 import android.content.IntentFilter;
 
-public class EnableDisableReceiver {
+public class EnableDisableSMSBroadcastReceiver {
 
     /**
      * This method enables the Broadcast receiver registered in the AndroidManifest file.
      */
 
-    private TextMessageReader reader;
+    private SMSReaderBraodcastReceiver mSMSReader;
 
-    public void enableBroadcastReceiver(Context context, TextMessageReader.OnTextMessageReceivedListener listener) {
+    public void enableBroadcastReceiver(Context context, SMSReaderBraodcastReceiver.OnTextMessageReceivedListener listener) {
 
         IntentFilter intentFilter = new IntentFilter(
                 "android.provider.Telephony.SMS_RECEIVED");
-        reader = new TextMessageReader();
-        reader.setOnTextMessageReceivedListener(listener);
-        context.registerReceiver(reader, intentFilter);
+        mSMSReader = new SMSReaderBraodcastReceiver();
+        mSMSReader.setOnTextMessageReceivedListener(listener);
+        context.registerReceiver(mSMSReader, intentFilter);
     }
 
     /**
      * This method disables the Broadcast receiver registered in the AndroidManifest file.
      */
     public void disableBroadcastReceiver(Context context) {
-        context.unregisterReceiver(reader);
+        context.unregisterReceiver(mSMSReader);
     }
 }

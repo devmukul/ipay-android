@@ -25,6 +25,8 @@ public class Constants {
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
 
+    public static final String SMS_reader_braodcast_receiver_pdus = "pdus";
+
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
     public static final String RESOURCE_TOKEN = "resource-token";

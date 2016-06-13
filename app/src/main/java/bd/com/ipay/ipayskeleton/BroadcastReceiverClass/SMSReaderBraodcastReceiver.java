@@ -11,8 +11,10 @@ import android.util.Log;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class TextMessageReader extends BroadcastReceiver {
+
+public class SMSReaderBraodcastReceiver extends BroadcastReceiver {
 
     private OnTextMessageReceivedListener listener;
 
@@ -29,7 +31,7 @@ public class TextMessageReader extends BroadcastReceiver {
             String OtpMessage;
             if (bundle != null){
                 try{
-                    Object[] pdus = (Object[]) bundle.get("pdus");
+                    Object[] pdus = (Object[]) bundle.get(Constants.SMS_reader_braodcast_receiver_pdus);
                     message = new SmsMessage[pdus.length];
                     for(int i = 0; i < message.length; i++){
                         message[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
@@ -47,7 +49,8 @@ public class TextMessageReader extends BroadcastReceiver {
 
     public void matchOTP(String message, Context context) {
 
-        Pattern pattern = Pattern.compile(".*iPay.*(\\d{6}).*");
+        String makePattern = ".*" + Constants.ApplicationTag +".*(\\d{6}).*";
+        Pattern pattern = Pattern.compile(makePattern);
         Matcher matcher = pattern.matcher(message);
         if (matcher.find()) {
             String otp = matcher.group(1);
