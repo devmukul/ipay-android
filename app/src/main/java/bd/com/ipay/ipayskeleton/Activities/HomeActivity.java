@@ -343,7 +343,7 @@ public class HomeActivity extends BaseActivity
                             getProfileInfo();
                         } else {
                             MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
-                            dialog.content(getString(R.string.request_for_permission))
+                            dialog.content(getString(R.string.request_for_storage_permission))
                                     .positiveText(R.string.allow_access)
                                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                                         @Override

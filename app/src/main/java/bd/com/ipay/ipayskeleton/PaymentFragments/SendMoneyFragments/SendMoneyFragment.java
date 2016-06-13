@@ -1,10 +1,14 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +44,9 @@ public class SendMoneyFragment extends Fragment {
     private EditText mAmountEditText;
 
     private SharedPreferences pref;
+
+    public static final int REQUEST_CODE_PERMISSION = 1001;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,7 +88,12 @@ public class SendMoneyFragment extends Fragment {
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initiateScan();
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA},
+                            REQUEST_CODE_PERMISSION);
+                } else {
+                    initiateScan();
+                }
             }
         });
 
@@ -90,7 +102,7 @@ public class SendMoneyFragment extends Fragment {
         return v;
     }
 
-    void initiateScan() {
+    public void initiateScan() {
         IntentIntegrator.forFragment(this).initiateScan();
     }
 
