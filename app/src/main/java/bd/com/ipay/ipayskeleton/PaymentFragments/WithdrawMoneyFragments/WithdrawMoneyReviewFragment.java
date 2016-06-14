@@ -150,7 +150,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
 					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.show();
+            mProgressDialog.dismiss();
             mWithdrawMoneyTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();

@@ -542,12 +542,13 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         hasNext = transactionHistoryCacheManager.hasNext();
         historyPageCount = transactionHistoryCacheManager.getPageCount();
 
-        loadTransactionHistory(transactionHistoryClasses, hasNext);
+        loadTransactionHistory(transactionHistoryClasses, hasNext, true);
         setContentShown(true);
     }
 
-    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
-        if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
+    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses,
+                                        boolean hasNext, boolean clearOldTransactions) {
+        if (clearOldTransactions || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
             userTransactionHistoryClasses = transactionHistoryClasses;
         } else {
             List<TransactionHistoryClass> tempTransactionHistoryClasses;
@@ -585,7 +586,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 try {
                     mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
 
-                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
+                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext(), false);
 
                 } catch (Exception e) {
                     e.printStackTrace();

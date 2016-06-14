@@ -164,7 +164,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
 					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.show();
+            mProgressDialog.dismiss();
             mSendMoneyTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
