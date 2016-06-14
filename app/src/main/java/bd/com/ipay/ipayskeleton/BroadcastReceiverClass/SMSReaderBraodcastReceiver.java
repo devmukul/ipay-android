@@ -31,7 +31,7 @@ public class SMSReaderBraodcastReceiver extends BroadcastReceiver {
             String OtpMessage;
             if (bundle != null){
                 try{
-                    Object[] pdus = (Object[]) bundle.get(Constants.SMS_reader_braodcast_receiver_pdus);
+                    Object[] pdus = (Object[]) bundle.get(Constants.SMS_READER_BROADCAST_RECEIVER_PDUS);
                     message = new SmsMessage[pdus.length];
                     for(int i = 0; i < message.length; i++){
                         message[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
