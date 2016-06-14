@@ -568,7 +568,7 @@ public class HomeActivity extends BaseActivity
             mGetProfileInfoTask = null;
             mGetAllContactsTask = null;
             mAddTrustedDeviceTask = null;
-            Toast.makeText(HomeActivity.this, R.string.request_failed, Toast.LENGTH_LONG).show();
+            Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 

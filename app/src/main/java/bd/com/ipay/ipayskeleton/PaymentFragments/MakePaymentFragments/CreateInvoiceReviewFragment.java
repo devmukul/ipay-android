@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -176,7 +174,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
             mProgressDialog.dismiss();
             mSaveInvoiceTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

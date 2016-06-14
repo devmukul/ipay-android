@@ -231,7 +231,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.show();
             mGetBankTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

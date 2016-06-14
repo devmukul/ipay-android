@@ -2,14 +2,12 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,7 +162,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             mProgressDialog.dismiss();
             mLoginTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

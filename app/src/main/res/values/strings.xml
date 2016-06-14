@@ -106,7 +106,7 @@
     <string name="from">From</string>
     <string name="to_date">To (dd/mm/yyyy)</string>
     <string name="from_date">From (dd/mm/yyyy)</string>
-    <string name="request_failed">Request failed.</string>
+    <string name="service_not_available">Service Currently Not Available</string>
     <string name="please_wait">Please wait. Loading... </string>
     <string name="loading">Loading... </string>
     <string name="load_more">Load more...</string>
@@ -359,7 +359,6 @@
     <string name="change_password_success">Password changed successfully...</string>
     <string name="enter_current_pass">Enter current password</string>
     <string name="server_down">Can not process your request right now. Please try again later</string>
-    <string name="service_not_available">Service is not available right now. Please try again later</string>
     <string name="no_extra_charges">There are no extra charges for this transaction!</string>
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="withdraw_money_failed">Could not submit request for money withdrawal</string>

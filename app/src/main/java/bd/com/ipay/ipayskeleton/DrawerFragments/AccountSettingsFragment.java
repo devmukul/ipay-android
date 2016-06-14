@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -383,7 +382,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             mGetTrustedDeviceTask = null;
             mRemoveTrustedDeviceTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 

@@ -2,13 +2,11 @@ package bd.com.ipay.ipayskeleton.ForgotPasswordFragments;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +17,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.ForgotPasswordActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
@@ -164,7 +159,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
             mProgressDialog.dismiss();
             mForgetPasswordTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

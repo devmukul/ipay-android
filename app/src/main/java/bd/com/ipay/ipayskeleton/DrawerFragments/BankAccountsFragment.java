@@ -388,7 +388,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private void attemptSendForVerification(Long userBankID) {
         if (userBankID == 0) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -406,7 +406,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private void attemptVerificationWithAmount(Long userBankID, double amount) {
         if (userBankID == 0) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -430,7 +430,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private void attemptRemoveBank(long bankAccountID) {
         if (bankAccountID == 0) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -451,7 +451,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             mRemoveBankAccountTask = null;
             mSendForVerificationTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 
