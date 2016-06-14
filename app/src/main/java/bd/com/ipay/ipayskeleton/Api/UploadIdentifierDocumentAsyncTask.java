@@ -24,6 +24,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -76,6 +77,11 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
                 // In case of un-authorization go to login activity
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
                 mContext.startActivity(intent);
+
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND ||
+                    result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
+
+                Toast.makeText(mContext, R.string.service_currently_not_available, Toast.LENGTH_LONG).show();
 
             } else
                 mHttpResponseListener.httpResponseReceiver(result);
