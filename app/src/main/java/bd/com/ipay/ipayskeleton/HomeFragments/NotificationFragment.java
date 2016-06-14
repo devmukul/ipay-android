@@ -548,7 +548,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final BigDecimal vat = moneyRequestList.get(pos).getVat();
                 final List<ItemList> itemList = moneyRequestList.get(pos).getItemList();
 
-                mProfileImageView.setInformation(imageUrl, name);
+                mProfileImageView.setInformation(Constants.BASE_URL_FTP_SERVER + imageUrl, name);
 
                 mDescriptionView.setText(description);
                 mTimeView.setText(time);

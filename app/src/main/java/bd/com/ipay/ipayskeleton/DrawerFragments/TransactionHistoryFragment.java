@@ -519,7 +519,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mMobileNumberView.setText(receiverMobileNumber);
             otherImageView.setVisibility(View.GONE);
             mProfileImageView.setVisibility(View.VISIBLE);
-            mProfileImageView.setInformation(photoUri, receiverName);
+            mProfileImageView.setInformation(Constants.BASE_URL_FTP_SERVER + photoUri, receiverName);
 
         }
 

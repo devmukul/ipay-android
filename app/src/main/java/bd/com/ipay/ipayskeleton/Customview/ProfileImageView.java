@@ -93,7 +93,7 @@ public class ProfileImageView extends FrameLayout {
 
         if (name != null && !name.isEmpty()) {
             setProfileFirstLetter(name);
-            setProfilePicture(Constants.BASE_URL_FTP_SERVER + photoUri);
+            setProfilePicture(photoUri);
 
         } else if (photoUri != null){
             setProfileFirstLetter(photoUri);
@@ -119,11 +119,11 @@ public class ProfileImageView extends FrameLayout {
 
             if(imageUri != null) {
                 Log.w("Image Uri", imageUri.toString());
-                setProfilePicture(imageUri.toString());
+                setInformation(imageUri.toString(), name);
 
             } else {
 
-                setInformation(photoUri, name);
+                setInformation(Constants.BASE_URL_FTP_SERVER + photoUri, name);
             }
 
         } catch (Exception e) {
