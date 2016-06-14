@@ -153,11 +153,6 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                     e.printStackTrace();
                 }
 
-            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND ||
-                    result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-
-                Toast.makeText(mContext, R.string.service_currently_not_available, Toast.LENGTH_LONG).show();
-
             } else {
                 if (mHttpResponseListener != null)
                     mHttpResponseListener.httpResponseReceiver(result);

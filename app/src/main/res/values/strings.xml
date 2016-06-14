@@ -659,7 +659,6 @@
     <string name="exit">Exit</string>
     <string name="request_for_storage_permission">The app needs to access your files to function properly. Please allow it to access your files.</string>
     <string name="request_for_camera_permission">QR code scanner requires camera permission to work properly</string>
-    <string name="service_currently_not_available">Service currently not available</string>
 
     <string-array name="account_types">
         <item>Personal</item>
