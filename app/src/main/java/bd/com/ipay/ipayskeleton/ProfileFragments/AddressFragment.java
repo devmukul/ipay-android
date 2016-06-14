@@ -234,7 +234,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         if (result == null) {
             mGetUserAddressTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

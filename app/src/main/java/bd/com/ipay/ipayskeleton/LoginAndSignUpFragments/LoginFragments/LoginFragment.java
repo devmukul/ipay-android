@@ -2,14 +2,10 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
@@ -18,13 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -35,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class LoginFragment extends Fragment implements HttpResponseListener {
@@ -66,8 +59,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mProgressDialog = new ProgressDialog(getActivity());
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        mDeviceID = telephonyManager.getDeviceId();
+        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
 
         mButtonLogin = (Button) v.findViewById(R.id.login_button);
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
@@ -98,8 +90,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         if (SignupOrLoginActivity.mMobileNumber != null) {
             // Delete +880 from the prefix
-            String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(
-                    SignupOrLoginActivity.mMobileNumber);
+            String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(SignupOrLoginActivity.mMobileNumber);
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + mobileNumberWithoutPrefix);
         } else if (pref.contains(Constants.USERID)) {
             String userIdWithoutPrefix = ContactEngine.trimPrefix(pref.getString(Constants.USERID, ""));
@@ -212,15 +203,14 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-//        Log.w("Result", result);
+        mProgressDialog.dismiss();
+
         if (result == null) {
-            mProgressDialog.dismiss();
             mLoginTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         Gson gson = new Gson();
 
@@ -230,10 +220,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
-                    pref.edit().putString(Constants.USERID, mUserNameLogin).commit();
-                    pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
-                    mProgressDialog.dismiss();
+                    pref.edit().putBoolean(Constants.LOGGEDIN, true).apply();
+                    pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
+                    pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
                     ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
@@ -245,7 +234,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                     // First time login from this device. Verify OTP for secure login
                     SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
-                    mProgressDialog.dismiss();
                     ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
@@ -256,7 +244,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                     // Enter previous OTP
                     SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
-                    mProgressDialog.dismiss();
 
                     ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
@@ -272,7 +259,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
             }
 
-            mProgressDialog.dismiss();
             mLoginTask = null;
 
         }

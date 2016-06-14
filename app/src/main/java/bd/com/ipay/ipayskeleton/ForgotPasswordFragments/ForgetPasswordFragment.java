@@ -2,13 +2,11 @@ package bd.com.ipay.ipayskeleton.ForgotPasswordFragments;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +18,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Activities.ForgotPasswordActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -33,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPasswordResp
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ForgetPasswordFragment extends Fragment implements HttpResponseListener {
@@ -88,8 +84,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 if (verifyUserInputs()) {
-                    TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-                    String deviceId = telephonyManager.getDeviceId();
+                    String deviceId = DeviceIdFactory.getDeviceId(getActivity());
 
                     attemptSendOTPForgetPassword(mNameEditText.getText().toString(),
                             mMobileNumberEditText.getText().toString().trim(),
@@ -164,7 +159,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
             mProgressDialog.dismiss();
             mForgetPasswordTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

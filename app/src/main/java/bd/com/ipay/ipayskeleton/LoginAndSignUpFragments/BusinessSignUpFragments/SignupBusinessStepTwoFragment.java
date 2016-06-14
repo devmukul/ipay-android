@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupBusinessStepTwoFragment extends Fragment {
@@ -59,10 +60,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
 
         mBusinessAddressView = (AddressInputView) v.findViewById(R.id.business_address);
 
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        mDeviceID = telephonyManager.getDeviceId();
-
-
+        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override

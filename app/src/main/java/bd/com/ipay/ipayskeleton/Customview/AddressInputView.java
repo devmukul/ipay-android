@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -271,7 +270,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
             if (context != null)
-                Toast.makeText(context, R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

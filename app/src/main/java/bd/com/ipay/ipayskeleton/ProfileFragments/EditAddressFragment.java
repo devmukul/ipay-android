@@ -100,7 +100,7 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
         if (result == null) {
             mProgressDialog.dismiss();
             mSetUserAddressTask = null;
-            Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

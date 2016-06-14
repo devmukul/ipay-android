@@ -11,8 +11,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -84,7 +82,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
         if (result == null) {
             mProgressDialog.dismiss();
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

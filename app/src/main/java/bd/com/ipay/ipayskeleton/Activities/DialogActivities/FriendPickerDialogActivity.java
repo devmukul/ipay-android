@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
  * If want to show only verified users, pass (Constants.VERIFIED_USERS_ONLY, false) in the intent
  * while starting the activity.
  */
-public class FriendPickerActivity extends FragmentActivity {
+public class FriendPickerDialogActivity extends FragmentActivity {
 
     private boolean mShowVerifiedUsersOnly;
 

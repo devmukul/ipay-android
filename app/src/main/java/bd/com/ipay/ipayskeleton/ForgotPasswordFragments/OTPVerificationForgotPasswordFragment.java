@@ -2,12 +2,10 @@ package bd.com.ipay.ipayskeleton.ForgotPasswordFragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.TextInputLayout;
-import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.TrustedOtp;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.TrustedOtpReceiver;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationForgotPasswordFragment extends Fragment implements HttpResponseListener {
@@ -78,8 +77,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
         mNewPasswordEditText = (EditText) v.findViewById(R.id.new_pass_edittext);
         mTrustedOtpReceiverLayout = (LinearLayout) v.findViewById(R.id.trusted_people_otp_containers);
 
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        mDeviceID = telephonyManager.getDeviceId();
+        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
         mTrustedOtpReceivers = getActivity().getIntent().getParcelableArrayListExtra(Constants.TRUSTED_OTP_RECEIVERS);
 
         List<String> trustedOtpReceiverInfos = new ArrayList<>();
@@ -208,7 +206,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
             mProgressDialog.dismiss();
             mOTPConfirmationTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 

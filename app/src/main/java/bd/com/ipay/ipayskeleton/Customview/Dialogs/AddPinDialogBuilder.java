@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.Customview.Dialogs;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -14,11 +12,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -129,7 +122,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
         if (result == null) {
             mSavePINTask = null;
             if (getContext() != null)
-                Toast.makeText(getContext(), R.string.request_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 

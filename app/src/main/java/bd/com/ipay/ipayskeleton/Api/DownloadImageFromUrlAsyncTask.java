@@ -19,6 +19,7 @@ public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String>
     private String mUserID;
 
     public DownloadImageFromUrlAsyncTask(String mProfilePictureUrl, String mUserID) {
+        Log.d("Downloading picture", mUserID + " : " + mProfilePictureUrl);
         this.mProfilePictureUrl = mProfilePictureUrl;
         this.mUserID = mUserID;
     }

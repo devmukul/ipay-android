@@ -76,9 +76,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private RefreshBalanceResponse mRefreshBalanceResponse;
 
-    private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
-    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
-
     private HttpRequestGetAsyncTask mGetNewsFeedTask = null;
     private GetNewsFeedResponse mGetNewsFeedResponse;
 
@@ -89,7 +86,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
 
     private SharedPreferences pref;
-    private String UUID;
     private String userID;
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
@@ -136,13 +132,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         userID = pref.getString(Constants.USERID, "");
 
-        if (pref.contains(Constants.UUID))
-            UUID = pref.getString(Constants.UUID, null);
-
-
         homeBottomSheet = (BottomSheetLayout) v.findViewById(R.id.home_bottomsheet);
         mProfileCompletionPromptView = getActivity().getLayoutInflater().inflate(R.layout.sheet_view_profile_completion, null);
-
 
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
@@ -250,13 +241,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 }
             }
         });
-
-        // TODO: Place this in HomeActivity
-        // Add to trusted device
-        if (UUID == null) {
-            if (Utilities.isConnectionAvailable(getActivity()))
-                addToTrustedDeviceList();
-        }
 
         setButtonActions();
 
@@ -448,26 +432,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void addToTrustedDeviceList() {
-        if (mAddTrustedDeviceTask != null) {
-            return;
-        }
-
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
-        String mDeviceID = telephonyManager.getDeviceId();
-        String mDeviceName = android.os.Build.MANUFACTURER + "-" + android.os.Build.PRODUCT + " -" + Build.MODEL;
-
-        AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
-                Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mAddToTrustedDeviceRequest);
-        mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
-                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
-        mAddTrustedDeviceTask.mHttpResponseListener = this;
-        mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     private void getNewsFeed() {
         if (mGetNewsFeedTask != null) {
             return;
@@ -564,7 +528,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mGetNewsFeedTask = null;
             mGetProfileCompletionStatusTask = null;
             mTransactionHistoryTask = null;
-            mAddTrustedDeviceTask = null;
 
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
@@ -631,28 +594,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
 
             mGetNewsFeedTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
-
-            try {
-                mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String UUID = mAddToTrustedDeviceResponse.getUUID();
-                    pref.edit().putString(Constants.UUID, UUID).commit();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
-            }
-
-
-            mAddTrustedDeviceTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

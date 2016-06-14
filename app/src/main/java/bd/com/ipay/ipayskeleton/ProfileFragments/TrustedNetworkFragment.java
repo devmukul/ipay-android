@@ -264,7 +264,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             mSetAccountRecoveryPersonTask = null;
 
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -330,7 +330,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.request_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             }
 
             mSetAccountRecoveryPersonTask = null;
