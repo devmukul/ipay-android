@@ -119,7 +119,8 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
 
         mProgressDialog.dismiss();
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mSavePINTask = null;
             if (getContext() != null)
                 Toast.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG).show();

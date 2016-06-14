@@ -248,7 +248,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     public void httpResponseReceiver(HttpResponseObject result) {
         mProgressDialog.dismiss();
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetProfileInfoTask = null;
             mGetOccupationTask = null;
             if (getActivity() != null)

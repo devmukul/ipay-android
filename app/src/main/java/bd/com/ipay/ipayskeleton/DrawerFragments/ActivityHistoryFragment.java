@@ -472,7 +472,8 @@ public class ActivityHistoryFragment extends Fragment implements HttpResponseLis
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUserActivityTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)

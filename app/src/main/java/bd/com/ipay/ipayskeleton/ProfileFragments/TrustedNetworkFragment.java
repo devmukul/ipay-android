@@ -258,7 +258,8 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
         mProgressDialog.dismiss();
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTrustedPersonsTask = null;
             mAddTrustedPersonTask = null;
             mSetAccountRecoveryPersonTask = null;

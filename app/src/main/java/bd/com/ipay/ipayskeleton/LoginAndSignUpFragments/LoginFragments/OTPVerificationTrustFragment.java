@@ -158,7 +158,8 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mLoginTask = null;
             if (getActivity() != null)

@@ -79,7 +79,8 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();

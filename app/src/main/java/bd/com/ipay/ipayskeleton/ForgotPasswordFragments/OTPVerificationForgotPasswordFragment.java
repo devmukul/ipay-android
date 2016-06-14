@@ -202,7 +202,8 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mOTPConfirmationTask = null;
             if (getActivity() != null)

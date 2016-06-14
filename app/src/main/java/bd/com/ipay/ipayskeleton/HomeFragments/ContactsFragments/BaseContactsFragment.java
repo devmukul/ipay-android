@@ -387,7 +387,8 @@ public abstract class BaseContactsFragment extends Fragment implements
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mSendInviteTask = null;
 

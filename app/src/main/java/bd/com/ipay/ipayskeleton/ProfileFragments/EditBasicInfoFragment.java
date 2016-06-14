@@ -365,7 +365,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     public void httpResponseReceiver(HttpResponseObject result) {
         mProgressDialog.dismiss();
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mSetProfileInfoTask = null;
             mUploadProfilePictureAsyncTask = null;
             mGetOccupationTask = null;

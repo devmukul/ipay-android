@@ -195,7 +195,8 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mRejectRequestTask = null;
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);

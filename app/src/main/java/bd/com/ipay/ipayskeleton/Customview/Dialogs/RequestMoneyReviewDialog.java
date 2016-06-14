@@ -199,7 +199,8 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.show();
             mAcceptRequestTask = null;
             mAcceptPaymentTask = null;

@@ -145,7 +145,8 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mPendingRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);

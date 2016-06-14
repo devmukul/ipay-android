@@ -140,7 +140,8 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mPendingInvoicesTask = null;
             mSwipeRefreshLayout.setRefreshing(false);

@@ -266,7 +266,8 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                    || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
             if (context != null)

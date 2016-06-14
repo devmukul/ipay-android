@@ -303,9 +303,7 @@ public class Constants {
     public static final int HTTP_RESPONSE_STATUS_UNAUTHORIZED = 401;
     public static final int HTTP_RESPONSE_STATUS_BAD_REQUEST = 400;
     public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 202;
-    public static final int HTTP_RESPONSE_STATUS_CANCELED = 2;
-    public static final int HTTP_RESPONSE_STATUS_REJECTED = 3;
-    public static final int HTTP_RESPONSE_STATUS_DRAFT = 4;
+    public static final int HTTP_RESPONSE_STATUS_INTERNAL_ERROR = 500;
 
     public static final int PERSONAL_ACCOUNT_TYPE = 1;
     public static final int BUSINESS_ACCOUNT_TYPE = 2;

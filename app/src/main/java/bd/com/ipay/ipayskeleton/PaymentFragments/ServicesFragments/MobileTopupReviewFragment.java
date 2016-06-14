@@ -143,7 +143,8 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.show();
             mTopupTask = null;
             if (getActivity() != null)

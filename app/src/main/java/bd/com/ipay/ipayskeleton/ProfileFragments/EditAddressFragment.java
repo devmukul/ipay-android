@@ -97,7 +97,8 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mSetUserAddressTask = null;
             Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();

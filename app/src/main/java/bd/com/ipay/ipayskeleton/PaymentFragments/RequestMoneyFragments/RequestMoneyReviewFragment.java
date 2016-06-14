@@ -154,7 +154,8 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
 
-        if (result == null) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mRequestMoneyTask = null;
             if (getActivity() != null)
