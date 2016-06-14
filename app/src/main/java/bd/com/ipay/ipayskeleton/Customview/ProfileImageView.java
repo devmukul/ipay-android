@@ -2,6 +2,8 @@ package bd.com.ipay.ipayskeleton.Customview;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.io.File;
 
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList;
@@ -50,11 +54,11 @@ public class ProfileImageView extends FrameLayout {
     }
 
     public void setProfilePicture(String photoUri) {
-//            mProfilePictureView.setVisibility(View.VISIBLE);
-//            mProfileFirstLetterView.setVisibility(View.GONE);
+//        mProfilePictureView.setVisibility(View.VISIBLE);
+//        mProfileFirstLetterView.setVisibility(View.GONE);
 
         Glide.with(context)
-                .load(Constants.BASE_URL_FTP_SERVER + photoUri)
+                .load(photoUri)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(mProfilePictureView);
@@ -89,12 +93,41 @@ public class ProfileImageView extends FrameLayout {
 
         if (name != null && !name.isEmpty()) {
             setProfileFirstLetter(name);
-            setProfilePicture(photoUri);
+            setProfilePicture(Constants.BASE_URL_FTP_SERVER + photoUri);
 
         } else if (photoUri != null){
             setProfileFirstLetter(photoUri);
         } else {
             setProfilePicturePlaceHolder();
+        }
+    }
+
+    public void downloadInformation(String photoUri, String name, String phoneNumber)
+    {
+        Log.w("info", photoUri + " " + name + " " + phoneNumber);
+        try {
+            File dir = new File(Environment.getExternalStorageDirectory().getPath()
+                    + Constants.PICTURE_FOLDER);
+            if (!dir.exists()) dir.mkdir();
+
+            Uri imageUri = null;
+            if (phoneNumber != null) {
+                File file = new File(dir, phoneNumber.replaceAll("[^0-9]", "") + ".jpg");
+                if (file.exists())
+                    imageUri = Uri.fromFile(file);
+            }
+
+            if(imageUri != null) {
+                Log.w("Image Uri", imageUri.toString());
+                setProfilePicture(imageUri.toString());
+
+            } else {
+
+                setInformation(photoUri, name);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     private Context context;
     private static DataHelper instance = null;
@@ -62,6 +62,7 @@ public class DataHelper {
             values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
             values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
                     DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
+            values.put(DBConstants.KEY_UPDATE_TIME, friendNode.getInfo().getUpdateTime());
             values.put(DBConstants.KEY_IS_MEMBER, friendNode.getInfo().isMember() ?
                     DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
 
@@ -88,6 +89,7 @@ public class DataHelper {
                     values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
                     values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
                             DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
+                    values.put(DBConstants.KEY_UPDATE_TIME, friendNode.getInfo().getUpdateTime());
                     values.put(DBConstants.KEY_IS_MEMBER, friendNode.getInfo().isMember() ?
                             DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
 
@@ -184,6 +186,7 @@ public class DataHelper {
             int profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
             int verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
             int accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
+            int updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
             int isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
 
             File dir = new File(Environment.getExternalStorageDirectory().getPath()
@@ -196,10 +199,11 @@ public class DataHelper {
                 int verificationStatus = cursor.getInt(verificationStatusIndex);
                 int accountType = cursor.getInt(accountTypeIndex);
                 String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
+                long updateTime = cursor.getLong(updateTimeIndex);
                 int isMember = cursor.getInt(isMemberIndex);
 
                 FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, isMember,
-                        verificationStatus, name, profilePictureUrl));
+                        verificationStatus, name, updateTime, profilePictureUrl));
                 friends.add(friend);
             } while (cursor.moveToNext());
         }

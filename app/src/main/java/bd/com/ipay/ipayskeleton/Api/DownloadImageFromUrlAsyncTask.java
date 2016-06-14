@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Api;
 
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.File;

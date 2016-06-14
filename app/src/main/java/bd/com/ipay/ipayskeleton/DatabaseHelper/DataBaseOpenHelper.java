@@ -37,6 +37,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_ACCOUNT_TYPE + " integer default 1, " +
                 DBConstants.KEY_PROFILE_PICTURE + " text, " +
                 DBConstants.KEY_VERIFICATION_STATUS + " integer default 0, " +
+                DBConstants.KEY_UPDATE_TIME + " long, " +
                 DBConstants.KEY_IS_MEMBER + " integer default 0)");
     }
 
@@ -62,7 +63,7 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         String sql = "create table if not exists " +
                 DBConstants.DB_TABLE_TRANSACTION_HISTORY + "(" +
                 DBConstants.KEY_TRANSACTION_HISTORY_TRANSACTION_ID + " text primary key, " +
-                DBConstants.KEY_TRANSACTION_HISTORY_ORIGINATING_MOBILE_NUMBER + " text not null, " +
+                DBConstants.KEY_TRANSACTION_HISTORY_ORIGINATING_MOBILE_NUMBER + " text, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_RECEIVER_INFO + " text," +
                 DBConstants.KEY_TRANSACTION_HISTORY_AMOUNT + " text, " +
                 DBConstants.KEY_TRANSACTION_HISTORY_FEE + " double, " +
@@ -136,6 +137,11 @@ public class DataBaseOpenHelper extends SQLiteOpenHelper {
         if (oldVersion < 4) {
             db.execSQL("drop table if exists " + DBConstants.DB_TABLE_TRANSACTION_HISTORY);
             createTransactionHistoryTrigger(db);
+        }
+
+        if (oldVersion < 5) {
+            db.execSQL("drop table if exists " + DBConstants.DB_TABLE_FRIENDS);
+            createFriendsTable(db);
         }
     }
 }

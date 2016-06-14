@@ -27,6 +27,7 @@ public class DBConstants {
     public static final String KEY_ACCOUNT_TYPE = "account_type";
     public static final String KEY_PROFILE_PICTURE = "profile_picture";
     public static final String KEY_IS_MEMBER = "is_member";
+    public static final String KEY_UPDATE_TIME = "update_at";
 
     // Push events table
     public static final String KEY_TAG_NAME = "tag_name";

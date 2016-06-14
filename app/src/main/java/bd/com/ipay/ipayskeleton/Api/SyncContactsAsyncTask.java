@@ -7,9 +7,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendResponse;
@@ -43,6 +46,30 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
     protected ContactEngine.ContactDiff doInBackground(String... params) {
         if (contactsSyncedOnce)
             return null;
+
+        DataHelper mDatahelper = DataHelper.getInstance(context);
+        List<FriendNode> databaseContacts = mDatahelper.getFriendList();
+
+        Map<String, FriendInfo> databaseMap = new HashMap<>();
+        for (FriendNode friend : databaseContacts) {
+            databaseMap.put(friend.getPhoneNumber(), friend.getInfo());
+        }
+
+        for (FriendNode serverFriend: serverContacts) {
+            if (databaseMap.containsKey(serverFriend.getPhoneNumber())) {
+                long serverUpdateTime = serverFriend.getInfo().getUpdateTime();
+                FriendInfo databaseFriend = databaseMap.get(serverFriend.getPhoneNumber());
+                long updateTime = databaseFriend.getUpdateTime();
+
+                if (serverUpdateTime > updateTime) {
+                    // Download the profile picture for the updated contacts and store it in local storage
+                    new DownloadImageFromUrlAsyncTask(serverFriend.getInfo().getProfilePictureUrl(), serverFriend.getPhoneNumber());
+                }
+            } else {
+                // Download the profile picture for the new contacts and store it in local storage
+                new DownloadImageFromUrlAsyncTask(serverFriend.getInfo().getProfilePictureUrl(), serverFriend.getPhoneNumber());
+            }
+        }
 
         List<FriendNode> phoneContacts = ContactEngine.getAllContacts(context);
 
