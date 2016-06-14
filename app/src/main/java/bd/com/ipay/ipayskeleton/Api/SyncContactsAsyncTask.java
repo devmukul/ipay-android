@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -54,9 +55,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
         contactsSyncedOnce = true;
 
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            List<FriendNode> phoneContacts = ContactEngine.getAllContacts(context);
         DataHelper mDatahelper = DataHelper.getInstance(context);
         List<FriendNode> databaseContacts = mDatahelper.getFriendList();
 
@@ -81,7 +79,9 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             }
         }
 
-        List<FriendNode> phoneContacts = ContactEngine.getAllContacts(context);
+        if (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            List<FriendNode> phoneContacts = ContactEngine.getAllContacts(context);
 
             ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
 
