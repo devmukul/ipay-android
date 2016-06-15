@@ -170,8 +170,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mProgressDialog.dismiss();
             mSaveInvoiceTask = null;
             if (getActivity() != null)

@@ -44,6 +44,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
     }
 
     private void switchToSendInviteFragment() {
+
         InviteFragment inviteFragment = new InviteFragment();
 
         Bundle bundle = new Bundle();
@@ -99,8 +100,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetProfileInfoTask = null;
             Toast.makeText(this, R.string.logout_failed, Toast.LENGTH_LONG).show();
             return;
@@ -108,9 +108,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
 
 
         Gson gson = new Gson();
-
         if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
-
             try {
                 mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
