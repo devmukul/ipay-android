@@ -1,4 +1,4 @@
-<bd.com.ipay.ipayskeleton.Custom_View.ParallaxScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<bd.com.ipay.ipayskeleton.CustomView.ParallaxScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
@@ -73,4 +73,4 @@
 
     </RelativeLayout>
 
-</bd.com.ipay.ipayskeleton.Custom_View.ParallaxScrollView>
+</bd.com.ipay.ipayskeleton.CustomView.ParallaxScrollView>

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Custom_View;
+package bd.com.ipay.ipayskeleton.CustomView;
 
 public interface OnOverScrollByListener {
     boolean overScrollBy(int deltaX, int deltaY, int scrollX,

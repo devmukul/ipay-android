@@ -12,7 +12,7 @@
         android:layout_marginBottom="4dp"
         android:orientation="horizontal">
 
-        <bd.com.ipay.ipayskeleton.Custom_View.ProfileImageView
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
             android:id="@+id/profile_picture"
             style="@style/ReviewImageStyle.Dialog" />
 

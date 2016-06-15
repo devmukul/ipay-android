@@ -25,11 +25,11 @@
                 android:orientation="horizontal">
 
 
-                <bd.com.ipay.ipayskeleton.Custom_View.ProfileImageView
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                     android:id="@+id/profile_picture"
                     style="@style/ReviewImageStyle">
 
-                </bd.com.ipay.ipayskeleton.Custom_View.ProfileImageView>
+                </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
                 <LinearLayout
                     android:layout_width="match_parent"

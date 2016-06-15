@@ -194,7 +194,7 @@
         android:text="@string/activity_log"
         android:textStyle="bold" />
 
-    <bd.com.ipay.ipayskeleton.Custom_View.CustomSwipeRefreshLayout
+    <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -203,6 +203,6 @@
             android:id="@+id/list_recent_activity_logs"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </bd.com.ipay.ipayskeleton.Custom_View.CustomSwipeRefreshLayout>
+    </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
 
 </LinearLayout>

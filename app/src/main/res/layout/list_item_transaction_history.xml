@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_vertical_margin_card"
     android:paddingTop="@dimen/value10">
 
-    <bd.com.ipay.ipayskeleton.Custom_View.ProfileImageView
+    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"
         android:layout_width="50dp"
         android:layout_height="50dp"

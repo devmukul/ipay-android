@@ -10,7 +10,7 @@
         android:padding="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="?android:attr/actionBarSize">
         
-        <bd.com.ipay.ipayskeleton.Custom_View.AddressInputView
+        <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
             android:id="@+id/input_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

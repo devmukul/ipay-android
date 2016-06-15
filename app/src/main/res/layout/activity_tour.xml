@@ -32,7 +32,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-        <bd.com.ipay.ipayskeleton.Custom_View.IconifiedButton
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedButton
             android:id="@+id/button_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,9 +40,9 @@
             custom:text="@string/log_in"
             custom:iconLeft="@drawable/ic_login">
 
-        </bd.com.ipay.ipayskeleton.Custom_View.IconifiedButton>
+        </bd.com.ipay.ipayskeleton.CustomView.IconifiedButton>
 
-        <bd.com.ipay.ipayskeleton.Custom_View.IconifiedButton
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedButton
             android:id="@+id/button_join_now"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             custom:iconLeft="@drawable/ic_signup"
             android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
 
-        </bd.com.ipay.ipayskeleton.Custom_View.IconifiedButton>
+        </bd.com.ipay.ipayskeleton.CustomView.IconifiedButton>
     </LinearLayout>
 
 </RelativeLayout>

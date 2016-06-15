@@ -36,7 +36,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Custom_View.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.GetActivityRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityResponse;
