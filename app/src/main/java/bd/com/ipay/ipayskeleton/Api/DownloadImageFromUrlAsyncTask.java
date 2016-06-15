@@ -36,7 +36,9 @@ public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String>
 
                 File file = new File(dir, mUserID.replaceAll("[^0-9]", "") + ".jpg");
 
-                URL url = new URL(Constants.BASE_URL_FTP_SERVER + mProfilePictureUrl);
+                URL url = new URL(mProfilePictureUrl);
+
+                Log.d("Picture URL : ", url.toString());
 
                 URLConnection connection = url.openConnection();
                 InputStream is = connection.getInputStream();

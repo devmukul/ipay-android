@@ -31,6 +31,8 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBraodcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPassOTPConfirmationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPassOTPConfirmationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.TrustedOtp;
@@ -52,6 +54,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
     private TextView mOtpSentInfo;
     private TextView mTimerTextView;
     private LinearLayout mTrustedOtpReceiverLayout;
+    private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
     private String mDeviceID;
     private List<TrustedOtpReceiver> mTrustedOtpReceivers;
@@ -107,6 +110,16 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
 
         mProgressDialog = new ProgressDialog(getActivity());
 
+        //enable broadcast receiver to get the text message to get the OTP
+        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
+        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getActivity(), new SMSReaderBraodcastReceiver.OnTextMessageReceivedListener() {
+            @Override
+            public void onTextMessageReceive(String otp) {
+                mOTPEditText.setText(otp);
+                mActivateButton.performClick();
+            }
+        });
+
         mResendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,6 +151,12 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
         }.start();
 
         return v;
+    }
+
+    @Override
+    public void onDestroy() {
+        mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(getActivity());
+        super.onDestroy();
     }
 
 

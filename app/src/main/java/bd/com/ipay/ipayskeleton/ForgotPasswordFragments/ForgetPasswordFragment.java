@@ -155,8 +155,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mProgressDialog.dismiss();
             mForgetPasswordTask = null;
             if (getActivity() != null)

@@ -211,11 +211,11 @@
     <string name="change_pass_failed">Failed to change password</string>
     <string name="recharge_success">Mobile recharge successfull.</string>
     <string name="pin_save_success">Pin saved successfully.</string>
-    <string name="otp_going_to_send">We are sending an OTP to your mobile number. Please enter the OTP in the box below.</string>
+    <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
     <string name="activate">Activate</string>
     <string name="verify">Verify</string>
-    <string name="resend_otp_description">If you did not receive the OTP in your mobile, please click the button Resend to send the OTP again.</string>
-    <string name="verify_otp_for_trust_description">You are going to login fist time from this device. Please verify the OTP sent to your mobile for a secure login.</string>
+    <string name="resend_otp_description">If you have not received the SMS, please press Resend Code after the time elapses</string>
+    <string name="verify_otp_for_trust_description">You are seeing this because you are logging in from this device for the first time or you have reached the maximum number of trusted devices that can be added</string>
     <string name="resend">Resend</string>
     <string name="not_implemented">Not implemented yet.</string>
     <string name="send_money">Send Money</string>

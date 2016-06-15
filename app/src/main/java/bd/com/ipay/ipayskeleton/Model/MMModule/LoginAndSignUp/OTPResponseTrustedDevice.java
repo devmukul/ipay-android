@@ -1,19 +1,20 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword;
+package bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp;
 
-public class ForgetPassOTPConfirmationResponse {
+
+public class OTPResponseTrustedDevice {
 
     private String message;
     private long otpValidFor;
 
-    public ForgetPassOTPConfirmationResponse() {
+    public OTPResponseTrustedDevice(){
 
     }
 
     public long getOtpValidFor() {
         return otpValidFor;
     }
-
     public String getMessage() {
         return message;
     }
 }
+

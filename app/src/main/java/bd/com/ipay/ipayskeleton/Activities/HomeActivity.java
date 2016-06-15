@@ -609,7 +609,7 @@ public class HomeActivity extends BaseActivity
                     if (profilePictures.size() > 0) {
                         for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
                             UserProfilePictureClass userProfilePictureClass = it.next();
-                            imageUrl = userProfilePictureClass.getUrl();
+                            imageUrl = Constants.BASE_URL_FTP_SERVER + userProfilePictureClass.getUrl();
                             break;
                         }
                     }
