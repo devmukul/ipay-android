@@ -16,7 +16,7 @@
             android:layout_marginBottom="16dp"
             android:text="Present Address"/>
 
-        <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
+        <bd.com.ipay.ipayskeleton.Custom_View.AddressInputView
             android:id="@+id/present_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -47,7 +47,7 @@
 
         </RelativeLayout>
 
-        <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
+        <bd.com.ipay.ipayskeleton.Custom_View.AddressInputView
             android:id="@+id/permanent_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             style="@style/AddressHeaderStyle"
             android:text="Office Address"/>
 
-        <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
+        <bd.com.ipay.ipayskeleton.Custom_View.AddressInputView
             android:id="@+id/office_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

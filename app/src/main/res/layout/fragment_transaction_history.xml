@@ -223,7 +223,7 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:text="@string/empty_transaction_history" />
 
-        <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
+        <bd.com.ipay.ipayskeleton.Custom_View.CustomSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -233,7 +233,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-        </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
+        </bd.com.ipay.ipayskeleton.Custom_View.CustomSwipeRefreshLayout>
     </LinearLayout>
 
 </LinearLayout>

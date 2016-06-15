@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
+package bd.com.ipay.ipayskeleton.Custom_View.Dialogs;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

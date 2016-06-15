@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import bd.com.ipay.ipayskeleton.CustomView.ParallaxScrollView;
+import bd.com.ipay.ipayskeleton.Custom_View.ParallaxScrollView;
 import bd.com.ipay.ipayskeleton.R;
 
 public class DetailsNewsActivity extends FragmentActivity {

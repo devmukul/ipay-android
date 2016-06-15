@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     android:padding="@dimen/activity_horizontal_margin_card">
 
-    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+    <bd.com.ipay.ipayskeleton.Custom_View.ProfileImageView
         android:id="@+id/profile_picture"
         android:layout_height="50dp"
         android:layout_width="50dp"

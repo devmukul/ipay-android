@@ -14,7 +14,7 @@
         android:textSize="@dimen/text_size_medium"
         android:textStyle="bold" />
 
-    <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
+    <bd.com.ipay.ipayskeleton.Custom_View.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             android:paddingBottom="@dimen/activity_horizontal_margin_double" />
 
 
-    </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
+    </bd.com.ipay.ipayskeleton.Custom_View.CustomSwipeRefreshLayout>
 
     <TextView
         android:id="@+id/empty_list_text"

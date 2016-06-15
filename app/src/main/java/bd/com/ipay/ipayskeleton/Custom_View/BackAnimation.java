@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.CustomView;
+package bd.com.ipay.ipayskeleton.Custom_View;
 
 
 import android.view.View;

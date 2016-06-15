@@ -18,7 +18,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
-import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
+import bd.com.ipay.ipayskeleton.Custom_View.AddressInputView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;

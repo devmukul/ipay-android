@@ -82,7 +82,7 @@
                 android:text="@string/present_address"
                 android:textStyle="bold" />
 
-            <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
+            <bd.com.ipay.ipayskeleton.Custom_View.AddressInputView
                 android:id="@+id/personal_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

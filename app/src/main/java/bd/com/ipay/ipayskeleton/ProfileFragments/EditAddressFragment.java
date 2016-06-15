@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
+import bd.com.ipay.ipayskeleton.Custom_View.AddressInputView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressResponse;
