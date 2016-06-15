@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import bd.com.ipay.ipayskeleton.R;
 
@@ -37,7 +39,7 @@ public class IconifiedButton extends FrameLayout {
     private void initView(Context context, AttributeSet attrs) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.view_iconified_button, this, true);
+        View v = inflater.inflate(R.layout.view_iconified_button, this, true);
 
         mImageView = (ImageView) findViewById(R.id.icon);
         mEditText = (Button) findViewById(R.id.button);
@@ -53,6 +55,25 @@ public class IconifiedButton extends FrameLayout {
 
             a.recycle();
         }
+
+        setBackgroundResource(R.drawable.background_iconified_button);
+
+//        v.setOnTouchListener(new OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.d("Event", event.getAction() + "");
+//
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        v.setBackgroundResource(R.drawable.background_iconified_button_pressed);
+//                        return true;
+//                    case MotionEvent.ACTION_UP:
+//                        v.setBackgroundResource(R.drawable.background_iconified_button_normal);
+//                        return true;
+//                }
+//                return false;
+//            }
+//        });
     }
 
     @Override
