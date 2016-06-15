@@ -20,7 +20,7 @@
         android:layout_weight="1"
         android:text="@string/do_you"
         android:fontFamily="sans-serif-thin"
-        android:textColor="@color/colorLightGray"
+        android:textColor="@android:color/white"
         android:textSize="36sp"
         android:layout_gravity="center_horizontal"/>
 

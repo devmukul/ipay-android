@@ -664,6 +664,9 @@
     <string name="log_in">LogIn</string>
     <string name="sign_up">SignUp</string>
     <string name="do_you">do you...</string>
+    <string name="send_money_to_your_friends_and_family">Send Money to your friends and family.</string>
+    <string name="request_money_from_your_friends_when_you_are_in_need">Request Money from your friends when you are in need.</string>
+    <string name="make_payments_for_your_purchases">Make Payments for your purchases.</string>
 
     <string-array name="account_types">
         <item>Personal</item>

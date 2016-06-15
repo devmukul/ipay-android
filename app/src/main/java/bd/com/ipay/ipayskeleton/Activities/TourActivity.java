@@ -31,7 +31,8 @@ public class TourActivity extends BaseActivity {
     private IconifiedButton buttonSignUp;
     private PagerIndicator mPagerIndicator;
 
-    private int[] tourBackgroundDrawables = {R.layout.tour_first_page, R.layout.tour_first_page, R.layout.tour_first_page};
+    private int[] tourBackgroundLayouts = {R.layout.tour_first_page, R.layout.tour_second_page,
+            R.layout.tour_third_page, R.layout.tour_fourth_page};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class TourActivity extends BaseActivity {
         mPagerIndicator = (PagerIndicator) findViewById(R.id.pager_indicator);
         mPagerIndicator.setup(R.drawable.pager_indicator_selected,
                 R.drawable.pager_indicator_unselected,
-                tourBackgroundDrawables.length);
+                tourBackgroundLayouts.length);
 
         tourPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -107,12 +108,12 @@ public class TourActivity extends BaseActivity {
         fragments = new ArrayList<>();
 
         boolean isLast = false;
-        for (int i = 0; i < tourBackgroundDrawables.length; i++) {
-            if (i < tourBackgroundDrawables.length - 1)
+        for (int i = 0; i < tourBackgroundLayouts.length; i++) {
+            if (i < tourBackgroundLayouts.length - 1)
                 isLast = false;
             else
                 isLast = true;
-            fragments.add(TourFragment.getInstance(tourBackgroundDrawables[i],
+            fragments.add(TourFragment.getInstance(tourBackgroundLayouts[i],
                     isLast));
         }
     }
