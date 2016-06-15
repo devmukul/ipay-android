@@ -518,6 +518,6 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/colorLightGray</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:background">background_rounded_white_button</item>
+        <item name="android:background">@drawable/background_rounded_white_button</item>
     </style>
 </resources>
