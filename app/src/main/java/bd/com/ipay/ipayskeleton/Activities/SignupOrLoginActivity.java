@@ -137,8 +137,8 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     }
 
     public void switchToHomeActivity() {
-        finish();
         Intent intent = new Intent(SignupOrLoginActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         this.finish();
     }
@@ -160,5 +160,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).commit();
         switchedToAccountSelection = false;
     }
+
 }
 
