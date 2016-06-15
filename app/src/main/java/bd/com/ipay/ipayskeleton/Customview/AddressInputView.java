@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Customview;
+package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
 import android.os.AsyncTask;

@@ -158,7 +158,7 @@
             </LinearLayout>
 
 
-            <bd.com.ipay.ipayskeleton.Customview.AddressInputView
+            <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
                 android:id="@+id/personal_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

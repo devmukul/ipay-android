@@ -42,4 +42,5 @@
 
     <color name="home_background">#E5E5E5</color>
     <color name="verified_background">#009688</color>
+    <color name="background_iconified_button_icon">#2ba4c5</color>
 </resources>

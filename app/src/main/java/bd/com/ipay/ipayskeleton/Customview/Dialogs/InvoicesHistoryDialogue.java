@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Customview.Dialogs;
+package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.content.Context;
 import android.graphics.Color;

@@ -1,10 +1,8 @@
-package bd.com.ipay.ipayskeleton.Customview;
+package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;

@@ -18,8 +18,9 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedButton;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Customview.PagerIndicator;
+import bd.com.ipay.ipayskeleton.CustomView.PagerIndicator;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class TourActivity extends BaseActivity {
@@ -27,8 +28,8 @@ public class TourActivity extends BaseActivity {
     private ViewPager tourPager;
     private TourPagerAdapter mAdapter;
     private ArrayList<Fragment> fragments;
-    private Button buttonLogin;
-    private Button buttonSignUp;
+    private IconifiedButton buttonLogin;
+    private IconifiedButton buttonSignUp;
     private PagerIndicator mPagerIndicator;
 
     private int[] tourBackgroundDrawables = {R.drawable.tour01,
@@ -41,8 +42,8 @@ public class TourActivity extends BaseActivity {
 
         getSupportActionBar().hide();
 
-        buttonLogin = (Button) findViewById(R.id.button_sign_in);
-        buttonSignUp = (Button) findViewById(R.id.button_join_now);
+        buttonLogin = (IconifiedButton) findViewById(R.id.button_sign_in);
+        buttonSignUp = (IconifiedButton) findViewById(R.id.button_join_now);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override

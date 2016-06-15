@@ -180,7 +180,7 @@
                 style="@style/HomeSecondaryButton"/>
         </LinearLayout>
 
-        <bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout
+        <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -191,7 +191,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
-        </bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout>
+        </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
 
     </LinearLayout>
 

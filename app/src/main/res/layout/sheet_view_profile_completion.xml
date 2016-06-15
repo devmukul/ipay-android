@@ -15,14 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <bd.com.ipay.ipayskeleton.Customview.CircularProgressBar
+        <bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true">
 
-        </bd.com.ipay.ipayskeleton.Customview.CircularProgressBar>
+        </bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar>
 
         <TextView
             android:id="@+id/profile_completion_message"

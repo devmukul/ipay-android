@@ -1,7 +1,6 @@
-package bd.com.ipay.ipayskeleton.Customview;
+package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.AttributeSet;
@@ -17,7 +16,6 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.io.File;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonDrawableList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

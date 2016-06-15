@@ -1,15 +1,13 @@
-package bd.com.ipay.ipayskeleton.Customview.Dialogs;
+package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.internal.MDButton;
 
 import bd.com.ipay.ipayskeleton.R;
 

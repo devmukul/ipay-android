@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Customview.Dialogs;
+package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 public interface ReviewDialogFinishListener {
     void onReviewFinish();

@@ -62,7 +62,7 @@
                     android:layout_weight="2" />
             </LinearLayout>
 
-            <bd.com.ipay.ipayskeleton.Customview.AddressInputView
+            <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
                 android:id="@+id/business_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

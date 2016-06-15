@@ -34,13 +34,11 @@ import java.util.Date;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Customview.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.GetActivityRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
