@@ -31,8 +31,7 @@ public class TourActivity extends BaseActivity {
     private IconifiedButton buttonSignUp;
     private PagerIndicator mPagerIndicator;
 
-    private int[] tourBackgroundDrawables = {R.drawable.tour01,
-            R.drawable.tour02, R.drawable.tour03};
+    private int[] tourBackgroundDrawables = {R.layout.tour_first_page, R.layout.tour_first_page, R.layout.tour_first_page};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,31 +61,31 @@ public class TourActivity extends BaseActivity {
             }
         });
 
-//        initFragments();
-//        tourPager = (ViewPager) findViewById(R.id.tour_pager);
-//        mAdapter = new TourPagerAdapter(getSupportFragmentManager(), fragments);
-//        tourPager.setAdapter(mAdapter);
-//
-//        mPagerIndicator = (PagerIndicator) findViewById(R.id.pager_indicator);
-//        mPagerIndicator.setup(R.drawable.pager_indicator_selected,
-//                R.drawable.pager_indicator_unselected,
-//                tourBackgroundDrawables.length);
-//
-//        tourPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                mPagerIndicator.setSelectedPosition(position);
-//            }
-//
-//            @Override
-//            public void onPageScrolled(int arg0, float arg1, int arg2) {
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int arg0) {
-//            }
-//        });
+        initFragments();
+        tourPager = (ViewPager) findViewById(R.id.tour_pager);
+        mAdapter = new TourPagerAdapter(getSupportFragmentManager(), fragments);
+        tourPager.setAdapter(mAdapter);
+
+        mPagerIndicator = (PagerIndicator) findViewById(R.id.pager_indicator);
+        mPagerIndicator.setup(R.drawable.pager_indicator_selected,
+                R.drawable.pager_indicator_unselected,
+                tourBackgroundDrawables.length);
+
+        tourPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                mPagerIndicator.setSelectedPosition(position);
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+            }
+        });
     }
 
     @Override
@@ -105,7 +104,7 @@ public class TourActivity extends BaseActivity {
     }
 
     private void initFragments() {
-        fragments = new ArrayList<Fragment>();
+        fragments = new ArrayList<>();
 
         boolean isLast = false;
         for (int i = 0; i < tourBackgroundDrawables.length; i++) {
@@ -120,22 +119,22 @@ public class TourActivity extends BaseActivity {
 
     public static class TourFragment extends Fragment {
 
-        int backgroundDrawable;
-        boolean isLast = false;
-
-        private void setBackgroundDrawable(int drawable) {
-            this.backgroundDrawable = drawable;
-        }
+        private boolean isLast = false;
+        private int layout;
 
         private void setIsLast(boolean last) {
             this.isLast = last;
         }
 
-        public static TourFragment getInstance(int drawable, boolean isLast) {
+        public static TourFragment getInstance(int layout, boolean isLast) {
             TourFragment fragment = new TourFragment();
-            fragment.setBackgroundDrawable(drawable);
+            fragment.setLayout(layout);
             fragment.setIsLast(isLast);
             return fragment;
+        }
+
+        public void setLayout(int layout) {
+            this.layout = layout;
         }
 
         @Nullable
@@ -143,9 +142,7 @@ public class TourActivity extends BaseActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View view = inflater.inflate(R.layout.fragment_tour, null);
-
-            view.setBackgroundResource(backgroundDrawable);
+            View view = inflater.inflate(layout, null);
 
             return view;
         }
@@ -155,8 +152,7 @@ public class TourActivity extends BaseActivity {
 
         ArrayList<Fragment> fragments;
 
-        public TourPagerAdapter(FragmentManager fm,
-                                ArrayList<Fragment> fragments) {
+        public TourPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
             super(fm);
             this.fragments = fragments;
         }

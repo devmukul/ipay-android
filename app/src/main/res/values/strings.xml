@@ -663,6 +663,7 @@
     <string name="request_for_camera_permission">QR code scanner requires camera permission to work properly</string>
     <string name="log_in">LogIn</string>
     <string name="sign_up">SignUp</string>
+    <string name="do_you">do you...</string>
 
     <string-array name="account_types">
         <item>Personal</item>

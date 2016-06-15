@@ -2,9 +2,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval" >
 
-    <size android:width="2dp"
-        android:height="2dp"/>
+    <size android:width="@dimen/pager_indicator_size"
+        android:height="@dimen/pager_indicator_size"/>
 
-    <solid android:color="@color/colorPrimaryLight"/>
+    <solid android:color="@android:color/white"/>
 
 </shape>

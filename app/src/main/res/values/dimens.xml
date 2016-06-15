@@ -41,4 +41,5 @@
     <dimen name="divider_space">1dp</dimen>
     <dimen name="iconified_button_border_width">1dp</dimen>
     <dimen name="iconified_button_radius">3dp</dimen>
+    <dimen name="pager_indicator_size">8dp</dimen>
 </resources>

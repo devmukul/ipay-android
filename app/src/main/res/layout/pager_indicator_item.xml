@@ -2,7 +2,7 @@
 <ImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pager_indicator_image"
-    android:layout_width="15dp"
-    android:layout_height="12dp"
-    android:layout_margin="3dp"
+    android:layout_width="@dimen/pager_indicator_size"
+    android:layout_height="@dimen/pager_indicator_size"
+    android:layout_margin="5dp"
     android:src="@drawable/pager_indicator_selected" />
