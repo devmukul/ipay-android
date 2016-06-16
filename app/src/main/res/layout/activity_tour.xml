@@ -35,8 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/value5"
-            custom:text="@string/log_in"
-            custom:iconLeft="@drawable/ic_login">
+            android:text="@string/log_in"
+            android:drawableLeft="@drawable/ic_login">
 
         </bd.com.ipay.ipayskeleton.CustomView.IconifiedButton>
 
@@ -44,8 +44,8 @@
             android:id="@+id/button_join_now"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            custom:text="@string/sign_up"
-            custom:iconLeft="@drawable/ic_signup"
+            android:text="@string/sign_up"
+            android:drawableLeft="@drawable/ic_signup"
             android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
 
         </bd.com.ipay.ipayskeleton.CustomView.IconifiedButton>

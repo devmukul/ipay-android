@@ -12,9 +12,21 @@
     </declare-styleable>
 
     <declare-styleable name="IconifiedButton">
-        <attr name="text" format="string" />
-        <attr name="hint" format="string" />
-        <attr name="iconLeft" format="reference" />
+        <attr name="android:text"/>
+        <attr name="android:drawableLeft" />
+    </declare-styleable>
+
+    <declare-styleable name="IconifiedEditText">
+        <attr name="android:text" />
+        <attr name="android:hint" />
+        <attr name="android:drawableLeft" />
+        <attr name="android:imeActionLabel" />
+        <attr name="android:inputType" />
+        <attr name="android:maxLength" />
+        <attr name="borderType" format="integer">
+            <flag name="up" value="0x1"/>
+            <flag name="down" value="0x2"/>
+        </attr>
     </declare-styleable>
 
 </resources>

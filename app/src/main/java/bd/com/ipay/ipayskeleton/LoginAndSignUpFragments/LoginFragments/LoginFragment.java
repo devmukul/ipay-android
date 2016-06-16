@@ -22,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
@@ -35,8 +36,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
 
-    private EditText mUserNameLoginView;
-    private EditText mPasswordLoginView;
+    private IconifiedEditText mUserNameLoginView;
+    private IconifiedEditText mPasswordLoginView;
     private Button mButtonLogin;
     private Button mButtonForgetPassword;
     private String mPasswordLogin;
@@ -63,8 +64,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         mButtonLogin = (Button) v.findViewById(R.id.login_button);
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
-        mUserNameLoginView = (EditText) v.findViewById(R.id.login_mobile_number);
-        mPasswordLoginView = (EditText) v.findViewById(R.id.login_password);
+        mUserNameLoginView = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
+        mPasswordLoginView = (IconifiedEditText) v.findViewById(R.id.login_password);
 
         putConstantStringInfront(mUserNameLoginView, "+880");
 
@@ -107,7 +108,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         return v;
     }
 
-    void putConstantStringInfront(final EditText edt, final String constString) {
+    void putConstantStringInfront(final IconifiedEditText edt, final String constString) {
         edt.setText(constString);
         Selection.setSelection(edt.getText(), edt.getText().length());
 

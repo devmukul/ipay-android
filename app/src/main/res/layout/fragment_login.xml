@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,77 +30,67 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_user_pic" />
 
-            <RelativeLayout
+            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+                android:id="@+id/login_mobile_number"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_half_upper_round_white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:drawableLeft="@drawable/ic_number"
+                android:hint="@string/prompt_mobile"
+                android:inputType="phone"
+                custom:borderType="up"
+                android:maxLength="14">
 
-                <ImageView
-                    android:id="@+id/iv_mobile_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="@dimen/value10"
-                    android:layout_marginRight="@dimen/value20"
-                    android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_number" />
-
-                <EditText
-                    android:id="@+id/login_mobile_number"
-                    android:layout_toRightOf="@+id/iv_mobile_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="@string/prompt_mobile"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:inputType="phone"
-                    android:maxLength="14"
-                    android:paddingTop="@dimen/value15"
-                    android:textSize="@dimen/text_size_small_medium">
-                </EditText>
-
-            </RelativeLayout>
+            </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/divider_space"
                 android:background="@color/colorDivider" />
 
-            <RelativeLayout
+            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+                android:id="@+id/login_password"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_half_lower_round_white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:drawableLeft="@drawable/ic_password"
+                android:hint="@string/prompt_password_new"
+                android:inputType="textPassword"
+                custom:borderType="down"
+                android:maxLength="14">
 
-                <ImageView
-                    android:id="@+id/password"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="@dimen/value10"
-                    android:layout_marginRight="@dimen/value20"
-                    android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_password" />
+            </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
-                <EditText
-                    android:id="@+id/login_password"
-                    android:layout_toRightOf="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="@string/prompt_password_new"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:inputType="textPassword"
-                    android:paddingTop="@dimen/value15"
-                    android:textSize="@dimen/text_size_small_medium" />
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/background_half_lower_round_white"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal">-->
 
-            </RelativeLayout>
+                <!--<ImageView-->
+                    <!--android:id="@+id/password"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_marginLeft="@dimen/value10"-->
+                    <!--android:layout_marginRight="@dimen/value20"-->
+                    <!--android:paddingBottom="@dimen/value5"-->
+                    <!--android:paddingTop="@dimen/value5"-->
+                    <!--android:src="@drawable/ic_password" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/login_password"-->
+                    <!--android:layout_toRightOf="@+id/password"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@null"-->
+                    <!--android:hint="@string/prompt_password_new"-->
+                    <!--android:imeActionId="@+id/login"-->
+                    <!--android:imeActionLabel="@string/action_sign_in_short"-->
+                    <!--android:inputType="textPassword"-->
+                    <!--android:paddingTop="@dimen/value15"-->
+                    <!--android:textSize="@dimen/text_size_small_medium" />-->
+
+            <!--</RelativeLayout>-->
 
             <Button
                 android:id="@+id/login_button"
