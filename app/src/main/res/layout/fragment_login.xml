@@ -10,108 +10,131 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <LinearLayout
             android:id="@+id/ipay_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:orientation="vertical">
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/value30"
+                android:layout_marginTop="@dimen/value30"
+                android:clickable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_user_pic" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_half_upper_round_white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/iv_mobile_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/value10"
+                    android:layout_marginRight="@dimen/value20"
+                    android:paddingBottom="@dimen/value5"
+                    android:paddingTop="@dimen/value5"
+                    android:src="@drawable/ic_number" />
+                <EditText
+                    android:id="@+id/login_mobile_number"
+                    android:layout_toRightOf="@+id/iv_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/prompt_mobile"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:inputType="phone"
+                    android:maxLength="14"
+                    android:paddingTop="@dimen/value15"
+                    android:textSize="@dimen/text_size_small_medium">
+                </EditText>
+            </RelativeLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_half_lower_round_white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/iv_flag"
-                    android:layout_width="45dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/tlayout"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginRight="10dp"
-                    android:paddingBottom="10dp"
-                    android:src="@drawable/flag_bd" />
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/tlayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_flag">
-
-                    <EditText
-                        android:id="@+id/login_mobile_number"
-                        style="@style/LoginEditTextStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/mobile_number"
-                        android:inputType="phone"
-                        android:maxLength="14"
-                        android:text="+880">
-
-                        <requestFocus />
-                    </EditText>
-
-                </android.support.design.widget.TextInputLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/dummy_flag"
-                    android:layout_width="45dp"
+                    android:id="@+id/password"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginRight="10dp"
-                    android:paddingBottom="10dp"
-                    android:src="@drawable/flag_bd"
-                    android:visibility="invisible" />
-
-                <android.support.design.widget.TextInputLayout
+                    android:layout_marginLeft="@dimen/value10"
+                    android:layout_marginRight="@dimen/value20"
+                    android:paddingBottom="@dimen/value5"
+                    android:paddingTop="@dimen/value5"
+                    android:src="@drawable/ic_password" />
+                <EditText
+                    android:id="@+id/login_password"
+                    android:layout_toRightOf="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/dummy_flag">
+                    android:background="@null"
+                    android:hint="@string/prompt_password_new"
+                    android:imeActionId="@+id/login"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:inputType="textPassword"
+                    android:paddingTop="@dimen/value15"
+                    android:textSize="@dimen/text_size_small_medium" />
 
-                    <EditText
-                        android:id="@+id/login_password"
-                        style="@style/LoginEditTextStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/prompt_password"
-                        android:imeActionId="@+id/login"
-                        android:imeActionLabel="@string/action_sign_in_short"
-                        android:inputType="textPassword" />
-
-                </android.support.design.widget.TextInputLayout>
             </RelativeLayout>
-
             <Button
                 android:id="@+id/login_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:background="@color/colorAmber"
+                android:background="@drawable/background_rounded_white_button"
                 android:fontFamily="sans-serif"
+                android:paddingBottom="@dimen/value15"
+                android:paddingTop="@dimen/value15"
                 android:text="@string/action_login"
-                android:textAllCaps="false" />
-
-            <Button
-                android:id="@+id/forget_password_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
-                android:background="@android:color/transparent"
-                android:clickable="true"
-                android:text="@string/forgot_password"
                 android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textColor="@color/colorLightGray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/join_us_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="left|center_vertical"
+                    android:text="@string/join_us"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorLightGray"
+                    android:textSize="@dimen/text_size_small" />
+
+                <Button
+                    android:id="@+id/forget_password_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical|right"
+                    android:text="@string/forgot_password"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorLightGray"
+                    android:textSize="@dimen/text_size_small" />
+            </RelativeLayout>
 
         </LinearLayout>
     </RelativeLayout>
