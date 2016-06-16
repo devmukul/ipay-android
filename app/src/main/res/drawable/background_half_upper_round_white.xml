@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#ffffff" />
+            <solid android:color="@android:color/white" />
             <!-- A numeric value is specified in "radius" for demonstrative purposes only,
                   it should be @dimen/val_name -->
             <corners android:radius="3dp" />
@@ -11,7 +11,7 @@
     <!-- To keep the TOP-LEFT corner UNROUNDED set both OPPOSITE offsets (bottom+right): -->
     <item android:top="10dp">
         <shape android:shape="rectangle">
-            <solid android:color="#ffffff" />
+            <solid android:color="@android:color/white" />
         </shape>
     </item>
 </layer-list>
