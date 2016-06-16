@@ -518,7 +518,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/colorLightGray</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:background">@drawable/background_rounded_white_button</item>
+        <item name="android:background">@drawable/background_iconified_button</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:paddingTop">@dimen/value15</item>
         <item name="android:paddingBottom">@dimen/value15</item>
