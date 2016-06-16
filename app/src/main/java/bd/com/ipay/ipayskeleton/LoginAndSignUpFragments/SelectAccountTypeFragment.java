@@ -9,12 +9,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedButton;
 import bd.com.ipay.ipayskeleton.R;
 
 public class SelectAccountTypeFragment extends Fragment {
 
-    private Button buttonAccountTypePersonal;
-    private Button buttonAccountTypeBusiness;
+    private IconifiedButton buttonAccountTypePersonal;
+    private IconifiedButton buttonAccountTypeBusiness;
 
     @Override
     public void onResume() {
@@ -27,8 +28,8 @@ public class SelectAccountTypeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_select_account_type, container, false);
 
-        buttonAccountTypePersonal = (Button) v.findViewById(R.id.button_account_type_personal);
-        buttonAccountTypeBusiness = (Button) v.findViewById(R.id.button_account_type_business);
+        buttonAccountTypePersonal = (IconifiedButton) v.findViewById(R.id.button_account_type_personal);
+        buttonAccountTypeBusiness = (IconifiedButton) v.findViewById(R.id.button_account_type_business);
 
         buttonAccountTypePersonal.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBraodcastReceiver;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestTrustedDevice;
@@ -45,7 +46,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     private OTPResponseTrustedDevice mOTPResponseTrustedDevice;
 
     private Button mActivateButton;
-    private EditText mOTPEditText;
+    private IconifiedEditText mOTPEditText;
     private TextView mTimerTextView;
     private Button mResendOTPButton;
 
@@ -68,7 +69,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
-        mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
+        mOTPEditText = (IconifiedEditText) v.findViewById(R.id.otp_edittext);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
 
         mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
@@ -111,7 +112,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
-        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000-500) {
 
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
@@ -119,7 +120,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
             public void onFinish() {
 
-                mTimerTextView.setVisibility(View.INVISIBLE);
+                //mTimerTextView.setVisibility(View.INVISIBLE);
                 mResendOTPButton.setEnabled(true);
             }
         }.start();

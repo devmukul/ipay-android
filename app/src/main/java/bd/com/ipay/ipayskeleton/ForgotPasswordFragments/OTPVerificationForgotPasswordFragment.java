@@ -138,7 +138,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
-        new CountDownTimer(mForgetPassOTPConfirmationResponse.getOtpValidFor(), 1000) {
+        new CountDownTimer(1800000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));

@@ -77,8 +77,8 @@
     <string name="error_invalid_last_name">Please enter last name</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
     <string name="error_loading_data">Error loading data. Please try again.</string>
-    <string name="forgot_password"><u>Forgot your password?</u></string>
-    <string name="join_us"><u>Join Us</u></string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="join_us">Join Us</string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="enter_the_amount_we_sent">Enter the amount we sent to your bank account here.</string>
     <string name="are_you_sure">Are you sure?</string>
@@ -203,7 +203,7 @@
     <string name="login_failed_different_user">Login failed. Please check your login ID.</string>
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
-    <string name="enter_otp">Enter OTP</string>
+    <string name="enter_otp">Enter Code</string>
     <string name="enter_promo_code">Invitation Code</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
@@ -219,7 +219,7 @@
     <string name="verify">Verify</string>
     <string name="resend_otp_description">If you have not received the SMS, please press Resend Code after the time elapses</string>
     <string name="verify_otp_for_trust_description">You are seeing this because you are logging in from this device for the first time or you have reached the maximum number of trusted devices that can be added</string>
-    <string name="resend">Resend</string>
+    <string name="resend">Resend Code</string>
     <string name="not_implemented">Not implemented yet.</string>
     <string name="send_money">Send Money</string>
     <string name="continue_send_money">Continue</string>
@@ -338,7 +338,7 @@
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
     <string name="end_date">End date (dd/mm/yyyy)</string>
-    <string name="sign_up_with_ipay">Sign up with iPay</string>
+    <string name="sign_up_with_ipay">sign up with iPay</string>
     <string name="sign_in">Sign In</string>
     <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
     <string name="please_fill_up_the_following">Please fill up the following information</string>
@@ -415,10 +415,10 @@
     <string name="title_signup_personal_page">Sign up with iPay</string>
     <string name="title_signup_business_page">Sign up with iPay</string>
     <string name="title_forget_password_page">Reset Password</string>
-    <string name="title_otp_verification_for_personal">Verify OTP</string>
-    <string name="title_otp_verification_for_add_trusted_device">Verify OTP</string>
-    <string name="title_otp_verification_for_business">Verify OTP</string>
-    <string name="title_select_account_type_page">Welcome to iPay</string>
+    <string name="title_otp_verification_for_personal">Enter Code</string>
+    <string name="title_otp_verification_for_add_trusted_device">Enter Code</string>
+    <string name="title_otp_verification_for_business">Enter Code</string>
+    <string name="title_select_account_type_page">Welcome</string>
 
     <!-- ARCA -->
     <string name="crash_toast_text">Ooooops! I crashed, but a report has been sent to my developer to help fix the issue !</string>

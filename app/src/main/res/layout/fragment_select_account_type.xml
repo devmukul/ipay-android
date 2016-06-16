@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/account_selection_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    android:padding="@dimen/activity_vertical_margin">
+    android:padding="@dimen/activity_horizontal_margin_card">
 
-    <TextView
-        style="@style/TextStylePrimarySmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:fontFamily="sans-serif"
-        android:text="@string/sign_up_with_ipay"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_vertical_margin_double">
 
-        <Button
-            android:id="@+id/button_account_type_personal"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/account_type_personal"
-            style="@style/SignUpButton"/>
-
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/logo_ipay_full_size" />
 
         <TextView
-            style="@style/TextStylePrimarySmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:fontFamily="sans-serif"
-            android:text="@string/or"
-            android:textSize="14sp" />
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif-thin"
+            android:text="@string/sign_up_with_ipay"
+            android:textColor="@android:color/white"
+            android:textSize="36sp" />
 
-        <Button
-            android:id="@+id/button_account_type_business"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/account_type_business"
-            style="@style/SignUpButton" />
     </LinearLayout>
 
-    <!--<TextView
-        style="@style/TextStylePrimarySmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:text="@string/have_an_existing_account" />
 
-    <Button
-        android:id="@+id/login_with_existing_account"
-        style="@style/ButtonStyleMedium"
+    <LinearLayout
+        android:id="@+id/button_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:text="@string/login_with_existing_account" />-->
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/activity_vertical_margin_card"
+        android:orientation="vertical">
+
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedButton
+            android:id="@+id/button_account_type_personal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/value5"
+            android:drawableLeft="@drawable/ic_personal"
+            android:text="@string/account_type_personal">
+
+
+        </bd.com.ipay.ipayskeleton.CustomView.IconifiedButton>
+
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedButton
+            android:id="@+id/button_account_type_business"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+            android:drawableLeft="@drawable/ic_business"
+            android:text="@string/account_type_business">
+
+        </bd.com.ipay.ipayskeleton.CustomView.IconifiedButton>
+
+    </LinearLayout>
 
 </RelativeLayout>

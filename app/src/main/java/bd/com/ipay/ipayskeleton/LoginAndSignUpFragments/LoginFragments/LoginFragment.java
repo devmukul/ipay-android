@@ -40,6 +40,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private IconifiedEditText mPasswordLoginView;
     private Button mButtonLogin;
     private Button mButtonForgetPassword;
+    private Button mButtonJoinUs;
     private String mPasswordLogin;
     private String mUserNameLogin;
 
@@ -64,6 +65,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         mButtonLogin = (Button) v.findViewById(R.id.login_button);
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
+        mButtonJoinUs = (Button) v.findViewById(R.id.join_us_button);
         mUserNameLoginView = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
         mPasswordLoginView = (IconifiedEditText) v.findViewById(R.id.login_password);
 
@@ -89,6 +91,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        mButtonJoinUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SignupOrLoginActivity) getActivity()).switchToAccountSelectionFragment();
+            }
+        });
+
         if (SignupOrLoginActivity.mMobileNumber != null) {
             // Delete +880 from the prefix
             String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(SignupOrLoginActivity.mMobileNumber);
@@ -106,6 +115,12 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         }
 
         return v;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utilities.hideKeyboard(getContext(),getView());
     }
 
     void putConstantStringInfront(final IconifiedEditText edt, final String constString) {
