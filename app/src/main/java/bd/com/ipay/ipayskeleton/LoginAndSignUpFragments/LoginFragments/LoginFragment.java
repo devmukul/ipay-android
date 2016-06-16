@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
@@ -36,6 +37,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
 
+    private ProfileImageView mProfileImageView;
     private IconifiedEditText mUserNameLoginView;
     private IconifiedEditText mPasswordLoginView;
     private Button mButtonLogin;
@@ -66,6 +68,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonLogin = (Button) v.findViewById(R.id.login_button);
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
         mButtonJoinUs = (Button) v.findViewById(R.id.join_us_button);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mUserNameLoginView = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
         mPasswordLoginView = (IconifiedEditText) v.findViewById(R.id.login_password);
 
@@ -112,6 +115,16 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mPasswordLoginView.setText("qqqqqqq1");
             //           mUserNameLoginView.setText("+8801677258077");
             attemptLogin();
+        }
+
+        boolean imageLoadedFromDisk = false;
+        if (pref.contains(Constants.USERID)) {
+            String phoneNumber = pref.getString(Constants.USERID, null);
+            imageLoadedFromDisk = mProfileImageView.setProfilePictureFromDisk(phoneNumber);
+        }
+
+        if (!imageLoadedFromDisk) {
+            mProfileImageView.setProfilePicture(R.drawable.ic_user_pic);
         }
 
         return v;
