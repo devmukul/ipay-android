@@ -515,8 +515,9 @@
 
     <style name="PrimaryButton" parent="@android:style/Widget.Holo.Button">
         <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/colorLightGray</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:background">@drawable/background_iconified_button</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
