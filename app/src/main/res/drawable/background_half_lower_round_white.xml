@@ -8,7 +8,7 @@
         <corners android:radius="3dp" />
     </shape>
 </item>
-<!-- To keep the TOP-LEFT corner UNROUNDED set both OPPOSITE offsets (bottom+right): -->
+<!-- To keep the lower corner UNROUNDED set both OPPOSITE offsets (bottom): -->
 <item
     android:bottom="10dp"
 
