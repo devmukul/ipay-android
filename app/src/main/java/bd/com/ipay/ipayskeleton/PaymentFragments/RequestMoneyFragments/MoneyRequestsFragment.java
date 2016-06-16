@@ -356,7 +356,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
                 } else mTitleView.setVisibility(View.GONE);
 
-                mProfileImageView.setInformation(imageUrl, name);
+                mProfileImageView.setInformation(Constants.BASE_URL_FTP_SERVER + imageUrl, name);
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {

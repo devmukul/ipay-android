@@ -262,7 +262,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                     }
                 });
 
-                mProfileImageView.setInformation(imageUrl, name);
+                mProfileImageView.setInformation(Constants.BASE_URL_FTP_SERVER + imageUrl, name);
 
             }
         }

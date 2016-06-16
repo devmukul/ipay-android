@@ -50,9 +50,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         if (contactsSyncedOnce)
             return null;
 
-        DataHelper dataHelper = DataHelper.getInstance(context);
-        dataHelper.createFriends(serverContacts);
-
         contactsSyncedOnce = true;
 
         DataHelper mDatahelper = DataHelper.getInstance(context);
@@ -64,6 +61,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         }
 
         for (FriendNode serverFriend: serverContacts) {
+            String profilePictureUrl = serverFriend.getInfo().getProfilePictureUrl();
+
             if (databaseMap.containsKey(serverFriend.getPhoneNumber())) {
                 long serverUpdateTime = serverFriend.getInfo().getUpdateTime();
                 FriendInfo databaseFriend = databaseMap.get(serverFriend.getPhoneNumber());
@@ -71,13 +70,20 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
                 if (serverUpdateTime > updateTime) {
                     // Download the profile picture for the updated contacts and store it in local storage
-                    new DownloadImageFromUrlAsyncTask(serverFriend.getInfo().getProfilePictureUrl(), serverFriend.getPhoneNumber());
+                    Log.d("Downloading picture", "Download the profile picture for the updated contacts and store it in local storage");
+                    if (profilePictureUrl != null && !profilePictureUrl.isEmpty())
+                        new DownloadImageFromUrlAsyncTask(profilePictureUrl, serverFriend.getPhoneNumber());
                 }
             } else {
                 // Download the profile picture for the new contacts and store it in local storage
-                new DownloadImageFromUrlAsyncTask(serverFriend.getInfo().getProfilePictureUrl(), serverFriend.getPhoneNumber());
+                Log.d("Downloading picture", "Download the profile picture for the new contacts and store it in local storage");
+                if (profilePictureUrl != null && !profilePictureUrl.isEmpty())
+                    new DownloadImageFromUrlAsyncTask(profilePictureUrl, serverFriend.getPhoneNumber());
             }
         }
+
+        DataHelper dataHelper = DataHelper.getInstance(context);
+        dataHelper.createFriends(serverContacts);
 
         if (ContextCompat.checkSelfPermission(context,
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
