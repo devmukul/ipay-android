@@ -27,4 +27,11 @@
         android:textSize="@dimen/text_size_small_medium">
     </EditText>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_space"
+        android:background="@color/colorDivider"
+        android:layout_below="@+id/icon"/>
+
 </RelativeLayout>

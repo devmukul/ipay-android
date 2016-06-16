@@ -23,6 +23,7 @@ public class IconifiedEditText extends FrameLayout {
 
     private ImageView mImageView;
     private EditText mEditText;
+    private View mDivider;
 
     public IconifiedEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -46,6 +47,7 @@ public class IconifiedEditText extends FrameLayout {
 
         mImageView = (ImageView) findViewById(R.id.icon);
         mEditText = (EditText) findViewById(R.id.edit_text);
+        mDivider = findViewById(R.id.divider);
 
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconifiedEditText, 0, 0);
@@ -75,12 +77,18 @@ public class IconifiedEditText extends FrameLayout {
             // Corresponding values can be found in attr.xml
             switch (borderType) {
                 case 0x0:
+                    v.setBackgroundResource(R.drawable.background_no_round_white);
                     break;
                 case 0x1:
                     v.setBackgroundResource(R.drawable.background_half_upper_round_white);
                     break;
                 case 0x2:
                     v.setBackgroundResource(R.drawable.background_half_lower_round_white);
+                    mDivider.setVisibility(View.GONE);
+                    break;
+                case 0x1|0x2:
+                    v.setBackgroundResource(R.drawable.background_rounded_white);
+                    mDivider.setVisibility(View.GONE);
                     break;
             }
 
