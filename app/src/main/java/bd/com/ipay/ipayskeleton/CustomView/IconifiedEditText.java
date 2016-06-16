@@ -62,8 +62,6 @@ public class IconifiedEditText extends FrameLayout {
             int maxLength = a.getInt(R.styleable.IconifiedEditText_android_maxLength, -1);
             int borderType = a.getInt(R.styleable.IconifiedEditText_borderType, 0x0);
 
-            Log.d("Border Type", borderType + "");
-
             if (text != null)
                 mEditText.setText(text);
             if (imeActionLabel != null)
