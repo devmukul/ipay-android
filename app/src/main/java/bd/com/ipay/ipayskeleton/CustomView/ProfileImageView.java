@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.AttributeSet;
@@ -62,6 +63,14 @@ public class ProfileImageView extends FrameLayout {
                 .into(mProfilePictureView);
     }
 
+    public void setProfilePicture(int photoResourceId) {
+//        mProfilePictureView.setVisibility(View.VISIBLE);
+//        mProfileFirstLetterView.setVisibility(View.GONE);
+
+        Drawable drawable = context.getResources().getDrawable(photoResourceId);
+        mProfilePictureView.setImageDrawable(drawable);
+    }
+
     public void setProfilePicturePlaceHolder() {
         Glide.with(context)
                 .load(R.drawable.ic_person)
@@ -100,6 +109,31 @@ public class ProfileImageView extends FrameLayout {
         }
     }
 
+    /**
+     * Try to set an already downloaded profile picture for this phone number.
+     * Returns true on success.
+     */
+    public boolean setProfilePictureFromDisk(String phoneNumber) {
+        File dir = new File(Environment.getExternalStorageDirectory().getPath()
+                + Constants.PICTURE_FOLDER);
+        if (!dir.exists()) dir.mkdir();
+
+        Uri imageUri = null;
+        if (phoneNumber != null) {
+            File file = new File(dir, phoneNumber.replaceAll("[^0-9]", "") + ".jpg");
+            if (file.exists()) {
+                imageUri = Uri.fromFile(file);
+
+                if (imageUri != null) {
+                    setProfilePicture(imageUri.toString());
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public void downloadInformation(String photoUri, String name, String phoneNumber)
     {
         Log.w("info", photoUri + " " + name + " " + phoneNumber);
@@ -120,7 +154,6 @@ public class ProfileImageView extends FrameLayout {
                 setInformation(imageUri.toString(), name);
 
             } else {
-
                 setInformation(Constants.BASE_URL_FTP_SERVER + photoUri, name);
             }
 

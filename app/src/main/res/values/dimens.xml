@@ -43,4 +43,5 @@
     <dimen name="iconified_button_border_width">1dp</dimen>
     <dimen name="iconified_button_radius">3dp</dimen>
     <dimen name="pager_indicator_size">8dp</dimen>
+    <dimen name="login_profile_image_size">100dp</dimen>
 </resources>
