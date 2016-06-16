@@ -2,40 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <android.support.design.widget.TextInputLayout
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/address_line_1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:inputType="textPostalAddress"
+        android:drawableLeft="@drawable/ic_signup_add1"
+        custom:borderType="up|"
+        android:drawablePadding="@dimen/value5"
+        android:hint="@string/address_line_1"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:paddingTop="@dimen/value15"
+        android:textSize="@dimen/text_size_small_medium">
+        <requestFocus/>
+    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
-        <EditText
-            android:id="@+id/address_line_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/prompt_business_addr_line1"
-            android:inputType="textPostalAddress"
-            android:maxLines="1"
-            android:singleLine="true" >
 
-            <requestFocus/>
-        </EditText>
 
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/address_line_2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_business_addr_line2"
+        android:inputType="textPostalAddress"
+        android:drawableLeft="@drawable/ic_signup_add2"
+        android:drawablePadding="@dimen/value5"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:paddingTop="@dimen/value15"
+        android:textSize="@dimen/text_size_small_medium">
+        <requestFocus/>
+    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
-        <EditText
-            android:id="@+id/address_line_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/prompt_business_addr_line2"
-            android:inputType="textPostalAddress"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -77,23 +79,22 @@
             android:layout_weight="2" />
     </LinearLayout>
 
-
-    <android.support.design.widget.TextInputLayout
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/postcode"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:hint="@string/postcode"
+        android:inputType="number"
+        android:drawableLeft="@drawable/ic_signup_pcode"
+        android:drawablePadding="@dimen/value5"
+        android:maxLines="1"
+        android:maxLength="4"
+        android:singleLine="true"
+        android:paddingTop="@dimen/value15"
+        android:textSize="@dimen/text_size_small_medium">
+        <requestFocus/>
+    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
-        <EditText
-            android:id="@+id/postcode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/postcode"
-            android:imeOptions="actionUnspecified"
-            android:inputType="number"
-            android:maxLines="1"
-            android:maxLength="4"
-            android:singleLine="true" />
-
-    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

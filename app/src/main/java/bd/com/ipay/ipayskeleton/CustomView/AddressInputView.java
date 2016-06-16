@@ -49,12 +49,12 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
     private Context context;
 
-    private EditText mAddressLine1Field;
-    private EditText mAddressLine2Field;
+    private IconifiedEditText mAddressLine1Field;
+    private IconifiedEditText mAddressLine2Field;
     private Spinner mThanaSelection;
     private Spinner mDistrictSelection;
     private Spinner mCountrySelection;
-    private EditText mPostalCodeField;
+    private IconifiedEditText mPostalCodeField;
 
     private ArrayAdapter<String> mAdapterThana;
     private ArrayAdapter<String> mAdapterDistrict;
@@ -79,13 +79,13 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
         View v = inflate(context, R.layout.view_address_input, null);
 
-        mAddressLine1Field = (EditText) v.findViewById(R.id.address_line_1);
-        mAddressLine2Field = (EditText) v.findViewById(R.id.address_line_2);
+        mAddressLine1Field = (IconifiedEditText) v.findViewById(R.id.address_line_1);
+        mAddressLine2Field = (IconifiedEditText) v.findViewById(R.id.address_line_2);
         mThanaSelection = (Spinner) v.findViewById(R.id.thana);
         mDistrictSelection = (Spinner) v.findViewById(R.id.district);
         mCountrySelection = (Spinner) v.findViewById(R.id.country);
         mCountrySelection.setEnabled(false);
-        mPostalCodeField = (EditText) v.findViewById(R.id.postcode);
+        mPostalCodeField = (IconifiedEditText) v.findViewById(R.id.postcode);
 
         mThanaNames = new ArrayList<>();
 
