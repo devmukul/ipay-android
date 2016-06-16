@@ -18,7 +18,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,7 +34,7 @@
                     android:layout_marginRight="@dimen/value20"
                     android:paddingBottom="@dimen/value5"
                     android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_number" />
+                    android:src="@drawable/ic_signup_user" />
 
 
                 <EditText
@@ -75,7 +74,7 @@
                     android:layout_marginRight="@dimen/value20"
                     android:paddingBottom="@dimen/value5"
                     android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_number" />
+                    android:src="@drawable/ic_signup_number" />
 
 
                 <EditText
@@ -117,7 +116,7 @@
                 android:layout_marginRight="@dimen/value20"
                 android:paddingBottom="@dimen/value5"
                 android:paddingTop="@dimen/value5"
-                android:src="@drawable/ic_number" />
+                android:src="@drawable/ic_signup_pw" />
 
 
                 <EditText
@@ -156,7 +155,7 @@
                     android:layout_marginRight="@dimen/value20"
                     android:paddingBottom="@dimen/value5"
                     android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_number" />
+                    android:src="@drawable/ic_signup_pwc" />
 
                 <EditText
                     android:id="@+id/confirm_password"
@@ -194,7 +193,7 @@
                 android:layout_marginRight="@dimen/value20"
                 android:paddingBottom="@dimen/value5"
                 android:paddingTop="@dimen/value5"
-                android:src="@drawable/ic_number" />
+                android:src="@drawable/ic_signup_invcode" />
 
 
                 <EditText
@@ -211,10 +210,6 @@
                     android:textSize="@dimen/text_size_small_medium"/>
             </RelativeLayout>
 
-
-
-
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -224,7 +219,8 @@
                     android:id="@+id/checkBoxTermsConditions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    android:buttonTint="@android:color/white"/>
 
                 <LinearLayout
                     android:id="@+id/signUpTermsWrapperLayout"
@@ -286,7 +282,7 @@
 
             <Button
                 android:id="@+id/personal_sign_in_button"
-                android:background="@drawable/background_rounded_white_button"
+                style="@style/PrimaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
