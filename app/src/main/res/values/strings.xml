@@ -661,8 +661,8 @@
     <string name="exit">Exit</string>
     <string name="request_for_storage_permission">The app needs to access your files to function properly. Please allow it to access your files.</string>
     <string name="request_for_camera_permission">QR code scanner requires camera permission to work properly</string>
-    <string name="log_in">LogIn</string>
-    <string name="sign_up">SignUp</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
     <string name="do_you">do you...</string>
     <string name="send_money_to_your_friends_and_family">Send Money to your friends and family.</string>
     <string name="request_money_from_your_friends_when_you_are_in_need">Request Money from your friends when you are in need.</string>
