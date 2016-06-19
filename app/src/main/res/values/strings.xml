@@ -342,6 +342,7 @@
     <string name="sign_up_with_ipay">sign up with iPay</string>
     <string name="sign_in">Sign In</string>
     <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
+    <string name="birthday_date_month_year">date/month/year</string>
     <string name="please_fill_up_the_following">Please fill up the following information</string>
     <string name="please_enter_document_number">Please enter the document number</string>
     <string name="send_money_failed">Money sending failed. Please try again.</string>
@@ -490,6 +491,7 @@
     <string name="action_edit">EDIT</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="profile_basic_info">Personal Info</string>
+    <string name="basic_info">Basic Information</string>
     <string name="profile_address">Address</string>
     <string name="profile_documents">Documents</string>
     <string name="profile_introducers">Identifications</string>
