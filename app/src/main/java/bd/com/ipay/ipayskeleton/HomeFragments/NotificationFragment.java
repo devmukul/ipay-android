@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.HomeFragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -639,6 +640,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
+                final String imageUrl = mRecommendationRequestList.get(pos).getProfilePictureUrl();
                 final long requestID = mRecommendationRequestList.get(pos).getId();
                 final String senderName = mRecommendationRequestList.get(pos).getSenderName();
                 final String senderMobileNumber = mRecommendationRequestList.get(pos).getSenderMobileNumber();
@@ -648,6 +650,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mSenderName.setText(senderName);
                 mSenderMobileNumber.setText(senderMobileNumber);
                 mDate.setText(time);
+                mProfileImageView.setInformation(Constants.BASE_URL_FTP_SERVER + imageUrl, senderName);
 
                 if (recommendationStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
                     mRecommendationStatus.setImageResource(R.drawable.ic_sync_problem_black_24dp);
@@ -735,6 +738,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             }
 
             public void bindViewFooter(int pos) {
+                loadMoreTextView.setTextColor(Color.WHITE);
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
                 else loadMoreTextView.setText(R.string.no_more_results);
             }

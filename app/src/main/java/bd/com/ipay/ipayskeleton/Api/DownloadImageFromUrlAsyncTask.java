@@ -62,7 +62,4 @@ public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String>
         return "";
     }
 
-    @Override
-    protected void onPostExecute(final String result) {
-    }
 }
