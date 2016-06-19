@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="1dp"
-        android:background="@drawable/background_portrait_circle"
+        android:background="@color/colorPrimary"
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:textSize="22sp" />

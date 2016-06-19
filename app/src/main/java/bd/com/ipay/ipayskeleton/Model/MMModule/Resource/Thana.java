@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Resource;
 
-public class Thana {
+public class Thana implements Resource {
     private int id;
     private String name;
 
@@ -9,6 +9,7 @@ public class Thana {
         this.name = name;
     }
 
+    @Override
     public int getId() {
         return id;
     }
@@ -17,6 +18,7 @@ public class Thana {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

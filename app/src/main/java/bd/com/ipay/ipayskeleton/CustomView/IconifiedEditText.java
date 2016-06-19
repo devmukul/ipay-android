@@ -25,6 +25,8 @@ public class IconifiedEditText extends FrameLayout {
     private EditText mEditText;
     private View mDivider;
 
+    private OnClickListener mOnClickListener;
+
     public IconifiedEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context, attrs);
@@ -60,7 +62,9 @@ public class IconifiedEditText extends FrameLayout {
             String hint = a.getString(R.styleable.IconifiedEditText_android_hint);
             int inputType = a.getInt(R.styleable.IconifiedEditText_android_inputType, EditorInfo.TYPE_TEXT_VARIATION_NORMAL);
             int maxLength = a.getInt(R.styleable.IconifiedEditText_android_maxLength, -1);
+            int maxLines = a.getInt(R.styleable.IconifiedEditText_android_maxLines, -1);
             int borderType = a.getInt(R.styleable.IconifiedEditText_borderType, 0x0);
+            boolean enabled = a.getBoolean(R.styleable.IconifiedEditText_android_enabled, true);
 
             if (text != null)
                 mEditText.setText(text);
@@ -72,6 +76,9 @@ public class IconifiedEditText extends FrameLayout {
             if (maxLength != -1) {
                 mEditText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
             }
+            if (maxLines != -1)
+                mEditText.setMaxLines(maxLines);
+            mEditText.setEnabled(enabled);
             // Corresponding values can be found in attr.xml
             switch (borderType) {
                 case 0x0:
@@ -111,5 +118,16 @@ public class IconifiedEditText extends FrameLayout {
 
     public void setError(String error) {
         mEditText.setError(error);
+    }
+
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        super.setOnClickListener(l);
+        mOnClickListener = l;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return mOnClickListener != null;
     }
 }

@@ -23,6 +23,8 @@
         <attr name="android:imeActionLabel" />
         <attr name="android:inputType" />
         <attr name="android:maxLength" />
+        <attr name="android:maxLines" />
+        <attr name="android:enabled" />
         <attr name="borderType" format="integer">
             <flag name="up" value="0x1"/>
             <flag name="down" value="0x2"/>

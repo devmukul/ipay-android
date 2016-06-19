@@ -120,7 +120,8 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
     @Override
     protected void onPostExecute(final HttpResponseObject result) {
         if (error) {
-            Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            if (mContext != null)
+                Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             return;
         }
 

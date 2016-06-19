@@ -47,7 +47,7 @@
 
     <string name="invalid_business_name">Enter a business name</string>
     <string name="thana">Thana</string>
-    <string name="invalid_city">Please select a City</string>
+    <string name="invalid_thana">Please select a Thana</string>
     <string name="district">District</string>
     <string name="invalid_district">Please select a District</string>
     <string name="postcode">Postcode</string>

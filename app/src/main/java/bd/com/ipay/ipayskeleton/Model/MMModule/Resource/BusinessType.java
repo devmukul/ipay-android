@@ -1,22 +1,24 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Resource;
 
-public class BusinessType {
-    private long id;
+public class BusinessType implements Resource {
+    private int id;
     private String name;
 
-    public BusinessType(long id, String name) {
+    public BusinessType(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public long getId() {
+    @Override
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

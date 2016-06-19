@@ -11,17 +11,12 @@
         android:layout_height="wrap_content"
         android:inputType="textPostalAddress"
         android:drawableLeft="@drawable/ic_signup_add1"
-        custom:borderType="up|"
-        android:drawablePadding="@dimen/value5"
+        custom:borderType="up"
         android:hint="@string/address_line_1"
         android:maxLines="1"
-        android:singleLine="true"
-        android:paddingTop="@dimen/value15"
-        android:textSize="@dimen/text_size_small_medium">
+        android:singleLine="true">
         <requestFocus/>
     </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
-
-
 
     <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
         android:id="@+id/address_line_2"
@@ -30,54 +25,30 @@
         android:hint="@string/prompt_business_addr_line2"
         android:inputType="textPostalAddress"
         android:drawableLeft="@drawable/ic_signup_add2"
-        android:drawablePadding="@dimen/value5"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:paddingTop="@dimen/value15"
-        android:textSize="@dimen/text_size_small_medium">
-        <requestFocus/>
+        android:maxLines="1">
     </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
 
-    <LinearLayout
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/district"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:hint="@string/district"
+        android:inputType="textPostalAddress"
+        android:drawableLeft="@drawable/ic_signup_district"
+        android:maxLines="1">
+    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
-        <TextView
-            style="@style/AddressSpinnerLabelStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/district" />
 
-        <Spinner
-            android:id="@+id/district"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2" />
-    </LinearLayout>
-
-    <LinearLayout
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/thana"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/AddressSpinnerLabelStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/thana" />
-
-        <Spinner
-            android:id="@+id/thana"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2" />
-    </LinearLayout>
+        android:hint="@string/thana"
+        android:inputType="textPostalAddress"
+        android:drawableLeft="@drawable/ic_signup_thana"
+        android:maxLines="1">
+    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
     <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
         android:id="@+id/postcode"
@@ -86,33 +57,81 @@
         android:hint="@string/postcode"
         android:inputType="number"
         android:drawableLeft="@drawable/ic_signup_pcode"
-        android:drawablePadding="@dimen/value5"
         android:maxLines="1"
-        android:maxLength="4"
-        android:singleLine="true"
-        android:paddingTop="@dimen/value15"
-        android:textSize="@dimen/text_size_small_medium">
-        <requestFocus/>
+        android:maxLength="4">
     </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
-
-    <LinearLayout
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/country"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:hint="@string/country"
+        android:inputType="textPostalAddress"
+        android:drawableLeft="@drawable/ic_signup_country"
+        custom:borderType="down"
+        android:enabled="false"
+        android:text="Bangladesh"
+        android:maxLines="1">
+    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
-        <TextView
-            style="@style/AddressSpinnerLabelStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/country" />
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal">-->
 
-        <Spinner
-            android:id="@+id/country"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2" />
-    </LinearLayout>
+    <!--<TextView-->
+    <!--style="@style/AddressSpinnerLabelStyle"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="@string/district" />-->
+
+    <!--<Spinner-->
+    <!--android:id="@+id/district"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="2" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<TextView-->
+    <!--style="@style/AddressSpinnerLabelStyle"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="@string/thana" />-->
+
+    <!--<Spinner-->
+    <!--android:id="@+id/thana"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="2" />-->
+    <!--</LinearLayout>-->
+
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<TextView-->
+            <!--style="@style/AddressSpinnerLabelStyle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="@string/country" />-->
+
+        <!--<Spinner-->
+            <!--android:id="@+id/country"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="2" />-->
+    <!--</LinearLayout>-->
 </LinearLayout>

@@ -10,11 +10,11 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 
 public class CommonData {
     private static List<Bank> availableBanks;
-    private static Map<Long, Bank> availableBanksMap;
+    private static Map<Integer, Bank> availableBanksMap;
 
     private static List<BusinessType> businessTypes;
-    private static Map<Long, BusinessType> businessIdToTypeMap;
-    private static Map<String, Long> businessNameToIdMap;
+    private static Map<Integer, BusinessType> businessIdToTypeMap;
+    private static Map<String, Integer> businessNameToIdMap;
 
     public static List<Bank> getAvailableBanks() {
         return availableBanks;
@@ -33,7 +33,7 @@ public class CommonData {
         return availableBankNames;
     }
 
-    public static Bank getBankById(long id) {
+    public static Bank getBankById(Integer id) {
         return availableBanksMap.get(id);
     }
 
@@ -64,11 +64,11 @@ public class CommonData {
         return businessTypes;
     }
 
-    public static Long getBusinessTypeId(String businessName) {
+    public static Integer getBusinessTypeId(String businessName) {
         return businessNameToIdMap.get(businessName);
     }
 
-    public static BusinessType getBusinessTypeById(long id) {
+    public static BusinessType getBusinessTypeById(Integer id) {
         return businessIdToTypeMap.get(id);
     }
 
