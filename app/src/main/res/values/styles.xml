@@ -243,8 +243,8 @@
     </style>
 
     <style name="ListHeaderStyle">
-        <item name="android:layout_marginTop">25dp</item>
-        <item name="android:layout_marginBottom">25dp</item>
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:layout_marginBottom">18dp</item>
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:padding">@dimen/activity_horizontal_margin_card</item>
     </style>
