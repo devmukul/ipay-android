@@ -125,7 +125,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         switchedToAccountSelection = false;
     }
 
-
     public void switchToAccountSelectionFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();

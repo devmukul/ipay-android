@@ -33,16 +33,9 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponsePersonalSignup mOtpResponsePersonalSignup;
 
-    private EditText mNameView;
-    private ImageView mDatePickerButton;
     private Button mSignupPersonalButton;
-    private EditText mBirthdayEditText;
 
     private AddressInputView mPersonalAddressView;
-
-    private int mYear;
-    private int mMonth;
-    private int mDay;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
@@ -57,26 +50,15 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_signup_personal_step_two, container, false);
-        mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_sms));
 
-        mNameView = (EditText) v.findViewById(R.id.user_name);
         mSignupPersonalButton = (Button) v.findViewById(R.id.personal_sign_in_button);
-        mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mPersonalAddressView = (AddressInputView) v.findViewById(R.id.personal_address);
 
         mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
-        mDatePickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
 
         mSignupPersonalButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,33 +77,10 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             return;
         }
 
-        // Store values at the time of the login attempt.
-        String name = mNameView.getText().toString().trim();
-
-        SignupOrLoginActivity.mName = name;
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
-        SignupOrLoginActivity.mBirthday = mBirthdayEditText.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
-
-        if (mNameView.getText().toString().trim().length() == 0) {
-            mNameView.setError(getString(R.string.error_invalid_first_name));
-            focusView = mNameView;
-            cancel = true;
-        }
-
-        if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
-            cancel = true;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.please_select_your_birthday, Toast.LENGTH_LONG).show();
-        }
-
-        if (mBirthdayEditText.getText().toString().trim().length() == 0) {
-            mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
-            focusView = mBirthdayEditText;
-            cancel = true;
-        }
 
         if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
@@ -146,27 +105,6 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
             mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
-
-    private DatePickerDialog.OnDateSetListener mDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    mYear = year;
-                    mMonth = monthOfYear + 1;
-                    mDay = dayOfMonth;
-
-                    String birthDate, birthMonth, birthYear;
-                    if (mDay < 10) birthDate = "0" + mDay;
-                    else birthDate = mDay + "";
-                    if (mMonth < 10) birthMonth = "0" + mMonth;
-                    else birthMonth = mMonth + "";
-                    birthYear = mYear + "";
-
-//                    SignupOrLoginActivity.mBirthday = birthDate + birthMonth + birthYear;
-//                    String[] months = getActivity().getResources().getStringArray(R.array.months);
-                    mBirthdayEditText.setText(birthDate + "/" + birthMonth + "/" + birthYear);
-                }
-            };
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {

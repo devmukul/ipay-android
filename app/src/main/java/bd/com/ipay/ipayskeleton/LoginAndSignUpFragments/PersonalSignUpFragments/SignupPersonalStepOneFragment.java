@@ -1,11 +1,11 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.graphics.drawable.Icon;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,23 +13,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -38,9 +39,11 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private HttpRequestPostAsyncTask mCheckPromoCodeTask = null;
     private CheckPromoCodeResponse mCheckPromoCodeResponse;
 
-    private EditText mPasswordView;
-    private EditText mConfirmPasswordView;
-    private EditText mMobileNumberView;
+    private IconifiedEditText mPasswordView;
+    private IconifiedEditText mConfirmPasswordView;
+    private IconifiedEditText mMobileNumberView;
+
+    private IconifiedEditText mNameView;
     private Button mNextButton;
     private TextView mTermsConditions;
     private TextView mPrivacyPolicy;
@@ -48,10 +51,16 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private CheckBox mFemaleCheckBox;
     private CheckBox mOtherCheckBox;
     private CheckBox mAgreementCheckBox;
-    private EditText mPromoCodeEditText;
+    private IconifiedEditText mPromoCodeEditText;
+    private IconifiedEditText mBirthdayEditText;
+    private ImageView mDatePickerButton;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
+
+    private int mYear;
+    private int mMonth;
+    private int mDay;
 
     @Override
     public void onResume() {
@@ -67,9 +76,10 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_validating_promo_code));
 
-        mPasswordView = (EditText) v.findViewById(R.id.password);
-        mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
-        mMobileNumberView = (EditText) v.findViewById(R.id.mobile_number);
+        mNameView = (IconifiedEditText) v.findViewById(R.id.user_name);
+        mPasswordView = (IconifiedEditText) v.findViewById(R.id.password);
+        mConfirmPasswordView = (IconifiedEditText) v.findViewById(R.id.confirm_password);
+        mMobileNumberView = (IconifiedEditText) v.findViewById(R.id.mobile_number);
         mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
@@ -77,7 +87,26 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
         mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
         mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
-        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
+        mPromoCodeEditText = (IconifiedEditText) v.findViewById(R.id.promo_code_edittext);
+        mBirthdayEditText = (IconifiedEditText) v.findViewById(R.id.birthdayEditText);
+        mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
+
+        final DatePickerDialog dialog = new DatePickerDialog(
+                getActivity(), mDateSetListener, 1990, 0, 1);
+
+        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+            }
+        });
+
+        mDatePickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+            }
+        });
 
         // Enable hyperlinked
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
@@ -121,6 +150,27 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         return v;
     }
 
+    private DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    mYear = year;
+                    mMonth = monthOfYear + 1;
+                    mDay = dayOfMonth;
+
+                    String birthDate, birthMonth, birthYear;
+                    if (mDay < 10) birthDate = "0" + mDay;
+                    else birthDate = mDay + "";
+                    if (mMonth < 10) birthMonth = "0" + mMonth;
+                    else birthMonth = mMonth + "";
+                    birthYear = mYear + "";
+
+//                    SignupOrLoginActivity.mBirthday = birthDate + birthMonth + birthYear;
+//                    String[] months = getActivity().getResources().getStringArray(R.array.months);
+                    mBirthdayEditText.setText(birthDate + "/" + birthMonth + "/" + birthYear);
+                }
+            };
+
     private void attemptCheckPromoCode() {
         if (mCheckPromoCodeTask != null) {
             return;
@@ -130,8 +180,13 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
+        SignupOrLoginActivity.mName = mNameView.getText().toString().trim();
+        SignupOrLoginActivity.mBirthday = mBirthdayEditText.getText().toString().trim();
+
+        // Store values at the time of the login attempt.
         SignupOrLoginActivity.mPassword = mPasswordView.getText().toString().trim();
-        SignupOrLoginActivity.mMobileNumber = "+880" + mMobileNumberView.getText().toString().trim();  // TODO: change Bangladesh
+        SignupOrLoginActivity.mMobileNumber = ContactEngine.formatMobileNumberBD(
+                mMobileNumberView.getText().toString().trim());
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
         if (mMaleCheckBox.isChecked()) SignupOrLoginActivity.mGender = Constants.GENDER_MALE;
@@ -139,6 +194,12 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
         boolean cancel = false;
         View focusView = null;
+
+        if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumber)) {
+            mMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
+            focusView = mMobileNumberView;
+            cancel = true;
+        }
 
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = Utilities.isPasswordValid(SignupOrLoginActivity.mPassword);
@@ -154,22 +215,35 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             cancel = true;
         }
 
-        if (mMobileNumberView.getText().toString().trim().length() != 10) {
-            mMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
-            focusView = mMobileNumberView;
-            cancel = true;
-        }
-
         if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
             mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
             focusView = mPromoCodeEditText;
             cancel = true;
         }
 
-        if (!mAgreementCheckBox.isChecked()) {
+        if (mNameView.getText().toString().trim().length() == 0) {
+            mNameView.setError(getString(R.string.error_invalid_first_name));
+            focusView = mNameView;
             cancel = true;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
+        }
+
+        if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
+            mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
+            cancel = true;
+        }
+
+        if (mBirthdayEditText.getText().toString().trim().length() == 0) {
+            mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
+            focusView = mBirthdayEditText;
+            cancel = true;
+        }
+
+        if (!cancel) {
+            if (!mAgreementCheckBox.isChecked()) {
+                cancel = true;
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
+            }
         }
 
         if (cancel) {
