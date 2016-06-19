@@ -131,6 +131,12 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
+    <style name="ProfileCardLayoutStyleColorPrimaryLight">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/colorPrimaryLight</item>
+    </style>
+
     <style name="ProfileAddressHeaderStyle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -169,6 +175,28 @@
         <item name="android:gravity">left</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginLeft">4dp</item>
+    </style>
+
+    <style name="TextViewProfileInfoLabel" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">@dimen/value15</item>
+        <item name="android:paddingBottom">@dimen/value15</item>
+        <item name="android:paddingLeft">@dimen/value15</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="TextViewProfileInfo" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">@dimen/value15</item>
+        <item name="android:paddingBottom">@dimen/value15</item>
+        <item name="android:paddingRight">@dimen/value15</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">right</item>
     </style>
 
     <!-- Document Upload -->
@@ -524,4 +552,5 @@
         <item name="android:paddingTop">@dimen/value15</item>
         <item name="android:paddingBottom">@dimen/value15</item>
     </style>
+
 </resources>

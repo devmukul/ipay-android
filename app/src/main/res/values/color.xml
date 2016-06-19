@@ -15,6 +15,7 @@
     <color name="colorBlackTransparent">#70000000</color>
     <color name="blue_button_disabled">#ff90caf9</color>
     <color name="bottle_green">#009688</color>
+    <color name="colorOrange">#f49331</color>
 
     <!-- zxinglib colors -->
     <color name="zxinglib_status_text">#ffffffff</color>
