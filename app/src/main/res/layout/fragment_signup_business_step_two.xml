@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:padding="@dimen/activity_horizontal_margin"
+    android:background="@color/colorPrimary">
 
     <ScrollView
         android:id="@+id/business_login_form"
@@ -17,29 +18,42 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                style="@style/TextStylePrimaryMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:text="@string/business_information"
-                android:textStyle="bold" />
-
-            <android.support.design.widget.TextInputLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_half_upper_round_white"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/iv_full_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/value10"
+                    android:layout_marginRight="@dimen/value20"
+                    android:paddingBottom="@dimen/value5"
+                    android:paddingTop="@dimen/value5"
+                    android:src="@drawable/ic_signup_personal" />
 
                 <EditText
                     android:id="@+id/business_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:hint="@string/prompt_business_name"
-                    android:inputType="textPersonName"
+                    android:layout_toRightOf="@+id/iv_full_name"
+                    android:inputType="text|textPersonName"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:background="@null"
+                    android:paddingTop="@dimen/value15"
+                    android:textSize="@dimen/text_size_small_medium"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,9 +81,219 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/background_no_round_white"-->
+                <!--android:gravity="center_vertical">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_address_line_1"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_marginLeft="@dimen/value10"-->
+                    <!--android:layout_marginRight="@dimen/value20"-->
+                    <!--android:paddingBottom="@dimen/value5"-->
+                    <!--android:paddingTop="@dimen/value5"-->
+                    <!--android:src="@drawable/ic_signup_add1" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/address_line_1"-->
+                    <!--android:layout_toRightOf="@+id/iv_address_line_1"-->
+                    <!--android:background="@null"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:drawablePadding="@dimen/value5"-->
+                    <!--android:inputType="textPostalAddress"-->
+                    <!--android:hint="@string/address_line_1"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:paddingTop="@dimen/value15"-->
+                    <!--android:textSize="@dimen/text_size_small_medium"/>-->
+
+            <!--</RelativeLayout>-->
+
+            <!--<View-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="@dimen/divider_space"-->
+                <!--android:background="@color/colorDivider" />-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/background_no_round_white"-->
+                <!--android:gravity="center_vertical">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_address_line_2"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_marginLeft="@dimen/value10"-->
+                    <!--android:layout_marginRight="@dimen/value20"-->
+                    <!--android:paddingBottom="@dimen/value5"-->
+                    <!--android:paddingTop="@dimen/value5"-->
+                    <!--android:src="@drawable/ic_signup_add2" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/address_line_2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_toRightOf="@+id/iv_address_line_2"-->
+                    <!--android:background="@null"-->
+                    <!--android:hint="@string/prompt_business_addr_line2"-->
+                    <!--android:inputType="textPostalAddress"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:paddingTop="@dimen/value15"-->
+                    <!--android:textSize="@dimen/text_size_small_medium"/>-->
+            <!--</RelativeLayout>-->
+
+            <!--<View-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="@dimen/divider_space"-->
+                <!--android:background="@color/colorDivider" />-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/background_no_round_white"-->
+                <!--android:gravity="center_vertical">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_thana"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_marginLeft="@dimen/value10"-->
+                    <!--android:layout_marginRight="@dimen/value20"-->
+                    <!--android:paddingBottom="@dimen/value5"-->
+                    <!--android:paddingTop="@dimen/value5"-->
+                    <!--android:src="@drawable/ic_signup_thana" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/thana"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_toRightOf="@+id/iv_thana"-->
+                    <!--android:background="@null"-->
+                    <!--android:hint="@string/thana"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:paddingTop="@dimen/value15"-->
+                    <!--android:textSize="@dimen/text_size_small_medium"/>-->
+            <!--</RelativeLayout>-->
+
+            <!--<View-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="@dimen/divider_space"-->
+                <!--android:background="@color/colorDivider" />-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/background_no_round_white"-->
+                <!--android:gravity="center_vertical">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_district"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_marginLeft="@dimen/value10"-->
+                    <!--android:layout_marginRight="@dimen/value20"-->
+                    <!--android:paddingBottom="@dimen/value5"-->
+                    <!--android:paddingTop="@dimen/value5"-->
+                    <!--android:src="@drawable/ic_signup_district" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/district"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_toRightOf="@+id/iv_district"-->
+                    <!--android:background="@null"-->
+                    <!--android:hint="@string/district"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:paddingTop="@dimen/value15"-->
+                    <!--android:textSize="@dimen/text_size_small_medium"/>-->
+            <!--</RelativeLayout>-->
+
+            <!--<View-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="@dimen/divider_space"-->
+                <!--android:background="@color/colorDivider" />-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/background_no_round_white"-->
+                <!--android:gravity="center_vertical">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_postalcode"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_marginLeft="@dimen/value10"-->
+                    <!--android:layout_marginRight="@dimen/value20"-->
+                    <!--android:paddingBottom="@dimen/value5"-->
+                    <!--android:paddingTop="@dimen/value5"-->
+                    <!--android:src="@drawable/ic_signup_pcode" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/postalcode"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_toRightOf="@+id/iv_postalcode"-->
+                    <!--android:background="@null"-->
+                    <!--android:hint="@string/postalcode"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:paddingTop="@dimen/value15"-->
+                    <!--android:textSize="@dimen/text_size_small_medium"/>-->
+
+            <!--</RelativeLayout>-->
+
+            <!--<View-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="@dimen/divider_space"-->
+                <!--android:background="@color/colorDivider" />-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/background_half_lower_round_white"-->
+                <!--android:gravity="center_vertical">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_country"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_marginLeft="@dimen/value10"-->
+                    <!--android:layout_marginRight="@dimen/value20"-->
+                    <!--android:paddingBottom="@dimen/value5"-->
+                    <!--android:paddingTop="@dimen/value5"-->
+                    <!--android:src="@drawable/ic_signup_country" />-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/country"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_toRightOf="@+id/iv_country"-->
+                    <!--android:background="@null"-->
+                    <!--android:hint="@string/country"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:paddingTop="@dimen/value15"-->
+                    <!--android:textSize="@dimen/text_size_small_medium"/>-->
+            <!--</RelativeLayout>-->
+
             <Button
-                android:id="@+id/business_again_next_button"
-                style="@style/ButtonStyleMedium"
+                android:id="@+id/business_next_button"
+                style="@style/PrimaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
