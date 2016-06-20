@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/value5"
-    android:background="@android:color/white"
-    android:paddingBottom="@dimen/value10"
-    android:paddingLeft="@dimen/activity_vertical_margin_card"
-    android:paddingRight="@dimen/activity_vertical_margin_card"
-    android:paddingTop="@dimen/value10">
+    android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+    android:layout_marginTop="@dimen/activity_horizontal_margin_card">
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginRight="@dimen/activity_horizontal_margin" />
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin" />
 
     <ImageView
         android:id="@+id/other_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginRight="@dimen/activity_horizontal_margin" />
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin" />
 
     <LinearLayout
         android:id="@+id/description_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/profile_picture"
         android:layout_toLeftOf="@+id/status"
+        android:layout_toRightOf="@+id/profile_picture"
         android:orientation="vertical">
 
         <TextView
@@ -60,6 +61,7 @@
                 android:layout_marginRight="@dimen/value5"
                 android:gravity="center_vertical"
                 android:text="@string/current_balance"
+                android:textColor="@color/colorPrimary"
                 android:textSize="12sp" />
 
             <TextView
@@ -68,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/value5"
                 android:gravity="center_vertical"
+                android:textColor="@color/colorPrimary"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -79,8 +82,16 @@
         android:layout_height="15dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
         android:src="@drawable/ic_error_black_24dp"
         android:tint="@color/background_red" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_space"
+        android:layout_below="@+id/description_layout"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@color/colorDivider" />
 
 </RelativeLayout>

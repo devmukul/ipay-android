@@ -2,8 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/home_background"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/ListHeaderStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/money_request_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_log"
+            android:textColor="@color/zxinglib_status_text"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/date_filter_layout"
@@ -185,19 +201,13 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/value5"
-        android:layout_marginTop="@dimen/value10"
-        android:text="@string/activity_log"
-        android:textStyle="bold" />
-
     <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_rounded_white"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_card">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_recent_activity_logs"

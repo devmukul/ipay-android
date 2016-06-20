@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -243,8 +243,10 @@
     </style>
 
     <style name="ListHeaderStyle">
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:layout_marginBottom">18dp</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:padding">@dimen/activity_horizontal_margin_card</item>
     </style>
 
     <style name="ButtonStyleSmall" parent="@android:style/Widget.Button">

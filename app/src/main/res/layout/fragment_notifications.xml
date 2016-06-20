@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/home_background"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
-
     <include layout="@layout/layout_progress_container" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,8 +15,7 @@
         <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/home_background">
+            android:layout_height="wrap_content">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_notification"
@@ -31,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="@string/empty_list" />
+            android:text="@string/empty_list"
+            android:textColor="@color/zxinglib_status_text"/>
 
     </RelativeLayout>
 </LinearLayout>

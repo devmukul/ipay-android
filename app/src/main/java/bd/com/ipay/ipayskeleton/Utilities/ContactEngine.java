@@ -990,16 +990,18 @@ public class ContactEngine {
 
     public static boolean isValidNumber(String number) {
 
-        if (number == null) return false;
+        if (number == null)
+            return false;
 
         number = number.trim();
         if (number.length() == 11 && number.startsWith("0"))
             return true;
-        if (number.length() == 13 && number.startsWith("880"))
+        else if (number.length() == 13 && number.startsWith("880"))
             return true;
-        if (number.length() == 14 && number.startsWith("+880"))
+        else if (number.length() == 14 && number.startsWith("+880"))
             return true;
-        return false;
+        else
+            return false;
     }
 
     /**

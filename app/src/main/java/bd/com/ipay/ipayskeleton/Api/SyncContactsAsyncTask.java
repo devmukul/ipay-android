@@ -1,17 +1,22 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -37,10 +42,11 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
     private static boolean contactsSyncedOnce;
 
-    private Context context;
+    private Activity context;
     private List<FriendNode> serverContacts;
+    ArrayList<FriendNode> downloadContacts;
 
-    public SyncContactsAsyncTask(Context context, List<FriendNode> serverContacts) {
+    public SyncContactsAsyncTask(Activity context, List<FriendNode> serverContacts) {
         this.context = context;
         this.serverContacts = serverContacts;
     }
@@ -60,8 +66,10 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             databaseMap.put(friend.getPhoneNumber(), friend.getInfo());
         }
 
-        for (FriendNode serverFriend: serverContacts) {
-            String profilePictureUrl = serverFriend.getInfo().getProfilePictureUrl();
+        downloadContacts = new ArrayList<>();
+
+        for (final FriendNode serverFriend: serverContacts) {
+            final String profilePictureUrl = serverFriend.getInfo().getProfilePictureUrl();
 
             if (databaseMap.containsKey(serverFriend.getPhoneNumber())) {
                 long serverUpdateTime = serverFriend.getInfo().getUpdateTime();
@@ -71,14 +79,16 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
                 if (serverUpdateTime > updateTime) {
                     // Download the profile picture for the updated contacts and store it in local storage
                     Log.d("Downloading picture", "Download the profile picture for the updated contacts and store it in local storage");
-                    if (profilePictureUrl != null && !profilePictureUrl.isEmpty())
-                        new DownloadImageFromUrlAsyncTask(profilePictureUrl, serverFriend.getPhoneNumber());
+                    if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+                        downloadContacts.add(serverFriend);
+                    }
                 }
             } else {
                 // Download the profile picture for the new contacts and store it in local storage
                 Log.d("Downloading picture", "Download the profile picture for the new contacts and store it in local storage");
-                if (profilePictureUrl != null && !profilePictureUrl.isEmpty())
-                    new DownloadImageFromUrlAsyncTask(profilePictureUrl, serverFriend.getPhoneNumber());
+                if (profilePictureUrl != null && !profilePictureUrl.isEmpty()){
+                    downloadContacts.add(serverFriend);
+                }
             }
         }
 
@@ -107,6 +117,14 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             addFriends(contactDiff.newFriends);
             updateFriends(contactDiff.updatedFriends);
         }
+
+        if (downloadContacts != null) {
+            for (final FriendNode downloadFriend: downloadContacts) {
+                AsyncTask<Void, Void, String> downloadProfilePictureTask = new DownloadImageFromUrlAsyncTask(downloadFriend.getInfo().getProfilePictureUrl(), downloadFriend.getPhoneNumber());
+                downloadProfilePictureTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+
     }
 
     private void addFriends(List<FriendNode> friends) {

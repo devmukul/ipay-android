@@ -8,6 +8,11 @@ public class IntroductionRequestClass {
     public long verifierAccountId;
     public long date;
     public String status;
+    public String profilePictureUrl;
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
 
     public long getId() {
         return id;

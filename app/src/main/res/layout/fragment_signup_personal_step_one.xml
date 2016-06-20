@@ -1,284 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/personal_signup_layout"
+
+<ScrollView android:id="@+id/personal_login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:background="@color/colorPrimary"
     android:gravity="center"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
-        android:id="@+id/personal_login_form"
+    <LinearLayout
+        android:id="@+id/ipay_personal_login_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/ipay_personal_login_form"
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+            android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:borderType="up"
+            android:drawableLeft="@drawable/ic_signup_personal"
+            android:hint="@string/full_name"
+            android:maxLines="1"
+            android:inputType="textPersonName"/>
 
-            <LinearLayout
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+            android:id="@+id/mobile_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_signup_number"
+            android:hint="@string/mobile_number"
+            android:maxLines="1"
+            android:maxLength="14"
+            android:inputType="phone"/>
+
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_signup_pw"
+            android:hint="@string/prompt_password"
+            android:maxLines="1"
+            android:inputType="textPassword"/>
+
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+            android:id="@+id/confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_signup_pwc"
+            android:hint="@string/confirm_password"
+            android:maxLines="1"
+            android:inputType="textPassword"/>
+
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+            android:id="@+id/promo_code_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_signup_invcode"
+            android:hint="@string/enter_promo_code"
+            android:maxLines="1"
+            android:inputType="number"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+                android:id="@+id/birthdayEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:drawableLeft="@drawable/ic_birthdate"
+                android:hint="@string/birthday_dd_mm_yy"
+                android:inputType="number"/>
 
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/flag_bangladesh" />
+            <ImageView
+                android:id="@+id/myDatePickerButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                android:clickable="true"
+                android:src="@drawable/ic_calendar"
+                android:layout_gravity="right|center_vertical"/>
 
-                <TextView
-                    style="@style/TextStylePrimaryMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/value5"
-                    android:text="+880" />
+        </FrameLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/mobile_number"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="@dimen/value5"
-                        android:hint="@string/mobile_number"
-                        android:inputType="phone"
-                        android:maxLength="10"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
-
-            <android.support.design.widget.TextInputLayout
+            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+                android:id="@+id/gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:drawableLeft="@drawable/ic_gender"
+                app:borderType="down"
+                android:hint="@string/gender"/>
 
-                <EditText
-                    android:id="@+id/user_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/name_of_user"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <EditText
-                    android:id="@+id/user_last_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/last_name"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/confirm_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/confirm_password"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <EditText
-                        android:id="@+id/birthdayEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/birthday_dd_mm_yy"
-                        android:inputType="date"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/myDatePickerButton"
-                    style="@style/ButtonStyleAccentSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:clickable="true"
-                    android:padding="@dimen/value5"
-                    android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
-            </LinearLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible">
-
-                <EditText
-                    android:id="@+id/promo_code_edittext"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/enter_promo_code"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:gravity="center"
-                android:visibility="visible">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:text="@string/gender" />
+                android:layout_gravity="right|center_vertical">
 
                 <CheckBox
                     android:id="@+id/checkBoxMale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/background_left_round_checkbox"
+                    android:button="@drawable/ic_male"
+                    android:layout_toLeftOf="@+id/checkBoxFemale"
                     android:checked="true"
-                    android:text="@string/male" />
+                    android:layout_centerVertical="true"/>
 
                 <CheckBox
                     android:id="@+id/checkBoxFemale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/female" />
+                    android:background="@drawable/background_no_round_checkbox"
+                    android:button="@drawable/ic_female"
+                    android:layout_toLeftOf="@+id/checkBoxOther"
+                    android:layout_centerVertical="true"/>
 
                 <CheckBox
                     android:id="@+id/checkBoxOther"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/other" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
-
-                <CheckBox
-                    android:id="@+id/checkBoxTermsConditions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true" />
-
-                <LinearLayout
-                    android:id="@+id/signUpTermsWrapperLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/checkBoxTermsConditions"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:text="@string/oath_sign_up"
-                        android:textColor="@color/colorTextSecondary"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/textViewTermsConditions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:background="@drawable/linked_textview_selector"
-                        android:clickable="true"
-                        android:text="@string/terms_condition"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/signUpTermsWrapperLayout"
-                    android:layout_toRightOf="@id/checkBoxTermsConditions"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:text="@string/and"
-                        android:textColor="@color/colorTextSecondary"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/textViewPrivacyPolicy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:background="@drawable/linked_textview_selector"
-                        android:clickable="true"
-                        android:text="@string/privacy_policy"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                    android:background="@drawable/background_right_round_checkbox"
+                    android:button="@drawable/ic_male"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/value5"
+                    android:layout_centerVertical="true"/>
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/personal_sign_in_button"
-                style="@style/ButtonStyleMedium"
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+            <CheckBox
+                android:id="@+id/checkBoxTermsConditions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:buttonTint="@android:color/white" />
+
+            <LinearLayout
+                android:id="@+id/signUpTermsWrapperLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:text="@string/next" />
+                android:layout_toRightOf="@+id/checkBoxTermsConditions"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible">
 
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/oath_sign_up"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textViewTermsConditions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/linked_textview_selector"
+                    android:clickable="true"
+                    android:text="@string/terms_condition"
+                    android:textColor="@android:color/white"
+                    android:textColorLink="@android:color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/signUpTermsWrapperLayout"
+                android:layout_toRightOf="@id/checkBoxTermsConditions"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/and"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textViewPrivacyPolicy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/linked_textview_selector"
+                    android:clickable="true"
+                    android:text="@string/privacy_policy"
+                    android:textColor="@android:color/white"
+                    android:textColorLink="@android:color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/personal_sign_in_button"
+            style="@style/PrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/next"
+            android:textSize="@dimen/text_size_medium" />
+
+    </LinearLayout>
+</ScrollView>
