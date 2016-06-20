@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -70,6 +71,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceR
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
+import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
@@ -98,6 +100,7 @@ public class HomeActivity extends BaseActivity
     private RoundedImageView mPortrait;
     private SharedPreferences pref;
     private String mUserID;
+    private String mDeviceID;
     private List<UserProfilePictureClass> profilePictures;
 
     private ProgressDialog mProgressDialog;
@@ -113,18 +116,23 @@ public class HomeActivity extends BaseActivity
     public static boolean switchedToHomeFragment = true;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.logo_ipay);
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = pref.getString(Constants.USERID, "");
+        mDeviceID = DeviceIdFactory.getDeviceId(HomeActivity.this);
+
         pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
 
         mProgressDialog = new ProgressDialog(HomeActivity.this);
@@ -208,6 +216,7 @@ public class HomeActivity extends BaseActivity
         }
 
         attemptRequestForPermission();
+        sendAnalytics();
     }
 
     @Override
@@ -292,6 +301,22 @@ public class HomeActivity extends BaseActivity
             ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
                     REQUEST_CODE_PERMISSION);
         }
+    }
+
+    private void sendAnalytics() {
+        Bundle bundle = new Bundle();
+        bundle.putString(AnalyticsConstants.USER_ID, mUserID);
+        bundle.putString(AnalyticsConstants.IP_V4_ADDRESS, Utilities.getIPAddress(true));
+        bundle.putString(AnalyticsConstants.IP_V6_ADDRESS, Utilities.getIPAddress(false));
+        bundle.putString(AnalyticsConstants.W_LAN_0, Utilities.getMACAddress(AnalyticsConstants.W_LAN_0));
+        bundle.putString(AnalyticsConstants.ETH_0, Utilities.getMACAddress(AnalyticsConstants.ETH_0));
+        bundle.putString(AnalyticsConstants.DEVICE_ID, mDeviceID);
+
+        String longLat = Utilities.getLongLatWithoutGPS(HomeActivity.this);
+        if (longLat != null)
+            bundle.putString(AnalyticsConstants.DEVICE_LONG_LAT, longLat);
+
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
     private void getContacts() {
@@ -422,7 +447,7 @@ public class HomeActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new AboutFragment()).commit();
             switchedToHomeFragment = false;
 
-        }  else if (id == R.id.nav_event) {
+        } else if (id == R.id.nav_event) {
 
             Intent intent = new Intent(HomeActivity.this, EventActivity.class);
             startActivity(intent);
