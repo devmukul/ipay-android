@@ -79,16 +79,6 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/button_verify"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:padding="@dimen/value5"
-                        android:text="@string/verify"
-                        android:textSize="12sp" />
-
-                    <Button
                         android:id="@+id/button_make_primary"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

@@ -239,24 +239,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         mDeleteEmailTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void verifyEmail(long id) {
-        if (mEmailVerificationTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_verification_mail));
-        mProgressDialog.show();
-
-        EmailVerificationRequest emailVerificationRequest = new EmailVerificationRequest();
-        Gson gson = new Gson();
-        String json = gson.toJson(emailVerificationRequest);
-
-        mEmailVerificationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_EMAIL_VERIFICATION,
-                Constants.BASE_URL_MM + Constants.URL_POST_EMAIL + id + Constants.URL_MAKE_EMAIL_VERIFIED,
-                json, getActivity(), this);
-        mEmailVerificationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
 
     private void makeEmailPrimary(long id) {
         if (mMakePrimaryEmailTask != null) {
@@ -331,11 +313,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     getEmails();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
-
-                        // Send the verification status
-                        long emailID = mAddNewEmailResponse.getId();
-                        verifyEmail(emailID);
-
                     }
                 } else {
                     if (getActivity() != null) {
@@ -371,27 +348,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             }
 
             mDeleteEmailTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_EMAIL_VERIFICATION)) {
-            try {
-                mEmailVerificationResponse = gson.fromJson(result.getJsonString(), EmailVerificationResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    getEmails();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mEmailVerificationResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mEmailVerificationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_verification_request, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            mEmailVerificationTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_EMAIL_MAKE_PRIMARY)) {
             try {
                 makePrimaryEmailResponse = gson.fromJson(result.getJsonString(), MakePrimaryEmailResponse.class);
@@ -456,7 +412,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             private ImageView mVerificationStatus;
             private LinearLayout optionsLayout;
             private Button removeButton;
-            private Button verifyButton;
             private Button makePrimaryButton;
             private View divider;
 
@@ -471,7 +426,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 divider = itemView.findViewById(R.id.divider);
 
                 removeButton = (Button) itemView.findViewById(R.id.button_remove);
-                verifyButton = (Button) itemView.findViewById(R.id.button_verify);
                 makePrimaryButton = (Button) itemView.findViewById(R.id.button_make_primary);
             }
 
@@ -486,20 +440,17 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     mVerificationStatus.setColorFilter(null);
 
                     makePrimaryButton.setVisibility(View.VISIBLE);
-                    verifyButton.setVisibility(View.GONE);
                 } else if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)) {
                     mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
                     mVerificationStatus.setColorFilter(Color.GRAY);
 
                     makePrimaryButton.setVisibility(View.GONE);
-                    verifyButton.setVisibility(View.GONE);
                     divider.setVisibility(View.GONE);
                 } else {
                     mVerificationStatus.setImageResource(R.drawable.ic_error_black_24dp);
                     mVerificationStatus.setColorFilter(Color.RED);
 
                     makePrimaryButton.setVisibility(View.GONE);
-                    verifyButton.setVisibility(View.VISIBLE);
                 }
 
                 if (email.isPrimary()) {
@@ -512,13 +463,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     @Override
                     public void onClick(View v) {
                         showDeleteEmailConfirmationDialog(email);
-                    }
-                });
-
-                verifyButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        verifyEmail(email.getEmailId());
                     }
                 });
 

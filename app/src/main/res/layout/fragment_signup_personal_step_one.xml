@@ -175,6 +175,7 @@
                     android:clickable="true"
                     android:text="@string/terms_condition"
                     android:textColor="@android:color/white"
+                    android:textColorLink="@android:color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -203,6 +204,7 @@
                     android:clickable="true"
                     android:text="@string/privacy_policy"
                     android:textColor="@android:color/white"
+                    android:textColorLink="@android:color/white"
                     android:textSize="14sp" />
             </LinearLayout>
         </RelativeLayout>
