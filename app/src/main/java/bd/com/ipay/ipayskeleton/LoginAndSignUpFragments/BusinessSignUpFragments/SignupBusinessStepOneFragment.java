@@ -2,13 +2,10 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeRequ
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -108,7 +106,8 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mPasswordBusiness = mPasswordView.getText().toString().trim();
         SignupOrLoginActivity.mEmailBusiness = mBusinessEmailView.getText().toString().trim();
-        SignupOrLoginActivity.mMobileNumberBusiness = "+880" + mBusinessMobileNumberView.getText().toString().trim();  // TODO: change Bangladesh
+        SignupOrLoginActivity.mMobileNumberBusiness = ContactEngine.formatMobileNumberBD(
+                mBusinessMobileNumberView.getText().toString().trim());  // TODO: change Bangladesh
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
         SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
 
@@ -127,7 +126,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             focusView = mConfirmPasswordView;
             cancel = true;
 
-        } else if (mBusinessMobileNumberView.getText().toString().trim().length() != 10) {
+        } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumberBusiness)) {
             mBusinessMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mBusinessMobileNumberView;
             cancel = true;
