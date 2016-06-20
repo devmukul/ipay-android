@@ -44,7 +44,7 @@
                     android:drawablePadding="@dimen/value5"
                     android:hint="@string/business_mobile_number"
                     android:inputType="phone"
-                    android:maxLength="10"
+                    android:maxLength="14"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:paddingTop="@dimen/value15"
@@ -236,6 +236,7 @@
                         android:clickable="true"
                         android:text="@string/terms_condition"
                         android:textColor="@android:color/white"
+                        android:textColorLink="@android:color/white"
                         android:textSize="@dimen/text_size_small" />
 
                 </LinearLayout>
@@ -264,6 +265,7 @@
                         android:clickable="true"
                         android:text="@string/privacy_policy"
                         android:textColor="@android:color/white"
+                        android:textColorLink="@android:color/white"
                         android:textSize="@dimen/text_size_small" />
                 </LinearLayout>
 

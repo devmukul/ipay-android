@@ -19,7 +19,10 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -28,16 +31,19 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupBusinessStepTwoFragment extends Fragment {
 
-    private Spinner mBusinessType;
+    private IconifiedEditText mBusinessType;
 
     private EditText mBusinessNameView;
     private Button mNextButton;
+
+    private ResourceSelectorDialog<BusinessType> businessTypeResourceSelectorDialog;
 
 
     private AddressInputView mBusinessAddressView;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
+    private int mSelectedBusinessTypeId = -1;
 
     @Override
     public void onResume() {
@@ -52,7 +58,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
         mProgressDialog = new ProgressDialog(getActivity());
 
         mBusinessNameView = (EditText) v.findViewById(R.id.business_name);
-        mBusinessType = (Spinner) v.findViewById(R.id.business_type);
+        mBusinessType = (IconifiedEditText) v.findViewById(R.id.business_type);
 
         mNextButton = (Button) v.findViewById(R.id.business_again_next_button);
 
@@ -66,6 +72,14 @@ public class SignupBusinessStepTwoFragment extends Fragment {
                 if (Utilities.isConnectionAvailable(getActivity())) attemptGoNextPage();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //business type dialog
+        mBusinessType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                businessTypeResourceSelectorDialog.show();
             }
         });
 
@@ -84,7 +98,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mBusinessName = mBusinessNameView.getText().toString().trim();
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
-        SignupOrLoginActivity.mTypeofBusiness = CommonData.getBusinessTypeId(mBusinessType.getSelectedItem().toString());
+        SignupOrLoginActivity.mTypeofBusiness = mSelectedBusinessTypeId;
 
         boolean cancel = false;
         View focusView = null;
@@ -112,10 +126,8 @@ public class SignupBusinessStepTwoFragment extends Fragment {
             new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
                 @Override
                 public void onLoadSuccess(List<BusinessType> businessTypes) {
-                    ArrayAdapter<String> businessTypeAdapter = new ArrayAdapter<>(getActivity(),
-                            android.R.layout.simple_dropdown_item_1line,
-                            CommonData.getBusinessTypeNames());
-                    mBusinessType.setAdapter(businessTypeAdapter);
+                    //set adapter to load the types
+                    setTypeAdapter(businessTypes);
                     mProgressDialog.dismiss();
                 }
 
@@ -128,6 +140,18 @@ public class SignupBusinessStepTwoFragment extends Fragment {
                     }
                 }
             };
+
+
+    private void setTypeAdapter(List<BusinessType> businessTypeList) {
+        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), businessTypeList, mSelectedBusinessTypeId);
+        businessTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int id, String name) {
+                mBusinessType.setText(name);
+                mSelectedBusinessTypeId = id;
+            }
+        });
+    }
 }
 
 
