@@ -44,7 +44,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ActivityHistoryFragment extends Fragment implements HttpResponseListener {
+public class ActivityLogFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;

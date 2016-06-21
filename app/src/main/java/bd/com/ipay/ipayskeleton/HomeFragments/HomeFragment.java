@@ -304,7 +304,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private void promptForProfileCompletion() {
         mProfileCompletionStatusResponse.analyzeProfileCompletionData();
         if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
-            ((HomeActivity) getActivity()).changeMenuVisibility(R.id.nav_profile_completeness, true);
+            ((HomeActivity) getActivity()).setDrawerMenuVisibility(R.id.nav_profile_completeness, true);
         }
 
         if (!profileCompletionPromptShown) {

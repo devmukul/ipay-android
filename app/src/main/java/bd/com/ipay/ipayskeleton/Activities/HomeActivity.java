@@ -52,9 +52,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
+import bd.com.ipay.ipayskeleton.BusinessFragments.BusinessActivity;
+import bd.com.ipay.ipayskeleton.BusinessFragments.BusinessFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityHistoryFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityLogFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
@@ -100,6 +102,7 @@ public class HomeActivity extends BaseActivity
     private RoundedImageView mPortrait;
     private SharedPreferences pref;
     private String mUserID;
+    private int mAccountType;
     private String mDeviceID;
     private List<UserProfilePictureClass> profilePictures;
 
@@ -125,29 +128,13 @@ public class HomeActivity extends BaseActivity
         setContentView(R.layout.activity_home);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
+        mProgressDialog = new ProgressDialog(HomeActivity.this);
+        profilePictures = new ArrayList<>();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.logo_ipay);
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        mUserID = pref.getString(Constants.USERID, "");
-        mDeviceID = DeviceIdFactory.getDeviceId(HomeActivity.this);
-
-        pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
-
-        mProgressDialog = new ProgressDialog(HomeActivity.this);
-        profilePictures = new ArrayList<>();
-
-        // Initialize token timer
-        tokenTimer = new CountDownTimer(iPayTokenTimeInMs, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                refreshToken();
-            }
-        }.start();
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -177,6 +164,30 @@ public class HomeActivity extends BaseActivity
         });
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        mUserID = pref.getString(Constants.USERID, "");
+        mAccountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
+        mDeviceID = DeviceIdFactory.getDeviceId(HomeActivity.this);
+
+        pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
+
+        if (mAccountType == Constants.PERSONAL_ACCOUNT_TYPE) {
+            setDrawerMenuVisibility(R.id.nav_manage_business, false);
+        } else {
+            setDrawerMenuVisibility(R.id.nav_manage_business, true);
+        }
+
+        // Initialize token timer
+        tokenTimer = new CountDownTimer(iPayTokenTimeInMs, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                refreshToken();
+            }
+        }.start();
 
         mMobileNumberView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
@@ -399,7 +410,7 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = true;
     }
 
-    public void changeMenuVisibility(int id, boolean visible) {
+    public void setDrawerMenuVisibility(int id, boolean visible) {
         mNavigationView.getMenu().findItem(id).setVisible(visible);
     }
 
@@ -432,7 +443,7 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_user_activity) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ActivityHistoryFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ActivityLogFragment()).commit();
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_support) {
@@ -441,6 +452,11 @@ public class HomeActivity extends BaseActivity
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
             switchedToHomeFragment = false;
+
+        } else if (id == R.id.nav_manage_business) {
+
+            Intent intent = new Intent(this, BusinessActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_about) {
 

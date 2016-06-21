@@ -100,7 +100,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -294,6 +294,10 @@ public class Constants {
     public static final String URL_DELETE_FRIEND = "deletefriend";
     public static final String URL_UPDATE_FRIENDS = "updatefriends";
 
+    // Business Information
+    public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";
+    public static final String URL_SET_BUSINESS_INFORMATION = "user/profile/business";
+
     public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
@@ -416,6 +420,10 @@ public class Constants {
     public static final String COMMAND_GET_TRUSTED_PERSONS = "COMMAND_GET_TRUSTED_PERSONS";
     public static final String COMMAND_ADD_TRUSTED_PERSON = "COMMAND_ADD_TRUSTED_PERSON";
     public static final String COMMAND_SET_ACCOUNT_RECOVERY_PERSON = "COMMAND_SET_ACCOUNT_RECOVERY_PERSON";
+
+    // Business Information
+    public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
+    public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
 
     public static final String COUNTRY_CODE_BANGLADESH = "+880";
     public static final int ACTIVITY_LOG_COUNT = 10;

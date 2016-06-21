@@ -188,6 +188,13 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.Dialog"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".Activities.DocumentPreviewActivity"></activity>
+        <activity
+            android:name=".BusinessFragments.BusinessActivity"
+            android:label="@string/manage_profile"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <!-- Receiver and service -->
 
@@ -220,8 +227,6 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
-        <activity android:name=".Activities.DocumentPreviewActivity"></activity>
     </application>
 
 </manifest>

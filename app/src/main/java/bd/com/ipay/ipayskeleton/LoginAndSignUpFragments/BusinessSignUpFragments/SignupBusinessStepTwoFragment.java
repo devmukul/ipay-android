@@ -38,10 +38,8 @@ public class SignupBusinessStepTwoFragment extends Fragment {
 
     private ResourceSelectorDialog<BusinessType> businessTypeResourceSelectorDialog;
 
-
     private AddressInputView mBusinessAddressView;
 
-    private String mDeviceID;
     private ProgressDialog mProgressDialog;
     private int mSelectedBusinessTypeId = -1;
 
@@ -63,8 +61,6 @@ public class SignupBusinessStepTwoFragment extends Fragment {
         mNextButton = (Button) v.findViewById(R.id.business_again_next_button);
 
         mBusinessAddressView = (AddressInputView) v.findViewById(R.id.business_address);
-
-        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override

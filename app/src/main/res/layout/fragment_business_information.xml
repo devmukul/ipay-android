@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/layout_progress_container" />
+
+    <LinearLayout
+        android:id="@+id/content_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_margin="@dimen/activity_horizontal_margin_card">
+
+        <LinearLayout
+            style="@style/BusinessProfileFieldHolder">
+
+            <TextView
+                style="@style/BusinessProfileLabel"
+                android:text="@string/business_name"/>
+
+            <TextView
+                android:id="@+id/textview_business_name"
+                style="@style/BusinessProfileTextView"
+                android:text="@string/business_name"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/BusinessProfileFieldHolder">
+
+            <TextView
+                style="@style/BusinessProfileLabel"
+                android:text="@string/mobile_number"/>
+
+            <TextView
+                android:id="@+id/textview_business_mobile_number"
+                style="@style/BusinessProfileTextView"
+                android:text="@string/business_name"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/BusinessProfileFieldHolder">
+
+            <TextView
+                style="@style/BusinessProfileLabel"
+                android:text="@string/email"/>
+
+            <TextView
+                android:id="@+id/textview_business_email"
+                style="@style/BusinessProfileTextView"
+                android:text="@string/business_name"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/BusinessProfileFieldHolder">
+
+            <TextView
+                style="@style/BusinessProfileLabel"
+                android:text="@string/business_type"/>
+
+            <TextView
+                android:id="@+id/textview_business_type"
+                style="@style/BusinessProfileTextView"
+                android:text="@string/business_name"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</FrameLayout>
