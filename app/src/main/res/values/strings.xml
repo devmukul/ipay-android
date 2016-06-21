@@ -676,6 +676,9 @@
     <string name="failed_loading_business_type">Loading failed</string>
     <string name="failed_loading_business_information">Failed loading business information</string>
     <string name="manage_business">Manage Business</string>
+    <string name="please_wait_until_information_loading">Please wait until all information are loaded</string>
+    <string name="saving_business_information">Saving business information...</string>
+    <string name="business_information_saving_failed">Business information saving failed</string>
 
     <string-array name="account_types">
         <item>Personal</item>

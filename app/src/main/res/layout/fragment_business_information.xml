@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
 
     <include layout="@layout/layout_progress_container" />
 
@@ -10,8 +11,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:layout_margin="@dimen/activity_horizontal_margin_card">
+        android:background="@drawable/background_rounded_white"
+        android:layout_margin="@dimen/activity_horizontal_margin">
 
         <LinearLayout
             style="@style/BusinessProfileFieldHolder">
@@ -22,8 +23,7 @@
 
             <TextView
                 android:id="@+id/textview_business_name"
-                style="@style/BusinessProfileTextView"
-                android:text="@string/business_name"/>
+                style="@style/BusinessProfileTextView"/>
 
         </LinearLayout>
 
@@ -36,8 +36,7 @@
 
             <TextView
                 android:id="@+id/textview_business_mobile_number"
-                style="@style/BusinessProfileTextView"
-                android:text="@string/business_name"/>
+                style="@style/BusinessProfileTextView"/>
 
         </LinearLayout>
 
@@ -50,8 +49,7 @@
 
             <TextView
                 android:id="@+id/textview_business_email"
-                style="@style/BusinessProfileTextView"
-                android:text="@string/business_name"/>
+                style="@style/BusinessProfileTextView"/>
 
         </LinearLayout>
 
@@ -64,8 +62,7 @@
 
             <TextView
                 android:id="@+id/textview_business_type"
-                style="@style/BusinessProfileTextView"
-                android:text="@string/business_name"/>
+                style="@style/BusinessProfileTextView"/>
 
         </LinearLayout>
 

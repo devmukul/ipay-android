@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/business_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_business_name"
+        android:maxLines="1"
+        android:drawableLeft="@drawable/ic_signup_personal"
+        android:inputType="text"
+        app:borderType="up"/>
+
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/business_mobile_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/business_mobile_number"
+        android:maxLines="1"
+        android:inputType="phone"
+        android:drawableLeft="@drawable/ic_signup_number"/>
+
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/business_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
+        android:drawableLeft="@drawable/ic_signup_number"/>
+
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+        android:id="@+id/business_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/type_of_business"
+        android:drawableLeft="@drawable/ic_signup_number"
+        android:inputType="textPostalAddress"
+        app:borderType="down"
+        android:maxLines="1" />
+
+</LinearLayout>

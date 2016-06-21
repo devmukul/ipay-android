@@ -86,6 +86,7 @@ public class IconifiedEditText extends FrameLayout {
                     break;
                 case 0x1:
                     v.setBackgroundResource(R.drawable.background_half_upper_round_white);
+                    mEditText.requestFocus();
                     break;
                 case 0x2:
                     v.setBackgroundResource(R.drawable.background_half_lower_round_white);

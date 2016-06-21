@@ -60,13 +60,15 @@ public class Constants {
     public static final String NAME = "NAME";
     public static final String OCCUPATION = "OCCUPATION";
 
+    public static final String BUSINESS_NAME = "BUSINESS_NAME";
+    public static final String BUSINESS_EMAIL = "BUSINESS_EMAIL";
+    public static final String BUSINESS_MOBILE_NUMBER = "BUSINESS_MOBILE_NUMBER";
+    public static final String BUSINESS_TYPE = "BUSINESS_TYPE";
+    public static final String BUSINESS_TYPE_LIST = "BUSINESS_TYPE_LIST";
+    public static final String SELECTED_BUSINESS_TYPE = "SELECTED_BUSINESS_TYPE";
+
     public static final String FATHERS_NAME = "FATHERS_NAME";
     public static final String MOTHERS_NAME = "MOTHERS_NAME";
-    public static final String SPOUSES_NAME = "SPOUSES_NAME";
-
-    public static final String FATHERS_MOBILE_NUMBER = "FATHERS_MOBILE_NUMBER";
-    public static final String MOTHERS_MOBILE_NUMBER = "MOTHERS_MOBILE_NUMBER";
-    public static final String SPOUSES_MOBILE_NUMBER = "SPOUSES_MOBILE_NUMBER";
 
     public static final String ADDRESS = "ADDRESS";
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -100,7 +102,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = true;
+    public static final boolean AUTO_LOGIN = false;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server

@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.BusinessFragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
@@ -15,7 +16,7 @@ public class BusinessActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business);
 
-        switchToBusinessFragment();
+        switchToBusinessInformationFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -43,15 +44,31 @@ public class BusinessActivity extends BaseActivity {
     }
 
     public void switchToBusinessInformationFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        }
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BusinessInformationFragment()).commit();
     }
 
     public void switchToEditBusinessInformationFragment(Bundle bundle) {
+        Fragment editBusinessInformationFragment = new EditBusinessInformationFragment();
+        editBusinessInformationFragment.setArguments(bundle);
 
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, editBusinessInformationFragment).addToBackStack(null).commit();
     }
 
     public void switchToEmployeeManagementFragment() {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+        else
+            super.onBackPressed();
     }
 
     @Override

@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.BusinessFragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
@@ -40,6 +42,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
     private GetBusinessTypesAsyncTask mGetBusinessTypesAsyncTask;
 
+    private List<BusinessType> mBusinessTypes;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,6 +53,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mBusinessMobileNumberView = (TextView) v.findViewById(R.id.textview_business_mobile_number);
         mBusinessEmailView = (TextView) v.findViewById(R.id.textview_business_email);
         mBusinessTypeView = (TextView) v.findViewById(R.id.textview_business_type);
+
+        setHasOptionsMenu(true);
 
         return v;
     }
@@ -80,7 +86,20 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
     private void launchEditBusinessInformationFragment() {
+        Bundle bundle = new Bundle();
 
+        if (mGetBusinessInformationResponse == null || mBusinessTypes == null) {
+            Toast.makeText(getActivity(), R.string.please_wait_until_information_loading, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        bundle.putString(Constants.BUSINESS_NAME, mGetBusinessInformationResponse.getBusinessName());
+        bundle.putString(Constants.BUSINESS_MOBILE_NUMBER, mGetBusinessInformationResponse.getMobileNumber());
+        bundle.putString(Constants.BUSINESS_EMAIL, mGetBusinessInformationResponse.getEmail());
+        bundle.putInt(Constants.BUSINESS_TYPE, mGetBusinessInformationResponse.getBusinessType());
+        bundle.putParcelableArrayList(Constants.BUSINESS_TYPE_LIST, new ArrayList<>(mBusinessTypes));
+
+        ((BusinessActivity) getActivity()).switchToEditBusinessInformationFragment(bundle);
     }
 
     private void getBusinessInformation() {
@@ -105,6 +124,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mGetBusinessTypesAsyncTask = new GetBusinessTypesAsyncTask(getActivity(), new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
             @Override
             public void onLoadSuccess(List<BusinessType> businessTypes) {
+                mBusinessTypes = businessTypes;
+
                 for (BusinessType businessType : businessTypes) {
                     if (businessType.getId() == mGetBusinessInformationResponse.getBusinessType())
                         mBusinessTypeView.setText(businessType.getName());
@@ -153,6 +174,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                     Toast.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
                 }
             }
+
+            mGetBusinessInformationAsyncTask = null;
         }
     }
 }
