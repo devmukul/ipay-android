@@ -322,6 +322,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             private Button removeButton;
             private Button verifyButton;
             private View verifyDivider;
+            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -334,9 +335,12 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 removeButton = (Button) itemView.findViewById(R.id.remove_button);
                 verifyButton = (Button) itemView.findViewById(R.id.verify_button);
                 verifyDivider = (View) itemView.findViewById(R.id.verify_divider);
+                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindView(int pos) {
+
+                if(pos == mListUserBankClasses.size() -1) divider.setVisibility(View.GONE);
 
                 final long bankAccountID = mListUserBankClasses.get(pos).getBankAccountId();
                 final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();

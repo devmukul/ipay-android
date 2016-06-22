@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,7 +43,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class IntroducerFragment extends ProgressFragment implements HttpResponseListener {
+public class IdentificationFragment extends ProgressFragment implements HttpResponseListener {
 
     private final int PICK_CONTACT_REQUEST = 100;
     private int MINIMUM_INTRODUCER_COUNT = 2;           // Default value
@@ -326,6 +327,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             private RoundedImageView mRequestedProfilePictureView;
             private ImageView mSentRequestStatus;
             private TextView mTimeView;
+            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -345,6 +347,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 mRequestedProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 mSentRequestStatus = (ImageView) itemView.findViewById(R.id.request_status);
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
+                divider = itemView.findViewById(R.id.divider);
 
             }
 
@@ -403,6 +406,19 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
+                if(pos==0) {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+
+                } else if(pos== mIntroducerList.size() -1) {
+                    divider.setVisibility(View.GONE);
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
+
+                } else {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+
+                }
+
+
                 final String introducerName = mIntroducerList.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
                 final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
@@ -421,6 +437,18 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 else {
                     if (mIntroducerList.size() == 0) pos = pos - 1;
                     else pos = pos - mIntroducerList.size() - 2;
+                }
+
+                if(pos== 0) {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+
+                } else if(pos== mIntroducedList.size() -1) {
+                    divider.setVisibility(View.GONE);
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
+
+                } else {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+
                 }
 
                 final String introducedName = mIntroducedList.get(pos).getName();
@@ -445,6 +473,18 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                     else if (mIntroducedList.size() == 0) pos = pos - mIntroducerList.size() - 2;
                     else if (mIntroducerList.size() == 0) pos = pos - mIntroducedList.size() - 2;
                     else pos = pos - mIntroducedList.size() - mIntroducerList.size() - 3;
+                }
+
+                if(pos==0) {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+
+                } else if(pos== mRecommendationRequestList.size() -1) {
+                    divider.setVisibility(View.GONE);
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
+
+                } else {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+
                 }
 
                 final String RequestedName = mRecommendationRequestList.get(pos).getName();

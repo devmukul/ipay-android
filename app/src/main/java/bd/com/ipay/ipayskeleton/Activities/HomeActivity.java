@@ -506,7 +506,7 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_identification) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.INTRODUCER, new Bundle());
-            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new IntroducerFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new IdentificationFragment()).commit();
             //switchedToHomeFragment = false;
         }
 

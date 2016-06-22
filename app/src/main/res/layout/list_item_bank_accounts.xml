@@ -8,7 +8,8 @@
     <RelativeLayout
         android:id="@+id/description_holder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/portrait"
@@ -114,7 +115,6 @@
         android:layout_height="@dimen/divider_space"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/options_layout"
-        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
         android:background="@color/colorDivider" />
 </RelativeLayout>
 

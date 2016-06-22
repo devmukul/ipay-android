@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -503,6 +504,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             private Button rejectRecommendationButton;
             private Button markAsSpamRecommendationButton;
             private ProfileImageView mProfileImageView;
+            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -527,6 +529,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 verifyButton = (Button) itemView.findViewById(R.id.verify_button);
                 rejectRecommendationButton = (Button) itemView.findViewById(R.id.reject_button);
                 markAsSpamRecommendationButton = (Button) itemView.findViewById(R.id.mark_as_spam_button);
+
+                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindViewMoneyRequestList(int pos) {
@@ -535,6 +539,18 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 else {
                     if (mRecommendationRequestList.size() == 0) pos = pos - 1;
                     else pos = pos - mRecommendationRequestList.size() - 2;
+                }
+
+                if(pos==0) {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+
+                } else if(pos== moneyRequestList.size() -1) {
+                    divider.setVisibility(View.GONE);
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
+
+                } else {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+
                 }
 
                 final String imageUrl = moneyRequestList.get(pos).getOriginatorProfile().getUserProfilePicture();
@@ -639,6 +655,18 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
+
+                if(pos==0) {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+
+                } else if(pos== mRecommendationRequestList.size() -1) {
+                    divider.setVisibility(View.GONE);
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
+
+                } else {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+
+                }
 
                 final String imageUrl = mRecommendationRequestList.get(pos).getProfilePictureUrl();
                 final long requestID = mRecommendationRequestList.get(pos).getId();

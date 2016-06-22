@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/home_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+    android:layout_marginRight="@dimen/activity_horizontal_margin_card" >
 
     <include layout="@layout/layout_progress_container" />
 
