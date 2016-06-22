@@ -29,7 +29,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class SignupOrLoginActivity extends AppCompatActivity {
 
     private SharedPreferences pref;
-    private Boolean switchedToAccountSelection = false;
 
     public static String mBirthday;
     public static String mPassword;
@@ -57,6 +56,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_or_login);
+
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         if (pref.contains(Constants.USERID)) {
@@ -65,7 +65,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         } else {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
-            switchedToAccountSelection = true;
         }
 
         if (getIntent().hasExtra(Constants.MESSAGE)) {
@@ -92,49 +91,41 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public void switchToLoginFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new LoginFragment()).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToOTPVerificationPersonalFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new OTPVerificationPersonalFragment()).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToSignupPersonalStepOneFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupPersonalStepOneFragment()).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToSignupPersonalStepTwoFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupPersonalStepTwoFragment()).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToOTPVerificationBusinessFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new OTPVerificationBusinessFragment()).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToOTPVerificationTrustedFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new OTPVerificationTrustFragment()).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToAccountSelectionFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
-        switchedToAccountSelection = true;
     }
 
     public void switchToForgetPasswordFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new ForgetPasswordFragment()).addToBackStack(null).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToHomeActivity() {
@@ -147,19 +138,28 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public void switchToBusinessStepOneFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupBusinessStepOneFragment()).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToBusinessStepTwoFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupBusinessStepTwoFragment()).commit();
-        switchedToAccountSelection = false;
     }
 
     public void switchToBusinessStepThreeFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).commit();
-        switchedToAccountSelection = false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            this.finish();
+        }
     }
 
 }
