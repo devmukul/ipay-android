@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.DrawerFragments;
+package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -9,21 +9,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,11 +26,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
@@ -45,21 +36,13 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankAccountRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranch;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranchRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetBankBranchesResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -67,17 +50,8 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class BankAccountsFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetBankBranchesTask = null;
-    private GetBankBranchesResponse mGetBankBranchesResponse;
-
-    private HttpRequestPostAsyncTask mAddBankTask = null;
-    private AddBankResponse mAddBankResponse;
-
     private HttpRequestDeleteAsyncTask mRemoveBankAccountTask = null;
     private RemoveBankAccountResponse mRemoveBankAccountResponse;
-
-    private HttpRequestPostAsyncTask mSendForVerificationTask = null;
-    private VerifyBankAccountResponse mVerifyBankAccountResponse;
 
     private HttpRequestPostAsyncTask mSendForVerificationWithAmountTask = null;
     private VerifyBankWithAmountResponse mVerifyBankWithAmountResponse;
@@ -90,69 +64,26 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     private TextView mEmptyListTextView;
     private UserBankListAdapter mUserBankListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Button addNewBankButton;
     private List<UserBankClass> mListUserBankClasses;
-    // Contains a list of bank branch corresponding to each district
-    private Map<String, ArrayList<BankBranch>> bankDistrictToBranchMap;
-    private ArrayList<String> mDistrictNames;
-    private ArrayList<BankBranch> mBranches;
-    private ArrayList<String> mBranchNames;
-
-    private ArrayAdapter<String> mDistrictAdapter;
-    private ArrayAdapter<String> mBranchAdapter;
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
+        attemptRefreshAvailableBankNames();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bank_accounts, container, false);
-        getActivity().setTitle(R.string.bank_accounts);
-
-
-        mDistrictNames = new ArrayList<>();
-        mBranches = new ArrayList<>();
-        mBranchNames = new ArrayList<>();
-
-        mDistrictAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mDistrictNames);
-        mDistrictAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        mBranchAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mBranchNames);
-        mBranchAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-
+        getActivity().setTitle(R.string.bank_list);
 
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mBankListRecyclerView = (RecyclerView) v.findViewById(R.id.list_bank);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        addNewBankButton = (Button) v.findViewById(R.id.button_add_bank);
         mProgressDialog = new ProgressDialog(getActivity());
-
-        attemptRefreshAvailableBankNames();
-
-        addNewBankButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addBankAccountDialogue();
-            }
-        });
 
         mUserBankListAdapter = new UserBankListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -188,7 +119,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 processGetBankListResponse(json);
             }
         }
-
     }
 
     private void attemptRefreshAvailableBankNames() {
@@ -197,7 +127,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                     @Override
                     public void onLoadSuccess(List<Bank> banks) {
                         mProgressDialog.dismiss();
-                        //getBankList();
+                        getBankList();
                     }
 
                     @Override
@@ -213,7 +143,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mGetAvailableBankAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-
     private void getBankList() {
         if (mGetBankTask != null) {
             return;
@@ -225,182 +154,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
         mGetBankTask.mHttpResponseListener = this;
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void addBankAccountDialogue() {
-        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.add_a_bank)
-                .customView(R.layout.dialog_add_bank_account, true)
-                .positiveText(R.string.add)
-                .negativeText(R.string.cancel)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .autoDismiss(false)
-                .show();
-
-        View view = dialog.getCustomView();
-        final Spinner mBankListSpinner = (Spinner) view.findViewById(R.id.spinner_default_bank_accounts);
-        final Spinner mAccountTypesSpinner = (Spinner) view.findViewById(R.id.spinner_default_account_types);
-        final Spinner mDistrictSpinner = (Spinner) view.findViewById(R.id.spinner_branch_districts);
-        final Spinner mBankBranchSpinner = (Spinner) view.findViewById(R.id.spinner_bank_branch);
-        final EditText mAccountNameEditText = (EditText) view.findViewById(R.id.bank_account_name);
-        final EditText mAccountNumberEditText = (EditText) view.findViewById(R.id.bank_account_number);
-
-        ArrayList<String> bankNames = new ArrayList<>();
-        bankNames.add(getString(R.string.select_one));
-        bankNames.addAll(Arrays.asList(CommonData.getAvailableBankNames()));
-
-        ArrayAdapter<String> mAdapterBanks = new ArrayAdapter<>(
-                getActivity(), android.R.layout.simple_spinner_item, bankNames);
-        mAdapterBanks.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        mBankListSpinner.setAdapter(mAdapterBanks);
-
-        ArrayAdapter<CharSequence> mAdapterAccountTypes = ArrayAdapter.createFromResource(getActivity(),
-                R.array.default_bank_account_types, android.R.layout.simple_spinner_item);
-        mAccountTypesSpinner.setAdapter(mAdapterAccountTypes);
-
-        mDistrictSpinner.setAdapter(mDistrictAdapter);
-        mBankBranchSpinner.setAdapter(mBranchAdapter);
-
-        mBankListSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // First position is "Select One"
-                if (position != 0) {
-                    Bank bank = CommonData.getAvailableBanks().get(position - 1);
-                    getBankBranches(bank.getId());
-                    mDistrictSpinner.setSelection(0);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        mDistrictSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // First position is "Select One"
-                if (position != 0) {
-                    String selectedDistrict = mDistrictNames.get(position);
-
-                    mBranches = new ArrayList<>();
-                    if (bankDistrictToBranchMap.containsKey(selectedDistrict)) {
-                        mBranches.addAll(bankDistrictToBranchMap.get(selectedDistrict));
-                    }
-
-                    mBranchNames.clear();
-                    mBranchNames.add(getString(R.string.select_one));
-                    for (BankBranch bankBranch : mBranches) {
-                        mBranchNames.add(bankBranch.getName());
-                    }
-
-                    mBankBranchSpinner.setSelection(0);
-                    mBranchAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                // The first position is "Select One"
-                if (mBankListSpinner.getSelectedItemPosition() <= 0) {
-                    ((TextView) mBankListSpinner.getSelectedView()).setError("");
-                }
-                else if (mDistrictSpinner.getSelectedItemPosition() <= 0) {
-                    ((TextView) mDistrictSpinner.getSelectedView()).setError("");
-                }
-                else if (mBankBranchSpinner.getSelectedItemPosition() <= 0) {
-                    ((TextView) mBankBranchSpinner.getSelectedView()).setError("");
-                }else if (mAccountNameEditText.getText().toString().trim().length() == 0) {
-                    if (getActivity() != null) {
-                        mAccountNameEditText.setError(getContext().getString( R.string.please_enter_an_account_name));
-                        View focusView = mAccountNameEditText;
-                        focusView.requestFocus();
-                    }
-                }else if (mAccountNumberEditText.getText().toString().trim().length() == 0) {
-                    if (getActivity() != null) {
-                        mAccountNumberEditText.setError(getContext().getString( R.string.please_enter_an_account_number));
-                        View focusView = mAccountNumberEditText;
-                        focusView.requestFocus();
-                    }
-                }
-                else {
-                    BankBranch bankBranch = mBranches.get(mBankBranchSpinner.getSelectedItemPosition() - 1);
-                    attemptAddBank(bankBranch.getRoutingNumber(), mAccountTypesSpinner.getSelectedItemPosition(),
-                            mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
-                    dialog.dismiss();
-                }
-            }
-        });
-
-        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                dialog.dismiss();
-            }
-        });
-
-
-    }
-
-    private void getBankBranches(long bankID) {
-        if (mGetBankBranchesTask != null) {
-            return;
-        }
-
-        BankBranchRequestBuilder mBankBranchRequestBuilder = new BankBranchRequestBuilder(bankID);
-
-        String mUri = mBankBranchRequestBuilder.getGeneratedUri();
-        mGetBankBranchesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_BRANCH_LIST,
-                mUri, getActivity());
-        mGetBankBranchesTask.mHttpResponseListener = this;
-
-        mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void attemptAddBank(String branchRoutingNumber, int accountType, String accountName, String accountNumber) {
-
-        mProgressDialog.setMessage(getString(R.string.adding_bank));
-        mProgressDialog.show();
-        AddBankRequest mAddBankRequest = new AddBankRequest(branchRoutingNumber, accountType, accountName, accountNumber);
-        Gson gson = new Gson();
-        String json = gson.toJson(mAddBankRequest);
-        mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity());
-        mAddBankTask.mHttpResponseListener = this;
-        mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void attemptSendForVerification(Long userBankID) {
-        if (userBankID == 0) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.sending_for_verification));
-        mProgressDialog.show();
-        VerifyBankAccountRequest mVerifyBankAccountRequest = new VerifyBankAccountRequest(userBankID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mVerifyBankAccountRequest);
-        mSendForVerificationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_FOR_VERIFICATION_BANK,
-                Constants.BASE_URL_SM + Constants.URL_SEND_FOR_VERIFICATION_BANK, json, getActivity());
-        mSendForVerificationTask.mHttpResponseListener = this;
-        mSendForVerificationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptVerificationWithAmount(Long userBankID, double amount) {
@@ -442,59 +195,51 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         mRemoveBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void processGetBankListResponse(String json) {
+        Gson gson = new Gson();
+        mBankListResponse = gson.fromJson(json, GetBankListResponse.class);
+
+        if (mListUserBankClasses == null) {
+            mListUserBankClasses = mBankListResponse.getBanks();
+        } else {
+            List<UserBankClass> tempBankClasses;
+            tempBankClasses = mBankListResponse.getBanks();
+            mListUserBankClasses.clear();
+            mListUserBankClasses.addAll(tempBankClasses);
+        }
+
+        if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
+            mEmptyListTextView.setVisibility(View.GONE);
+        else mEmptyListTextView.setVisibility(View.VISIBLE);
+
+        mUserBankListAdapter.notifyDataSetChanged();
+
+        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
+        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
+
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mAddBankTask = null;
             mGetBankTask = null;
             mRemoveBankAccountTask = null;
-            mSendForVerificationTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 
-
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_ADD_A_BANK)) {
-
-            try {
-                mAddBankResponse = gson.fromJson(result.getJsonString(), AddBankResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                    long bankAccountID = mAddBankResponse.getId();
-
-                    // Refresh bank list
-                    if (mListUserBankClasses != null)
-                        mListUserBankClasses.clear();
-                    mListUserBankClasses = null;
-
-                    // Send the verification status
-                    attemptSendForVerification(bankAccountID);
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mProgressDialog.dismiss();
-            mAddBankTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
 
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                     processGetBankListResponse(result.getJsonString());
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
@@ -534,66 +279,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             mProgressDialog.dismiss();
             mRemoveBankAccountTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_BRANCH_LIST)) {
-
-            try {
-                mGetBankBranchesResponse = gson.fromJson(result.getJsonString(), GetBankBranchesResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mDistrictNames.clear();
-                    mDistrictNames.add(getString(R.string.select_one));
-
-                    bankDistrictToBranchMap = new HashMap<>();
-
-                    for (BankBranch branch : mGetBankBranchesResponse.getAvailableBranches()) {
-                        if (!bankDistrictToBranchMap.containsKey(branch.getDistrict())) {
-                            bankDistrictToBranchMap.put(branch.getDistrict(), new ArrayList<BankBranch>());
-                            mDistrictNames.add(branch.getDistrict());
-                        }
-                        bankDistrictToBranchMap.get(branch.getDistrict()).add(branch);
-                    }
-
-                    mDistrictAdapter.notifyDataSetChanged();
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mGetBankBranchesResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_to_fetch_branch, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mGetBankBranchesTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_FOR_VERIFICATION_BANK)) {
-
-            try {
-                mVerifyBankAccountResponse = gson.fromJson(result.getJsonString(), VerifyBankAccountResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Refresh bank list
-                    if (mListUserBankClasses != null)
-                        mListUserBankClasses.clear();
-                    mListUserBankClasses = null;
-                    getBankList();
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_to_send_for_bank_verification, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mSendForVerificationTask = null;
-
         } else if (result.getApiCommand().equals(Constants.COMMAND_VERIFICATION_BANK_WITH_AMOUNT)) {
 
             try {
@@ -620,32 +305,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
             mProgressDialog.dismiss();
             mSendForVerificationWithAmountTask = null;
-
         }
-    }
-
-    private void processGetBankListResponse(String json) {
-        Gson gson = new Gson();
-        mBankListResponse = gson.fromJson(json, GetBankListResponse.class);
-
-        if (mListUserBankClasses == null) {
-            mListUserBankClasses = mBankListResponse.getBanks();
-        } else {
-            List<UserBankClass> tempBankClasses;
-            tempBankClasses = mBankListResponse.getBanks();
-            mListUserBankClasses.clear();
-            mListUserBankClasses.addAll(tempBankClasses);
-        }
-
-        if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
-            mEmptyListTextView.setVisibility(View.GONE);
-        else mEmptyListTextView.setVisibility(View.VISIBLE);
-
-        mUserBankListAdapter.notifyDataSetChanged();
-
-        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
-        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
-
     }
 
     public class UserBankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -662,7 +322,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             private Button removeButton;
             private Button verifyButton;
             private View verifyDivider;
-            private CardView mBankCard;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -675,7 +334,6 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 removeButton = (Button) itemView.findViewById(R.id.remove_button);
                 verifyButton = (Button) itemView.findViewById(R.id.verify_button);
                 verifyDivider = (View) itemView.findViewById(R.id.verify_divider);
-                mBankCard = (CardView) itemView.findViewById(R.id.bank_account_card);
             }
 
             public void bindView(int pos) {
@@ -691,14 +349,14 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 optionsLayout.setVisibility(View.GONE);
 
                 if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_verified3x);
                     mBankVerifiedStatus.clearColorFilter();
 
                     verifyDivider.setVisibility(View.GONE);
                     verifyButton.setVisibility(View.GONE);
 
                 } else if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_error_black_24dp);
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified3x);
                     mBankVerifiedStatus.setColorFilter(Color.RED);
 
                     verifyDivider.setVisibility(View.GONE);

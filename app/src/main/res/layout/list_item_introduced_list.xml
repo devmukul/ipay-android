@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/value5"
-    android:background="@android:color/white"
-    android:paddingLeft="@dimen/activity_horizontal_margin">
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/activity_horizontal_margin">
+
 
         <include
             android:id="@+id/introduced_profile_picture"
@@ -25,21 +30,29 @@
             android:paddingBottom="2dp"
             android:paddingTop="14dp"
             android:singleLine="true"
+            android:text="Mohsin Khan"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="Mohsin Khan"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/introduced_mobile_number"
+            style="@style/TextStyleSecondaryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/introduced_name"
             android:layout_toRightOf="@+id/introduced_profile_picture"
-            style="@style/TextStyleSecondaryMedium"
-            android:text="+8801919191919"
             android:gravity="left"
             android:paddingBottom="14dp"
             android:singleLine="true"
-            android:textSize="15sp"/>
+            android:text="+8801919191919"
+            android:textSize="15sp" />
 
-</RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_space"
+        android:background="@color/colorDivider" />
+
+</LinearLayout>

@@ -414,6 +414,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             private Button removeButton;
             private Button makePrimaryButton;
             private View divider;
+            private View divider1;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -424,21 +425,23 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 divider = itemView.findViewById(R.id.divider);
+                divider1 = itemView.findViewById(R.id.divider1);
 
                 removeButton = (Button) itemView.findViewById(R.id.button_remove);
                 makePrimaryButton = (Button) itemView.findViewById(R.id.button_make_primary);
+
             }
 
             public void bindView(int pos) {
 
                 final Email email = mEmails.get(pos);
 
+                if(pos == mEmails.size() -1) divider1.setVisibility(View.GONE);
+
                 final String verificationStatus = email.getVerificationStatus();
 
                 if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)) {
-                    mVerificationStatus.setImageResource(R.drawable.ic_verified);
-                    mVerificationStatus.setColorFilter(null);
-
+                    mVerificationStatus.setImageResource(R.drawable.ic_verified3x);
                     makePrimaryButton.setVisibility(View.VISIBLE);
                 } else if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)) {
                     mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
@@ -447,8 +450,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     makePrimaryButton.setVisibility(View.GONE);
                     divider.setVisibility(View.GONE);
                 } else {
-                    mVerificationStatus.setImageResource(R.drawable.ic_error_black_24dp);
-                    mVerificationStatus.setColorFilter(Color.RED);
+                    mVerificationStatus.setImageResource(R.drawable.ic_notverified3x);
 
                     makePrimaryButton.setVisibility(View.GONE);
                 }

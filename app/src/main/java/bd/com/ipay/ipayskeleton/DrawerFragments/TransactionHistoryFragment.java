@@ -619,6 +619,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             private ImageView statusView;
             private ImageView otherImageView;
             private ProfileImageView mProfileImageView;
+            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -630,9 +631,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 statusView = (ImageView) itemView.findViewById(R.id.status);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 otherImageView = (ImageView) itemView.findViewById(R.id.other_image);
+                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindView(int pos) {
+
+                if (pos == userTransactionHistoryClasses.size() -1) divider.setVisibility(View.GONE);
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
 
                 final String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
@@ -679,16 +683,14 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 }
 
                 if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    statusView.setColorFilter(Color.GREEN);
-                    statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
+                    statusView.setImageResource(R.drawable.ic_verified3x);
 
                 } else if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_cached_black_24dp);
 
                 } else {
-                   statusView.setColorFilter(Color.RED);
-                    statusView.setImageResource(R.drawable.ic_error_black_24dp);
+                    statusView.setImageResource(R.drawable.ic_notverified3x);
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {

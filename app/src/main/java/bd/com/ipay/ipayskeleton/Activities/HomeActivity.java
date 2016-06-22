@@ -53,11 +53,9 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.BusinessFragments.BusinessActivity;
-import bd.com.ipay.ipayskeleton.BusinessFragments.BusinessFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityLogFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
@@ -438,7 +436,8 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_bank_account) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new BankAccountsFragment()).commit();
+            Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
+            startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_user_activity) {
@@ -467,6 +466,7 @@ public class HomeActivity extends BaseActivity
 
             Intent intent = new Intent(HomeActivity.this, EventActivity.class);
             startActivity(intent);
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_settings) {
 
@@ -705,7 +705,6 @@ public class HomeActivity extends BaseActivity
                 e.printStackTrace();
                 Toast.makeText(this, R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
             }
-
 
             mAddTrustedDeviceTask = null;
 

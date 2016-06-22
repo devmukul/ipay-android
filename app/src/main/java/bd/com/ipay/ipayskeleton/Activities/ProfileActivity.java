@@ -6,7 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
-import bd.com.ipay.ipayskeleton.DrawerFragments.BankAccountsFragment;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentListFragment;
@@ -19,9 +20,12 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.*;
 
 public class ProfileActivity extends BaseActivity {
+
+    private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,8 @@ public class ProfileActivity extends BaseActivity {
         String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
 
         if (targetFragment != null) {
-            switchToFragment(targetFragment, null, false);
+            Bundle args = setBundle(targetFragment);
+            switchToFragment(targetFragment, args, false);
         } else {
             switchToProfileCompletionFragment();
         }
@@ -62,6 +67,20 @@ public class ProfileActivity extends BaseActivity {
             super.onBackPressed();
     }
 
+    private Bundle setBundle(String targetFragment) {
+        Bundle args = new Bundle();
+        switch (targetFragment) {
+            case ADD_BANK:
+                args.putBoolean(STARTED_FROM_PROFILE_ACTIVITY, true);
+                break;
+            default:
+                args = null;
+                break;
+        }
+
+        return args;
+    }
+
     public void switchToFragment(String targetFragment, Bundle bundle, boolean addToBackStack) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment fragment;
@@ -69,7 +88,7 @@ public class ProfileActivity extends BaseActivity {
         switch (targetFragment) {
             case VERIFY_BANK:
             case ADD_BANK:
-                fragment = new BankAccountsFragment();
+                fragment = new AddBankFragment();
                 break;
             case TRUSTED_NETWORK:
             case TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE:
@@ -104,7 +123,7 @@ public class ProfileActivity extends BaseActivity {
 
         ft.replace(R.id.fragment_container, fragment);
         if (addToBackStack)
-                ft.addToBackStack(null);
+            ft.addToBackStack(null);
 
         ft.commit();
     }

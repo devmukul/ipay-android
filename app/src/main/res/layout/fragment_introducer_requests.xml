@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/home_background"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <include layout="@layout/layout_progress_container" />
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/button_ask_for_recommendation"
                 android:text="@string/at_least_two_introducers"
-                android:textColor="@color/background_red" />
+                android:textColor="@color/zxinglib_status_text" />
 
             <Button
                 android:id="@+id/button_ask_for_recommendation"
@@ -40,12 +40,13 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_introducer_requests"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/complete_introduction_header"
             android:layout_marginTop="@dimen/value5"
             android:clipToPadding="false"
-            android:paddingBottom="@dimen/activity_horizontal_margin_double"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card" />
 
         <TextView
             android:id="@+id/empty_list_text"

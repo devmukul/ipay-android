@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary">
 
-    <Button
-        android:id="@+id/button_add_bank"
-        style="@style/ButtonStyleLarge"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/add_a_bank"
-        android:textSize="@dimen/text_size_medium"
-        android:textStyle="bold" />
+        android:layout_marginBottom="@dimen/activity_horizontal_margin">
 
-    <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:layout_below="@+id/button_add_bank">
+        <LinearLayout
+            android:id="@+id/header"
+            style="@style/ListHeaderStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/bank_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                android:text="@string/bank_list"
+                android:textColor="@color/zxinglib_status_text"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_bank"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/button_add_bank"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/activity_horizontal_margin_double" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+            android:background="@drawable/background_rounded_white" />
 
+        <TextView
+            android:id="@+id/empty_list_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:text="@string/empty_bank_account_list" />
 
-    </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/empty_list_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/empty_bank_account_list" />
-
-</RelativeLayout>
+</bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>

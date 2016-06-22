@@ -134,6 +134,13 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".Activities.ManageBanksActivity"
+            android:label="@string/events"
+            android:parentActivityName=".Activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".Activities.AddParticipantsInEventActivity"
             android:label="@string/add_participants"
             android:parentActivityName=".Activities.EventActivity"

@@ -72,8 +72,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mUserNameLoginView = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
         mPasswordLoginView = (IconifiedEditText) v.findViewById(R.id.login_password);
 
-        putConstantStringInfront(mUserNameLoginView, "+880");
-
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,8 +172,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mPasswordLoginView.setError(null);
 
         // Store values at the time of the login attempt.
+
         mPasswordLogin = mPasswordLoginView.getText().toString().trim();
-        mUserNameLogin = mUserNameLoginView.getText().toString().trim();
+        mUserNameLogin = ContactEngine.formatMobileNumberBD(mUserNameLoginView.getText().toString().trim());
 
         boolean cancel = false;
         View focusView = null;
@@ -188,7 +187,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             cancel = true;
         }
 
-        if (mUserNameLoginView.getText().toString().trim().length() != 14) {
+        if (!ContactEngine.isValidNumber(mUserNameLogin)) {
             mUserNameLoginView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mUserNameLoginView;
             cancel = true;

@@ -261,7 +261,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
-                getActivity().finish();
+                if (getActivity() != null) getActivity().finish();
             }
 
             mGetUserAddressTask = null;

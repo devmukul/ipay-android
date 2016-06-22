@@ -529,6 +529,7 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
             private TextView mTransactionDescription;
             private TextView mTime;
             private TextView loadMoreTextView;
+            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -537,9 +538,14 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindView(int pos) {
+
+
+                if(pos == userActivityResponsesList.size() -1) divider.setVisibility(View.GONE);
+
                 String type = activityLogTypes[userActivityResponsesList.get(pos).getType()];
                 String description = userActivityResponsesList.get(pos).getDescription();
 

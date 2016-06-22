@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout android:id="@+id/swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -231,20 +236,17 @@
             android:text="@string/empty_transaction_history"
             android:textColor="@color/zxinglib_status_text"/>
 
-        <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_half_upper_round_white"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-            android:layout_marginRight="@dimen/activity_horizontal_margin_card">
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_transaction_history"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="@drawable/background_half_upper_round_white"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
 
-        </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
     </LinearLayout>
 
 </LinearLayout>
+</bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>

@@ -1,114 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/activity_horizontal_margin">
+    android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
+    <RelativeLayout
+        android:id="@+id/info_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/email_holder"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/activity_horizontal_margin_card"
-            android:paddingLeft="@dimen/activity_horizontal_margin_card"
-            android:paddingTop="@dimen/activity_horizontal_margin_card">
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/info_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/email_holder"
-                    android:orientation="vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/textview_email"
-                        style="@style/TextStyleSecondaryMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_toLeftOf="@+id/bank_account_verify_status"
-                        android:gravity="left"
-                        android:singleLine="true" />
-
-                    <TextView
-                        android:id="@+id/textview_is_primary"
-                        android:layout_below="@+id/textview_email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:visibility="gone"
-                        android:text="@string/primary_email"/>
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/email_verification_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignBaseline="@+id/email_holder"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_verified"
-                    android:padding="@dimen/activity_horizontal_margin" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/options_layout"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textview_email"
+                style="@style/TextStyleSecondaryMedium"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/info_layout"
-                android:layout_marginTop="@dimen/value10"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/bank_account_verify_status"
+                android:gravity="left"
+                android:singleLine="true" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/colorDivider" />
+            <TextView
+                android:id="@+id/textview_is_primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textview_email"
+                android:text="@string/primary_email"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/value25"
-                    android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/email_verification_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/email_holder"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_verified" />
+    </RelativeLayout>
 
-                    <Button
-                        android:id="@+id/button_make_primary"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:padding="@dimen/value5"
-                        android:text="@string/make_primary"
-                        android:textSize="12sp" />
+    <LinearLayout
+        android:id="@+id/options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_layout"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-                    <View
-                        android:id="@+id/divider"
-                        android:layout_width="1px"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorDivider" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider" />
 
-                    <Button
-                        android:id="@+id/button_remove"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:padding="@dimen/value5"
-                        android:text="@string/remove"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/value25"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/button_make_primary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:padding="@dimen/value5"
+                android:text="@string/make_primary"
+                android:textSize="12sp" />
 
-        </RelativeLayout>
+            <View
+                android:id="@+id/divider"
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/colorDivider" />
 
-    </android.support.v7.widget.CardView>
+            <Button
+                android:id="@+id/button_remove"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:padding="@dimen/value5"
+                android:text="@string/remove"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
 
-</LinearLayout>
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_space"
+        android:layout_below="@+id/options_layout"
+        android:background="@color/colorDivider" />
+
+</RelativeLayout>
+
