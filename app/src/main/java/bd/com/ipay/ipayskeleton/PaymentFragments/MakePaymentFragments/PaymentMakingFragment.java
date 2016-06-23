@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -248,6 +249,7 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
             private Button acceptButton;
             private Button rejectButton;
             private ProfileImageView mProfileImageView;
+            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -263,10 +265,23 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 acceptButton = (Button) itemView.findViewById(R.id.accept_button);
                 rejectButton = (Button) itemView.findViewById(R.id.reject_button);
+                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindViewMoneyRequestList(int pos) {
                 final NotificationClass moneyRequest = moneyRequestList.get(pos - 1);
+
+                if(pos-1 == 0) {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+
+                } else if(pos-1 == moneyRequestList.size() -1) {
+                    divider.setVisibility(View.GONE);
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
+
+                } else {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+
+                }
 
                 final long id = moneyRequest.getId();
                 final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();

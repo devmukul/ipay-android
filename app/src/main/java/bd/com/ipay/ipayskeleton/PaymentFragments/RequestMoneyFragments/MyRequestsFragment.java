@@ -230,6 +230,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
             private TextView mDescription;
             private ImageView mCancel;
             private ProfileImageView mProfileImageView;
+            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -239,9 +240,13 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                 mDescription = (TextView) itemView.findViewById(R.id.description);
                 mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
+                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindView(int pos) {
+
+
+                if(pos == pendingMoneyRequestClasses.size() -1) divider.setVisibility(View.GONE);
 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
