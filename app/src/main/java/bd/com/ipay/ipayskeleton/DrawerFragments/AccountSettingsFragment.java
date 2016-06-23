@@ -3,10 +3,14 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordResponse;
@@ -60,9 +66,9 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private HttpRequestDeleteAsyncTask mRemoveTrustedDeviceTask = null;
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
 
-    private EditText mEnterPINEditText;
-    private EditText mConfirmPINEditText;
-    private EditText mEnterPasswordEditText;
+    private IconifiedEditText mEnterPINEditText;
+    private IconifiedEditText mConfirmPINEditText;
+    private IconifiedEditText mEnterPasswordEditText;
 
     private View setPINHeader;
     private View changePasswordHeader;
@@ -78,9 +84,9 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private LinearLayout mTrustedDevicesLayout;
 
     private Button mChangePasswordButton;
-    private EditText mEnterCurrentPasswordEditText;
-    private EditText mEnterNewPasswordEditText;
-    private EditText mEnterConfirmNewPasswordEditText;
+    private IconifiedEditText mEnterCurrentPasswordEditText;
+    private IconifiedEditText mEnterNewPasswordEditText;
+    private IconifiedEditText mEnterConfirmNewPasswordEditText;
 
     private ListView mTrustedDevicesListView;
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
@@ -99,13 +105,13 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         View v = inflater.inflate(R.layout.fragment_account_settings, container, false);
         ((HomeActivity) getActivity()).setTitle(R.string.security_settings);
 
-        mEnterPINEditText = (EditText) v.findViewById(R.id.new_pin);
-        mConfirmPINEditText = (EditText) v.findViewById(R.id.confirm_pin);
-        mEnterPasswordEditText = (EditText) v.findViewById(R.id.password);
+        mEnterPINEditText = (IconifiedEditText) v.findViewById(R.id.new_pin);
+        mConfirmPINEditText = (IconifiedEditText) v.findViewById(R.id.confirm_pin);
+        mEnterPasswordEditText = (IconifiedEditText) v.findViewById(R.id.password);
 
-        mEnterCurrentPasswordEditText = (EditText) v.findViewById(R.id.current_password);
-        mEnterNewPasswordEditText = (EditText) v.findViewById(R.id.new_password);
-        mEnterConfirmNewPasswordEditText = (EditText) v.findViewById(R.id.confirm_new_password);
+        mEnterCurrentPasswordEditText = (IconifiedEditText) v.findViewById(R.id.current_password);
+        mEnterNewPasswordEditText = (IconifiedEditText) v.findViewById(R.id.new_password);
+        mEnterConfirmNewPasswordEditText = (IconifiedEditText) v.findViewById(R.id.confirm_new_password);
 
         mChangePasswordButton = (Button) v.findViewById(R.id.save_pass);
         mSetPINButton = (Button) v.findViewById(R.id.save_pin);
@@ -516,17 +522,37 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             View view = convertView;
             if (view == null)
                 view = inflater.inflate(R.layout.list_item_trusted_device, null);
+
+
+            RelativeLayout layout_item_view=(RelativeLayout)view.findViewById(R.id.layout_list_item_trusted_device);
             ImageView deviceimageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
             TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
             TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);
-            TextView currentDevice = (TextView) view.findViewById(R.id.current_device);
+            //TextView currentDevice = (TextView) view.findViewById(R.id.current_device);
             Button removeButton = (Button) view.findViewById(R.id.button_remove);
+
+            //setting background :Maliha
+            //if first position
+            if(position==0) {
+
+                layout_item_view.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+            }
+            //if last position
+            else if(position== getCount()-1) {
+
+                layout_item_view.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
+            }
+            else {
+
+               layout_item_view.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+            }
+
 
             //Setting the correct image based on trusted device type
             int[] images = {
-                    R.drawable.ic_computer_black_24dp,
-                    R.drawable.ic_phone_android_black_24dp,
-                    R.drawable.ic_phone_iphone_black_24dp
+                    R.drawable.ic_browser3x,
+                    R.drawable.ic_android3x,
+                    R.drawable.ic_ios3x
             };
             String deviceID = trustedDevice.getDeviceId();
             String Android = "android";
@@ -548,18 +574,18 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             if (mDeviceID.equals(deviceID)) {
                 removeButton.setVisibility(View.INVISIBLE);
-                currentDevice.setVisibility(View.VISIBLE);
-                deviceNameView.setTextColor(getResources().getColor(R.color.cardview_dark_background));
+                //currentDevice.setVisibility(View.VISIBLE);
+                deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimaryLighter));
             } else {
                 removeButton.setVisibility(View.VISIBLE);
-                currentDevice.setVisibility(View.INVISIBLE);
+                //currentDevice.setVisibility(View.INVISIBLE);
 
             }
 
 
             deviceNameView.setText(trustedDevice.getDeviceName());
             grantTimeView.setText(trustedDevice.getCreatedTimeString());
-            currentDevice.setText("Current Device");
+            //currentDevice.setText("Current Device");
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

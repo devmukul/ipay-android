@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -272,6 +273,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private Button mUploadButton;
             private Button mPreviewButton;
             private View mDivider;
+            private View mRecyclarDivider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -284,11 +286,30 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mUploadButton = (Button) itemView.findViewById(R.id.button_upload);
                 mPreviewButton = (Button) itemView.findViewById(R.id.button_preview);
                 mDivider = itemView.findViewById(R.id.divider);
+                mRecyclarDivider = itemView.findViewById(R.id.divider_recyclar);
 
             }
 
             public void bindView(final int pos) {
 
+                //setting background : Maliha
+                //if first position
+                /*if(pos==0) {
+
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+                }*/
+                //if last position
+                if(pos== mIdentificationDocumentDetails.length-1) {
+
+                    //itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
+                    mRecyclarDivider.setVisibility(View.GONE);
+                }
+                /*else {
+
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+
+                }
+*/
                 final IdentificationDocumentDetails identificationDocumentDetail = mIdentificationDocumentDetails[pos];
 
                 final String verificationStatus = identificationDocumentDetail.getVerificationStatus();

@@ -38,6 +38,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
+    <string name="email_address">Email Address</string>
     <string name="full_name">Full Name</string>
     <string name="address">Address</string>
     <string name="address_line_1">Address Line 1</string>
@@ -56,6 +57,9 @@
     <string name="invalid_country">Please enter a Country</string>
     <string name="occupation">Occupation</string>
     <string name="mobile_number">Mobile Number</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="help_faq">Help/FAQ</string>
+    <string name="terms">Terms and Privacy Policy</string>
     <string name="contact_person_mobile_number">Mobile number of contact person</string>
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>

@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/profile_completion_icon"
-            android:src="@drawable/ic_activity_profile_change"
+            android:src="@drawable/ic_signup_personal"
             android:layout_width="@dimen/list_item_icon_size"
             android:layout_height="@dimen/list_item_icon_size"
             android:layout_marginRight="@dimen/activity_horizontal_margin"

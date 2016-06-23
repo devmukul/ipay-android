@@ -18,6 +18,8 @@
     <dimen name="value20">20.0dip</dimen>
     <dimen name="value25">25.0dip</dimen>
     <dimen name="value30">30.0dip</dimen>
+    <dimen name="value35">35.0dip</dimen>
+    <dimen name="value40">40.0dip</dimen>
     <dimen name="value48">48.0dip</dimen>
     <dimen name="value64">64dp</dimen>
     <dimen name="value2">2dp</dimen>
@@ -33,6 +35,7 @@
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_small_medium">16dp</dimen>
     <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_extra_small">12sp</dimen>
     <dimen name="card_view_elevation">10dp</dimen>
     <dimen name="list_item_transaction_history_height">105dp</dimen>
     <dimen name="action_bar_default_elevation">4dp</dimen>

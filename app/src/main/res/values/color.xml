@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#2295b5</color>
     <color name="colorPrimaryDark">#27a1c1</color>
+    <color name="colorPrimaryDarker">#1B6F8D</color>
     <color name="colorPrimaryDarkTransparent">#500277BD</color>
     <color name="colorPrimaryLight">#81D4FA</color>
     <color name="colorPrimaryLighter">#A1E4FA</color>
@@ -16,6 +17,7 @@
     <color name="blue_button_disabled">#ff90caf9</color>
     <color name="bottle_green">#009688</color>
     <color name="colorOrange">#f49331</color>
+    <color name="colorPrimaryLightHeader">#1F93BA</color>
 
     <!-- zxinglib colors -->
     <color name="zxinglib_status_text">#ffffffff</color>
