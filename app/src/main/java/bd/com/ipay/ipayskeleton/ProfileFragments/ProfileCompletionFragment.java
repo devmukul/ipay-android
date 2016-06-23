@@ -66,7 +66,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         mProfileCompletionRecyclerView.setAdapter(mProfileCompletionAdapter);
 
         mProfileCompletionStatusView.setText("Your profile is " + mProfileCompletionStatusResponse.getCompletionPercentage()
-            + "% complete");
+                + "% complete");
         mProfileCompletionStatusProgressBar.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
 
         setContentShown(true);
@@ -86,7 +86,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetProfileCompletionStatusTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();

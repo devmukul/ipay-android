@@ -22,6 +22,7 @@ public class ProfileCompletionPropertyConstants {
     public static final String VERIFICATION_DOCUMENT = "VERIFICATION_DOCUMENT";
     public static final String ADD_BANK = "ADD_BANK";
     public static final String PARENT = "PARENT";
+    public static final String PROFILE_INFO="PROFILEINFO";
 
     public static final String TAG_BASIC_INFO = "Basic Info";
     public static final String TAG_ADDRESS = "Address";

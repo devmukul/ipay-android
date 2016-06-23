@@ -96,7 +96,7 @@ public class ProfileActivity extends BaseActivity {
                 fragment = new TrustedNetworkFragment();
                 break;
             case BASIC_PROFILE:
-                fragment=new BasicInfoFragment();
+                fragment = new BasicInfoFragment();
             case PROFILE_PICTURE:
                 fragment = new ProfileInfoFragment();
             case PARENT:
@@ -216,7 +216,7 @@ public class ProfileActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IdentificationFragment()).commit();
     }
 
-    public void switchToProfileInfoFragment(){
+    public void switchToProfileInfoFragment() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStack();
 

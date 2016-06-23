@@ -254,13 +254,13 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
         mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-    
+
     private void attemptSaveBasicInfo() {
         mProgressDialog.setMessage(getString(R.string.saving_profile_information));
         mProgressDialog.show();
 
         Gson gson = new Gson();
-        
+
         SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, mDateOfBirth,
                 mOccupation, mFathersName, mMothersName);
 
@@ -366,7 +366,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mSetProfileInfoTask = null;
             mUploadProfilePictureAsyncTask = null;
             mGetOccupationTask = null;

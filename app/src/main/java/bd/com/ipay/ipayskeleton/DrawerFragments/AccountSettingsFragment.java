@@ -253,7 +253,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             mEnterPINEditText.setError(getString(R.string.error_invalid_pin));
             focusView = mEnterPINEditText;
             cancel = true;
-        } else if (mConfirmPINEditText.getText().toString().length() !=4
+        } else if (mConfirmPINEditText.getText().toString().length() != 4
                 || !(mEnterPINEditText.getText().toString().equals(mConfirmPINEditText.getText().toString()))) {
             mConfirmPINEditText.setError(getString(R.string.confirm_pin_not_matched));
             focusView = mConfirmPINEditText;
@@ -382,7 +382,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mSavePINTask = null;
             mChangePasswordTask = null;
@@ -524,27 +524,25 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
                 view = inflater.inflate(R.layout.list_item_trusted_device, null);
 
 
-            RelativeLayout layout_item_view=(RelativeLayout)view.findViewById(R.id.layout_list_item_trusted_device);
+            RelativeLayout layout_item_view = (RelativeLayout) view.findViewById(R.id.layout_list_item_trusted_device);
             ImageView deviceimageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
             TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
             TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);
-            //TextView currentDevice = (TextView) view.findViewById(R.id.current_device);
             Button removeButton = (Button) view.findViewById(R.id.button_remove);
 
-            //setting background :Maliha
+            //setting background
             //if first position
-            if(position==0) {
+            if (position == 0) {
 
                 layout_item_view.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
             }
             //if last position
-            else if(position== getCount()-1) {
+            else if (position == getCount() - 1) {
 
                 layout_item_view.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
-            }
-            else {
+            } else {
 
-               layout_item_view.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+                layout_item_view.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
             }
 
 
@@ -574,18 +572,15 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             if (mDeviceID.equals(deviceID)) {
                 removeButton.setVisibility(View.INVISIBLE);
-                //currentDevice.setVisibility(View.VISIBLE);
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimaryLighter));
             } else {
                 removeButton.setVisibility(View.VISIBLE);
-                //currentDevice.setVisibility(View.INVISIBLE);
 
             }
 
 
             deviceNameView.setText(trustedDevice.getDeviceName());
             grantTimeView.setText(trustedDevice.getCreatedTimeString());
-            //currentDevice.setText("Current Device");
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
