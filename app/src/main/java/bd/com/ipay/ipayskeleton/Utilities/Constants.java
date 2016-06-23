@@ -8,6 +8,7 @@ public class Constants {
     public static final String GENDER_FEMALE = "F";
     public static final String EMAIL = "EMAIL";
     public static final String USERID = "USERID";
+    public static final String USERNAME = "USERNAME";
     public static final String UUID = "UUID";
     public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String USER_AGENT = "User-Agent";

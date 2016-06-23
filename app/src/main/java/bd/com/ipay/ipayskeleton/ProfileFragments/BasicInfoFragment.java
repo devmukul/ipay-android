@@ -114,7 +114,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
 
-        mDateOfBirthView = (TextView) v.findViewById(R.id.textview_date_of_birth);
+        //mDateOfBirthView = (TextView) v.findViewById(R.id.textview_date_of_birth);
 
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
         mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);

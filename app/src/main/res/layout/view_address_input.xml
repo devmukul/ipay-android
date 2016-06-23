@@ -28,7 +28,6 @@
         android:maxLines="1">
     </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
-
     <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
         android:id="@+id/district"
         android:layout_width="match_parent"
@@ -38,7 +37,6 @@
         android:drawableLeft="@drawable/ic_signup_district"
         android:maxLines="1">
     </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
-
 
     <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
         android:id="@+id/thana"

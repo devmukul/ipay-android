@@ -483,7 +483,7 @@ public class HomeActivity extends BaseActivity
             }
         } else if (id == R.id.nav_profile_basic_info) {
 
-            launchEditProfileActivity(ProfileCompletionPropertyConstants.BASIC_PROFILE, new Bundle());
+            launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
         } else if (id == R.id.nav_profile_addresses) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.ADDRESS, new Bundle());
@@ -656,6 +656,9 @@ public class HomeActivity extends BaseActivity
                     }
 
                     pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
+
+                    //saving user name in shared preference : Maliha
+                    pref.edit().putString(Constants.USERNAME, mGetUserInfoResponse.getName()).apply();
 
                     // Download the profile picture and store it in local storage
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {

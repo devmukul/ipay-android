@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:background="@color/colorPrimary"
+    android:fillViewport="true"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout style="@style/ProfileCardLayoutStyleColorPrimaryLight"
+                android:background="@drawable/background_rounded_color_primary_dark">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="@dimen/value15"
+                    android:layout_marginLeft="@dimen/value30"
+                    android:layout_marginTop="@dimen/value15"
+                    android:clickable="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_person"
+                    app:riv_border_color="@color/colorPrimary"
+                    app:riv_border_width="1dip"
+                    app:riv_corner_radius="75dip"
+                    app:riv_oval="false" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/layout_name"
+                    android:layout_below="@+id/profile_picture"
+                    android:layout_marginTop="@dimen/value10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textview_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/value35"
+                        android:layout_marginRight="@dimen/value20"
+                        android:layout_marginBottom="@dimen/value5"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_medium"/>
+
+                    <ImageView
+                        android:id="@+id/textview_verification_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_name"
+                    android:layout_marginLeft="@dimen/value35"
+                    android:layout_marginBottom="@dimen/value15"
+                    android:textColor="@android:color/white"
+                    android:text="01746176211"
+                    android:textSize="@dimen/text_size_small_medium" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/ProfileCardLayoutStyle"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/background_rounded_white">
+
+                <!-- Relative names -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:id="@+id/layout_basic_info">
+
+                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                        android:id="@+id/basic_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_signup_number"
+                        android:text="@string/basic_info" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_below="@+id/layout_basic_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/divider_space"
+                    android:background="@color/colorDivider" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_below="@+id/layout_basic_info"
+                    android:id="@+id/layout_email_address">
+
+                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_signup_number"
+                        android:text="@string/email_address" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_below="@+id/layout_email_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/divider_space"
+                    android:background="@color/colorDivider" />
+
+                <RelativeLayout
+                    android:layout_below="@+id/layout_email_address"
+                    android:id="@+id/layout_trusted_network"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                        android:id="@+id/trusted_network"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_signup_number"
+                        android:text="@string/trusted_network" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_below="@+id/layout_trusted_network"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/divider_space"
+                    android:background="@color/colorDivider" />
+
+                <RelativeLayout
+                    android:layout_below="@+id/layout_trusted_network"
+                    android:id="@+id/layout_present_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                        android:id="@+id/present_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_signup_number"
+                        android:text="@string/address" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_below="@+id/layout_present_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/divider_space"
+                    android:background="@color/colorDivider" />
+
+                <RelativeLayout
+                    android:layout_below="@+id/layout_present_address"
+                    android:id="@+id/layout_profile_complition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                        android:id="@+id/profile_completion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_signup_invcode"
+                        android:text="@string/profile_completeness" />
+
+                </RelativeLayout>
+
+                <!--<View
+                    android:layout_below="@+id/layout_present_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/divider_space"
+                    android:background="@color/colorDivider" />
+
+                <RelativeLayout
+                    android:layout_below="@+id/layout_present_address"
+                    android:id="@+id/layout_permanent_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                        android:id="@+id/permanent_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_signup_number"
+                        android:text="@string/permanent_address" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_below="@+id/layout_permanent_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/divider_space"
+                    android:background="@color/colorDivider" />
+
+                <RelativeLayout
+                    android:layout_below="@+id/layout_permanent_address"
+                    android:id="@+id/layout_office_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                        android:id="@+id/office_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_signup_number"
+                        android:text="@string/office_address" />
+
+                </RelativeLayout>
+-->
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

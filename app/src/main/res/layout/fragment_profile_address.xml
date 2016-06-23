@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/colorPrimary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +31,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/AddressViewHeader"
-                    android:text="@string/present_address"/>
+                    android:text="@string/present_address"
+                    android:textColor="@android:color/white"/>
 
                 <TextView
                     android:id="@+id/textview_present_address"
@@ -38,7 +40,7 @@
 
                 <Button
                     android:id="@+id/button_edit_present_address"
-                    style="@style/ButtonStyleMedium"
+                    style="@style/PrimaryButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/edit"/>
@@ -56,7 +58,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/AddressViewHeader"
-                    android:text="@string/permanent_address"/>
+                    android:text="@string/permanent_address"
+                    android:textColor="@android:color/white"/>
 
                 <TextView
                     android:id="@+id/textview_permanent_address"
@@ -64,7 +67,7 @@
 
                 <Button
                     android:id="@+id/button_edit_permanent_address"
-                    style="@style/ButtonStyleMedium"
+                    style="@style/PrimaryButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/edit"/>
@@ -82,7 +85,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/AddressViewHeader"
-                    android:text="@string/office_address"/>
+                    android:text="@string/office_address"
+                    android:textColor="@android:color/white"/>
 
                 <TextView
                     android:id="@+id/textview_office_address"
@@ -90,7 +94,7 @@
 
                 <Button
                     android:id="@+id/button_edit_office_address"
-                    style="@style/ButtonStyleMedium"
+                    style="@style/PrimaryButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/edit"/>
@@ -99,21 +103,21 @@
 
             <Button
                 android:id="@+id/button_add_present_address"
-                style="@style/ButtonStyleMain"
+                style="@style/PrimaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/add_present_address"/>
 
             <Button
                 android:id="@+id/button_add_permanent_address"
-                style="@style/ButtonStyleMain"
+                style="@style/PrimaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/add_permanent_address"/>
 
             <Button
                 android:id="@+id/button_add_office_address"
-                style="@style/ButtonStyleMain"
+                style="@style/PrimaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/add_office_address"/>

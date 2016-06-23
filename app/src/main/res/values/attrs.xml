@@ -31,4 +31,10 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="IconifiedTextViewWithButton">
+        <attr name="android:text"/>
+        <attr name="android:drawableLeft" />
+    </declare-styleable>
+
+
 </resources>

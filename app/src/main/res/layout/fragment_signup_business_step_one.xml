@@ -76,7 +76,7 @@
                     android:layout_marginRight="@dimen/value20"
                     android:paddingBottom="@dimen/value5"
                     android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_signup_number" />
+                    android:src="@drawable/ic_email" />
 
             <EditText
                 android:id="@+id/email"
