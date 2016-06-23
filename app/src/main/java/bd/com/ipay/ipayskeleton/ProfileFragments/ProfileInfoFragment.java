@@ -88,23 +88,21 @@ public class ProfileInfoFragment extends android.support.v4.app.Fragment {
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.profile);
 
-
         mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (ImageView) v.findViewById(R.id.textview_verification_status);
 
-        //Buttons : Maliha
-        mBasicInfo=(IconfiedTextViewWithButton) v.findViewById(R.id.basic_info);
-        mEmail=(IconfiedTextViewWithButton) v.findViewById(R.id.email);
-        mTrustedNetwork=(IconfiedTextViewWithButton) v.findViewById(R.id.trusted_network);
-        mAddress=(IconfiedTextViewWithButton) v.findViewById(R.id.present_address);
-        mCompleteness=(IconfiedTextViewWithButton) v.findViewById(R.id.profile_completion);
+        mBasicInfo = (IconfiedTextViewWithButton) v.findViewById(R.id.basic_info);
+        mEmail = (IconfiedTextViewWithButton) v.findViewById(R.id.email);
+        mTrustedNetwork = (IconfiedTextViewWithButton) v.findViewById(R.id.trusted_network);
+        mAddress = (IconfiedTextViewWithButton) v.findViewById(R.id.present_address);
+        mCompleteness = (IconfiedTextViewWithButton) v.findViewById(R.id.profile_completion);
 
 
         mMobileNumber = pref.getString(Constants.USERID, "");
-        mName= pref.getString(Constants.USERNAME, "");
-        mVerificationStatus=pref.getString(Constants.VERIFICATION_STATUS,"");
+        mName = pref.getString(Constants.USERNAME, "");
+        mVerificationStatus = pref.getString(Constants.VERIFICATION_STATUS, "");
 
         setProfilePicture("");
         setProfileInformation();

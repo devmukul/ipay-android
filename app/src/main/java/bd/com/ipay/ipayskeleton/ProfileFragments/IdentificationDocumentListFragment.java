@@ -177,7 +177,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mGetIdentificationDocumentsTask = null;
             Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -186,7 +186,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
 
         Gson gson = new Gson();
-        
+
         if (result.getApiCommand().equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -292,24 +292,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
             public void bindView(final int pos) {
 
-                //setting background : Maliha
-                //if first position
-                /*if(pos==0) {
-
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-                }*/
                 //if last position
-                if(pos== mIdentificationDocumentDetails.length-1) {
+                if (pos == mIdentificationDocumentDetails.length - 1) {
 
-                    //itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
                     mRecyclarDivider.setVisibility(View.GONE);
                 }
-                /*else {
 
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
-
-                }
-*/
                 final IdentificationDocumentDetails identificationDocumentDetail = mIdentificationDocumentDetails[pos];
 
                 final String verificationStatus = identificationDocumentDetail.getVerificationStatus();
@@ -318,10 +306,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 if (verificationStatus == null) {
                     mVerificationStatus.setVisibility(View.GONE);
                     mDocumentIdView.setText(R.string.not_submitted);
-
-//                    mOptionsLayout.setVisibility(View.VISIBLE);
                     mUploadButton.setText(getString(R.string.upload));
-
                     mPreviewButton.setVisibility(View.GONE);
                     mDivider.setVisibility(View.GONE);
                 }
@@ -331,9 +316,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mVerificationStatus.setImageResource(R.drawable.ic_verified);
                     mVerificationStatus.setColorFilter(null);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
-
-//                    mOptionsLayout.setVisibility(View.GONE);
-
                     mPreviewButton.setVisibility(View.GONE);
                     mDivider.setVisibility(View.GONE);
                 }
@@ -343,10 +325,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
                     mVerificationStatus.setColorFilter(Color.GRAY);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
-
-//                    mOptionsLayout.setVisibility(View.GONE);
                     mUploadButton.setText(getString(R.string.upload_again));
-
                     mPreviewButton.setVisibility(View.VISIBLE);
                     mDivider.setVisibility(View.VISIBLE);
                 }
@@ -355,11 +334,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    if (mOptionsLayout.getVisibility() == View.VISIBLE) {
-                        mOptionsLayout.setVisibility(View.GONE);
-                    } else {
-                        mOptionsLayout.setVisibility(View.VISIBLE);
-                    }
+                        if (mOptionsLayout.getVisibility() == View.VISIBLE) {
+                            mOptionsLayout.setVisibility(View.GONE);
+                        } else {
+                            mOptionsLayout.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
 

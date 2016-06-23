@@ -113,21 +113,15 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
-
-        //mDateOfBirthView = (TextView) v.findViewById(R.id.textview_date_of_birth);
-
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
         mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
-
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
         mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
         mGenderView = (TextView) v.findViewById(R.id.textview_gender);
         mSignUpTimeView = (TextView) v.findViewById(R.id.textview_signup);
-
         mMobileNumber = pref.getString(Constants.USERID, "");
         mGender = pref.getString(Constants.GENDER, "");
         mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
-
         mProgressDialog = new ProgressDialog(getActivity());
 
         setProfilePicture("");
@@ -142,8 +136,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
         if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)) {
             getProfileInfo();
-        }
-        else {
+        } else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
 
@@ -249,7 +242,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetProfileInfoTask = null;
             mGetOccupationTask = null;
             if (getActivity() != null)
