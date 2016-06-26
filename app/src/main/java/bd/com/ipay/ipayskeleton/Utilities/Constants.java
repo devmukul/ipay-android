@@ -559,7 +559,8 @@ public class Constants {
     public static final int TRANSACTION_STATUS_ACCEPTED = 200;
     public static final int TRANSACTION_STATUS_PROCESSING = 102;
 
-    public static final String BUSINESS_INVITATION_ACCEPT = "ACCEPTED";
+    public static final String BUSINESS_INVITATION_ACCEPTED = "ACCEPTED";
+    public static final String BUSINESS_INVITATION_PENDING = "PENDING";
     public static final String BUSINESS_INVITATION_REJECTED = "REJECTED";
     public static final String BUSINESS_INVITATION_SPAM = "SPAM";
 

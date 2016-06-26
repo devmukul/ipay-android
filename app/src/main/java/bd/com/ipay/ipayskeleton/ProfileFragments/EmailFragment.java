@@ -43,7 +43,6 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.DeleteEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.Email;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.EmailVerificationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.EmailVerificationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailResponse;
@@ -406,7 +405,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         public EmailListAdapter() {
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public class EmailViewHolder extends RecyclerView.ViewHolder {
             private TextView mEmailView;
             private TextView mIsPrimaryView;
             private ImageView mVerificationStatus;
@@ -416,7 +415,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             private View divider;
             private View divider1;
 
-            public ViewHolder(final View itemView) {
+            public EmailViewHolder(final View itemView) {
                 super(itemView);
 
                 mEmailView = (TextView) itemView.findViewById(R.id.textview_email);
@@ -436,12 +435,15 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
                 final Email email = mEmails.get(pos);
 
-                if(pos == mEmails.size() -1) divider1.setVisibility(View.GONE);
+                if (pos == mEmails.size() - 1)
+                    divider1.setVisibility(View.GONE);
 
                 final String verificationStatus = email.getVerificationStatus();
 
                 if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)) {
                     mVerificationStatus.setImageResource(R.drawable.ic_verified3x);
+                    mVerificationStatus.setColorFilter(null);
+
                     makePrimaryButton.setVisibility(View.VISIBLE);
                 } else if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)) {
                     mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
@@ -451,6 +453,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     divider.setVisibility(View.GONE);
                 } else {
                     mVerificationStatus.setImageResource(R.drawable.ic_notverified3x);
+                    mVerificationStatus.setColorFilter(null);
 
                     makePrimaryButton.setVisibility(View.GONE);
                 }
@@ -499,7 +502,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_email,
                     parent, false);
 
-            ViewHolder vh = new ViewHolder(v);
+            EmailViewHolder vh = new EmailViewHolder(v);
 
             return vh;
         }
@@ -507,7 +510,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             try {
-                ViewHolder vh = (ViewHolder) holder;
+                EmailViewHolder vh = (EmailViewHolder) holder;
                 vh.bindView(position);
 
             } catch (Exception e) {

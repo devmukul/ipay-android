@@ -712,6 +712,7 @@
     <string name="see_business_info">See Business Info</string>
     <string name="update_business_info">Update Business Info</string>
     <string name="manage_emails">Manage Emails</string>
+    <string name="failed_loading_employee_list">Failed to load employee list</string>
 
     <string-array name="account_types">
         <item>Personal</item>
