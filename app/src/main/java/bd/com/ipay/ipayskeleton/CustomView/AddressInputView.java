@@ -132,6 +132,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
             public void onResourceSelected(int id, String name) {
                 mDistrictSelection.setError(null);
                 mDistrictSelection.setText(name);
+                mDistrictSelection.setError(null);
                 mSelectedDistrictId = id;
 
                 mThanaList = null;

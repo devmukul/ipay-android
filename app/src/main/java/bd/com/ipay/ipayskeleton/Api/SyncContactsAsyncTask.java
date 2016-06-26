@@ -78,14 +78,12 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
                 if (serverUpdateTime > updateTime) {
                     // Download the profile picture for the updated contacts and store it in local storage
-                    Log.d("Downloading picture", "Download the profile picture for the updated contacts and store it in local storage");
                     if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
                         downloadContacts.add(serverFriend);
                     }
                 }
             } else {
                 // Download the profile picture for the new contacts and store it in local storage
-                Log.d("Downloading picture", "Download the profile picture for the new contacts and store it in local storage");
                 if (profilePictureUrl != null && !profilePictureUrl.isEmpty()){
                     downloadContacts.add(serverFriend);
                 }

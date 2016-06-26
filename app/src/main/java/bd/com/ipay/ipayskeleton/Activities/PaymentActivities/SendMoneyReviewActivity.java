@@ -102,7 +102,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetProfileInfoTask = null;
-            Toast.makeText(this, R.string.logout_failed, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
