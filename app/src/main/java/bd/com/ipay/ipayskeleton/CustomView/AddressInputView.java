@@ -111,6 +111,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         thanaSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
+                mThanaSelection.setError(null);
                 mThanaSelection.setText(name);
                 mSelectedThanaId = id;
             }
@@ -129,6 +130,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         districtSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
+                mDistrictSelection.setError(null);
                 mDistrictSelection.setText(name);
                 mSelectedDistrictId = id;
 

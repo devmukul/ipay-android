@@ -151,6 +151,7 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
         bankSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
+                mBankListSelection.setError(null);
                 mBankListSelection.setText(name);
                 mSelectedBankId = id;
                 mSelectedDistrictId = -1;
@@ -172,6 +173,7 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
         districtSelectorDialog.setOnDistrictSelectedListener(new AddBankDialog.OnDistrictSelectedListener() {
             @Override
             public void onDistrictSelected(int id, String name) {
+                mDistrictSelection.setError(null);
                 mDistrictSelection.setText(name);
                 mSelectedDistrictId = id;
 
@@ -206,6 +208,7 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
         bankBranchSelectorDialog.setOnDistrictSelectedListener(new AddBankDialog.OnDistrictSelectedListener() {
             @Override
             public void onDistrictSelected(int id, String name) {
+                mBankBranchSelection.setError(null);
                 mBankBranchSelection.setText(name);
                 mSelectedBranchId = id;
             }

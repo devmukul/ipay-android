@@ -239,6 +239,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                     else birthMonth = mMonth + "";
                     birthYear = mYear + "";
 
+                    mBirthdayEditText.setError(null);
                     mBirthdayEditText.setText(birthDate + "/" + birthMonth + "/" + birthYear);
                 }
             };

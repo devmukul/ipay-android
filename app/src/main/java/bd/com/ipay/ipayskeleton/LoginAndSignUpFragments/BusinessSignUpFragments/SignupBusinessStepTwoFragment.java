@@ -143,6 +143,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
         businessTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
+                mBusinessType.setError(null);
                 mBusinessType.setText(name);
                 mSelectedBusinessTypeId = id;
             }

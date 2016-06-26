@@ -32,10 +32,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBusinessInformationFragment extends Fragment implements HttpResponseListener {
 
-    private IconifiedEditText mBusinessNameField;
-    private IconifiedEditText mBusinessMobileNumberField;
-    private IconifiedEditText mBusinessEmailField;
-    private IconifiedEditText mBusinessTypeField;
+    private IconifiedEditText mBusinessNameEditText;
+    private IconifiedEditText mBusinessMobileNumberEditText;
+    private IconifiedEditText mBusinessEmailEditText;
+    private IconifiedEditText mBusinessTypeEditText;
 
     private String mBusinessName;
     private String mBusinessMobileNumber;
@@ -55,10 +55,10 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_business_information, container, false);
 
-        mBusinessNameField = (IconifiedEditText) v.findViewById(R.id.business_name);
-        mBusinessMobileNumberField = (IconifiedEditText) v.findViewById(R.id.business_mobile_number);
-        mBusinessEmailField = (IconifiedEditText) v.findViewById(R.id.business_email);
-        mBusinessTypeField = (IconifiedEditText) v.findViewById(R.id.business_type);
+        mBusinessNameEditText = (IconifiedEditText) v.findViewById(R.id.business_name);
+        mBusinessMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.business_mobile_number);
+        mBusinessEmailEditText = (IconifiedEditText) v.findViewById(R.id.business_email);
+        mBusinessTypeEditText = (IconifiedEditText) v.findViewById(R.id.business_type);
 
         mBusinessName = getArguments().getString(Constants.BUSINESS_NAME);
         mBusinessMobileNumber = getArguments().getString(Constants.BUSINESS_MOBILE_NUMBER);
@@ -70,24 +70,25 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         businessTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
-                mBusinessTypeField.setText(name);
+                mBusinessTypeEditText.setError(null);
+                mBusinessTypeEditText.setText(name);
                 mBusinessTypeId = id;
             }
         });
 
-        mBusinessTypeField.setOnClickListener(new View.OnClickListener() {
+        mBusinessTypeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 businessTypeResourceSelectorDialog.show();
             }
         });
 
-        mBusinessNameField.setText(mBusinessName);
-        mBusinessMobileNumberField.setText(mBusinessMobileNumber);
-        mBusinessEmailField.setText(mBusinessEmail);
+        mBusinessNameEditText.setText(mBusinessName);
+        mBusinessMobileNumberEditText.setText(mBusinessMobileNumber);
+        mBusinessEmailEditText.setText(mBusinessEmail);
         for (BusinessType businessType : mBusinessTypes) {
             if (businessType.getId() == mBusinessTypeId) {
-                mBusinessTypeField.setText(businessType.getName());
+                mBusinessTypeEditText.setText(businessType.getName());
                 break;
             }
         }
@@ -139,26 +140,26 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         boolean cancel = false;
         View focusView = null;
 
-        mBusinessName = mBusinessNameField.getText().toString();
-        mBusinessMobileNumber = ContactEngine.formatMobileNumberBD(mBusinessMobileNumberField.getText().toString());
-        mBusinessEmail = mBusinessEmailField.getText().toString();
+        mBusinessName = mBusinessNameEditText.getText().toString();
+        mBusinessMobileNumber = ContactEngine.formatMobileNumberBD(mBusinessMobileNumberEditText.getText().toString());
+        mBusinessEmail = mBusinessEmailEditText.getText().toString();
         /** mBusinessTypeId has already been selected when the user picked an item from the dialog **/
 
         if (mBusinessName.isEmpty()) {
-            mBusinessNameField.setError(getString(R.string.error_invalid_name));
+            mBusinessNameEditText.setError(getString(R.string.error_invalid_name));
             cancel = true;
-            focusView = mBusinessNameField;
+            focusView = mBusinessNameEditText;
         }
 
         if (!ContactEngine.isValidNumber(mBusinessMobileNumber)) {
-            mBusinessMobileNumberField.setError(getString(R.string.error_invalid_mobile_number));
+            mBusinessMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
             cancel = true;
-            focusView = mBusinessMobileNumberField;
+            focusView = mBusinessMobileNumberEditText;
         }
 
         if (!Utilities.isValidEmail(mBusinessEmail)) {
-            mBusinessNameField.setError(getString(R.string.error_invalid_email));
-            focusView = mBusinessNameField;
+            mBusinessNameEditText.setError(getString(R.string.error_invalid_email));
+            focusView = mBusinessNameEditText;
             cancel = true;
         }
 

@@ -167,6 +167,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
 //                    SignupOrLoginActivity.mBirthday = birthDate + birthMonth + birthYear;
 //                    String[] months = getActivity().getResources().getStringArray(R.array.months);
+                    mBirthdayEditText.setError(null);
                     mBirthdayEditText.setText(birthDate + "/" + birthMonth + "/" + birthYear);
                 }
             };

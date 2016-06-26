@@ -36,7 +36,6 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     private HttpRequestPostAsyncTask mCheckPromoCodeTask = null;
     private CheckPromoCodeResponse mCheckPromoCodeResponse;
 
-
     private EditText mBusinessEmailView;
     private EditText mPasswordView;
     private EditText mConfirmPasswordView;
@@ -46,7 +45,6 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     private TextView mPrivacyPolicy;
     private CheckBox mAgreementCheckBox;
     private EditText mPromoCodeEditText;
-
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
