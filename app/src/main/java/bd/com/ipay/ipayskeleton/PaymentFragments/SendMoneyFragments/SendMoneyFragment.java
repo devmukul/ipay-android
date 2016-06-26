@@ -145,31 +145,6 @@ public class SendMoneyFragment extends Fragment {
         }
     }
 
-//    private void sendMoneyQuery() {
-//        if (mSendMoneyQueryTask != null) {
-//            return;
-//        }
-//
-//
-//        if (verifyUserInputs()) {
-//            String amount = mAmountEditText.getText().toString().trim();
-//            String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-//            String description = mDescriptionEditText.getText().toString().trim();
-//            String senderMobileNumber = pref.getString(Constants.USERID, "");
-//
-//            mProgressDialog.setMessage(getString(R.string.validating));
-//            mProgressDialog.show();
-//            SendMoneyQueryRequest mSendMoneyQueryRequest = new SendMoneyQueryRequest(
-//                    senderMobileNumber, ContactEngine.formatMobileNumberBD(mobileNumber), amount);
-//            Gson gson = new Gson();
-//            String json = gson.toJson(mSendMoneyQueryRequest);
-//            mSendMoneyQueryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY_QUERY,
-//                    Constants.BASE_URL + Constants.URL_SEND_MONEY_QUERY, json, getActivity());
-//            mSendMoneyQueryTask.mHttpResponseListener = this;
-//            mSendMoneyQueryTask.execute((Void) null);
-//        }
-//    }
-
     private void launchReviewPage() {
 
         String receiver = mMobileNumberEditText.getText().toString().trim();

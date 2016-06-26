@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
@@ -16,7 +17,7 @@ public class BusinessActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business);
 
-        switchToBusinessInformationFragment();
+        switchToBusinessFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -36,31 +37,62 @@ public class BusinessActivity extends BaseActivity {
     }
 
     public void switchToBusinessFragment() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BusinessFragment()).commit();
     }
 
+    // Business -> Business Information
     public void switchToBusinessInformationFragment() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStackImmediate();
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BusinessInformationFragment()).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new BusinessInformationFragment()).addToBackStack(null).commit();
     }
 
+    // Business -> Business Information -> Edit Business Information
     public void switchToEditBusinessInformationFragment(Bundle bundle) {
         Fragment editBusinessInformationFragment = new EditBusinessInformationFragment();
-        editBusinessInformationFragment.setArguments(bundle);
+        if (bundle != null)
+            editBusinessInformationFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, editBusinessInformationFragment).addToBackStack(null).commit();
     }
 
+    // Business -> Employee Management
     public void switchToEmployeeManagementFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
 
+        Fragment employeeManagementFragment = new EmployeeManagementFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, employeeManagementFragment).addToBackStack(null).commit();
+    }
+
+    // Business -> Employee Management -> Employee Information
+    public void switchToEmployeeInformationFragment(Bundle bundle) {
+        Fragment employeeInformationFragment = new CreateEmployeeInformationFragment();
+        if (bundle != null)
+            employeeInformationFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, employeeInformationFragment).addToBackStack(null).commit();
+    }
+
+    // Business -> Employee Management -> Employee Information -> Employee Privilege
+    public void switchToEmployeePrivilegeFragment(Bundle bundle) {
+        Fragment employeePrivilegeFragment = new EmployeePrivilegeFragment();
+        if (bundle != null)
+            employeePrivilegeFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, employeePrivilegeFragment).addToBackStack(null).commit();
     }
 
     @Override

@@ -28,7 +28,7 @@ public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String>
     protected String doInBackground(Void... params) {
 
         try {
-            if (mProfilePictureUrl.length() > 0) {
+            if (mProfilePictureUrl != null && !mProfilePictureUrl.isEmpty()) {
 
                 File dir = new File(Environment.getExternalStorageDirectory().getPath()
                         + Constants.PICTURE_FOLDER);

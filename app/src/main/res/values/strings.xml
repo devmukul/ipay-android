@@ -687,6 +687,31 @@
     <string name="please_wait_until_information_loading">Please wait until all information are loaded</string>
     <string name="saving_business_information">Saving business information...</string>
     <string name="business_information_saving_failed">Business information saving failed</string>
+    <string name="designation">Designation</string>
+    <string name="create_employee">Create Employee</string>
+    <string name="please_enter_designation">Please enter designation of the employee</string>
+    <string name="user_has_no_ipay_account">Sorry, this user has no iPay account</string>
+    <string name="preparing">Preparing</string>
+    <string name="see_other_activity">See Other Activity</string>
+    <string name="manage_employees">Manage Employees</string>
+    <string name="request_payment">Request Payment</string>
+    <string name="request_invoice">Request Invoice</string>
+    <string name="pay_bills">Pay Bills</string>
+    <string name="update_info">Update Info</string>
+    <string name="see_balance">See Balance</string>
+    <string name="see_other_transactions">See Other Transactions</string>
+    <string name="manage_bank_accounts">Manage Bank Accounts</string>
+    <string name="create_new_employee">Creating new employee...</string>
+    <string name="new_employee_creation_failed">Failed to create new employee</string>
+    <string name="add_an_employee">Add an Employee</string>
+    <string name="see_bank_accounts">See Bank Accounts</string>
+    <string name="see_employee">See Employee</string>
+    <string name="manage_employee">Manage Employee</string>
+    <string name="see_emails">See Emails</string>
+    <string name="see_addresses">See Addresses</string>
+    <string name="see_business_info">See Business Info</string>
+    <string name="update_business_info">Update Business Info</string>
+    <string name="manage_emails">Manage Emails</string>
 
     <string-array name="account_types">
         <item>Personal</item>

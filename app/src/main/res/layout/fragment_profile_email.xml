@@ -24,9 +24,7 @@
             style="@style/ButtonStyleLarge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_an_email"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold" />
+            android:text="@string/add_an_email" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_email"

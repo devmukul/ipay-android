@@ -18,9 +18,7 @@
             style="@style/ButtonStyleLarge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_a_trusted_person"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold" />
+            android:text="@string/add_a_trusted_person" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"

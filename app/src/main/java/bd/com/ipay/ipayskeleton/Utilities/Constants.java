@@ -60,6 +60,7 @@ public class Constants {
 
     public static final String NAME = "NAME";
     public static final String OCCUPATION = "OCCUPATION";
+    public static final String DESIGNATION = "DESIGNATION";
 
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
     public static final String BUSINESS_EMAIL = "BUSINESS_EMAIL";
@@ -82,6 +83,8 @@ public class Constants {
     public static final String SERVICE_CHARGE = "service_charge";
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
+
+    public static final String EMPLOYEE_PRIVILEGE = "EMPLOYEE_PRIVILEGE";
 
     public static final int STARTING_DATE = 01;
     public static final int STARTING_MONTH = 01;
@@ -264,9 +267,9 @@ public class Constants {
     public static final String URL_SEND_MONEY = "transaction/send";
 
     // Trusted Network REST
-    public static final String URL_GET_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
-    public static final String URL_POST_TRUSTED_PERSONS = "/trustednetwork/trustedpersons/";
-    public static final String URL_SET_RECOVERY_PERSON = "/recovery";
+    public static final String URL_GET_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
+    public static final String URL_POST_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
+    public static final String URL_SET_RECOVERY_PERSON = "recovery";
 
     // User Rest
     public static final String URL_GET_USER_INFO = "user/userinfo";
@@ -285,10 +288,9 @@ public class Constants {
     public static final String URL_SET_USER_ADDRESS_REQUEST = "user/profile/address";
 
     // User Rest (Email)
-    public static final String URL_GET_EMAIL = "/user/emails/";
-    public static final String URL_POST_EMAIL = "/user/emails/";
-    public static final String URL_DELETE_EMAIL = "/user/emails/";
-    public static final String URL_MAKE_EMAIL_VERIFIED = "/verification/confirmation";
+    public static final String URL_GET_EMAIL = "user/emails/";
+    public static final String URL_POST_EMAIL = "user/emails/";
+    public static final String URL_DELETE_EMAIL = "user/emails/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
     // User Rest (Friends)
@@ -300,6 +302,10 @@ public class Constants {
     // Business Information
     public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";
     public static final String URL_SET_BUSINESS_INFORMATION = "user/profile/business";
+
+    public static final String URL_CREATE_EMPLOYEE = "business/user";
+    public static final String URL_UPDATE_EMPLOYEE = "business/user";
+    public static final String URL_GET_EMPLOYEE_LIST = "business/users";
 
     public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
 
@@ -427,6 +433,9 @@ public class Constants {
     // Business Information
     public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
+    public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
+    public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";
+    public static final String COMMAND_GET_EMPLOYEE_LIST = "COMMAND_GET_EMPLOYEE_LIST";
 
     public static final String COUNTRY_CODE_BANGLADESH = "+880";
     public static final int ACTIVITY_LOG_COUNT = 10;
@@ -549,4 +558,15 @@ public class Constants {
 
     public static final int TRANSACTION_STATUS_ACCEPTED = 200;
     public static final int TRANSACTION_STATUS_PROCESSING = 102;
+
+    public static final String BUSINESS_INVITATION_ACCEPT = "ACCEPTED";
+    public static final String BUSINESS_INVITATION_REJECTED = "REJECTED";
+    public static final String BUSINESS_INVITATION_SPAM = "SPAM";
+
+    public static final String BUSINESS_STATUS_ACCEPTED = "ACCEPTED";
+    public static final String BUSINESS_STATUS_REJECTED = "REJECTED";
+    public static final String BUSINESS_STATUS_SPAM = "SPAM";
+    public static final String BUSINESS_STATUS_RESIGN = "RESIGN";
+    public static final String BUSINESS_STATUS_PENDING = "PENDING";
+
 }

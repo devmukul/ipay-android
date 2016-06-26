@@ -522,9 +522,5 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             else return 0;
         }
 
-        @Override
-        public int getItemViewType(int position) {
-            return super.getItemViewType(position);
-        }
     }
 }

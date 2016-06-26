@@ -60,7 +60,7 @@ public class IconifiedEditText extends FrameLayout {
             String text = a.getString(R.styleable.IconifiedEditText_android_text);
             String imeActionLabel = a.getString(R.styleable.IconifiedEditText_android_imeActionLabel);
             String hint = a.getString(R.styleable.IconifiedEditText_android_hint);
-            int inputType = a.getInt(R.styleable.IconifiedEditText_android_inputType, EditorInfo.TYPE_TEXT_VARIATION_NORMAL);
+            int inputType = a.getInt(R.styleable.IconifiedEditText_android_inputType, EditorInfo.TYPE_CLASS_TEXT);
             int maxLength = a.getInt(R.styleable.IconifiedEditText_android_maxLength, -1);
             int maxLines = a.getInt(R.styleable.IconifiedEditText_android_maxLines, -1);
             int borderType = a.getInt(R.styleable.IconifiedEditText_borderType, 0x0);
