@@ -250,6 +250,8 @@ public class Constants {
     // SM Payment REST
     public static final String URL_PAYMENT_SEND_INVOICE = "payment/invoice/send";
     public static final String URL_PAYMENT_SAVE_INVOICE = "payment/invoice/save";
+    public static final String URL_PAYMENT_GET_INVOICE = "payment/invoice/get/";
+
 
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
@@ -355,6 +357,7 @@ public class Constants {
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
     public static final String COMMAND_SEND_INVOICE = "COMMAND_SEND_INVOICE";
     public static final String COMMAND_SAVE_INVOICE = "COMMAND_SAVE_INVOICE";
+    public static final String COMMAND_GET_SINGLE_INVOICE = "COMMAND_GET_SINGLE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
     public static final String COMMAND_SEND_FOR_VERIFICATION_BANK = "COMMAND_SEND_FOR_VERIFICATION_BANK";

@@ -1,10 +1,17 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.Notification;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,12 +28,15 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -42,12 +52,16 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRe
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentMakingFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetNotificationsResponse mGetNotificationsResponse;
+
+    private HttpRequestGetAsyncTask mGetSingleInvoiceTask = null;
+    private NotificationClass mGetSingleInvoiceResponse;
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
@@ -67,13 +81,15 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
     private List<ItemList> mItemList;
     private BigDecimal mAmount;
     private BigDecimal mVat;
-    private BigDecimal mServiceCharge;
     private String mReceiverName;
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private long mMoneyRequestId;
     private String mTitle;
-    private String mDescription;
+    private Button buttonScanQRCode;
+
+
+    public static final int REQUEST_CODE_PERMISSION = 1001;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +97,7 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
+        buttonScanQRCode = (Button) v.findViewById(R.id.button_scan_qr_code);
         mProgressDialog = new ProgressDialog(getActivity());
 
         mNotificationListAdapter = new NotificationListAdapter();
@@ -100,7 +117,61 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
             }
         });
 
+        buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[] {Manifest.permission.CAMERA},
+                            REQUEST_CODE_PERMISSION);
+                }
+            }
+        });
+
         return v;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initiateScan();
+                } else {
+                    Toast.makeText(getActivity(), R.string.error_permission_denied, Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+    public void initiateScan() {
+        IntentIntegrator.forSupportFragment(this).initiateScan();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
+            IntentResult scanResult = IntentIntegrator.parseActivityResult(
+                    requestCode, resultCode, data);
+            if (scanResult == null) {
+                return;
+            }
+            final String result = scanResult.getContents();
+            if (result != null) {
+                Handler mHandler = new Handler();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            getSingleInvoice(Integer.parseInt(result));
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -132,6 +203,19 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
                 Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mGetAllNotificationsTask.mHttpResponseListener = this;
         mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getSingleInvoice(int invoiceId) {
+        if (mGetSingleInvoiceTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_single_invoice));
+        mProgressDialog.show();
+        mGetSingleInvoiceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_INVOICE,
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT_GET_INVOICE + invoiceId + "/", getActivity());
+        mGetSingleInvoiceTask.mHttpResponseListener = this;
+        mGetSingleInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void rejectRequestMoney(long id) {
@@ -224,6 +308,48 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
             mProgressDialog.dismiss();
             mRejectRequestTask = null;
 
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SINGLE_INVOICE)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                try {
+                    mGetSingleInvoiceResponse = gson.fromJson(result.getJsonString(), NotificationClass.class);
+                    mMoneyRequestId = mGetSingleInvoiceResponse.getId();
+                    mAmount = mGetSingleInvoiceResponse.getAmount();
+                    mReceiverName = mGetSingleInvoiceResponse.originatorProfile.getUserName();
+                    mReceiverMobileNumber = mGetSingleInvoiceResponse.originatorProfile.getUserMobileNumber();
+                    mPhotoUri = mGetSingleInvoiceResponse.originatorProfile.getUserProfilePicture();
+                    mTitle = mGetSingleInvoiceResponse.getTitle();
+                    mVat = mGetSingleInvoiceResponse.getVat();
+                    mItemList = mGetSingleInvoiceResponse.getItemList();
+
+                    ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                            mReceiverName, mPhotoUri, mAmount, mTitle , Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                            new ReviewDialogFinishListener() {
+                                @Override
+                                public void onReviewFinish() {
+                                    refreshNotificationList();
+                                }
+                            });
+                    dialog.show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            } else {
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            if (this.isAdded()) setContentShown(true);
+            mGetSingleInvoiceTask = null;
+            mSwipeRefreshLayout.setRefreshing(false);
+            mProgressDialog.dismiss();
+
         }
     }
 
@@ -243,7 +369,6 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
             private TextView loadMoreTextView;
 
             private TextView headerView;
-            private RoundedImageView mPortrait;
 
             private LinearLayout optionsLayout;
             private Button acceptButton;
@@ -324,7 +449,6 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
                         mReceiverMobileNumber = mobileNumber;
                         mPhotoUri = imageUrl;
                         mTitle = title;
-                        mDescription = description;
                         mVat = vat;
                         mItemList = itemList;
 

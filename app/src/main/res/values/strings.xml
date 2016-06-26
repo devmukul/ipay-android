@@ -17,6 +17,7 @@
     <string name="prompt_business_addr_line2">Address Line 2</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="type_of_business">Type of Business</string>
+    <string name="error_invalid_QR_code">This QR code is invalid</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_invalid_password_short">This password is too short</string>
@@ -632,6 +633,7 @@
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
     <string name="select_a_file">Select a file</string>
     <string name="failed_fetching_money_requests">Failed to fetch money requests</string>
+    <string name="failed_fetching_single_invoice">Failed to fetch invoice</string>
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
     <string name="complete_now">COMPLETE NOW</string>
     <string name="later">LATER</string>
@@ -648,6 +650,7 @@
     <string name="sent_requests_header">You have sent requests to</string>
     <string name="invitation">Invited</string>
     <string name="select_a_contact">Select a contact</string>
+    <string name="progress_dialog_single_invoice">Fetching invoice...</string>
     <string name="progress_dialog_introducer_list">Fetching inroducer list...</string>
     <string name="progress_dialog_introduced_list">Fetching list of introduced people by me...</string>
     <string name="progress_dialog_sent_request_list">Fetching recommendation requests list...</string>
@@ -672,6 +675,7 @@
     <string name="exit">Exit</string>
     <string name="request_for_storage_permission">The app needs to access your files to function properly. Please allow it to access your files.</string>
     <string name="request_for_camera_permission">QR code scanner requires camera permission to work properly</string>
+    <string name="error_permission_denied">Camera permission is denied</string>
     <string name="log_in">Log In</string>
     <string name="sign_up">Sign Up</string>
     <string name="do_you">do you...</string>

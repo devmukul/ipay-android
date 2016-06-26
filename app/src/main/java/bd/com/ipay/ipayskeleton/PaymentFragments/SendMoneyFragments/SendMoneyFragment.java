@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 
@@ -43,7 +45,6 @@ public class SendMoneyFragment extends Fragment {
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
 
-    private SharedPreferences pref;
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -91,15 +92,27 @@ public class SendMoneyFragment extends Fragment {
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA},
                             REQUEST_CODE_PERMISSION);
-                } else {
-                    initiateScan();
-                }
+                } else initiateScan();
             }
         });
 
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         return v;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initiateScan();
+                } else {
+                    Toast.makeText(getActivity(), R.string.error_permission_denied, Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
     }
 
     public void initiateScan() {
@@ -114,6 +127,28 @@ public class SendMoneyFragment extends Fragment {
                 mMobileNumberEditText.setText(mobileNumber);
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
+        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
+            IntentResult scanResult = IntentIntegrator.parseActivityResult(
+                    requestCode, resultCode, data);
+            if (scanResult == null) {
+                return;
+            }
+            final String result = scanResult.getContents();
+            if (result != null) {
+                Handler mHandler = new Handler();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result.matches("[0-9]+") && result.length() > 2) {
+                            ContactEngine.formatMobileNumberBD(result);
+                            mMobileNumberEditText.setText("+" + result);
+                        } else if (getActivity() != null)
+                            Toast.makeText(getActivity(), getResources().getString(
+                                    R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            }
         }
     }
 

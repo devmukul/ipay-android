@@ -360,7 +360,7 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
 
                     if (!startedFromProfileCompletion)
                         ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
-                    else
+                    else //TODO
                         Toast.makeText(getActivity(), R.string.bank_added_successfully, Toast.LENGTH_LONG).show();
 
                 } else {

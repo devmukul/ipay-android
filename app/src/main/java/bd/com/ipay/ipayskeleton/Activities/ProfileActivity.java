@@ -88,6 +88,8 @@ public class ProfileActivity extends BaseActivity {
 
         switch (targetFragment) {
             case VERIFY_BANK:
+                fragment = new BankAccountsFragment();
+                break;
             case ADD_BANK:
                 fragment = new AddBankFragment();
                 break;
