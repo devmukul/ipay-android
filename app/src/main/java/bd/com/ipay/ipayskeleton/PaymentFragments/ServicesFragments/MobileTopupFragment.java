@@ -166,9 +166,11 @@ public class MobileTopupFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
-            String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
-            if (mobileNumber != null)
-                mMobileNumberEditText.setText(mobileNumber);
+            if (data != null) {
+                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                if (mobileNumber != null)
+                    mMobileNumberEditText.setText(mobileNumber);
+            }
         }
     }
 
