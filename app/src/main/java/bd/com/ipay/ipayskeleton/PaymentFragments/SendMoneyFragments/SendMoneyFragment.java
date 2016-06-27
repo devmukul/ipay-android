@@ -92,7 +92,7 @@ public class SendMoneyFragment extends Fragment {
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA},
                             REQUEST_CODE_PERMISSION);
-                } else initiateScan();
+                }
             }
         });
 
