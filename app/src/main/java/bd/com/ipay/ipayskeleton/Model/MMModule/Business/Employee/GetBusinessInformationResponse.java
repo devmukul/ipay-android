@@ -1,18 +1,11 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Business;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee;
 
-public class SetBusinessInformationRequest {
+public class GetBusinessInformationResponse {
 
     private String businessName;
     private int businessType;
     private String email;
     private String mobileNumber;
-
-    public SetBusinessInformationRequest(String businessName, int businessType, String email, String mobileNumber) {
-        this.businessName = businessName;
-        this.businessType = businessType;
-        this.email = email;
-        this.mobileNumber = mobileNumber;
-    }
 
     public String getBusinessName() {
         return businessName;

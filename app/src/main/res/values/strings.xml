@@ -157,9 +157,9 @@
     <string name="please_select_a_branch">Please select a branch</string>
     <string name="please_enter_an_account_number">Please provide your Account Number and try again</string>
     <string name="account_type">Account Type</string>
-    <string name="money_requests_header">Money requests</string>
-    <string name="invoice_requests_header">Received invoices</string>
-    <string name="recommendation_requests_header">Recommendation requests</string>
+    <string name="money_requests_header">Money Requests</string>
+    <string name="invoice_requests_header">Received Invoices</string>
+    <string name="introduction_requests_header">Introduction Requests</string>
     <string name="select_account_type">Select an account type for iPay to Sign Up</string>
     <string name="name_of_user">Name</string>
     <string name="name_of_participant">Participant Name</string>
@@ -721,6 +721,11 @@
     <string name="update_business_info">Update Business Info</string>
     <string name="manage_emails">Manage Emails</string>
     <string name="failed_loading_employee_list">Failed to load employee list</string>
+    <string name="loading_accepting_invitation">Accepting invitation...</string>
+    <string name="loading_rejecting_invitation">Rejecting invitation...</string>
+    <string name="loading_marking_invitation_as_spam">Marking invitation as spam...</string>
+    <string name="failed_confirming_business_invitation">Failed to confirm business invitation</string>
+    <string name="business_account_invites">Business Account Invites</string>
 
     <string-array name="account_types">
         <item>Personal</item>

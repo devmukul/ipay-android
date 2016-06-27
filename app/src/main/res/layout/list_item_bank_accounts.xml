@@ -35,7 +35,6 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/bank_account_verify_status"
             android:layout_toRightOf="@+id/portrait"
-            android:gravity="left"
             android:singleLine="true" />
 
         <TextView

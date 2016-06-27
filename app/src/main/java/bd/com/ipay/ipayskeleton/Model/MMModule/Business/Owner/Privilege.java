@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Business;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner;
 
 import android.os.Parcel;
 import android.os.Parcelable;

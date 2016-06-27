@@ -325,7 +325,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Basic Info Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader("Basic Info");
+                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.basic_info));
                 return;
             }
 
@@ -340,7 +340,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Address Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader("Address");
+                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.address));
                 return;
             }
 
@@ -355,7 +355,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Identification Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader("Identification");
+                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.identification));
                 return;
             }
 
@@ -370,7 +370,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Link Bank Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader("Link Bank");
+                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.link_banks));
                 return;
             }
 

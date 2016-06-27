@@ -27,7 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/portrait"
         android:layout_weight="1"
-        android:gravity="left"
         android:singleLine="true" />
 
     <TextView

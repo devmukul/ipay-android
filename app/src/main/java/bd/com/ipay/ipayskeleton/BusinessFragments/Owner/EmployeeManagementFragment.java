@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.BusinessFragments;
+package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -23,8 +23,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.GetAllEmployeesResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Employee;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetAllEmployeesResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -135,7 +135,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             public void bindView(final int pos) {
                 Employee employee = mEmployeeList.get(pos);
 
-                mProfileImageView.downloadInformation(employee.getProfilePictureUrl(),
+                mProfileImageView.setInformation(employee.getProfilePictureUrl(),
                         employee.getName(), employee.getMobileNumber());
                 mNameView.setText(employee.getName());
                 mMobileNumberView.setText(employee.getMobileNumber());

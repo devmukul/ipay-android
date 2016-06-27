@@ -679,7 +679,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     otherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
                     //mProfileImageView.setInformation(imageUrl, name);
-                    mProfileImageView.downloadInformation(imageUrl, name, mobileNumber);
+                    mProfileImageView.setInformation(imageUrl, name, mobileNumber);
                 }
 
                 if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {

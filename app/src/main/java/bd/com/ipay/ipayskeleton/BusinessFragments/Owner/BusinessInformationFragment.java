@@ -1,10 +1,8 @@
-package bd.com.ipay.ipayskeleton.BusinessFragments;
+package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,8 +22,7 @@ import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

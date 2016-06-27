@@ -31,7 +31,6 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/is_subscriber"
         android:layout_toRightOf="@+id/contact_portrait_view"
-        android:gravity="left"
         android:paddingBottom="2dp"
         android:paddingTop="14dp"
         android:singleLine="true"

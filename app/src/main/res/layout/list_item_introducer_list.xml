@@ -32,7 +32,6 @@
             style="@style/TextStylePrimaryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left"
             android:paddingBottom="2dp"
             android:singleLine="true"
             android:textSize="16sp"

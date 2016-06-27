@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.BusinessFragments;
+package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -22,8 +22,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.SetBusinessInformationRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.SetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.SetBusinessInformationRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.SetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

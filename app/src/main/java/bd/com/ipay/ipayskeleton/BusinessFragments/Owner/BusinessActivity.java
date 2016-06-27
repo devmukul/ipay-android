@@ -1,10 +1,9 @@
-package bd.com.ipay.ipayskeleton.BusinessFragments;
+package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;

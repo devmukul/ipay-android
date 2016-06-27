@@ -1,10 +1,10 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Business;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner;
 
 public class CreateEmployeeResponse {
-    private int id;
+    private long id;
     private String message;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

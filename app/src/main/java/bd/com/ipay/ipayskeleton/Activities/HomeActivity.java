@@ -52,7 +52,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
-import bd.com.ipay.ipayskeleton.BusinessFragments.BusinessActivity;
+import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityLogFragment;

@@ -26,6 +26,7 @@
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:text="@string/account_holder_information"
                 android:textStyle="bold"
+                android:gravity="center"
                 android:textColor="@android:color/white"/>
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText

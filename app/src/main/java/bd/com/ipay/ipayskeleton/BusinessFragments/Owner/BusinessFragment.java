@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.BusinessFragments;
+package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

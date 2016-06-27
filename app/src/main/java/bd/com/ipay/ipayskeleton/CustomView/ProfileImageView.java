@@ -134,7 +134,7 @@ public class ProfileImageView extends FrameLayout {
         return false;
     }
 
-    public void downloadInformation(String photoUri, String name, String phoneNumber)
+    public void setInformation(String photoUri, String name, String phoneNumber)
     {
         Log.w("info", photoUri + " " + name + " " + phoneNumber);
         try {

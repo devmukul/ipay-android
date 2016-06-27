@@ -1,13 +1,10 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Business;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner;
 
-import java.util.List;
-
-public class EmployeeDetails {
+public class Employee {
     private String designation;
-    private int id;
+    private long id;
     private String mobileNumber;
     private String name;
-    private List<Privilege> privilegeList;
     private String profilePictureUrl;
     private String status;
 
@@ -15,7 +12,7 @@ public class EmployeeDetails {
         return designation;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -25,10 +22,6 @@ public class EmployeeDetails {
 
     public String getName() {
         return name;
-    }
-
-    public List<Privilege> getPrivilegeList() {
-        return privilegeList;
     }
 
     public String getProfilePictureUrl() {

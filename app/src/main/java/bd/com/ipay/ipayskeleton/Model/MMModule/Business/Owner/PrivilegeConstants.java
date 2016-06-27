@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Business;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner;
 
 import java.util.ArrayList;
 import java.util.HashMap;

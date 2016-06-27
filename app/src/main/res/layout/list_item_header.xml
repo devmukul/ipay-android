@@ -9,8 +9,7 @@
         style="@style/ListHeaderStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/your_latest_transactions"
+        android:gravity="left"
         android:textStyle="bold"
         android:textColor="@android:color/white"/>
 

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.BusinessFragments;
+package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -24,10 +24,10 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.CreateEmployeeRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.CreateEmployeeResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Privilege;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.PrivilegeConstants;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.CreateEmployeeRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.CreateEmployeeResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Privilege;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.PrivilegeConstants;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

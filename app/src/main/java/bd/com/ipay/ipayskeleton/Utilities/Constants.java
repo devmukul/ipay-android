@@ -302,13 +302,16 @@ public class Constants {
     public static final String URL_DELETE_FRIEND = "deletefriend";
     public static final String URL_UPDATE_FRIENDS = "updatefriends";
 
-    // Business Information
+    // Business Information (Owner)
     public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";
     public static final String URL_SET_BUSINESS_INFORMATION = "user/profile/business";
-
     public static final String URL_CREATE_EMPLOYEE = "business/user";
     public static final String URL_UPDATE_EMPLOYEE = "business/user";
     public static final String URL_GET_EMPLOYEE_LIST = "business/users";
+
+    // Business Information (Employee)
+    public static final String URL_GET_BUSINESS_LIST = "business/list";
+    public static final String URL_CONFIRM_BUSINESS_INVITATION = "business/user/confirm";
 
     public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
 
@@ -434,12 +437,16 @@ public class Constants {
     public static final String COMMAND_ADD_TRUSTED_PERSON = "COMMAND_ADD_TRUSTED_PERSON";
     public static final String COMMAND_SET_ACCOUNT_RECOVERY_PERSON = "COMMAND_SET_ACCOUNT_RECOVERY_PERSON";
 
-    // Business Information
+    // Business Information (Owner)
     public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
     public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
     public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";
     public static final String COMMAND_GET_EMPLOYEE_LIST = "COMMAND_GET_EMPLOYEE_LIST";
+
+    // Business Information (Employee)
+    public static final String COMMAND_GET_BUSINESS_LIST = "COMMAND_GET_BUSINESS_LIST";
+    public static final String COMMAND_CONFIRM_BUSINESS_INVITATION = "COMMAND_CONFIRM_BUSINESS_INVITATION";
 
     public static final String COUNTRY_CODE_BANGLADESH = "+880";
     public static final int ACTIVITY_LOG_COUNT = 10;

@@ -40,6 +40,7 @@
             <TextView
                 android:id="@+id/quantity"
                 style="@style/TextStylePrimaryMedium"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/rateHolder"
@@ -75,6 +76,7 @@
 
             <TextView
                 style="@style/TextStylePrimaryMedium"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/value5"

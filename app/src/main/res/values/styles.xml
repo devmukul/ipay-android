@@ -343,7 +343,7 @@
     <style name="TextStylePrimaryMedium" parent="@android:style/Widget.TextView">
         <item name="android:textSize">18.0sp</item>
         <item name="android:textColor">@color/colorTextPrimary</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">left</item>
     </style>
 
     <style name="TextStylePrimary" parent="@android:style/Widget.TextView">
@@ -503,11 +503,12 @@
     </style>
 
     <style name="RowButton">
-        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:textSize">12sp</item>
         <item name="android:minHeight">0dp</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:padding">@dimen/value5</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
 

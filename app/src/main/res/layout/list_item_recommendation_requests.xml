@@ -60,8 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:src="@drawable/ic_sync_problem_black_24dp" />
+            android:paddingRight="@dimen/activity_horizontal_margin" />
     </RelativeLayout>
 
     <LinearLayout
