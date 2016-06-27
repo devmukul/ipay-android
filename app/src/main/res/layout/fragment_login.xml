@@ -40,6 +40,15 @@
                 android:maxLength="14"
                 custom:borderType="up">
 
+                <ImageView
+                    android:id="@+id/login_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_info_outline_black_24dp"
+                    android:layout_gravity="right|center"
+                    android:paddingRight="@dimen/activity_horizontal_margin_card"
+                    android:visibility="invisible"/>
+
             </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText

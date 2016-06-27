@@ -242,6 +242,7 @@ public class Constants {
 
     // Signout Rest
     public static final String URL_LOG_OUT = "signout";
+    public static final String URL_LOG_OUT_from_all_device = "signout/formAllDevice";
 
     // Signup Rest
     public static final String URL_SIGN_UP = "signup/activation";

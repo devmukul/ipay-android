@@ -105,6 +105,10 @@ public class IconifiedEditText extends FrameLayout {
 
     }
 
+    public EditText getEditText() {
+        return mEditText;
+    }
+
     public Editable getText() {
         return mEditText.getText();
     }

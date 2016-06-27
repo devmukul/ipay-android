@@ -422,6 +422,7 @@
     <string name="fetching_profile_picture">Fetching profile picture</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="title_login_page">Login</string>
+    <string name="login_info">You can only use one account per device. If you want to use another account from this device, please reinstall the app.</string>
     <string name="title_signup_personal_page">Sign up with iPay</string>
     <string name="title_signup_business_page">Sign up with iPay</string>
     <string name="title_forget_password_page">Reset Password</string>
@@ -528,6 +529,9 @@
     <string name="unverified">Not Verified</string>
     <string name="invited">Invited</string>
     <string name="trusted_devices">Trusted Devices</string>
+
+    <string name="logout_from_all_device">Log Out From All Devices</string>
+    <string name="logout_from_all_device_warning">Are you sure to log out from all devices?</string>
     <string name="progress_dialog_loading_trusted_devices">Loading trusted device list</string>
     <string name="failed_loading_trusted_devices">Failed to load trusted device list</string>
     <string name="success_device_removed">Device removed successfully</string>

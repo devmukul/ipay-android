@@ -1,8 +1,11 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -32,8 +35,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -43,6 +48,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordR
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
@@ -53,6 +60,9 @@ import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountSettingsFragment extends Fragment implements HttpResponseListener {
+
+    private HttpRequestPostAsyncTask mLogoutTask = null;
+    private LogoutResponse mLogOutResponse;
 
     private HttpRequestPutAsyncTask mSavePINTask = null;
     private SetPinResponse mSetPinResponse;
@@ -73,6 +83,8 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private View setPINHeader;
     private View changePasswordHeader;
     private View trustedDevicesHeader;
+    private View passwordRecoveryHeader;
+    private View logoutHeader;
 
     private Button mSetPINButton;
     private ImageView setPinArrow;
@@ -92,6 +104,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
 
     private ProgressDialog mProgressDialog;
+    private SharedPreferences pref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +132,8 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         setPINHeader = v.findViewById(R.id.set_pin_header);
         changePasswordHeader = v.findViewById(R.id.change_password);
         trustedDevicesHeader = v.findViewById(R.id.trusted_devices);
+        passwordRecoveryHeader = v.findViewById(R.id.password_recovery);
+        logoutHeader = v.findViewById(R.id.logout);
 
         changePassArrow = (ImageView) v.findViewById(R.id.change_pass_arrow);
         setPinArrow = (ImageView) v.findViewById(R.id.change_pin_arrow);
@@ -182,6 +197,31 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
             }
         });
 
+        passwordRecoveryHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HomeActivity) getActivity()).switchToPasswordRecovery();
+            }
+        });
+
+        logoutHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new android.app.AlertDialog.Builder(getContext())
+                        .setMessage(R.string.logout_from_all_device_warning)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                logOutFromAllDevices();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
+            }
+        });
+
         mSetPINButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,6 +273,29 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         super.onPrepareOptionsMenu(menu);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
+    }
+
+    private void logOutFromAllDevices() {
+        if (mLogoutTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
+        mProgressDialog.show();
+
+        pref = getContext().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        LogoutRequest mLogoutModel = new LogoutRequest(pref.getString(Constants.USERID, ""));
+        Gson gson = new Gson();
+        String json = gson.toJson(mLogoutModel);
+
+       // Set the preference
+        pref.edit().putBoolean(Constants.LOGGEDIN, false).apply();
+
+        mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
+                Constants.BASE_URL_MM + Constants.URL_LOG_OUT_from_all_device, json, getActivity());
+        mLogoutTask.mHttpResponseListener = this;
+
+        mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptSavePIN() {
@@ -493,6 +556,26 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
 
             mProgressDialog.cancel();
             mRemoveTrustedDeviceTask = null;
+        }         if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
+
+            try {
+                mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    Intent intent = new Intent(getActivity(), SignupOrLoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mLogoutTask = null;
+
         }
     }
 

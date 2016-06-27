@@ -7,8 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="@dimen/value15">
+        android:layout_margin="@dimen/value15"
+        android:orientation="vertical">
 
         <include
             android:id="@+id/set_pin_header"
@@ -64,6 +64,37 @@
             android:layout_height="@dimen/divider_space"
             android:background="@color/colorDivider" />
 
+        <RelativeLayout
+            android:id="@+id/password_recovery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_no_round_white">
+
+            <ImageView
+                android:id="@+id/icon1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="@dimen/value20"
+                android:paddingBottom="@dimen/value5"
+                android:paddingTop="@dimen/value5"
+                android:src="@drawable/ic_pwr3x" />
+
+            <TextView
+                style="@style/TextStylePrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/icon1"
+                android:text="@string/password_recovery" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_space"
+            android:background="@color/colorDivider" />
+
         <include
             android:id="@+id/trusted_devices"
             layout="@layout/view_trusted_devices_header"
@@ -86,6 +117,38 @@
                 android:layout_below="@+id/view_trusted_devices_header" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_space"
+            android:background="@color/colorDivider" />
+
+        <RelativeLayout
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_half_lower_round_white">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="@dimen/value20"
+                android:paddingBottom="@dimen/value5"
+                android:paddingTop="@dimen/value5"
+                android:src="@drawable/ic_logout23x" />
+
+            <TextView
+                style="@style/TextStylePrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/icon"
+                android:text="@string/logout_from_all_device" />
+
+        </RelativeLayout>
+
     </LinearLayout>
+
 
 </android.support.v4.widget.NestedScrollView>

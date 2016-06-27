@@ -1,10 +1,14 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Selection;
@@ -12,10 +16,14 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
@@ -45,6 +53,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private Button mButtonJoinUs;
     private String mPasswordLogin;
     private String mUserNameLogin;
+    private ImageView mInfo;
 
     private ProgressDialog mProgressDialog;
     private String mDeviceID;
@@ -71,6 +80,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mUserNameLoginView = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
         mPasswordLoginView = (IconifiedEditText) v.findViewById(R.id.login_password);
+        mInfo = (ImageView) v.findViewById(R.id.login_info);
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,11 +109,34 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        mInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new AlertDialog.Builder(getContext())
+                        .setMessage(R.string.login_info)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
+
+
         if (SignupOrLoginActivity.mMobileNumber != null) {
             // Delete +880 from the prefix
+            mUserNameLoginView.getEditText().setEnabled(false);
+            mInfo.setVisibility(View.VISIBLE);
+            mPasswordLoginView.getEditText().requestFocus();
             String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(SignupOrLoginActivity.mMobileNumber);
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + mobileNumberWithoutPrefix);
-        } else if (pref.contains(Constants.USERID)) {
+      } else if (pref.contains(Constants.USERID)) {
+            mUserNameLoginView.getEditText().setEnabled(false);
+            mInfo.setVisibility(View.VISIBLE);
+            mPasswordLoginView.getEditText().requestFocus();
             String userIdWithoutPrefix = ContactEngine.trimPrefix(pref.getString(Constants.USERID, ""));
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + userIdWithoutPrefix);
         }

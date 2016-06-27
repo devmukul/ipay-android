@@ -13,7 +13,7 @@
         android:layout_marginRight="@dimen/value20"
         android:paddingBottom="@dimen/value5"
         android:paddingTop="@dimen/value5"
-        android:src="@drawable/ic_number" />
+        android:src="@drawable/ic_signup_pwc" />
 
     <TextView
         style="@style/TextStylePrimary"
