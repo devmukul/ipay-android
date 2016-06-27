@@ -16,7 +16,7 @@
 
         <Button
             android:id="@+id/button_scan_qr_code"
-            style="@style/ButtonStyleSmall"
+            style="@style/PrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin_double"

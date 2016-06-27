@@ -123,7 +123,7 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[] {Manifest.permission.CAMERA},
                             REQUEST_CODE_PERMISSION);
-                }
+                } else initiateScan();
             }
         });
 

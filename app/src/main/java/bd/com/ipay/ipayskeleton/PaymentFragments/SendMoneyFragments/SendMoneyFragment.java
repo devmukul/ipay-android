@@ -89,10 +89,12 @@ public class SendMoneyFragment extends Fragment {
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA},
                             REQUEST_CODE_PERMISSION);
-                }
+                } else initiateScan();
+
             }
         });
 
@@ -108,7 +110,7 @@ public class SendMoneyFragment extends Fragment {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initiateScan();
                 } else {
-                    Toast.makeText(getActivity(), R.string.error_permission_denied, Toast.LENGTH_LONG).show();
+                   Toast.makeText(getActivity(), R.string.error_permission_denied, Toast.LENGTH_LONG).show();
                 }
                 return;
             }
