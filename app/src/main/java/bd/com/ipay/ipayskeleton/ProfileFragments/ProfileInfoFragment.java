@@ -57,7 +57,7 @@ public class ProfileInfoFragment extends android.support.v4.app.Fragment {
 
     private String mVerificationStatus = null;
 
-    private IconfiedTextViewWithButton mBasicInfo, mEmail, mTrustedNetwork, mAddress, mCompleteness;
+    private IconfiedTextViewWithButton mBasicInfo, mEmail, mDocuments, mAddress, mCompleteness;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,7 +95,7 @@ public class ProfileInfoFragment extends android.support.v4.app.Fragment {
 
         mBasicInfo = (IconfiedTextViewWithButton) v.findViewById(R.id.basic_info);
         mEmail = (IconfiedTextViewWithButton) v.findViewById(R.id.email);
-        mTrustedNetwork = (IconfiedTextViewWithButton) v.findViewById(R.id.trusted_network);
+        mDocuments = (IconfiedTextViewWithButton) v.findViewById(R.id.documents);
         mAddress = (IconfiedTextViewWithButton) v.findViewById(R.id.present_address);
         mCompleteness = (IconfiedTextViewWithButton) v.findViewById(R.id.profile_completion);
 
@@ -129,10 +129,10 @@ public class ProfileInfoFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        mTrustedNetwork.setOnClickListener(new View.OnClickListener() {
+        mDocuments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileActivity) getActivity()).switchToTrustedNetworkFragment();
+                ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
         });
 

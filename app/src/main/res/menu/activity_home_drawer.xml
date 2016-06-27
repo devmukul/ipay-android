@@ -6,7 +6,14 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_drawer_home"
             android:title="@string/home" />
-
+        <item
+            android:id="@+id/nav_profile_basic_info"
+            android:title="@string/profile"
+            android:icon="@drawable/ic_drawer_profile"/>
+        <item
+            android:id="@+id/nav_identification"
+            android:icon="@drawable/ic_drawer_identification"
+            android:title="@string/identification" />
         <item
             android:id="@+id/nav_bank_account"
             android:icon="@drawable/ic_drawer_bank"
@@ -45,52 +52,6 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_drawer_logout"
             android:title="@string/logout" />
-
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_drawer_profile"
-            android:title="@string/profile" >
-
-            <menu>
-                <group android:checkableBehavior="single">
-                    <item
-                        android:id="@+id/nav_profile_basic_info"
-                        android:title="@string/profile_basic_info"
-                        android:icon="@drawable/ic_drawer_profile"/>
-
-                    <item
-                        android:id="@+id/nav_profile_addresses"
-                        android:title="@string/profile_address"
-                        android:icon="@drawable/ic_drawer_address" />
-
-                    <item
-                        android:id="@+id/nav_identification"
-                        android:icon="@drawable/ic_drawer_identification"
-                        android:title="@string/identification" />
-
-                    <item
-                        android:id="@+id/nav_email_addresses"
-                        android:title="@string/email"
-                        android:icon="@drawable/ic_drawer_email" />
-
-                    <item
-                        android:id="@+id/nav_trusted_network"
-                        android:title="@string/trusted_network"
-                        android:icon="@drawable/ic_drawer_trusted_people" />
-
-                    <item
-                        android:id="@+id/nav_profile_documents"
-                        android:title="@string/profile_documents"
-                        android:icon="@drawable/ic_drawer_documents" />
-
-                    <item
-                        android:id="@+id/nav_profile_completeness"
-                        android:title="@string/profile_completeness"
-                        android:icon="@drawable/ic_drawer_profile_completeness"
-                        android:visible="false"/>
-                </group>
-            </menu>
-        </item>
     </group>
 
 </menu>

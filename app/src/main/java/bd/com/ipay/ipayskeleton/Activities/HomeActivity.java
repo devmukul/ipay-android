@@ -485,30 +485,9 @@ public class HomeActivity extends BaseActivity
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
 
-        } else if (id == R.id.nav_profile_addresses) {
-
-            launchEditProfileActivity(ProfileCompletionPropertyConstants.ADDRESS, new Bundle());
-
-        } else if (id == R.id.nav_profile_documents) {
-
-            launchEditProfileActivity(ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT, new Bundle());
-
-        } else if (id == R.id.nav_email_addresses) {
-
-            launchEditProfileActivity(ProfileCompletionPropertyConstants.VERIFIED_EMAIL, new Bundle());
-
-        } else if (id == R.id.nav_trusted_network) {
-
-            launchEditProfileActivity(ProfileCompletionPropertyConstants.TRUSTED_NETWORK, new Bundle());
-
-        } else if (id == R.id.nav_profile_completeness) {
-
-            launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS, new Bundle());
         } else if (id == R.id.nav_identification) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.INTRODUCER, new Bundle());
-            //getSupportFragmentManager().beginTransaction().replace(R.id.container, new IdentificationFragment()).commit();
-            //switchedToHomeFragment = false;
         }
 
     }
