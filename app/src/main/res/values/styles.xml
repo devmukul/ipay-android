@@ -209,6 +209,31 @@
         <item name="android:textSize">@dimen/text_size_small_medium</item>
     </style>
 
+    <style name="TextViewUserInfoPrimary" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:layout_marginBottom">@dimen/value6</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
+
+    <style name="TextViewUserInfoSecondary" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
+    </style>
+
+    <style name="CheckBoxStyle" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:paddingTop">@dimen/value6</item>
+        <item name="android:paddingBottom">@dimen/value6</item>
+        <item name="android:paddingLeft">@dimen/value12</item>
+        <item name="android:paddingRight">@dimen/value12</item>
+    </style>
+
     <!-- Document Upload -->
     <style name="DocumentUploadLabel">
         <item name="android:textSize">18sp</item>

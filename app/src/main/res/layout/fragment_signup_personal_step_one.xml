@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView android:id="@+id/personal_login_form"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/personal_login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin"
     android:background="@color/colorPrimary"
-    android:gravity="center"
     android:fillViewport="true"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:gravity="center"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <LinearLayout
         android:id="@+id/ipay_personal_login_form"
@@ -20,11 +20,11 @@
             android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:borderType="up"
             android:drawableLeft="@drawable/ic_signup_personal"
             android:hint="@string/full_name"
+            android:inputType="textPersonName"
             android:maxLines="1"
-            android:inputType="textPersonName"/>
+            app:borderType="up" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
             android:id="@+id/mobile_number"
@@ -32,9 +32,9 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_signup_number"
             android:hint="@string/mobile_number"
-            android:maxLines="1"
+            android:inputType="phone"
             android:maxLength="14"
-            android:inputType="phone"/>
+            android:maxLines="1" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
             android:id="@+id/password"
@@ -42,8 +42,8 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_signup_pw"
             android:hint="@string/prompt_password"
-            android:maxLines="1"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:maxLines="1" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
             android:id="@+id/confirm_password"
@@ -51,8 +51,8 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_signup_pwc"
             android:hint="@string/confirm_password"
-            android:maxLines="1"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:maxLines="1" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
             android:id="@+id/promo_code_edittext"
@@ -60,10 +60,10 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_signup_invcode"
             android:hint="@string/enter_promo_code"
-            android:maxLines="1"
-            android:inputType="number"/>
+            android:inputType="number"
+            android:maxLines="1" />
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -73,22 +73,23 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_birthdate"
                 android:hint="@string/birthday_dd_mm_yy"
-                android:inputType="number"/>
+                android:inputType="number" />
 
             <ImageView
                 android:id="@+id/myDatePickerButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="right|center_vertical"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                 android:layout_marginRight="@dimen/activity_horizontal_margin_card"
                 android:clickable="true"
-                android:src="@drawable/ic_calendar"
-                android:layout_gravity="right|center_vertical"/>
+                android:src="@drawable/ic_calendar" />
 
-        </FrameLayout>
+        </RelativeLayout>
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -97,45 +98,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_gender"
-                app:borderType="down"
-                android:hint="@string/gender"/>
+                android:hint="@string/gender"
+                app:borderType="down" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical">
+            <CheckBox
+                android:id="@+id/checkBoxMale"
+                style="@style/CheckBoxStyle"
+                android:layout_toLeftOf="@+id/checkBoxFemale"
+                android:background="@drawable/background_left_round_checkbox"
+                android:button="@null"
+                android:checked="true"
+                android:text="Male"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/value12" />
 
-                <CheckBox
-                    android:id="@+id/checkBoxMale"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_left_round_checkbox"
-                    android:button="@drawable/ic_male"
-                    android:layout_toLeftOf="@+id/checkBoxFemale"
-                    android:checked="true"
-                    android:layout_centerVertical="true"/>
+            <CheckBox
+                android:id="@+id/checkBoxFemale"
+                style="@style/CheckBoxStyle"
+                android:layout_toLeftOf="@+id/checkBoxOther"
+                android:background="@drawable/background_no_round_checkbox"
+                android:button="@null"
+                android:text="@string/female"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/value12" />
 
-                <CheckBox
-                    android:id="@+id/checkBoxFemale"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_no_round_checkbox"
-                    android:button="@drawable/ic_female"
-                    android:layout_toLeftOf="@+id/checkBoxOther"
-                    android:layout_centerVertical="true"/>
-
-                <CheckBox
-                    android:id="@+id/checkBoxOther"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_right_round_checkbox"
-                    android:button="@drawable/ic_male"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/value5"
-                    android:layout_centerVertical="true"/>
-            </RelativeLayout>
-
-        </FrameLayout>
+            <CheckBox
+                android:id="@+id/checkBoxOther"
+                style="@style/CheckBoxStyle"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/value5"
+                android:background="@drawable/background_right_round_checkbox"
+                android:button="@null"
+                android:text="Other"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/value12" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -293,7 +293,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             public void bindView(final int pos) {
 
                 //if last position
-                if (pos == mIdentificationDocumentDetails.length - 1) {
+                if (pos == mIdentificationDocumentDetails.length) {
 
                     mRecyclarDivider.setVisibility(View.GONE);
                 }

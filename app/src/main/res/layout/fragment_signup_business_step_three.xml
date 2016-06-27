@@ -50,7 +50,7 @@
                 android:maxLines="1"
                 android:singleLine="true" />
 
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -61,41 +61,35 @@
                     android:drawableLeft="@drawable/ic_gender"
                     android:hint="@string/gender"/>
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|center_vertical">
-
                     <CheckBox
                         android:id="@+id/checkBoxMale"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/CheckBoxStyle"
                         android:background="@drawable/background_left_round_checkbox"
-                        android:button="@drawable/ic_male"
+                        android:button="@null"
+                        android:text="@string/male"
+                        android:textColor="@android:color/white"
                         android:layout_toLeftOf="@+id/checkBoxFemale"
-                        android:checked="true"
-                        android:layout_centerVertical="true"/>
+                        android:checked="true"/>
 
                     <CheckBox
                         android:id="@+id/checkBoxFemale"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/CheckBoxStyle"
                         android:background="@drawable/background_no_round_checkbox"
-                        android:button="@drawable/ic_female"
-                        android:layout_toLeftOf="@+id/checkBoxOther"
-                        android:layout_centerVertical="true"/>
+                        android:button="@null"
+                        android:text="@string/female"
+                        android:textColor="@android:color/white"
+                        android:layout_toLeftOf="@+id/checkBoxOther" />
 
                     <CheckBox
                         android:id="@+id/checkBoxOther"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/CheckBoxStyle"
                         android:background="@drawable/background_right_round_checkbox"
-                        android:button="@drawable/ic_male"
+                        android:button="@null"
+                        android:text="Other"
+                        android:textColor="@android:color/white"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/value5"
-                        android:layout_centerVertical="true"/>
+                        android:layout_marginRight="@dimen/value5"/>
                 </RelativeLayout>
-            </FrameLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

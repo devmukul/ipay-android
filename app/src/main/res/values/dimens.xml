@@ -12,7 +12,12 @@
     <dimen name="news_feed_fragment_height">260dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="parallax_image_height">150dp</dimen>
+    <dimen name="value2">2dp</dimen>
+    <dimen name="value4">4.0dip</dimen>
+    <dimen name="value5">5.0dip</dimen>
+    <dimen name="value6">6.0dip</dimen>
     <dimen name="value10">10.0dip</dimen>
+    <dimen name="value12">12.0dip</dimen>
     <dimen name="value15">15.0dip</dimen>
     <dimen name="value17">17.0dip</dimen>
     <dimen name="value20">20.0dip</dimen>
@@ -22,8 +27,6 @@
     <dimen name="value40">40.0dip</dimen>
     <dimen name="value48">48.0dip</dimen>
     <dimen name="value64">64dp</dimen>
-    <dimen name="value2">2dp</dimen>
-    <dimen name="value5">5.0dip</dimen>
     <dimen name="spacing_xsmall">2dp</dimen>
     <dimen name="spacing_medium">8dp</dimen>
     <dimen name="spacing_large">16dp</dimen>
