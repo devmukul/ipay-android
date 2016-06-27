@@ -57,6 +57,7 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });
