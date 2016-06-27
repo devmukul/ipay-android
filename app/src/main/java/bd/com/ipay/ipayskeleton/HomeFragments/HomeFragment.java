@@ -303,9 +303,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private void promptForProfileCompletion() {
         mProfileCompletionStatusResponse.analyzeProfileCompletionData();
-        if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
-            ((HomeActivity) getActivity()).setDrawerMenuVisibility(R.id.nav_profile_completeness, true);
-        }
 
         if (!profileCompletionPromptShown) {
             profileCompletionPromptShown = true;
@@ -517,7 +514,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
 
             mRefreshBalanceTask = null;
