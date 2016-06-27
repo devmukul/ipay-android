@@ -69,6 +69,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.Profile
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
+import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
@@ -406,6 +407,11 @@ public class HomeActivity extends BaseActivity
         mNavigationView.getMenu().getItem(0).setChecked(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
         switchedToHomeFragment = true;
+    }
+
+    public void switchToPasswordRecovery() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new TrustedNetworkFragment()).commit();
+        switchedToHomeFragment = false;
     }
 
     public void setDrawerMenuVisibility(int id, boolean visible) {

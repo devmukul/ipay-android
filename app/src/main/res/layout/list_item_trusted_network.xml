@@ -66,15 +66,6 @@
                     android:visibility="gone"
                     android:text="@string/trusted_member"/>
 
-                <ImageButton
-                    android:id="@+id/button_make_recovery_person"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/background_list_item_circle"
-                    android:padding="@dimen/activity_horizontal_margin"
-                    android:src="@drawable/ic_add_circle_outline"/>
             </RelativeLayout>
 
         </RelativeLayout>

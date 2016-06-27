@@ -86,7 +86,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trusted_network, container, false);
 
-        getActivity().setTitle(R.string.trusted_network);
+        getActivity().setTitle(R.string.password_recovery);
 
         mAddTrustedPersonButton = (Button) v.findViewById(R.id.button_add_trusted_person);
         mTrustedPersonListRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_person);
@@ -238,21 +238,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         dialog.show();
     }
 
-    private void showSetRecoveryPersonConfirmationDialog(final long id) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.are_you_sure)
-                .setMessage(getString(R.string.confirmation_set_trusted_member))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setAccountRecoveryPerson(id);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null);
-
-        dialog.show();
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
@@ -358,8 +343,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             private TextView mNameView;
             private TextView mMobileNumberView;
             private TextView mRelationshipView;
-            private TextView mIsTrustedMemberView;
-            private ImageButton mSetRecoveryPersonButton;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -367,8 +350,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 mNameView = (TextView) itemView.findViewById(R.id.textview_name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
                 mRelationshipView = (TextView) itemView.findViewById(R.id.textview_relationship);
-                mIsTrustedMemberView = (TextView) itemView.findViewById(R.id.textview_is_trusted_member);
-                mSetRecoveryPersonButton = (ImageButton) itemView.findViewById(R.id.button_make_recovery_person);
             }
 
             public void bindView(int pos) {
@@ -378,21 +359,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 mNameView.setText(trustedPerson.getName());
                 mMobileNumberView.setText(trustedPerson.getMobileNumber());
                 mRelationshipView.setText(trustedPerson.getRelationship());
-
-                if (trustedPerson.isEligibleForAccountRecovery()) {
-                    mIsTrustedMemberView.setVisibility(View.VISIBLE);
-                    mSetRecoveryPersonButton.setVisibility(View.GONE);
-                } else {
-                    mIsTrustedMemberView.setVisibility(View.GONE);
-                    mSetRecoveryPersonButton.setVisibility(View.VISIBLE);
-                }
-
-                mSetRecoveryPersonButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showSetRecoveryPersonConfirmationDialog(trustedPerson.getPersonId());
-                    }
-                });
             }
         }
 
