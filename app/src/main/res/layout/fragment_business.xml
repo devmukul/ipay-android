@@ -9,16 +9,14 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@android:style/Widget.Holo.Button.Borderless"
-        android:text="Business Information"
-        android:layout_gravity="center"
+        style="@style/PrimaryButton"
+        android:text="@string/business_information"
         android:id="@+id/button_business_information" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Manage Employee"
-        style="@android:style/Widget.Holo.Button.Borderless"
-        android:layout_gravity="center"
+        android:text="@string/manage_employees"
+        style="@style/PrimaryButton"
         android:id="@+id/button_manage_employees" />
 </LinearLayout>

@@ -726,6 +726,7 @@
     <string name="loading_marking_invitation_as_spam">Marking invitation as spam...</string>
     <string name="failed_confirming_business_invitation">Failed to confirm business invitation</string>
     <string name="business_account_invites">Business Account Invites</string>
+    <string name="edit_business_information">Edit Business Information</string>
 
     <string-array name="account_types">
         <item>Personal</item>

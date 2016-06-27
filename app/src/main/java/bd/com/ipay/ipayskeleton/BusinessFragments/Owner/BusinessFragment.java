@@ -18,6 +18,7 @@ public class BusinessFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_business, container, false);
+        getActivity().setTitle(R.string.manage_business);
 
         mBusinessInformationButton = (Button) v.findViewById(R.id.button_business_information);
         mManageEmployeeButton = (Button) v.findViewById(R.id.button_manage_employees);

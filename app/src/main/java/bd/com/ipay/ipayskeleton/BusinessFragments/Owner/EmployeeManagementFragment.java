@@ -42,6 +42,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_employee_management, container, false);
+        getActivity().setTitle(R.string.manage_employees);
 
         mAddEmployeeButton = (Button) v.findViewById(R.id.button_add_employee);
         mAddEmployeeButton.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +96,9 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                     mEmployeeList = mGetAllEmployeesResponse.getPersonList();
                     EmployeeListAdapter adapter = new EmployeeListAdapter();
                     mEmployeeListView.setAdapter(adapter);
-                    setContentShown(true);
+
+                    if (isAdded())
+                        setContentShown(true);
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mGetAllEmployeesResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -109,6 +112,8 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                     getActivity().onBackPressed();
                 }
             }
+
+            mGetAllEmployeeAsyncTask = null;
         }
     }
 

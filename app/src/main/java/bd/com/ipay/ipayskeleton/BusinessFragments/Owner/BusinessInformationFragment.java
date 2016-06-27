@@ -45,6 +45,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_business_information, container, false);
+        getActivity().setTitle(R.string.business_information);
 
         mBusinessNameView = (TextView) v.findViewById(R.id.textview_business_name);
         mBusinessMobileNumberView = (TextView) v.findViewById(R.id.textview_business_mobile_number);

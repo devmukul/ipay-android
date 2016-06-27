@@ -46,6 +46,7 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_employee_information, container, false);
+        getActivity().setTitle(R.string.create_employee);
 
         mMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.mobile_number);
         mDesignationEditText = (IconifiedEditText) v.findViewById(R.id.designation);

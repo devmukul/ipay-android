@@ -54,6 +54,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_business_information, container, false);
+        getActivity().setTitle(R.string.edit_business_information);
 
         mBusinessNameEditText = (IconifiedEditText) v.findViewById(R.id.business_name);
         mBusinessMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.business_mobile_number);
