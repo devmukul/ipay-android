@@ -243,6 +243,7 @@
     <string name="password_recovery">Password Recovery</string>
     <string name="add_a_bank">Add Bank</string>
     <string name="transaction_details">Transaction Details</string>
+    <string name="invoice">Invoice</string>
     <string name="invoice_details">Invoice Details</string>
     <string name="adding_bank">Bank is being added...</string>
     <string name="removing_bank">Bank is being removed...</string>
@@ -720,6 +721,7 @@
     <string name="see_business_info">See Business Info</string>
     <string name="update_business_info">Update Business Info</string>
     <string name="manage_emails">Manage Emails</string>
+    <string name="education_management">Education Management</string>
     <string name="failed_loading_employee_list">Failed to load employee list</string>
     <string name="loading_accepting_invitation">Accepting invitation...</string>
     <string name="loading_rejecting_invitation">Rejecting invitation...</string>
@@ -727,6 +729,10 @@
     <string name="failed_confirming_business_invitation">Failed to confirm business invitation</string>
     <string name="business_account_invites">Business Account Invites</string>
     <string name="edit_business_information">Edit Business Information</string>
+    <string name="get_balance">Get Balance</string>
+    <string name="get_transactions">Get Transactions</string>
+    <string name="friend_read">Friend Read</string>
+    <string name="friend_write">Friend Write</string>
 
     <string-array name="account_types">
         <item>Personal</item>

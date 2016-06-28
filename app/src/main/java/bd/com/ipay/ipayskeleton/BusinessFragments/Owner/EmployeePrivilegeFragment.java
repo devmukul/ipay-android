@@ -162,13 +162,13 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                 Privilege privilege = mPrivilegeList.get(pos);
 
                 mPrivilegeCheckBox.setText(PrivilegeConstants.PRIVILEGE_NAME_MAP.get(privilege.getName()));
-                mPrivilegeCheckBox.setChecked(privilege.hasAuthority());
                 mPrivilegeCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         mPrivilegeList.get(pos).setHasAuthority(isChecked);
                     }
                 });
+                mPrivilegeCheckBox.setChecked(privilege.hasAuthority());
             }
         }
 
