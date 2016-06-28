@@ -132,7 +132,7 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_user_activity, container, false);
+        View v = inflater.inflate(R.layout.fragment_activity_log, container, false);
         getActivity().setTitle(R.string.activity_log);
 
         activityLogTypes = getResources().getStringArray(R.array.activity_log_types);
