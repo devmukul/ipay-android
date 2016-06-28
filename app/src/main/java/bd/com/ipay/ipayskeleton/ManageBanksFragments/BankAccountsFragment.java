@@ -459,6 +459,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                                     .setContentText(Html.fromHtml(getString(R.string.bank_verification_help_html)))
                                     .setDelay(100) // optional but starting animations immediately in onCreate can make them choppy
                                     .singleUse(bankAccountID + "") // provide a unique ID used to ensure it is only shown once // TODO: removed for now. Comment out later
+                                    .setDismissOnTargetTouch(true)
+                                    .setDismissOnTouch(true)
                                     .show();
                     }
                 });
