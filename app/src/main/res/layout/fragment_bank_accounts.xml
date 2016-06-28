@@ -10,22 +10,13 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_horizontal_margin">
 
-        <LinearLayout
+        <TextView
             android:id="@+id/header"
-            style="@style/ListHeaderStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="@string/bank_list"
+            style="@style/ListHeaderStyle"/>
 
-            <TextView
-                android:id="@+id/bank_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:text="@string/bank_list"
-                android:textColor="@color/zxinglib_status_text"
-                android:textStyle="bold" />
-
-        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_bank"

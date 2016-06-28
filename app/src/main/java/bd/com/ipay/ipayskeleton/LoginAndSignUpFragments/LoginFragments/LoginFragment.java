@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class LoginFragment extends Fragment implements HttpResponseListener {
@@ -69,7 +70,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_login, container, false);
+
         mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setCancelable(false);
+
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
@@ -167,7 +171,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         Utilities.hideKeyboard(getContext(),getView());
     }
 
-    void putConstantStringInfront(final IconifiedEditText edt, final String constString) {
+    void putConstantStringInFront(final IconifiedEditText edt, final String constString) {
         edt.setText(constString);
         Selection.setSelection(edt.getText(), edt.getText().length());
 
@@ -285,6 +289,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     pref.edit().putBoolean(Constants.LOGGEDIN, true).apply();
                     pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
                     pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
+                    // When user logs in, we want that by default he would log in to his default account
+                    TokenManager.deactivateEmployerAccount();
                     ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {

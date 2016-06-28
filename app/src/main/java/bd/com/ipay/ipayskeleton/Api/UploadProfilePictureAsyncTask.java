@@ -18,12 +18,10 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpResponseObject> {
@@ -90,8 +88,11 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
             File file = new File(selectedImagePath);
             HttpPost post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_SET_PROFILE_PICTURE);
 
-            if (HomeActivity.iPayToken.length() > 0)
-                post.setHeader(Constants.TOKEN, HomeActivity.iPayToken);
+            if (TokenManager.isTokenExists())
+                post.setHeader(Constants.TOKEN, TokenManager.getToken());
+            if (TokenManager.isEmployerAccountActive())
+                post.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOperatingOnAccountId());
+
             MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,
                     Constants.BOUNDARY, Charset.defaultCharset());
 

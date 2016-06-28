@@ -137,12 +137,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
         mNotificationsRecyclerView.setAdapter(mNotificationListAdapter);
 
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getNotifications();
-            getRecommendationRequestsList();
-            getBusinessInvitationList();
-        }
-
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -160,6 +154,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            getNotifications();
+            getRecommendationRequestsList();
+            getBusinessInvitationList();
+        }
+
         setContentShown(false);
     }
 
@@ -357,6 +358,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mRejectRequestTask = null;
             mRejectPaymentTask = null;
             mGetAllNotificationsTask = null;
+            mServiceChargeTask = null;
+            mConfirmBusinessInvitationTask = null;
+            mGetBusinessInvitationTask = null;
+            mGetRecommendationRequestsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();

@@ -60,6 +60,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.ManageEmployerFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
@@ -76,6 +77,7 @@ import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeActivity extends BaseActivity
@@ -108,12 +110,7 @@ public class HomeActivity extends BaseActivity
     private ProgressDialog mProgressDialog;
     private NavigationView mNavigationView;
 
-    public static String iPayToken = "";
-    public static String iPayRefreshToken = "";
-    public static String fireBaseToken = "";
     public static boolean newsFeedLoadedOnce = false;
-    public static CountDownTimer tokenTimer;
-    public static long iPayTokenTimeInMs = 60000;  // By default this is one minute
 
     public static boolean switchedToHomeFragment = true;
 
@@ -173,12 +170,14 @@ public class HomeActivity extends BaseActivity
 
         if (mAccountType == Constants.PERSONAL_ACCOUNT_TYPE) {
             setDrawerMenuVisibility(R.id.nav_manage_business, false);
+            setDrawerMenuVisibility(R.id.nav_manage_employer, true);
         } else {
             setDrawerMenuVisibility(R.id.nav_manage_business, true);
+            setDrawerMenuVisibility(R.id.nav_manage_employer, false);
         }
 
         // Initialize token timer
-        tokenTimer = new CountDownTimer(iPayTokenTimeInMs, 1000) {
+        CountDownTimer tokenTimer = new CountDownTimer(TokenManager.getiPayTokenTimeInMs(), 1000) {
 
             public void onTick(long millisUntilFinished) {
             }
@@ -187,6 +186,7 @@ public class HomeActivity extends BaseActivity
                 refreshToken();
             }
         }.start();
+        TokenManager.setTokenTimer(tokenTimer);
 
         mMobileNumberView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
@@ -222,7 +222,7 @@ public class HomeActivity extends BaseActivity
         }
 
         if (Constants.DEBUG) {
-            Log.w("Token", HomeActivity.iPayToken);
+            Log.w("Token", TokenManager.getToken());
         }
 
         attemptRequestForPermission();
@@ -258,7 +258,6 @@ public class HomeActivity extends BaseActivity
     public void onResume() {
         super.onResume();
         getProfileInfo();
-        // TODO: refresh balance in the navigation drawer here
     }
 
     private void setProfilePicture(String imageUrl) {
@@ -462,6 +461,11 @@ public class HomeActivity extends BaseActivity
 
             Intent intent = new Intent(this, BusinessActivity.class);
             startActivity(intent);
+
+        } else if (id == R.id.nav_manage_employer) {
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ManageEmployerFragment()).commit();
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_about) {
 

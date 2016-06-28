@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+    android:paddingTop="@dimen/activity_vertical_margin_card">
+
+    <RelativeLayout
+        android:id="@+id/info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_card">
+
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+        <LinearLayout
+            android:layout_toRightOf="@+id/profile_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/textview_name"
+                style="@style/TextStylePrimaryMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/textview_mobile_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_layout"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_switch_account"
+                style="@style/RowButton"
+                android:text="@string/switch_account" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/colorDivider" />
+
+            <Button
+                android:id="@+id/button_show_privileges"
+                style="@style/RowButton"
+                android:text="@string/show_privileges" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/colorDivider" />
+
+            <Button
+                android:id="@+id/button_resign"
+                style="@style/RowButton"
+                android:text="@string/resign" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_space"
+        android:layout_below="@+id/options_layout"
+        android:background="@color/colorDivider" />
+
+</RelativeLayout>

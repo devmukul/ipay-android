@@ -733,6 +733,11 @@
     <string name="get_transactions">Get Transactions</string>
     <string name="friend_read">Friend Read</string>
     <string name="friend_write">Friend Write</string>
+    <string name="switch_account">Switch Account</string>
+    <string name="show_privileges">Show Privileges</string>
+    <string name="resign">Resign</string>
+    <string name="manage_employer">Manage Employer</string>
+    <string name="failed_fetching_employer_list">Failed to fetch employer list</string>
 
     <string-array name="account_types">
         <item>Personal</item>

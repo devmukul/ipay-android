@@ -1,22 +1,16 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -27,6 +21,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenReque
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public abstract class BaseActivity extends AppCompatActivity implements HttpResponseListener {
@@ -94,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             HomeActivity.mRefreshTokenAsyncTask = null;
         }
 
-        GetRefreshTokenRequest mGetRefreshTokenRequest = new GetRefreshTokenRequest(HomeActivity.iPayRefreshToken);
+        GetRefreshTokenRequest mGetRefreshTokenRequest = new GetRefreshTokenRequest(TokenManager.getRefreshToken());
         Gson gson = new Gson();
         String json = gson.toJson(mGetRefreshTokenRequest);
         HomeActivity.mRefreshTokenAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_TOKEN,
