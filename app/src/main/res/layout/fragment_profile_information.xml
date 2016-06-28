@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout style="@style/ProfileCardLayoutStyleColorPrimaryLight"
+            <RelativeLayout
+                style="@style/ProfileCardLayoutStyleColorPrimaryLight"
                 android:background="@drawable/background_rounded_color_primary_dark">
 
                 <com.makeramen.roundedimageview.RoundedImageView
@@ -40,9 +41,9 @@
                     app:riv_oval="false" />
 
                 <LinearLayout
+                    android:id="@+id/layout_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/layout_name"
                     android:layout_below="@+id/profile_picture"
                     android:layout_marginTop="@dimen/value10"
                     android:orientation="horizontal">
@@ -51,16 +52,18 @@
                         android:id="@+id/textview_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/value5"
                         android:layout_marginLeft="@dimen/value35"
                         android:layout_marginRight="@dimen/value20"
-                        android:layout_marginBottom="@dimen/value5"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_medium"/>
+                        android:textSize="@dimen/text_size_medium" />
 
                     <ImageView
                         android:id="@+id/textview_verification_status"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_verified_profile"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -69,10 +72,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/layout_name"
-                    android:layout_marginLeft="@dimen/value35"
                     android:layout_marginBottom="@dimen/value15"
-                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="@dimen/value35"
                     android:text="01746176211"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/text_size_small_medium" />
 
             </RelativeLayout>
@@ -84,10 +87,10 @@
 
                 <!-- Relative names -->
                 <RelativeLayout
+                    android:id="@+id/layout_basic_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:id="@+id/layout_basic_info">
+                    android:gravity="center_vertical">
 
                     <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
                         android:id="@+id/basic_info"
@@ -99,17 +102,17 @@
                 </RelativeLayout>
 
                 <View
-                    android:layout_below="@+id/layout_basic_info"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/divider_space"
+                    android:layout_below="@+id/layout_basic_info"
                     android:background="@color/colorDivider" />
 
                 <RelativeLayout
+                    android:id="@+id/layout_email_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_below="@+id/layout_basic_info"
-                    android:id="@+id/layout_email_address">
+                    android:gravity="center_vertical">
 
                     <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
                         android:id="@+id/email"
@@ -121,16 +124,16 @@
                 </RelativeLayout>
 
                 <View
-                    android:layout_below="@+id/layout_email_address"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/divider_space"
+                    android:layout_below="@+id/layout_email_address"
                     android:background="@color/colorDivider" />
 
                 <RelativeLayout
-                    android:layout_below="@+id/layout_email_address"
                     android:id="@+id/layout_documents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_email_address"
                     android:gravity="center_vertical">
 
                     <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
@@ -142,16 +145,16 @@
                 </RelativeLayout>
 
                 <View
-                    android:layout_below="@+id/layout_documents"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/divider_space"
+                    android:layout_below="@+id/layout_documents"
                     android:background="@color/colorDivider" />
 
                 <RelativeLayout
-                    android:layout_below="@+id/layout_documents"
                     android:id="@+id/layout_present_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_documents"
                     android:gravity="center_vertical">
 
                     <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
@@ -164,16 +167,16 @@
                 </RelativeLayout>
 
                 <View
-                    android:layout_below="@+id/layout_present_address"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/divider_space"
+                    android:layout_below="@+id/layout_present_address"
                     android:background="@color/colorDivider" />
 
                 <RelativeLayout
-                    android:layout_below="@+id/layout_present_address"
                     android:id="@+id/layout_profile_complition"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/layout_present_address"
                     android:gravity="center_vertical">
 
                     <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton

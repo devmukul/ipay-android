@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Api;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,7 +13,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -23,11 +23,11 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpResponseObject> {
@@ -73,16 +73,18 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             if (headers.length > 0) {
                 for (Header header : headers) {
                     if (header.getName().equals(Constants.TOKEN)) {
-                        HomeActivity.iPayToken = header.getValue();
-                        HomeActivity.iPayTokenTimeInMs = Utilities.getTimeFromBase64Token(HomeActivity.iPayToken);
+                        TokenManager.setToken(header.getValue());
+                        TokenManager.setiPayTokenTimeInMs(Utilities.getTimeFromBase64Token(TokenManager.getToken()));
 
-                        if (HomeActivity.tokenTimer != null) {
-                            HomeActivity.tokenTimer.cancel();
-                            HomeActivity.tokenTimer.start();
+                        CountDownTimer tokenTimer = TokenManager.getTokenTimer();
+
+                        if (tokenTimer != null) {
+                            tokenTimer.cancel();
+                            tokenTimer.start();
                         }
                     } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
-                        HomeActivity.iPayRefreshToken = header.getValue();
-                        Log.d(Constants.REFRESH_TOKEN, HomeActivity.iPayRefreshToken);
+                        TokenManager.setRefreshToken(header.getValue());
+                        Log.d(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
                     }
                 }
             }
@@ -175,8 +177,10 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         try {
             HttpRequestBase httpRequest = getRequest();
 
-            if (HomeActivity.iPayToken.length() > 0)
-                httpRequest.setHeader(Constants.TOKEN, HomeActivity.iPayToken);
+            if (TokenManager.getToken().length() > 0)
+                httpRequest.setHeader(Constants.TOKEN, TokenManager.getToken());
+            if (TokenManager.isEmployerAccountActive())
+                httpRequest.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOperatingOnAccountId());
             httpRequest.setHeader(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID);
             httpRequest.setHeader("Accept", "application/json");
             httpRequest.setHeader("Content-type", "application/json");

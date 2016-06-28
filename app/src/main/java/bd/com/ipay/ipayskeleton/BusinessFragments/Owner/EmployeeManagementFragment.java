@@ -66,8 +66,6 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mEmployeeListView.setLayoutManager(layoutManager);
 
-        getEmployeeList();
-
         adapter = new EmployeeListAdapter();
         mEmployeeListView.setAdapter(adapter);
 
@@ -83,6 +81,9 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        getEmployeeList();
+
         setContentShown(false);
     }
 
@@ -202,7 +203,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             public void bindView(final int pos) {
 
                 mOptionsLayout.setVisibility(View.GONE);
-                if (pos == mEmployeeList.size() -1) divider.setVisibility(View.GONE);
+                if (pos == mEmployeeList.size() - 1) divider.setVisibility(View.GONE);
                 final Employee employee = mEmployeeList.get(pos);
 
 

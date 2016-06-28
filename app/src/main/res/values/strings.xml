@@ -738,6 +738,11 @@
     <string name="get_transactions">Get Transactions</string>
     <string name="friend_read">Friend Read</string>
     <string name="friend_write">Friend Write</string>
+    <string name="switch_account">Switch Account</string>
+    <string name="show_privileges">Show Privileges</string>
+    <string name="resign">Resign</string>
+    <string name="manage_employer">Manage Employer</string>
+    <string name="failed_fetching_employer_list">Failed to fetch employer list</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
 
     <string-array name="account_types">
@@ -765,6 +770,14 @@
         <item>Robi</item>
         <item>Airtel</item>
         <item>Banglalink</item>Teletalk
+        <item>Teletalk</item>
+    </string-array>
+
+    <string-array name="package_type">
+        <item>Pre-paid</item>
+        <item>Post-paid </item>
+        <item>Airtel</item>
+        <item>Banglalink</item>
         <item>Teletalk</item>
     </string-array>
 

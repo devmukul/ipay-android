@@ -32,6 +32,7 @@ public class Constants {
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
     public static final String RESOURCE_TOKEN = "resource-token";
+    public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
 
     public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";

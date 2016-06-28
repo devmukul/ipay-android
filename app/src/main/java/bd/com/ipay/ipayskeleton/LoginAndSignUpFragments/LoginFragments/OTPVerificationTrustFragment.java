@@ -76,6 +76,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
+        mProgressDialog.setCancelable(true);
 
         //enable broadcast receiver to get the text message to get the OTP
         mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
@@ -84,16 +85,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             public void onTextMessageReceive(String otp) {
                 mOTPEditText.setText(otp);
                 mActivateButton.performClick();
-            }
-        });
-
-        mResendOTPButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) resendOTP(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword);
-                else if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-
             }
         });
 
@@ -107,6 +98,16 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mResendOTPButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utilities.isConnectionAvailable(getActivity())) resendOTP(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword);
+                else if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -124,6 +125,11 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 mResendOTPButton.setEnabled(true);
             }
         }.start();
+
+        if (Constants.DEBUG && Constants.AUTO_LOGIN && (Constants.SERVER_TYPE == 1 || Constants.SERVER_TYPE == 2)) {
+            mOTPEditText.setText("123456");
+            mActivateButton.callOnClick();
+        }
 
         return v;
     }
