@@ -170,10 +170,8 @@ public class HomeActivity extends BaseActivity
 
         if (mAccountType == Constants.PERSONAL_ACCOUNT_TYPE) {
             setDrawerMenuVisibility(R.id.nav_manage_business, false);
-            setDrawerMenuVisibility(R.id.nav_manage_employer, true);
         } else {
             setDrawerMenuVisibility(R.id.nav_manage_business, true);
-            setDrawerMenuVisibility(R.id.nav_manage_employer, false);
         }
 
         // Initialize token timer
