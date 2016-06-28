@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -40,10 +41,10 @@ public class SendMoneyFragment extends Fragment {
 
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
-    private Button buttonScanQRCode;
-    private EditText mMobileNumberEditText;
-    private EditText mDescriptionEditText;
-    private EditText mAmountEditText;
+    private ImageView buttonScanQRCode;
+    private IconifiedEditText mMobileNumberEditText;
+    private IconifiedEditText mDescriptionEditText;
+    private IconifiedEditText mAmountEditText;
 
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
@@ -53,10 +54,10 @@ public class SendMoneyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_send_money, container, false);
-        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
-        mDescriptionEditText = (EditText) v.findViewById(R.id.description);
-        mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        buttonScanQRCode = (Button) v.findViewById(R.id.button_scan_qr_code);
+        mMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.mobile_number);
+        mDescriptionEditText = (IconifiedEditText) v.findViewById(R.id.description);
+        mAmountEditText = (IconifiedEditText) v.findViewById(R.id.amount);
+        buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
 
@@ -91,7 +92,7 @@ public class SendMoneyFragment extends Fragment {
             public void onClick(View v) {
 
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA},
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
                             REQUEST_CODE_PERMISSION);
                 } else initiateScan();
 
@@ -110,7 +111,7 @@ public class SendMoneyFragment extends Fragment {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initiateScan();
                 } else {
-                   Toast.makeText(getActivity(), R.string.error_permission_denied, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.error_permission_denied, Toast.LENGTH_LONG).show();
                 }
                 return;
             }

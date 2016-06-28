@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -30,29 +31,29 @@ public class RequestMoneyFragment extends Fragment {
 
     private Button buttonRequest;
     private ImageView buttonSelectFromContacts;
-    private Button buttonShowQRCode;
-    private EditText mMobileNumberEditText;
-    private EditText mDescriptionEditText;
-    private EditText mAmountEditText;
-    private EditText mTitleEditText;
+    private ImageView buttonShowQRCode;
+    private IconifiedEditText mMobileNumberEditText;
+    private IconifiedEditText mDescriptionEditText;
+    private IconifiedEditText mAmountEditText;
+    private IconifiedEditText mTitleEditText;
     private ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_request_money, container, false);
-        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
-        buttonShowQRCode = (Button) v.findViewById(R.id.button_show_qr_code);
+        mMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.mobile_number);
+        buttonShowQRCode = (ImageView) v.findViewById(R.id.button_show_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_sender_from_contacts);
         buttonRequest = (Button) v.findViewById(R.id.button_request_money);
-        mDescriptionEditText = (EditText) v.findViewById(R.id.description);
-        mAmountEditText = (EditText) v.findViewById(R.id.amount);
+        mDescriptionEditText = (IconifiedEditText) v.findViewById(R.id.description);
+        mAmountEditText = (IconifiedEditText) v.findViewById(R.id.amount);
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
         }
 
-        mTitleEditText = (EditText) v.findViewById(R.id.title_request);
+        mTitleEditText = (IconifiedEditText) v.findViewById(R.id.title_request);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));

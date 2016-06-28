@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/value12"
             android:background="@color/colorPrimary">
 
             <LinearLayout
@@ -56,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/ReviewCardStyle"
-            app:cardElevation="4dp"
+            app:cardElevation="@dimen/value2"
             android:layout_margin="@dimen/value12">
 
             <LinearLayout
@@ -145,7 +144,7 @@
                 android:layout_height="wrap_content"
                 style="@style/ReviewCardStyle"
                 android:id="@+id/description_holder"
-                app:cardElevation="2dp"
+                app:cardElevation="@dimen/value2"
                 android:layout_margin="@dimen/value12">
 
                 <LinearLayout

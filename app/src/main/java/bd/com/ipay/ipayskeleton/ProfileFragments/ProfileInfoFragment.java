@@ -156,9 +156,9 @@ public class ProfileInfoFragment extends android.support.v4.app.Fragment {
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-                mVerificationStatusView.setImageResource(R.drawable.ic_verified);
+                mVerificationStatusView.setVisibility(View.VISIBLE);
             } else {
-                mVerificationStatusView.setImageResource(R.drawable.ic_notverified3x);
+                mVerificationStatusView.setVisibility(View.GONE);
             }
         }
     }

@@ -1,25 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="12dp">
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/value12">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    style="@style/ReviewImageStyle"
+                    android:src="@drawable/ic_mobile_recharge_large" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextViewUserInfoPrimary"
+                        android:text="Rechange To"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/textview_mobile_number"
+                        style="@style/TextViewUserInfoSecondary"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            app:cardElevation="4dp">
+            app:cardElevation="@dimen/value2">
 
             <LinearLayout
-                android:id="@+id/profile"
+                android:id="@+id/total_amount_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -29,123 +64,65 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        style="@style/ReviewImageStyle"
-                        android:src="@drawable/ic_mobile_recharge_large" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:layout_marginBottom="6dp"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:text="@string/recharge_to"/>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:id="@+id/textview_mobile_number" />
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:id="@+id/total_amount_holder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/ReviewItemLabelStyle"
-                        android:text="@string/total_amount"/>
+                        style="@style/TextViewProfileInfoLabel"
+                        android:text="@string/total_amount" />
 
                     <TextView
                         android:id="@+id/textview_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/ReviewItemStyle"
-                        android:gravity="right" />
+                        style="@style/TextViewProfileInfo" />
 
                 </LinearLayout>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/divider_space"
+                    android:layout_below="@+id/icon"
+                    android:background="@color/colorDivider" />
 
                 <LinearLayout
                     android:id="@+id/service_charge_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="24dp">
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/ReviewItemLabelStyle"
-                        android:text="@string/service_charge"/>
+                        style="@style/TextViewProfileInfoLabel"
+                        android:text="@string/service_charge" />
 
                     <TextView
                         android:id="@+id/textview_service_charge"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/ReviewItemStyle"
-                        android:gravity="right" />
+                        style="@style/TextViewProfileInfo" />
 
                 </LinearLayout>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/divider_space"
+                    android:layout_below="@+id/icon"
+                    android:background="@color/colorDivider" />
 
                 <LinearLayout
                     android:id="@+id/topup_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="24dp">
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/ReviewItemLabelStyle"
-                        android:text="@string/topup_received"/>
+                        style="@style/TextViewProfileInfoLabel"
+                        android:text="@string/topup_received" />
 
                     <TextView
                         android:id="@+id/textview_total"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/ReviewItemStyle"
-                        android:gravity="right" />
+                        style="@style/TextViewProfileInfo" />
 
                 </LinearLayout>
-
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-
         <Button
             android:id="@+id/button_topup"
-            style="@style/ButtonStyleMain"
+            style="@style/PrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/recharge_now" />

@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
@@ -45,9 +46,9 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private GetBankListResponse mBankListResponse;
 
     private Button buttonAddMoney;
-    private EditText mBankAccountNumberEditText;
-    private EditText mDescriptionEditText;
-    private EditText mAmountEditText;
+    private IconifiedEditText mBankAccountNumberEditText;
+    private IconifiedEditText mDescriptionEditText;
+    private IconifiedEditText mAmountEditText;
     private TextView mLinkABankNoteTextView;
     private ImageView mBankPicker;
     private List<UserBankClass> mListUserBankClasses;
@@ -61,9 +62,9 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_money, container, false);
-        mBankAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
-        mDescriptionEditText = (EditText) v.findViewById(R.id.description);
-        mAmountEditText = (EditText) v.findViewById(R.id.amount);
+        mBankAccountNumberEditText = (IconifiedEditText) v.findViewById(R.id.bank_account_number);
+        mDescriptionEditText = (IconifiedEditText) v.findViewById(R.id.description);
+        mAmountEditText = (IconifiedEditText) v.findViewById(R.id.amount);
         buttonAddMoney = (Button) v.findViewById(R.id.button_cash_in);
         mBankPicker = (ImageView) v.findViewById(R.id.accountPicker);
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
@@ -228,7 +229,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.show();
             mGetBankTask = null;
             if (getActivity() != null)
