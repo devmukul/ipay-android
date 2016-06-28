@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,9 +14,8 @@
             android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="@color/colorPrimary"
-            android:padding="@dimen/value12">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,20 +29,20 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textview_bank_name"
                         style="@style/TextViewUserInfoPrimary"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white" />
 
                     <TextView
                         android:id="@+id/textview_account_number"
                         style="@style/TextViewUserInfoSecondary"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -53,11 +51,11 @@
         </LinearLayout>
 
         <android.support.v7.widget.CardView
+            style="@style/ReviewCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ReviewCardStyle"
-            app:cardElevation="4dp"
-            android:layout_margin="@dimen/value12">
+            android:layout_margin="@dimen/value12"
+            app:cardElevation="@dimen/value2">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,7 +69,7 @@
 
                     <TextView
                         style="@style/TextViewProfileInfoLabel"
-                        android:text="@string/amount_to_transfer"/>
+                        android:text="@string/amount_to_transfer" />
 
                     <TextView
                         android:id="@+id/textview_amount"
@@ -82,8 +80,8 @@
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider"
-                    android:layout_below="@+id/icon"/>
+                    android:layout_below="@+id/icon"
+                    android:background="@color/colorDivider" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -92,7 +90,7 @@
 
                     <TextView
                         style="@style/TextViewProfileInfoLabel"
-                        android:text="@string/service_charge"/>
+                        android:text="@string/service_charge" />
 
                     <TextView
                         android:id="@+id/textview_service_charge"
@@ -103,8 +101,8 @@
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider"
-                    android:layout_below="@+id/icon"/>
+                    android:layout_below="@+id/icon"
+                    android:background="@color/colorDivider" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -113,11 +111,11 @@
 
                     <TextView
                         style="@style/TextViewProfileInfoLabel"
-                        android:text="@string/total_received"/>
+                        android:text="@string/total_received" />
 
                     <TextView
                         android:id="@+id/textview_total"
-                        style="@style/TextViewProfileInfo"/>
+                        style="@style/TextViewProfileInfo" />
 
                 </LinearLayout>
 
@@ -132,28 +130,28 @@
 
             <TextView
                 android:id="@+id/textview_note"
+                style="@style/ListHeaderStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/ListHeaderStyle"
-                android:text="@string/description1"
-                android:layout_weight="0.5"
                 android:layout_gravity="center"
-                android:textColor="@android:color/white"/>
+                android:layout_weight="0.5"
+                android:text="@string/description1"
+                android:textColor="@android:color/white" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/description_holder"
+                style="@style/ReviewCardStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/ReviewCardStyle"
-                app:cardElevation="@dimen/value2"
-                android:layout_margin="@dimen/value12">
+                android:layout_margin="@dimen/value12"
+                app:cardElevation="@dimen/value2">
 
                 <TextView
                     android:id="@+id/textview_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/value12"
                     android:layout_marginBottom="@dimen/value12"
+                    android:layout_marginTop="@dimen/value12"
                     android:gravity="center" />
 
             </android.support.v7.widget.CardView>
@@ -164,11 +162,11 @@
             style="@style/PrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_money"
+            android:layout_marginBottom="@dimen/value20"
             android:layout_marginLeft="@dimen/value12"
             android:layout_marginRight="@dimen/value12"
             android:layout_marginTop="@dimen/value20"
-            android:layout_marginBottom="@dimen/value20"/>
+            android:text="@string/add_money" />
 
     </LinearLayout>
 </ScrollView>

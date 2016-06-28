@@ -756,6 +756,14 @@
         <item>Teletalk</item>
     </string-array>
 
+    <string-array name="package_type">
+        <item>Pre-paid</item>
+        <item>Post-paid </item>
+        <item>Airtel</item>
+        <item>Banglalink</item>Teletalk
+        <item>Teletalk</item>
+    </string-array>
+
     <string-array name="default_bank_account_types">
         <item>Current</item>
         <item>Savings</item>

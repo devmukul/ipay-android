@@ -15,8 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:orientation="vertical"
-            android:padding="@dimen/value12">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,7 +36,7 @@
                     <TextView
                         android:id="@+id/textview_bank_name"
                         style="@style/TextViewUserInfoPrimary"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white" />
 
                     <TextView
                         android:id="@+id/textview_account_number"
@@ -56,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/value12"
-            app:cardElevation="4dp">
+            app:cardElevation="@dimen/value2">
 
             <LinearLayout
                 android:layout_width="match_parent"

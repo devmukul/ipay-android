@@ -1,107 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="@dimen/activity_vertical_margin">
-
-    <TextView
-        android:id="@+id/balance"
-        style="@style/TextStylePrimaryLarge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:gravity="center"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/link_a_bank_note"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:gravity="center"
-        android:text="@string/please_link_a_bank_for_cash_out"
-        android:visibility="gone" />
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/value12">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_marginTop="@dimen/value5"
+        android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/bank_account_number"
+            <TextView
+                android:id="@+id/balance"
+                style="@style/TextStylePrimaryLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:gravity="center"
-                android:hint="@string/enter_bank_account_number"
-                android:inputType="phone"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/link_a_bank_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:text="@string/please_link_a_bank_for_cash_in"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+                    android:id="@+id/bank_account_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_bank3x"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:hint="@string/enter_bank_account_number"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    app:borderType="up" />
+
+                <ImageView
+                    android:id="@+id/accountPicker"
+                    style="@style/ButtonStyleWithIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:clickable="true"
+                    android:src="@drawable/ic_bank2" />
+            </RelativeLayout>
+
+            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+                android:id="@+id/amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_enter3x"
+                android:hint="@string/enter_amount"
+                android:inputType="numberDecimal"
                 android:maxLines="1"
                 android:singleLine="true" />
 
-        </android.support.design.widget.TextInputLayout>
+            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_note3x"
+                android:hint="@string/send_money_description"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                app:borderType="down" />
 
-        <ImageView
-            android:id="@+id/accountPicker"
-            style="@style/ButtonStyleAccentSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:clickable="true"
-            android:padding="@dimen/value5"
-            android:src="@drawable/ic_account_balance_white_24dp" />
+            <Button
+                android:id="@+id/button_cash_out"
+                style="@style/PrimaryButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/continue_add_money" />
+
+        </LinearLayout>
     </LinearLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
-
-        <EditText
-            android:id="@+id/amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="@string/enter_amount"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
-
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="@string/description"
-            android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/button_cash_out"
-        style="@style/ButtonStyleMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/continue_withdraw_money" />
-
-</LinearLayout>
+</ScrollView>
