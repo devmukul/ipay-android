@@ -33,6 +33,7 @@ public class Constants {
     public static final String REFRESH_TOKEN = "refresh-token";
     public static final String RESOURCE_TOKEN = "resource-token";
 
+    public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String PROFILE_INFO_UPDATED = "PROFILE_INFO_UPDATED";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
@@ -106,7 +107,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -308,6 +309,9 @@ public class Constants {
     public static final String URL_CREATE_EMPLOYEE = "business/user";
     public static final String URL_UPDATE_EMPLOYEE = "business/user";
     public static final String URL_GET_EMPLOYEE_LIST = "business/users";
+    public static final String URL_GET_EMPLOYEE_DETAILS = "business/user/";
+    public static final String URL_REMOVE_AN_EMPLOYEE_FIRST_PART = "business/user/";
+    public static final String URL_REMOVE_AN_EMPLOYEE_LAST_PART = "/resignation/confirm";
 
     // Business Information (Employee)
     public static final String URL_GET_BUSINESS_LIST = "business/list";
@@ -443,6 +447,8 @@ public class Constants {
     public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
     public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";
     public static final String COMMAND_GET_EMPLOYEE_LIST = "COMMAND_GET_EMPLOYEE_LIST";
+    public static final String COMMAND_REMOVE_AN_EMPLOYEE = "COMMAND_REMOVE_AN_EMPLOYEE";
+    public static final String COMMAND_GET_EMPLOYEE_DETAILS = "COMMAND_GET_EMPLOYEE_DETAILS";
 
     // Business Information (Employee)
     public static final String COMMAND_GET_BUSINESS_LIST = "COMMAND_GET_BUSINESS_LIST";

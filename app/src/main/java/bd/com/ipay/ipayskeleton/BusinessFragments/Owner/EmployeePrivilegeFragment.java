@@ -28,6 +28,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.CreateEmployeeRequ
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.CreateEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Privilege;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.PrivilegeConstants;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.UpdateEmployeeRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.UpdateEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -35,6 +37,9 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
     private HttpRequestPostAsyncTask mCreateEmployeeAsyncTask;
     private CreateEmployeeResponse mCreateEmployeeResponse;
+
+    private HttpRequestPostAsyncTask mEditEmployeeAsyncTask;
+    private UpdateEmployeeResponse mEditEmployeeResponse;
 
     private List<Privilege> mPrivilegeList;
     private EmployeePrivilegeAdapter mEmployeePrivilegeAdapter;
@@ -47,8 +52,10 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
     private ProfileImageView mProfilePictureView;
     private TextView mNameView;
     private TextView mMobileNumberView;
+    private TextView mDesignationView;
 
     private Button mAddEmployeeOrSavePermissionsButton;
+    private long mAssociationId;
 
     private RecyclerView mPrivilegeListView;
     private ProgressDialog mProgressDialog;
@@ -58,11 +65,18 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_employee_privileges, container, false);
 
+        if (getArguments() != null && getArguments().containsKey(Constants.ASSOCIATION_ID)) {
+            mAssociationId = getArguments().getLong(Constants.ASSOCIATION_ID);
+        }
+
         mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mDesignationView = (TextView) v.findViewById(R.id.textview_designation);
         mPrivilegeListView = (RecyclerView) v.findViewById(R.id.privilege_list);
         mAddEmployeeOrSavePermissionsButton = (Button) v.findViewById(R.id.button_add_employee_or_save_permissions);
+
+        if(mAssociationId != 0) mAddEmployeeOrSavePermissionsButton.setText(R.string.edit_employee);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -74,11 +88,14 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         mProfilePictureView.setInformation(mProfilePicture, mName);
         mNameView.setText(mName);
         mMobileNumberView.setText(mMobileNumber);
+        if(!mDesignation.equals(""))mDesignationView.setText(mDesignation);
+        else mDesignationView.setVisibility(View.GONE);
 
         mAddEmployeeOrSavePermissionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createEmployee(getString(R.string.create_new_employee));
+                if(mAssociationId==0) createEmployee(getString(R.string.create_new_employee));
+                else editEmployee(getString(R.string.edit_employee_details));
             }
         });
 
@@ -114,6 +131,22 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         mCreateEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void editEmployee(String progressMessage) {
+        if (mEditEmployeeAsyncTask != null)
+            return;
+
+        mProgressDialog.setMessage(progressMessage);
+        mProgressDialog.show();
+
+        UpdateEmployeeRequest editEmployeeRequest = new UpdateEmployeeRequest(mDesignation, mAssociationId, mPrivilegeList);
+        Gson gson = new Gson();
+        String json = gson.toJson(editEmployeeRequest);
+
+        mEditEmployeeAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_EMPLOYEE,
+                Constants.BASE_URL_MM + Constants.URL_UPDATE_EMPLOYEE, json, getActivity(), this);
+        mEditEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         mProgressDialog.dismiss();
@@ -142,6 +175,24 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             } catch (Exception e) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.new_employee_creation_failed, Toast.LENGTH_LONG).show();
+            }
+        } else if (result.getApiCommand().equals(Constants.COMMAND_UPDATE_EMPLOYEE)) {
+            try {
+                mEditEmployeeResponse = gson.fromJson(result.getJsonString(), UpdateEmployeeResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ((BusinessActivity) getActivity()).switchToEmployeeManagementFragment();
+                    }
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (Exception e) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.edit_employee_details_failed, Toast.LENGTH_LONG).show();
             }
         }
     }

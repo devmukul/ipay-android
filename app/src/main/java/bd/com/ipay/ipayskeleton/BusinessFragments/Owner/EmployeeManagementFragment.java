@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,13 +21,16 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Employee;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetAllEmployeesResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmployeeManagementFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -35,6 +39,12 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
     private HttpRequestGetAsyncTask mGetAllEmployeeAsyncTask;
     private GetAllEmployeesResponse mGetAllEmployeesResponse;
+
+
+    private HttpRequestPutAsyncTask mRemoveAnEmployeeAsyncTask;
+    private RemoveEmployeeResponse mRemoveAnEmployeeResponse;
+
+    EmployeeListAdapter adapter;
 
     private RecyclerView mEmployeeListView;
 
@@ -58,7 +68,16 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
         getEmployeeList();
 
+        adapter = new EmployeeListAdapter();
+        mEmployeeListView.setAdapter(adapter);
+
         return v;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utilities.hideKeyboard(getContext(),getView());
     }
 
     @Override
@@ -74,6 +93,15 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         mGetAllEmployeeAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMPLOYEE_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_LIST, getActivity(), this);
         mGetAllEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void removeAnEmployee(long associationId){
+        if (mRemoveAnEmployeeAsyncTask != null)
+            return;
+
+        mRemoveAnEmployeeAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId + Constants.URL_REMOVE_AN_EMPLOYEE_LAST_PART, null, getContext(), this);
+        mRemoveAnEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -94,9 +122,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mEmployeeList = mGetAllEmployeesResponse.getPersonList();
-                    EmployeeListAdapter adapter = new EmployeeListAdapter();
-                    mEmployeeListView.setAdapter(adapter);
-
+                    adapter.notifyDataSetChanged();
                     if (isAdded())
                         setContentShown(true);
                 } else {
@@ -114,6 +140,32 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             }
 
             mGetAllEmployeeAsyncTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_AN_EMPLOYEE)) {
+
+            try {
+                mRemoveAnEmployeeResponse = gson.fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String message = mRemoveAnEmployeeResponse.getMessage();
+
+                    if (getActivity() != null) {
+
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getEmployeeList();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mRemoveAnEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.could_not_remove_employee, Toast.LENGTH_LONG).show();
+            }
+
+            mRemoveAnEmployeeAsyncTask = null;
+
         }
     }
 
@@ -125,7 +177,11 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             private TextView mMobileNumberView;
             private TextView mDesignationView;
             private ImageView mStatusView;
-
+            private View mOptionsLayout;
+            private Button mViewButton;
+            private Button mRemoveButton;
+            private Button mEditButton;
+            private View divider;
 
             public EmployeeViewHolder(View itemView) {
                 super(itemView);
@@ -135,10 +191,20 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
                 mDesignationView = (TextView) itemView.findViewById(R.id.textview_designation);
                 mStatusView = (ImageView) itemView.findViewById(R.id.verification_status);
+
+                divider = itemView.findViewById(R.id.divider);
+                mOptionsLayout = itemView.findViewById(R.id.options_layout);
+                mViewButton = (Button) itemView.findViewById(R.id.view_button);
+                mRemoveButton = (Button) itemView.findViewById(R.id.remove_button);
+                mEditButton = (Button) itemView.findViewById(R.id.edit_button);
             }
 
             public void bindView(final int pos) {
-                Employee employee = mEmployeeList.get(pos);
+
+                mOptionsLayout.setVisibility(View.GONE);
+                if (pos == mEmployeeList.size() -1) divider.setVisibility(View.GONE);
+                final Employee employee = mEmployeeList.get(pos);
+
 
                 mProfileImageView.setInformation(employee.getProfilePictureUrl(),
                         employee.getName(), employee.getMobileNumber());
@@ -162,6 +228,44 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                     mStatusView.setImageResource(R.drawable.ic_notverified3x);
                     mStatusView.setColorFilter(null);
                 }
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOptionsLayout.getVisibility() == View.VISIBLE)
+                            mOptionsLayout.setVisibility(View.GONE);
+                        else
+                            mOptionsLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                mViewButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
+                        ((BusinessActivity) getActivity()).switchToEmployeeInformationDetailsFragment(bundle);
+                    }
+                });
+
+                mRemoveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeAnEmployee(employee.getId());
+                    }
+                });
+
+                mEditButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
+                        bundle.putString(Constants.MOBILE_NUMBER, employee.getMobileNumber());
+                        bundle.putString(Constants.DESIGNATION, employee.getDesignation());
+                        ((BusinessActivity) getActivity()).switchToEditEmployeeInformationFragment(bundle);
+                    }
+                });
+
             }
         }
 

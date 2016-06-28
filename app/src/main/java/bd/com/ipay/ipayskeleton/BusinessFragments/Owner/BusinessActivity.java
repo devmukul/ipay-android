@@ -94,6 +94,28 @@ public class BusinessActivity extends BaseActivity {
                 .replace(R.id.fragment_container, employeePrivilegeFragment).addToBackStack(null).commit();
     }
 
+
+    // Business -> Employee Management -> Employee Information details
+    public void switchToEmployeeInformationDetailsFragment(Bundle bundle) {
+        Fragment employeeInformationDetailsFragment = new EmployeeInformationDetailsFragment();
+        if (bundle != null)
+            employeeInformationDetailsFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, employeeInformationDetailsFragment).addToBackStack(null).commit();
+    }
+
+
+    // Business -> Employee Management -> Employee Information edit
+    public void switchToEditEmployeeInformationFragment(Bundle bundle) {
+        Fragment editEmployeeInformationFragment = new CreateEmployeeInformationFragment();
+        if (bundle != null)
+            editEmployeeInformationFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, editEmployeeInformationFragment).addToBackStack(null).commit();
+    }
+
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0)

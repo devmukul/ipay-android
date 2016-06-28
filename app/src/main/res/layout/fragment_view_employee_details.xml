@@ -2,17 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <LinearLayout
         android:id="@+id/profile"
-        android:background="@drawable/background_rounded_white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/activity_vertical_margin_card">
+        android:layout_marginBottom="@dimen/activity_vertical_margin_card"
+        android:background="@drawable/background_rounded_white"
+        android:orientation="horizontal">
 
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
             android:id="@+id/profile_picture"
@@ -23,29 +23,29 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textview_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_marginBottom="6dp"
-                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="20sp"
-                android:id="@+id/textview_name" />
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/textview_mobile_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/textview_mobile_number" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
+                android:id="@+id/textview_designation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/textview_designation" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
 
@@ -55,19 +55,11 @@
         android:id="@+id/privilege_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile"
         android:layout_above="@+id/button_add_employee_or_save_permissions"
+        android:layout_below="@+id/profile"
         android:background="@drawable/background_rounded_white">
 
     </android.support.v7.widget.RecyclerView>
 
-    <Button
-        android:id="@+id/button_add_employee_or_save_permissions"
-        style="@style/PrimaryButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-        android:text="@string/create_employee" />
 
 </RelativeLayout>

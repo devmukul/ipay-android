@@ -109,6 +109,7 @@
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>
     <string name="reject">Reject</string>
+    <string name="view">View</string>
     <string name="remove">Remove</string>
     <string name="mark_as_spam">Spam</string>
     <string name="to">To</string>
@@ -174,6 +175,7 @@
     <string name="could_not_load_document">Could not load document</string>
     <string name="could_not_sync_contact">Could not sync contacts.</string>
     <string name="could_not_sign_out">Could not signed out properly</string>
+    <string name="could_not_remove_employee">Could not remove the employee. Please try again later.</string>
     <string name="could_not_reject_money_request">Could not reject the request. Please try again later.</string>
     <string name="could_not_cancel_money_request">Could not cancel the request. Please try again later.</string>
     <string name="could_not_accept_money_request">Could not accept the request. Please try again later.</string>
@@ -698,6 +700,7 @@
     <string name="business_information_saving_failed">Business information saving failed</string>
     <string name="designation">Designation</string>
     <string name="create_employee">Create Employee</string>
+    <string name="edit_employee">Edit Employee</string>
     <string name="please_enter_designation">Please enter designation of the employee</string>
     <string name="user_has_no_ipay_account">Sorry, this user has no iPay account</string>
     <string name="preparing">Preparing</string>
@@ -711,7 +714,9 @@
     <string name="see_other_transactions">See Other Transactions</string>
     <string name="manage_bank_accounts">Manage Bank Accounts</string>
     <string name="create_new_employee">Creating new employee...</string>
+    <string name="edit_employee_details">Editing employee details...</string>
     <string name="new_employee_creation_failed">Failed to create new employee</string>
+    <string name="edit_employee_details_failed">Failed to edit employee details</string>
     <string name="add_an_employee">Add an Employee</string>
     <string name="see_bank_accounts">See Bank Accounts</string>
     <string name="see_employee">See Employee</string>
@@ -733,6 +738,7 @@
     <string name="get_transactions">Get Transactions</string>
     <string name="friend_read">Friend Read</string>
     <string name="friend_write">Friend Write</string>
+    <string name="fetching_employee_details_failed">Failed to fetch details information</string>
 
     <string-array name="account_types">
         <item>Personal</item>

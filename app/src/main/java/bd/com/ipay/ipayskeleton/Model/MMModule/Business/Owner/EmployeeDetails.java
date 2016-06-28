@@ -12,7 +12,8 @@ public class EmployeeDetails {
     private String status;
 
     public String getDesignation() {
-        return designation;
+        if(designation != null) return designation;
+        else return "";
     }
 
     public long getId() {

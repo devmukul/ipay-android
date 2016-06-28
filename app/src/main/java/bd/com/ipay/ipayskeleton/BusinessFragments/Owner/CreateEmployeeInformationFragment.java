@@ -39,29 +39,48 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
     private IconifiedEditText mDesignationEditText;
 
     private Button mContinueButton;
+    private long mAssociationId;
 
     private ProgressDialog mProgressDialog;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        Bundle args = getArguments();
+        if (args != null && args.containsKey(Constants.ASSOCIATION_ID)) {
+            mAssociationId = getArguments().getLong(Constants.ASSOCIATION_ID);
+        }
+
         View v = inflater.inflate(R.layout.fragment_employee_information, container, false);
-        getActivity().setTitle(R.string.create_employee);
+        if(mAssociationId ==0) getActivity().setTitle(R.string.create_employee);
+        else getActivity().setTitle(R.string.edit_employee);
 
         mMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.mobile_number);
         mDesignationEditText = (IconifiedEditText) v.findViewById(R.id.designation);
 
+        if(mAssociationId ==0) {
+            mMobileNumberEditText.setEnabled(true);
+        }
+        else {
+            mMobileNumberEditText.setText(getArguments().getString(Constants.MOBILE_NUMBER));
+            mDesignationEditText.setText(getArguments().getString(Constants.DESIGNATION));
+            mMobileNumberEditText.getEditText().setEnabled(false);
+
+        }
+
         mSelectMobileNumberFromContactsButton = (ImageView) v.findViewById(R.id.select_mobile_number_from_contacts);
         mContinueButton = (Button) v.findViewById(R.id.button_continue);
 
-        mSelectMobileNumberFromContactsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
-                intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);
-                startActivityForResult(intent, PICK_CONTACT_REQUEST);
-            }
-        });
+        if(mAssociationId ==0) {
+            mSelectMobileNumberFromContactsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                    intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);
+                    startActivityForResult(intent, PICK_CONTACT_REQUEST);
+                }
+            });
+        }
 
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,16 +148,19 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
         bundle.putString(Constants.DESIGNATION, designation);
         bundle.putString(Constants.NAME, name);
         bundle.putString(Constants.PROFILE_PICTURE, profilePicture);
+        bundle.putLong(Constants.ASSOCIATION_ID, mAssociationId);
 
         ((BusinessActivity) getActivity()).switchToEmployeePrivilegeFragment(bundle);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
-            String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
-            if (mobileNumber != null)
-                mMobileNumberEditText.setText(mobileNumber);
+        if(mAssociationId == 0) {
+            if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                if (mobileNumber != null)
+                    mMobileNumberEditText.setText(mobileNumber);
+            }
         }
     }
 
