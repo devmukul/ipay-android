@@ -71,7 +71,7 @@
                     android:gravity="center_vertical"
                     android:id="@+id/layout_contact_us">
 
-                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                    <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                         android:id="@+id/contact_us"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                     android:layout_below="@+id/layout_contact_us"
                     android:id="@+id/layout_help">
 
-                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                    <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                         android:id="@+id/help"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical">
 
-                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                    <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                         android:id="@+id/terms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

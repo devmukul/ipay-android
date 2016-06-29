@@ -60,7 +60,6 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.ManageEmployerFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
@@ -537,7 +536,7 @@ public class HomeActivity extends BaseActivity
         String json = gson.toJson(mLogoutModel);
 
         // Set the preference
-        pref.edit().putBoolean(Constants.LOGGEDIN, false).apply();
+        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
@@ -637,7 +636,8 @@ public class HomeActivity extends BaseActivity
 
                     //saving user info in shared preference
                     pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
-                    pref.edit().putString(Constants.USERNAME, mGetUserInfoResponse.getName()).apply();
+                    pref.edit().putString(Constants.USER_NAME, mGetUserInfoResponse.getName()).apply();
+                    pref.edit().putString(Constants.PROFILE_PICTURE, imageUrl).apply();
 
                     // Download the profile picture and store it in local storage
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -678,7 +678,7 @@ public class HomeActivity extends BaseActivity
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String UUID = mAddToTrustedDeviceResponse.getUUID();
-                    pref.edit().putString(Constants.UUID, UUID).commit();
+                    pref.edit().putString(Constants.UUID, UUID).apply();
                 } else {
                     Toast.makeText(this, mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }

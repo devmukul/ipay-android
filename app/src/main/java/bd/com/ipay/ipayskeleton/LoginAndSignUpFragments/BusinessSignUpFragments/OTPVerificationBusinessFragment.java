@@ -248,7 +248,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                 pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder).commit();
                 pref.edit().putString(Constants.GENDER, "M").commit();
                 pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE).commit();
-                pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
+                pref.edit().putBoolean(Constants.LOGGED_IN, true).commit();
 
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();
