@@ -95,7 +95,7 @@ public class Constants {
      * All requests and responses to$ server, and token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     /**
      * If set to true (with DEBUG flag also being set to true),
@@ -113,7 +113,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = 4;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
