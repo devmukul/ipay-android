@@ -6,19 +6,14 @@
     android:background="@color/colorPrimary"
     android:padding="@dimen/value12">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/value5"
-        android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/value5">
 
             <TextView
                 android:id="@+id/balance"
@@ -97,5 +92,5 @@
                 android:text="@string/continue_add_money" />
 
         </LinearLayout>
-    </LinearLayout>
+
 </ScrollView>
