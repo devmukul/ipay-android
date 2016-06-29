@@ -44,7 +44,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
     private HttpRequestPutAsyncTask mRemoveAnEmployeeAsyncTask;
     private RemoveEmployeeResponse mRemoveAnEmployeeResponse;
 
-    EmployeeListAdapter adapter;
+    private EmployeeListAdapter adapter;
 
     private RecyclerView mEmployeeListView;
 

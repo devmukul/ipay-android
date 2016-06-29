@@ -20,12 +20,16 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.CreateEmployeeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.CreateEmployeeResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.EmployeeDetails;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetEmployeeDetailsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Privilege;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.PrivilegeConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.UpdateEmployeeRequest;
@@ -38,8 +42,13 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
     private HttpRequestPostAsyncTask mCreateEmployeeAsyncTask;
     private CreateEmployeeResponse mCreateEmployeeResponse;
 
-    private HttpRequestPostAsyncTask mEditEmployeeAsyncTask;
+    private HttpRequestPutAsyncTask mEditEmployeeAsyncTask;
     private UpdateEmployeeResponse mEditEmployeeResponse;
+
+    private HttpRequestGetAsyncTask mEmployeeDetailsAsyncTask;
+    private GetEmployeeDetailsResponse mGetEmployeeDetailsResponse;
+
+    private EmployeeDetails mEmployeeDetails;
 
     private List<Privilege> mPrivilegeList;
     private EmployeePrivilegeAdapter mEmployeePrivilegeAdapter;
@@ -99,11 +108,13 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             }
         });
 
-        if (getArguments().containsKey(Constants.EMPLOYEE_PRIVILEGE)) {
-            mPrivilegeList = getArguments().getParcelableArrayList(Constants.EMPLOYEE_PRIVILEGE);
-        } else {
-            mPrivilegeList = PrivilegeConstants.ALL_PRIVILEGES;
-        }
+        if(mAssociationId == 0) {
+            if (getArguments().containsKey(Constants.EMPLOYEE_PRIVILEGE)) {
+                mPrivilegeList = getArguments().getParcelableArrayList(Constants.EMPLOYEE_PRIVILEGE);
+            } else {
+                mPrivilegeList = PrivilegeConstants.ALL_PRIVILEGES;
+            }
+        } else getEmployeeDetails(mAssociationId);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mPrivilegeListView.setLayoutManager(layoutManager);
@@ -142,9 +153,22 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         Gson gson = new Gson();
         String json = gson.toJson(editEmployeeRequest);
 
-        mEditEmployeeAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_EMPLOYEE,
+        mEditEmployeeAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_EMPLOYEE,
                 Constants.BASE_URL_MM + Constants.URL_UPDATE_EMPLOYEE, json, getActivity(), this);
         mEditEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getEmployeeDetails(long assotiationId){
+        if(mEmployeeDetailsAsyncTask != null){
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.preparing));
+        mProgressDialog.show();
+        mEmployeeDetailsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMPLOYEE_DETAILS,
+                Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_DETAILS + assotiationId, getActivity());
+        mEmployeeDetailsAsyncTask.mHttpResponseListener = this;
+        mEmployeeDetailsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -193,6 +217,36 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             } catch (Exception e) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.edit_employee_details_failed, Toast.LENGTH_LONG).show();
+            }
+        }  else if (result.getApiCommand().equals(Constants.COMMAND_GET_EMPLOYEE_DETAILS)) {
+            try {
+                mGetEmployeeDetailsResponse = gson.fromJson(result.getJsonString(), GetEmployeeDetailsResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
+
+                        mProfilePictureView.setInformation(mEmployeeDetails.getMobileNumber(), mEmployeeDetails.getName());
+                        mNameView.setText(mEmployeeDetails.getName());
+                        mMobileNumberView.setText(mEmployeeDetails.getMobileNumber());
+
+                        if (!mEmployeeDetails.getDesignation().equals("")) mDesignationView.setText(mEmployeeDetails.getDesignation());
+                        else mDesignationView.setVisibility(View.GONE);
+
+                        mPrivilegeList = mEmployeeDetails.getPrivilegeList();
+                        mEmployeePrivilegeAdapter.notifyDataSetChanged();
+
+                    }
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (Exception e) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.fetching_employee_details_failed, Toast.LENGTH_LONG).show();
             }
         }
     }

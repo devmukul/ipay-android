@@ -98,6 +98,12 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
     private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
