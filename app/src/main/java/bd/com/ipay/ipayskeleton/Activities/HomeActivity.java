@@ -193,7 +193,8 @@ public class HomeActivity extends BaseActivity
 
         switchToDashBoard();
 
-        // Set the inital profile picture
+        // Set the initial profile picture
+        setProfilePicture("");
         setProfilePicture("");
 
         // Load the list of available banks, which will be accessed from multiple activities
@@ -236,10 +237,6 @@ public class HomeActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_profile:
-                Intent intent = new Intent(this, ProfileActivity.class);
-                startActivity(intent);
-                return true;
 
             case R.id.action_notification:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new NotificationFragment()).commit();

@@ -122,7 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_introducer"
-                android:text="@string/introducer" />
+                android:text="@string/introducers" />
 
             <View
                 android:layout_width="wrap_content"

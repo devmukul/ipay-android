@@ -3,16 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_profile"
-        android:icon="@drawable/ic_account_circle_white_24dp"
-        android:title="@string/profile"
-        android:visible="false"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_notification"
         android:icon="@drawable/ic_notifications_white_24dp"
         android:title="@string/notification"
         app:showAsAction="always"
-        android:visible="false"/>
+        android:visible="true"/>
 </menu>

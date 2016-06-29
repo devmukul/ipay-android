@@ -542,16 +542,16 @@ public class Constants {
     public static final String ADDRESS_TYPE_PERMANENT = "PERMANENT";
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
-    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "PROFILE_PICTURE";
-    public static final String PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE = "PROFILE_INFO";
-    public static final String PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE = "IDENTIFICATION_DOCUMENT";
-    public static final String PUSH_NOTIFICATION_TAG_EMAIL_UPDATE = "EMAIL";
-    public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "BANK";
-    public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "DEVICE";
-    public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "TRUSTED_PERSON";
-    public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "SEND_MONEY";
-    public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "REQUEST_MONEY";
-    public static final String PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY = "TRANSACTION_HISTORY";
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "PUSH_PROFILE_PICTURE";
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE = "PUSH_PROFILE_INFO";
+    public static final String PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE = "PUSH_IDENTIFICATION_DOCUMENT";
+    public static final String PUSH_NOTIFICATION_TAG_EMAIL_UPDATE = "PUSH_EMAIL";
+    public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "PUSH_BANK";
+    public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "PUSH_DEVICE";
+    public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "PUSH_TRUSTED_PERSON";
+    public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "PUSH_SEND_MONEY";
+    public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "PUSH_REQUEST_MONEY";
+    public static final String PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY = "PUSH_TRANSACTION_HISTORY";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
     public static final String PUSH_NOTIFICATION_TAG = "tag";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";

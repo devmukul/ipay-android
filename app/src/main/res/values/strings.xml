@@ -412,7 +412,7 @@
     <string name="filter">Filter</string>
     <string name="verification">Verification</string>
     <string name="introduce">Introduce</string>
-    <string name="introducer">Introducer</string>
+    <string name="introducers">Introducers</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
     <string name="draft">Saved but not send</string>
