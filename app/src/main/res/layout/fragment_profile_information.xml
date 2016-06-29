@@ -96,7 +96,7 @@
                         android:id="@+id/basic_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_signup_number"
+                        android:drawableLeft="@drawable/ic_basicinfo"
                         android:text="@string/basic_info" />
 
                 </RelativeLayout>
@@ -118,7 +118,7 @@
                         android:id="@+id/email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_signup_number"
+                        android:drawableLeft="@drawable/ic_email"
                         android:text="@string/email_address" />
 
                 </RelativeLayout>
@@ -140,7 +140,7 @@
                         android:id="@+id/documents"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_signup_business"
+                        android:drawableLeft="@drawable/ic_doc"
                         android:text="@string/profile_documents" />
                 </RelativeLayout>
 
@@ -161,7 +161,7 @@
                         android:id="@+id/present_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_signup_number"
+                        android:drawableLeft="@drawable/ic_signup_add1"
                         android:text="@string/address" />
 
                 </RelativeLayout>
@@ -183,7 +183,7 @@
                         android:id="@+id/profile_completion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_signup_invcode"
+                        android:drawableLeft="@drawable/ic_completeness"
                         android:text="@string/profile_completeness" />
                 </RelativeLayout>
 

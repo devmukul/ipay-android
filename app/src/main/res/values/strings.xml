@@ -262,6 +262,7 @@
     <string name="request_recommendation">Recommendation Requests</string>
     <string name="requesting_money">Money request processing...</string>
     <string name="add_money">Add Money</string>
+    <string name="note">Note</string>
     <string name="withdraw_money">Withdraw Money</string>
     <string name="events">Events</string>
     <string name="add_participants">Participants</string>
@@ -745,6 +746,7 @@
     <string name="failed_fetching_employer_list">Failed to fetch employer list</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
 
+
     <string-array name="account_types">
         <item>Personal</item>
         <item>Business</item>
@@ -776,9 +778,6 @@
     <string-array name="package_type">
         <item>Pre-paid</item>
         <item>Post-paid </item>
-        <item>Airtel</item>
-        <item>Banglalink</item>
-        <item>Teletalk</item>
     </string-array>
 
     <string-array name="default_bank_account_types">
