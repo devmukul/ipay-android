@@ -381,6 +381,7 @@
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="withdraw_money_failed">Could not submit request for money withdrawal</string>
     <string name="home">Home</string>
+    <string name="wallet">Wallet</string>
     <string name="next">Next</string>
     <string name="profile">Profile</string>
     <string name="your_selected_bank_account_is">Your selected bank account is</string>

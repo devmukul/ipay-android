@@ -444,13 +444,6 @@ public class HomeActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ActivityLogFragment()).commit();
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_support) {
-
-        } else if (id == R.id.nav_transaction_history) {
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
-            switchedToHomeFragment = false;
-
         } else if (id == R.id.nav_manage_business) {
 
             Intent intent = new Intent(this, BusinessActivity.class);
