@@ -61,7 +61,7 @@
                 android:orientation="vertical"
                 android:layout_marginTop="@dimen/activity_horizontal_margin">
 
-                <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                     android:id="@+id/contact_us"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                     android:layout_marginLeft="@dimen/value48"
                     android:background="@color/colorDivider" />
 
-                <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                     android:id="@+id/help"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                     android:layout_marginLeft="@dimen/value48"
                     android:background="@color/colorDivider" />
 
-                <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
+                <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                     android:id="@+id/terms"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
