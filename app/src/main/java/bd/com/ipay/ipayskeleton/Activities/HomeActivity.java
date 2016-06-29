@@ -60,7 +60,6 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.ManageEmployerFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
@@ -170,10 +169,8 @@ public class HomeActivity extends BaseActivity
 
         if (mAccountType == Constants.PERSONAL_ACCOUNT_TYPE) {
             setDrawerMenuVisibility(R.id.nav_manage_business, false);
-            setDrawerMenuVisibility(R.id.nav_manage_employer, true);
         } else {
             setDrawerMenuVisibility(R.id.nav_manage_business, true);
-            setDrawerMenuVisibility(R.id.nav_manage_employer, false);
         }
 
         // Initialize token timer
@@ -196,7 +193,8 @@ public class HomeActivity extends BaseActivity
 
         switchToDashBoard();
 
-        // Set the inital profile picture
+        // Set the initial profile picture
+        setProfilePicture("");
         setProfilePicture("");
 
         // Load the list of available banks, which will be accessed from multiple activities
@@ -239,10 +237,6 @@ public class HomeActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_profile:
-                Intent intent = new Intent(this, ProfileActivity.class);
-                startActivity(intent);
-                return true;
 
             case R.id.action_notification:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new NotificationFragment()).commit();
@@ -450,22 +444,10 @@ public class HomeActivity extends BaseActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ActivityLogFragment()).commit();
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_support) {
-
-        } else if (id == R.id.nav_transaction_history) {
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new TransactionHistoryFragment()).commit();
-            switchedToHomeFragment = false;
-
         } else if (id == R.id.nav_manage_business) {
 
             Intent intent = new Intent(this, BusinessActivity.class);
             startActivity(intent);
-
-        } else if (id == R.id.nav_manage_employer) {
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ManageEmployerFragment()).commit();
-            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_about) {
 
@@ -478,7 +460,7 @@ public class HomeActivity extends BaseActivity
             startActivity(intent);
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_security_settings) {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountSettingsFragment()).commit();
             switchedToHomeFragment = false;
@@ -491,13 +473,10 @@ public class HomeActivity extends BaseActivity
                 Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
                 startActivity(intent);
             }
-        } else if (id == R.id.nav_profile_basic_info) {
+        } else if (id == R.id.nav_account) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
 
-        } else if (id == R.id.nav_identification) {
-
-            launchEditProfileActivity(ProfileCompletionPropertyConstants.INTRODUCER, new Bundle());
         }
 
     }
@@ -547,7 +526,7 @@ public class HomeActivity extends BaseActivity
         String json = gson.toJson(mLogoutModel);
 
         // Set the preference
-        pref.edit().putBoolean(Constants.LOGGEDIN, false).apply();
+        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
@@ -647,7 +626,8 @@ public class HomeActivity extends BaseActivity
 
                     //saving user info in shared preference
                     pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
-                    pref.edit().putString(Constants.USERNAME, mGetUserInfoResponse.getName()).apply();
+                    pref.edit().putString(Constants.USER_NAME, mGetUserInfoResponse.getName()).apply();
+                    pref.edit().putString(Constants.PROFILE_PICTURE, imageUrl).apply();
 
                     // Download the profile picture and store it in local storage
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -688,7 +668,7 @@ public class HomeActivity extends BaseActivity
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String UUID = mAddToTrustedDeviceResponse.getUUID();
-                    pref.edit().putString(Constants.UUID, UUID).commit();
+                    pref.edit().putString(Constants.UUID, UUID).apply();
                 } else {
                     Toast.makeText(this, mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }

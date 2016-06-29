@@ -319,11 +319,12 @@ public class DataHelper {
     }
 
     public void createTransactionHistories(List<TransactionHistoryClass> transactionHistoryClasses) {
-        SQLiteDatabase db = null;
+        if (transactionHistoryClasses == null)
+            return;
 
         try {
 
-            db = dOpenHelper.getWritableDatabase();
+            SQLiteDatabase db = dOpenHelper.getWritableDatabase();
             db.beginTransaction();
 
             for (TransactionHistoryClass transactionHistoryClass : transactionHistoryClasses) {

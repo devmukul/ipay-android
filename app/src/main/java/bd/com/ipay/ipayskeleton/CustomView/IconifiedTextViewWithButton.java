@@ -16,22 +16,22 @@ import bd.com.ipay.ipayskeleton.R;
 /**
  * Created by yapi on 6/22/16.
  */
-public class IconfiedTextViewWithButton extends FrameLayout {
+public class IconifiedTextViewWithButton extends FrameLayout {
 
     private ImageView mImageView;
     private TextView mtextView;
 
-    public IconfiedTextViewWithButton(Context context, AttributeSet attrs, int defStyle) {
+    public IconifiedTextViewWithButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context, attrs);
     }
 
-    public IconfiedTextViewWithButton(Context context, AttributeSet attrs) {
+    public IconifiedTextViewWithButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context, attrs);
     }
 
-    public IconfiedTextViewWithButton(Context context) {
+    public IconifiedTextViewWithButton(Context context) {
         super(context);
         initView(context, null);
     }

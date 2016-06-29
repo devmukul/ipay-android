@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -224,7 +223,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 String message = mLoginResponseModel.getMessage();
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
+                    pref.edit().putBoolean(Constants.LOGGED_IN, true).commit();
                     pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
 
                     if (mLoginResponseModel.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)

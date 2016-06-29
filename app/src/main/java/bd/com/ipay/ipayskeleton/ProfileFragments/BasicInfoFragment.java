@@ -217,9 +217,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private void setProfilePicture(String url) {
         try {
             if (!url.equals("")) {
-                if (!url.startsWith("content:"))
-                    url = Constants.BASE_URL_FTP_SERVER + url;
-
                 Glide.with(getActivity())
                         .load(url)
                         .crossFade()
@@ -328,10 +325,13 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
             for (Iterator<UserProfilePictureClass> it = mGetProfileInfoResponse.getProfilePictures().iterator(); it.hasNext(); ) {
                 UserProfilePictureClass userProfilePictureClass = it.next();
-                profileImageUrl = userProfilePictureClass.getUrl();
+                profileImageUrl = Constants.BASE_URL_FTP_SERVER + userProfilePictureClass.getUrl();
                 break;
             }
         }
+
+        pref.edit().putString(Constants.USER_NAME, mName).apply();
+        pref.edit().putString(Constants.PROFILE_PICTURE, profileImageUrl).apply();
 
         setProfileInformation();
         getOccupationList();

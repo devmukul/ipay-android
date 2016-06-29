@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
         android:textSize="@dimen/text_size_small_medium">
     </EditText>
 

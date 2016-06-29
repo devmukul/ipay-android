@@ -5,21 +5,17 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_drawer_home"
-            android:title="@string/home" />
+            android:title="@string/wallet" />
         <item
-            android:id="@+id/nav_profile_basic_info"
-            android:title="@string/profile"
-            android:icon="@drawable/ic_drawer_profile"/>
-        <item
-            android:id="@+id/nav_identification"
-            android:icon="@drawable/ic_drawer_identification"
-            android:title="@string/identification" />
+            android:id="@+id/nav_account"
+            android:title="@string/account"
+            android:icon="@drawable/ic_drawer_profile"/>]
         <item
             android:id="@+id/nav_bank_account"
             android:icon="@drawable/ic_drawer_bank"
             android:title="@string/link_banks" />
         <item
-            android:id="@+id/nav_settings"
+            android:id="@+id/nav_security_settings"
             android:icon="@drawable/ic_drawer_settings"
             android:title="@string/security_settings" />
         <item
@@ -27,18 +23,9 @@
             android:icon="@drawable/ic_drawer_activity"
             android:title="@string/activity_log" />
         <item
-            android:id="@+id/nav_transaction_history"
-            android:icon="@drawable/ic_drawer_transaction_history"
-            android:title="@string/transaction_history" />
-        <item
             android:id="@+id/nav_manage_business"
             android:icon="@drawable/ic_drawer_business"
             android:title="@string/manage_business" />
-        <item
-            android:id="@+id/nav_manage_employer"
-            android:icon="@drawable/ic_drawer_business"
-            android:title="@string/manage_employer"
-            android:visible="false"/>
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_about"

@@ -8,12 +8,12 @@ public class Constants {
     public static final String GENDER_FEMALE = "F";
     public static final String EMAIL = "EMAIL";
     public static final String USERID = "USERID";
-    public static final String USERNAME = "USERNAME";
+    public static final String USER_NAME = "USER_NAME";
     public static final String UUID = "UUID";
     public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String USER_AGENT = "User-Agent";
     public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
-    public static final String LOGGEDIN = "LOGGEDIN";
+    public static final String LOGGED_IN = "LOGGED_IN";
     public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
     public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
     public static final String GCM_REGISTRATION_COMPLETE = "GCM_REGISTRATION_COMPLETE";
@@ -36,7 +36,6 @@ public class Constants {
 
     public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
     public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
-    public static final String PROFILE_INFO_UPDATED = "PROFILE_INFO_UPDATED";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
     public static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";
@@ -46,7 +45,6 @@ public class Constants {
     public static final String ANDROID = "Android";
     public static final String IS_PIN_ADDED = "is-pin-added";
     public static final String MOBILE_ANDROID = "mobile-android-";
-    public static final String DUMMY = "DUMMY";
     public static final String THANA = "thana";
     public static final String DISTRICT = "district";
     public static final String MULTIPART_FORM_DATA_NAME = "file";
@@ -544,16 +542,16 @@ public class Constants {
     public static final String ADDRESS_TYPE_PERMANENT = "PERMANENT";
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
-    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "PROFILE_PICTURE";
-    public static final String PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE = "PROFILE_INFO";
-    public static final String PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE = "IDENTIFICATION_DOCUMENT";
-    public static final String PUSH_NOTIFICATION_TAG_EMAIL_UPDATE = "EMAIL";
-    public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "BANK";
-    public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "DEVICE";
-    public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "TRUSTED_PERSON";
-    public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "SEND_MONEY";
-    public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "REQUEST_MONEY";
-    public static final String PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY = "TRANSACTION_HISTORY";
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "PUSH_PROFILE_PICTURE";
+    public static final String PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE = "PUSH_PROFILE_INFO";
+    public static final String PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE = "PUSH_IDENTIFICATION_DOCUMENT";
+    public static final String PUSH_NOTIFICATION_TAG_EMAIL_UPDATE = "PUSH_EMAIL";
+    public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "PUSH_BANK";
+    public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "PUSH_DEVICE";
+    public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "PUSH_TRUSTED_PERSON";
+    public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "PUSH_SEND_MONEY";
+    public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "PUSH_REQUEST_MONEY";
+    public static final String PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY = "PUSH_TRANSACTION_HISTORY";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
     public static final String PUSH_NOTIFICATION_TAG = "tag";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
