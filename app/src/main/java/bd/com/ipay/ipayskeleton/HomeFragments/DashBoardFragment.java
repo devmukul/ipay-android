@@ -133,64 +133,51 @@ public class DashBoardFragment extends Fragment {
         servicesTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
     }
 
+    private void setTabViews() {
+        homeTab.setCustomView(homeTabView);
+        contactsTab.setCustomView(contactsTabView);
+        transactionHistoryTab.setCustomView(transactionHistoryTabView);
+        servicesTab.setCustomView(servicesTabView);
+    }
+
     private void setHomeTabSelected() {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_24dp);
-        homeTab.setCustomView(homeTabView);
-
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        contactsTab.setCustomView(contactsTabView);
-
         transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
-        transactionHistoryTab.setCustomView(transactionHistoryTabView);
-
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-        servicesTab.setCustomView(servicesTabView);
+
+        setTabViews();
     }
 
     private void setContactsTabSelected() {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        homeTab.setCustomView(homeTabView);
-
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_white_24dp);
-        contactsTab.setCustomView(contactsTabView);
-
         transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
-        transactionHistoryTab.setCustomView(transactionHistoryTabView);
-
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-        servicesTab.setCustomView(servicesTabView);
+
+        setTabViews();
     }
 
     private void setNotificationTabSelected() {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        homeTab.setCustomView(homeTabView);
-
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        contactsTab.setCustomView(contactsTabView);
-
         transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_white_24dp);
-        transactionHistoryTab.setCustomView(transactionHistoryTabView);
-
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-        servicesTab.setCustomView(servicesTabView);
+
+        setTabViews();
     }
 
     private void setServicesTabSelected() {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        homeTab.setCustomView(homeTabView);
-
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        contactsTab.setCustomView(contactsTabView);
-
         transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
-        transactionHistoryTab.setCustomView(transactionHistoryTabView);
-
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service);
-        servicesTab.setCustomView(servicesTabView);
+
+        setTabViews();
     }
 
     private class DashBoardTabAdapter extends FragmentPagerAdapter {
