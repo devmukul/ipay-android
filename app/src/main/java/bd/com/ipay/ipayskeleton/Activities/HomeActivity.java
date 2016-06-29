@@ -170,10 +170,8 @@ public class HomeActivity extends BaseActivity
 
         if (mAccountType == Constants.PERSONAL_ACCOUNT_TYPE) {
             setDrawerMenuVisibility(R.id.nav_manage_business, false);
-            setDrawerMenuVisibility(R.id.nav_manage_employer, true);
         } else {
             setDrawerMenuVisibility(R.id.nav_manage_business, true);
-            setDrawerMenuVisibility(R.id.nav_manage_employer, false);
         }
 
         // Initialize token timer
@@ -462,11 +460,6 @@ public class HomeActivity extends BaseActivity
             Intent intent = new Intent(this, BusinessActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_manage_employer) {
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ManageEmployerFragment()).commit();
-            switchedToHomeFragment = false;
-
         } else if (id == R.id.nav_about) {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new AboutFragment()).commit();
@@ -478,7 +471,7 @@ public class HomeActivity extends BaseActivity
             startActivity(intent);
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_security_settings) {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountSettingsFragment()).commit();
             switchedToHomeFragment = false;
@@ -491,13 +484,10 @@ public class HomeActivity extends BaseActivity
                 Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
                 startActivity(intent);
             }
-        } else if (id == R.id.nav_profile_basic_info) {
+        } else if (id == R.id.nav_account) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
 
-        } else if (id == R.id.nav_identification) {
-
-            launchEditProfileActivity(ProfileCompletionPropertyConstants.INTRODUCER, new Bundle());
         }
 
     }
