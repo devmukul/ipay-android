@@ -52,13 +52,13 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
         }
 
         View v = inflater.inflate(R.layout.fragment_employee_information, container, false);
-        if(mAssociationId ==0) getActivity().setTitle(R.string.create_employee);
+        if(mAssociationId == 0) getActivity().setTitle(R.string.create_employee);
         else getActivity().setTitle(R.string.edit_employee);
 
         mMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.mobile_number);
         mDesignationEditText = (IconifiedEditText) v.findViewById(R.id.designation);
 
-        if(mAssociationId ==0) {
+        if(mAssociationId == 0) {
             mMobileNumberEditText.setEnabled(true);
         }
         else {
@@ -71,7 +71,7 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
         mSelectMobileNumberFromContactsButton = (ImageView) v.findViewById(R.id.select_mobile_number_from_contacts);
         mContinueButton = (Button) v.findViewById(R.id.button_continue);
 
-        if(mAssociationId ==0) {
+        if(mAssociationId == 0) {
             mSelectMobileNumberFromContactsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

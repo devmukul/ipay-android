@@ -153,18 +153,18 @@ public class TransactionHistoryClass {
                 }
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                 if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                    return "Added " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (successful)";
+                    return "Added " + Utilities.formatTaka(getNetAmount()) + "  from " +  getBankName() + " (successful)";
                 else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                    return "Adding " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (in progress)";
+                    return "Adding " + Utilities.formatTaka(getNetAmount()) + "  from " + getBankName() + " (in progress)";
                 else
-                    return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (" + statusDescription + ")";
+                    return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from " + getBankName() + " (" + statusDescription + ")";
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                 if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" +" (successful)";
+                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankName() +" (successful)";
                 else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (in progress)";
+                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankName() + " (in progress)";
                 else
-                    return "Failed to transfer " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (" + statusDescription + ")";
+                    return "Failed to transfer " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankName() + " (" + statusDescription + ")";
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                     return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " (successful)";
