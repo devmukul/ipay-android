@@ -108,7 +108,7 @@ public class DashBoardFragment extends Fragment {
                         // Selected tab
                         if (position == HOME_TAB) setHomeTabSelected();
                         else if (position == CONTACTS_TAB) setContactsTabSelected();
-                        else if (position == TRANSACTION_HISTORY_TAB) setNotificationTabSelected();
+                        else if (position == TRANSACTION_HISTORY_TAB) setTransactionHistoryTabSelected();
                         else if (position == SERVICES_TAB) setServicesTabSelected();
                     }
                 }
@@ -144,7 +144,7 @@ public class DashBoardFragment extends Fragment {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_24dp);
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
+        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
 
         setTabViews();
@@ -154,17 +154,7 @@ public class DashBoardFragment extends Fragment {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-
-        setTabViews();
-    }
-
-    private void setNotificationTabSelected() {
-
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_white_24dp);
+        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
 
         setTabViews();
@@ -174,8 +164,18 @@ public class DashBoardFragment extends Fragment {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
+        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service);
+
+        setTabViews();
+    }
+
+    private void setTransactionHistoryTabSelected() {
+
+        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
+        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
+        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction_);
+        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
 
         setTabViews();
     }
