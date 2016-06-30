@@ -48,7 +48,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private Button mButtonJoinUs;
     private String mPasswordLogin;
     private String mUserNameLogin;
-    private ImageView mInfo;
+    private ImageView mInfoView;
 
     private ProgressDialog mProgressDialog;
     private String mDeviceID;
@@ -78,7 +78,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mUserNameLoginView = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
         mPasswordLoginView = (IconifiedEditText) v.findViewById(R.id.login_password);
-        mInfo = (ImageView) v.findViewById(R.id.login_info);
+        mInfoView = (ImageView) v.findViewById(R.id.login_info);
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +107,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        mInfo.setOnClickListener(new View.OnClickListener() {
+        mInfoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -125,15 +125,12 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
 
         if (SignupOrLoginActivity.mMobileNumber != null) {
-            // Delete +880 from the prefix
-            mUserNameLoginView.getEditText().setEnabled(false);
-            mInfo.setVisibility(View.VISIBLE);
             mPasswordLoginView.getEditText().requestFocus();
             String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(SignupOrLoginActivity.mMobileNumber);
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + mobileNumberWithoutPrefix);
       } else if (pref.contains(Constants.USERID)) {
             mUserNameLoginView.getEditText().setEnabled(false);
-            mInfo.setVisibility(View.VISIBLE);
+            mInfoView.setVisibility(View.VISIBLE);
             mPasswordLoginView.getEditText().requestFocus();
             String userIdWithoutPrefix = ContactEngine.trimPrefix(pref.getString(Constants.USERID, ""));
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + userIdWithoutPrefix);
