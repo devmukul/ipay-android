@@ -639,7 +639,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 if (pos == userTransactionHistoryClasses.size() -1) divider.setVisibility(View.GONE);
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
 
-                final String description = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
+                final String description = userTransactionHistoryClasses.get(pos).getShortDescription(mMobileNumber);
                 final String responseTime = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getResponseTime());
                 final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
                 final double fee = userTransactionHistoryClasses.get(pos).getFee();
@@ -683,11 +683,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
                 if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     statusView.setImageResource(R.drawable.ic_verified3x);
-
                 } else if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-                    statusView.setColorFilter(Color.GRAY);
-                    statusView.setImageResource(R.drawable.ic_cached_black_24dp);
-
+                    statusView.setImageResource(R.drawable.ic_wip);
                 } else {
                     statusView.setImageResource(R.drawable.ic_notverified3x);
                 }

@@ -586,4 +586,9 @@ public class Constants {
     public static final String BUSINESS_STATUS_RESIGN = "RESIGN";
     public static final String BUSINESS_STATUS_PENDING = "PENDING";
 
+    public static final String IMAGE_QUALITY_LOW = "low";
+    public static final String IMAGE_QUALITY_MEDIUM = "medium";
+    public static final String IMAGE_QUALITY_HIGH = "high";
+
+
 }

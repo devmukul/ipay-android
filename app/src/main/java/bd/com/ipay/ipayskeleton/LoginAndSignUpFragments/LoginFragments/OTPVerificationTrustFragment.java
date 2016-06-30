@@ -130,6 +130,8 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             mActivateButton.callOnClick();
         }
 
+        mOTPEditText.getEditText().requestFocus();
+
         return v;
     }
 

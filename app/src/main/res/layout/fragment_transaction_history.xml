@@ -223,6 +223,8 @@
 
         <LinearLayout
             style="@style/ListHeaderStyle"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -245,8 +247,6 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:text="@string/empty_transaction_history"
             android:textColor="@color/zxinglib_status_text"/>
-
-
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_transaction_history"

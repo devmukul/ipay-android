@@ -29,6 +29,7 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/status"
         android:layout_toRightOf="@+id/profile_picture"
+        android:layout_marginBottom="@dimen/activity_vertical_margin_card"
         android:orientation="vertical">
 
         <TextView
@@ -40,20 +41,11 @@
             android:text="Description" />
 
 
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/activity_description"
-            android:text="Time" />
-
-
         <LinearLayout
             android:id="@+id/status_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/activity_vertical_margin_card">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,7 +54,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/current_balance"
                 android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/amount"
@@ -71,9 +63,17 @@
                 android:layout_marginRight="@dimen/value5"
                 android:gravity="center_vertical"
                 android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Time" />
     </LinearLayout>
 
     <ImageView
