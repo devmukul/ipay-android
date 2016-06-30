@@ -92,7 +92,8 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:background="#EEFFFFFF"
-                android:visibility="gone">
+                android:clickable="true"
+                android:visibility="visible">
 
                 <bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar
                     android:id="@+id/profile_completion_percentage"
@@ -140,7 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/background_rounded_white"
+            android:background="@color/colorLightOrange"
             android:paddingTop="@dimen/activity_horizontal_margin_card"
             android:paddingBottom="@dimen/activity_horizontal_margin_card"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -185,7 +186,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="1dp"
             android:layout_marginBottom="@dimen/activity_vertical_margin_card">
 
             <LinearLayout
