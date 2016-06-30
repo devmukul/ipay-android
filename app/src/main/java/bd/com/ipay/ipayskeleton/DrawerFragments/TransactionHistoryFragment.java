@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;

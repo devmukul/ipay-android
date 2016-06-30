@@ -1,10 +1,5 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
-import android.util.Log;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -26,10 +21,6 @@ public class TransactionHistoryClass {
     private long requestTime;
     private long responseTime;
     private TransactionHistoryAdditionalInfo additionalInfo;
-
-    public TransactionHistoryClass() {
-
-    }
 
     public TransactionHistoryClass(String originatingMobileNumber, String receiverInfo, double amount,
                                    double fee, double netAmount, double balance, int serviceID, int statusCode,

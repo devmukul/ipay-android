@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,14 +21,25 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MobileTopupFragment extends Fragment {
+public class MobileTopupFragment extends Fragment implements HttpResponseListener {
 
     private EditText mMobileNumberEditText;
     private EditText mAmountEditText;
@@ -44,6 +56,9 @@ public class MobileTopupFragment extends Fragment {
 
     private static final int MOBILE_TOPUP_REVIEW_REQUEST = 100;
     private final int PICK_CONTACT_REQUEST = 100;
+
+
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,6 +145,10 @@ public class MobileTopupFragment extends Fragment {
             });
         }
 
+
+        // Get business rule
+        attemptGetBusinessRule(Constants.SERVICE_ID_TOP_UP);
+
         return v;
     }
 
@@ -153,6 +172,18 @@ public class MobileTopupFragment extends Fragment {
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             focusView = mAmountEditText;
             cancel = true;
+        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
+                && Utilities.isValueAvailable(TopUpActivity.MIN_AMOUNT_PER_PAYMENT)
+                && Utilities.isValueAvailable(TopUpActivity.MAX_AMOUNT_PER_PAYMENT)) {
+
+            String error_message = Utilities.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                    TopUpActivity.MIN_AMOUNT_PER_PAYMENT, TopUpActivity.MAX_AMOUNT_PER_PAYMENT);
+
+            if (error_message != null) {
+                focusView = mAmountEditText;
+                mAmountEditText.setError(error_message);
+                cancel = true;
+            }
         }
 
         if (cancel) {
@@ -195,5 +226,54 @@ public class MobileTopupFragment extends Fragment {
         intent.putExtra(Constants.COUNTRY_CODE, countryCode);
 
         startActivityForResult(intent, MOBILE_TOPUP_REVIEW_REQUEST);
+    }
+
+    protected void attemptGetBusinessRule(int serviceID) {
+
+        if (mGetBusinessRuleTask != null) {
+            return;
+        }
+
+        String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                mUri, getActivity(), this);
+
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void httpResponseReceiver(HttpResponseObject result) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                try {
+                    Gson gson = new Gson();
+
+                    BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
+
+                    for (BusinessRule rule : businessRuleArray) {
+                        if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT)) {
+                            TopUpActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT)) {
+                            TopUpActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+            }
+
+            mGetBusinessRuleTask = null;
+        }
     }
 }

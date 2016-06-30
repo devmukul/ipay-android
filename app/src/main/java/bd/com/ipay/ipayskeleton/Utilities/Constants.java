@@ -582,6 +582,10 @@ public class Constants {
     public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT="SENDMONEY_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT="SENDMONEY_MAX_AMOUNT_SINGLE";
 
+
+    public static final String SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT="TOPUP_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT="TOPUP_MAX_AMOUNT_SINGLE";
+
     public static final int INVOICE_STATUS_ACCEPTED = 200;
     public static final int INVOICE_STATUS_PROCESSING = 102;
     public static final int INVOICE_STATUS_CANCELED = 2;
