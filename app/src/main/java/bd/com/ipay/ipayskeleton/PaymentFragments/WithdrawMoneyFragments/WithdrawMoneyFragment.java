@@ -21,8 +21,10 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -32,6 +34,8 @@ import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
@@ -57,6 +61,9 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
     private int selectedBankPosition = 0;
 
     private ProgressDialog mProgressDialog;
+
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+    private List<BusinessRule> mBusinessRules;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,8 +109,26 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             }
         });
 
+
+        // Get business rule
+        attemptGetBusinessRule(Constants.SERVICE_ID_WITHDRAW_MONEY);
+
         return v;
     }
+
+    protected void attemptGetBusinessRule(int serviceID) {
+
+        if (mGetBusinessRuleTask != null) {
+            return;
+        }
+
+        String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                mUri, getActivity(), this);
+
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
 
     private void attemptRefreshAvailableBankNames() {
         GetAvailableBankAsyncTask mGetAvailableBankAsyncTask = new GetAvailableBankAsyncTask(getActivity(),
@@ -268,6 +293,38 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                 }
 
 
+            } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                    try {
+                        gson = new Gson();
+
+                        BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
+                        mBusinessRules = Arrays.asList(businessRuleArray);
+
+                        for (BusinessRule rule : businessRuleArray) {
+                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                                WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+
+                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                                WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            }
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                }
+
+                mGetBusinessRuleTask = null;
             }
 
             mProgressDialog.dismiss();

@@ -145,7 +145,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             });
         }
 
-
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_TOP_UP);
 

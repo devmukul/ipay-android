@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -44,6 +47,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private long mBankAccountId;
     private String mBankName;
     private String mBankAccountNumber;
+    String mError_message;
 
     private TextView mBankNameView;
     private TextView mBankAccountNumberView;
@@ -91,20 +95,41 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
-                pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        attemptWithdrawMoney(pinInputDialogBuilder.getPin());
-                    }
-                });
+                mError_message = Utilities.isValidAmount(getActivity(), new BigDecimal(mAmount), WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT, WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
 
-                pinInputDialogBuilder.build().show();
+                if (mError_message == null) {
+                    final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+
+                    pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            attemptWithdrawMoney(pinInputDialogBuilder.getPin());
+                        }
+                    });
+
+                    pinInputDialogBuilder.build().show();
+
+                } else {
+                    new AlertDialog.Builder(getContext())
+                            .setMessage(mError_message)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getActivity().finish();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
             }
         });
 
-        attemptGetServiceCharge();
+        // Check if Min or max amount is available
+        if (!Utilities.isValueAvailable(WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT)
+                && !Utilities.isValueAvailable(WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT))
+            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+        else
+            attemptGetServiceCharge();
 
         return v;
     }
