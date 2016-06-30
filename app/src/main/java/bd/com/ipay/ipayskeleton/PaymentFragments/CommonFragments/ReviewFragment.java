@@ -12,7 +12,10 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -109,8 +112,8 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
         }
 
 
-        if(mProgressDialog!=null)
-        mProgressDialog.dismiss();
+        if (mProgressDialog != null)
+            mProgressDialog.dismiss();
 
         Gson gson = new Gson();
 
@@ -158,9 +161,20 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                     for (BusinessRule rule : mBusinessRulesResponseWithServiceCharge.getBusinessRules()) {
                         if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
                             SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
-
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
                             SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                            AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                            AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT)) {
+                            TopUpActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT)) {
+                            TopUpActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                            WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                            WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
                         }
 
                     }

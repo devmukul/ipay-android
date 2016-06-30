@@ -123,7 +123,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         // Check if Min or max amount is available
         if (!Utilities.isValueAvailable(TopUpActivity.MAX_AMOUNT_PER_PAYMENT)
                 && !Utilities.isValueAvailable(TopUpActivity.MIN_AMOUNT_PER_PAYMENT))
-            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_TOP_UP);
         else
             attemptGetServiceCharge();
 
@@ -169,7 +169,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mTopupTask = null;
             if (getActivity() != null)

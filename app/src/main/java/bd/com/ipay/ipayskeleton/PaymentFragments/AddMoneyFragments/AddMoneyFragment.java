@@ -20,10 +20,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -32,6 +36,8 @@ import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
@@ -44,6 +50,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private Button buttonAddMoney;
     private IconifiedEditText mBankAccountNumberEditText;
@@ -54,9 +61,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private List<UserBankClass> mListUserBankClasses;
     private ArrayList<String> mUserBankNameList;
     private ArrayList<String> mUserBankAccountNumberList;
+    private List<BusinessRule> mBusinessRules;
     private int selectedBankPosition = 0;
 
     private ProgressDialog mProgressDialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,6 +111,9 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        // Get business rule
+        attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY);
+
         return v;
     }
 
@@ -141,6 +153,19 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    protected void attemptGetBusinessRule(int serviceID) {
+
+        if (mGetBusinessRuleTask != null) {
+            return;
+        }
+
+        String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                mUri, getActivity(), this);
+
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private boolean verifyUserInputs() {
 
         boolean cancel = false;
@@ -150,6 +175,19 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             focusView = mAmountEditText;
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             cancel = true;
+        }
+        else if ((mAmountEditText.getText().toString().trim().length() > 0)
+                && Utilities.isValueAvailable(AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT)
+                && Utilities.isValueAvailable(AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT)) {
+
+            String error_message = Utilities.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                    AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT, AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+
+            if (error_message != null) {
+                focusView = mAmountEditText;
+                mAmountEditText.setError(error_message);
+                cancel = true;
+            }
         }
         if (!(mBankAccountNumberEditText.getText().toString().trim().length() > 0)) {
             focusView = mBankAccountNumberEditText;
@@ -226,6 +264,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         builderSingle.show();
     }
 
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -280,6 +319,38 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.dismiss();
             mGetBankTask = null;
 
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                try {
+                    gson = new Gson();
+
+                    BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
+                    mBusinessRules = Arrays.asList(businessRuleArray);
+
+                    for (BusinessRule rule : businessRuleArray) {
+                        if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                            AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                            AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+            }
+
+            mGetBusinessRuleTask = null;
         }
     }
 }

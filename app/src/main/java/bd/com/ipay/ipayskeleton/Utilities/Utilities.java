@@ -79,7 +79,7 @@ public class Utilities {
     /**
      * Get IP address from first non-localhost interface
      *
-     * @param ipv4 true=return ipv4, false=return ipv6
+     * @paramipv4 true=return ipv4, false=return ipv6
      * @return address or empty string
      */
     public static String getIPAddress(boolean useIPv4) {
@@ -497,10 +497,10 @@ public class Utilities {
         String error_message = null;
 
         if (amount.compareTo(min_amount) == -1) {
-            error_message = context.getResources().getString(R.string.please_enter_minimum_amount) + min_amount;
+            error_message = context.getResources().getString(R.string.please_enter_minimum_amount) +" "+ min_amount;
             return error_message;
         } else if (amount.compareTo(max_amount) == 1) {
-            error_message = context.getResources().getString(R.string.please_enter_not_more_than_max_amount) + max_amount;
+            error_message = context.getResources().getString(R.string.please_enter_not_more_than_max_amount) + " " +max_amount;
             return error_message;
         }
         return error_message;

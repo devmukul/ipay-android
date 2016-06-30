@@ -127,7 +127,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         // Check if Min or max amount is available
         if (!Utilities.isValueAvailable(WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT)
                 && !Utilities.isValueAvailable(WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT))
-            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_WITHDRAW_MONEY);
         else
             attemptGetServiceCharge();
 
@@ -174,7 +174,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mWithdrawMoneyTask = null;
             if (getActivity() != null)
