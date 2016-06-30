@@ -160,11 +160,11 @@ public class TransactionHistoryClass {
                     return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from " + getBankName() + " (" + statusDescription + ")";
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                 if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankName() +" (successful)";
+                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName() +" (successful)";
                 else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankName() + " (in progress)";
+                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName() + " (in progress)";
                 else
-                    return "Failed to transfer " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankName() + " (" + statusDescription + ")";
+                    return "Failed to transfer " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName() + " (" + statusDescription + ")";
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                     return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " (successful)";
