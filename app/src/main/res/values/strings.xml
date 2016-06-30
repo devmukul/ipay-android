@@ -273,7 +273,7 @@
     <string name="select_from_contact">Select Receiver from Contacts</string>
     <string name="select_sender_from_contact">Select Sender from Contacts</string>
     <string name="enter_mobile_number">Enter Mobile Number (+8801xxxxxxxx)</string>
-    <string name="enter_bank_account_number">Enter Bank Account Number</string>
+    <string name="enter_bank_account_number">Bank Account Number</string>
     <string name="no_number_found">No number found for this contact</string>
     <string name="pick_a_number">Choose a number</string>
     <string name="event_link">Event link</string>
