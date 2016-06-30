@@ -105,8 +105,6 @@ public class DataHelper {
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
 
             Log.i("Friends", "Inserted into the database");
-
-            dOpenHelper.close();
         }
     }
 

@@ -242,16 +242,16 @@ public class TransactionHistoryClass {
                 }
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                 if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                    return "Added " + Utilities.formatTaka(getNetAmount()) + "  from " +  getBankName() + " (successful)";
+                    return "Added " + Utilities.formatTaka(getNetAmount()) + "  from " +  getBankName();
                 else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
                     return "Adding " + Utilities.formatTaka(getNetAmount()) + "  from " + getBankName() + " (in progress)";
                 else
-                    return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from " + getBankName() + " (" + statusDescription + ")";
+                    return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from " + getBankName();
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                 if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName() +" (successful)";
+                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName();
                 else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName() + " (in progress)";
+                    return "Transferring " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName() + " (in progress)";
                 else
                     return "Failed to transfer " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName();
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
