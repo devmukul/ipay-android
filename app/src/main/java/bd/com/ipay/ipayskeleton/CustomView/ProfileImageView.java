@@ -58,6 +58,7 @@ public class ProfileImageView extends FrameLayout {
 
         Glide.with(context)
                 .load(photoUri)
+                .error(R.drawable.ic_user_pic)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(mProfilePictureView);

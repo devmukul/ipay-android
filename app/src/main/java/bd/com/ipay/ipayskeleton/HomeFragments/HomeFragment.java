@@ -304,8 +304,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mNameView.setText(profileInfoCacheManager.getName());
         mMobileNumberView.setText(profileInfoCacheManager.getMobileNumber());
-        mProfilePictureView.setInformation(profileInfoCacheManager.getProfileImageUrl(),
-                profileInfoCacheManager.getName(), profileInfoCacheManager.getMobileNumber());
+        boolean imageLoadedFromDisk = mProfilePictureView.setProfilePictureFromDisk(profileInfoCacheManager.getMobileNumber());
+        if (!imageLoadedFromDisk)
+            mProfilePictureView.setProfilePicture(profileInfoCacheManager.getProfileImageUrl());
+
         if (profileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
             mVerificationStatusView.setVisibility(View.VISIBLE);
         else
