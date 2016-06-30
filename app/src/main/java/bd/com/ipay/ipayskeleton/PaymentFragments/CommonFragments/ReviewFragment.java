@@ -156,10 +156,10 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                     mBusinessRulesResponseWithServiceCharge = gson.fromJson(result.getJsonString(), GetBusinessRulesWithServiceChargeResponse.class);
 
                     for (BusinessRule rule : mBusinessRulesResponseWithServiceCharge.getBusinessRules()) {
-                        if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAX_AMOUNT_PER_PAYMENT)) {
+                        if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
                             SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
 
-                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MIN_AMOUNT_PER_PAYMENT)) {
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
                             SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
                         }
 
