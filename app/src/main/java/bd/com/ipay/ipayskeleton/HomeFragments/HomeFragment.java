@@ -332,6 +332,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mProfileCompletionPromptView.setVisibility(View.GONE);
+
                         Intent intent = new Intent(getActivity(), ProfileActivity.class);
                         intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS);
                         startActivity(intent);
