@@ -513,7 +513,7 @@
     <string name="basic_info">Basic Information</string>
     <string name="profile_address">Address</string>
     <string name="profile_documents">Documents</string>
-    <string name="profile_introducers">Identifications</string>
+    <string name="profile_introducers">Introducers</string>
     <string name="national_id">National ID</string>
     <string name="bank_is_not_submitted_for_verification">Your bank is not submitted for verification yet. Please try again later.</string>
     <string name="national_id_number">National ID Number</string>

@@ -215,7 +215,7 @@ public class TransactionHistoryClass {
             case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                        return "Sent " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + "";
+                        return "Sent " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName();
                     else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
                         return "Sending " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (in progress)";
                     else {
