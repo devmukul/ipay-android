@@ -1,198 +1,300 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.flipboard.bottomsheet.BottomSheetLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/home_bottomsheet"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorBackground">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/account_info_card"
+        <RelativeLayout
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/home_background">
+            android:layout_height="130dp">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/profile_info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:background="@drawable/profile_background"
+                android:padding="@dimen/activity_vertical_margin_card">
 
                 <LinearLayout
+                    android:layout_above="@+id/info_layout"
+                    android:layout_alignParentTop="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:gravity="center">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="14dp"
-                        android:paddingLeft="14dp"
-                        android:paddingRight="0dp"
-                        android:paddingTop="14dp">
+                    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                        android:id="@+id/profile_picture"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp">
 
-                        <TextView
-                            android:id="@+id/tv_ballabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="20dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="iPay Balance"
-                            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                        <TextView
-                            android:id="@+id/balance"
-                            style="@style/TextStylePrimaryLarge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="15dp"
-                            android:fontFamily="sans-serif-light"
-                            android:text="@string/balance_placeholder_not_available"
-                            android:textSize="40sp" />
-
-                        <TextView
-                            android:id="@+id/balanceCurrency"
-                            style="@style/TextStylePrimaryLarge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@id/balance"
-                            android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@id/balance"
-                            android:text="BDT"
-                            android:textColor="@android:color/black" />
-
-                        <ImageView
-                            android:id="@+id/iv_balance_overflow"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_more_vert_black_48dp" />
-
-                        <ImageView
-                            android:id="@+id/refresh_balance_button"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@id/iv_balance_overflow"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_refresh_black_48dp" />
-
-                    </RelativeLayout>
+                    </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
                 </LinearLayout>
 
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+                <RelativeLayout
+                    android:id="@+id/info_layout"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/name_layout"
+                        android:layout_centerHorizontal="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textview_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/value2"
+                            android:textColor="@android:color/white"
+                            android:text="eweweewwe"
+                            android:textSize="18sp" />
+
+                        <ImageView
+                            android:id="@+id/verification_status"
+                            android:layout_toRightOf="@+id/textview_name"
+                            android:layout_marginLeft="@dimen/value5"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_verified_profile"
+                            android:visibility="visible"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textview_mobile_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name_layout"
+                        android:layout_centerHorizontal="true"
+                        android:text="03232323"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="@dimen/value2"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/profile_completion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:background="#EEFFFFFF"
+                android:visibility="gone">
+
+                <bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar
+                    android:id="@+id/profile_completion_percentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/activity_vertical_margin_double"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin">
+
+                </bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar>
+
+                <TextView
+                    android:layout_toRightOf="@+id/profile_completion_percentage"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/profile_completion_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Your profile is 78% complete. Complete profile to get verified."
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:textSize="14sp" />
+
+                <ImageButton
+                    android:id="@+id/button_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:background="@android:color/transparent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginRight="6dp"
+                    android:tint="@color/colorPrimary"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/background_rounded_white"
+            android:paddingTop="@dimen/activity_horizontal_margin_card"
+            android:paddingBottom="@dimen/activity_horizontal_margin_card"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:layout_alignParentTop="true"
+                android:id="@+id/balance_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ipay_balance"
+                android:layout_marginBottom="6dp"
+                android:textColor="@color/colorPrimary"
+                android:fontFamily="sans-serif-light"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/balance"
+                android:layout_below="@+id/balance_label"
+                android:text="12980.05 BDT"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-thin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:id="@+id/refresh_balance_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="8dp"
+                android:src="@drawable/ic_refresh" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin_card">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:orientation="horizontal">
+                android:id="@+id/button_add_money"
+                style="@style/HomeBalanceButtonBackground">
 
-                <Button
-                    android:id="@+id/send_money_button"
-                    android:layout_width="0dp"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-                    android:layout_weight="1"
-                    android:text="Send\nMoney"
-                    style="@style/HomePrimaryButton"/>
+                    android:src="@drawable/ic_add"
+                    android:layout_gravity="center"/>
 
-                <Button
-                    android:id="@+id/request_money_button"
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:layout_weight="1"
-                    android:text="Request\nMoney"
-                    style="@style/HomePrimaryButton" />
+                    android:text="@string/add_money"
+                    style="@style/HomeBalanceButtonStyle"/>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/divider_gray" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
-                android:gravity="center"
-                android:text="Pay"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/mobile_recharge_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Mobile Recharge"
-                style="@style/HomeSecondaryButton"/>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/value64"
-                android:layout_marginRight="@dimen/value64"
-                android:background="@color/divider_gray" />
-
-            <Button
-                android:id="@+id/education_payment_button"
-                android:layout_width="match_parent"
+                android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:text="Education"
-                style="@style/HomeSecondaryButton" />
+                android:background="@android:color/white"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/value64"
-                android:layout_marginRight="@dimen/value64"
-                android:background="@color/divider_gray" />
+            <LinearLayout
+                android:id="@+id/button_withdraw_money"
+                style="@style/HomeBalanceButtonBackground">
 
-            <Button
-                android:id="@+id/make_payment_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Make Payment"
-                style="@style/HomeSecondaryButton"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_withdraw"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/withdraw_money"
+                    style="@style/HomeBalanceButtonStyle"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_transaction_history"
-                android:layout_width="match_parent"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/button_send_money"
+                android:drawableTop="@drawable/ic_send"
+                style="@style/HomeImageButtonStyle"
+                android:text="@string/send_money"/>
+
+            <View
+                android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
-        </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
+                android:background="@color/colorDivider"/>
+
+            <Button
+                android:id="@+id/button_request_money"
+                android:drawableTop="@drawable/ic_rcv"
+                style="@style/HomeImageButtonStyle"
+                android:text="@string/request_money"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/button_mobile_topup"
+                android:drawableTop="@drawable/ic_topup"
+                style="@style/HomeImageButtonStyle"
+                android:text="@string/mobile_topup"/>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/colorDivider"/>
+
+            <Button
+                android:id="@+id/button_make_payment"
+                android:drawableTop="@drawable/ic_payment"
+                style="@style/HomeImageButtonStyle"
+                android:text="@string/make_payment"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/colorDivider"/>
 
     </LinearLayout>
 
-</com.flipboard.bottomsheet.BottomSheetLayout>
+</ScrollView>

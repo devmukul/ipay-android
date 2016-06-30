@@ -19,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -73,6 +74,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
@@ -626,9 +628,13 @@ public class HomeActivity extends BaseActivity
                     }
 
                     //saving user info in shared preference
-                    pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
-                    pref.edit().putString(Constants.USER_NAME, mGetUserInfoResponse.getName()).apply();
-                    pref.edit().putString(Constants.PROFILE_PICTURE, imageUrl).apply();
+
+
+                    ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);
+                    profileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
+
+                    Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
                     // Download the profile picture and store it in local storage
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {

@@ -17,6 +17,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -62,11 +63,12 @@ public class ProfileInfoFragment extends Fragment {
         mDocuments = (IconifiedTextViewWithButton) v.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
 
-        mName = pref.getString(Constants.USER_NAME, "");
-        mMobileNumber = pref.getString(Constants.USERID, "");
-        profileImageUrl = pref.getString(Constants.PROFILE_PICTURE, "");
+        ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
 
-        mVerificationStatus = pref.getString(Constants.VERIFICATION_STATUS, "");
+        mName = profileInfoCacheManager.getName();
+        mMobileNumber = profileInfoCacheManager.getMobileNumber();
+        profileImageUrl = profileInfoCacheManager.getProfileImageUrl();
+        mVerificationStatus = profileInfoCacheManager.getVerificationStatus();
 
         setProfileInformation();
 

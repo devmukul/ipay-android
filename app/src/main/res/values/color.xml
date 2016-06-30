@@ -17,7 +17,7 @@
     <color name="colorBlackTransparent">#70000000</color>
     <color name="blue_button_disabled">#ff90caf9</color>
     <color name="bottle_green">#009688</color>
-    <color name="colorOrange">#f49331</color>
+    <color name="colorOrange">#fcb22b</color>
     <color name="colorPrimaryLightHeader">#1F93BA</color>
 
     <!-- zxinglib colors -->

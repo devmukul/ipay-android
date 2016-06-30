@@ -2,13 +2,17 @@ package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +34,8 @@ import com.bumptech.glide.Glide;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +58,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedRequestBuilder;
@@ -62,6 +70,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHis
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -74,9 +83,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetNewsFeedTask = null;
     private GetNewsFeedResponse mGetNewsFeedResponse;
 
-    private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
-    private TransactionHistoryResponse mTransactionHistoryResponse;
-
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
 
@@ -86,22 +92,24 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private TextView balanceView;
     public static List<News> newsFeedResponsesList;
 
-    private Button mSendMoneyButton;
-    private Button mRequestMoneyButton;
-    private Button mMobileTopUpButton;
-    private Button mMakePaymentButton;
+    private TextView mNameView;
+    private TextView mMobileNumberView;
+    private ImageView mVerificationStatusView;
+    private ProfileImageView mProfilePictureView;
+
+    private View mAddMoneyButton;
+    private View mWithdrawMoneyButton;
+    private TextView mSendMoneyButton;
+    private TextView mRequestMoneyButton;
+    private TextView mMobileTopUpButton;
+    private TextView mMakePaymentButton;
 
     private ImageView refreshBalanceButton;
-    private ImageView addWithdrawMoneyButton;
 
-    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-
-    private BottomSheetLayout homeBottomSheet;
-
-    private List<TransactionHistoryClass> userTransactionHistoryClasses;
-    private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
-    private RecyclerView mTransactionHistoryRecyclerView;
-    private TransactionHistoryAndNewsFeedAdapter mTransactionHistoryAndNewsFeedAdapter;
+//    private List<TransactionHistoryClass> userTransactionHistoryClasses;
+//    private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
+//    private RecyclerView mTransactionHistoryRecyclerView;
+//    private TransactionHistoryAndNewsFeedAdapter mTransactionHistoryAndNewsFeedAdapter;
 
     private View mProfileCompletionPromptView;
 
@@ -116,53 +124,60 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         userID = pref.getString(Constants.USERID, "");
 
-        homeBottomSheet = (BottomSheetLayout) v.findViewById(R.id.home_bottomsheet);
-        mProfileCompletionPromptView = getActivity().getLayoutInflater().inflate(R.layout.sheet_view_profile_completion, null);
-
-        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mProfileCompletionPromptView = v.findViewById(R.id.profile_completion);
 
         balanceView = (TextView) v.findViewById(R.id.balance);
         mProgressDialog = new ProgressDialog(getActivity());
         refreshBalanceButton = (ImageView) v.findViewById(R.id.refresh_balance_button);
-        addWithdrawMoneyButton = (ImageView) v.findViewById(R.id.iv_balance_overflow);
 
-        mSendMoneyButton = (Button) v.findViewById(R.id.send_money_button);
-        mRequestMoneyButton = (Button) v.findViewById(R.id.request_money_button);
-        mMobileTopUpButton = (Button) v.findViewById(R.id.mobile_recharge_button);
-        mMakePaymentButton = (Button) v.findViewById(R.id.make_payment_button);
+        mNameView = (TextView) v.findViewById(R.id.textview_name);
+        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mVerificationStatusView = (ImageView) v.findViewById(R.id.verification_status);
+        mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+
+        mAddMoneyButton = v.findViewById(R.id.button_add_money);
+        mWithdrawMoneyButton = v.findViewById(R.id.button_withdraw_money);
+        mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
+        mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
+        mMobileTopUpButton = (Button) v.findViewById(R.id.button_mobile_topup);
+        mMakePaymentButton = (Button) v.findViewById(R.id.button_make_payment);
 
         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
             mMakePaymentButton.setText(getString(R.string.make_payment));
         else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
             mMakePaymentButton.setText(getString(R.string.create_invoice));
 
-        mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
+        mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
-                    PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                        @Override
-                        public void ifPinAdded() {
-                            Intent intent = new Intent(getActivity(), PaymentMakingActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-                    makePaymentPinChecker.execute();
-                } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
-                    Intent intent = new Intent(getActivity(), MakePaymentActivity.class);
-                    startActivity(intent);
-                }
+                PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                addMoneyPinChecker.execute();
+            }
+        });
+
+        mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PinChecker withdrawMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                withdrawMoneyPinChecker.execute();
             }
         });
 
@@ -188,6 +203,25 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
+                    PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                        @Override
+                        public void ifPinAdded() {
+                            Intent intent = new Intent(getActivity(), PaymentMakingActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    makePaymentPinChecker.execute();
+                } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+                    Intent intent = new Intent(getActivity(), MakePaymentActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
         mMobileTopUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,12 +236,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
-
-        mTransactionHistoryLayoutManager = new LinearLayoutManager(getActivity());
-        mTransactionHistoryAndNewsFeedAdapter = new TransactionHistoryAndNewsFeedAdapter();
-        mTransactionHistoryRecyclerView.setLayoutManager(mTransactionHistoryLayoutManager);
-        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAndNewsFeedAdapter);
+//        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
+//
+//        mTransactionHistoryLayoutManager = new LinearLayoutManager(getActivity());
+//        mTransactionHistoryAndNewsFeedAdapter = new TransactionHistoryAndNewsFeedAdapter();
+//        mTransactionHistoryRecyclerView.setLayoutManager(mTransactionHistoryLayoutManager);
+//        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAndNewsFeedAdapter);
 
         refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,31 +257,38 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             // Check if the news feed is already cleared or not
             if (!HomeActivity.newsFeedLoadedOnce) getNewsFeed();
 
-            refreshBalance();
-//            getTransactionHistory();
             getProfileCompletionStatus();
         }
 
-        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    getTransactionHistory();
-                }
-            }
-        });
-
-        setButtonActions();
+        updateProfileData();
 
         return v;
     }
+
+    private BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateProfileData();
+        }
+    };
 
     @Override
     public void onResume() {
         super.onResume();
         getActivity().invalidateOptionsMenu();
         refreshBalance();
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
+                new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
     }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileInfoUpdateBroadcastReceiver);
+
+        super.onPause();
+    }
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -256,61 +297,36 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             menu.findItem(R.id.action_search_contacts).setVisible(false);
     }
 
-    private void setButtonActions() {
+    public void updateProfileData() {
+        ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
 
-        addWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                View sheetView = LayoutInflater.from(getContext()).inflate(R.layout.sheet_view_add_withdraw_money, homeBottomSheet, false);
-
-                LinearLayout llAddMoneyButton = (LinearLayout) sheetView.findViewById(R.id.ll_add_money);
-                LinearLayout llWithdrawMoneyButton = (LinearLayout) sheetView.findViewById(R.id.ll_withdraw_money);
-
-                llAddMoneyButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                            @Override
-                            public void ifPinAdded() {
-                                Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                                startActivity(intent);
-                            }
-                        });
-                        pinChecker.execute();
-                    }
-                });
-
-                llWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                            @Override
-                            public void ifPinAdded() {
-                                Intent intent = new Intent(getActivity(), WithdrawMoneyActivity.class);
-                                startActivity(intent);
-                            }
-                        });
-                        pinChecker.execute();
-                    }
-                });
-
-
-                homeBottomSheet.showWithSheetView(sheetView);
-            }
-        });
+        mNameView.setText(profileInfoCacheManager.getName());
+        mMobileNumberView.setText(profileInfoCacheManager.getMobileNumber());
+        mProfilePictureView.setInformation(profileInfoCacheManager.getProfileImageUrl(),
+                profileInfoCacheManager.getName(), profileInfoCacheManager.getMobileNumber());
+        if (profileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
+            mVerificationStatusView.setVisibility(View.VISIBLE);
+        else
+            mVerificationStatusView.setVisibility(View.GONE);
     }
 
     private void promptForProfileCompletion() {
-        mProfileCompletionStatusResponse.analyzeProfileCompletionData();
 
         if (!profileCompletionPromptShown) {
             profileCompletionPromptShown = true;
 
-            CircularProgressBar progressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.progress_bar);
+            mProfileCompletionStatusResponse.analyzeProfileCompletionData();
+
+            CircularProgressBar progressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
             TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
-            Button completeProfileButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_profile);
-            Button completeLaterButton = (Button) mProfileCompletionPromptView.findViewById(R.id.complete_later);
+            ImageButton closeButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
+
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mProfileCompletionPromptView.setVisibility(View.GONE);
+                }
+            });
 
             if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
 
@@ -318,26 +334,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
                         + "complete. Complete your profile to get verified.");
 
-                completeProfileButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        homeBottomSheet.dismissSheet();
-
-                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-                completeLaterButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        homeBottomSheet.dismissSheet();
-                    }
-                });
-
                 progressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
 
-                homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
+                mProfileCompletionPromptView.setVisibility(View.VISIBLE);
             } else {
                 // "Good to have" properties
                 List<ProfileCompletionStatusResponse.PropertyDetails> otherCompletionDetails =
@@ -367,18 +366,15 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         String completeButtonMessage = incompletePropertyDetails.getActionName();
 
                         profileCompletionMessageView.setText(profileCompletionMessage);
-                        completeProfileButton.setText(completeButtonMessage);
 
                         /**
                          * For ADD_PIN, we show a PIN input dialog to the user.
                          * For other cases, we forward the user to the corresponding fragment
                          * in the ProfileActivity.
                          */
-                        completeProfileButton.setOnClickListener(new View.OnClickListener() {
+                        mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                homeBottomSheet.dismissSheet();
-
                                 if (incompletePropertyDetails.getPropertyName().equals(ProfileCompletionPropertyConstants.ADD_PIN)) {
                                     AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(getActivity(), null);
                                     addPinDialogBuilder.show();
@@ -390,16 +386,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                             }
                         });
 
-                        completeLaterButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                homeBottomSheet.dismissSheet();
-                            }
-                        });
-
                         progressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
 
-                        homeBottomSheet.showWithSheetView(mProfileCompletionPromptView);
+                        mProfileCompletionPromptView.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -436,20 +425,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 mUri, getActivity());
         mGetNewsFeedTask.mHttpResponseListener = this;
         mGetNewsFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void getTransactionHistory() {
-        if (mTransactionHistoryTask != null) {
-            return;
-        }
-
-        TransactionHistoryRequest mTransactionHistoryRequest = new TransactionHistoryRequest(null, pageCount);
-        Gson gson = new Gson();
-        String json = gson.toJson(mTransactionHistoryRequest);
-        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
-                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
-        mTransactionHistoryTask.mHttpResponseListener = this;
-        mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getProfileCompletionStatus() {
@@ -520,9 +495,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mRefreshBalanceTask = null;
             mGetNewsFeedTask = null;
             mGetProfileCompletionStatusTask = null;
-            mTransactionHistoryTask = null;
 
-            mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
 
@@ -572,7 +545,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                     HomeActivity.newsFeedLoadedOnce = true;
                     // TODO: Handle news feed hasNext in future
-                    mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
+//                    mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -588,39 +561,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             mGetNewsFeedTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                try {
-                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
-
-                    // Show only last 5 transactions
-                    userTransactionHistoryClasses = mTransactionHistoryResponse.getTransactions().subList(
-                            0, Math.min(5, mTransactionHistoryResponse.getTransactions().size()));
-
-                    if (userTransactionHistoryClasses.size() == 0)
-                        userTransactionHistoryClasses = null;
-                    mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
-                }
-
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
-            }
-
-            mSwipeRefreshLayout.setRefreshing(false);
-            mTransactionHistoryTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     promptForProfileCompletion();
-
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -636,248 +581,247 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
     }
 
-    private class TransactionHistoryAndNewsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private static final int TRANSACTION_HISTORY_HEADER_VIEW = 1;
-        private static final int WHATS_NEW_VIEW = 2;
-        private static final int NEWS_FEED_ITEM_VIEW = 3;
-
-        public class TransactionHistoryViewHolder extends RecyclerView.ViewHolder {
-            private View mItemView;
-
-            private TextView mTransactionDescription;
-            private TextView mTime;
-            private RoundedImageView mPortrait;
-            private TextView mAmountTextView;
-            private ImageView statusView;
-
-            private ImageView mNewsImage;
-            private TextView mNewsHeadLine;
-            private TextView mNewsSubDescription;
-            private TextView mNewsShortDescription;
-
-            public TransactionHistoryViewHolder(final View itemView) {
-                super(itemView);
-
-                mItemView = itemView;
-
-                mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
-                mTime = (TextView) itemView.findViewById(R.id.time);
-                mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
-                statusView = (ImageView) itemView.findViewById(R.id.status);
-                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
-
-                mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
-                mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
-                mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
-                mNewsShortDescription = (TextView) itemView.findViewById(R.id.short_desc);
-            }
-
-            public void bindViewTransactionHistory(int pos) {
-
-                // Decrease pos by 1 as there is a header view now.
-                pos = pos - 1;
-
-                double amount = userTransactionHistoryClasses.get(pos).getAmount(userID);
-
-                final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
-                final double fee = userTransactionHistoryClasses.get(pos).getFee();
-                final double netAmount = userTransactionHistoryClasses.get(pos).getNetAmount();
-                final String transactionID = userTransactionHistoryClasses.get(pos).getTransactionID();
-                final String purpose = userTransactionHistoryClasses.get(pos).getPurpose();
-                final Integer statusCode = userTransactionHistoryClasses.get(pos).getStatusCode();
-                final double balance = userTransactionHistoryClasses.get(pos).getBalance();
-                final String description = userTransactionHistoryClasses.get(pos).getDescription();
-                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
-
-                mAmountTextView.setText(Utilities.formatTaka(amount));
-
-                mTransactionDescription.setText(description);
-                mTime.setText(time);
-
-                if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
-                    statusView.setColorFilter(Color.GREEN);
-                    statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
-
-                } else if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-                    mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
-                    statusView.setColorFilter(Color.GRAY);
-                    statusView.setImageResource(R.drawable.ic_wip);
-
-                } else {
-                    mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
-                    statusView.setColorFilter(Color.RED);
-                    statusView.setImageResource(R.drawable.ic_error_black_24dp);
-                }
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!mSwipeRefreshLayout.isRefreshing());
-                            showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount,
-                                    balance, purpose, time, statusCode, description, transactionID);
-                    }
-                });
-
-                //TODO: remove this when pro pic will come
-//                Glide.with(getActivity())
-//                        .load(R.drawable.ic_transaction_history)
-//                        .into(mPortrait);
-            }
-
-            public void bindViewNewsFeed(int pos) {
-
-                if (userTransactionHistoryClasses == null) pos = pos - 1;
-                else {
-                    if (userTransactionHistoryClasses.size() == 0) pos = pos - 1;
-                    else pos = pos - userTransactionHistoryClasses.size() - 2;
-                }
-
-                final long newsID = newsFeedResponsesList.get(pos).getId();
-                final String description = newsFeedResponsesList.get(pos).getDescription();
-                final String title = newsFeedResponsesList.get(pos).getTitle();
-                final String subDescription = newsFeedResponsesList.get(pos).getSubDescription();
-                final String imageUrl = newsFeedResponsesList.get(pos).getImageUrl();
-                final String imageUrlThumbnail = newsFeedResponsesList.get(pos).getImageThumbnailUrl();
-
-                if (title != null) mNewsHeadLine.setText(title);
-                if (subDescription != null) mNewsSubDescription.setText(subDescription);
-                if (description != null) mNewsShortDescription.setText(description);
-
-                if (imageUrl != null) Glide.with(getActivity())
-                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
-                        .crossFade()
-                        .placeholder(R.drawable.dummy)
-                        .into(mNewsImage);
-            }
-
-            public View getItemView() {
-                return mItemView;
-            }
-        }
-
-        public class HeaderViewHolder extends TransactionHistoryViewHolder {
-            public HeaderViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        public class WhatsNewViewHolder extends TransactionHistoryViewHolder {
-            public WhatsNewViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        public class NewsFeedViewHolder extends TransactionHistoryViewHolder {
-            public NewsFeedViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        // Now define the ViewHolder for Normal list item
-        public class NormalViewHolder extends TransactionHistoryViewHolder {
-            public NormalViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-
-            if (viewType == WHATS_NEW_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_whats_new, parent, false);
-                WhatsNewViewHolder vh = new WhatsNewViewHolder(v);
-                return vh;
-
-            } else if (viewType == TRANSACTION_HISTORY_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_header_transaction_histories, parent, false);
-                HeaderViewHolder vh = new HeaderViewHolder(v);
-                return vh;
-
-            } else if (viewType == NEWS_FEED_ITEM_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_news_feed, parent, false);
-                NewsFeedViewHolder vh = new NewsFeedViewHolder(v);
-                return vh;
-            }
-
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
-            NormalViewHolder vh = new NormalViewHolder(v);
-
-            return vh;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                if (holder instanceof NormalViewHolder) {
-                    NormalViewHolder vh = (NormalViewHolder) holder;
-                    vh.bindViewTransactionHistory(position);
-                } else if (holder instanceof WhatsNewViewHolder) {
-                    WhatsNewViewHolder vh = (WhatsNewViewHolder) holder;
-                } else if (holder instanceof HeaderViewHolder) {
-                    HeaderViewHolder vh = (HeaderViewHolder) holder;
-                } else if (holder instanceof NewsFeedViewHolder) {
-                    NewsFeedViewHolder vh = (NewsFeedViewHolder) holder;
-                    vh.bindViewNewsFeed(position);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-
-            int transactionHistoryListSize = 0;
-            int newsFeedListSize = 0;
-
-            if (userTransactionHistoryClasses == null && newsFeedResponsesList == null) return 0;
-
-            if (userTransactionHistoryClasses != null)
-                transactionHistoryListSize = userTransactionHistoryClasses.size();
-            if (newsFeedResponsesList != null) newsFeedListSize = newsFeedResponsesList.size();
-
-            if (transactionHistoryListSize > 0 && newsFeedListSize > 0)
-                return 1 + transactionHistoryListSize + 1 + newsFeedListSize;   // Header, transaction histories, whats new header , news feed list
-            else if (transactionHistoryListSize > 0 && newsFeedListSize == 0)
-                return 1 + transactionHistoryListSize;                          // Header, transaction histories
-            else if (transactionHistoryListSize == 0 && newsFeedListSize > 0)
-                return 1 + newsFeedListSize;                                    // whats new header , news feed list
-            else return 0;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-
-            int transactionHistoryListSize = 0;
-            int newsFeedListSize = 0;
-
-            if (userTransactionHistoryClasses == null && newsFeedResponsesList == null)
-                return super.getItemViewType(position);
-
-            if (userTransactionHistoryClasses != null)
-                transactionHistoryListSize = userTransactionHistoryClasses.size();
-            if (newsFeedResponsesList != null) newsFeedListSize = newsFeedResponsesList.size();
-
-            if (transactionHistoryListSize > 0 && newsFeedListSize > 0) {
-                if (position == 0) return TRANSACTION_HISTORY_HEADER_VIEW;
-                else if (position == transactionHistoryListSize + 1) return WHATS_NEW_VIEW;
-                else if (position > transactionHistoryListSize + 1) return NEWS_FEED_ITEM_VIEW;
-                else return super.getItemViewType(position);
-
-            } else if (transactionHistoryListSize > 0 && newsFeedListSize == 0) {
-                if (position == 0) return TRANSACTION_HISTORY_HEADER_VIEW;
-                else return super.getItemViewType(position);
-
-            } else if (transactionHistoryListSize == 0 && newsFeedListSize > 0) {
-                if (position == 0) return WHATS_NEW_VIEW;
-                else return NEWS_FEED_ITEM_VIEW;
-            }
-
-            return super.getItemViewType(position);
-        }
-    }
+//    private class TransactionHistoryAndNewsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+//
+//        private static final int TRANSACTION_HISTORY_HEADER_VIEW = 1;
+//        private static final int WHATS_NEW_VIEW = 2;
+//        private static final int NEWS_FEED_ITEM_VIEW = 3;
+//
+//        public class TransactionHistoryViewHolder extends RecyclerView.ViewHolder {
+//            private View mItemView;
+//
+//            private TextView mTransactionDescription;
+//            private TextView mTime;
+//            private RoundedImageView mPortrait;
+//            private TextView mAmountTextView;
+//            private ImageView statusView;
+//
+//            private ImageView mNewsImage;
+//            private TextView mNewsHeadLine;
+//            private TextView mNewsSubDescription;
+//            private TextView mNewsShortDescription;
+//
+//            public TransactionHistoryViewHolder(final View itemView) {
+//                super(itemView);
+//
+//                mItemView = itemView;
+//
+//                mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
+//                mTime = (TextView) itemView.findViewById(R.id.time);
+//                mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
+//                statusView = (ImageView) itemView.findViewById(R.id.status);
+//                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+//
+//                mNewsImage = (ImageView) itemView.findViewById(R.id.news_image);
+//                mNewsHeadLine = (TextView) itemView.findViewById(R.id.news_title);
+//                mNewsSubDescription = (TextView) itemView.findViewById(R.id.short_news);
+//                mNewsShortDescription = (TextView) itemView.findViewById(R.id.short_desc);
+//            }
+//
+//            public void bindViewTransactionHistory(int pos) {
+//
+//                // Decrease pos by 1 as there is a header view now.
+//                pos = pos - 1;
+//
+//                double amount = userTransactionHistoryClasses.get(pos).getAmount(userID);
+//
+//                final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
+//                final double fee = userTransactionHistoryClasses.get(pos).getFee();
+//                final double netAmount = userTransactionHistoryClasses.get(pos).getNetAmount();
+//                final String transactionID = userTransactionHistoryClasses.get(pos).getTransactionID();
+//                final String purpose = userTransactionHistoryClasses.get(pos).getPurpose();
+//                final Integer statusCode = userTransactionHistoryClasses.get(pos).getStatusCode();
+//                final double balance = userTransactionHistoryClasses.get(pos).getBalance();
+//                final String description = userTransactionHistoryClasses.get(pos).getDescription();
+//                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getTime());
+//
+//                mAmountTextView.setText(Utilities.formatTaka(amount));
+//
+//                mTransactionDescription.setText(description);
+//                mTime.setText(time);
+//
+//                if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {
+//                    mAmountTextView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
+//                    statusView.setColorFilter(Color.GREEN);
+//                    statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
+//
+//                } else if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+//                    mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
+//                    statusView.setColorFilter(Color.GRAY);
+//                    statusView.setImageResource(R.drawable.ic_cached_black_24dp);
+//
+//                } else {
+//                    mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
+//                    statusView.setColorFilter(Color.RED);
+//                    statusView.setImageResource(R.drawable.ic_error_black_24dp);
+//                }
+//
+//                itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount,
+//                                balance, purpose, time, statusCode, description, transactionID);
+//                    }
+//                });
+//
+//                //TODO: remove this when pro pic will come
+////                Glide.with(getActivity())
+////                        .load(R.drawable.ic_transaction_history)
+////                        .into(mPortrait);
+//            }
+//
+//            public void bindViewNewsFeed(int pos) {
+//
+//                if (userTransactionHistoryClasses == null) pos = pos - 1;
+//                else {
+//                    if (userTransactionHistoryClasses.size() == 0) pos = pos - 1;
+//                    else pos = pos - userTransactionHistoryClasses.size() - 2;
+//                }
+//
+//                final long newsID = newsFeedResponsesList.get(pos).getId();
+//                final String description = newsFeedResponsesList.get(pos).getDescription();
+//                final String title = newsFeedResponsesList.get(pos).getTitle();
+//                final String subDescription = newsFeedResponsesList.get(pos).getSubDescription();
+//                final String imageUrl = newsFeedResponsesList.get(pos).getImageUrl();
+//                final String imageUrlThumbnail = newsFeedResponsesList.get(pos).getImageThumbnailUrl();
+//
+//                if (title != null) mNewsHeadLine.setText(title);
+//                if (subDescription != null) mNewsSubDescription.setText(subDescription);
+//                if (description != null) mNewsShortDescription.setText(description);
+//
+//                if (imageUrl != null) Glide.with(getActivity())
+//                        .load(Constants.BASE_URL_FTP_SERVER + imageUrl)
+//                        .crossFade()
+//                        .placeholder(R.drawable.dummy)
+//                        .into(mNewsImage);
+//            }
+//
+//            public View getItemView() {
+//                return mItemView;
+//            }
+//        }
+//
+//        public class HeaderViewHolder extends TransactionHistoryViewHolder {
+//            public HeaderViewHolder(View itemView) {
+//                super(itemView);
+//            }
+//        }
+//
+//        public class WhatsNewViewHolder extends TransactionHistoryViewHolder {
+//            public WhatsNewViewHolder(View itemView) {
+//                super(itemView);
+//            }
+//        }
+//
+//        public class NewsFeedViewHolder extends TransactionHistoryViewHolder {
+//            public NewsFeedViewHolder(View itemView) {
+//                super(itemView);
+//            }
+//        }
+//
+//        // Now define the ViewHolder for Normal list item
+//        public class NormalViewHolder extends TransactionHistoryViewHolder {
+//            public NormalViewHolder(View itemView) {
+//                super(itemView);
+//            }
+//        }
+//
+//        @Override
+//        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//
+//            View v;
+//
+//            if (viewType == WHATS_NEW_VIEW) {
+//                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_whats_new, parent, false);
+//                WhatsNewViewHolder vh = new WhatsNewViewHolder(v);
+//                return vh;
+//
+//            } else if (viewType == TRANSACTION_HISTORY_HEADER_VIEW) {
+//                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_header_transaction_histories, parent, false);
+//                HeaderViewHolder vh = new HeaderViewHolder(v);
+//                return vh;
+//
+//            } else if (viewType == NEWS_FEED_ITEM_VIEW) {
+//                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_news_feed, parent, false);
+//                NewsFeedViewHolder vh = new NewsFeedViewHolder(v);
+//                return vh;
+//            }
+//
+//            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
+//            NormalViewHolder vh = new NormalViewHolder(v);
+//
+//            return vh;
+//        }
+//
+//        @Override
+//        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+//            try {
+//                if (holder instanceof NormalViewHolder) {
+//                    NormalViewHolder vh = (NormalViewHolder) holder;
+//                    vh.bindViewTransactionHistory(position);
+//                } else if (holder instanceof WhatsNewViewHolder) {
+//                    WhatsNewViewHolder vh = (WhatsNewViewHolder) holder;
+//                } else if (holder instanceof HeaderViewHolder) {
+//                    HeaderViewHolder vh = (HeaderViewHolder) holder;
+//                } else if (holder instanceof NewsFeedViewHolder) {
+//                    NewsFeedViewHolder vh = (NewsFeedViewHolder) holder;
+//                    vh.bindViewNewsFeed(position);
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        @Override
+//        public int getItemCount() {
+//
+//            int transactionHistoryListSize = 0;
+//            int newsFeedListSize = 0;
+//
+//            if (userTransactionHistoryClasses == null && newsFeedResponsesList == null) return 0;
+//
+//            if (userTransactionHistoryClasses != null)
+//                transactionHistoryListSize = userTransactionHistoryClasses.size();
+//            if (newsFeedResponsesList != null) newsFeedListSize = newsFeedResponsesList.size();
+//
+//            if (transactionHistoryListSize > 0 && newsFeedListSize > 0)
+//                return 1 + transactionHistoryListSize + 1 + newsFeedListSize;   // Header, transaction histories, whats new header , news feed list
+//            else if (transactionHistoryListSize > 0 && newsFeedListSize == 0)
+//                return 1 + transactionHistoryListSize;                          // Header, transaction histories
+//            else if (transactionHistoryListSize == 0 && newsFeedListSize > 0)
+//                return 1 + newsFeedListSize;                                    // whats new header , news feed list
+//            else return 0;
+//        }
+//
+//        @Override
+//        public int getItemViewType(int position) {
+//
+//            int transactionHistoryListSize = 0;
+//            int newsFeedListSize = 0;
+//
+//            if (userTransactionHistoryClasses == null && newsFeedResponsesList == null)
+//                return super.getItemViewType(position);
+//
+//            if (userTransactionHistoryClasses != null)
+//                transactionHistoryListSize = userTransactionHistoryClasses.size();
+//            if (newsFeedResponsesList != null) newsFeedListSize = newsFeedResponsesList.size();
+//
+//            if (transactionHistoryListSize > 0 && newsFeedListSize > 0) {
+//                if (position == 0) return TRANSACTION_HISTORY_HEADER_VIEW;
+//                else if (position == transactionHistoryListSize + 1) return WHATS_NEW_VIEW;
+//                else if (position > transactionHistoryListSize + 1) return NEWS_FEED_ITEM_VIEW;
+//                else return super.getItemViewType(position);
+//
+//            } else if (transactionHistoryListSize > 0 && newsFeedListSize == 0) {
+//                if (position == 0) return TRANSACTION_HISTORY_HEADER_VIEW;
+//                else return super.getItemViewType(position);
+//
+//            } else if (transactionHistoryListSize == 0 && newsFeedListSize > 0) {
+//                if (position == 0) return WHATS_NEW_VIEW;
+//                else return NEWS_FEED_ITEM_VIEW;
+//            }
+//
+//            return super.getItemViewType(position);
+//        }
+//    }
 }

@@ -2,10 +2,12 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePict
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -64,7 +67,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private String mName = "";
     private String mMobileNumber = "";
-    private String profileImageUrl = "";
+    private String mProfileImageUrl = "";
 
     private String mDateOfBirth = "";
 
@@ -156,7 +159,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         bundle.putString(Constants.FATHERS_NAME, mFathersName);
         bundle.putString(Constants.MOTHERS_NAME, mMothersName);
         bundle.putString(Constants.DATE_OF_BIRTH, mDateOfBirth);
-        bundle.putString(Constants.PROFILE_PICTURE, profileImageUrl);
+        bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
 
@@ -164,7 +167,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     }
 
     private void setProfileInformation() {
-        setProfilePicture(profileImageUrl);
+        setProfilePicture(mProfileImageUrl);
 
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
@@ -325,13 +328,17 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
             for (Iterator<UserProfilePictureClass> it = mGetProfileInfoResponse.getProfilePictures().iterator(); it.hasNext(); ) {
                 UserProfilePictureClass userProfilePictureClass = it.next();
-                profileImageUrl = Constants.BASE_URL_FTP_SERVER + userProfilePictureClass.getUrl();
-                break;
+                mProfileImageUrl = Constants.BASE_URL_FTP_SERVER + userProfilePictureClass.getUrl();
+                if (userProfilePictureClass.getQuality().equals(Constants.IMAGE_QUALITY_HIGH))
+                    break;
             }
         }
 
-        pref.edit().putString(Constants.USER_NAME, mName).apply();
-        pref.edit().putString(Constants.PROFILE_PICTURE, profileImageUrl).apply();
+        ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
+        profileInfoCacheManager.updateCache(mName, mMobileNumber, mProfileImageUrl, mVerificationStatus);
+
+        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
         setProfileInformation();
         getOccupationList();
