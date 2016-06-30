@@ -223,7 +223,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                     mStatusView.setImageResource(R.drawable.ic_verified3x);
                     mStatusView.setColorFilter(null);
                 } else if (employee.getStatus().equals(Constants.BUSINESS_STATUS_PENDING)) {
-                    mStatusView.setImageResource(R.drawable.ic_cached_black_24dp);
+                    mStatusView.setImageResource(R.drawable.ic_wip);
                     mStatusView.setColorFilter(Color.GRAY);
                 } else {
                     mStatusView.setImageResource(R.drawable.ic_notverified3x);

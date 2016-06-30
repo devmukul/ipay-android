@@ -637,8 +637,10 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             public void bindView(int pos) {
 
                 if (pos == userTransactionHistoryClasses.size() -1) divider.setVisibility(View.GONE);
+                else divider.setVisibility(View.VISIBLE);
                 double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
 
+                final String detailDescription = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
                 final String description = userTransactionHistoryClasses.get(pos).getShortDescription(mMobileNumber);
                 final String responseTime = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getResponseTime());
                 final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
@@ -694,7 +696,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing())
                             showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount, balance, purpose, responseTime,
-                                    statusCode, description, transactionID,mobileNumber,name,imageUrl,serviceId,bankName,bankAccountNumber);
+                                    statusCode, detailDescription, transactionID,mobileNumber,name,imageUrl,serviceId,bankName,bankAccountNumber);
                     }
                 });
 

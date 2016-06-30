@@ -322,7 +322,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 // Document uploaded but not verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
                     mVerificationStatus.setVisibility(View.VISIBLE);
-                    mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
+                    mVerificationStatus.setImageResource(R.drawable.ic_wip);
                     mVerificationStatus.setColorFilter(Color.GRAY);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
                     mUploadButton.setText(getString(R.string.upload_again));

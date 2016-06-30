@@ -703,7 +703,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 } else if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.text_gray));
                     statusView.setColorFilter(Color.GRAY);
-                    statusView.setImageResource(R.drawable.ic_cached_black_24dp);
+                    statusView.setImageResource(R.drawable.ic_wip);
 
                 } else {
                     mAmountTextView.setTextColor(getResources().getColor(R.color.background_red));
@@ -714,7 +714,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!mSwipeRefreshLayout.isRefreshing())
+                        if (!mSwipeRefreshLayout.isRefreshing());
                             showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount,
                                     balance, purpose, time, statusCode, description, transactionID);
                     }

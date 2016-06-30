@@ -446,7 +446,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
                     makePrimaryButton.setVisibility(View.VISIBLE);
                 } else if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)) {
-                    mVerificationStatus.setImageResource(R.drawable.ic_cached_black_24dp);
+                    mVerificationStatus.setImageResource(R.drawable.ic_wip);
                     mVerificationStatus.setColorFilter(Color.GRAY);
 
                     makePrimaryButton.setVisibility(View.GONE);

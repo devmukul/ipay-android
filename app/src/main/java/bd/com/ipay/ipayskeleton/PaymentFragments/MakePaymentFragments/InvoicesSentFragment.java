@@ -273,7 +273,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
                     mSenderName.setTextColor(getResources().getColor(R.color.background_yellow));
                     statusView.setColorFilter(getResources().getColor(R.color.background_yellow));
-                    statusView.setImageResource(R.drawable.ic_cached_black_24dp);
+                    statusView.setImageResource(R.drawable.ic_wip);
 
                 } else if (status == Constants.INVOICE_STATUS_REJECTED) {
                     mSenderName.setTextColor(getResources().getColor(R.color.background_red));
