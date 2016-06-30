@@ -56,6 +56,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.R;
 
 public class Utilities {
 
@@ -490,5 +491,24 @@ public class Utilities {
             return filePath.substring(0, filePath.lastIndexOf('.'));
         else
             return "";
+    }
+
+    public static String isValidAmount(Context context, BigDecimal amount, BigDecimal min_amount, BigDecimal max_amount) {
+        String error_message = null;
+
+        if (amount.compareTo(min_amount) == -1) {
+            error_message = context.getResources().getString(R.string.please_enter_minimum_amount) + min_amount;
+            return error_message;
+        } else if (amount.compareTo(max_amount) == 1) {
+            error_message = context.getResources().getString(R.string.please_enter_not_more_than_max_amount) + max_amount;
+            return error_message;
+        }
+        return error_message;
+    }
+
+    public static boolean isValueAvailable(BigDecimal amount) {
+        if (amount.compareTo(new BigDecimal("0")) == 0)
+            return false;
+        else return true;
     }
 }

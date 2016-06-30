@@ -12,13 +12,19 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge.GetServiceChargeResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.GetBusinessRuleWithServiceChargeRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.GetBusinessRulesWithServiceChargeResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+
 
 /**
  * Be sure to call the attemptGetServiceCharge method at the end of your onCreateView method
@@ -31,6 +37,9 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
     private HttpRequestPostAsyncTask mServiceChargeTask = null;
     private GetServiceChargeResponse mGetServiceChargeResponse;
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+
+    private GetBusinessRulesWithServiceChargeResponse mBusinessRulesResponseWithServiceCharge;
 
     /**
      * Service ID used to query the service charge
@@ -77,10 +86,22 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
         mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    protected void attemptGetBusinessRulewithServiceCharge(int serviceID) {
+
+        if (mGetBusinessRuleTask != null) return;
+
+        String mUri = new GetBusinessRuleWithServiceChargeRequestBuilder(serviceID).getGeneratedUri();
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE,
+                mUri, getActivity(), this);
+
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -88,9 +109,10 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
         }
 
 
-        Gson gson = new Gson();
-
+        if(mProgressDialog!=null)
         mProgressDialog.dismiss();
+
+        Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
             try {
@@ -123,8 +145,55 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                 getActivity().finish();
             }
 
-
             mServiceChargeTask = null;
+
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                try {
+                    gson = new Gson();
+                    mBusinessRulesResponseWithServiceCharge = gson.fromJson(result.getJsonString(), GetBusinessRulesWithServiceChargeResponse.class);
+
+                    for (BusinessRule rule : mBusinessRulesResponseWithServiceCharge.getBusinessRules()) {
+                        if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAX_AMOUNT_PER_PAYMENT)) {
+                            SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MIN_AMOUNT_PER_PAYMENT)) {
+                            SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                        }
+
+                    }
+
+                    if (mBusinessRulesResponseWithServiceCharge.getFeeCharge() != null) {
+                        if (mBusinessRulesResponseWithServiceCharge.getFeeCharge().getServiceCharge(getAmount()).compareTo(BigDecimal.ZERO) < 0) {
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            getActivity().finish();
+                        } else {
+                            onServiceChargeLoadFinished(mBusinessRulesResponseWithServiceCharge.getFeeCharge().getServiceCharge(getAmount()));
+                        }
+
+                    } else {
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+            }
+
+            mGetBusinessRuleTask = null;
+
         }
+
+
     }
 }

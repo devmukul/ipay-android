@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
+
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
@@ -20,6 +22,11 @@ public class SendMoneyActivity extends BaseActivity {
     public Boolean switchedToAccountSelection = false;
 
     private SendMoneyFragment sendMoneyFragment;
+    public static BigDecimal MAX_AMOUNT_PER_PAYMENT=new BigDecimal("0");
+    public static BigDecimal MIN_AMOUNT_PER_PAYMENT=new BigDecimal("0");
+
+
+    public int has_businessRule=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -28,6 +28,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
+import bd.com.ipay.ipayskeleton.R;
 
 public class ContactEngine {
     private static final String TAG = "ContactEngine";
@@ -1003,6 +1005,7 @@ public class ContactEngine {
         else
             return false;
     }
+
 
     /**
      * Pass phone contacts in the newContacts list and server contacts in the oldContacts list

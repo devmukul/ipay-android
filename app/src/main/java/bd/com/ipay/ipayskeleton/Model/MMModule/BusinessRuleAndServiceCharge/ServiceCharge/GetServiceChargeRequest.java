@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.ServiceCharge;
+package bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge;
 
 public class GetServiceChargeRequest {
 

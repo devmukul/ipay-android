@@ -201,6 +201,12 @@ public class Constants {
     // Fee Charge REST
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
+    //business rule Rest
+    //business rule Rest
+    public static final String URL_BUSINESS_RULE = "business-rule";
+
+    public static final String URL_BUSINESS_RULE_WITH_SERVICE_CHARGE = "rules-charge";
+
     // Introducer REST
     public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
     public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/notapproved";
@@ -417,6 +423,8 @@ public class Constants {
     public static final String COMMAND_ADD_FRIENDS = "COMMAND_ADD_FRIENDS";
     public static final String COMMAND_UPDATE_FRIENDS = "COMMAND_UPDATE_FRIENDS";
     public static final String COMMAND_DELETE_FRIENDS = "COMMAND_DELETE_FRIENDS";
+    public static final String COMMAND_GET_BUSINESS_RULE= "COMMAND_GET_BUSINESS_RULE";
+    public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE= "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
 
 
     // Resource
@@ -515,6 +523,9 @@ public class Constants {
     public static final int SERVICE_ID_TOP_UP = 2001;
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_EDUCATION = 8001;
+    public static final int SERVICE_ID_MIN_AMOUNT_PER_PAYMENT=87;
+    public static final int SERVICE_ID_MAX_AMOUNT_PER_PAYMENT=88;
+
 
     public static final String RESULT = "Result";
     public static final String POST_REQUEST = "POST_RESULT: ";
@@ -567,6 +578,8 @@ public class Constants {
     public static final String INVOICE_RATE_TAG = "rate";
     public static final String INVOICE_TITLE_TAG = "title";
 
+    public static final String SERVICE_RULE_MIN_AMOUNT_PER_PAYMENT="SENDMONEY_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_MAX_AMOUNT_PER_PAYMENT="SENDMONEY_MAX_AMOUNT_SINGLE";
 
     public static final int INVOICE_STATUS_ACCEPTED = 200;
     public static final int INVOICE_STATUS_PROCESSING = 102;

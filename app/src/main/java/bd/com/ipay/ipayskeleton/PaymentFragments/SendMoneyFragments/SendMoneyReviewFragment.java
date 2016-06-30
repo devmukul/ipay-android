@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -47,6 +50,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private String mSenderMobileNumber;
     private String mPhotoUri;
     private String mDescription;
+    String mError_message;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
@@ -106,20 +110,41 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
-                pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        attemptSendMoney(pinInputDialogBuilder.getPin());
-                    }
-                });
+                mError_message = Utilities.isValidAmount(getActivity(), mAmount, SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT, SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
 
-                pinInputDialogBuilder.build().show();
+                if (mError_message == null) {
+                    final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+
+                    pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            attemptSendMoney(pinInputDialogBuilder.getPin());
+                        }
+                    });
+
+                    pinInputDialogBuilder.build().show();
+
+                } else {
+                    new AlertDialog.Builder(getContext())
+                            .setMessage(mError_message)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getActivity().finish();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
             }
         });
 
-        attemptGetServiceCharge();
+        // Check if Min or max amount is available
+        if (!Utilities.isValueAvailable(SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT)
+                && !Utilities.isValueAvailable(SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT))
+            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+        else
+            attemptGetServiceCharge();
 
         return v;
     }
@@ -163,7 +188,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mSendMoneyTask = null;
             if (getActivity() != null)
@@ -171,11 +196,9 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
-
 
             try {
                 mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
@@ -192,7 +215,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
             mProgressDialog.dismiss();
             mSendMoneyTask = null;
