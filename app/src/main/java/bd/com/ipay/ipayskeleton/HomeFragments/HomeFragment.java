@@ -7,14 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -30,14 +27,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
-import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -56,7 +47,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
-import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceRequest;
@@ -66,9 +56,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.News;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -117,6 +104,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private static boolean profileCompletionPromptShown = false;
 
+    private CircularProgressBar mProgressBar;
+    private TextView mProfileCompletionMessageView;
+    private ImageButton mCloseButton;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +138,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
         mMobileTopUpButton = (Button) v.findViewById(R.id.button_mobile_topup);
         mMakePaymentButton = (Button) v.findViewById(R.id.button_make_payment);
+
+        mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
+        mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
+        mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
+
+        mCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProfileCompletionPromptView.setVisibility(View.GONE);
+            }
+        });
 
         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
             mMakePaymentButton.setText(getString(R.string.make_payment));
@@ -317,24 +319,22 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             mProfileCompletionStatusResponse.analyzeProfileCompletionData();
 
-            CircularProgressBar progressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
-            TextView profileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
-            ImageButton closeButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
-
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mProfileCompletionPromptView.setVisibility(View.GONE);
-                }
-            });
-
             if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
 
-                profileCompletionMessageView.setText("Your profile is " +
+                mProfileCompletionMessageView.setText("Your profile is " +
                         mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
                         + "complete. Complete your profile to get verified.");
 
-                progressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
+                mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
+
+                mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                        intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS);
+                        startActivity(intent);
+                    }
+                });
 
                 mProfileCompletionPromptView.setVisibility(View.VISIBLE);
             } else {
@@ -365,7 +365,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                                 + " to improve your profile";
                         String completeButtonMessage = incompletePropertyDetails.getActionName();
 
-                        profileCompletionMessageView.setText(profileCompletionMessage);
+                        mProfileCompletionMessageView.setText(profileCompletionMessage);
 
                         /**
                          * For ADD_PIN, we show a PIN input dialog to the user.
@@ -386,7 +386,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                             }
                         });
 
-                        progressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
+                        mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
 
                         mProfileCompletionPromptView.setVisibility(View.VISIBLE);
                     }
@@ -514,7 +514,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     mRefreshBalanceResponse = gson.fromJson(result.getJsonString(), RefreshBalanceResponse.class);
                     String balance = mRefreshBalanceResponse.getBalance() + "";
                     if (balance != null)
-                        balanceView.setText(balance);
+                        balanceView.setText(balance + " " + getString(R.string.bdt));
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)

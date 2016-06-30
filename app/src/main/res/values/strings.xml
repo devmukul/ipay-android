@@ -393,6 +393,7 @@
     <string name="bank_branch">Select Branch</string>
     <string name="logout">Log out</string>
     <string name="topup">Mobile Top Up</string>
+    <string name="bdt">BDT</string>
     <string name="make_payment">Make Payment</string>
     <string name="transaction_history">Transaction History</string>
     <string name="about">About</string>

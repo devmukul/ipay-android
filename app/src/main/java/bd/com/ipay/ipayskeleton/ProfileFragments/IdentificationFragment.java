@@ -287,7 +287,8 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
         }
 
         try {
-            setContentShown(true);
+            if (isAdded())
+                setContentShown(true);
             if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null
                     && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
                 mEmptyListTextView.setVisibility(View.VISIBLE);
