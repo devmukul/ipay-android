@@ -40,7 +40,7 @@ public class ProfileActivity extends BaseActivity {
             Bundle args = setBundle(targetFragment);
             switchToFragment(targetFragment, args, false);
         } else {
-            switchToProfileCompletionFragment();
+            switchToProfileFragment();
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -133,6 +133,13 @@ public class ProfileActivity extends BaseActivity {
             ft.addToBackStack(null);
 
         ft.commit();
+    }
+
+    public void switchToProfileFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileInfoFragment()).commit();
     }
 
     public void switchToBasicInfoFragment() {

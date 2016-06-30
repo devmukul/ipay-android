@@ -2,6 +2,9 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
 import android.util.Log;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -116,11 +119,14 @@ public class TransactionHistoryClass {
     }
 
     public String getDescription(String userMobileNumber) {
-        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && (
-                originatingMobileNumber == null || receiverInfo == null))
+        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null )
             return "No information available";
 
         switch (serviceID) {
+            case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
+                return "Top up failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
+            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                return "Withdraw money failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
             case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                 return "Opening balance from iPay";
             case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
@@ -204,6 +210,98 @@ public class TransactionHistoryClass {
         return "No information available";
     }
 
+    public String getShortDescription(String userMobileNumber) {
+        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
+            return "No information available";
+
+        switch (serviceID) {
+            case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
+                return "Top up failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
+            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                return "Withdraw money failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
+            case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
+                return "Opening balance from iPay";
+            case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
+                if (originatingMobileNumber.equals(userMobileNumber)) {
+                    if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                        return "Sent " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + "";
+                    else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                        return "Sending " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (in progress)";
+                    else {
+                        if (additionalInfo.getUserName() == null)
+                            return "Failed to send money";
+                        else
+                            return "Failed to send " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName();
+                    }
+                }
+                else if (receiverInfo.equals(userMobileNumber)) {
+                    if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                        return "Received "+ Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + "";
+                    else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                        return "Receiving "+ Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (in progress)";
+                    else {
+                        if (additionalInfo.getUserName() == null)
+                            return "Failed to receive money";
+                        else
+                            return "Failed to receive " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName();
+                    }
+                }
+                else {
+                    return "No information available";
+                }
+            case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
+                if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                    return "Added " + Utilities.formatTaka(getNetAmount()) + "  from " +  getBankName() + " (successful)";
+                else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                    return "Adding " + Utilities.formatTaka(getNetAmount()) + "  from " + getBankName() + " (in progress)";
+                else
+                    return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from " + getBankName() + " (" + statusDescription + ")";
+            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
+                if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName() +" (successful)";
+                else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName() + " (in progress)";
+                else
+                    return "Failed to transfer " + Utilities.formatTaka(getNetAmount()) + " to " + getBankName();
+            case (Constants.TRANSACTION_HISTORY_TOP_UP):
+                if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                    return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo;
+                else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                    return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " (in progress)";
+                else
+                    return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " failed";
+            case (Constants.TRANSACTION_HISTORY_PAYMENT):
+                if (originatingMobileNumber.equals(userMobileNumber)) {
+                    if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                        return "Payment of " + Utilities.formatTaka(getNetAmount()) + " sent to " + additionalInfo.getUserName();
+                    else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                        return "Sending payment of " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (in progress)";
+                    else {
+                        if (additionalInfo.getUserName() == null)
+                            return "Payment sending failed";
+                        else
+                            return "Sending payment of " + Utilities.formatTaka(getNetAmount()) + "  to " + additionalInfo.getUserName() + " failed";
+                    }
+                }
+                else if (receiverInfo.equals(userMobileNumber)) {
+                    if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                        return "Payment of " + Utilities.formatTaka(getNetAmount()) + " received from " + additionalInfo.getUserName();
+                    else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                        return "Receiving payment of " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (in progress)";
+                    else {
+                        if (additionalInfo.getUserName() == null)
+                            return "Payment receiving failed";
+                        else
+                            return "Receiving payment of " + Utilities.formatTaka(getNetAmount()) + "  from " + additionalInfo.getUserName() + " failed";
+                    }
+                }
+                else
+                    return "No information available";
+        }
+
+        return "No information available";
+    }
+
     private String getBankAccountNumber() {
         if (additionalInfo.getBankAccountNumber() == null)
             return "bank";
@@ -223,6 +321,11 @@ public class TransactionHistoryClass {
             return "bank";
         else
             return additionalInfo.getBranchName();
+    }
+
+    private String getPhoneNumber(String str){
+        str = str.substring(str.indexOf("+") );
+        return str.substring(0,14);
     }
 
     public double getAmount(String userMobileNumber) {

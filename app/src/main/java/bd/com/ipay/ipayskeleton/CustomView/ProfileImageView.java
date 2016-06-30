@@ -136,7 +136,6 @@ public class ProfileImageView extends FrameLayout {
 
     public void setInformation(String photoUri, String name, String phoneNumber)
     {
-        Log.w("info", photoUri + " " + name + " " + phoneNumber);
         try {
             File dir = new File(Environment.getExternalStorageDirectory().getPath()
                     + Constants.PICTURE_FOLDER);

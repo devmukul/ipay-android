@@ -250,7 +250,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     pref.edit().putString(Constants.GENDER, SignupOrLoginActivity.mGender).commit();
                     pref.edit().putString(Constants.USERCOUNTRY, "Bangladesh").commit();   // TODO
                     pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE).commit();
-                    pref.edit().putBoolean(Constants.LOGGEDIN, true).commit();
+                    pref.edit().putBoolean(Constants.LOGGED_IN, true).commit();
 
                     // Request a login immediately after sign up
                     if (Utilities.isConnectionAvailable(getActivity()))

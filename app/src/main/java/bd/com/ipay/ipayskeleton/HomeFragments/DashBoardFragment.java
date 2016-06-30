@@ -9,10 +9,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 
+import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
-import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -21,24 +20,24 @@ public class DashBoardFragment extends Fragment {
     private final int HOME_TAB = 0;
     private final int SERVICES_TAB = 1;
     private final int CONTACTS_TAB = 2;
-    private final int NOTIFICATION_TAB = 3;
+    private final int TRANSACTION_HISTORY_TAB = 3;
 
     private final int TOTAL_PAGE_COUNT = 4;
 
     private HomeFragment mHomeFragment;
-    private NotificationFragment mNotificationFragment;
     private ServiceFragment mServiceFragment;
     private ContactsHolderFragment mContactsHolderFragment;
+    private TransactionHistoryFragment mTransactionHistoryFragment;
 
     private TabLayout.Tab homeTab;
-    private TabLayout.Tab contactsTab;
-    private TabLayout.Tab notificationTab;
     private TabLayout.Tab servicesTab;
+    private TabLayout.Tab contactsTab;
+    private TabLayout.Tab transactionHistoryTab;
 
     private View homeTabView;
-    private View contactsTabView;
-    private View notificationTabView;
     private View servicesTabView;
+    private View contactsTabView;
+    private View transactionHistoryTabView;
 
     private ViewPager viewPager;
 
@@ -47,7 +46,7 @@ public class DashBoardFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
         mHomeFragment = new HomeFragment();
-        mNotificationFragment = new NotificationFragment();
+        mTransactionHistoryFragment = new TransactionHistoryFragment();
         mServiceFragment = new ServiceFragment();
         mContactsHolderFragment = new ContactsHolderFragment();
 
@@ -61,7 +60,7 @@ public class DashBoardFragment extends Fragment {
         setupCustomViewsForTabLayout();
 
         homeTab = tabLayout.getTabAt(HOME_TAB);
-        notificationTab = tabLayout.getTabAt(NOTIFICATION_TAB);
+        transactionHistoryTab = tabLayout.getTabAt(TRANSACTION_HISTORY_TAB);
         servicesTab = tabLayout.getTabAt(SERVICES_TAB);
         contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
 
@@ -109,7 +108,7 @@ public class DashBoardFragment extends Fragment {
                         // Selected tab
                         if (position == HOME_TAB) setHomeTabSelected();
                         else if (position == CONTACTS_TAB) setContactsTabSelected();
-                        else if (position == NOTIFICATION_TAB) setNotificationTabSelected();
+                        else if (position == TRANSACTION_HISTORY_TAB) setTransactionHistoryTabSelected();
                         else if (position == SERVICES_TAB) setServicesTabSelected();
                     }
                 }
@@ -129,69 +128,56 @@ public class DashBoardFragment extends Fragment {
 
         contactsTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
 
-        notificationTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        transactionHistoryTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
 
         servicesTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+    }
+
+    private void setTabViews() {
+        homeTab.setCustomView(homeTabView);
+        contactsTab.setCustomView(contactsTabView);
+        transactionHistoryTab.setCustomView(transactionHistoryTabView);
+        servicesTab.setCustomView(servicesTabView);
     }
 
     private void setHomeTabSelected() {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_24dp);
-        homeTab.setCustomView(homeTabView);
-
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        contactsTab.setCustomView(contactsTabView);
-
-        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
-        notificationTab.setCustomView(notificationTabView);
-
+        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-        servicesTab.setCustomView(servicesTabView);
+
+        setTabViews();
     }
 
     private void setContactsTabSelected() {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        homeTab.setCustomView(homeTabView);
-
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_white_24dp);
-        contactsTab.setCustomView(contactsTabView);
-
-        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
-        notificationTab.setCustomView(notificationTabView);
-
+        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-        servicesTab.setCustomView(servicesTabView);
-    }
 
-    private void setNotificationTabSelected() {
-
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        homeTab.setCustomView(homeTabView);
-
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        contactsTab.setCustomView(contactsTabView);
-
-        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_white_24dp);
-        notificationTab.setCustomView(notificationTabView);
-
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-        servicesTab.setCustomView(servicesTabView);
+        setTabViews();
     }
 
     private void setServicesTabSelected() {
 
         homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        homeTab.setCustomView(homeTabView);
-
         contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        contactsTab.setCustomView(contactsTabView);
-
-        notificationTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_notifications_none_white_24dp);
-        notificationTab.setCustomView(notificationTabView);
-
+        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
         servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service);
-        servicesTab.setCustomView(servicesTabView);
+
+        setTabViews();
+    }
+
+    private void setTransactionHistoryTabSelected() {
+
+        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
+        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
+        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction_);
+        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
+
+        setTabViews();
     }
 
     private class DashBoardTabAdapter extends FragmentPagerAdapter {
@@ -210,7 +196,7 @@ public class DashBoardFragment extends Fragment {
                 case 2:
                     return mContactsHolderFragment;
                 case 3:
-                    return mNotificationFragment;
+                    return mTransactionHistoryFragment;
                 default:
                     return new Fragment();
             }

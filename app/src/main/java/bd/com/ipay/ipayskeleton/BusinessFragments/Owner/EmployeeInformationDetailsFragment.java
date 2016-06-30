@@ -11,9 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +20,9 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.CreateEmployeeRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.CreateEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.EmployeeDetails;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetEmployeeDetailsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Privilege;
@@ -119,7 +114,6 @@ public class EmployeeInformationDetailsFragment extends Fragment implements Http
                         else mDesignationView.setVisibility(View.GONE);
 
                         mPrivilegeList = mEmployeeDetails.getPrivilegeList();
-                        mPrivilegeList.size();
                         mEmployeeDetailsAdapter = new EmployeeDetailsAdapter();
 
                         mPrivilegeListView.setAdapter(mEmployeeDetailsAdapter);

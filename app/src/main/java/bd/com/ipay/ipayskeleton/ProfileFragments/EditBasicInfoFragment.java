@@ -289,16 +289,13 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
         }
 
-        setProfilePicture(mProfilePicture, true);
+        setProfilePicture(mProfilePicture);
 
     }
 
-    private void setProfilePicture(String url, boolean fromServer) {
+    private void setProfilePicture(String url) {
         try {
             if (!url.equals("")) {
-                if (fromServer)
-                    url = Constants.BASE_URL_FTP_SERVER + url;
-
                 Glide.with(getActivity())
                         .load(url)
                         .crossFade()
@@ -351,7 +348,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                                     R.string.could_not_load_image,
                                     Toast.LENGTH_SHORT).show();
                     } else {
-                        setProfilePicture(uri.toString(), false);
+                        setProfilePicture(uri.toString());
                         updateProfilePicture(uri);
                     }
 

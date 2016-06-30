@@ -369,7 +369,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 } else {
 
                     // Bank verification status pending
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_cached_black_24dp);
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_wip);
                     mBankVerifiedStatus.setColorFilter(Color.GRAY);
 
                     verifyDivider.setVisibility(View.VISIBLE);

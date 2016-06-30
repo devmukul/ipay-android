@@ -7,7 +7,7 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="#f2f2f2"
     android:orientation="vertical">
 
     <include layout="@layout/layout_progress_container" />
@@ -38,6 +38,7 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="date"
                     android:maxLines="1"
+                    android:textColor="@android:color/white"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -72,6 +73,7 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="date"
                     android:maxLines="1"
+                    android:textColor="@android:color/white"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -113,7 +115,7 @@
                     android:padding="@dimen/value5"
                     android:text="@string/clear_filter"
                     android:textAllCaps="false"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@android:color/white"
                     android:textSize="12sp" />
 
                 <View
@@ -130,7 +132,7 @@
                     android:padding="@dimen/value5"
                     android:text="@string/filter"
                     android:textAllCaps="false"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@android:color/white"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
@@ -147,6 +149,7 @@
             android:id="@+id/filter_send_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TransactionHistoryFilterCheckboxStyle"
             android:text="@string/filter_send_money" />
 
         <CheckBox
@@ -154,42 +157,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/filter_request_money"
+            style="@style/TransactionHistoryFilterCheckboxStyle"
             android:visibility="gone" />
 
         <CheckBox
             android:id="@+id/filter_add_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TransactionHistoryFilterCheckboxStyle"
             android:text="@string/filter_add_money" />
 
         <CheckBox
             android:id="@+id/filter_withdraw_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TransactionHistoryFilterCheckboxStyle"
             android:text="@string/filter_withdraw_money" />
 
         <CheckBox
             android:id="@+id/filter_top_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TransactionHistoryFilterCheckboxStyle"
             android:text="@string/filter_top_up" />
 
         <CheckBox
             android:id="@+id/filter_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TransactionHistoryFilterCheckboxStyle"
             android:text="@string/filter_payment" />
 
         <CheckBox
             android:id="@+id/filter_opening_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TransactionHistoryFilterCheckboxStyle"
             android:text="@string/filter_opening_balance" />
 
         <CheckBox
             android:id="@+id/filter_education"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TransactionHistoryFilterCheckboxStyle"
             android:text="@string/filter_education" />
 
         <Button
@@ -200,7 +210,7 @@
             android:background="@android:color/transparent"
             android:text="@string/clear_filter"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@android:color/white"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -213,6 +223,8 @@
 
         <LinearLayout
             style="@style/ListHeaderStyle"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -236,15 +248,10 @@
             android:text="@string/empty_transaction_history"
             android:textColor="@color/zxinglib_status_text"/>
 
-
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_transaction_history"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background_half_upper_round_white"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+                android:layout_height="match_parent"/>
 
     </LinearLayout>
 

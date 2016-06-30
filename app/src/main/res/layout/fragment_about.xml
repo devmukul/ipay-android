@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentTop="true"
-    android:background="@color/colorPrimary"
-    android:fillViewport="true"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:background="#f2f2f2"
+    android:fillViewport="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,135 +19,105 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout style="@style/ProfileCardLayoutStyleColorPrimaryLight"
-                android:background="@drawable/background_rounded_color_primary_darker">
+            <RelativeLayout
+                android:background="@drawable/about"
+                style="@style/ProfileCardLayoutStyle">
 
                 <ImageView
                     android:id="@+id/iPay_logo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/value64"
-                    android:gravity="center"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_marginTop="5dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_ipaylogo3x" />
+                    android:src="@drawable/ic_logo" />
 
                 <TextView
                     android:id="@+id/iPay_name"
-                    android:layout_below="@+id/iPay_logo"
                     style="@style/TextStylePrimaryLarge"
-                    android:textSize="@dimen/text_size_medium"
-                    android:layout_marginTop="@dimen/value30"
-                    android:layout_marginBottom="@dimen/value5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/iPay_logo"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/value5"
                     android:text="iPay Systems Ltd."
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_medium" />
 
                 <TextView
                     android:id="@+id/textview_build_number"
                     style="@style/TextStyleSecondaryMedium"
-                    android:textSize="@dimen/text_size_extra_small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/iPay_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/value64"
-                    android:text="iPay Systems Ltd."
                     android:gravity="center"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_extra_small"
+                    android:layout_marginBottom="50dp"/>
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 style="@style/ProfileCardLayoutStyle"
-                android:layout_marginTop="18dp"
-                android:background="@drawable/background_rounded_white">
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
 
-                <!-- Relative names -->
-                <RelativeLayout
+                <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+                    android:id="@+id/contact_us"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:id="@+id/layout_contact_us">
-
-                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
-                        android:id="@+id/contact_us"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_contact3x"
-                        android:text="@string/contact_us" />
-
-                </RelativeLayout>
+                    android:drawableLeft="@drawable/ic_contact3x"
+                    android:text="@string/contact_us" />
 
                 <View
-                    android:layout_below="@+id/layout_contact_us"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/divider_space"
+                    android:layout_marginLeft="@dimen/value48"
                     android:background="@color/colorDivider" />
 
-                <RelativeLayout
+                <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+                    android:id="@+id/help"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_below="@+id/layout_contact_us"
-                    android:id="@+id/layout_help">
-
-                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
-                        android:id="@+id/help"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_faq3x"
-                        android:text="@string/help_faq" />
-
-                </RelativeLayout>
+                    android:drawableLeft="@drawable/ic_faq3x"
+                    android:text="@string/help_faq" />
 
                 <View
-                    android:layout_below="@+id/layout_help"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/divider_space"
+                    android:layout_marginLeft="@dimen/value48"
                     android:background="@color/colorDivider" />
 
-                <RelativeLayout
-                    android:layout_below="@+id/layout_help"
-                    android:id="@+id/layout_terms"
+                <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+                    android:id="@+id/terms"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
+                    android:drawableLeft="@drawable/ic_terms3x"
+                    android:text="@string/terms" />
 
-                    <bd.com.ipay.ipayskeleton.CustomView.IconfiedTextViewWithButton
-                        android:id="@+id/terms"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_terms3x"
-                        android:text="@string/terms" />
 
-                </RelativeLayout>
-
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/content_container"
+            android:layout_margin="@dimen/value20"
             android:orientation="vertical"
-            android:layout_margin="@dimen/value5"
-            android:layout_gravity="bottom"
-            android:gravity="bottom"
-            android:layout_weight="1">
+            android:layout_alignParentBottom="true">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Copyright 2016 @ ipay.com.bd "
                 android:layout_margin="@dimen/value5"
-                android:textColor="@android:color/white"/>
+                android:text="Copyright 2016 @ iPay Systems Ltd. " />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="All Rights reserved. "
-                android:layout_margin="@dimen/value5"
-                android:textColor="@android:color/white"/>
+                android:layout_marginLeft="@dimen/value5"
+                android:text="All rights reserved. " />
+
         </LinearLayout>
 
     </RelativeLayout>
