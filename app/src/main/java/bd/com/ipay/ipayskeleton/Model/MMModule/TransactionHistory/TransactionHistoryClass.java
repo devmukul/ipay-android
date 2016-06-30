@@ -2,6 +2,9 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
 import android.util.Log;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -116,11 +119,14 @@ public class TransactionHistoryClass {
     }
 
     public String getDescription(String userMobileNumber) {
-        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && (
-                originatingMobileNumber == null || receiverInfo == null))
+        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null )
             return "No information available";
 
         switch (serviceID) {
+            case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
+                return "Top up failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
+            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                return "Withdraw money failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
             case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                 return "Opening balance from iPay";
             case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
@@ -205,11 +211,14 @@ public class TransactionHistoryClass {
     }
 
     public String getShortDescription(String userMobileNumber) {
-        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && (
-                originatingMobileNumber == null || receiverInfo == null))
+        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
             return "No information available";
 
         switch (serviceID) {
+            case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
+                return "Top up failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
+            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                return "Withdraw money failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
             case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                 return "Opening balance from iPay";
             case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
@@ -312,6 +321,11 @@ public class TransactionHistoryClass {
             return "bank";
         else
             return additionalInfo.getBranchName();
+    }
+
+    private String getPhoneNumber(String str){
+        str = str.substring(str.indexOf("+") );
+        return str.substring(0,14);
     }
 
     public double getAmount(String userMobileNumber) {
