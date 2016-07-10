@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -615,6 +616,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             private TextView mTime;
             private TextView loadMoreTextView;
             private TextView mAmountTextView;
+            private TextView statusDescriptionView;
+            private TextView netAmountView;
             private ImageView statusView;
             private ImageView otherImageView;
             private ProfileImageView mProfileImageView;
@@ -628,6 +631,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
+                netAmountView = (TextView) itemView.findViewById(R.id.net_amount);
+                statusDescriptionView = (TextView) itemView.findViewById(R.id.status_description);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 otherImageView = (ImageView) itemView.findViewById(R.id.other_image);
                 divider = itemView.findViewById(R.id.divider);
@@ -644,6 +649,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final String responseTime = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getResponseTime());
                 final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
                 final double fee = userTransactionHistoryClasses.get(pos).getFee();
+                final String netAmountWithSign = userTransactionHistoryClasses.get(pos).getNetAmount(userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserMobileNumber());
                 final double netAmount = userTransactionHistoryClasses.get(pos).getNetAmount();
                 final String transactionID = userTransactionHistoryClasses.get(pos).getTransactionID();
                 final String purpose = userTransactionHistoryClasses.get(pos).getPurpose();
@@ -657,7 +663,19 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
                 mAmountTextView.setText(Utilities.formatTaka(balance));
 
+                if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    statusDescriptionView.setText(getString(R.string.transaction_successful));
+                    statusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
+                } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+                    statusDescriptionView.setText(getString(R.string.in_progress));
+                    statusDescriptionView.setTextColor(getResources().getColor(R.color.colorBlackTransparent));
+                } else {
+                    statusDescriptionView.setText(getString(R.string.transaction_failed));
+                    statusDescriptionView.setTextColor(getResources().getColor(R.color.background_red));
+                }
+
                 mTransactionDescription.setText(description);
+                netAmountView.setText(netAmountWithSign + " BDT");
                 mTime.setText(responseTime);
 
                 if(serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
