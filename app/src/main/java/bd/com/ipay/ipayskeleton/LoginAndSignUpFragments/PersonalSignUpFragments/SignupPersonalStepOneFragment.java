@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupPersonalStepOneFragment extends Fragment implements HttpResponseListener {
@@ -203,7 +204,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         }
 
         // Check for a valid password, if the user entered one.
-        String passwordValidationMsg = Utilities.isPasswordValid(SignupOrLoginActivity.mPassword);
+        String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPassword);
         if (passwordValidationMsg.length() > 0) {
             mPasswordView.setError(passwordValidationMsg);
             focusView = mPasswordView;

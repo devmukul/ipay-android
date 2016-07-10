@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -208,7 +209,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        String passwordValidationMsg = Utilities.isPasswordValid(mPasswordLogin);
+        String passwordValidationMsg = InputValidator.isPasswordValid(mPasswordLogin);
         if (passwordValidationMsg.length() > 0) {
             mPasswordLoginView.setError(passwordValidationMsg);
             focusView = mPasswordLoginView;

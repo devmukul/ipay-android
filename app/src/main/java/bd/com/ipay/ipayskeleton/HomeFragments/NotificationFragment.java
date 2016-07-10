@@ -994,8 +994,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 final Business businessInvitation = mBusinessInvitationList.get(pos);
 
-                mProfilePictureView.setInformation(businessInvitation.getProfilePictureUrl(),
-                        businessInvitation.getName(), businessInvitation.getMobileNumber());
+                mProfilePictureView.setInformation(businessInvitation.getMobileNumber(), businessInvitation.getProfilePictureUrl(),
+                        businessInvitation.getName());
                 mNameView.setText(businessInvitation.getName());
                 mMobileNumberView.setText(businessInvitation.getMobileNumber());
 

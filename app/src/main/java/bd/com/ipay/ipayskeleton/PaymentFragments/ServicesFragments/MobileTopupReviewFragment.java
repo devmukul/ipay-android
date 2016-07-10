@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MobileTopupReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -92,7 +93,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             @Override
             public void onClick(View v) {
 
-                mError_message = Utilities.isValidAmount(getActivity(), new BigDecimal(mAmount), TopUpActivity.MIN_AMOUNT_PER_PAYMENT, TopUpActivity.MAX_AMOUNT_PER_PAYMENT);
+                mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount), TopUpActivity.MIN_AMOUNT_PER_PAYMENT, TopUpActivity.MAX_AMOUNT_PER_PAYMENT);
 
                 if (mError_message == null) {
                     final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());

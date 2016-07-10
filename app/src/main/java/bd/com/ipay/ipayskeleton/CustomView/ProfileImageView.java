@@ -19,6 +19,7 @@ import java.io.File;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonDrawableList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.StorageManager;
 
 public class ProfileImageView extends FrameLayout {
     private Context context;
@@ -115,15 +116,12 @@ public class ProfileImageView extends FrameLayout {
      * Returns true on success.
      */
     public boolean setProfilePictureFromDisk(String phoneNumber) {
-        File dir = new File(Environment.getExternalStorageDirectory().getPath()
-                + Constants.PICTURE_FOLDER);
-        if (!dir.exists()) dir.mkdir();
 
-        Uri imageUri = null;
         if (phoneNumber != null) {
-            File file = new File(dir, phoneNumber.replaceAll("[^0-9]", "") + ".jpg");
-            if (file.exists()) {
-                imageUri = Uri.fromFile(file);
+            File imageFile = StorageManager.getProfilePictureFile(phoneNumber);
+
+            if (imageFile.exists()) {
+                Uri imageUri = Uri.fromFile(imageFile);
 
                 if (imageUri != null) {
                     setProfilePicture(imageUri.toString());
@@ -135,18 +133,19 @@ public class ProfileImageView extends FrameLayout {
         return false;
     }
 
-    public void setInformation(String photoUri, String name, String phoneNumber)
-    {
+    /**
+     * Try to load a profile picture in this ImageView. This is done in the following order:
+     * 1. Try to find an already downloaded image for this phone number
+     * 2. If not found, then try to load the image from the photoUri
+     * 3. If this fails, too, then show only the first letter of user's name
+     */
+    public void setInformation(String phoneNumber, String photoUri, String name) {
         try {
-            File dir = new File(Environment.getExternalStorageDirectory().getPath()
-                    + Constants.PICTURE_FOLDER);
-            if (!dir.exists()) dir.mkdir();
-
             Uri imageUri = null;
             if (phoneNumber != null) {
-                File file = new File(dir, phoneNumber.replaceAll("[^0-9]", "") + ".jpg");
-                if (file.exists())
-                    imageUri = Uri.fromFile(file);
+                File imageFile = StorageManager.getProfilePictureFile(phoneNumber);
+                if (imageFile.exists())
+                    imageUri = Uri.fromFile(imageFile);
             }
 
             if(imageUri != null) {

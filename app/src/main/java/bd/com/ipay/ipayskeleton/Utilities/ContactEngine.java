@@ -5,19 +5,16 @@ import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 import android.provider.ContactsContract.RawContacts;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.i18n.phonenumbers.NumberParseException;
@@ -28,20 +25,16 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.BuildConfig;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
-import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Model.Friend.PhoneName;
 
 public class ContactEngine {
     private static final String TAG = "ContactEngine";

@@ -42,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyFragment extends Fragment implements HttpResponseListener {
@@ -180,7 +181,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 && Utilities.isValueAvailable(AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT)
                 && Utilities.isValueAvailable(AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT)) {
 
-            String error_message = Utilities.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT, AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
 
             if (error_message != null) {

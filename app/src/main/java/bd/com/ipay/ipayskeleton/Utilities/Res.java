@@ -4,6 +4,9 @@ import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.R;
 
+/**
+ * Contains the ids of the common resources used throught the app
+ */
 public class Res {
     public static int[] BACKGROUNDS = {
             R.drawable.background_portrait_circle,

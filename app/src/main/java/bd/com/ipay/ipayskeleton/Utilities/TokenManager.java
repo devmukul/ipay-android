@@ -2,6 +2,11 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.os.CountDownTimer;
 
+/**
+ * We get an authentication token from the server when the user logs in. This token needs to be
+ * sent to the server with subsequent requests. It also needs to be refreshed periodically. All
+ * types of token management/access should be done through this class.
+ */
 public class TokenManager {
 
     // This field will be set when a personal user switches to an employer's account

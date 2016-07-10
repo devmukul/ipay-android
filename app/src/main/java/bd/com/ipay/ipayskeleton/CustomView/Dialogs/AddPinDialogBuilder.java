@@ -19,6 +19,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpResponseListener {
@@ -63,7 +64,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
                 View focusView;
                 String pin = mPinField.getText().toString();
                 String password = mPasswordField.getText().toString();
-                String passwordValidationMsg = Utilities.isPasswordValid(password);
+                String passwordValidationMsg = InputValidator.isPasswordValid(password);
 
                 if (pin.trim().length() != 4) {
                     mPinField.setError(getContext().getString(R.string.error_invalid_pin));

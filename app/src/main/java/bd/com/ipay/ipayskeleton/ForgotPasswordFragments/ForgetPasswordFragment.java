@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ForgetPasswordFragment extends Fragment implements HttpResponseListener {
@@ -113,7 +114,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
             mNameEditText.setError(getString(R.string.error_invalid_name));
             cancel = true;
             focusView = mNameEditText;
-        } else if (!Utilities.isDateOfBirthValid(dob)) {
+        } else if (!InputValidator.isDateOfBirthValid(dob)) {
             mDateOfBirthEditText.setError(getString(R.string.please_enter_valid_date_of_birth));
             cancel = true;
             focusView = mDateOfBirthEditText;

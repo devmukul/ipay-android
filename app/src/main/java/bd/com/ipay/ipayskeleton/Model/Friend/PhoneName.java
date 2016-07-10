@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Utilities;
+package bd.com.ipay.ipayskeleton.Model.Friend;
 
 public class PhoneName {
 

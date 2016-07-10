@@ -78,6 +78,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.StorageManager;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -258,14 +259,10 @@ public class HomeActivity extends BaseActivity
 
     private void setProfilePicture(String imageUrl) {
         try {
-
-            File dir = new File(Environment.getExternalStorageDirectory().getPath()
-                    + Constants.PICTURE_FOLDER);
-            if (!dir.exists()) dir.mkdir();
-            File file = new File(dir, mUserID.replaceAll("[^0-9]", "") + ".jpg");
-
+            File imageFile = StorageManager.getProfilePictureFile(mUserID);
             Uri imageUri = null;
-            if (file.exists()) imageUri = Uri.fromFile(file);
+
+            if (imageFile.exists()) imageUri = Uri.fromFile(imageFile);
 
             if (imageUri != null) {
                 Glide.with(HomeActivity.this)

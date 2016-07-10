@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -207,8 +206,8 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                 final Employee employee = mEmployeeList.get(pos);
 
 
-                mProfileImageView.setInformation(employee.getProfilePictureUrl(),
-                        employee.getName(), employee.getMobileNumber());
+                mProfileImageView.setInformation(employee.getMobileNumber(), employee.getProfilePictureUrl(),
+                        employee.getName());
                 mNameView.setText(employee.getName());
                 mMobileNumberView.setText(employee.getMobileNumber());
 
