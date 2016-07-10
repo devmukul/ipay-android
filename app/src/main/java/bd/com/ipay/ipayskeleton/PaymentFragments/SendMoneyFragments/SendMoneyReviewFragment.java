@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -111,7 +112,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             @Override
             public void onClick(View v) {
 
-                mError_message = Utilities.isValidAmount(getActivity(), mAmount, SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT, SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+                mError_message = InputValidator.isValidAmount(getActivity(), mAmount, SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT, SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
 
                 if (mError_message == null) {
                     final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());

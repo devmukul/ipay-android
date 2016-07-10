@@ -187,10 +187,6 @@ public class DataHelper {
             int updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
             int isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
 
-            File dir = new File(Environment.getExternalStorageDirectory().getPath()
-                    + Constants.PICTURE_FOLDER);
-            if (!dir.exists()) dir.mkdir();
-
             do {
                 String name = cursor.getString(nameIndex);
                 String mobileNumber = cursor.getString(mobileNumberIndex);

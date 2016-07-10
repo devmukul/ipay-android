@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBasicInfoFragment extends Fragment implements HttpResponseListener {
@@ -231,7 +232,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             cancel = true;
         }
 
-        if (!Utilities.isDateOfBirthValid(mDateOfBirth)) {
+        if (!InputValidator.isDateOfBirthValid(mDateOfBirth)) {
             focusView = mDateOfBirthEditText;
             cancel = true;
             mDateOfBirthEditText.setError(getString(R.string.please_enter_valid_date_of_birth));

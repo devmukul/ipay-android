@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBusinessInformationFragment extends Fragment implements HttpResponseListener {
@@ -158,7 +159,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
             focusView = mBusinessMobileNumberEditText;
         }
 
-        if (!Utilities.isValidEmail(mBusinessEmail)) {
+        if (!InputValidator.isValidEmail(mBusinessEmail)) {
             mBusinessNameEditText.setError(getString(R.string.error_invalid_email));
             focusView = mBusinessNameEditText;
             cancel = true;

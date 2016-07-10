@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.Busi
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MobileTopupFragment extends Fragment implements HttpResponseListener {
@@ -175,7 +176,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 && Utilities.isValueAvailable(TopUpActivity.MIN_AMOUNT_PER_PAYMENT)
                 && Utilities.isValueAvailable(TopUpActivity.MAX_AMOUNT_PER_PAYMENT)) {
 
-            String error_message = Utilities.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     TopUpActivity.MIN_AMOUNT_PER_PAYMENT, TopUpActivity.MAX_AMOUNT_PER_PAYMENT);
 
             if (error_message != null) {

@@ -12,6 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.StorageManager;
 
 public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String> {
 
@@ -37,14 +38,10 @@ public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String>
                 InputStream is = connection.getInputStream();
                 BufferedInputStream bis = new BufferedInputStream(is);
 
-                File dir = new File(Environment.getExternalStorageDirectory().getPath()
-                        + Constants.PICTURE_FOLDER);
-                if (!dir.exists()) dir.mkdir();
+                File imageFile = StorageManager.getProfilePictureFile(mUserID);
+                FileOutputStream fos = new FileOutputStream(imageFile);
 
-                File file = new File(dir, mUserID.replaceAll("[^0-9]", "") + ".jpg");
-                FileOutputStream fos = new FileOutputStream(file);
-
-                byte buffer[] = new byte[1024];
+                byte buffer[] = new byte[8192];
                 int read;
                 while ((read = bis.read(buffer)) > 0) {
                     fos.write(buffer, 0, read);
