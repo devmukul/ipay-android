@@ -30,20 +30,20 @@ public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String>
         try {
             if (mProfilePictureUrl != null && !mProfilePictureUrl.isEmpty()) {
 
-                File dir = new File(Environment.getExternalStorageDirectory().getPath()
-                        + Constants.PICTURE_FOLDER);
-                if (!dir.exists()) dir.mkdir();
-
-                File file = new File(dir, mUserID.replaceAll("[^0-9]", "") + ".jpg");
-
                 URL url = new URL(mProfilePictureUrl);
-
                 Log.d("Picture URL : ", url.toString());
 
                 URLConnection connection = url.openConnection();
                 InputStream is = connection.getInputStream();
                 BufferedInputStream bis = new BufferedInputStream(is);
+
+                File dir = new File(Environment.getExternalStorageDirectory().getPath()
+                        + Constants.PICTURE_FOLDER);
+                if (!dir.exists()) dir.mkdir();
+
+                File file = new File(dir, mUserID.replaceAll("[^0-9]", "") + ".jpg");
                 FileOutputStream fos = new FileOutputStream(file);
+
                 byte buffer[] = new byte[1024];
                 int read;
                 while ((read = bis.read(buffer)) > 0) {
