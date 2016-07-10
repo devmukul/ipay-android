@@ -14,39 +14,33 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="130dp">
+            android:layout_height="90dp">
 
             <RelativeLayout
                 android:id="@+id/profile_info"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/profile_background"
-                android:padding="@dimen/activity_vertical_margin_card">
+                android:paddingLeft="@dimen/activity_horizontal_margin_double">
 
-                <LinearLayout
-                    android:layout_above="@+id/info_layout"
-                    android:layout_alignParentTop="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_centerVertical="true"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp">
 
-                    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                        android:id="@+id/profile_picture"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp">
-
-                    </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
-                </LinearLayout>
+                </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
                 <RelativeLayout
                     android:id="@+id/info_layout"
-                    android:layout_alignParentBottom="true"
+                    android:layout_toRightOf="@+id/profile_picture"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:id="@+id/name_layout"
-                        android:layout_centerHorizontal="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -57,14 +51,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/value2"
                             android:textColor="@android:color/white"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
 
                         <ImageView
                             android:id="@+id/verification_status"
                             android:layout_toRightOf="@+id/textview_name"
-                            android:layout_marginLeft="@dimen/value5"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/ic_verified_profile"
                             android:visibility="gone"/>
 
@@ -75,10 +69,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/name_layout"
-                        android:layout_centerHorizontal="true"
                         android:textColor="@android:color/white"
                         android:layout_marginBottom="@dimen/value2"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 
@@ -141,7 +134,7 @@
             android:paddingTop="@dimen/activity_horizontal_margin_card"
             android:paddingBottom="@dimen/activity_horizontal_margin_card"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin_double"
             android:layout_centerVertical="true">
 
             <TextView
