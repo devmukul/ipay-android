@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fillViewport="true">
 
     <LinearLayout
@@ -14,7 +14,8 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="90dp">
+            android:layout_height="0dp"
+            android:layout_weight=".5">
 
             <RelativeLayout
                 android:id="@+id/profile_info"
@@ -221,68 +222,45 @@
 
         </LinearLayout>
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorDivider"/>
-
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
+            android:orientation="vertical"
+            android:gravity="center">
 
             <Button
                 android:id="@+id/button_send_money"
-                android:drawableTop="@drawable/ic_send"
+                android:drawableLeft="@drawable/ic_send"
                 style="@style/HomeImageButtonStyle"
                 android:text="@string/send_money"/>
-
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="@color/colorDivider"/>
+            
+            <View style="@style/HomeDividerStyle"/>
 
             <Button
                 android:id="@+id/button_request_money"
-                android:drawableTop="@drawable/ic_rcv"
+                android:drawableLeft="@drawable/ic_rcv"
                 style="@style/HomeImageButtonStyle"
                 android:text="@string/request_money"/>
 
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorDivider"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <View style="@style/HomeDividerStyle"/>
 
             <Button
                 android:id="@+id/button_mobile_topup"
-                android:drawableTop="@drawable/ic_topup"
+                android:drawableLeft="@drawable/ic_topup"
                 style="@style/HomeImageButtonStyle"
                 android:text="@string/mobile_topup"/>
 
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="@color/colorDivider"/>
+            <View style="@style/HomeDividerStyle"/>
 
             <Button
                 android:id="@+id/button_make_payment"
-                android:drawableTop="@drawable/ic_payment"
+                android:drawableLeft="@drawable/ic_payment"
                 style="@style/HomeImageButtonStyle"
                 android:text="@string/make_payment"/>
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorDivider"/>
 
     </LinearLayout>
 
