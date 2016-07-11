@@ -18,21 +18,16 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class SendMoneyActivity extends BaseActivity {
 
-    private SharedPreferences pref;
-    public Boolean switchedToAccountSelection = false;
 
     private SendMoneyFragment sendMoneyFragment;
     public static BigDecimal MAX_AMOUNT_PER_PAYMENT=new BigDecimal("0");
     public static BigDecimal MIN_AMOUNT_PER_PAYMENT=new BigDecimal("0");
 
 
-    public int has_businessRule=0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_money);
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         sendMoneyFragment = new SendMoneyFragment();
         getFragmentManager().beginTransaction()
