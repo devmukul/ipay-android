@@ -267,6 +267,15 @@
                 style="@style/HomeImageButtonStyle"
                 android:text="@string/make_payment"/>
 
+
+            <View style="@style/HomeDividerStyle"/>
+
+            <Button
+                android:id="@+id/button_pay_by_QR_code"
+                android:drawableLeft="@drawable/ic_qrc3x"
+                style="@style/HomeImageButtonStyle"
+                android:text="@string/pay_by_QR_code"/>
+
         </LinearLayout>
 
     </LinearLayout>

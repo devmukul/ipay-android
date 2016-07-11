@@ -77,6 +77,13 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:name=".Activities.PaymentActivities.SingleInvoiceActivity"
+            android:label="@string/invoice_details"
+            android:parentActivityName=".Activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
             android:name=".Activities.PaymentActivities.MakePaymentActivity"
             android:label="@string/payment"
             android:parentActivityName=".Activities.HomeActivity"
