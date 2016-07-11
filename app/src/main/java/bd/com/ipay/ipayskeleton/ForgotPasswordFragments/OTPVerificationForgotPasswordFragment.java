@@ -32,7 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBraodcastReceiver;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPassOTPConfirmationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.ForgetPassOTPConfirmationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.TrustedOtp;
@@ -113,7 +113,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
 
         //enable broadcast receiver to get the text message to get the OTP
         mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
-        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getActivity(), new SMSReaderBraodcastReceiver.OnTextMessageReceivedListener() {
+        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getActivity(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
             @Override
             public void onTextMessageReceive(String otp) {
                 mOTPEditText.setText(otp);

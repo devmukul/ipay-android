@@ -10,13 +10,13 @@ public class EnableDisableSMSBroadcastReceiver {
      * This method enables the Broadcast receiver registered in the AndroidManifest file.
      */
 
-    private SMSReaderBraodcastReceiver mSMSReader;
+    private SMSReaderBroadcastReceiver mSMSReader;
 
-    public void enableBroadcastReceiver(Context context, SMSReaderBraodcastReceiver.OnTextMessageReceivedListener listener) {
+    public void enableBroadcastReceiver(Context context, SMSReaderBroadcastReceiver.OnTextMessageReceivedListener listener) {
 
         IntentFilter intentFilter = new IntentFilter(
                 "android.provider.Telephony.SMS_RECEIVED");
-        mSMSReader = new SMSReaderBraodcastReceiver();
+        mSMSReader = new SMSReaderBroadcastReceiver();
         mSMSReader.setOnTextMessageReceivedListener(listener);
         context.registerReceiver(mSMSReader, intentFilter);
     }
