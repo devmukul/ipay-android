@@ -53,6 +53,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountSettingsFragment extends Fragment implements HttpResponseListener {
@@ -306,7 +307,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         boolean cancel = false;
         View focusView = null;
 
-        String passwordValidationMsg = Utilities.isPasswordValid(mEnterPasswordEditText.getText().toString());
+        String passwordValidationMsg = InputValidator.isPasswordValid(mEnterPasswordEditText.getText().toString());
 
         if (mEnterPINEditText.getText().toString().trim().length() != 4) {
             mEnterPINEditText.setError(getString(R.string.error_invalid_pin));
@@ -356,7 +357,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         boolean cancel = false;
         View focusView = null;
 
-        String passwordValidationMsg = Utilities.isPasswordValid(mEnterNewPasswordEditText.getText().toString().trim());
+        String passwordValidationMsg = InputValidator.isPasswordValid(mEnterNewPasswordEditText.getText().toString().trim());
 
         if (mEnterCurrentPasswordEditText.getText().toString().length() < 5) {
             mEnterCurrentPasswordEditText.setError(getString(R.string.error_invalid_password));

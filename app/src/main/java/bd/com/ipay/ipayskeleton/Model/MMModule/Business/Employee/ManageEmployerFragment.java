@@ -145,8 +145,8 @@ public class ManageEmployerFragment extends ProgressFragment implements HttpResp
 
                 final Business business = mBusinessList.get(pos);
 
-                mProfilePictureView.setInformation(business.getProfilePictureUrl(),
-                        business.getName(), business.getMobileNumber());
+                mProfilePictureView.setInformation(business.getMobileNumber(), business.getProfilePictureUrl(),
+                        business.getName());
                 mNameView.setText(business.getName());
                 mMobileNumberView.setText(business.getMobileNumber());
 

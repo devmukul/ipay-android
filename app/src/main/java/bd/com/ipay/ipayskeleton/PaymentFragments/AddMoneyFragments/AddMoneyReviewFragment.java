@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.AddMoneyRespon
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -95,7 +96,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mError_message = Utilities.isValidAmount(getActivity(), new BigDecimal(mAmount), AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT, AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+                mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount), AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT, AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
 
                 if (mError_message == null) {
                     final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());

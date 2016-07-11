@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +21,6 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
@@ -41,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyFragment extends Fragment implements HttpResponseListener {
@@ -64,7 +63,6 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
     private ProgressDialog mProgressDialog;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
-    private List<BusinessRule> mBusinessRules;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -178,7 +176,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                 && Utilities.isValueAvailable(WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT)
                 && Utilities.isValueAvailable(WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT)) {
 
-            String error_message = Utilities.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT, WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
 
             if (error_message != null) {
@@ -314,7 +312,6 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                         gson = new Gson();
 
                         BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
-                        mBusinessRules = Arrays.asList(businessRuleArray);
 
                         for (BusinessRule rule : businessRuleArray) {
                             if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT)) {

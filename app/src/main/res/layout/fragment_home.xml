@@ -1,71 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/colorBackground">
+        android:background="@drawable/bg3">
 
         <RelativeLayout
             android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="130dp">
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:minHeight="90dp">
 
             <RelativeLayout
                 android:id="@+id/profile_info"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/profile_background"
-                android:padding="@dimen/activity_vertical_margin_card">
+                android:paddingLeft="@dimen/activity_horizontal_margin_double">
 
-                <LinearLayout
-                    android:layout_above="@+id/info_layout"
-                    android:layout_alignParentTop="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_centerVertical="true"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp">
 
-                    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                        android:id="@+id/profile_picture"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp">
-
-                    </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
-                </LinearLayout>
+                </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
                 <RelativeLayout
                     android:id="@+id/info_layout"
-                    android:layout_alignParentBottom="true"
+                    android:layout_toRightOf="@+id/profile_picture"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
+                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:id="@+id/name_layout"
-                        android:layout_centerHorizontal="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
                         <TextView
                             android:id="@+id/textview_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/value2"
-                            android:textColor="@android:color/white"
-                            android:textSize="18sp" />
+                            android:textColor="@android:color/black"
+                            android:fontFamily="sans-serif-thin"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
 
                         <ImageView
                             android:id="@+id/verification_status"
                             android:layout_toRightOf="@+id/textview_name"
-                            android:layout_marginLeft="@dimen/value5"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_verified_profile"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_verified_profile_black"
                             android:visibility="gone"/>
 
                     </LinearLayout>
@@ -75,10 +73,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/name_layout"
-                        android:layout_centerHorizontal="true"
-                        android:textColor="@android:color/white"
+                        android:textColor="@android:color/black"
                         android:layout_marginBottom="@dimen/value2"
-                        android:textSize="16sp" />
+                        android:fontFamily="sans-serif-thin"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 
@@ -137,11 +136,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/colorLightOrange"
+            android:background="@color/colorBalanceBackground"
             android:paddingTop="@dimen/activity_horizontal_margin_card"
             android:paddingBottom="@dimen/activity_horizontal_margin_card"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin_double"
             android:layout_centerVertical="true">
 
             <TextView
@@ -228,68 +227,47 @@
 
         </LinearLayout>
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorDivider"/>
-
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:orientation="vertical"
+            android:gravity="center">
 
             <Button
                 android:id="@+id/button_send_money"
-                android:drawableTop="@drawable/ic_send"
+                android:drawableLeft="@drawable/ic_send"
                 style="@style/HomeImageButtonStyle"
                 android:text="@string/send_money"/>
-
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="@color/colorDivider"/>
+            
+            <View style="@style/HomeDividerStyle"/>
 
             <Button
                 android:id="@+id/button_request_money"
-                android:drawableTop="@drawable/ic_rcv"
+                android:drawableLeft="@drawable/ic_rcv"
                 style="@style/HomeImageButtonStyle"
                 android:text="@string/request_money"/>
 
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorDivider"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <View style="@style/HomeDividerStyle"/>
 
             <Button
                 android:id="@+id/button_mobile_topup"
-                android:drawableTop="@drawable/ic_topup"
+                android:drawableLeft="@drawable/ic_topup"
                 style="@style/HomeImageButtonStyle"
                 android:text="@string/mobile_topup"/>
 
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="@color/colorDivider"/>
+            <View style="@style/HomeDividerStyle"/>
 
             <Button
                 android:id="@+id/button_make_payment"
-                android:drawableTop="@drawable/ic_payment"
+                android:drawableLeft="@drawable/ic_payment"
                 style="@style/HomeImageButtonStyle"
                 android:text="@string/make_payment"/>
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorDivider"/>
 
     </LinearLayout>
 

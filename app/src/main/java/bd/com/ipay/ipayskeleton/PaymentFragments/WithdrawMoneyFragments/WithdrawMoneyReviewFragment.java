@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyR
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -96,7 +97,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             @Override
             public void onClick(View v) {
 
-                mError_message = Utilities.isValidAmount(getActivity(), new BigDecimal(mAmount), WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT, WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+                mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount), WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT, WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
 
                 if (mError_message == null) {
                     final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());

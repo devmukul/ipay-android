@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
@@ -113,7 +114,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        String passwordValidationMsg = Utilities.isPasswordValid(SignupOrLoginActivity.mPasswordBusiness);
+        String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPasswordBusiness);
         if (passwordValidationMsg.length() > 0) {
             mPasswordView.setError(passwordValidationMsg);
             focusView = mPasswordView;
@@ -129,7 +130,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             focusView = mBusinessMobileNumberView;
             cancel = true;
 
-        } else if (!Utilities.isValidEmail(SignupOrLoginActivity.mEmailBusiness)) {
+        } else if (!InputValidator.isValidEmail(SignupOrLoginActivity.mEmailBusiness)) {
             mBusinessEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mBusinessEmailView;
             cancel = true;

@@ -51,6 +51,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmailFragment extends ProgressFragment implements HttpResponseListener {
@@ -170,7 +171,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
 
-                if (!Utilities.isValidEmail(email)) {
+                if (!InputValidator.isValidEmail(email)) {
                     Toast.makeText(getActivity(), R.string.enter_valid_email, Toast.LENGTH_LONG).show();
                 } else {
                     addNewEmail(email);

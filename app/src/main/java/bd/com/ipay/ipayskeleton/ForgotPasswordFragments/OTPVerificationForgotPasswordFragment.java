@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword.TrustedOtpReceiver
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationForgotPasswordFragment extends Fragment implements HttpResponseListener {
@@ -174,7 +175,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
             cancel = true;
         }
 
-        String passwordValidationMsg = Utilities.isPasswordValid(mNewPasswordEditText.getText().toString().trim());
+        String passwordValidationMsg = InputValidator.isPasswordValid(mNewPasswordEditText.getText().toString().trim());
         if (passwordValidationMsg.length() > 0) {
             mNewPasswordEditText.setError(passwordValidationMsg);
             focusView = mNewPasswordEditText;
