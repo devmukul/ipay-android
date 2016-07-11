@@ -50,6 +50,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -424,12 +425,19 @@ public class Utilities {
         else return true;
     }
 
+    public static String formatTakaWithComma(double amount) {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
+        return String.format("\u09F3%s", numberFormat.format(amount));
+    }
+
     public static String formatTaka(BigDecimal amount) {
-        return String.format("\u09F3 %.2f BDT", amount);
+        return String.format("\u09F3%.2f BDT", amount);
     }
 
     public static String formatTaka(double amount) {
-        return String.format("\u09F3 %.2f BDT", amount);
+        return String.format("\u09F3%.2f BDT", amount);
     }
 
     public static void hideKeyboard(Activity activity) {

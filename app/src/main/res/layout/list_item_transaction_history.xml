@@ -39,83 +39,54 @@
 
             <TextView
                 android:id="@+id/activity_description"
-                style="@style/TextStylePrimarySmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:gravity="left"
-                android:maxLines="1"
-                android:layout_alignParentLeft="true"
+                style="@style/TransactionHistoryLeftTextViewStyle"
                 android:layout_toLeftOf="@+id/net_amount"
-                android:layout_marginRight="5dp"/>
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-light"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/net_amount"
-                style="@style/TextStylePrimarySmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textSize="12sp" />
+                style="@style/TransactionHistoryRightTextViewStyle"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-light"
+                android:textStyle="bold"/>
 
         </RelativeLayout>
 
 
-        <LinearLayout
-            android:id="@+id/status_layout"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/value5"
-                android:gravity="center_vertical"
-                android:text="@string/balance"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:textSize="12sp" />
+                android:id="@+id/receiver"
+                style="@style/TransactionHistoryLeftTextViewStyle"
+                android:layout_toLeftOf="@+id/status_description"/>
 
             <TextView
                 android:id="@+id/status_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:gravity="right"
-                android:textSize="12sp" />
+                style="@style/TransactionHistoryRightTextViewStyle" />
 
-        </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp">
+
+            <TextView
+                android:id="@+id/time"
+                style="@style/TransactionHistoryLeftTextViewStyle"
+                android:layout_toLeftOf="@+id/amount"
+                android:textColor="@color/colorBlackTransparent"/>
+
+            <TextView
+                android:id="@+id/amount"
+                style="@style/TransactionHistoryRightTextViewStyle" />
+
+        </RelativeLayout>
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-        android:visibility="gone" />
 
     <View
         android:id="@+id/divider"

@@ -10,6 +10,7 @@
     <color name="colorAmber">#FFC107</color>
     <color name="colorTabPrimary">#1694b5</color>
     <color name="colorDivider">#DDDDDD</color>
+    <color name="colorHomeDivider">#CC555555</color>
     <color name="colorLightGray">#E5E5E5</color>
     <color name="colorTransparentLightGray">#EEE5E5E5</color>
     <color name="colorBackground">#F1F2F3</color>

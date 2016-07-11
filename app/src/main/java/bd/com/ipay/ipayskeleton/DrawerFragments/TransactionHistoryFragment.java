@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -612,13 +611,13 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mTransactionDescription;
-            private TextView mTime;
+            private TextView mTransactionDescriptionView;
+            private TextView mTimeView;
+            private TextView mReceiverView;
             private TextView loadMoreTextView;
             private TextView mAmountTextView;
             private TextView statusDescriptionView;
             private TextView netAmountView;
-            private ImageView statusView;
             private ImageView otherImageView;
             private ProfileImageView mProfileImageView;
             private View divider;
@@ -626,11 +625,11 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
-                mTime = (TextView) itemView.findViewById(R.id.time);
+                mTransactionDescriptionView = (TextView) itemView.findViewById(R.id.activity_description);
+                mTimeView = (TextView) itemView.findViewById(R.id.time);
+                mReceiverView = (TextView) itemView.findViewById(R.id.receiver);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
-                statusView = (ImageView) itemView.findViewById(R.id.status);
                 netAmountView = (TextView) itemView.findViewById(R.id.net_amount);
                 statusDescriptionView = (TextView) itemView.findViewById(R.id.status_description);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
@@ -642,14 +641,14 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
                 if (pos == userTransactionHistoryClasses.size() -1) divider.setVisibility(View.GONE);
                 else divider.setVisibility(View.VISIBLE);
-                double amount = userTransactionHistoryClasses.get(pos).getAmount(mMobileNumber);
 
                 final String detailDescription = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
                 final String description = userTransactionHistoryClasses.get(pos).getShortDescription(mMobileNumber);
-                final String responseTime = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getResponseTime());
+                final String receiver = userTransactionHistoryClasses.get(pos).getReceiver();
+                final String responseTime = new SimpleDateFormat("dd/MM/yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getResponseTime());
                 final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
                 final double fee = userTransactionHistoryClasses.get(pos).getFee();
-                final String netAmountWithSign = userTransactionHistoryClasses.get(pos).getNetAmount(userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserMobileNumber());
+                final String netAmountWithSign = userTransactionHistoryClasses.get(pos).getNetAmountFormatted(userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserMobileNumber());
                 final double netAmount = userTransactionHistoryClasses.get(pos).getNetAmount();
                 final String transactionID = userTransactionHistoryClasses.get(pos).getTransactionID();
                 final String purpose = userTransactionHistoryClasses.get(pos).getPurpose();
@@ -661,22 +660,24 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final String bankName = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountName();
                 final String bankAccountNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountNumber();
                 final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
-                mAmountTextView.setText(Utilities.formatTaka(balance));
+
+                mAmountTextView.setText("Balance: " + Utilities.formatTakaWithComma(balance));
 
                 if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
                     statusDescriptionView.setText(getString(R.string.transaction_successful));
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
                 } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                     statusDescriptionView.setText(getString(R.string.in_progress));
-                    statusDescriptionView.setTextColor(getResources().getColor(R.color.colorBlackTransparent));
+                    statusDescriptionView.setTextColor(getResources().getColor(R.color.colorAmber));
                 } else {
                     statusDescriptionView.setText(getString(R.string.transaction_failed));
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.background_red));
                 }
 
-                mTransactionDescription.setText(description);
-                netAmountView.setText(netAmountWithSign + " BDT");
-                mTime.setText(responseTime);
+                mTransactionDescriptionView.setText(description);
+                mReceiverView.setText(receiver);
+                netAmountView.setText(netAmountWithSign);
+                mTimeView.setText(responseTime);
 
                 if(serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
@@ -698,14 +699,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     otherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
                     mProfileImageView.setInformation(mobileNumber, imageUrl, name);
-                }
-
-                if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    statusView.setImageResource(R.drawable.ic_verified3x);
-                } else if (userTransactionHistoryClasses.get(pos).getStatusCode() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-                    statusView.setImageResource(R.drawable.ic_wip);
-                } else {
-                    statusView.setImageResource(R.drawable.ic_notverified3x);
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
