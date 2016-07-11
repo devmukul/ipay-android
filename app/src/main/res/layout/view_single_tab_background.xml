@@ -4,7 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/value5">
 
     <ImageView
         android:id="@+id/tab_icon"
@@ -19,5 +20,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size_extra_small" />
+        android:textSize="@dimen/text_size_extra_smaller" />
 </LinearLayout>
