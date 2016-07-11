@@ -21,8 +21,9 @@ public class DashBoardFragment extends Fragment {
 
     private final int HOME_TAB = 0;
     private final int SERVICES_TAB = 1;
-    private final int CONTACTS_TAB = 2;
-    private final int TRANSACTION_HISTORY_TAB = 3;
+    private final int TRANSACTION_HISTORY_TAB = 2;
+    private final int CONTACTS_TAB = 3;
+
 
     private final int TOTAL_PAGE_COUNT = 4;
 
@@ -59,14 +60,14 @@ public class DashBoardFragment extends Fragment {
         final TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        setupCustomViewsForTabLayout();
 
         homeTab = tabLayout.getTabAt(HOME_TAB);
         transactionHistoryTab = tabLayout.getTabAt(TRANSACTION_HISTORY_TAB);
         servicesTab = tabLayout.getTabAt(SERVICES_TAB);
         contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
 
-        setHomeTabSelected();
+        setupCustomViewsForTabLayout();
+
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -102,23 +103,10 @@ public class DashBoardFragment extends Fragment {
                         mContactsHolderFragment.onFocus();
                     }
                 }
-
-                for (int i = 0; i < TOTAL_PAGE_COUNT; i++) {
-                    TabLayout.Tab tab = tabLayout.getTabAt(i);
-
-                    if (tab != null) {
-                        // Selected tab
-                        if (position == HOME_TAB) setHomeTabSelected();
-                        else if (position == CONTACTS_TAB) setContactsTabSelected();
-                        else if (position == TRANSACTION_HISTORY_TAB) setTransactionHistoryTabSelected();
-                        else if (position == SERVICES_TAB) setServicesTabSelected();
-                    }
-                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -134,68 +122,31 @@ public class DashBoardFragment extends Fragment {
 
         servicesTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
 
+        setTabViews();
+
     }
 
     private void setTabViews() {
+        setTabIconsWithTexts();
+
         homeTab.setCustomView(homeTabView);
         contactsTab.setCustomView(contactsTabView);
         transactionHistoryTab.setCustomView(transactionHistoryTabView);
         servicesTab.setCustomView(servicesTabView);
 
-        setTabIconsWithTexts();
-    }
-
-    private void setHomeTabSelected() {
-
-        homeTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorOrange));
-        contactsTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        transactionHistoryTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        servicesTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
-        setTabViews();
-    }
-
-    private void setContactsTabSelected() {
-
-        homeTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        contactsTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorOrange));
-        transactionHistoryTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        servicesTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
-        setTabViews();
-    }
-
-    private void setServicesTabSelected() {
-
-        homeTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        contactsTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        transactionHistoryTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        servicesTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorOrange));
-
-        setTabViews();
-    }
-
-    private void setTransactionHistoryTabSelected() {
-
-        homeTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        contactsTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        transactionHistoryTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorOrange));
-        servicesTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
-        setTabViews();
     }
 
     private void setTabIconsWithTexts() {
 
         ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_walletw);
-        ((ImageView)contactsTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_contact);
-        ((ImageView)transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_taka);
-        ((ImageView)servicesTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
+        ((ImageView) contactsTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_contact);
+        ((ImageView) transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_transaction);
+        ((ImageView) servicesTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
 
-        ((TextView)homeTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.wallet));
-        ((TextView)contactsTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.contacts));
-        ((TextView)servicesTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
-        ((TextView)transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
+        ((TextView) homeTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.wallet));
+        ((TextView) contactsTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.contacts));
+        ((TextView) servicesTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
+        ((TextView) transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
 
     }
 
@@ -213,9 +164,9 @@ public class DashBoardFragment extends Fragment {
                 case 1:
                     return mServiceFragment;
                 case 2:
-                    return mContactsHolderFragment;
-                case 3:
                     return mTransactionHistoryFragment;
+                case 3:
+                    return mContactsHolderFragment;
                 default:
                     return new Fragment();
             }

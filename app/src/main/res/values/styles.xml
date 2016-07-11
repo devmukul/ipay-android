@@ -88,7 +88,7 @@
 
     <style name="TabStyleDashBoard" parent="Widget.Design.TabLayout">
         <item name="tabSelectedTextColor">@android:color/white</item>
-        <item name="tabBackground">@color/colorTabPrimary</item>
+        <item name="tabBackground">@drawable/tab_color_selector</item>
         <item name="tabGravity">fill</item>
         <item name="tabMode">fixed</item>
         <item name="tabTextAppearance">@style/TextAppearanceForDashBoard</item>
