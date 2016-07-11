@@ -4,23 +4,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_drawer_home"
-            android:title="@string/wallet" />
+            android:icon="@drawable/ic_drawer_walletw"
+            android:title="@string/wallet"/>
         <item
             android:id="@+id/nav_account"
             android:title="@string/account"
             android:icon="@drawable/ic_drawer_profile"/>]
         <item
             android:id="@+id/nav_bank_account"
-            android:icon="@drawable/ic_drawer_bank"
+            android:icon="@drawable/ic_bank"
             android:title="@string/link_banks" />
         <item
             android:id="@+id/nav_security_settings"
-            android:icon="@drawable/ic_drawer_settings"
+            android:icon="@drawable/ic_settings"
             android:title="@string/security_settings" />
         <item
             android:id="@+id/nav_user_activity"
-            android:icon="@drawable/ic_drawer_activity"
+            android:icon="@drawable/ic_log"
             android:title="@string/activity_log" />
         <item
             android:id="@+id/nav_manage_business"
@@ -28,7 +28,7 @@
             android:title="@string/manage_business" />
         <item
             android:id="@+id/nav_about"
-            android:icon="@drawable/ic_about"
+            android:icon="@drawable/ic_drawer_about"
             android:title="@string/about" />
         <item
             android:id="@+id/nav_support"
@@ -42,7 +42,7 @@
             android:visible="false" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_drawer_logout"
+            android:icon="@drawable/ic_logout"
             android:title="@string/logout" />
     </group>
 

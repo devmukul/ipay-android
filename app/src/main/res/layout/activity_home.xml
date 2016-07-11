@@ -16,11 +16,16 @@
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="250dp"
+        android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
-        app:menu="@menu/activity_home_drawer" />
+        app:menu="@menu/activity_home_drawer"
+        android:background="@color/colorPrimary"
+        app:itemBackground="@drawable/nav_drawer_color_selector"
+        app:itemTextColor="@android:color/white"
+        app:itemIconTint="@android:color/white"/>
 
     <!--TODO : add ripple selector for values-21 for button backgrounds-->
 
