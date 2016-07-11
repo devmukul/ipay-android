@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class DashBoardFragment extends Fragment {
 
     private final int HOME_TAB = 0;
-    private final int SERVICES_TAB = 1;
+    private final int PAY_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
     private final int CONTACTS_TAB = 3;
 
@@ -28,17 +28,17 @@ public class DashBoardFragment extends Fragment {
     private final int TOTAL_PAGE_COUNT = 4;
 
     private HomeFragment mHomeFragment;
-    private ServiceFragment mServiceFragment;
+    private PayFragment mPayFragment;
     private ContactsHolderFragment mContactsHolderFragment;
     private TransactionHistoryFragment mTransactionHistoryFragment;
 
     private TabLayout.Tab homeTab;
-    private TabLayout.Tab servicesTab;
+    private TabLayout.Tab payTab;
     private TabLayout.Tab contactsTab;
     private TabLayout.Tab transactionHistoryTab;
 
     private View homeTabView;
-    private View servicesTabView;
+    private View payTabView;
     private View contactsTabView;
     private View transactionHistoryTabView;
 
@@ -50,7 +50,7 @@ public class DashBoardFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryFragment();
-        mServiceFragment = new ServiceFragment();
+        mPayFragment = new PayFragment();
         mContactsHolderFragment = new ContactsHolderFragment();
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
@@ -63,7 +63,7 @@ public class DashBoardFragment extends Fragment {
 
         homeTab = tabLayout.getTabAt(HOME_TAB);
         transactionHistoryTab = tabLayout.getTabAt(TRANSACTION_HISTORY_TAB);
-        servicesTab = tabLayout.getTabAt(SERVICES_TAB);
+        payTab = tabLayout.getTabAt(PAY_TAB);
         contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
 
         setupCustomViewsForTabLayout();
@@ -120,7 +120,7 @@ public class DashBoardFragment extends Fragment {
 
         transactionHistoryTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
 
-        servicesTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        payTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
 
         setTabViews();
 
@@ -132,7 +132,7 @@ public class DashBoardFragment extends Fragment {
         homeTab.setCustomView(homeTabView);
         contactsTab.setCustomView(contactsTabView);
         transactionHistoryTab.setCustomView(transactionHistoryTabView);
-        servicesTab.setCustomView(servicesTabView);
+        payTab.setCustomView(payTabView);
 
     }
 
@@ -141,11 +141,11 @@ public class DashBoardFragment extends Fragment {
         ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_walletw);
         ((ImageView) contactsTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_contact);
         ((ImageView) transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_transaction);
-        ((ImageView) servicesTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
+        ((ImageView) payTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
 
         ((TextView) homeTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.wallet));
         ((TextView) contactsTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.contacts));
-        ((TextView) servicesTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
+        ((TextView) payTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
         ((TextView) transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
 
     }
@@ -159,13 +159,13 @@ public class DashBoardFragment extends Fragment {
         @Override
         public Fragment getItem(int pos) {
             switch (pos) {
-                case 0:
+                case HOME_TAB:
                     return mHomeFragment;
-                case 1:
-                    return mServiceFragment;
-                case 2:
+                case PAY_TAB:
+                    return mPayFragment;
+                case TRANSACTION_HISTORY_TAB:
                     return mTransactionHistoryFragment;
-                case 3:
+                case CONTACTS_TAB:
                     return mContactsHolderFragment;
                 default:
                     return new Fragment();

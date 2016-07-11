@@ -25,7 +25,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 
-public class ServiceFragment extends Fragment {
+public class PayFragment extends Fragment {
     private ListView mServiceActionListView;
     private WalletActionListAdapter mServiceActionListAdapter;
 

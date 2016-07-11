@@ -110,6 +110,11 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         super.onCreateOptionsMenu(menu, inflater);
         MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.activity_transaction_history, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
 
         // Remove search action of contacts
         if (menu.findItem(R.id.action_search_contacts) != null)
@@ -661,7 +666,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final String bankAccountNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountNumber();
                 final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
 
-                mAmountTextView.setText("Balance: " + Utilities.formatTakaWithComma(balance));
+                mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
 
                 if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
                     statusDescriptionView.setText(getString(R.string.transaction_successful));
