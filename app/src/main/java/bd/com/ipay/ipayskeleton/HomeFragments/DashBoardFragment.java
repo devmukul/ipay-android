@@ -9,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
@@ -131,6 +133,7 @@ public class DashBoardFragment extends Fragment {
         transactionHistoryTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
 
         servicesTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+
     }
 
     private void setTabViews() {
@@ -138,46 +141,62 @@ public class DashBoardFragment extends Fragment {
         contactsTab.setCustomView(contactsTabView);
         transactionHistoryTab.setCustomView(transactionHistoryTabView);
         servicesTab.setCustomView(servicesTabView);
+
+        setTabIconsWithTexts();
     }
 
     private void setHomeTabSelected() {
 
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_24dp);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
+        homeTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorOrange));
+        contactsTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        transactionHistoryTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        servicesTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
         setTabViews();
     }
 
     private void setContactsTabSelected() {
 
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
+        homeTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        contactsTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorOrange));
+        transactionHistoryTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        servicesTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
         setTabViews();
     }
 
     private void setServicesTabSelected() {
 
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service);
+        homeTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        contactsTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        transactionHistoryTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        servicesTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorOrange));
 
         setTabViews();
     }
 
     private void setTransactionHistoryTabSelected() {
 
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction_);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
+        homeTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        contactsTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        transactionHistoryTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorOrange));
+        servicesTabView.findViewById(R.id.tab_layout).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
         setTabViews();
+    }
+
+    private void setTabIconsWithTexts() {
+
+        ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_walletw);
+        ((ImageView)contactsTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_contact);
+        ((ImageView)transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_taka);
+        ((ImageView)servicesTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
+
+        ((TextView)homeTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.wallet));
+        ((TextView)contactsTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.contacts));
+        ((TextView)servicesTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
+        ((TextView)transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
+
     }
 
     private class DashBoardTabAdapter extends FragmentPagerAdapter {
