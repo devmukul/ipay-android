@@ -76,9 +76,15 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp">
 
+
+            <TextView
+                android:text="@string/balance"
+                style="@style/TransactionHistoryLeftTextViewStyle"
+                android:layout_toLeftOf="@+id/amount"/>
+
             <TextView
                 android:id="@+id/amount"
-                style="@style/TransactionHistoryLeftTextViewStyle" />
+                style="@style/TransactionHistoryRightTextViewStyle" />
 
             <TextView
                 android:id="@+id/time"

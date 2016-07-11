@@ -666,7 +666,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final String bankAccountNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountNumber();
                 final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
 
-                mAmountTextView.setText("Balance: " + Utilities.formatTakaWithComma(balance));
+                mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
 
                 if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
                     statusDescriptionView.setText(getString(R.string.transaction_successful));
