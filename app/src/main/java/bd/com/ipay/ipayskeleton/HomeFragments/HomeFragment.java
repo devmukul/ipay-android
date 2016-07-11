@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -7,10 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +32,8 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
@@ -90,8 +97,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private TextView mRequestMoneyButton;
     private TextView mMobileTopUpButton;
     private TextView mMakePaymentButton;
+    private TextView mPayByQRCodeButton;
 
     private ImageView refreshBalanceButton;
+
+
+    public static final int REQUEST_CODE_PERMISSION = 1001;
 
 //    private List<TransactionHistoryClass> userTransactionHistoryClasses;
 //    private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
@@ -138,6 +149,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
         mMobileTopUpButton = (Button) v.findViewById(R.id.button_mobile_topup);
         mMakePaymentButton = (Button) v.findViewById(R.id.button_make_payment);
+        mPayByQRCodeButton = (Button) v.findViewById(R.id.button_pay_by_QR_code);
 
         mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
         mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
@@ -224,6 +236,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        mPayByQRCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[] {Manifest.permission.CAMERA},
+                            REQUEST_CODE_PERMISSION);
+                } else initiateScan();
+            }
+        });
+
+
         mMobileTopUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -266,6 +289,59 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         return v;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initiateScan();
+                } else {
+                    Toast.makeText(getActivity(), R.string.error_permission_denied, Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+    public void initiateScan() {
+        IntentIntegrator.forSupportFragment(this).initiateScan();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
+            IntentResult scanResult = IntentIntegrator.parseActivityResult(
+                    requestCode, resultCode, data);
+            if (scanResult == null) {
+                return;
+            }
+            final String result = scanResult.getContents();
+            if (result != null) {
+                Handler mHandler = new Handler();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            PinChecker singleInvoicePinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                                @Override
+                                public void ifPinAdded() {
+                                    Intent intent = new Intent(getActivity(), SingleInvoiceActivity.class);
+                                    intent.putExtra(Constants.RESULT,result);
+                                    startActivity(intent);
+                                }
+                            });
+                            singleInvoicePinChecker.execute();
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
 
     private BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -439,54 +515,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
                 Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,
-                                                double balance, String purpose, String time, Integer statusCode, String description, String transactionID) {
-        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.transaction_details)
-                .customView(R.layout.dialog_transaction_details, true)
-                .negativeText(R.string.ok)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-
-        View view = dialog.getCustomView();
-        final TextView descriptionTextView = (TextView) view.findViewById(R.id.description);
-        final TextView timeTextView = (TextView) view.findViewById(R.id.time);
-        final TextView amountTextView = (TextView) view.findViewById(R.id.amount);
-        final TextView feeTextView = (TextView) view.findViewById(R.id.fee);
-        final TextView transactionIDTextView = (TextView) view.findViewById(R.id.transaction_id);
-        final TextView netAmountTextView = (TextView) view.findViewById(R.id.netAmount);
-        final TextView balanceTextView = (TextView) view.findViewById(R.id.balance);
-        final TextView purposeTextView = (TextView) view.findViewById(R.id.purpose);
-        final TextView statusTextView = (TextView) view.findViewById(R.id.status);
-        final LinearLayout purposeLayout = (LinearLayout) view.findViewById(R.id.purpose_layout);
-
-        descriptionTextView.setText(description);
-        timeTextView.setText(time);
-        amountTextView.setText(Utilities.formatTaka(amount));
-        feeTextView.setText(Utilities.formatTaka(fee));
-        transactionIDTextView.setText(getString(R.string.transaction_id) + " " + transactionID);
-        netAmountTextView.setText(Utilities.formatTaka(netAmount));
-        balanceTextView.setText(Utilities.formatTaka(balance));
-        if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
-        else purposeLayout.setVisibility(View.GONE);
-
-        if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
-            statusTextView.setText(getString(R.string.transaction_successful));
-            statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
-        } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-            statusTextView.setText(getString(R.string.in_progress));
-        } else {
-            statusTextView.setText(getString(R.string.transaction_failed));
-            statusTextView.setTextColor(getResources().getColor(R.color.background_red));
-        }
-
     }
 
     @Override

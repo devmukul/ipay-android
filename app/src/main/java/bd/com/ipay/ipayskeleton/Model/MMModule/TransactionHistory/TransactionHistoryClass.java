@@ -83,6 +83,7 @@ public class TransactionHistoryClass {
                 return getBankName();
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return receiverInfo;
+            case (Constants.SERVICE_ID_REQUEST_INVOICE):
             case (Constants.TRANSACTION_HISTORY_PAYMENT):
                 if (additionalInfo != null)
                     return additionalInfo.getUserName();
@@ -95,7 +96,7 @@ public class TransactionHistoryClass {
 
     public String getNetAmountFormatted(String userMobileNumber) {
         if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null || receiverInfo == null)
-            return "+" + Utilities.formatTakaWithComma(netAmount);
+            return Utilities.formatTakaWithComma(netAmount);
 
             switch (serviceID) {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
@@ -117,6 +118,7 @@ public class TransactionHistoryClass {
                     return "-" + Utilities.formatTakaWithComma(netAmount);
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return "-" + Utilities.formatTakaWithComma(netAmount);
+                case (Constants.SERVICE_ID_REQUEST_INVOICE):
                 case (Constants.TRANSACTION_HISTORY_PAYMENT):
                     if (originatingMobileNumber.equals(userMobileNumber)) {
                         return "+" + Utilities.formatTakaWithComma(netAmount);
@@ -126,7 +128,7 @@ public class TransactionHistoryClass {
                     }
             }
 
-            return "+" + Utilities.formatTakaWithComma(netAmount);
+            return  Utilities.formatTakaWithComma(netAmount);
         }
 
     public double getNetAmount() {
@@ -241,6 +243,7 @@ public class TransactionHistoryClass {
                     return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " (in progress)";
                 else
                     return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " failed (" + statusDescription + ")";
+            case (Constants.SERVICE_ID_REQUEST_INVOICE):
             case (Constants.TRANSACTION_HISTORY_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
@@ -300,6 +303,7 @@ public class TransactionHistoryClass {
                 return "Withdraw Money";
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return "Mobile TopUp";
+            case (Constants.SERVICE_ID_REQUEST_INVOICE):
             case (Constants.TRANSACTION_HISTORY_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     return "Make Payment";
@@ -362,6 +366,7 @@ public class TransactionHistoryClass {
                 return -netAmount;
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return -netAmount;
+            case (Constants.SERVICE_ID_REQUEST_INVOICE):
             case (Constants.TRANSACTION_HISTORY_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber))
                     return -netAmount;
