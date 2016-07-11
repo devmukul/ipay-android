@@ -9,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
@@ -19,8 +21,9 @@ public class DashBoardFragment extends Fragment {
 
     private final int HOME_TAB = 0;
     private final int SERVICES_TAB = 1;
-    private final int CONTACTS_TAB = 2;
-    private final int TRANSACTION_HISTORY_TAB = 3;
+    private final int TRANSACTION_HISTORY_TAB = 2;
+    private final int CONTACTS_TAB = 3;
+
 
     private final int TOTAL_PAGE_COUNT = 4;
 
@@ -57,14 +60,14 @@ public class DashBoardFragment extends Fragment {
         final TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        setupCustomViewsForTabLayout();
 
         homeTab = tabLayout.getTabAt(HOME_TAB);
         transactionHistoryTab = tabLayout.getTabAt(TRANSACTION_HISTORY_TAB);
         servicesTab = tabLayout.getTabAt(SERVICES_TAB);
         contactsTab = tabLayout.getTabAt(CONTACTS_TAB);
 
-        setHomeTabSelected();
+        setupCustomViewsForTabLayout();
+
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -100,23 +103,10 @@ public class DashBoardFragment extends Fragment {
                         mContactsHolderFragment.onFocus();
                     }
                 }
-
-                for (int i = 0; i < TOTAL_PAGE_COUNT; i++) {
-                    TabLayout.Tab tab = tabLayout.getTabAt(i);
-
-                    if (tab != null) {
-                        // Selected tab
-                        if (position == HOME_TAB) setHomeTabSelected();
-                        else if (position == CONTACTS_TAB) setContactsTabSelected();
-                        else if (position == TRANSACTION_HISTORY_TAB) setTransactionHistoryTabSelected();
-                        else if (position == SERVICES_TAB) setServicesTabSelected();
-                    }
-                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -131,53 +121,33 @@ public class DashBoardFragment extends Fragment {
         transactionHistoryTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
 
         servicesTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+
+        setTabViews();
+
     }
 
     private void setTabViews() {
+        setTabIconsWithTexts();
+
         homeTab.setCustomView(homeTabView);
         contactsTab.setCustomView(contactsTabView);
         transactionHistoryTab.setCustomView(transactionHistoryTabView);
         servicesTab.setCustomView(servicesTabView);
+
     }
 
-    private void setHomeTabSelected() {
+    private void setTabIconsWithTexts() {
 
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_24dp);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
+        ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_walletw);
+        ((ImageView) contactsTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_contact);
+        ((ImageView) transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_transaction);
+        ((ImageView) servicesTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);
 
-        setTabViews();
-    }
+        ((TextView) homeTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.wallet));
+        ((TextView) contactsTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.contacts));
+        ((TextView) servicesTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
+        ((TextView) transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
 
-    private void setContactsTabSelected() {
-
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-
-        setTabViews();
-    }
-
-    private void setServicesTabSelected() {
-
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service);
-
-        setTabViews();
-    }
-
-    private void setTransactionHistoryTabSelected() {
-
-        homeTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_home_white_outline_24dp);
-        contactsTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_people_outline_white_24dp);
-        transactionHistoryTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_transaction_);
-        servicesTabView.findViewById(R.id.tab_icon).setBackgroundResource(R.drawable.ic_service_outline);
-
-        setTabViews();
     }
 
     private class DashBoardTabAdapter extends FragmentPagerAdapter {
@@ -194,9 +164,9 @@ public class DashBoardFragment extends Fragment {
                 case 1:
                     return mServiceFragment;
                 case 2:
-                    return mContactsHolderFragment;
-                case 3:
                     return mTransactionHistoryFragment;
+                case 3:
+                    return mContactsHolderFragment;
                 default:
                     return new Fragment();
             }
