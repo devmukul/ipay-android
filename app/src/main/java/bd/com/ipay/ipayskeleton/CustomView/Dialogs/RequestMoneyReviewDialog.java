@@ -103,7 +103,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mSenderMobileNumber = pref.getString(Constants.USERID, "");
 
-        mProfileImageView.setInformation(mPhotoUri, mReceiverName);
+        mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
             mNameView.setVisibility(View.GONE);

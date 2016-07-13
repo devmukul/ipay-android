@@ -93,7 +93,7 @@ public class ProfileImageView extends FrameLayout {
         }
     }
 
-    public void setInformation(String photoUri, String name) {
+    private void setInformation(String photoUri, String name) {
 //        if (photoUri != null) {
 //            setProfilePicture(photoUri);
 //        } else {
@@ -153,7 +153,7 @@ public class ProfileImageView extends FrameLayout {
                 setInformation(imageUri.toString(), name);
 
             } else {
-                setInformation(Constants.BASE_URL_FTP_SERVER + photoUri, name);
+                setInformation(photoUri, name);
             }
 
         } catch (Exception e) {

@@ -251,6 +251,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingPaymentClasses.get(pos).getRequestTime());
                 String name = pendingPaymentClasses.get(pos).getReceiverProfile().getUserName();
+                String mobileNumber = pendingPaymentClasses.get(pos).getReceiverProfile().getUserMobileNumber();
                 final int status = pendingPaymentClasses.get(pos).getStatus();
                 final BigDecimal amount = pendingPaymentClasses.get(pos).getAmount();
                 final BigDecimal vat = pendingPaymentClasses.get(pos).getVat();
@@ -261,7 +262,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
 
 
-                mProfileImageView.setInformation(Constants.BASE_URL_FTP_SERVER + imageUrl, name);
+                mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name);
 
                 mSenderName.setText(name);
 

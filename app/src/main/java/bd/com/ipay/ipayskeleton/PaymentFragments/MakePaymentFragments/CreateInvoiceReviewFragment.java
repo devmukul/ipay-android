@@ -30,6 +30,10 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
+/**
+ * Previous Fragment: {@link CreateInvoiceFragmentStepTwo}.
+ * Contained in: {@link bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CreateInvoiceReviewActivity}
+ */
 public class CreateInvoiceReviewFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSaveInvoiceTask = null;
@@ -98,7 +102,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mProfileImageView.setInformation(mPhotoUri, mReceiverName);
+        mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
             mNameView.setVisibility(View.GONE);

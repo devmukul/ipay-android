@@ -82,7 +82,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        mProfileImageView.setInformation(mPhotoUri, mReceiverName);
+        mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
             mNameView.setVisibility(View.GONE);

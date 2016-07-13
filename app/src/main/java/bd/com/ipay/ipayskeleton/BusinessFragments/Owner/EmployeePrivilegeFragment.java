@@ -37,6 +37,10 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.UpdateEmployeeResp
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+/**
+ * Contained in {@link BusinessActivity}
+ * Previous Fragment: {@link CreateEmployeeInformationFragment}
+ */
 public class EmployeePrivilegeFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mCreateEmployeeAsyncTask;
@@ -94,7 +98,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         mMobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
         mDesignation = getArguments().getString(Constants.DESIGNATION);
 
-        mProfilePictureView.setInformation(mProfilePicture, mName);
+        mProfilePictureView.setInformation(mMobileNumber, Constants.BASE_URL_FTP_SERVER + mProfilePicture, mName);
         mNameView.setText(mName);
         mMobileNumberView.setText(mMobileNumber);
         if(!mDesignation.equals(""))mDesignationView.setText(mDesignation);
@@ -228,7 +232,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
                         mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
 
-                        mProfilePictureView.setInformation(mEmployeeDetails.getMobileNumber(), mEmployeeDetails.getName());
+                        mProfilePictureView.setInformation(mMobileNumber, Constants.BASE_URL_FTP_SERVER + mProfilePicture, mName);
                         mNameView.setText(mEmployeeDetails.getName());
                         mMobileNumberView.setText(mEmployeeDetails.getMobileNumber());
 

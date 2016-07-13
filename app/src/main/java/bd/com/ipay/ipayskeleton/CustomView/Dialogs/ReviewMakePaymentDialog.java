@@ -244,7 +244,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                     mTitleView.setText(mTitle);
                 }
 
-                mProfileImageView.setInformation(mPhotoUri, mReceiverName);
+                mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName);
             }
 
             public void bindViewForFooter(int pos) {
