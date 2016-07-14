@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -46,9 +47,9 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
     private ImageView buttonScanQRCode;
-    private IconifiedEditText mMobileNumberEditText;
-    private IconifiedEditText mDescriptionEditText;
-    private IconifiedEditText mAmountEditText;
+    private EditText mMobileNumberEditText;
+    private EditText mDescriptionEditText;
+    private EditText mAmountEditText;
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -58,9 +59,9 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_send_money, container, false);
-        mMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.mobile_number);
-        mDescriptionEditText = (IconifiedEditText) v.findViewById(R.id.description);
-        mAmountEditText = (IconifiedEditText) v.findViewById(R.id.amount);
+        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
+        mDescriptionEditText = (EditText) v.findViewById(R.id.description);
+        mAmountEditText = (EditText) v.findViewById(R.id.amount);
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
