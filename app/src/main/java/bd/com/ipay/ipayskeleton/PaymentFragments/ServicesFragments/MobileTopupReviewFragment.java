@@ -230,7 +230,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, getActivity().getApplicationContext(), this);
+                mUri, getActivity(), this);
 
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -258,8 +258,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
             mTopupTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -293,53 +291,49 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             mProgressDialog.dismiss();
             mTopupTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+        }
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             try {
                 mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
                     mInvitationLayout.setVisibility(View.GONE);
                     mInvitationCheckBox.setChecked(false);
                     String name = mGetUserInfoResponse.getName();
-                    mReceiverView.setText(name);
                     String profilePicture = null;
 
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
                         profilePicture = mGetUserInfoResponse
                                 .getProfilePictures().get(0).getUrl();
                     }
-                    mProfileImageView.setInformation(mMobileNumber,Constants.BASE_URL_FTP_SERVER + profilePicture, name);
+                    mReceiverView.setText(name);
+                    mProfileImageView.setInformation(mMobileNumber, Constants.BASE_URL_FTP_SERVER + profilePicture, name);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                    mInvitationLayout.setVisibility(View.VISIBLE);
-                    String name = getUserNameFromContacts(mMobileNumber);
-                    if (name != null) {
-                        mReceiverView.setText(name);
-                        Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
-                        mProfileImageView.setInformation(mMobileNumber,photoUri.toString(), name);
-                    }
+
                 } else {
                     mInvitationLayout.setVisibility(View.VISIBLE);
-
+                    String name = ContactEngine.getContactNameFromNumber(getActivity(), mMobileNumber);
+                    if (name != null)
+                        mReceiverView.setText(name);
+                    Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
+                    mProfileImageView.setInformation(mMobileNumber, photoUri.toString(), name);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                mInvitationLayout.setVisibility(View.VISIBLE);
                 Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
             }
 
             mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
+        }
+        if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
             try {
                 mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-
-                        mInvitationLayout.setVisibility(View.GONE);
                         Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
                     }
 
