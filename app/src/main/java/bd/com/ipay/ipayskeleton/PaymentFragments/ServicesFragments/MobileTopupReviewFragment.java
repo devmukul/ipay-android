@@ -309,7 +309,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                         profilePicture = mGetUserInfoResponse
                                 .getProfilePictures().get(0).getUrl();
                     }
-                    mProfileImageView.setInformation(Constants.BASE_URL_FTP_SERVER + profilePicture, name);
+                    mProfileImageView.setInformation(mMobileNumber,Constants.BASE_URL_FTP_SERVER + profilePicture, name);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     mInvitationLayout.setVisibility(View.VISIBLE);
@@ -317,7 +317,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                     if (name != null) {
                         mReceiverView.setText(name);
                         Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
-                        mProfileImageView.setInformation(photoUri.toString(), name);
+                        mProfileImageView.setInformation(mMobileNumber,photoUri.toString(), name);
                     }
                 } else {
                     mInvitationLayout.setVisibility(View.VISIBLE);
