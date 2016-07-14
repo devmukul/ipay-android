@@ -105,7 +105,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         });
 
         // Get business rule
-        attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
+        //attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
 
         return v;
     }
@@ -241,8 +241,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
-        }
-        else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -251,12 +250,15 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
                     BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
 
-                    for (BusinessRule rule : businessRuleArray) {
-                        if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                            SendMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                    if (businessRuleArray != null) {
 
-                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                            SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                        for (BusinessRule rule : businessRuleArray) {
+                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                                SendMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+
+                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                                SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            }
                         }
                     }
 

@@ -124,6 +124,9 @@ public class BusinessRule {
     }
 
     public BigDecimal getRuleValue() {
+
+        if (ruleValue == null)
+            return BigDecimal.ZERO;
         return ruleValue;
     }
 
