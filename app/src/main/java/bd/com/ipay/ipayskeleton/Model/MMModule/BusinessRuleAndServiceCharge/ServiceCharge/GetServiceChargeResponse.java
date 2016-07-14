@@ -31,7 +31,10 @@ public class GetServiceChargeResponse {
     }
 
     public boolean isPinRequired() {
-        return isPinRequired;
+        if (isPinRequired == null)
+            return false;
+        else
+            return isPinRequired;
     }
 
     public void setPinRequired(boolean pinRequired) {
