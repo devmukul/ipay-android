@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:clickable="true"
-                    android:src="@drawable/ic_bank2" />
+                    android:src="@drawable/ic_book3x" />
 
             </RelativeLayout>
 
