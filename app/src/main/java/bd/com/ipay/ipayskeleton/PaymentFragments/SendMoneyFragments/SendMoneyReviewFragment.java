@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private String mDescription;
     String mError_message;
 
+    private LinearLayout mLinearLayoutDescriptionHolder;
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
     private TextView mMobileNumberView;
@@ -77,6 +79,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mLinearLayoutDescriptionHolder = (LinearLayout) v.findViewById(R.id.layout_description_holder);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
@@ -99,7 +102,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mMobileNumberView.setText(mReceiverMobileNumber);
 
         if (mDescription == null || mDescription.isEmpty()) {
-            mDescriptionView.setVisibility(View.GONE);
+            mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
         } else {
             mDescriptionView.setText(mDescription);
         }
@@ -117,54 +120,38 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                             SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                     if (mError_message == null) {
-                        if (SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-                            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-                            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    attemptSendMoney(pinInputDialogBuilder.getPin());
-                                }
-                            });
-
-                            pinInputDialogBuilder.build().show();
-                        }
-
+                        attemptSendMoneyWithPinCheck();
                     } else {
-                        new AlertDialog.Builder(getContext())
-                                .setMessage(mError_message)
-                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        getActivity().finish();
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
+                        showErrorDialog();
                     }
                 } else {
-                    if (SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-                        final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-                        pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                attemptSendMoney(pinInputDialogBuilder.getPin());
-                            }
-                        });
-
-                        pinInputDialogBuilder.build().show();
-                    }
+                    attemptSendMoneyWithPinCheck();
                 }
             }
         });
 
-        // Check if Min or max amount is available
         if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
             attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
         else
             attemptGetServiceCharge();
         return v;
+    }
+
+    private void attemptSendMoneyWithPinCheck() {
+        if (SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+
+            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    attemptSendMoney(pinInputDialogBuilder.getPin());
+                }
+            });
+            pinInputDialogBuilder.build().show();
+        } else {
+            attemptSendMoney(null);
+        }
     }
 
     private void attemptSendMoney(String pin) {
@@ -183,6 +170,18 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                 Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, json, getActivity());
         mSendMoneyTask.mHttpResponseListener = this;
         mSendMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void showErrorDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(mError_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @Override

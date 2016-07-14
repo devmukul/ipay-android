@@ -105,7 +105,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         });
 
         // Get business rule
-        //attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
+        attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
 
         return v;
     }

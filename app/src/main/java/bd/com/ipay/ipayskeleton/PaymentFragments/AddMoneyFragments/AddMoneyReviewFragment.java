@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -96,37 +95,20 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
-                        AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                        AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                if (Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                    mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
+                            AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                            AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
-                if (mError_message == null) {
-                    //if Pin Required
-                    if (AddMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-                        final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+                    if (mError_message == null) {
+                        attemptAddMoneyWithPinCheck();
 
-                        pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                attemptAddMoney(pinInputDialogBuilder.getPin());
-                            }
-                        });
-
-                        pinInputDialogBuilder.build().show();
                     } else {
-                        attemptAddMoney(null);
+                        showErrorDialog();
                     }
-                } else {
-                    new AlertDialog.Builder(getContext())
-                            .setMessage(mError_message)
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    getActivity().finish();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                }
+                } else
+                    attemptAddMoneyWithPinCheck();
             }
         });
 
@@ -138,6 +120,22 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
             attemptGetServiceCharge();
 
         return v;
+    }
+
+    private void attemptAddMoneyWithPinCheck() {
+        if (AddMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+
+            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    attemptAddMoney(pinInputDialogBuilder.getPin());
+                }
+            });
+            pinInputDialogBuilder.build().show();
+        } else {
+            attemptAddMoney(null);
+        }
     }
 
     private void attemptAddMoney(String pin) {
@@ -158,6 +156,17 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         mAddMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void showErrorDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(mError_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
 
     @Override
     public int getServiceID() {

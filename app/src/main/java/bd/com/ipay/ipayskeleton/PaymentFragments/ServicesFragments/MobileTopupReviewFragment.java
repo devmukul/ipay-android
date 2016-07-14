@@ -123,42 +123,23 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             @Override
             public void onClick(View v) {
 
-                mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
-                        TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                        TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                if (Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                    mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
+                            TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                            TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
-                if (mError_message == null) {
-                    if (TopUpActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-                        final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-                        pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                attemptTopUp(pinInputDialogBuilder.getPin());
-                            }
-                        });
-
-                        pinInputDialogBuilder.build().show();
+                    if (mError_message == null) {
+                        attemptTopUpWithPinCheck();
                     } else {
-                        attemptTopUp(null);
+                        showErrorDialog();
                     }
-
-                    if (mInvitationCheckBox.isChecked())
-                        sendInvite(mMobileNumber);
-
                 } else {
-                    new AlertDialog.Builder(getContext())
-                            .setMessage(mError_message)
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    getActivity().finish();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                    attemptTopUpWithPinCheck();
                 }
             }
         });
+
 
         if (!Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
@@ -167,6 +148,26 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             attemptGetServiceCharge();
 
         return v;
+    }
+
+    private void attemptTopUpWithPinCheck() {
+        if (TopUpActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+
+            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    attemptTopUp(pinInputDialogBuilder.getPin());
+                }
+            });
+
+            pinInputDialogBuilder.build().show();
+        } else {
+            attemptTopUp(null);
+        }
+
+        if (mInvitationCheckBox.isChecked())
+            sendInvite(mMobileNumber);
     }
 
     private void attemptTopUp(String pin) {
@@ -179,6 +180,18 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                 Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity());
         mTopupTask.mHttpResponseListener = this;
         mTopupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void showErrorDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(mError_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
 
@@ -311,6 +324,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
 
+                    mInvitationLayout.setVisibility(View.VISIBLE);
                 } else {
                     mInvitationLayout.setVisibility(View.VISIBLE);
                     String name = ContactEngine.getContactNameFromNumber(getActivity(), mMobileNumber);

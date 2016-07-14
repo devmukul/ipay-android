@@ -116,43 +116,13 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                             PaymentMakingActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                     if (mError_message == null) {
-                        if (PaymentMakingActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-                            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-                            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    attemptPayment(pinInputDialogBuilder.getPin());
-                                }
-                            });
-
-                            pinInputDialogBuilder.build().show();
-                        }
+                        attemptPaymentWithPinCheck();
 
                     } else {
-                        new AlertDialog.Builder(getContext())
-                                .setMessage(mError_message)
-                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        getActivity().finish();
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
+                        showErrorDialog();
                     }
                 } else {
-                    if (PaymentMakingActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-                        final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-                        pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                attemptPayment(pinInputDialogBuilder.getPin());
-                            }
-                        });
-
-                        pinInputDialogBuilder.build().show();
-                    }
+                    attemptPaymentWithPinCheck();
                 }
             }
         });
@@ -164,6 +134,22 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         else
             attemptGetServiceCharge();
         return v;
+    }
+
+    private void attemptPaymentWithPinCheck() {
+        if (PaymentMakingActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+
+            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    attemptPayment(pinInputDialogBuilder.getPin());
+                }
+            });
+            pinInputDialogBuilder.build().show();
+        } else {
+            attemptPayment(null);
+        }
     }
 
     private void attemptPayment(String pin) {
@@ -183,6 +169,19 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mPaymentTask.mHttpResponseListener = this;
         mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+    private void showErrorDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(mError_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
 
     @Override
     public int getServiceID() {

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -51,8 +51,7 @@
 
             </RelativeLayout>
 
-            <View
-                style="@style/Divider"/>
+            <View style="@style/Divider" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -70,8 +69,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <View
-                style="@style/Divider"/>
+            <View style="@style/Divider" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -82,16 +80,15 @@
                     style="@style/CustomEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
                     android:hint="@string/select_a_package"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:focusable="false" />
+                    android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
-            <View
-                style="@style/Divider"/>
+            <View style="@style/Divider" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -102,26 +99,25 @@
                     style="@style/CustomEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
                     android:hint="@string/select_an_operator"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
-                    android:singleLine="true"
-                    android:focusable="false"/>
+                    android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
-            <View
-                style="@style/Divider"/>
+            <View style="@style/Divider" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="24dp"
-                android:textStyle="italic"
                 android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/mobile_topup_restriction_info"
-                android:layout_gravity="center_horizontal" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="italic" />
 
             <Button
                 android:id="@+id/button_recharge"

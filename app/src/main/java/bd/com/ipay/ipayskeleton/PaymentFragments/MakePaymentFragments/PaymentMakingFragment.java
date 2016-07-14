@@ -241,8 +241,7 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
-        }
-        else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 

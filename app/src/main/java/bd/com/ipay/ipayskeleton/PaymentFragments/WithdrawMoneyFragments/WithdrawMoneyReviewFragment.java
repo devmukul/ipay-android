@@ -97,38 +97,21 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             @Override
             public void onClick(View v) {
 
-                mError_message = InputValidator.isValidAmount(getActivity(),
-                        new BigDecimal(mAmount),
-                        WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                        WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT());
+                if (Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                    mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
+                            WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                            WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
-                if (mError_message == null) {
-                    if (WithdrawMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-                        final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+                    if (mError_message == null) {
+                        attemptAddMoneyWithPinCheck();
 
-                        pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                attemptWithdrawMoney(pinInputDialogBuilder.getPin());
-                            }
-                        });
-
-                        pinInputDialogBuilder.build().show();
                     } else {
-                        attemptWithdrawMoney(null);
+                        showErrorDialog();
                     }
+                } else
+                    attemptAddMoneyWithPinCheck();
 
-                } else {
-                    new AlertDialog.Builder(getContext())
-                            .setMessage(mError_message)
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    getActivity().finish();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                }
             }
         });
 
@@ -142,6 +125,21 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         return v;
     }
 
+    private void attemptAddMoneyWithPinCheck() {
+        if (WithdrawMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+
+            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    attemptWithdrawMoney(pinInputDialogBuilder.getPin());
+                }
+            });
+            pinInputDialogBuilder.build().show();
+        } else {
+            attemptWithdrawMoney(null);
+        }
+    }
     private void attemptWithdrawMoney(String pin) {
         if (mWithdrawMoneyTask != null) {
             return;
@@ -158,6 +156,17 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mWithdrawMoneyTask.mHttpResponseListener = this;
 
         mWithdrawMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    private void showErrorDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(mError_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
 

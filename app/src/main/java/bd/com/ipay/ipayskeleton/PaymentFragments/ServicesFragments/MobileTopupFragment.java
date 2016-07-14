@@ -305,7 +305,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             }
         });
 
-        dialog.setTitle(null);
+        dialog.setTitle(R.string.select_an_operator);
         dialog.setCancelable(true); //  TO NOT DISMISS THE DIALOG
         dialog.show();
 

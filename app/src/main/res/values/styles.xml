@@ -629,7 +629,7 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:paddingTop">@dimen/value10</item>
         <item name="android:paddingBottom">@dimen/value10</item>
-        <item name="android:textColorHint">@color/divider_gray</item>
+        <item name="android:textColorHint">@color/colorGray</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
