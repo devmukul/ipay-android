@@ -275,7 +275,7 @@
             <Button
                 android:id="@+id/button_pay_by_QR_code"
                 style="@style/HomeImageButtonStyle"
-                android:drawableLeft="@drawable/ic_qrc3x"
+                android:drawableLeft="@drawable/ic_qrc2"
                 android:text="@string/pay_by_QR_code" />
 
         </LinearLayout>

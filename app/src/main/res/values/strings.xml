@@ -190,6 +190,7 @@
     <string name="progress_dialog_add_money_in_progress">Request submitting for add money</string>
     <string name="progress_dialog_withdraw_money_in_progress">Request submitting for money withdrawal</string>
     <string name="progress_dialog_text_sending_money">Sending money in progress. Please wait...</string>
+    <string name="progress_dialog_text_payment">Payment in progress. Please wait...</string>
     <string name="progress_dialog_text_sending_sms">Sending SMS to your mobile...</string>
     <string name="progress_dialog_validating_promo_code">Validating invitation code...</string>
     <string name="progress_dialog_refreshing">Refreshing...</string>
@@ -361,6 +362,7 @@
     <string name="please_enter_document_number">Please enter the document number</string>
     <string name="send_money_failed">Money sending failed. Please try again.</string>
     <string name="send_money_failed_due_to_server_down">Money sending failed. No response from server. Please try again later.</string>
+    <string name="payment_failed_due_to_server_down">Payment failed. No response from server. Please try again later.</string>
     <string name="send_money_query_failed">Could not authenticate receiver</string>
     <string name="no_internet_connection">No internet connection. Please check your connection.</string>
     <string name="balance_update_failed">Could not update balance. Please try again later</string>
@@ -557,6 +559,7 @@
     <string name="total_amount">Total Amount</string>
     <string name="post_paid">Post-paid</string>
     <string name="review_and_send">Review &amp; Send</string>
+    <string name="review_and_payment">Review &amp; Payment</string>
     <string name="review_and_request">Review &amp; Request Money</string>
     <string name="review_and_recharge">Review &amp; Recharge</string>
     <string name="review_and_add_money"><![CDATA[Review & Add Money]]></string>

@@ -263,6 +263,8 @@ public class Constants {
     public static final String URL_PAYMENT_GET_INVOICE = "payment/invoice/get/";
 
 
+    public static final String URL_PAYMENT = "payment";
+
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
 
@@ -353,6 +355,7 @@ public class Constants {
     public static final String COMMAND_FORGET_PASSWORD_CONFIRM_OTP = "COMMAND_FORGET_PASSWORD_CONFIRM_OTP";
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
+    public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
     public static final String COMMAND_GET_SERVICE_CHARGE = "COMMAND_GET_SERVICE_CHARGE";
     public static final String COMMAND_SEND_MONEY_QUERY = "COMMAND_SEND_MONEY_QUERY";
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
@@ -592,6 +595,11 @@ public class Constants {
 
     public static final String SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT="WITHDRAW_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT="WITHDRAW_MAX_AMOUNT_SINGLE";
+
+
+    public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT="MAKEPAYMENT_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT="MAKEPAYMENT_MAX_AMOUNT_SINGLE";
+
 
     public static final int INVOICE_STATUS_ACCEPTED = 200;
     public static final int INVOICE_STATUS_PROCESSING = 102;

@@ -117,6 +117,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".Activities.PaymentActivities.PaymentReviewActivity"
+            android:label="@string/review_and_payment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".Activities.PaymentActivities.RequestMoneyActivity"
             android:label="@string/request_money"
             android:parentActivityName=".Activities.HomeActivity"

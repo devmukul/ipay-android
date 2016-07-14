@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/profile_picture"
+                style="@style/ReviewImageStyle"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textview_name"
+                    style="@style/TextViewUserInfoPrimary"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    style="@style/TextViewUserInfoSecondary"
+                    android:textColor="@android:color/white" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewProfileInfoLabel"
+                    android:text="@string/amount" />
+
+                <TextView
+                    android:id="@+id/textview_amount"
+                    style="@style/TextViewProfileInfo" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:layout_below="@+id/icon"
+                android:background="@color/colorDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewProfileInfoLabel"
+                    android:text="@string/service_charge" />
+
+                <TextView
+                    android:id="@+id/textview_service_charge"
+                    style="@style/TextViewProfileInfo" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:layout_below="@+id/icon"
+                android:background="@color/colorDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewProfileInfoLabel"
+                    android:text="@string/net_received" />
+
+                <TextView
+                    android:id="@+id/textview_net_received"
+                    style="@style/TextViewProfileInfo" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_description_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textview_note"
+                style="@style/ListHeaderStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:text="@string/note"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/textview_description"
+                style="@style/TextViewDescription"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_payment"
+            style="@style/PrimaryMidiumButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/make_payment" />
+    </LinearLayout>
+</ScrollView>

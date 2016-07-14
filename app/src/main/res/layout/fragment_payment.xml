@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/value15">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true">
+
+                <EditText
+                    android:id="@+id/mobile_number"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/mobile_number"
+                    android:inputType="phone"
+                    android:maxLength="14"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/button_scan_qr_code"
+                style="@style/ButtonStyleWithIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/select_receiver_from_contacts"
+                android:src="@drawable/ic_qrc3x" />
+
+            <ImageView
+                android:id="@+id/select_receiver_from_contacts"
+                style="@style/ButtonStyleWithIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_book3x" />
+
+        </RelativeLayout>
+
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true">
+
+            <EditText
+                android:id="@+id/amount"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_amount"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true">
+
+            <EditText
+                android:id="@+id/description"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/send_money_description"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_payment"
+            style="@style/PrimaryMidiumButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/continue_send_money" />
+    </LinearLayout>
+</ScrollView>
