@@ -31,8 +31,8 @@ public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String>
         try {
             if (mProfilePictureUrl != null && !mProfilePictureUrl.isEmpty()) {
 
+                Log.d("Picture URL : ", mProfilePictureUrl);
                 URL url = new URL(mProfilePictureUrl);
-                Log.d("Picture URL : ", url.toString());
 
                 URLConnection connection = url.openConnection();
                 InputStream is = connection.getInputStream();

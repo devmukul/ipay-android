@@ -428,7 +428,7 @@ public class PaymentMakingFragment extends ProgressFragment implements HttpRespo
 
                 } else mTitleView.setVisibility(View.GONE);
 
-                mProfileImageView.setInformation(Constants.BASE_URL_FTP_SERVER + imageUrl, name);
+                mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

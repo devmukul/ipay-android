@@ -252,6 +252,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
                 String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
+                String mobileNumber = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();
                 mTime.setText(time);
                 mSenderNumber.setText(name);
                 mDescription.setText(pendingMoneyRequestClasses.get(pos).getDescription());
@@ -263,7 +264,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                     }
                 });
 
-                mProfileImageView.setInformation(Constants.BASE_URL_FTP_SERVER + imageUrl, name);
+                mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name);
 
             }
         }

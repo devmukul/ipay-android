@@ -206,7 +206,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                 final Employee employee = mEmployeeList.get(pos);
 
 
-                mProfileImageView.setInformation(employee.getMobileNumber(), employee.getProfilePictureUrl(),
+                mProfileImageView.setInformation(employee.getMobileNumber(), Constants.BASE_URL_FTP_SERVER + employee.getProfilePictureUrl(),
                         employee.getName());
                 mNameView.setText(employee.getName());
                 mMobileNumberView.setText(employee.getMobileNumber());
