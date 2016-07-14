@@ -53,12 +53,13 @@ public class ProfileImageView extends FrameLayout {
         addView(v);
     }
 
-    public void setProfilePicture(String photoUri) {
+    public void setProfilePicture(String photoUri, boolean forceLoad) {
 //        mProfilePictureView.setVisibility(View.VISIBLE);
 //        mProfileFirstLetterView.setVisibility(View.GONE);
 
         Glide.with(context)
                 .load(photoUri)
+                .skipMemoryCache(forceLoad)
                 .error(R.drawable.ic_user_pic)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -93,12 +94,27 @@ public class ProfileImageView extends FrameLayout {
         }
     }
 
+    private void setInformation(String photoUri, String name, boolean forceLoad) {
+//        if (photoUri != null) {
+//            setProfilePicture(photoUri);
+//        } else {
+//            setProfileFirstLetter(name);
+//        }
+
+        if (name != null && !name.isEmpty()) {
+            setProfileFirstLetter(name);
+            setProfilePicture(photoUri, forceLoad);
+
+        } else {
+            setProfilePicturePlaceHolder();
+        }
+    }
 
     /**
      * Try to set an already downloaded profile picture for this phone number.
      * Returns true on success.
      */
-    public boolean setProfilePictureFromDisk(String phoneNumber) {
+    public boolean setProfilePictureFromDisk(String phoneNumber, boolean forceLoad) {
 
         if (phoneNumber != null) {
             File imageFile = StorageManager.getProfilePictureFile(phoneNumber);
@@ -107,7 +123,7 @@ public class ProfileImageView extends FrameLayout {
                 Uri imageUri = Uri.fromFile(imageFile);
 
                 if (imageUri != null) {
-                    setProfilePicture(imageUri.toString());
+                    setProfilePicture(imageUri.toString(), forceLoad);
                     return true;
                 }
             }
@@ -116,16 +132,10 @@ public class ProfileImageView extends FrameLayout {
         return false;
     }
 
-    public void setInformation(String photoUri, String name) {
-        if (name != null && !name.isEmpty()) {
-            setProfileFirstLetter(name);
-            setProfilePicture(photoUri);
-
-        } else if (photoUri != null) {
-            setProfileFirstLetter(photoUri);
-        } else {
+    public void setInformation(String phoneNumber, boolean forceLoad) {
+        boolean imageLoadedFromDisk = setProfilePictureFromDisk(phoneNumber, forceLoad);
+        if (!imageLoadedFromDisk)
             setProfilePicturePlaceHolder();
-        }
     }
 
     /**
@@ -134,7 +144,7 @@ public class ProfileImageView extends FrameLayout {
      * 2. If not found, then try to load the image from the photoUri
      * 3. If this fails, too, then show only the first letter of user's name
      */
-    public void setInformation(String phoneNumber, String photoUri, String name) {
+    public void setInformation(String phoneNumber, String photoUri, String name, boolean forceLoad) {
         try {
             Uri imageUri = null;
             if (phoneNumber != null) {
@@ -143,12 +153,12 @@ public class ProfileImageView extends FrameLayout {
                     imageUri = Uri.fromFile(imageFile);
             }
 
-            if (imageUri != null) {
+            if(imageUri != null) {
                 Log.w("Image Uri", imageUri.toString());
-                setInformation(imageUri.toString(), name);
+                setInformation(imageUri.toString(), name, forceLoad);
 
             } else {
-                setInformation(photoUri, name);
+                setInformation(photoUri, name, forceLoad);
             }
 
         } catch (Exception e) {

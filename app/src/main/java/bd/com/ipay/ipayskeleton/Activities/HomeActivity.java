@@ -72,6 +72,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceR
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -557,14 +558,10 @@ public class HomeActivity extends BaseActivity
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         // Get the changes
-        boolean isProfilePictureUpdated = true;
-        if (pref.contains(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE))
-            isProfilePictureUpdated = pref.getBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+        boolean isProfilePictureUpdated = pref.getBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
 
         // Take actions
         if (isProfilePictureUpdated) {
-            // Set the preference to false again to set the update action is resolved
-            pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false).apply();
             getProfileInfo();
         }
     }
@@ -625,20 +622,18 @@ public class HomeActivity extends BaseActivity
                     }
 
                     //saving user info in shared preference
-
-
                     ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);
                     profileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
 
-                    Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-                    // Download the profile picture and store it in local storage
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
-                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                        setProfilePicture(imageUrl);
+                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(this);
+                    if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                            new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
+                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        }
+                        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                     }
+                    setProfilePicture(imageUrl);
 
 
                 } else {

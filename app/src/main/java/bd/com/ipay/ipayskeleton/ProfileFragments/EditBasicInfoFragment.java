@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,13 +26,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.DownloadImageFromUrlAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -50,6 +54,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.StorageManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBasicInfoFragment extends Fragment implements HttpResponseListener {
@@ -83,6 +88,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
 
+    private String mMobileNumber;
     private String mName = "";
     private String mDateOfBirth = "";
     private String mProfilePicture;
@@ -97,6 +103,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private List<String> mOccupationNameList;
 
     private ArrayAdapter<String> mAdapterOccupation;
+
+    private String mSelectedImagePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,6 +145,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         Bundle bundle = getArguments();
 
+        mMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
         mName = bundle.getString(Constants.NAME);
         mFathersName = bundle.getString(Constants.FATHERS_NAME);
         mMothersName = bundle.getString(Constants.MOTHERS_NAME);
@@ -295,6 +304,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     }
 
     private void setProfilePicture(String url) {
+        Log.d("URL", url.toString());
         try {
             if (!url.equals("")) {
                 Glide.with(getActivity())
@@ -318,10 +328,10 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
         mProgressDialog.show();
 
-        String selectedOImagePath = selectedImageUri.getPath();
+        mSelectedImagePath = selectedImageUri.getPath();
 
         mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
-                selectedOImagePath, getActivity());
+                mSelectedImagePath, getActivity());
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
         mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -383,7 +393,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
 
                         // We need to update the basic info page when user navigates to that page from the current edit page.
                         // But by default, the basic info stored in our database is refreshed only when a push is received.
@@ -391,6 +400,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                         // navigated to the basic info page. To handle this case, we are setting updateNeeded to true.
                         PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
                         pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, true);
+
+                        ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
                     }
                 } else {
                     if (getActivity() != null)
@@ -412,6 +423,9 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
                     pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
+
+                    File profilePictureCache = StorageManager.getProfilePictureFile(mMobileNumber);
+                    StorageManager.fileCopy(new File(mSelectedImagePath), profilePictureCache);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();

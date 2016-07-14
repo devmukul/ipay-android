@@ -694,7 +694,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final BigDecimal vat = mMoneyRequestList.get(pos).getVat();
                 final List<ItemList> itemList = mMoneyRequestList.get(pos).getItemList();
 
-                mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name);
+                mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name, false);
 
                 mDescriptionView.setText(description);
                 mTimeView.setText(time);
@@ -810,7 +810,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mSenderName.setText(senderName);
                 mSenderMobileNumber.setText(senderMobileNumber);
                 mDate.setText(time);
-                mProfileImageView.setInformation(senderMobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, senderName);
+                mProfileImageView.setInformation(senderMobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, senderName, false);
 
                 optionsLayout.setVisibility(View.GONE);
 
@@ -995,7 +995,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final Business businessInvitation = mBusinessInvitationList.get(pos);
 
                 mProfilePictureView.setInformation(businessInvitation.getMobileNumber(), Constants.BASE_URL_FTP_SERVER + businessInvitation.getProfilePictureUrl(),
-                        businessInvitation.getName());
+                        businessInvitation.getName(), false);
                 mNameView.setText(businessInvitation.getName());
                 mMobileNumberView.setText(businessInvitation.getMobileNumber());
 

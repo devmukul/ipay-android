@@ -147,7 +147,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         boolean imageLoadedFromDisk = false;
         if (pref.contains(Constants.USERID)) {
             String phoneNumber = pref.getString(Constants.USERID, null);
-            imageLoadedFromDisk = mProfileImageView.setProfilePictureFromDisk(phoneNumber);
+            imageLoadedFromDisk = mProfileImageView.setProfilePictureFromDisk(phoneNumber, false);
         }
 
         if (!imageLoadedFromDisk) {

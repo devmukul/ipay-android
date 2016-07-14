@@ -16,6 +16,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
@@ -23,7 +24,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileInfoFragment extends Fragment {
 
-    private RoundedImageView mProfilePictureView;
+    private ProfileImageView mProfilePictureView;
     private TextView mNameView;
     private TextView mMobileNumberView;
     private ImageView mVerificationStatusView;
@@ -32,7 +33,6 @@ public class ProfileInfoFragment extends Fragment {
 
     private String mName = "";
     private String mMobileNumber = "";
-    private String profileImageUrl = "";
 
     private String mVerificationStatus = null;
 
@@ -51,7 +51,7 @@ public class ProfileInfoFragment extends Fragment {
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.account);
 
-        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
+        mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (ImageView) v.findViewById(R.id.textview_verification_status);
@@ -67,7 +67,6 @@ public class ProfileInfoFragment extends Fragment {
 
         mName = profileInfoCacheManager.getName();
         mMobileNumber = profileInfoCacheManager.getMobileNumber();
-        profileImageUrl = profileInfoCacheManager.getProfileImageUrl();
         mVerificationStatus = profileInfoCacheManager.getVerificationStatus();
 
         setProfileInformation();
@@ -117,10 +116,14 @@ public class ProfileInfoFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mProfilePictureView.setInformation(mMobileNumber, true);
+    }
 
     private void setProfileInformation() {
-        setProfilePicture(profileImageUrl);
-
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
 
@@ -132,26 +135,5 @@ public class ProfileInfoFragment extends Fragment {
             }
         }
     }
-
-    private void setProfilePicture(String url) {
-        try {
-            if (!url.equals("")) {
-                Glide.with(getActivity())
-                        .load(url)
-                        .crossFade()
-                        .error(R.drawable.ic_person)
-                        .transform(new CircleTransform(getActivity()))
-                        .into(mProfilePictureView);
-            } else {
-                Glide.with(getActivity())
-                        .load(R.drawable.ic_person)
-                        .crossFade()
-                        .into(mProfilePictureView);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

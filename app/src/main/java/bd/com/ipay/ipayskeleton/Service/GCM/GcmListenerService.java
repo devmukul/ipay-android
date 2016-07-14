@@ -12,6 +12,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -36,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.GetTrustedPersonsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.TransactionHistoryCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -79,7 +81,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         switch (tag) {
             case Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
                 if (isForeground() && isLoggedIn)
-                    getUserInfo();
+                    getProfileInfo();
                 else {
                     mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
                     createNotification(getString(R.string.push_profile_picture_updated_title),
@@ -182,21 +184,6 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         return componentInfo.getPackageName().equals(Constants.ApplicationPackage);
     }
 
-    private void getUserInfo() {
-        if (mUserInfoTask != null) {
-            return;
-        }
-
-        SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(pref.getString(Constants.USERID, ""));
-
-        String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
-        mUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, this);
-        mUserInfoTask.mHttpResponseListener = this;
-        mUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     private void getProfileInfo() {
         if (mGetProfileInfoTask != null) {
             return;
@@ -269,44 +256,35 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         DataHelper dataHelper = DataHelper.getInstance(this);
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
-
-            try {
-                mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                    List<UserProfilePictureClass> profilePictures = mGetUserInfoResponse.getProfilePictures();
-
-                    String imageUrl = "";
-                    if (profilePictures.size() > 0) {
-                        for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
-                            UserProfilePictureClass userProfilePictureClass = it.next();
-                            imageUrl = Constants.BASE_URL_FTP_SERVER + userProfilePictureClass.getUrl();
-                            break;
-                        }
-                    }
-
-                    SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
-                    String mUserID = pref.getString(Constants.USERID, "");
-
-                    // Download the profile picture and store it in local storage
-                    new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
-                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
-
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mUserInfoTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
                 mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+
+                List<UserProfilePictureClass> profilePictures = mGetUserInfoResponse.getProfilePictures();
+
+                String imageUrl = "";
+                if (profilePictures.size() > 0) {
+                    for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
+                        UserProfilePictureClass userProfilePictureClass = it.next();
+                        imageUrl = Constants.BASE_URL_FTP_SERVER + userProfilePictureClass.getUrl();
+                        break;
+                    }
+                }
+
+                SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
+                String mUserID = pref.getString(Constants.USERID, "");
+
+                // Download the profile picture and store it in local storage
+                new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+
+                ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);
+                profileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(),
+                        mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
             }
 
             mGetProfileInfoTask = null;

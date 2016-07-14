@@ -285,8 +285,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             getProfileCompletionStatus();
         }
 
-        updateProfileData();
-
         return v;
     }
 
@@ -354,6 +352,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public void onResume() {
         super.onResume();
         getActivity().invalidateOptionsMenu();
+
+        updateProfileData();
         refreshBalance();
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
@@ -380,9 +380,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mNameView.setText(profileInfoCacheManager.getName());
         mMobileNumberView.setText(profileInfoCacheManager.getMobileNumber());
-        boolean imageLoadedFromDisk = mProfilePictureView.setProfilePictureFromDisk(profileInfoCacheManager.getMobileNumber());
+        boolean imageLoadedFromDisk = mProfilePictureView.setProfilePictureFromDisk(profileInfoCacheManager.getMobileNumber(), true);
         if (!imageLoadedFromDisk)
-            mProfilePictureView.setProfilePicture(profileInfoCacheManager.getProfileImageUrl());
+            mProfilePictureView.setProfilePicture(profileInfoCacheManager.getProfileImageUrl(), false);
 
         if (profileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
             mVerificationStatusView.setVisibility(View.VISIBLE);

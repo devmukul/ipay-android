@@ -50,7 +50,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private ProgressDialog mProgressDialog;
 
-    private RoundedImageView mProfilePictureView;
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mVerificationStatusView;
@@ -112,7 +111,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.profile_basic_info);
 
-        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
@@ -126,8 +124,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mGender = pref.getString(Constants.GENDER, "");
         mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
         mProgressDialog = new ProgressDialog(getActivity());
-
-        setProfilePicture("");
 
         return v;
     }
@@ -155,6 +151,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private void launchEditFragment() {
         Bundle bundle = new Bundle();
 
+        bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
         bundle.putString(Constants.NAME, mName);
         bundle.putString(Constants.FATHERS_NAME, mFathersName);
         bundle.putString(Constants.MOTHERS_NAME, mMothersName);
@@ -167,7 +164,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     }
 
     private void setProfileInformation() {
-        setProfilePicture(mProfileImageUrl);
 
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
@@ -215,26 +211,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
                 new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
         mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void setProfilePicture(String url) {
-        try {
-            if (!url.equals("")) {
-                Glide.with(getActivity())
-                        .load(url)
-                        .crossFade()
-                        .error(R.drawable.ic_person)
-                        .transform(new CircleTransform(getActivity()))
-                        .into(mProfilePictureView);
-            } else {
-                Glide.with(getActivity())
-                        .load(R.drawable.ic_person)
-                        .crossFade()
-                        .into(mProfilePictureView);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -336,9 +312,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
         ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
         profileInfoCacheManager.updateCache(mName, mMobileNumber, mProfileImageUrl, mVerificationStatus);
-
-        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
-        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
         setProfileInformation();
         getOccupationList();

@@ -262,7 +262,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
                 final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
 
 
-                mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name);
+                mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name, false);
 
                 mSenderName.setText(name);
 

@@ -2,14 +2,18 @@ package bd.com.ipay.ipayskeleton.Utilities.CacheManager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.content.LocalBroadcastManager;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileInfoCacheManager {
     private SharedPreferences pref;
+    private Context context;
 
     public ProfileInfoCacheManager(Context context) {
+        this.context = context;
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
@@ -40,6 +44,11 @@ public class ProfileInfoCacheManager {
                 .putString(Constants.PROFILE_PICTURE, profileImageUrl)
                 .putString(Constants.VERIFICATION_STATUS, verificationStatus)
                 .apply();
+
+        // Send broadcast that profile information has updated, so views showing profile information
+        // (e.g. HomeFragment) could be refreshed
+        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void updateCache(String name, String profileImageUrl, String verificationStatus) {
@@ -48,13 +57,11 @@ public class ProfileInfoCacheManager {
                 .putString(Constants.PROFILE_PICTURE, profileImageUrl)
                 .putString(Constants.VERIFICATION_STATUS, verificationStatus)
                 .apply();
-    }
 
-    public void updateCache(String mobileNumber, int accountType) {
-        pref.edit()
-                .putString(Constants.USERID, mobileNumber)
-                .putInt(Constants.ACCOUNT_TYPE, accountType)
-                .apply();
+        // Send broadcast that profile information has updated, so views showing profile information
+        // (e.g. HomeFragment) could be refreshed
+        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }
 

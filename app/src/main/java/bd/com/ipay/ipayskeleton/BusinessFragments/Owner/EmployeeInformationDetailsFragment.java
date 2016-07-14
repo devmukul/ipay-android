@@ -107,7 +107,7 @@ public class EmployeeInformationDetailsFragment extends Fragment implements Http
                         mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
 
                         mProfilePictureView.setInformation(mEmployeeDetails.getMobileNumber(),
-                                Constants.BASE_URL_FTP_SERVER + mEmployeeDetails.getProfilePictureUrl(), mEmployeeDetails.getName());
+                                Constants.BASE_URL_FTP_SERVER + mEmployeeDetails.getProfilePictureUrl(), mEmployeeDetails.getName(), false);
                         mNameView.setText(mEmployeeDetails.getName());
                         mMobileNumberView.setText(mEmployeeDetails.getMobileNumber());
 

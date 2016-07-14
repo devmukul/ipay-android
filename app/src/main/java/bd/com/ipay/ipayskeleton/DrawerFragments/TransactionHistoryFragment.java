@@ -522,7 +522,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mMobileNumberView.setText(receiverMobileNumber);
             otherImageView.setVisibility(View.GONE);
             mProfileImageView.setVisibility(View.VISIBLE);
-            mProfileImageView.setInformation(receiverMobileNumber, Constants.BASE_URL_FTP_SERVER + photoUri, receiverName);
+            mProfileImageView.setInformation(receiverMobileNumber, Constants.BASE_URL_FTP_SERVER + photoUri, receiverName, false);
         }
 
 
@@ -702,7 +702,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 } else {
                     otherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
-                    mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name);
+                    mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name, false);
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
