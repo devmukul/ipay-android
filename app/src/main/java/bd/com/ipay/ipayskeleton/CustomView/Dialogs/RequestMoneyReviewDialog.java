@@ -95,7 +95,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
         mPinField = (EditText) v.findViewById(R.id.pin);
 
-        mProfileImageView.setInformation(mPhotoUri, mReceiverName);
+        mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName, false);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
             mNameView.setVisibility(View.GONE);

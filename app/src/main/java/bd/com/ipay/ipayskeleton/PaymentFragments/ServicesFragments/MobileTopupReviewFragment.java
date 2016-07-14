@@ -61,7 +61,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private int mMobileNumberType;
     private String mCountryCode;
     private int mOperatorCode;
-    String mError_message;
+    private String mError_message;
 
     public TextView mReceiverView;
     private TextView mMobileNumberView;
@@ -307,7 +307,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                                 .getProfilePictures().get(0).getUrl();
                     }
                     mReceiverView.setText(name);
-                    mProfileImageView.setInformation(mMobileNumber, Constants.BASE_URL_FTP_SERVER + profilePicture, name);
+                    mProfileImageView.setInformation(mMobileNumber, Constants.BASE_URL_FTP_SERVER + profilePicture, name, false);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
 
@@ -317,7 +317,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                     if (name != null)
                         mReceiverView.setText(name);
                     Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
-                    mProfileImageView.setInformation(mMobileNumber, photoUri.toString(), name);
+                    mProfileImageView.setInformation(mMobileNumber, photoUri.toString(), name, false);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

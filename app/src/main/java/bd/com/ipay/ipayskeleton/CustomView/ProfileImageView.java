@@ -94,22 +94,6 @@ public class ProfileImageView extends FrameLayout {
         }
     }
 
-    private void setInformation(String photoUri, String name, boolean forceLoad) {
-//        if (photoUri != null) {
-//            setProfilePicture(photoUri);
-//        } else {
-//            setProfileFirstLetter(name);
-//        }
-
-        if (name != null && !name.isEmpty()) {
-            setProfileFirstLetter(name);
-            setProfilePicture(photoUri, forceLoad);
-
-        } else {
-            setProfilePicturePlaceHolder();
-        }
-    }
-
     /**
      * Try to set an already downloaded profile picture for this phone number.
      * Returns true on success.
@@ -163,6 +147,16 @@ public class ProfileImageView extends FrameLayout {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setInformation(String photoUri, String name, boolean forceLoad) {
+        if (name != null && !name.isEmpty()) {
+            setProfileFirstLetter(name);
+            setProfilePicture(photoUri, forceLoad);
+
+        } else {
+            setProfilePicturePlaceHolder();
         }
     }
 }
