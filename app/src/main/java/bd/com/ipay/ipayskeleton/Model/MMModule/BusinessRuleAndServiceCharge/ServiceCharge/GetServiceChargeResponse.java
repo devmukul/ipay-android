@@ -7,6 +7,7 @@ public class GetServiceChargeResponse {
     public BigDecimal maxTransactionFee;
     public BigDecimal perTransactionFlatFee;
     public BigDecimal perTransactionVeriableCharge;
+    public Boolean isPinRequired;
 
     public GetServiceChargeResponse() {
     }
@@ -29,6 +30,14 @@ public class GetServiceChargeResponse {
             return perTransactionVeriableCharge;
     }
 
+    public boolean isPinRequired() {
+        return isPinRequired;
+    }
+
+    public void setPinRequired(boolean pinRequired) {
+        isPinRequired = pinRequired;
+    }
+
     public BigDecimal getServiceCharge(BigDecimal amount) {
         try {
             BigDecimal calculatedServiceCharge = getPerTransactionFlatFee().add(((getPerTransactionVeriableCharge().multiply(amount))).divide(new BigDecimal(100)));
@@ -42,6 +51,8 @@ public class GetServiceChargeResponse {
             e.printStackTrace();
             return new BigDecimal(-1);
         }
+
+
     }
 
 //    public String getServiceChargeDescription(BigDecimal amount) {

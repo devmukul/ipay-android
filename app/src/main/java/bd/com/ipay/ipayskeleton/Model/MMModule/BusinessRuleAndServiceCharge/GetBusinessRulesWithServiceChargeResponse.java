@@ -9,6 +9,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.Serv
 public class GetBusinessRulesWithServiceChargeResponse {
     public List<BusinessRule> businessRules = new ArrayList<>();
     public FeeCharge feeCharge = new FeeCharge();
+    public Boolean isPinRequired=false;
 
     public GetBusinessRulesWithServiceChargeResponse() {
     }
@@ -27,5 +28,13 @@ public class GetBusinessRulesWithServiceChargeResponse {
 
     public void setFeeCharge(FeeCharge feeCharge) {
         this.feeCharge = feeCharge;
+    }
+
+    public Boolean getPinRequired() {
+        return isPinRequired;
+    }
+
+    public void setPinRequired(Boolean pinRequired) {
+        isPinRequired = pinRequired;
     }
 }

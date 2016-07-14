@@ -28,7 +28,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.Serv
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-
 /**
  * Be sure to call the attemptGetServiceCharge method at the end of your onCreateView method
  * of the fragment. If you override httpResponseReceiver, make sure to call
@@ -44,14 +43,11 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
     private GetBusinessRulesWithServiceChargeResponse mBusinessRulesResponseWithServiceCharge;
 
-    /**
-     * Service ID used to query the service charge
-     */
+
+    // Service ID used to query the service charge
     public abstract int getServiceID();
 
-    /**
-     * The original amount you have entered in the previous page
-     */
+    // The original amount you have entered in the previous page
     public abstract BigDecimal getAmount();
 
     /**
@@ -59,6 +55,8 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
      * the service charge and net amount view withing this method.
      */
     public abstract void onServiceChargeLoadFinished(BigDecimal serviceCharge);
+
+    public abstract void onPinLoadFinished(boolean isPinRequired);
 
     protected void attemptGetServiceCharge() {
 
@@ -111,7 +109,6 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
             return;
         }
 
-
         if (mProgressDialog != null)
             mProgressDialog.dismiss();
 
@@ -129,6 +126,8 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                         } else {
                             onServiceChargeLoadFinished(mGetServiceChargeResponse.getServiceCharge(getAmount()));
                         }
+
+                        onPinLoadFinished(mGetServiceChargeResponse.isPinRequired());
 
                     } else {
                         Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -160,23 +159,22 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
                     for (BusinessRule rule : mBusinessRulesResponseWithServiceCharge.getBusinessRules()) {
                         if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                            SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            SendMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                            SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                            AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                            AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT)) {
-                            TopUpActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            TopUpActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT)) {
-                            TopUpActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            TopUpActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                            WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            WithdrawMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                            WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            WithdrawMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         }
-
                     }
 
                     if (mBusinessRulesResponseWithServiceCharge.getFeeCharge() != null) {
@@ -191,6 +189,9 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                         Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
                         getActivity().finish();
                         return;
+                    }
+                    if (mBusinessRulesResponseWithServiceCharge.getPinRequired() != null) {
+                        onPinLoadFinished(mBusinessRulesResponseWithServiceCharge.getPinRequired());
                     }
 
                 } catch (Exception e) {
@@ -207,7 +208,6 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
             mGetBusinessRuleTask = null;
 
         }
-
 
     }
 }

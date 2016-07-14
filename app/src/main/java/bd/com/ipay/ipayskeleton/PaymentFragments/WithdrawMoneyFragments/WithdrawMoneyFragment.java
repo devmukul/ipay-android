@@ -173,11 +173,11 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             cancel = true;
         } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT)
-                && Utilities.isValueAvailable(WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT)) {
+                && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT, WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+                    WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
             if (error_message != null) {
                 focusView = mAmountEditText;
@@ -303,42 +303,41 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                     e.printStackTrace();
                 }
 
+                mProgressDialog.dismiss();
+                mGetBankTask = null;
 
-            } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+            }
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    try {
-                        gson = new Gson();
+                try {
+                    gson = new Gson();
 
-                        BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
+                    BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
 
-                        for (BusinessRule rule : businessRuleArray) {
-                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                    for (BusinessRule rule : businessRuleArray) {
+                        if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                            WithdrawMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
-                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                                WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
-                            }
-
+                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                            WithdrawMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                     }
 
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
 
-                mGetBusinessRuleTask = null;
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
             }
 
-            mProgressDialog.dismiss();
-            mGetBankTask = null;
+            mGetBusinessRuleTask = null;
 
         }
     }

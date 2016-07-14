@@ -178,11 +178,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             cancel = true;
         }
         else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT)
-                && Utilities.isValueAvailable(AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT)) {
+                && Utilities.isValueAvailable(((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT, AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+                    ((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                    ((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
             if (error_message != null) {
                 focusView = mAmountEditText;
@@ -332,12 +333,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
                     for (BusinessRule rule : businessRuleArray) {
                         if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                            AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            ((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                            AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            ((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         }
-
                     }
 
                 } catch (Exception e) {

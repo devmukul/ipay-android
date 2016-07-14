@@ -97,19 +97,26 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             @Override
             public void onClick(View v) {
 
-                mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount), WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT, WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+                mError_message = InputValidator.isValidAmount(getActivity(),
+                        new BigDecimal(mAmount),
+                        WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                        WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT());
 
                 if (mError_message == null) {
-                    final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+                    if (WithdrawMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+                        final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
-                    pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            attemptWithdrawMoney(pinInputDialogBuilder.getPin());
-                        }
-                    });
+                        pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                attemptWithdrawMoney(pinInputDialogBuilder.getPin());
+                            }
+                        });
 
-                    pinInputDialogBuilder.build().show();
+                        pinInputDialogBuilder.build().show();
+                    } else {
+                        attemptWithdrawMoney(null);
+                    }
 
                 } else {
                     new AlertDialog.Builder(getContext())
@@ -126,8 +133,8 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         });
 
         // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(WithdrawMoneyActivity.MAX_AMOUNT_PER_PAYMENT)
-                && !Utilities.isValueAvailable(WithdrawMoneyActivity.MIN_AMOUNT_PER_PAYMENT))
+        if (!Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
+                && !Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
             attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_WITHDRAW_MONEY);
         else
             attemptGetServiceCharge();
@@ -168,6 +175,11 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
         mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+    }
+
+    @Override
+    public void onPinLoadFinished(boolean isPinRequired) {
+        WithdrawMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
     @Override

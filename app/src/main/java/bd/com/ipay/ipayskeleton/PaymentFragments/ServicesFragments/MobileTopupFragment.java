@@ -1,8 +1,10 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -12,19 +14,25 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
@@ -32,8 +40,11 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.OperatorClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopUpPackageClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -44,8 +55,9 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
     private EditText mMobileNumberEditText;
     private EditText mAmountEditText;
+    private EditText mPackageEditText;
+    private EditText mOperatorEditText;
     private ImageView mSelectReceiverButton;
-    private Spinner mSelectOperator;
     private Button mRechargeButton;
 
     private RadioGroup mSelectType;
@@ -55,8 +67,20 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
 
+    private TopUpPackageClass aPackage;
+    private OperatorClass mOperator;
+
+    private List<TopUpPackageClass> mpackageList;
+    private List<OperatorClass> moperatorList;
+    private List<String> mArraypackages;
+    private List<String> mArrayoperators;
+
+    private ResourceSelectorDialog<TopUpPackageClass> packageClassResourceSelectorDialog;
+    private ListView pop_up_list;
     private static final int MOBILE_TOPUP_REVIEW_REQUEST = 100;
     private final int PICK_CONTACT_REQUEST = 100;
+    private int mSelectedPackageTypeId = -1;
+    private int mSelectedOperatorTypeId = 0;
 
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
@@ -69,27 +93,42 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        mSelectOperator = (Spinner) v.findViewById(R.id.operator_list_spinner);
+        mPackageEditText = (EditText) v.findViewById(R.id.package_type);
+        mOperatorEditText = (EditText) v.findViewById(R.id.operator);
         mSelectReceiverButton = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
 
-        mSelectType = (RadioGroup) v.findViewById(R.id.mobile_number_type_selector);
-        mPrepaidRadioButton = (RadioButton) v.findViewById(R.id.radio_button_prepaid);
-        mPostPaidRadioButton = (RadioButton) v.findViewById(R.id.radio_button_postpaid);
+        getOperatorandPackage();
+
+        //Set adapter for package type
+        setPackageTypeAdapter();
 
         int mobileNumberType = pref.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
         if (mobileNumberType == Constants.MOBILE_TYPE_PREPAID) {
-            mPrepaidRadioButton.setChecked(true);
+            mPackageEditText.setText(mArraypackages.get(Constants.MOBILE_TYPE_PREPAID - 1));
         } else {
-            mPostPaidRadioButton.setChecked(true);
+            mPackageEditText.setText(mArraypackages.get(Constants.MOBILE_TYPE_POSTPAID - 1));
         }
+
+        mPackageEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                packageClassResourceSelectorDialog.show();
+            }
+        });
+
+        mOperatorEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showOperatorDialog();
+            }
+        });
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.recharging_balance));
 
-        ArrayAdapter<CharSequence> mAdapterMobileOperators = ArrayAdapter.createFromResource(getActivity(),
-                R.array.mobile_operators, android.R.layout.simple_dropdown_item_1line);
-        mSelectOperator.setAdapter(mAdapterMobileOperators);
 
         mRechargeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,12 +147,13 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         String verificationStatus = pref.getString(Constants.VERIFICATION_STATUS, Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED);
         String userMobileNumber = pref.getString(Constants.USERID, "");
         mMobileNumberEditText.setText(userMobileNumber);
+        setOperator(userMobileNumber);
 
         if (!verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
             mMobileNumberEditText.setEnabled(false);
             mMobileNumberEditText.setFocusable(false);
 
-            mSelectOperator.setEnabled(false);
+            mOperatorEditText.setEnabled(false);
             mSelectReceiverButton.setVisibility(View.GONE);
             mAmountEditText.requestFocus();
 
@@ -152,13 +192,31 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         return v;
     }
 
+    private void getOperatorandPackage() {
+        mpackageList = new ArrayList<TopUpPackageClass>();
+        moperatorList = new ArrayList<OperatorClass>();
+        mArraypackages = Arrays.asList(getResources().getStringArray(R.array.package_type));
+        mArrayoperators = Arrays.asList(getResources().getStringArray(R.array.mobile_operators));
+
+        for (String mpackage : mArraypackages) {
+            aPackage = new TopUpPackageClass();
+            aPackage.setName(mpackage);
+            mpackageList.add(aPackage);
+        }
+        for (String moperator : mArrayoperators) {
+            mOperator = new OperatorClass(moperator);
+            moperatorList.add(mOperator);
+        }
+    }
+
     private void setOperator(String phoneNumber) {
         phoneNumber = ContactEngine.trimPrefix(phoneNumber);
 
         final String[] OPERATOR_PREFIXES = {"17", "18", "16", "19", "15"};
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
             if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
-                mSelectOperator.setSelection(i);
+                mOperatorEditText.setText(mArrayoperators.get(i));
+                mSelectedOperatorTypeId = i;
                 break;
             }
         }
@@ -173,11 +231,12 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             focusView = mAmountEditText;
             cancel = true;
         } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(TopUpActivity.MIN_AMOUNT_PER_PAYMENT)
-                && Utilities.isValueAvailable(TopUpActivity.MAX_AMOUNT_PER_PAYMENT)) {
+                && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    TopUpActivity.MIN_AMOUNT_PER_PAYMENT, TopUpActivity.MAX_AMOUNT_PER_PAYMENT);
+                    TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                    TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
             if (error_message != null) {
                 focusView = mAmountEditText;
@@ -208,24 +267,48 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private void launchReviewPage() {
 
         double amount = Double.parseDouble(mAmountEditText.getText().toString().trim());
+        String mobileNumber = mMobileNumberEditText.getText().toString();
 
         int mobileNumberType;
-        if (mSelectType.getCheckedRadioButtonId() == R.id.radio_button_prepaid)
-            mobileNumberType = Constants.MOBILE_TYPE_PREPAID;
-        else
+        if (mSelectedPackageTypeId > 0)
             mobileNumberType = Constants.MOBILE_TYPE_POSTPAID;
+        else
+            mobileNumberType = Constants.MOBILE_TYPE_PREPAID;
         pref.edit().putInt(Constants.MOBILE_NUMBER_TYPE, mobileNumberType).apply();
 
-        int operatorCode = mSelectOperator.getSelectedItemPosition() + 1;
+        int operatorCode = mSelectedOperatorTypeId + 1;
         String countryCode = "+88"; // TODO: For now Bangladesh Only
 
         Intent intent = new Intent(getActivity(), TopUpReviewActivity.class);
+        intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.MOBILE_NUMBER_TYPE, mobileNumberType);
         intent.putExtra(Constants.OPERATOR_CODE, operatorCode);
         intent.putExtra(Constants.COUNTRY_CODE, countryCode);
 
         startActivityForResult(intent, MOBILE_TOPUP_REVIEW_REQUEST);
+    }
+
+    private void showOperatorDialog() {
+
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_operator_listview);
+        pop_up_list = (ListView) dialog.findViewById(R.id.custom_list);
+        OperatorAdapter adapter = new OperatorAdapter(getActivity(), moperatorList);
+        pop_up_list.setAdapter(adapter);
+        pop_up_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mSelectedOperatorTypeId = i;
+                mOperatorEditText.setText(moperatorList.get(i).getName());
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setTitle(null);
+        dialog.setCancelable(true); //  TO NOT DISMISS THE DIALOG
+        dialog.show();
+
     }
 
     protected void attemptGetBusinessRule(int serviceID) {
@@ -243,7 +326,14 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mProgressDialog.dismiss();
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -254,10 +344,10 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
                     for (BusinessRule rule : businessRuleArray) {
                         if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT)) {
-                            TopUpActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            TopUpActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT)) {
-                            TopUpActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            TopUpActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         }
 
                     }
@@ -274,6 +364,59 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             }
 
             mGetBusinessRuleTask = null;
+        }
+    }
+
+    private void setPackageTypeAdapter() {
+        packageClassResourceSelectorDialog = new ResourceSelectorDialog(getActivity(), mpackageList, mSelectedPackageTypeId);
+        packageClassResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int id, String name) {
+                mPackageEditText.setText(name);
+                mSelectedPackageTypeId = mArraypackages.indexOf(name);
+            }
+        });
+    }
+
+
+    public class OperatorAdapter extends ArrayAdapter<OperatorClass> {
+
+        private LayoutInflater inflater;
+
+        public OperatorAdapter(Context context, List<OperatorClass> objects) {
+            super(context, 0, objects);
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final OperatorClass operator = getItem(position);
+
+            View view = convertView;
+            if (view == null)
+                view = inflater.inflate(R.layout.list_item_operator, null);
+
+
+            ImageView operatorimageView = (ImageView) view.findViewById(R.id.operator_imageView);
+            TextView operatorNameView = (TextView) view.findViewById(R.id.textview_operator_name);
+
+
+            //Setting the correct image based on Operator
+            int[] images = {
+                    R.drawable.ic_gp,
+                    R.drawable.ic_robi,
+                    R.drawable.ic_airtel,
+                    R.drawable.ic_banglalink,
+                    R.drawable.ic_teletalk,
+
+            };
+            int operatorID = position;
+
+            operatorimageView.setImageResource(images[position]);
+            operatorNameView.setText(operator.getName());
+
+
+            return view;
         }
     }
 }

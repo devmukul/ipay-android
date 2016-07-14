@@ -1,28 +1,21 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
-import java.math.BigDecimal;
-
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class SendMoneyActivity extends BaseActivity {
 
-
     private SendMoneyFragment sendMoneyFragment;
-    public static BigDecimal MAX_AMOUNT_PER_PAYMENT=new BigDecimal("0");
-    public static BigDecimal MIN_AMOUNT_PER_PAYMENT=new BigDecimal("0");
-
+    public static MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

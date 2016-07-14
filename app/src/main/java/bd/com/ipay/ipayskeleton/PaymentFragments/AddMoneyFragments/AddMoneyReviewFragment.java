@@ -96,19 +96,26 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount), AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT, AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+                mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
+                        AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                        AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                 if (mError_message == null) {
-                    final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+                    //if Pin Required
+                    if (AddMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+                        final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
-                    pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            attemptAddMoney(pinInputDialogBuilder.getPin());
-                        }
-                    });
+                        pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                attemptAddMoney(pinInputDialogBuilder.getPin());
+                            }
+                        });
 
-                    pinInputDialogBuilder.build().show();
+                        pinInputDialogBuilder.build().show();
+                    } else {
+                        attemptAddMoney(null);
+                    }
                 } else {
                     new AlertDialog.Builder(getContext())
                             .setMessage(mError_message)
@@ -124,8 +131,8 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         });
 
         // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(AddMoneyActivity.MAX_AMOUNT_PER_PAYMENT)
-                && !Utilities.isValueAvailable(AddMoneyActivity.MIN_AMOUNT_PER_PAYMENT))
+        if (!Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
+                && !Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
             attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_ADD_MONEY);
         else
             attemptGetServiceCharge();
@@ -166,6 +173,12 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
         mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+    }
+
+    @Override
+    public void onPinLoadFinished(boolean isPinRequired) {
+        AddMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+
     }
 
     @Override

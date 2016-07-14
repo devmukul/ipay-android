@@ -37,7 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-
             <TextView
                 android:id="@+id/receiver"
                 style="@style/TransactionHistoryLeftTextViewStyle"
@@ -64,7 +63,6 @@
                 style="@style/TransactionHistoryLeftTextViewStyle"
                 android:layout_toLeftOf="@+id/status_description" />
 
-
             <TextView
                 android:id="@+id/status_description"
                 style="@style/TransactionHistoryRightTextViewStyle" />
@@ -75,7 +73,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp">
-
 
             <TextView
                 android:text="@string/balance"
@@ -90,7 +87,8 @@
                 android:id="@+id/time"
                 style="@style/TransactionHistoryLeftTextViewStyle"
                 android:layout_below="@+id/amount"
-                android:textColor="@color/colorBlackTransparent"/>
+                android:textColor="@color/colorBlackTransparent"
+                android:textSize="11sp"/>
 
         </RelativeLayout>
     </LinearLayout>

@@ -112,19 +112,23 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             @Override
             public void onClick(View v) {
 
-                mError_message = InputValidator.isValidAmount(getActivity(), mAmount, SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT, SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+                mError_message = InputValidator.isValidAmount(getActivity(), mAmount,
+                        SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                        SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                 if (mError_message == null) {
-                    final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+                    if (SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+                        final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
-                    pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            attemptSendMoney(pinInputDialogBuilder.getPin());
-                        }
-                    });
+                        pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                attemptSendMoney(pinInputDialogBuilder.getPin());
+                            }
+                        });
 
-                    pinInputDialogBuilder.build().show();
+                        pinInputDialogBuilder.build().show();
+                    }
 
                 } else {
                     new AlertDialog.Builder(getContext())
@@ -141,8 +145,8 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         });
 
         // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT)
-                && !Utilities.isValueAvailable(SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT))
+        if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
+                && !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
             attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
         else
             attemptGetServiceCharge();
@@ -182,6 +186,11 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
         mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+    }
+
+    @Override
+    public void onPinLoadFinished(boolean isPinRequired) {
+        SendMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
     @Override

@@ -22,8 +22,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
@@ -45,16 +43,12 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int SEND_MONEY_REVIEW_REQUEST = 101;
 
-//    private HttpRequestPostAsyncTask mSendMoneyQueryTask = null;
-//    private SendMoneyQueryResponse mSendMoneyQueryResponse;
-
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
     private ImageView buttonScanQRCode;
     private IconifiedEditText mMobileNumberEditText;
     private IconifiedEditText mDescriptionEditText;
     private IconifiedEditText mAmountEditText;
-
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -183,11 +177,11 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             cancel = true;
 
         } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT)
-                && Utilities.isValueAvailable(SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT)) {
+                && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT, SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT);
+                    SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
             if (error_message != null) {
                 focusView = mAmountEditText;
@@ -209,7 +203,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             return true;
         }
     }
-
 
     private void launchReviewPage() {
 
@@ -241,7 +234,14 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -252,12 +252,11 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
                     for (BusinessRule rule : businessRuleArray) {
                         if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                            SendMoneyActivity.MAX_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            SendMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                            SendMoneyActivity.MIN_AMOUNT_PER_PAYMENT = rule.getRuleValue();
+                            SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         }
-
                     }
 
                 } catch (Exception e) {
