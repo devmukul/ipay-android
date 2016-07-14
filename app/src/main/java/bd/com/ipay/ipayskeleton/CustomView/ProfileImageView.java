@@ -93,23 +93,6 @@ public class ProfileImageView extends FrameLayout {
         }
     }
 
-    private void setInformation(String photoUri, String name) {
-//        if (photoUri != null) {
-//            setProfilePicture(photoUri);
-//        } else {
-//            setProfileFirstLetter(name);
-//        }
-
-        if (name != null && !name.isEmpty()) {
-            setProfileFirstLetter(name);
-            setProfilePicture(photoUri);
-
-        } else if (photoUri != null){
-            setProfileFirstLetter(photoUri);
-        } else {
-            setProfilePicturePlaceHolder();
-        }
-    }
 
     /**
      * Try to set an already downloaded profile picture for this phone number.
@@ -133,6 +116,18 @@ public class ProfileImageView extends FrameLayout {
         return false;
     }
 
+    public void setInformation(String photoUri, String name) {
+        if (name != null && !name.isEmpty()) {
+            setProfileFirstLetter(name);
+            setProfilePicture(photoUri);
+
+        } else if (photoUri != null) {
+            setProfileFirstLetter(photoUri);
+        } else {
+            setProfilePicturePlaceHolder();
+        }
+    }
+
     /**
      * Try to load a profile picture in this ImageView. This is done in the following order:
      * 1. Try to find an already downloaded image for this phone number
@@ -148,7 +143,7 @@ public class ProfileImageView extends FrameLayout {
                     imageUri = Uri.fromFile(imageFile);
             }
 
-            if(imageUri != null) {
+            if (imageUri != null) {
                 Log.w("Image Uri", imageUri.toString());
                 setInformation(imageUri.toString(), name);
 
