@@ -278,8 +278,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 String mUserID = pref.getString(Constants.USERID, "");
 
                 // Download the profile picture and store it in local storage
-                new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
-                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
+//                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
                 ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);

@@ -628,8 +628,8 @@ public class HomeActivity extends BaseActivity
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(this);
                     if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                            new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
-                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                            new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
+//                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                         pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                     }

@@ -6,12 +6,11 @@ import android.content.IntentFilter;
 
 public class EnableDisableSMSBroadcastReceiver {
 
+    private SMSReaderBroadcastReceiver mSMSReader;
+
     /**
      * This method enables the Broadcast receiver registered in the AndroidManifest file.
      */
-
-    private SMSReaderBroadcastReceiver mSMSReader;
-
     public void enableBroadcastReceiver(Context context, SMSReaderBroadcastReceiver.OnTextMessageReceivedListener listener) {
 
         IntentFilter intentFilter = new IntentFilter(

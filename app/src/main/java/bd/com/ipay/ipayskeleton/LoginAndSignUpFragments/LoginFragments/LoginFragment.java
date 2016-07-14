@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
@@ -129,7 +130,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mPasswordLoginView.getEditText().requestFocus();
             String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(SignupOrLoginActivity.mMobileNumber);
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + mobileNumberWithoutPrefix);
-      } else if (pref.contains(Constants.USERID)) {
+        } else if (pref.contains(Constants.USERID)) {
             mUserNameLoginView.getEditText().setEnabled(false);
             mInfoView.setVisibility(View.VISIBLE);
             mPasswordLoginView.getEditText().requestFocus();
@@ -144,13 +145,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             attemptLogin();
         }
 
-        boolean imageLoadedFromDisk = false;
-        if (pref.contains(Constants.USERID)) {
-            String phoneNumber = pref.getString(Constants.USERID, null);
-            imageLoadedFromDisk = mProfileImageView.setProfilePictureFromDisk(phoneNumber, false);
-        }
-
-        if (!imageLoadedFromDisk) {
+        ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getContext());
+        if (!profileInfoCacheManager.getProfileImageUrl().isEmpty()) {
+            mProfileImageView.setProfilePicture(profileInfoCacheManager.getProfileImageUrl(), true);
+        } else {
             mProfileImageView.setProfilePicture(R.drawable.ic_user_pic);
         }
 

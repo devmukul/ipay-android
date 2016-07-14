@@ -10,8 +10,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.target.Target;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
@@ -54,22 +57,21 @@ public class ProfileImageView extends FrameLayout {
     }
 
     public void setProfilePicture(String photoUri, boolean forceLoad) {
-//        mProfilePictureView.setVisibility(View.VISIBLE);
-//        mProfileFirstLetterView.setVisibility(View.GONE);
+        final DrawableTypeRequest<String> glide = Glide.with(context).load(photoUri);
 
-        Glide.with(context)
-                .load(photoUri)
-                .skipMemoryCache(forceLoad)
-                .error(R.drawable.ic_user_pic)
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(mProfilePictureView);
+        if (forceLoad) {
+            glide
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE);
+        }
+
+        glide
+            .error(R.drawable.ic_user_pic)
+            .crossFade()
+            .into(mProfilePictureView);
     }
 
     public void setProfilePicture(int photoResourceId) {
-//        mProfilePictureView.setVisibility(View.VISIBLE);
-//        mProfileFirstLetterView.setVisibility(View.GONE);
-
         Drawable drawable = context.getResources().getDrawable(photoResourceId);
         mProfilePictureView.setImageDrawable(drawable);
     }
@@ -130,20 +132,22 @@ public class ProfileImageView extends FrameLayout {
      */
     public void setInformation(String phoneNumber, String photoUri, String name, boolean forceLoad) {
         try {
-            Uri imageUri = null;
-            if (phoneNumber != null) {
-                File imageFile = StorageManager.getProfilePictureFile(phoneNumber);
-                if (imageFile.exists())
-                    imageUri = Uri.fromFile(imageFile);
-            }
+//            Uri imageUri = null;
+//            if (phoneNumber != null) {
+//                File imageFile = StorageManager.getProfilePictureFile(phoneNumber);
+//                if (imageFile.exists())
+//                    imageUri = Uri.fromFile(imageFile);
+//            }
+//
+//            if(imageUri != null) {
+//                Log.w("Image Uri", imageUri.toString());
+//                setInformation(imageUri.toString(), name, forceLoad);
+//
+//            } else {
+//                setInformation(photoUri, name, forceLoad);
+//            }
 
-            if(imageUri != null) {
-                Log.w("Image Uri", imageUri.toString());
-                setInformation(imageUri.toString(), name, forceLoad);
-
-            } else {
-                setInformation(photoUri, name, forceLoad);
-            }
+            setInformation(photoUri, name, forceLoad);
 
         } catch (Exception e) {
             e.printStackTrace();

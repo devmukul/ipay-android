@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -424,8 +425,13 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
                     pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
 
-                    File profilePictureCache = StorageManager.getProfilePictureFile(mMobileNumber);
-                    StorageManager.fileCopy(new File(mSelectedImagePath), profilePictureCache);
+//                    File profilePictureCache = StorageManager.getProfilePictureFile(mMobileNumber);
+//                    StorageManager.fileCopy(new File(mSelectedImagePath), profilePictureCache);
+
+                    Intent intent = new Intent(Constants.PROFILE_PICTURE_UPDATE_BROADCAST);
+                    intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);
+                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();

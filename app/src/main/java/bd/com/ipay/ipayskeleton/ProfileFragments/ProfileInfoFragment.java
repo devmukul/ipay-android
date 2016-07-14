@@ -1,9 +1,14 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,10 +34,9 @@ public class ProfileInfoFragment extends Fragment {
     private TextView mMobileNumberView;
     private ImageView mVerificationStatusView;
 
-    private SharedPreferences pref;
-
     private String mName = "";
     private String mMobileNumber = "";
+    private String mProfilePicture = "";
 
     private String mVerificationStatus = null;
 
@@ -48,7 +52,6 @@ public class ProfileInfoFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile_information, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.account);
 
         mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
@@ -67,6 +70,7 @@ public class ProfileInfoFragment extends Fragment {
 
         mName = profileInfoCacheManager.getName();
         mMobileNumber = profileInfoCacheManager.getMobileNumber();
+        mProfilePicture = profileInfoCacheManager.getProfileImageUrl();
         mVerificationStatus = profileInfoCacheManager.getVerificationStatus();
 
         setProfileInformation();
@@ -113,19 +117,16 @@ public class ProfileInfoFragment extends Fragment {
             }
         });
 
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
+                new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
+
         return v;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        mProfilePictureView.setInformation(mMobileNumber, true);
     }
 
     private void setProfileInformation() {
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
+        mProfilePictureView.setProfilePicture(mProfilePicture, false);
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -135,5 +136,21 @@ public class ProfileInfoFragment extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
+
+        super.onDestroyView();
+    }
+
+    private BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
+            Log.d("Broadcast received", newProfilePicture);
+            mProfilePictureView.setProfilePicture(newProfilePicture, true);
+        }
+    };
 
 }

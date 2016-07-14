@@ -29,6 +29,7 @@ public class Constants {
 
     public static final String SMS_READER_BROADCAST_RECEIVER_PDUS = "pdus";
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";
+    public static final String PROFILE_PICTURE_UPDATE_BROADCAST = "PROFILE_PICTURE_UPDATE_BROADCAST";
 
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";

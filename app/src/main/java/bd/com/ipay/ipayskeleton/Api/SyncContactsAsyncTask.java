@@ -118,8 +118,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
         if (downloadContacts != null) {
             for (final FriendNode downloadFriend: downloadContacts) {
-                AsyncTask<Void, Void, String> downloadProfilePictureTask = new DownloadImageFromUrlAsyncTask(downloadFriend.getInfo().getProfilePictureUrl(), downloadFriend.getPhoneNumber());
-                downloadProfilePictureTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                AsyncTask<Void, Void, String> downloadProfilePictureTask = new DownloadImageFromUrlAsyncTask(downloadFriend.getInfo().getProfilePictureUrl(), downloadFriend.getPhoneNumber());
+//                downloadProfilePictureTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
 
