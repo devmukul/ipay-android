@@ -77,8 +77,8 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
     private ResourceSelectorDialog<TopUpPackageClass> packageClassResourceSelectorDialog;
     private ListView pop_up_list;
-    private static final int MOBILE_TOPUP_REVIEW_REQUEST = 100;
     private final int PICK_CONTACT_REQUEST = 100;
+    private static final int MOBILE_TOPUP_REVIEW_REQUEST = 101;
     private int mSelectedPackageTypeId = -1;
     private int mSelectedOperatorTypeId = 0;
 
@@ -261,6 +261,9 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 if (mobileNumber != null)
                     mMobileNumberEditText.setText(mobileNumber);
             }
+        } else if (requestCode == MOBILE_TOPUP_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (getActivity() != null)
+                getActivity().finish();
         }
     }
 

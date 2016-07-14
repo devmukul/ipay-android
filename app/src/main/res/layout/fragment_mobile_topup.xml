@@ -117,7 +117,8 @@
                 android:gravity="center"
                 android:text="@string/mobile_topup_restriction_info"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/button_recharge"

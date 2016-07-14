@@ -207,7 +207,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        if (serviceCharge == null || serviceCharge.equals(BigDecimal.ZERO)) {
+        if (serviceCharge == null) {
             mServiceChargeHolder.setVisibility(View.GONE);
             mTopUpHolder.setVisibility(View.GONE);
         } else {
@@ -304,8 +304,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             mProgressDialog.dismiss();
             mTopupTask = null;
 
-        }
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             try {
                 mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
@@ -341,8 +340,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
 
-        }
-        if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
             try {
                 mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
 
