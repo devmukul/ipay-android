@@ -3,19 +3,11 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Resource;
 public class Bank implements Resource {
     private int id;
     private String name;
-
-    public Bank(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    private String bankCode;
 
     @Override
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override
@@ -23,8 +15,8 @@ public class Bank implements Resource {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getBankCode() {
+        return bankCode;
     }
 
     @Override
@@ -32,6 +24,7 @@ public class Bank implements Resource {
         return "Bank{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", bankCode='" + bankCode + '\'' +
                 '}';
     }
 }

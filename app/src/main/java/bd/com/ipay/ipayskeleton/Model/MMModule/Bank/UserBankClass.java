@@ -1,5 +1,11 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Bank;
 
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+
+
 public class UserBankClass {
     public long bankAccountId;
     public long bankBranchId;
@@ -10,6 +16,8 @@ public class UserBankClass {
     public String verificationStatus;
     public String bankName;
     public String branchName;
+    public String bankCode;
+
 
     public String getBankName() {
         return bankName;
@@ -45,5 +53,16 @@ public class UserBankClass {
 
     public String getVerificationStatus() {
         return verificationStatus;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public Drawable getBankIcon(Context context) {
+        Resources resources = context.getResources();
+        final int resourceId = resources.getIdentifier("bank" + getBankCode(), "drawable",
+                context.getPackageName());
+        return resources.getDrawable(resourceId);
     }
 }

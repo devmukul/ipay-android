@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -323,6 +325,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
             private Button verifyButton;
             private View verifyDivider;
             private View divider;
+            private RoundedImageView bankIcon;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -336,6 +339,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 verifyButton = (Button) itemView.findViewById(R.id.verify_button);
                 verifyDivider = (View) itemView.findViewById(R.id.verify_divider);
                 divider = itemView.findViewById(R.id.divider);
+                bankIcon = (RoundedImageView) itemView.findViewById(R.id.portrait);
             }
 
             public void bindView(int pos) {
@@ -344,13 +348,16 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
                 final long bankAccountID = mListUserBankClasses.get(pos).getBankAccountId();
                 final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();
-                String bankName = mListUserBankClasses.get(pos).getBankName();
-                String branchName = mListUserBankClasses.get(pos).getBranchName();
+                final String bankName = mListUserBankClasses.get(pos).getBankName();
+                final String branchName = mListUserBankClasses.get(pos).getBranchName();
                 final String verificationStatus = mListUserBankClasses.get(pos).getVerificationStatus();
+                final Drawable icon = mListUserBankClasses.get(pos).getBankIcon(getContext());
                 mBankAccountNumber.setText(mListUserBankClasses.get(pos).getAccountNumber());
                 mBankName.setText(bankName);
                 mBranchName.setText(branchName);
+                bankIcon.setImageDrawable(icon);
                 optionsLayout.setVisibility(View.GONE);
+
 
                 if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
                     mBankVerifiedStatus.setImageResource(R.drawable.ic_verified3x);
