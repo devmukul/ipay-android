@@ -37,13 +37,10 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
     private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
 
-    private SharedPreferences pref;
-
     private BigDecimal mAmount;
     private BigDecimal mServiceCharge;
     private String mReceiverName;
     private String mReceiverMobileNumber;
-    private String mSenderMobileNumber;
     private String mPhotoUri;
     private long requestId;
     private String mTitle;
@@ -56,7 +53,6 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
     private TextView mMobileNumberView;
-    //    private TextView mDescriptionView;
     private TextView mTitleView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
@@ -93,15 +89,11 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-//        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mTitleView = (TextView) v.findViewById(R.id.textview_title);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
         mPinField = (EditText) v.findViewById(R.id.pin);
-
-        pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        mSenderMobileNumber = pref.getString(Constants.USERID, "");
 
         mProfileImageView.setInformation(mPhotoUri, mReceiverName);
 
@@ -112,12 +104,6 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         }
 
         mMobileNumberView.setText(mReceiverMobileNumber);
-
-//        if (mDescription == null || mDescription.isEmpty()) {
-//            mDescriptionView.setVisibility(View.GONE);
-//        } else {
-//            mDescriptionView.setText(mDescription);
-//        }
 
         if (mTitle == null || mTitle.isEmpty()) {
             mTitleView.setVisibility(View.GONE);
@@ -206,7 +192,6 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
                 Toast.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         Gson gson = new Gson();
 
