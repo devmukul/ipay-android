@@ -420,7 +420,7 @@ public class Utilities {
     }
 
     public static boolean isValueAvailable(BigDecimal amount) {
-        if (amount.compareTo(new BigDecimal("0")) == 0)
+        if (amount.compareTo(new BigDecimal("-1")) == 0)
             return false;
         else return true;
     }
