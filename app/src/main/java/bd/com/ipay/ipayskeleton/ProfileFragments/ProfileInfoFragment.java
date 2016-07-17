@@ -119,6 +119,7 @@ public class ProfileInfoFragment extends Fragment {
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
+        Log.d("Broadcast receiver", "registering receiver");
 
         return v;
     }
@@ -126,7 +127,7 @@ public class ProfileInfoFragment extends Fragment {
     private void setProfileInformation() {
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
-        mProfilePictureView.setProfilePicture(mProfilePicture, false);
+        mProfilePictureView.setProfilePicture(mProfilePicture, true);
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -139,6 +140,7 @@ public class ProfileInfoFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        Log.d("Broadcast receiver", "unregister receiver");
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
 
         super.onDestroyView();

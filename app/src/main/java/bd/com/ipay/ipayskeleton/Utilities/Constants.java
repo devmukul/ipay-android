@@ -37,7 +37,7 @@ public class Constants {
     public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
 
     public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
-    public static final String PROFILE_PICTURE = "PROFILE_PICTURE";
+    public static final String PROFILE_PICTURE = "_PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
     public static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";

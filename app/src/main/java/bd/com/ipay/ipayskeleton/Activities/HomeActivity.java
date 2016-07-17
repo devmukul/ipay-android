@@ -626,13 +626,7 @@ public class HomeActivity extends BaseActivity
                     profileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
 
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(this);
-                    if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
-                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//                            new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
-//                                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                        }
-                        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
-                    }
+                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                     setProfilePicture(imageUrl);
 
 

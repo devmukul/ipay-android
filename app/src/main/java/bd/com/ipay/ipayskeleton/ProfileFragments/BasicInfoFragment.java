@@ -133,7 +133,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         super.onActivityCreated(savedInstanceState);
 
         PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
-        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)) {
+        if (pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
+                || pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
             getProfileInfo();
         } else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
@@ -239,6 +240,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
                     pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
                 } else {
                     if (getActivity() != null)

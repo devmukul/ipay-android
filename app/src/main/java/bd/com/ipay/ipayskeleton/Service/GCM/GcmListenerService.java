@@ -261,6 +261,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
                 mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
                 List<UserProfilePictureClass> profilePictures = mGetUserInfoResponse.getProfilePictures();
 
@@ -275,12 +276,6 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
                 SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                 pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
-                String mUserID = pref.getString(Constants.USERID, "");
-
-                // Download the profile picture and store it in local storage
-//                new DownloadImageFromUrlAsyncTask(imageUrl, mUserID)
-//                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
                 ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);
                 profileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(),
