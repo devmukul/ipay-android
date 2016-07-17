@@ -602,7 +602,9 @@ public abstract class BaseContactsFragment extends Fragment implements
                         if (isDialogFragment()) {
 
                             Intent intent = new Intent();
+                            intent.putExtra(Constants.NAME, name);
                             intent.putExtra(Constants.MOBILE_NUMBER, phoneNumber);
+                            intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrl);
                             getActivity().setResult(Activity.RESULT_OK, intent);
                             getActivity().finish();
 
