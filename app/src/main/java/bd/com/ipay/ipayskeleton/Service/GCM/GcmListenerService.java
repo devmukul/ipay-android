@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.DownloadImageFromUrlAsyncTask;
@@ -42,9 +43,6 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.TransactionHistoryCacheMa
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService implements HttpResponseListener {
-
-    private HttpRequestGetAsyncTask mUserInfoTask = null;
-    private GetUserInfoResponse mGetUserInfoResponse;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
@@ -249,7 +247,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
 					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mUserInfoTask = null;
+//            mUserInfoTask = null;
             return;
         }
 
@@ -259,11 +257,12 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                 dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
                 mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
                 mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
-                List<UserProfilePictureClass> profilePictures = mGetUserInfoResponse.getProfilePictures();
+                Set<UserProfilePictureClass> profilePictures = mGetProfileInfoResponse.getProfilePictures();
 
                 String imageUrl = "";
                 if (profilePictures.size() > 0) {
@@ -274,12 +273,9 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     }
                 }
 
-                SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                pref.edit().putString(Constants.VERIFICATION_STATUS, mGetUserInfoResponse.getAccountStatus()).apply();
-
                 ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);
-                profileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(),
-                        mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
+                profileInfoCacheManager.updateCache(mGetProfileInfoResponse.getName(),
+                        mGetProfileInfoResponse.getName(), imageUrl, mGetProfileInfoResponse.getVerificationStatus());
             }
 
             mGetProfileInfoTask = null;

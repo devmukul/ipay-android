@@ -555,10 +555,15 @@ public class HomeActivity extends BaseActivity
     }
 
     private void checkForUpdateFromPush() {
-        SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-
         // Get the changes
-        boolean isProfilePictureUpdated = pref.getBoolean(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
+        boolean isProfilePictureUpdated = true;
+        try {
+            // TODO migration code, remove try-catch later
+            PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(this);
+            isProfilePictureUpdated = pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Take actions
         if (isProfilePictureUpdated) {
