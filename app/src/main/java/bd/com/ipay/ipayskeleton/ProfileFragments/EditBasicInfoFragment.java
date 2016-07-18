@@ -425,9 +425,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
                     pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
 
-//                    File profilePictureCache = StorageManager.getProfilePictureFile(mMobileNumber);
-//                    StorageManager.fileCopy(new File(mSelectedImagePath), profilePictureCache);
-
                     Intent intent = new Intent(Constants.PROFILE_PICTURE_UPDATE_BROADCAST);
                     intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);

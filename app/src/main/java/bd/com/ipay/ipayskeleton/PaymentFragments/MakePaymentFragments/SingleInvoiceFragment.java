@@ -241,7 +241,7 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
                     mTitleView.setText(mTitle);
                 }
 
-                mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName, false);
+                mProfileImageView.setProfilePicture(mPhotoUri, false);
             }
 
             public void bindViewForFooter(int pos) {

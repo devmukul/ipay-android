@@ -235,8 +235,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             SignupOrLoginActivity.mMobileNumberBusiness = mUserNameLogin;
             SignupOrLoginActivity.mPasswordBusiness = mPasswordLogin;
 
-            mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
-            mProgressDialog.show();
+            if (getActivity() != null) {
+                mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
+                mProgressDialog.show();
+            }
 
             String UUID = null;
             if (pref.contains(Constants.UUID)) {

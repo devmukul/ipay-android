@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -95,7 +93,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
         mPinField = (EditText) v.findViewById(R.id.pin);
 
-        mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName, false);
+        mProfileImageView.setProfilePicture(mPhotoUri, false);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
             mNameView.setVisibility(View.GONE);

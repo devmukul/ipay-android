@@ -91,7 +91,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mSenderMobileNumber = pref.getString(Constants.USERID, "");
 
-        mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName, false);
+        mProfileImageView.setProfilePicture(mPhotoUri, false);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
             mNameView.setVisibility(View.GONE);

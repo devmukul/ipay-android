@@ -1,11 +1,9 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,15 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.makeramen.roundedimageview.RoundedImageView;
-
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileInfoFragment extends Fragment {
@@ -125,9 +119,10 @@ public class ProfileInfoFragment extends Fragment {
     }
 
     private void setProfileInformation() {
+        Log.d("Profile Pic", mProfilePicture);
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
-        mProfilePictureView.setProfilePicture(mProfilePicture, true);
+        mProfilePictureView.setProfilePicture(mProfilePicture, false);
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {

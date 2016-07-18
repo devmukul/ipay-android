@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -26,12 +25,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -366,9 +362,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mNameView.setText(profileInfoCacheManager.getName());
         mMobileNumberView.setText(profileInfoCacheManager.getMobileNumber());
-        boolean imageLoadedFromDisk = mProfilePictureView.setProfilePictureFromDisk(profileInfoCacheManager.getMobileNumber(), true);
-        if (!imageLoadedFromDisk)
-            mProfilePictureView.setProfilePicture(profileInfoCacheManager.getProfileImageUrl(), false);
+        mProfilePictureView.setProfilePicture(profileInfoCacheManager.getProfileImageUrl(), false);
 
         if (profileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
             mVerificationStatusView.setVisibility(View.VISIBLE);
