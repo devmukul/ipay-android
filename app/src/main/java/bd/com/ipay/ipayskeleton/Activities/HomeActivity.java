@@ -229,7 +229,7 @@ public class HomeActivity extends BaseActivity
             Log.w("Token", TokenManager.getToken());
         }
 
-        attemptRequestForPermission();
+        //attemptRequestForPermission();
         sendAnalytics();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -268,7 +268,6 @@ public class HomeActivity extends BaseActivity
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
         super.onDestroy();
     }
-
 
     private void attemptRequestForPermission() {
         String[] requiredPermissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};

@@ -187,7 +187,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         }
         if (!(mBankAccountNumberEditText.getText().toString().trim().length() > 0)) {
             focusView = mBankAccountNumberEditText;
-            mBankAccountNumberEditText.setError(getString(R.string.enter_bank_account_number));
+            mBankAccountNumberEditText.setError(getString(R.string.select_a_bank));
             cancel = true;
         }
         if (cancel) {
@@ -257,6 +257,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                         final String strName = arrayAdapter.getItem(which);
                         selectedBankPosition = which;
                         mBankAccountNumberEditText.setText(strName);
+                        mBankAccountNumberEditText.setError(null);
                     }
                 });
         builderSingle.show();

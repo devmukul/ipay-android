@@ -194,7 +194,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         }
         if (!(mBankAccountNumberEditText.getText().toString().trim().length() > 0)) {
             focusView = mBankAccountNumberEditText;
-            mBankAccountNumberEditText.setError(getString(R.string.enter_bank_account_number));
+            mBankAccountNumberEditText.setError(getString(R.string.select_a_bank));
             cancel = true;
         }
 
@@ -263,6 +263,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                         final String strName = arrayAdapter.getItem(which);
                         selectedBankPosition = which;
                         mBankAccountNumberEditText.setText(strName);
+                        mBankAccountNumberEditText.setError(null);
                     }
                 });
 
