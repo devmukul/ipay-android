@@ -3,12 +3,16 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
@@ -61,6 +66,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private RecyclerView.LayoutManager mLayoutManager;
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+
+    private TransactionHistoryDatabaseChangeObserver mTransactionHistoryDatabaseChangeObserver;
 
     private String mMobileNumber;
 
@@ -103,42 +110,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.activity_transaction_history, menu);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        // Remove search action of contacts
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_filter_by_date:
-                if (eventFilterLayout.getVisibility() == View.VISIBLE)
-                    eventFilterLayout.setVisibility(View.GONE);
-                dateFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(dateFilterLayout, getActivity());
-                return true;
-            case R.id.action_filter_by_event:
-                if (dateFilterLayout.getVisibility() == View.VISIBLE)
-                    dateFilterLayout.setVisibility(View.GONE);
-                eventFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(eventFilterLayout, getActivity());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -227,6 +198,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             }
         });
 
+        if (getActivity() != null) {
+            mTransactionHistoryDatabaseChangeObserver = new TransactionHistoryDatabaseChangeObserver(new Handler());
+            getActivity().getContentResolver().registerContentObserver(
+                    DBConstants.DB_TABLE_TRANSACTION_URI, true, mTransactionHistoryDatabaseChangeObserver);
+        }
+
         return v;
     }
 
@@ -246,6 +223,52 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             });
         } else {
             readTransactionHistoryFromCache();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (getActivity() != null) {
+            getActivity().getContentResolver().unregisterContentObserver(
+                    mTransactionHistoryDatabaseChangeObserver);
+        }
+
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.activity_transaction_history, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // Remove search action of contacts
+        if (menu.findItem(R.id.action_search_contacts) != null)
+            menu.findItem(R.id.action_search_contacts).setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_filter_by_date:
+                if (eventFilterLayout.getVisibility() == View.VISIBLE)
+                    eventFilterLayout.setVisibility(View.GONE);
+                dateFilterLayout.setVisibility(View.VISIBLE);
+                Utilities.setLayoutAnim_slideDown(dateFilterLayout, getActivity());
+                return true;
+            case R.id.action_filter_by_event:
+                if (dateFilterLayout.getVisibility() == View.VISIBLE)
+                    dateFilterLayout.setVisibility(View.GONE);
+                eventFilterLayout.setVisibility(View.VISIBLE);
+                Utilities.setLayoutAnim_slideDown(eventFilterLayout, getActivity());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -326,13 +349,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mClearEventFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = null;
-                for (CheckBox eventFilter : mCheckBoxTypeMap.keySet()) {
-                    eventFilter.setChecked(false);
-                }
-
-                refreshTransactionHistory();
-                eventFilterLayout.setVisibility(View.GONE);
+                clearFilters();
+                readTransactionHistoryFromCache();
             }
         });
 
@@ -363,6 +381,15 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 }
             });
         }
+    }
+
+    private void clearFilters() {
+        type = null;
+        for (CheckBox eventFilter : mCheckBoxTypeMap.keySet()) {
+            eventFilter.setChecked(false);
+        }
+
+        eventFilterLayout.setVisibility(View.GONE);
     }
 
     private DatePickerDialog.OnDateSetListener mFromDateSetListener =
@@ -774,7 +801,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
 
             NormalViewHolder vh = new NormalViewHolder(v);
-
             return vh;
         }
 
@@ -812,4 +838,26 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             return super.getItemViewType(position);
         }
     }
+
+    private class TransactionHistoryDatabaseChangeObserver extends ContentObserver {
+
+        public TransactionHistoryDatabaseChangeObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public boolean deliverSelfNotifications() {
+            return super.deliverSelfNotifications();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            clearFilters();
+            readTransactionHistoryFromCache();
+        }
+    };
 }

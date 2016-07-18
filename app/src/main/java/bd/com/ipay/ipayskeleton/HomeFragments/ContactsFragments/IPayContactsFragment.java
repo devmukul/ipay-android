@@ -70,7 +70,7 @@ public class IPayContactsFragment extends BaseContactsFragment
                     updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
                     isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
 
-                    this.registerContentObserver(cursor, DBConstants.DB_TABLE_SUBSCRIBERS_URI);
+                    this.registerContentObserver(cursor, DBConstants.DB_TABLE_FRIENDS_URI);
                 }
 
                 return cursor;
