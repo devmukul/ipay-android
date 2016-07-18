@@ -42,7 +42,11 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
 
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
-    
+
+    public void updateCache() {
+        updateCache(null);
+    }
+
     public void updateCache(OnUpdateCacheListener onUpdateCacheListener) {
 
         mOnUpdateCacheListener = onUpdateCacheListener;
@@ -56,11 +60,11 @@ public class TransactionHistoryCacheManager implements HttpResponseListener {
     }
 
     public boolean isUpdateNeeded() {
-        return pref.getBoolean(Constants.PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY, true);
+        return pref.getBoolean(Constants.PUSH_NOTIFICATION_TAG_TRANSACTION, true);
     }
 
     public void setUpdateNeeded(boolean isUpdateNeeded) {
-        pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY, isUpdateNeeded).apply();
+        pref.edit().putBoolean(Constants.PUSH_NOTIFICATION_TAG_TRANSACTION, isUpdateNeeded).apply();
     }
 
     public void loadTransactions() {
