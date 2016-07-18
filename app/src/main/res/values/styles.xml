@@ -693,7 +693,7 @@
 
     <style name="CustomTextInputLayout" parent="AppTheme">
         <item name="android:textColorHint">@color/colorGray</item>
-        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorLightPrimaryAccent</item>
         <item name="colorControlNormal">@color/colorGray</item>
     </style>
     <!-- Business Profile -->
