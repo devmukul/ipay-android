@@ -351,7 +351,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 final String bankName = mListUserBankClasses.get(pos).getBankName();
                 final String branchName = mListUserBankClasses.get(pos).getBranchName();
                 final String verificationStatus = mListUserBankClasses.get(pos).getVerificationStatus();
-                final Drawable icon = mListUserBankClasses.get(pos).getBankIcon(getContext());
+                final Drawable icon =  getResources().getDrawable(mListUserBankClasses.get(pos).getBankIcon(getContext()));
                 mBankAccountNumber.setText(mListUserBankClasses.get(pos).getAccountNumber());
                 mBankName.setText(bankName);
                 mBranchName.setText(branchName);

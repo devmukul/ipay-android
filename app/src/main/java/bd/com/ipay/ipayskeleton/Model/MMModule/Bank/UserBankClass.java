@@ -59,10 +59,11 @@ public class UserBankClass {
         return bankCode;
     }
 
-    public Drawable getBankIcon(Context context) {
+    public int getBankIcon(Context context) {
         Resources resources = context.getResources();
         final int resourceId = resources.getIdentifier("bank" + getBankCode(), "drawable",
                 context.getPackageName());
-        return resources.getDrawable(resourceId);
+        return resourceId;
+        //return resources.getDrawable(resourceId);
     }
 }

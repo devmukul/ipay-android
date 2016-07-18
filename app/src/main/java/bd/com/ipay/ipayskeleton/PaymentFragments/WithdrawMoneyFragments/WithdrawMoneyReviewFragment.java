@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
 
@@ -49,6 +51,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private String mBankName;
     private String mBankAccountNumber;
     String mError_message;
+    private int mBankCode;
 
     private TextView mBankNameView;
     private TextView mBankAccountNumberView;
@@ -58,6 +61,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private TextView mServiceChargeView;
     private TextView mTotalView;
     private Button mWithdrawMoneyButton;
+    private RoundedImageView mBankIcon;
 
 
     @Override
@@ -69,6 +73,8 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mBankAccountId = getActivity().getIntent().getLongExtra(Constants.BANK_ACCOUNT_ID, -1);
         mBankName = getActivity().getIntent().getStringExtra(Constants.BANK_NAME);
         mBankAccountNumber = getActivity().getIntent().getStringExtra(Constants.BANK_ACCOUNT_NUMBER);
+        mBankCode = getActivity().getIntent().getIntExtra(Constants.BANK_CODE,0);
+        Drawable bankIcon =  getResources().getDrawable(mBankCode);
 
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
@@ -78,11 +84,13 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
         mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
+        mBankIcon = (RoundedImageView) v.findViewById(R.id.portrait);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
+        mBankIcon.setImageDrawable(bankIcon);
         mBankNameView.setText(mBankName);
         mBankAccountNumberView.setText(mBankAccountNumber);
         mAmountView.setText(Utilities.formatTaka(mAmount));

@@ -81,6 +81,8 @@ public class Constants {
     public static final String BANK_NAME = "bank_name";
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
     public static final String BANK_ACCOUNT_ID = "bank_account_id";
+    public static final String BANK_CODE = "bank_code";
+
 
     public static final String SERVICE_CHARGE = "service_charge";
     public static final String PHOTO_URI = "photo_uri";
@@ -566,9 +568,7 @@ public class Constants {
     public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "BANK";
     public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "DEVICE";
     public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "TRUSTED_PERSON";
-    public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "SEND_MONEY";
-    public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "REQUEST_MONEY";
-    public static final String PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY = "TRANSACTION_HISTORY";
+    public static final String PUSH_NOTIFICATION_TAG_TRANSACTION = "TRANSACTION";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
     public static final String PUSH_NOTIFICATION_TAG = "tag";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";

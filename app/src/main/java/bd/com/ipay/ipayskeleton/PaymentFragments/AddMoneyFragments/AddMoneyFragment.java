@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -213,6 +214,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         long bankAccountId = selectedBankAccount.getBankAccountId();
         String bankName = selectedBankAccount.getBankName();
         String accountNumber = selectedBankAccount.getAccountNumber();
+        int bankCode = selectedBankAccount.getBankIcon(getActivity());
 
         Intent intent = new Intent(getActivity(), AddMoneyReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, Double.parseDouble(amount));
@@ -220,6 +222,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         intent.putExtra(Constants.BANK_ACCOUNT_ID, bankAccountId);
         intent.putExtra(Constants.BANK_ACCOUNT_NUMBER, accountNumber);
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
+        intent.putExtra(Constants.BANK_CODE, bankCode);
 
         startActivityForResult(intent, ADD_MONEY_REVIEW_REQUEST);
     }

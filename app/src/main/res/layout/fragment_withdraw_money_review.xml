@@ -17,36 +17,39 @@
             android:background="@color/colorPrimary"
             android:orientation="vertical">
 
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/portrait"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bank111"
+                app:riv_corner_radius="50dip"
+                app:riv_oval="false" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <ImageView
-                    style="@style/ReviewImageStyle"
-                    android:src="@drawable/ic_withdraw_money_large" />
+                <TextView
+                    android:id="@+id/textview_bank_name"
+                    style="@style/TextViewUserInfoPrimary"
+                    android:textColor="@android:color/white" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textview_bank_name"
-                        style="@style/TextViewUserInfoPrimary"
-                        android:textColor="@android:color/white" />
-
-                    <TextView
-                        android:id="@+id/textview_account_number"
-                        style="@style/TextViewUserInfoSecondary"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/textview_account_number"
+                    style="@style/TextViewUserInfoSecondary"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
 
             </LinearLayout>
+
 
         </LinearLayout>
 

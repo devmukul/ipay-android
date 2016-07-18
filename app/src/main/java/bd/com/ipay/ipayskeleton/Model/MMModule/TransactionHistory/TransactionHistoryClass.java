@@ -62,7 +62,7 @@ public class TransactionHistoryClass {
      * money, returns the bank name.
      */
     public String getReceiver() {
-        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null || receiverInfo == null)
+        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
             return "";
 
         switch (serviceID) {
@@ -340,9 +340,14 @@ public class TransactionHistoryClass {
             return additionalInfo.getBranchName();
     }
 
-    private String getPhoneNumber(String str){
-        str = str.substring(str.indexOf("+") );
-        return str.substring(0,14);
+    private String getPhoneNumber(String str) {
+        int numberStartIndex = str.indexOf("+");
+        if (numberStartIndex >= 0) {
+            str = str.substring(numberStartIndex);
+            return str.substring(0, 14);
+        } else {
+            return "";
+        }
     }
 
     public double getAmount(String userMobileNumber) {
