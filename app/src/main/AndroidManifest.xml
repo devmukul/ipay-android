@@ -26,7 +26,9 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <!-- Adding this line to make the app available for tablet users -->
-    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
 
     <application
         android:name=".Utilities.MyApplication"
@@ -37,6 +39,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB6fiY1MTe0DBchx0-SJtiB7PoIe9cyzh4" />
+
         <activity
             android:name=".Activities.LauncherActivity"
             android:label="@string/app_name"
@@ -66,9 +77,6 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".Activities.DetailsNewsActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.PaymentActivities.SendMoneyActivity"
             android:label="@string/send_money"
@@ -152,13 +160,6 @@
             android:name=".Activities.ManageBanksActivity"
             android:label="@string/events"
             android:parentActivityName=".Activities.HomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".Activities.AddParticipantsInEventActivity"
-            android:label="@string/add_participants"
-            android:parentActivityName=".Activities.EventActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />

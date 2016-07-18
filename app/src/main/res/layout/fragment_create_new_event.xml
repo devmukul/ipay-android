@@ -61,20 +61,36 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/event_location"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/event_location"
-                android:inputType="text"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:layout_alignParentLeft="true">
 
-        </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/event_location"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/event_location"
+                    android:inputType="phone"
+                    android:maxLines="5" />
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/button_select_place"
+                style="@style/ButtonStyleWithIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:src="@drawable/ic_edit_location_black_24dp" />
+
+        </RelativeLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
