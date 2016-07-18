@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -552,7 +551,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mMobileNumberView.setText(receiverMobileNumber);
             otherImageView.setVisibility(View.GONE);
             mProfileImageView.setVisibility(View.VISIBLE);
-            mProfileImageView.setInformation(receiverMobileNumber, Constants.BASE_URL_FTP_SERVER + photoUri, receiverName, false);
+            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + photoUri, false);
         }
 
 
@@ -732,7 +731,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 } else {
                     otherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
-                    mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name, false);
+                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {

@@ -87,7 +87,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName, false);
+        mProfileImageView.setProfilePicture(mPhotoUri, false);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
             mNameView.setVisibility(View.GONE);

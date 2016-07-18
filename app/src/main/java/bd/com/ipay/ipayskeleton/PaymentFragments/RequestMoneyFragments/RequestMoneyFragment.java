@@ -137,6 +137,7 @@ public class RequestMoneyFragment extends Fragment {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
+                mMobileNumberEditText.setError(null);
         } else if (requestCode == REQUEST_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
         }

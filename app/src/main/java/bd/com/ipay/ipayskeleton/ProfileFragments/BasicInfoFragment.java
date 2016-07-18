@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BasicInfoFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -302,15 +303,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mOccupation = mGetProfileInfoResponse.getOccupation();
         mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
 
-        if (mGetProfileInfoResponse.getProfilePictures().size() > 0) {
-
-            for (Iterator<UserProfilePictureClass> it = mGetProfileInfoResponse.getProfilePictures().iterator(); it.hasNext(); ) {
-                UserProfilePictureClass userProfilePictureClass = it.next();
-                mProfileImageUrl = Constants.BASE_URL_FTP_SERVER + userProfilePictureClass.getUrl();
-                if (userProfilePictureClass.getQuality().equals(Constants.IMAGE_QUALITY_HIGH))
-                    break;
-            }
-        }
+        mProfileImageUrl = Constants.BASE_URL_FTP_SERVER +
+                Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
 
         ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
         profileInfoCacheManager.updateCache(mName, mMobileNumber, mProfileImageUrl, mVerificationStatus);

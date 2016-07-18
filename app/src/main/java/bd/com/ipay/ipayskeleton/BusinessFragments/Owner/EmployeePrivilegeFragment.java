@@ -98,7 +98,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         mMobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
         mDesignation = getArguments().getString(Constants.DESIGNATION);
 
-        mProfilePictureView.setInformation(mMobileNumber, Constants.BASE_URL_FTP_SERVER + mProfilePicture, mName, false);
+        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture, false);
         mNameView.setText(mName);
         mMobileNumberView.setText(mMobileNumber);
         if(!mDesignation.equals(""))mDesignationView.setText(mDesignation);
@@ -232,7 +232,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
                         mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
 
-                        mProfilePictureView.setInformation(mMobileNumber, Constants.BASE_URL_FTP_SERVER + mProfilePicture, mName, false);
+                        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture, false);
                         mNameView.setText(mEmployeeDetails.getName());
                         mMobileNumberView.setText(mEmployeeDetails.getMobileNumber());
 

@@ -102,7 +102,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mProfileImageView.setInformation(mReceiverMobileNumber, mPhotoUri, mReceiverName, false);
+        mProfileImageView.setProfilePicture(mPhotoUri, false);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
             mNameView.setVisibility(View.GONE);
