@@ -2,12 +2,10 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,12 +15,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
-
-import java.util.Iterator;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -30,15 +24,13 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BasicInfoFragment extends ProgressFragment implements HttpResponseListener {

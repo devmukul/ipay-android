@@ -40,7 +40,6 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
@@ -61,7 +60,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
@@ -102,7 +100,6 @@ public class HomeActivity extends BaseActivity
     private String mUserID;
     private int mAccountType;
     private String mDeviceID;
-    private List<UserProfilePictureClass> profilePictures;
 
     private ProgressDialog mProgressDialog;
     private NavigationView mNavigationView;
@@ -122,7 +119,6 @@ public class HomeActivity extends BaseActivity
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mProgressDialog = new ProgressDialog(HomeActivity.this);
-        profilePictures = new ArrayList<>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
