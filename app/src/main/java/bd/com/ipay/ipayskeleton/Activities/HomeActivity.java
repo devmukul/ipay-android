@@ -3,9 +3,11 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -54,6 +56,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessActivity;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityLogFragment;
@@ -103,7 +106,7 @@ public class HomeActivity extends BaseActivity
 
     private TextView mMobileNumberView;
     private TextView mNameView;
-    private RoundedImageView mPortrait;
+    private ProfileImageView mPortrait;
     private SharedPreferences pref;
     private String mUserID;
     private int mAccountType;
@@ -191,15 +194,14 @@ public class HomeActivity extends BaseActivity
 
         mMobileNumberView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
-        mPortrait = (RoundedImageView) mNavigationView.getHeaderView(0).findViewById(R.id.portrait);
+        mPortrait = (ProfileImageView) mNavigationView.getHeaderView(0).findViewById(R.id.portrait);
         mMobileNumberView.setText(mUserID);
         mNavigationView.setNavigationItemSelectedListener(this);
 
         switchToDashBoard();
 
         // Set the initial profile picture
-        setProfilePicture("");
-        setProfilePicture("");
+        mPortrait.setProfilePicture("",false);
 
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
@@ -229,6 +231,9 @@ public class HomeActivity extends BaseActivity
 
         attemptRequestForPermission();
         sendAnalytics();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
+                new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
     }
 
     @Override
@@ -258,38 +263,12 @@ public class HomeActivity extends BaseActivity
         getProfileInfo();
     }
 
-    private void setProfilePicture(String imageUrl) {
-        try {
-            File imageFile = StorageManager.getProfilePictureFile(mUserID);
-            Uri imageUri = null;
-
-            if (imageFile.exists()) imageUri = Uri.fromFile(imageFile);
-
-            if (imageUri != null) {
-                Glide.with(HomeActivity.this)
-                        .load(imageUrl)
-                        .error(R.drawable.ic_person)
-                        .crossFade()
-                        .transform(new CircleTransform(HomeActivity.this))
-                        .into(mPortrait);
-            } else {
-                if (!imageUrl.equals(""))
-                    Glide.with(HomeActivity.this)
-                            .load(imageUrl)
-                            .error(R.drawable.ic_person)
-                            .crossFade()
-                            .transform(new CircleTransform(HomeActivity.this))
-                            .into(mPortrait);
-                else Glide.with(HomeActivity.this)
-                        .load(R.drawable.ic_person)
-                        .transform(new CircleTransform(HomeActivity.this))
-                        .into(mPortrait);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
+        super.onDestroy();
     }
+
 
     private void attemptRequestForPermission() {
         String[] requiredPermissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
@@ -632,7 +611,7 @@ public class HomeActivity extends BaseActivity
 
                     PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(this);
                     pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
-                    setProfilePicture(imageUrl);
+                    mPortrait.setProfilePicture(imageUrl,false);
 
 
                 } else {
@@ -685,5 +664,14 @@ public class HomeActivity extends BaseActivity
     public Context setContext() {
         return HomeActivity.this;
     }
+
+    private BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
+            Log.d("Broadcast received home", newProfilePicture);
+            mPortrait.setProfilePicture(newProfilePicture, true);
+        }
+    };
 
 }

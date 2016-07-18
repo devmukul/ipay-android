@@ -546,7 +546,7 @@
     <string name="trusted_devices">Trusted Devices</string>
 
     <string name="logout_from_all_device">Log Out From All Devices</string>
-    <string name="logout_from_all_device_warning">Are you sure to log out from all devices?</string>
+    <string name="logout_from_all_device_warning">Are you sure you want to log out from all devices?</string>
     <string name="progress_dialog_loading_trusted_devices">Loading trusted device list</string>
     <string name="failed_loading_trusted_devices">Failed to load trusted device list</string>
     <string name="success_device_removed">Device removed successfully</string>
