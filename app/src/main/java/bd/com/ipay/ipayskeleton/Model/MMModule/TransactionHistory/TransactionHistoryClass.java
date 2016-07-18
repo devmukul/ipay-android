@@ -62,7 +62,7 @@ public class TransactionHistoryClass {
      * money, returns the bank name.
      */
     public String getReceiver() {
-        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null || receiverInfo == null)
+        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
             return "";
 
         switch (serviceID) {

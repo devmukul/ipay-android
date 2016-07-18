@@ -439,7 +439,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,double balance, String purpose, String time, Integer statusCode,
                                                  String description, String transactionID, String receiverMobileNumber, String receiverName, String photoUri,
-                                                 int serviceId, String mBankName, String mBankAccountNumber) {
+                                                 int serviceId, String mBankName, String mBankAccountNumber, String receiver) {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.transaction_details)
                 .customView(R.layout.dialog_transaction_details, true)
@@ -476,7 +476,10 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         transactionIDTextView.setText(getString(R.string.transaction_id) + " " + transactionID);
         netAmountTextView.setText(Utilities.formatTaka(netAmount));
         balanceTextView.setText(Utilities.formatTaka(balance));
-        if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
+        if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+            purposeLayout.setVisibility(View.GONE);
+        }
+        else if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
         else purposeLayout.setVisibility(View.GONE);
 
         if(serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
@@ -505,7 +508,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
             mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(R.string.recharge_to);
-            mMobileNumberView.setText(mMobileNumber);
+            mMobileNumberView.setText(receiver);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
             otherImageView.setImageResource(R.drawable.ic_mobile_recharge_large);
@@ -710,7 +713,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing())
                             showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount, balance, purpose, responseTime,
-                                    statusCode, detailDescription, transactionID,mobileNumber,name,imageUrl,serviceId,bankName,bankAccountNumber);
+                                    statusCode, detailDescription, transactionID,mobileNumber,name,imageUrl,serviceId,bankName,bankAccountNumber, receiver);
                     }
                 });
 

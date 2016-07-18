@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.math.BigDecimal;
 
@@ -48,6 +51,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     private long mBankAccountId;
     private String mBankName;
     private String mBankAccountNumber;
+    private int mBankCode;
 
     private TextView mBankNameView;
     private TextView mBankAccountNumberView;
@@ -57,6 +61,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     private TextView mServiceChargeView;
     private TextView mTotalView;
     private Button mAddMoneyButton;
+    private RoundedImageView mBankIcon;
     String mError_message;
 
     @Override
@@ -68,6 +73,8 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         mBankAccountId = getActivity().getIntent().getLongExtra(Constants.BANK_ACCOUNT_ID, -1);
         mBankName = getActivity().getIntent().getStringExtra(Constants.BANK_NAME);
         mBankAccountNumber = getActivity().getIntent().getStringExtra(Constants.BANK_ACCOUNT_NUMBER);
+        mBankCode = getActivity().getIntent().getIntExtra(Constants.BANK_CODE,0);
+        Drawable bankIcon =  getResources().getDrawable(mBankCode);
 
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
@@ -77,11 +84,13 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
         mAddMoneyButton = (Button) v.findViewById(R.id.button_add_money);
+        mBankIcon = (RoundedImageView) v.findViewById(R.id.portrait);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
+        mBankIcon.setImageDrawable(bankIcon);
         mBankNameView.setText(mBankName);
         mBankAccountNumberView.setText(mBankAccountNumber);
         mAmountView.setText(Utilities.formatTaka(mAmount));
