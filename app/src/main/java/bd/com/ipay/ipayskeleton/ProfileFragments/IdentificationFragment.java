@@ -46,7 +46,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class IdentificationFragment extends ProgressFragment implements HttpResponseListener {
 
     private final int PICK_CONTACT_REQUEST = 100;
-    private int MINIMUM_INTRODUCER_COUNT = 2;           // Default value
+    private int MINIMUM_INTRODUCER_COUNT;           // Default value
 
     private GetIntroducerListResponse mIntroducerListResponse;
     private HttpRequestGetAsyncTask mGetIntroducersTask = null;
