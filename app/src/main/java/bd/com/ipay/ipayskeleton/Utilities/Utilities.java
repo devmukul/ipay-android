@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
 import bd.com.ipay.ipayskeleton.R;
 
@@ -478,4 +479,12 @@ public class Utilities {
             return "";
     }
 
+    public static String getImage(List<UserProfilePictureClass> profilePictureClasses, String quality) {
+        for (UserProfilePictureClass profilePicture : profilePictureClasses) {
+            if (profilePicture.getQuality().equals(quality))
+                return profilePicture.getUrl();
+        }
+
+        return "";
+    }
 }
