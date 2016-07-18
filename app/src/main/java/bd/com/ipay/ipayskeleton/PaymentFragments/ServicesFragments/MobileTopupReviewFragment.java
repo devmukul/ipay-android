@@ -312,8 +312,18 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                                 .getProfilePictures().get(0).getUrl();
                     }
                     mReceiverView.setText(name);
-                    mProfileImageView.setInformation(mMobileNumber, Constants.BASE_URL_FTP_SERVER + profilePicture, name, false);
+                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
 
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+
+                    mInvitationLayout.setVisibility(View.VISIBLE);
+                } else {
+                    mInvitationLayout.setVisibility(View.VISIBLE);
+                    String name = ContactEngine.getContactNameFromNumber(getActivity(), mMobileNumber);
+                    if (name != null)
+                        mReceiverView.setText(name);
+                    Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
+                    mProfileImageView.setProfilePicture(photoUri.toString(), false);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
