@@ -67,7 +67,7 @@
                 android:hint="@string/enter_amount"
                 android:inputType="numberDecimal"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"/>
         </android.support.design.widget.TextInputLayout>
 
         <View style="@style/Divider" />
@@ -88,11 +88,19 @@
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
+        <View style="@style/Divider" />
+
         <Button
             android:id="@+id/button_send_money"
             style="@style/PrimaryMidiumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/continue_send_money" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/CustomNoteTextView"
+            android:text="@string/send_money_info"/>
     </LinearLayout>
 </ScrollView>

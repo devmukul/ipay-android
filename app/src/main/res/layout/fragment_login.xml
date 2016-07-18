@@ -4,7 +4,6 @@
     android:id="@+id/login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     android:fillViewport="true">
 
     <RelativeLayout
@@ -16,11 +15,9 @@
             android:id="@+id/ipay_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin_card"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            android:orientation="vertical">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/profile_picture"
@@ -28,49 +25,64 @@
                 android:layout_height="@dimen/login_profile_image_size"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/value30"/>
+                android:layout_marginBottom="@dimen/value30" />
 
-            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                android:id="@+id/login_mobile_number"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableLeft="@drawable/ic_number"
-                android:hint="@string/prompt_mobile"
-                android:inputType="phone"
-                android:maxLength="14"
-                custom:borderType="up">
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true">
+
+                    <EditText
+                        android:id="@+id/login_mobile_number"
+                        style="@style/CustomEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_mobile"
+                        android:inputType="phone"
+                        android:maxLength="14" />
+                </android.support.design.widget.TextInputLayout>
 
                 <ImageView
                     android:id="@+id/login_info"
+                    style="@style/ButtonStyleWithIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_info_outline_black_24dp"
-                    android:layout_gravity="right|center"
-                    android:paddingRight="@dimen/activity_horizontal_margin_card"
-                    android:visibility="invisible"/>
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_info_outline_black_24dp" />
+            </RelativeLayout>
 
-            </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+            <View style="@style/Divider" />
 
-            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                android:id="@+id/login_password"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableLeft="@drawable/ic_password"
-                android:hint="@string/prompt_password_new"
-                android:inputType="textPassword"
-                custom:borderType="down">
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true">
 
-            </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+                <EditText
+                    android:id="@+id/login_password"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_password_new"
+                    android:inputType="textPassword"
+                    custom:borderType="down" />
 
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/Divider" />
 
             <Button
                 android:id="@+id/login_button"
+                style="@style/PrimaryMidiumButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/PrimaryButton"
                 android:imeOptions="actionDone"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:text="@string/action_login"/>
+                android:text="@string/action_login" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -86,8 +98,9 @@
                     android:gravity="left|center_vertical"
                     android:text="@string/join_us"
                     android:textAllCaps="false"
-                    android:textColor="@color/colorLightGray"
-                    android:textSize="@dimen/text_size_small" />
+                    android:textColor="@color/colorGray"
+                    android:textSize="@dimen/text_size_small"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
                 <Button
                     android:id="@+id/forget_password_button"
@@ -98,8 +111,9 @@
                     android:gravity="center_vertical|right"
                     android:text="@string/forgot_password"
                     android:textAllCaps="false"
-                    android:textColor="@color/colorLightGray"
-                    android:textSize="@dimen/text_size_small" />
+                    android:textColor="@color/colorGray"
+                    android:textSize="@dimen/text_size_small"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
             </RelativeLayout>
 
         </LinearLayout>

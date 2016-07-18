@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -43,8 +44,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private LoginResponse mLoginResponseModel;
 
     private ProfileImageView mProfileImageView;
-    private IconifiedEditText mUserNameLoginView;
-    private IconifiedEditText mPasswordLoginView;
+    private EditText mUserNameLoginView;
+    private EditText mPasswordLoginView;
     private Button mButtonLogin;
     private Button mButtonForgetPassword;
     private Button mButtonJoinUs;
@@ -78,8 +79,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
         mButtonJoinUs = (Button) v.findViewById(R.id.join_us_button);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mUserNameLoginView = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
-        mPasswordLoginView = (IconifiedEditText) v.findViewById(R.id.login_password);
+        mUserNameLoginView = (EditText) v.findViewById(R.id.login_mobile_number);
+        mPasswordLoginView = (EditText) v.findViewById(R.id.login_password);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
@@ -127,13 +128,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
 
         if (SignupOrLoginActivity.mMobileNumber != null) {
-            mPasswordLoginView.getEditText().requestFocus();
+            mPasswordLoginView.requestFocus();
             String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(SignupOrLoginActivity.mMobileNumber);
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + mobileNumberWithoutPrefix);
         } else if (pref.contains(Constants.USERID)) {
-            mUserNameLoginView.getEditText().setEnabled(false);
+            mUserNameLoginView.setEnabled(false);
             mInfoView.setVisibility(View.VISIBLE);
-            mPasswordLoginView.getEditText().requestFocus();
+            mPasswordLoginView.requestFocus();
             String userIdWithoutPrefix = ContactEngine.trimPrefix(pref.getString(Constants.USERID, ""));
             mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + userIdWithoutPrefix);
         }

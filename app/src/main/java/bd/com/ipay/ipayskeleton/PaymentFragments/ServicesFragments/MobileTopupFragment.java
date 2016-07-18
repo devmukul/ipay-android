@@ -59,6 +59,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private EditText mOperatorEditText;
     private ImageView mSelectReceiverButton;
     private Button mRechargeButton;
+    private TextView mMobileTopUpInfoTextView;
 
     private RadioGroup mSelectType;
     private RadioButton mPrepaidRadioButton;
@@ -97,6 +98,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mOperatorEditText = (EditText) v.findViewById(R.id.operator);
         mSelectReceiverButton = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
+        mMobileTopUpInfoTextView=(TextView)v.findViewById(R.id.text_view_mobile_restriction_info);
 
         getOperatorandPackage();
 
@@ -156,6 +158,8 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             mOperatorEditText.setEnabled(false);
             mSelectReceiverButton.setVisibility(View.GONE);
             mAmountEditText.requestFocus();
+            mMobileTopUpInfoTextView.setVisibility(View.VISIBLE);
+
 
         } else {
             mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {

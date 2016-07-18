@@ -207,13 +207,9 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        if (serviceCharge == null) {
-            mServiceChargeHolder.setVisibility(View.GONE);
-            mTopUpHolder.setVisibility(View.GONE);
-        } else {
-            mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+
             mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
-        }
+
     }
 
     @Override
