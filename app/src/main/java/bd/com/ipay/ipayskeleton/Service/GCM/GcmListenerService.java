@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.TransactionHistoryCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService implements HttpResponseListener {
 
@@ -261,16 +262,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
                 mPushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
-                Set<UserProfilePictureClass> profilePictures = mGetProfileInfoResponse.getProfilePictures();
-
-                String imageUrl = "";
-                if (profilePictures.size() > 0) {
-                    for (Iterator<UserProfilePictureClass> it = profilePictures.iterator(); it.hasNext(); ) {
-                        UserProfilePictureClass userProfilePictureClass = it.next();
-                        imageUrl = Constants.BASE_URL_FTP_SERVER + userProfilePictureClass.getUrl();
-                        break;
-                    }
-                }
+                String imageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
                 ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);
                 profileInfoCacheManager.updateCache(mGetProfileInfoResponse.getName(),
