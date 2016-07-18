@@ -73,7 +73,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
 
-        Utilities.showKeyboard(getActivity(), mOTPEditText);
+        mOTPEditText.fo;
+        Utilities.showKeyboard(getActivity(), v);
 
         mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
 
@@ -81,14 +82,14 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
 
         //enable broadcast receiver to get the text message to get the OTP
-        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
+        /*mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
         mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
             @Override
             public void onTextMessageReceive(String otp) {
                 mOTPEditText.setText(otp);
                 mActivateButton.performClick();
             }
-        });
+        });*/
 
         mResendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
