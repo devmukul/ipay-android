@@ -476,7 +476,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         transactionIDTextView.setText(getString(R.string.transaction_id) + " " + transactionID);
         netAmountTextView.setText(Utilities.formatTaka(netAmount));
         balanceTextView.setText(Utilities.formatTaka(balance));
-        if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+        if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK  || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
             purposeLayout.setVisibility(View.GONE);
         }
         else if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
