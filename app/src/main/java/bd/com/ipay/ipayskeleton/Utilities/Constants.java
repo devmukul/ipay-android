@@ -568,9 +568,7 @@ public class Constants {
     public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "BANK";
     public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "DEVICE";
     public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "TRUSTED_PERSON";
-    public static final String PUSH_NOTIFICATION_TAG_SEND_MONEY = "SEND_MONEY";
-    public static final String PUSH_NOTIFICATION_TAG_REQUEST_MONEY = "REQUEST_MONEY";
-    public static final String PUSH_NOTIFICATION_TAG_TRANSACTION_HISTORY = "TRANSACTION_HISTORY";
+    public static final String PUSH_NOTIFICATION_TAG_TRANSACTION = "TRANSACTION";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
     public static final String PUSH_NOTIFICATION_TAG = "tag";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";

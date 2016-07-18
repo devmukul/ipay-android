@@ -140,11 +140,10 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
                 }
                 break;
-            case Constants.PUSH_NOTIFICATION_TAG_SEND_MONEY:
-            case Constants.PUSH_NOTIFICATION_TAG_REQUEST_MONEY:
+            case Constants.PUSH_NOTIFICATION_TAG_TRANSACTION:
                 TransactionHistoryCacheManager transactionHistoryCacheManager = new TransactionHistoryCacheManager(this);
                 if (isForeground() && isLoggedIn)
-                    transactionHistoryCacheManager.updateCache(null);
+                    transactionHistoryCacheManager.updateCache();
                 else {
                     transactionHistoryCacheManager.setUpdateNeeded(true);
                 }
@@ -275,7 +274,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
                 ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);
                 profileInfoCacheManager.updateCache(mGetProfileInfoResponse.getName(),
-                        mGetProfileInfoResponse.getName(), imageUrl, mGetProfileInfoResponse.getVerificationStatus());
+                        mGetProfileInfoResponse.getMobileNumber(), imageUrl, mGetProfileInfoResponse.getVerificationStatus());
             }
 
             mGetProfileInfoTask = null;
