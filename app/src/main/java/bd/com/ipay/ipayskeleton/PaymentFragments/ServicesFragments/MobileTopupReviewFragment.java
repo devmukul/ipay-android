@@ -166,8 +166,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             attemptTopUp(null);
         }
 
-        if (mInvitationCheckBox.isChecked())
-            sendInvite(mMobileNumber);
     }
 
     private void attemptTopUp(String pin) {
@@ -208,7 +206,8 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
 
-            mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+        mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
 
     }
 
@@ -305,8 +304,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                 mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mInvitationLayout.setVisibility(View.GONE);
-                    mInvitationCheckBox.setChecked(false);
                     String name = mGetUserInfoResponse.getName();
                     String profilePicture = null;
 
@@ -317,16 +314,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                     mReceiverView.setText(name);
                     mProfileImageView.setInformation(mMobileNumber, Constants.BASE_URL_FTP_SERVER + profilePicture, name, false);
 
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-
-                    mInvitationLayout.setVisibility(View.VISIBLE);
-                } else {
-                    mInvitationLayout.setVisibility(View.VISIBLE);
-                    String name = ContactEngine.getContactNameFromNumber(getActivity(), mMobileNumber);
-                    if (name != null)
-                        mReceiverView.setText(name);
-                    Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
-                    mProfileImageView.setInformation(mMobileNumber, photoUri.toString(), name, false);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
