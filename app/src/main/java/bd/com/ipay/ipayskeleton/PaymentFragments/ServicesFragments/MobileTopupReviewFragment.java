@@ -308,8 +308,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                     String profilePicture = null;
 
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        profilePicture = mGetUserInfoResponse
-                                .getProfilePictures().get(0).getUrl();
+                        profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
                     }
                     mReceiverView.setText(name);
                     mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
