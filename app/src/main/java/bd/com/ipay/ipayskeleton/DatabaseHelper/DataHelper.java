@@ -4,10 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 import android.util.Log;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +13,6 @@ import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryAdditionalInfo;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
@@ -46,7 +43,7 @@ public class DataHelper {
     /**
      * Inserts a friends' information into the database.
      * If notifyChange is set to true, and if we use
-     * registerContentObserver(cursor, DBConstants.DB_TABLE_SUBSCRIBERS_URI)
+     * registerContentObserver(cursor, DBConstants.DB_TABLE_FRIENDS_URI)
      * somewhere in the code where cursor points to the friends table, then the cursor will be
      * updated. As a rule of thumb, you should set it to true. But if you batch create friends,
      * then consider setting it to false and calling notifyChange after all friends have been
@@ -102,7 +99,7 @@ public class DataHelper {
             db.setTransactionSuccessful();
             db.endTransaction();
 
-            context.getContentResolver().notifyChange(DBConstants.DB_TABLE_SUBSCRIBERS_URI, null);
+            context.getContentResolver().notifyChange(DBConstants.DB_TABLE_FRIENDS_URI, null);
 
             Log.i("Friends", "Inserted into the database");
         }
@@ -313,7 +310,7 @@ public class DataHelper {
     }
 
     public void createTransactionHistories(List<TransactionHistoryClass> transactionHistoryClasses) {
-        if (transactionHistoryClasses == null)
+        if (transactionHistoryClasses == null || transactionHistoryClasses.isEmpty())
             return;
 
         try {
@@ -353,6 +350,8 @@ public class DataHelper {
 
             db.setTransactionSuccessful();
             db.endTransaction();
+
+            context.getContentResolver().notifyChange(DBConstants.DB_TABLE_TRANSACTION_URI, null);
 
         } catch (Exception e) {
             e.printStackTrace();

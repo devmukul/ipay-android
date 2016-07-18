@@ -17,8 +17,10 @@ public class DBConstants {
 
     public static final String DB_TRIGGER_ACTIVITY_LOG = "delete_till_50_activity_log";
     public static final String DB_TRIGGER_TRANSACTION_HISTORY = "delete_till_50_transaction_history";
-    public static final Uri DB_TABLE_SUBSCRIBERS_URI = Uri
+    public static final Uri DB_TABLE_FRIENDS_URI = Uri
             .parse("sqlite://" + Constants.ApplicationPackage + "/" + DB_TABLE_FRIENDS);
+    public static final Uri DB_TABLE_TRANSACTION_URI = Uri
+            .parse("sqlite://" + Constants.ApplicationPackage + "/" + DB_TABLE_TRANSACTION_HISTORY);
 
     // Subscriber table
     public static final String KEY_MOBILE_NUMBER = "mobile_number";
