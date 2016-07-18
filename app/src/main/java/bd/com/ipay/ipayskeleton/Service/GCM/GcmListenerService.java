@@ -275,7 +275,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
                 ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);
                 profileInfoCacheManager.updateCache(mGetProfileInfoResponse.getName(),
-                        mGetProfileInfoResponse.getName(), imageUrl, mGetProfileInfoResponse.getVerificationStatus());
+                        mGetProfileInfoResponse.getMobileNumber(), imageUrl, mGetProfileInfoResponse.getVerificationStatus());
             }
 
             mGetProfileInfoTask = null;
