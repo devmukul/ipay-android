@@ -662,7 +662,7 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:background">@drawable/background_iconified_button</item>
+        <item name="android:background">@drawable/background_primary_button</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:paddingTop">@dimen/value10</item>
         <item name="android:paddingBottom">@dimen/value10</item>
