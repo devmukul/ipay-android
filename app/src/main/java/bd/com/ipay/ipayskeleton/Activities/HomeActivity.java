@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -9,16 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,8 +28,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 
@@ -111,7 +104,6 @@ public class HomeActivity extends BaseActivity
 
     public static boolean switchedToHomeFragment = true;
 
-    private static final int REQUEST_CODE_PERMISSION = 1001;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -217,7 +209,6 @@ public class HomeActivity extends BaseActivity
             Log.w("Token", TokenManager.getToken());
         }
 
-        //attemptRequestForPermission();
         sendAnalytics();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -255,21 +246,6 @@ public class HomeActivity extends BaseActivity
     public void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
         super.onDestroy();
-    }
-
-    private void attemptRequestForPermission() {
-        String[] requiredPermissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
-        List<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : requiredPermissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(permission);
-            }
-        }
-
-        if (!permissionsToRequest.isEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
-                    REQUEST_CODE_PERMISSION);
-        }
     }
 
     private void sendAnalytics() {
@@ -318,49 +294,6 @@ public class HomeActivity extends BaseActivity
         mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_PERMISSION:
-                for (int i = 0; i < permissions.length; i++) {
-                    Log.w(permissions[i], grantResults[i] + "");
-
-                    if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
-                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            if (mGetAllContactsResponse != null) {
-                                SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(this, mGetAllContactsResponse);
-                                syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            }
-                        }
-                    } else if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            getProfileInfo();
-                        } else {
-                            MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
-                            dialog.content(getString(R.string.request_for_storage_permission))
-                                    .positiveText(R.string.allow_access)
-                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            attemptRequestForPermission();
-                                        }
-                                    })
-                                    .negativeText(R.string.exit)
-                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            finish();
-                                        }
-                                    })
-                                    .show();
-                        }
-                    }
-                }
-
-                break;
-
-        }
-    }
 
     public void switchToDashBoard() {
         mNavigationView.getMenu().getItem(0).setChecked(true);
