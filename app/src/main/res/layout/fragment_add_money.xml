@@ -2,9 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:padding="@dimen/value12">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +11,7 @@
         android:focusableInTouchMode="true"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/value5">
+        android:paddingTop="@dimen/value15">
 
         <TextView
             android:id="@+id/balance"
