@@ -19,6 +19,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:theme="@style/CustomTextInputLayout"
                 android:layout_alignParentLeft="true">
 
                 <EditText
@@ -57,6 +58,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/CustomTextInputLayout"
             android:layout_alignParentLeft="true">
 
             <EditText
@@ -75,6 +77,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/CustomTextInputLayout"
             android:layout_alignParentLeft="true">
 
             <EditText
@@ -87,6 +90,8 @@
                 android:maxLines="1"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
 
         <Button
             android:id="@+id/button_payment"
