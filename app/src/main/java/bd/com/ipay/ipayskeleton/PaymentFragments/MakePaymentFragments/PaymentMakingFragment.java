@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.app.Fragment;
 
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -126,7 +126,7 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
     }
 
     public void initiateScan() {
-        IntentIntegrator.forFragment(this).initiateScan();
+        IntentIntegrator.forSupportFragment(this).initiateScan();
     }
 
     @Override
