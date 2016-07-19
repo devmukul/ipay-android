@@ -30,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -58,6 +59,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
 import bd.com.ipay.ipayskeleton.R;
 
@@ -82,8 +85,8 @@ public class Utilities {
     /**
      * Get IP address from first non-localhost interface
      *
-     * @paramipv4 true=return ipv4, false=return ipv6
      * @return address or empty string
+     * @paramipv4 true=return ipv4, false=return ipv6
      */
     public static String getIPAddress(boolean useIPv4) {
         try {
@@ -462,6 +465,23 @@ public class Utilities {
         imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
     }
 
+    public static void showKeyBoardEditText(Context activityContext, final EditText editText) {
+
+        final InputMethodManager imm = (InputMethodManager)
+                activityContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (!editText.hasFocus()) {
+            editText.requestFocus();
+        }
+
+        editText.post(new Runnable() {
+            @Override
+            public void run() {
+                imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+            }
+        });
+    }
+
     public static boolean checkPlayServices(Context context) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
@@ -478,4 +498,12 @@ public class Utilities {
             return "";
     }
 
+    public static String getImage(List<UserProfilePictureClass> profilePictureClasses, String quality) {
+        for (UserProfilePictureClass profilePicture : profilePictureClasses) {
+            if (profilePicture.getQuality().equals(quality))
+                return profilePicture.getUrl();
+        }
+
+        return "";
+    }
 }

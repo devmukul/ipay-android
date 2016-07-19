@@ -75,7 +75,7 @@
             android:screenOrientation="portrait"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
             android:name=".Activities.PaymentActivities.SendMoneyActivity"
             android:label="@string/send_money"

@@ -2,8 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,8 +13,8 @@
             android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="@dimen/value15">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,6 +31,7 @@
                     android:layout_marginTop="@dimen/activity_horizontal_margin_card"
                     android:scaleType="centerCrop"
                     android:src="@drawable/bank111"
+                    app:riv_border_color="@android:color/white"
                     app:riv_corner_radius="50dip"
                     app:riv_oval="false" />
 
@@ -44,92 +44,72 @@
 
                     <TextView
                         android:id="@+id/textview_bank_name"
-                        style="@style/TextViewUserInfoPrimary"
-                        android:textColor="@android:color/white" />
+                        style="@style/TextViewUserInfoPrimary" />
 
                     <TextView
                         android:id="@+id/textview_account_number"
                         style="@style/TextViewUserInfoSecondary"
-                        android:textColor="@android:color/white"
                         android:textStyle="bold" />
 
                 </LinearLayout>
-
             </LinearLayout>
 
         </LinearLayout>
 
-        <android.support.v7.widget.CardView
-            style="@style/ReviewCardStyle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/value12"
-            app:cardElevation="@dimen/value2">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                <TextView
+                    style="@style/TextViewProfileInfoLabel"
+                    android:text="@string/amount_to_transfer" />
 
-                    <TextView
-                        style="@style/TextViewProfileInfoLabel"
-                        android:text="@string/amount_to_transfer" />
-
-                    <TextView
-                        android:id="@+id/textview_amount"
-                        style="@style/TextViewProfileInfo" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:layout_below="@+id/icon"
-                    android:background="@color/colorDivider" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/TextViewProfileInfoLabel"
-                        android:text="@string/service_charge" />
-
-                    <TextView
-                        android:id="@+id/textview_service_charge"
-                        style="@style/TextViewProfileInfo" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:layout_below="@+id/icon"
-                    android:background="@color/colorDivider" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/TextViewProfileInfoLabel"
-                        android:text="@string/total_received" />
-
-                    <TextView
-                        android:id="@+id/textview_total"
-                        style="@style/TextViewProfileInfo" />
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/textview_amount"
+                    style="@style/TextViewProfileInfo" />
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewProfileInfoLabel"
+                    android:text="@string/service_charge" />
+
+                <TextView
+                    android:id="@+id/textview_service_charge"
+                    style="@style/TextViewProfileInfo" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewProfileInfoLabel"
+                    android:text="@string/total_received" />
+
+                <TextView
+                    android:id="@+id/textview_total"
+                    style="@style/TextViewProfileInfo" />
+
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layout_description_holder"
@@ -147,34 +127,17 @@
                 android:text="@string/note"
                 android:textColor="@android:color/white" />
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/description_holder"
-                style="@style/ReviewCardStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/value12"
-                app:cardElevation="@dimen/value2">
-
-                <TextView
-                    android:id="@+id/textview_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/value12"
-                    android:layout_marginTop="@dimen/value12"
-                    android:gravity="center" />
-
-            </android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/textview_description"
+                style="@style/TextViewDescription"
+                android:gravity="center" />
         </LinearLayout>
 
         <Button
             android:id="@+id/button_add_money"
-            style="@style/PrimaryButton"
+            style="@style/PrimaryMidiumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/value20"
-            android:layout_marginLeft="@dimen/value12"
-            android:layout_marginRight="@dimen/value12"
-            android:layout_marginTop="@dimen/value20"
             android:text="@string/add_money" />
 
     </LinearLayout>

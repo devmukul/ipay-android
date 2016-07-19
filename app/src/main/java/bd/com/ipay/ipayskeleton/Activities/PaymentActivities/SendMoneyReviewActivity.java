@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyReviewFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewActivity extends BaseActivity implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
@@ -117,8 +118,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
                     String name = mGetUserInfoResponse.getName();
                     String profilePicture = null;
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        profilePicture = mGetUserInfoResponse
-                                .getProfilePictures().get(0).getUrl();
+                        profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
                     }
 
                     switchToRequestReviewFragment(name, profilePicture);

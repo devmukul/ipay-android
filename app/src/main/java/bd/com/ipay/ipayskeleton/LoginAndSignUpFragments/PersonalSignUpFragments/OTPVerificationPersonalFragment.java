@@ -73,10 +73,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
 
-        Utilities.showKeyboard(getActivity(), mOTPEditText);
+        Utilities.showKeyBoardEditText(getActivity(), mOTPEditText);
 
         mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
-
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
 
@@ -220,7 +219,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mSignUpTask = null;
             mRequestOTPTask = null;

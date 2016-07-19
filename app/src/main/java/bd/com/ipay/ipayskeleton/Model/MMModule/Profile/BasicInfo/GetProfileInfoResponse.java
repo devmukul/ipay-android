@@ -1,9 +1,11 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class GetProfileInfoResponse {
@@ -21,7 +23,7 @@ public class GetProfileInfoResponse {
     public String mother;
     public long signupTime;
 
-    public Set<UserProfilePictureClass> profilePictures = new HashSet<>();
+    public List<UserProfilePictureClass> profilePictures = new ArrayList<>();
 
     public String getMessage() {
         return message;
@@ -75,7 +77,8 @@ public class GetProfileInfoResponse {
         return simpleDateFormat.format(date);
     }
 
-    public Set<UserProfilePictureClass> getProfilePictures() {
+    public List<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
     }
+
 }

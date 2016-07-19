@@ -19,8 +19,8 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/CustomTextInputLayout"
-                android:layout_alignParentLeft="true">
+                android:layout_alignParentLeft="true"
+                android:theme="@style/CustomTextInputLayout">
 
                 <EditText
                     android:id="@+id/mobile_number"
@@ -58,8 +58,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/CustomTextInputLayout"
-            android:layout_alignParentLeft="true">
+            android:layout_alignParentLeft="true"
+            android:theme="@style/CustomTextInputLayout">
 
             <EditText
                 android:id="@+id/amount"
@@ -69,7 +69,7 @@
                 android:hint="@string/enter_amount"
                 android:inputType="numberDecimal"
                 android:maxLines="1"
-                android:singleLine="true"/>
+                android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
         <View style="@style/Divider" />
@@ -77,8 +77,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/CustomTextInputLayout"
-            android:layout_alignParentLeft="true">
+            android:layout_alignParentLeft="true"
+            android:theme="@style/CustomTextInputLayout">
 
             <EditText
                 android:id="@+id/description"
@@ -101,9 +101,9 @@
             android:text="@string/continue_send_money" />
 
         <TextView
+            style="@style/CustomNoteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/CustomNoteTextView"
-            android:text="@string/send_money_info"/>
+            android:text="@string/send_money_info" />
     </LinearLayout>
 </ScrollView>

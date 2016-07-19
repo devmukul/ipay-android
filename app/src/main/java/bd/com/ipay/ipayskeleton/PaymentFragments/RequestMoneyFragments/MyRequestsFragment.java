@@ -264,7 +264,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                     }
                 });
 
-                mProfileImageView.setInformation(mobileNumber, Constants.BASE_URL_FTP_SERVER + imageUrl, name, false);
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
             }
         }

@@ -37,18 +37,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                android:id="@+id/bank_account_number"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_bank3x"
-                android:enabled="false"
-                android:gravity="center"
-                android:hint="@string/enter_bank_account_number"
-                android:inputType="phone"
-                android:maxLines="1"
-                android:singleLine="true"
-                app:borderType="up" />
+                android:layout_alignParentLeft="true"
+                android:theme="@style/CustomTextInputLayout">
+
+                <EditText
+                    android:id="@+id/bank_account_number"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:hint="@string/enter_bank_account_number"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
             <ImageView
                 android:id="@+id/accountPicker"
@@ -60,35 +65,57 @@
                 android:src="@drawable/ic_bank2" />
         </RelativeLayout>
 
-        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-            android:id="@+id/amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_enter3x"
-            android:hint="@string/enter_amount"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:singleLine="true" />
+        <View style="@style/Divider" />
 
-        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-            android:id="@+id/description"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_note3x"
-            android:hint="@string/send_money_description"
-            android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true"
-            app:borderType="down" />
+            android:layout_alignParentLeft="true"
+            android:theme="@style/CustomTextInputLayout">
+
+            <EditText
+                android:id="@+id/amount"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_amount"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:theme="@style/CustomTextInputLayout">
+
+            <EditText
+                android:id="@+id/description"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/send_money_description"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
 
         <Button
             android:id="@+id/button_cash_in"
-            style="@style/PrimaryButton"
+            style="@style/PrimaryMidiumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="@string/continue_add_money" />
 
-
+        <TextView
+            style="@style/CustomNoteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_money_info" />
     </LinearLayout>
 </ScrollView>

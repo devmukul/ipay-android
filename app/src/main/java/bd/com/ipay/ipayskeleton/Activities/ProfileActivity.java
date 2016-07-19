@@ -17,7 +17,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditAddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileInfoFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -40,7 +40,7 @@ public class ProfileActivity extends BaseActivity {
             Bundle args = setBundle(targetFragment);
             switchToFragment(targetFragment, args, false);
         } else {
-            switchToProfileFragment();
+            switchToAccountFragment();
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -100,7 +100,7 @@ public class ProfileActivity extends BaseActivity {
             case BASIC_PROFILE:
                 fragment = new BasicInfoFragment();
             case PROFILE_PICTURE:
-                fragment = new ProfileInfoFragment();
+                fragment = new AccountFragment();
             case PARENT:
                 fragment = new BasicInfoFragment();
                 break;
@@ -120,9 +120,9 @@ public class ProfileActivity extends BaseActivity {
             case PROFILE_COMPLETENESS:
                 fragment = new ProfileCompletionFragment();
             case PROFILE_INFO:
-                fragment = new ProfileInfoFragment();
+                fragment = new AccountFragment();
             default:
-                fragment = new ProfileInfoFragment();
+                fragment = new AccountFragment();
         }
 
         if (bundle != null)
@@ -135,11 +135,11 @@ public class ProfileActivity extends BaseActivity {
         ft.commit();
     }
 
-    public void switchToProfileFragment() {
+    public void switchToAccountFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileInfoFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AccountFragment()).commit();
     }
 
     public void switchToBasicInfoFragment() {
@@ -229,7 +229,7 @@ public class ProfileActivity extends BaseActivity {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileInfoFragment()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AccountFragment()).addToBackStack(null).commit();
     }
 
     @Override

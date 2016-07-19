@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     String mError_message;
     private int mBankCode;
 
+    private LinearLayout mLinearLayoutDescriptionHolder;
     private TextView mBankNameView;
     private TextView mBankAccountNumberView;
     private TextView mDescriptionView;
@@ -77,6 +79,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         Drawable bankIcon =  getResources().getDrawable(mBankCode);
 
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
+        mLinearLayoutDescriptionHolder = (LinearLayout) v.findViewById(R.id.layout_description_holder);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mDescriptionHolder = v.findViewById(R.id.description_holder);
         mBankNameView = (TextView) v.findViewById(R.id.textview_bank_name);
@@ -96,7 +99,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
         if (mDescription == null || mDescription.isEmpty()) {
-            mDescriptionHolder.setVisibility(View.GONE);
+            mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
         } else {
             mDescriptionView.setText(mDescription);
         }

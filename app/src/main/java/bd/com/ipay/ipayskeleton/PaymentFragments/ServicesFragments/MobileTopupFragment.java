@@ -22,8 +22,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -264,6 +262,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null)
                     mMobileNumberEditText.setText(mobileNumber);
+                    mMobileNumberEditText.setError(null);
             }
         } else if (requestCode == MOBILE_TOPUP_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             if (getActivity() != null)

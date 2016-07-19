@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -28,13 +27,11 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
-import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -55,9 +52,9 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private Button buttonAddMoney;
-    private IconifiedEditText mBankAccountNumberEditText;
-    private IconifiedEditText mDescriptionEditText;
-    private IconifiedEditText mAmountEditText;
+    private EditText mBankAccountNumberEditText;
+    private EditText mDescriptionEditText;
+    private EditText mAmountEditText;
     private TextView mLinkABankNoteTextView;
     private ImageView mBankPicker;
     private List<UserBankClass> mListUserBankClasses;
@@ -73,9 +70,9 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_money, container, false);
-        mBankAccountNumberEditText = (IconifiedEditText) v.findViewById(R.id.bank_account_number);
-        mDescriptionEditText = (IconifiedEditText) v.findViewById(R.id.description);
-        mAmountEditText = (IconifiedEditText) v.findViewById(R.id.amount);
+        mBankAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
+        mDescriptionEditText = (EditText) v.findViewById(R.id.description);
+        mAmountEditText = (EditText) v.findViewById(R.id.amount);
         buttonAddMoney = (Button) v.findViewById(R.id.button_cash_in);
         mBankPicker = (ImageView) v.findViewById(R.id.accountPicker);
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
@@ -177,14 +174,13 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             focusView = mAmountEditText;
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             cancel = true;
-        }
-        else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
+                && Utilities.isValueAvailable(((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    ((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    ((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                    ((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                    ((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
             if (error_message != null) {
                 focusView = mAmountEditText;
@@ -194,7 +190,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         }
         if (!(mBankAccountNumberEditText.getText().toString().trim().length() > 0)) {
             focusView = mBankAccountNumberEditText;
-            mBankAccountNumberEditText.setError(getString(R.string.enter_bank_account_number));
+            mBankAccountNumberEditText.setError(getString(R.string.select_a_bank));
             cancel = true;
         }
 
@@ -263,6 +259,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                         final String strName = arrayAdapter.getItem(which);
                         selectedBankPosition = which;
                         mBankAccountNumberEditText.setText(strName);
+                        mBankAccountNumberEditText.setError(null);
                     }
                 });
 
@@ -336,10 +333,10 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
                     for (BusinessRule rule : businessRuleArray) {
                         if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                            ((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            ((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                            ((AddMoneyActivity)getActivity()).mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            ((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         }
                     }
 

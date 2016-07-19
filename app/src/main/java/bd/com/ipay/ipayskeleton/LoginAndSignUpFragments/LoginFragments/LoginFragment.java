@@ -129,14 +129,17 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         if (SignupOrLoginActivity.mMobileNumber != null) {
             mPasswordLoginView.requestFocus();
-            String mobileNumberWithoutPrefix = ContactEngine.trimPrefix(SignupOrLoginActivity.mMobileNumber);
-            mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + mobileNumberWithoutPrefix);
+
+            String mobileNumber = ContactEngine.formatMobileNumberBD(SignupOrLoginActivity.mMobileNumber);
+            mUserNameLoginView.setText(mobileNumber);
         } else if (pref.contains(Constants.USERID)) {
+            mPasswordLoginView.requestFocus();
             mUserNameLoginView.setEnabled(false);
             mInfoView.setVisibility(View.VISIBLE);
-            mPasswordLoginView.requestFocus();
-            String userIdWithoutPrefix = ContactEngine.trimPrefix(pref.getString(Constants.USERID, ""));
-            mUserNameLoginView.setText(Constants.COUNTRY_CODE_BANGLADESH + userIdWithoutPrefix);
+
+            ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
+            String mobileNumber = ContactEngine.formatMobileNumberBD(profileInfoCacheManager.getMobileNumber());
+            mUserNameLoginView.setText(mobileNumber);
         }
 
         // Auto Login
@@ -235,8 +238,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             SignupOrLoginActivity.mMobileNumberBusiness = mUserNameLogin;
             SignupOrLoginActivity.mPasswordBusiness = mPasswordLogin;
 
-            mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
-            mProgressDialog.show();
+            if (getActivity() != null) {
+                mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
+                mProgressDialog.show();
+            }
 
             String UUID = null;
             if (pref.contains(Constants.UUID)) {
