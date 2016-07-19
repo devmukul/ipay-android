@@ -583,7 +583,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_system_event)
+                            .load(R.drawable.ic_signin)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
                     Glide.with(getActivity())
