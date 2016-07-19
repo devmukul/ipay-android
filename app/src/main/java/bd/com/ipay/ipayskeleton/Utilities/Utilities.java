@@ -425,8 +425,7 @@ public class Utilities {
     }
 
     public static boolean isValueAvailable(BigDecimal amount) {
-        if (amount.compareTo(new BigDecimal("-1")) == 0)
-            return false;
+        if (amount.compareTo(BigDecimal.ZERO) < 0) return false;
         else return true;
     }
 

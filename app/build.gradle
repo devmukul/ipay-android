@@ -77,4 +77,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:9.0.0'
     compile 'com.google.android.gms:play-services:9.0.0'
     compile 'com.android.support:multidex:1.0.1'
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:1.9.5"
 }
