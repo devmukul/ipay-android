@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,12 +46,10 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.TransactionHistoryCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -66,8 +63,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private RecyclerView.LayoutManager mLayoutManager;
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-
-    private TransactionHistoryDatabaseChangeObserver mTransactionHistoryDatabaseChangeObserver;
 
     private String mMobileNumber;
 
@@ -103,8 +98,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private boolean hasNext = false;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
-
-    private TransactionHistoryCacheManager transactionHistoryCacheManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -185,24 +178,10 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-
-                    transactionHistoryCacheManager.updateCache(new TransactionHistoryCacheManager.OnUpdateCacheListener() {
-                        @Override
-                        public void onUpdateCache() {
-                            readTransactionHistoryFromCache();
-
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
-                    });
+                    refreshTransactionHistory();
                 }
             }
         });
-
-        if (getActivity() != null) {
-            mTransactionHistoryDatabaseChangeObserver = new TransactionHistoryDatabaseChangeObserver(new Handler());
-            getActivity().getContentResolver().registerContentObserver(
-                    DBConstants.DB_TABLE_TRANSACTION_URI, true, mTransactionHistoryDatabaseChangeObserver);
-        }
 
         return v;
     }
@@ -212,28 +191,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         super.onActivityCreated(savedInstanceState);
 
         setContentShown(false);
-
-        transactionHistoryCacheManager = new TransactionHistoryCacheManager(getActivity());
-        if (transactionHistoryCacheManager.isUpdateNeeded()) {
-            transactionHistoryCacheManager.updateCache(new TransactionHistoryCacheManager.OnUpdateCacheListener() {
-                @Override
-                public void onUpdateCache() {
-                    readTransactionHistoryFromCache();
-                }
-            });
-        } else {
-            readTransactionHistoryFromCache();
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (getActivity() != null) {
-            getActivity().getContentResolver().unregisterContentObserver(
-                    mTransactionHistoryDatabaseChangeObserver);
-        }
-
-        super.onDestroyView();
+        getTransactionHistory();
     }
 
     @Override
@@ -285,11 +243,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         clearDateFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateFilterLayout.setVisibility(View.GONE);
-                fromDate = null;
-                toDate = null;
-                mFromDateEditText.setText("");
-                mToDateEditText.setText("");
+                clearDateFilters();
                 refreshTransactionHistory();
             }
         });
@@ -349,8 +303,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mClearEventFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearFilters();
-                readTransactionHistoryFromCache();
+                clearEventFilters();
+                refreshTransactionHistory();
             }
         });
 
@@ -383,13 +337,22 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         }
     }
 
-    private void clearFilters() {
+    private void clearEventFilters() {
         type = null;
         for (CheckBox eventFilter : mCheckBoxTypeMap.keySet()) {
             eventFilter.setChecked(false);
         }
 
         eventFilterLayout.setVisibility(View.GONE);
+    }
+
+    private void clearDateFilters() {
+        fromDate = null;
+        toDate = null;
+        mFromDateEditText.setText("");
+        mToDateEditText.setText("");
+
+        dateFilterLayout.setVisibility(View.GONE);
     }
 
     private DatePickerDialog.OnDateSetListener mFromDateSetListener =
@@ -442,6 +405,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     mToDateEditText.setText(toDatePicker + "/" + toMonthPicker + "/" + toYearPicker);
                 }
             };
+
 
     private void getTransactionHistory() {
         if (mTransactionHistoryTask != null) {
@@ -568,16 +532,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     }
 
-    private void readTransactionHistoryFromCache() {
-        transactionHistoryCacheManager.loadTransactions();
-        List<TransactionHistoryClass> transactionHistoryClasses = transactionHistoryCacheManager.getTransactions();
-        hasNext = transactionHistoryCacheManager.hasNext();
-        historyPageCount = transactionHistoryCacheManager.getPageCount();
-
-        loadTransactionHistory(transactionHistoryClasses, hasNext, true);
-        setContentShown(true);
-    }
-
     private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses,
                                         boolean hasNext, boolean clearOldTransactions) {
         if (clearOldTransactions || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
@@ -591,7 +545,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         this.hasNext = hasNext;
         if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
             mEmptyListTextView.setVisibility(View.GONE);
-        else mEmptyListTextView.setVisibility(View.VISIBLE);
+        else
+            mEmptyListTextView.setVisibility(View.VISIBLE);
 
         mTransactionHistoryAdapter.notifyDataSetChanged();
     }
@@ -832,33 +787,10 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         public int getItemViewType(int position) {
 
             if (position == userTransactionHistoryClasses.size()) {
-                // This is where we'll add footer.
                 return FOOTER_VIEW;
             }
 
             return super.getItemViewType(position);
         }
     }
-
-    private class TransactionHistoryDatabaseChangeObserver extends ContentObserver {
-
-        public TransactionHistoryDatabaseChangeObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public boolean deliverSelfNotifications() {
-            return super.deliverSelfNotifications();
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            clearFilters();
-            readTransactionHistoryFromCache();
-        }
-    };
 }
