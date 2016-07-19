@@ -505,4 +505,8 @@ public class Utilities {
 
         return "";
     }
+
+    public static void setActionBarTitle(Activity activity,String title) {
+        activity.getActionBar().setTitle(title);
+    }
 }

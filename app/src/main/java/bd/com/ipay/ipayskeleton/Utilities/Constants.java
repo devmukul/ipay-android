@@ -30,6 +30,7 @@ public class Constants {
     public static final String SMS_READER_BROADCAST_RECEIVER_PDUS = "pdus";
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";
     public static final String PROFILE_PICTURE_UPDATE_BROADCAST = "PROFILE_PICTURE_UPDATE_BROADCAST";
+    public static final String TRANSACTION_HISTORY_UPDATE_BROADCAST = "TRANSACTION_HISTORY_UPDATE_BROADCAST";
 
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
@@ -110,7 +111,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -364,7 +365,7 @@ public class Constants {
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
     public static final String COMMAND_GET_USER_ACTIVITIES = "COMMAND_GET_USER_ACTIVITIES";
     public static final String COMMAND_GET_TRANSACTION_HISTORY = "COMMAND_GET_TRANSACTION_HISTORY";
-    public static final String COMMAND_GET_NOTIFICATIONS = "COMMAND_GET_NOTIFICATIONS";
+    public static final String COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS = "COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS";
     public static final String COMMAND_ADD_TRUSTED_DEVICE = "COMMAND_ADD_TRUSTED_DEVICE";
     public static final String COMMAND_GET_TRUSTED_DEVICES = "COMMAND_GET_TRUSTED_DEVICES";
     public static final String COMMAND_REMOVE_TRUSTED_DEVICE = "COMMAND_REMOVE_TRUSTED_DEVICE";
@@ -406,7 +407,7 @@ public class Constants {
     public static final String COMMAND_GET_BANK_LIST = "COMMAND_GET_BANK_LIST";
     public static final String COMMAND_GET_RECOMMENDATION_REQUESTS = "COMMAND_GET_RECOMMENDATION_REQUESTS";
     public static final String COMMAND_ADD_MONEY = "COMMAND_ADD_MONEY";
-    public static final String COMMAND_RECOMMEND_ACTION = "COMMAND_RECOMMEND_ACTION";
+    public static final String COMMAND_INTRODUCE_ACTION = "COMMAND_INTRODUCE_ACTION";
     public static final String COMMAND_INVITEE_ACTION = "COMMAND_INVITEE_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
     public static final String COMMAND_GET_NEWS_FEED = "COMMAND_GET_NEWS_FEED";
@@ -529,8 +530,8 @@ public class Constants {
     public static final int SERVICE_ID_TOP_UP = 2001;
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_EDUCATION = 8001;
-    public static final int SERVICE_ID_MIN_AMOUNT_PER_PAYMENT=87;
-    public static final int SERVICE_ID_MAX_AMOUNT_PER_PAYMENT=88;
+    public static final int SERVICE_ID_MIN_AMOUNT_PER_PAYMENT = 87;
+    public static final int SERVICE_ID_MAX_AMOUNT_PER_PAYMENT = 88;
 
 
     public static final String RESULT = "Result";
@@ -626,5 +627,8 @@ public class Constants {
     public static final String IMAGE_QUALITY_MEDIUM = "medium";
     public static final String IMAGE_QUALITY_HIGH = "high";
 
-
+    public static final int NOTIFICATION_TYPE_REQUEST_MONEY = 1;
+    public static final int NOTIFICATION_TYPE_MAKE_PAYMENT = 2;
+    public static final int NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE = 3;
+    public static final int NOTIFICATION_TYPE_INTROUDCTION_REQUEST = 4;
 }

@@ -1,6 +1,9 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee;
 
-public class Business {
+import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+
+public class Business implements Notification {
     private int accountId;
     private long associationId;
     private String mobileNumber;
@@ -30,5 +33,30 @@ public class Business {
 
     public String getStatus() {
         return status;
+    }
+
+    @Override
+    public String getTitle() {
+        return name;
+    }
+
+    @Override
+    public String getDescription() {
+        return getMobileNumber();
+    }
+
+    @Override
+    public String getImageUrl() {
+        return getProfilePictureUrl();
+    }
+
+    @Override
+    public long getTime() {
+        return 0;
+    }
+
+    @Override
+    public int getNotificationType() {
+        return Constants.NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE;
     }
 }

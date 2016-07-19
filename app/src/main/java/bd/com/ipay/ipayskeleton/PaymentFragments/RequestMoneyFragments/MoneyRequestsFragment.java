@@ -35,9 +35,9 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.RequestMoneyReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetNotificationsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
@@ -50,7 +50,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
-    private GetNotificationsResponse mGetNotificationsResponse;
+    private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
 
     private HttpRequestPostAsyncTask mServiceChargeTask = null;
     private GetServiceChargeResponse mGetServiceChargeResponse;
@@ -61,7 +61,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
     private RecyclerView mNotificationsRecyclerView;
     private NotificationListAdapter mNotificationListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<NotificationClass> moneyRequestList;
+    private List<MoneyAndPaymentRequest> moneyRequestList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ProgressDialog mProgressDialog;
@@ -78,6 +78,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
     private long mMoneyRequestId;
     private String mTitle;
     private String mDescription;
+    private TextView mEmptyListTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
         mProgressDialog = new ProgressDialog(getActivity());
 
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mNotificationListAdapter = new NotificationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
@@ -127,7 +129,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             return;
         }
 
-        GetNotificationsRequest mTransactionHistoryRequest = new GetNotificationsRequest(
+        GetMoneyAndPaymentRequest mTransactionHistoryRequest = new GetMoneyAndPaymentRequest(
                 pageCount, Constants.SERVICE_ID_REQUEST_MONEY);
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
@@ -209,17 +211,17 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    mGetNotificationsResponse = gson.fromJson(result.getJsonString(), GetNotificationsResponse.class);
+                    mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
 
                     if (moneyRequestList == null || moneyRequestList.size() == 0) {
-                        moneyRequestList = mGetNotificationsResponse.getAllNotifications();
+                        moneyRequestList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
                     } else {
-                        List<NotificationClass> tempNotificationList;
-                        tempNotificationList = mGetNotificationsResponse.getAllNotifications();
+                        List<MoneyAndPaymentRequest> tempNotificationList;
+                        tempNotificationList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
                         moneyRequestList.addAll(tempNotificationList);
                     }
 
-                    hasNext = mGetNotificationsResponse.isHasNext();
+                    hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
                     mNotificationListAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
@@ -295,6 +297,9 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             mRejectRequestTask = null;
 
         }
+        if (moneyRequestList != null && moneyRequestList.size() == 0 ) {
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
     private class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -323,11 +328,11 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
                 super(itemView);
 
                 // Money request list items
-                mDescriptionView = (TextView) itemView.findViewById(R.id.description);
-                mTimeView = (TextView) itemView.findViewById(R.id.time);
-                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                mTitleView = (TextView) itemView.findViewById(R.id.title);
+                mDescriptionView = (TextView) itemView.findViewById(R.id.textview_description);
+                mTimeView = (TextView) itemView.findViewById(R.id.textview_time);
+                mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
+                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
 
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 acceptButton = (Button) itemView.findViewById(R.id.accept_button);
@@ -337,7 +342,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             }
 
             public void bindViewMoneyRequestList(int pos) {
-                final NotificationClass moneyRequest = moneyRequestList.get(pos - 1);
+                final MoneyAndPaymentRequest moneyRequest = moneyRequestList.get(pos - 1);
 
                 if(pos-1 == 0) {
                     itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
@@ -475,7 +480,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
             } else {
                 // MONEY_REQUEST_ITEM_VIEW
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_request, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
                 MoneyRequestViewHolder vh = new MoneyRequestViewHolder(v);
                 return vh;
             }
@@ -503,7 +508,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
         @Override
         public int getItemCount() {
-            if (moneyRequestList == null) {
+            if (moneyRequestList == null || moneyRequestList.size() == 0) {
                 return 0;
             } else {
                 return 1 + moneyRequestList.size() + 1; // header, money requests list, footer
@@ -518,10 +523,11 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
             if (position == 0)
                 return MONEY_REQUEST_HEADER_VIEW;
-            else if (position == getItemCount() - 1)
+            else if (position == getItemCount() - 1) {
                 return FOOTER_VIEW;
-            else
+            } else
                 return MONEY_REQUEST_ITEM_VIEW;
+
         }
     }
 

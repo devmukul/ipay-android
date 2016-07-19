@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.DatePickerDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -33,6 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -44,7 +47,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ActivityLogFragment extends Fragment implements HttpResponseListener {
+public class ActivityLogFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;
@@ -133,8 +136,8 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_activity_log, container, false);
-        getActivity().setTitle(R.string.activity_log);
 
+        setTitle();
         activityLogTypes = getResources().getStringArray(R.array.activity_log_types);
         mActivityLogRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -196,6 +199,19 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
         });
 
         return v;
+    }
+    public void setTitle()
+    {
+        getActivity().setTitle(R.string.activity_log);
+        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(false);
+        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
     }
 
     private void setActionsForDateFilter() {
@@ -483,7 +499,7 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_ACTIVITIES)) {
-
+            if (this.isAdded()) setContentShown(true);
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
@@ -529,7 +545,6 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
             private TextView mTransactionDescription;
             private TextView mTime;
             private TextView loadMoreTextView;
-            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -538,13 +553,9 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindView(int pos) {
-
-
-                if(pos == userActivityResponsesList.size() -1) divider.setVisibility(View.GONE);
 
                 String type = activityLogTypes[userActivityResponsesList.get(pos).getType()];
                 String description = userActivityResponsesList.get(pos).getDescription();
@@ -556,7 +567,7 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
                 // Set icon for activity type
                 if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_PROFILE) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_profile_change)
+                            .load(R.drawable.ic_change)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_IN) {
                     Glide.with(getActivity())
@@ -568,15 +579,15 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_VERIFICATION) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_verification)
+                            .load(R.drawable.ic_verified_log)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_system_event)
+                            .load(R.drawable.ic_signin)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_security_changes)
+                            .load(R.drawable.ic_security)
                             .into(mPortrait);
                 }
             }

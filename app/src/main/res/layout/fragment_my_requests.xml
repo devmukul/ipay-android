@@ -28,6 +28,15 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin_card"
                 android:background="@drawable/background_rounded_white" />
 
+            <TextView
+                android:id="@+id/empty_list_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/empty_list"
+                android:textColor="@color/zxinglib_status_text"/>
+
         </RelativeLayout>
     </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

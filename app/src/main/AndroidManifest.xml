@@ -182,7 +182,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.TopUpReviewActivity"
-            android:label="@string/review_and_recharge"
+            android:label="@string/topup"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />

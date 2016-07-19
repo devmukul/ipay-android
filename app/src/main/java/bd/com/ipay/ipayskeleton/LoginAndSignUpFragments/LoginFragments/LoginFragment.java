@@ -44,8 +44,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private LoginResponse mLoginResponseModel;
 
     private ProfileImageView mProfileImageView;
-    private EditText mUserNameLoginView;
-    private EditText mPasswordLoginView;
+    private IconifiedEditText mUserNameLoginView;
+    private IconifiedEditText mPasswordLoginView;
     private Button mButtonLogin;
     private Button mButtonForgetPassword;
     private Button mButtonJoinUs;
@@ -79,8 +79,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
         mButtonJoinUs = (Button) v.findViewById(R.id.join_us_button);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mUserNameLoginView = (EditText) v.findViewById(R.id.login_mobile_number);
-        mPasswordLoginView = (EditText) v.findViewById(R.id.login_password);
+        mUserNameLoginView = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
+        mPasswordLoginView = (IconifiedEditText) v.findViewById(R.id.login_password);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {

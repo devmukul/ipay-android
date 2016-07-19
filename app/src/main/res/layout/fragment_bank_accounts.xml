@@ -2,31 +2,19 @@
 <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorPrimary">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin">
-
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/bank_list"
-            style="@style/ListHeaderStyle"/>
-
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_bank"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/header"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-            android:background="@drawable/background_rounded_white" />
+            android:layout_marginTop="@dimen/activity_horizontal_margin_card" />
 
         <TextView
             android:id="@+id/empty_list_text"
