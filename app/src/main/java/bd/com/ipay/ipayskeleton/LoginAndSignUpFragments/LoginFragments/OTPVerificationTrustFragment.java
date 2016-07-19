@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,7 +12,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +63,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_otp_verification_for_add_trusted_device);
+
     }
 
     @Override
@@ -76,6 +81,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
         mProgressDialog.setCancelable(true);
+
 
         //enable broadcast receiver to get the text message to get the OTP
         mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
@@ -103,7 +109,8 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         mResendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) resendOTP(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword);
+                if (Utilities.isConnectionAvailable(getActivity()))
+                    resendOTP(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword);
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
 
@@ -112,7 +119,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
-        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000-500) {
+        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
 
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
@@ -129,16 +136,14 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             mOTPEditText.setText("123456");
             mActivateButton.callOnClick();
         }
-
-        mOTPEditText.getEditText().requestFocus();
-
         return v;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Utilities.showKeyboard(getActivity(), mOTPEditText);
+        Utilities.showKeyBoardEditText(getActivity(), mOTPEditText.getEditText());
+
     }
 
     @Override
@@ -153,15 +158,15 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             return;
         }
 
-            mProgressDialog.show();
+        mProgressDialog.show();
 
         OTPRequestTrustedDevice mOTPRequestTrustedDevice = new OTPRequestTrustedDevice
                 (mUserNameLogin, mPasswordLogin,
                         Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mAccountType, SignupOrLoginActivity.mPromoCode);
-            Gson gson = new Gson();
-            String json = gson.toJson(mOTPRequestTrustedDevice);
-            mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
-                    Constants.BASE_URL_MM + Constants.URL_LOGIN, json, getActivity());
+        Gson gson = new Gson();
+        String json = gson.toJson(mOTPRequestTrustedDevice);
+        mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
+                Constants.BASE_URL_MM + Constants.URL_LOGIN, json, getActivity());
         mRequestOTPTask.mHttpResponseListener = this;
         mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -206,7 +211,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mLoginTask = null;
             if (getActivity() != null)

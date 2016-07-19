@@ -31,7 +31,7 @@
             android:hint="@string/enter_otp"
             android:inputType="phone"
             custom:borderType="up|down">
-            <requestFocus/>
+
         </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
 
