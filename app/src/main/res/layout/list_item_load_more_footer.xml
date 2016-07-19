@@ -9,7 +9,6 @@
         android:id="@+id/load_more"
         style="@style/TextStylePrimarySmall"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/load_more"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -5,11 +5,21 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <include layout="@layout/layout_progress_container" />
+
 <LinearLayout
+    android:id="@+id/content_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="@dimen/value15">
+
+
     <LinearLayout
         android:id="@+id/date_filter_layout"
         android:layout_width="match_parent"
@@ -197,6 +207,6 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
 </LinearLayout>
-
+    </LinearLayout>
     </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
 

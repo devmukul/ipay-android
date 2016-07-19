@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.app.DatePickerDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -45,7 +47,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ActivityLogFragment extends Fragment implements HttpResponseListener {
+public class ActivityLogFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;
@@ -204,6 +206,12 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(false);
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
 
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
     }
 
     private void setActionsForDateFilter() {
@@ -491,7 +499,7 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_ACTIVITIES)) {
-
+            if (this.isAdded()) setContentShown(true);
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
