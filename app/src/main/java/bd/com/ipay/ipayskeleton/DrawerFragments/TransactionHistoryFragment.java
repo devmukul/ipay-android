@@ -2,6 +2,10 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.graphics.drawable.Drawable;
@@ -10,8 +14,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -183,6 +189,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             }
         });
 
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mTransactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+
         return v;
     }
 
@@ -192,6 +201,13 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         setContentShown(false);
         getTransactionHistory();
+    }
+
+    @Override
+    public void onDestroyView() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mTransactionHistoryBroadcastReceiver);
+
+        super.onDestroyView();
     }
 
     @Override
@@ -231,10 +247,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     }
 
     private void refreshTransactionHistory() {
+        Log.d("Transaction History", "Refreshing...");
         setContentShown(false);
 
         historyPageCount = 0;
-        if (userTransactionHistoryClasses != null) userTransactionHistoryClasses.clear();
+        if (userTransactionHistoryClasses != null)
+            userTransactionHistoryClasses.clear();
         getTransactionHistory();
     }
 
@@ -533,8 +551,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     }
 
     private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses,
-                                        boolean hasNext, boolean clearOldTransactions) {
-        if (clearOldTransactions || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
+                                        boolean hasNext) {
+        if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
             userTransactionHistoryClasses = transactionHistoryClasses;
         } else {
             List<TransactionHistoryClass> tempTransactionHistoryClasses;
@@ -573,7 +591,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 try {
                     mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
 
-                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext(), false);
+                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -649,7 +667,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final String bankName = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountName();
                 final String bankAccountNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountNumber();
                 final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
-                //final Drawable icon =  getResources().getDrawable(userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankIcon(getContext()));
 
                 mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
 
@@ -793,4 +810,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             return super.getItemViewType(position);
         }
     }
+
+    private BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("Broadcast received", "Transaction History");
+            refreshTransactionHistory();
+        }
+    };
 }

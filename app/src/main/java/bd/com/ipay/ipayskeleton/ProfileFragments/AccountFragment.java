@@ -113,7 +113,6 @@ public class AccountFragment extends Fragment {
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
-        Log.d("Broadcast receiver", "registering receiver");
 
         return v;
     }
