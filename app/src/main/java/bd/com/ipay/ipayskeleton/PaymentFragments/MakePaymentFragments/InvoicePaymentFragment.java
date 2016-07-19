@@ -376,10 +376,10 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 super(itemView);
 
                 // Money request list items
-                mDescriptionView = (TextView) itemView.findViewById(R.id.description);
-                mTimeView = (TextView) itemView.findViewById(R.id.time);
+                mDescriptionView = (TextView) itemView.findViewById(R.id.textview_description);
+                mTimeView = (TextView) itemView.findViewById(R.id.textview_time);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                mTitleView = (TextView) itemView.findViewById(R.id.title);
+                mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 headerView = (TextView) itemView.findViewById(R.id.money_request_header);
 

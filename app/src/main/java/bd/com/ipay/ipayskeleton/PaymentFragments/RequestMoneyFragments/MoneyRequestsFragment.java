@@ -328,11 +328,11 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
                 super(itemView);
 
                 // Money request list items
-                mDescriptionView = (TextView) itemView.findViewById(R.id.description);
-                mTimeView = (TextView) itemView.findViewById(R.id.time);
-                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                mTitleView = (TextView) itemView.findViewById(R.id.title);
+                mDescriptionView = (TextView) itemView.findViewById(R.id.textview_description);
+                mTimeView = (TextView) itemView.findViewById(R.id.textview_time);
+                mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
+                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
 
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 acceptButton = (Button) itemView.findViewById(R.id.accept_button);
