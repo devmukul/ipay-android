@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -48,6 +49,7 @@ public class DashBoardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        setTitle();
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryFragment();
         mPayFragment = new PayFragment();
@@ -133,6 +135,13 @@ public class DashBoardFragment extends Fragment {
         contactsTab.setCustomView(contactsTabView);
         transactionHistoryTab.setCustomView(transactionHistoryTabView);
         payTab.setCustomView(payTabView);
+
+    }
+    public void setTitle()
+    {
+        //getActivity().setTitle(R.string.activity_log);
+        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(true);
+        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
     }
 

@@ -44,6 +44,8 @@
     <View
         android:id="@+id/divider"
         style="@style/Divider"
-        android:layout_below="@+id/portrait"/>
+        android:layout_below="@+id/portrait"
+        android:layout_marginTop="@dimen/value15"
+        android:layout_marginBottom="@dimen/value5"/>
 
 </RelativeLayout>
