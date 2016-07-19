@@ -19,6 +19,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.CreateInvoiceReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateInvoiceReviewActivity extends BaseActivity {
 
@@ -118,8 +119,8 @@ public class CreateInvoiceReviewActivity extends BaseActivity {
                     String name = mGetUserInfoResponse.getName();
                     String profilePicture = null;
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        profilePicture = mGetUserInfoResponse
-                                .getProfilePictures().get(0).getUrl();
+
+                        profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
                     }
 
                     switchToRequestReviewFragment(name, profilePicture);

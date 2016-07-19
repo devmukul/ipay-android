@@ -21,7 +21,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class ProfileInfoFragment extends Fragment {
+public class AccountFragment extends Fragment {
 
     private ProfileImageView mProfilePictureView;
     private TextView mNameView;
@@ -45,7 +45,7 @@ public class ProfileInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_profile_information, container, false);
+        View v = inflater.inflate(R.layout.fragment_account, container, false);
         getActivity().setTitle(R.string.account);
 
         mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
