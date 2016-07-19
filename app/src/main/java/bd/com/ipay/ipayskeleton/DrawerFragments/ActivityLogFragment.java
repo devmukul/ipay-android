@@ -134,8 +134,8 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_activity_log, container, false);
-        getActivity().setTitle(R.string.activity_log);
 
+        setTitle();
         activityLogTypes = getResources().getStringArray(R.array.activity_log_types);
         mActivityLogRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -197,6 +197,13 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
         });
 
         return v;
+    }
+    public void setTitle()
+    {
+        getActivity().setTitle(R.string.activity_log);
+        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(false);
+        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
+
     }
 
     private void setActionsForDateFilter() {

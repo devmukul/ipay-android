@@ -102,7 +102,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_basic_info, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        getActivity().setTitle(R.string.profile_basic_info);
+        getActivity().setTitle(R.string.basic_info);
 
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
