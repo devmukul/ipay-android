@@ -59,7 +59,7 @@ public class IPayContactsFragment extends BaseContactsFragment
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
 
-                Cursor cursor = dataHelper.searchSubscribers(getQuery(), mShowVerifiedUsersOnly);
+                Cursor cursor = dataHelper.searchFriends(getQuery(), mShowVerifiedUsersOnly);
 
                 if (cursor != null) {
                     nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
