@@ -393,7 +393,7 @@
     <string name="bank_list">Bank List</string>
     <string name="bank_branch">Select Branch</string>
     <string name="logout">Log out</string>
-    <string name="topup">Mobile Top Up</string>
+    <string name="topup">Top Up</string>
     <string name="bdt">BDT</string>
     <string name="make_payment">Make Payment</string>
     <string name="pay_by_QR_code">Pay by QR Code</string>

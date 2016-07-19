@@ -33,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -529,7 +530,6 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
             private TextView mTransactionDescription;
             private TextView mTime;
             private TextView loadMoreTextView;
-            private View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -538,13 +538,9 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindView(int pos) {
-
-
-                if(pos == userActivityResponsesList.size() -1) divider.setVisibility(View.GONE);
 
                 String type = activityLogTypes[userActivityResponsesList.get(pos).getType()];
                 String description = userActivityResponsesList.get(pos).getDescription();
@@ -556,7 +552,7 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
                 // Set icon for activity type
                 if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_PROFILE) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_profile_change)
+                            .load(R.drawable.ic_change)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_IN) {
                     Glide.with(getActivity())
@@ -568,7 +564,7 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_VERIFICATION) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_verification)
+                            .load(R.drawable.ic_verified_log)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     Glide.with(getActivity())
@@ -576,7 +572,7 @@ public class ActivityLogFragment extends Fragment implements HttpResponseListene
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
                     Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_security_changes)
+                            .load(R.drawable.ic_security)
                             .into(mPortrait);
                 }
             }

@@ -122,8 +122,7 @@ public class HomeActivity extends BaseActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setLogo(R.drawable.logo_ipay);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -647,5 +646,4 @@ public class HomeActivity extends BaseActivity
             mPortrait.setProfilePicture(newProfilePicture, true);
         }
     };
-
 }

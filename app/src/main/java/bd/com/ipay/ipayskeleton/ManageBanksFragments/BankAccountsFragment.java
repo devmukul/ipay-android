@@ -151,6 +151,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
+        if(getActivity()!=null)
         mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
