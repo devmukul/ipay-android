@@ -76,7 +76,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         Utilities.showKeyBoardEditText(getActivity(), mOTPEditText);
 
         mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
-
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
 

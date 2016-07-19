@@ -82,7 +82,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
         mProgressDialog.setCancelable(true);
 
-
         //enable broadcast receiver to get the text message to get the OTP
         mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
         mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
@@ -143,7 +142,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Utilities.showKeyBoardEditText(getActivity(), mOTPEditText.getEditText());
-
     }
 
     @Override
