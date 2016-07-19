@@ -1,6 +1,9 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite;
 
-public class IntroductionRequestClass {
+import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+
+public class IntroductionRequestClass implements Notification {
     public long id;
     public String senderMobileNumber;
     public String senderName;
@@ -40,5 +43,30 @@ public class IntroductionRequestClass {
 
     public String getStatus() {
         return status;
+    }
+
+    @Override
+    public String getTitle() {
+        return getSenderName();
+    }
+
+    @Override
+    public String getDescription() {
+        return getSenderMobileNumber();
+    }
+
+    @Override
+    public String getImageUrl() {
+        return getProfilePictureUrl();
+    }
+
+    @Override
+    public long getTime() {
+        return getDate();
+    }
+
+    @Override
+    public int getNotificationType() {
+        return Constants.NOTIFICATION_TYPE_INTROUDCTION_REQUEST;
     }
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/description_holder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/activity_vertical_margin_card"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+        android:id="@+id/profile_picture"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/profile_picture"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview_title"
+            style="@style/TextStylePrimaryMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="title" />
+
+        <TextView
+            android:id="@+id/textview_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sender_name"
+            android:text="5456464544" />
+
+        <TextView
+            android:id="@+id/textview_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sender_mobile_number"
+            android:text="date" />
+
+    </LinearLayout>
+</RelativeLayout>
