@@ -9,5 +9,4 @@
         android:id="@+id/progress_bar"
         android:layout_gravity="center"
         android:indeterminate="true" />
-
 </FrameLayout>
