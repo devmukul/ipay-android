@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -96,7 +97,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mOperatorEditText = (EditText) v.findViewById(R.id.operator);
         mSelectReceiverButton = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
-        mMobileTopUpInfoTextView=(TextView)v.findViewById(R.id.text_view_mobile_restriction_info);
+        mMobileTopUpInfoTextView = (TextView) v.findViewById(R.id.text_view_mobile_restriction_info);
 
         getOperatorandPackage();
 
@@ -262,7 +263,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null)
                     mMobileNumberEditText.setText(mobileNumber);
-                    mMobileNumberEditText.setError(null);
+                mMobileNumberEditText.setError(null);
             }
         } else if (requestCode == MOBILE_TOPUP_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             if (getActivity() != null)
@@ -298,6 +299,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private void showOperatorDialog() {
 
         final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_operator_listview);
         pop_up_list = (ListView) dialog.findViewById(R.id.custom_list);
         OperatorAdapter adapter = new OperatorAdapter(getActivity(), moperatorList);
@@ -310,8 +312,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 dialog.dismiss();
             }
         });
-
-        dialog.setTitle(R.string.select_an_operator);
         dialog.setCancelable(true); //  TO NOT DISMISS THE DIALOG
         dialog.show();
 
@@ -338,8 +338,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
-        }
-        else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 

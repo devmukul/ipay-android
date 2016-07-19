@@ -1,133 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/value15">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:descendantFocusability="beforeDescendants"
-            android:focusableInTouchMode="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/value15">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true">
-
-                    <EditText
-                        android:id="@+id/mobile_number"
-                        style="@style/CustomEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/enter_mobile_number"
-                        android:inputType="phone"
-                        android:maxLength="14"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/select_receiver_from_contacts"
-                    style="@style/ButtonStyleWithIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:clickable="true"
-                    android:src="@drawable/ic_book3x" />
-
-            </RelativeLayout>
-
-            <View style="@style/Divider" />
+            android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true">
 
                 <EditText
-                    android:id="@+id/amount"
+                    android:id="@+id/mobile_number"
                     style="@style/CustomEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/enter_amount"
-                    android:inputType="numberDecimal"
+                    android:hint="@string/enter_mobile_number"
+                    android:inputType="phone"
+                    android:maxLength="14"
                     android:maxLines="1"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
-            <View style="@style/Divider" />
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/package_type"
-                    style="@style/CustomEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:hint="@string/select_a_package"
-                    android:inputType="numberDecimal"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <View style="@style/Divider" />
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/operator"
-                    style="@style/CustomEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:hint="@string/select_an_operator"
-                    android:inputType="numberDecimal"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <View style="@style/Divider" />
-
-            <TextView
-                android:id="@+id/text_view_mobile_restriction_info"
+            <ImageView
+                android:id="@+id/select_receiver_from_contacts"
+                style="@style/ButtonStyleWithIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="24dp"
-                android:gravity="center"
-                android:text="@string/mobile_topup_restriction_info"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textStyle="italic"
-                android:visibility="gone" />
+                android:layout_alignParentRight="true"
+                android:clickable="true"
+                android:src="@drawable/ic_book3x" />
 
-            <Button
-                android:id="@+id/button_recharge"
-                style="@style/PrimaryMidiumButton"
+        </RelativeLayout>
+
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/amount"
+                style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/continue_mobile_recharge" />
-        </LinearLayout>
-    </ScrollView>
+                android:hint="@string/enter_amount"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:singleLine="true" />
 
-</LinearLayout>
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/package_type"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/select_a_package"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/operator"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/select_an_operator"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
+
+        <TextView
+            android:id="@+id/text_view_mobile_restriction_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="@string/mobile_topup_restriction_info"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="italic"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button_recharge"
+            style="@style/PrimaryMidiumButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/continue_mobile_recharge" />
+    </LinearLayout>
+</ScrollView>
