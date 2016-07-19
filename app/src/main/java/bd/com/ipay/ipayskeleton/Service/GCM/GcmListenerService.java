@@ -39,7 +39,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.GetTrusted
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.TransactionHistoryCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -141,13 +140,6 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     mPushNotificationStatusHolder.setUpdateNeeded(tag, true);
                 }
                 break;
-            case Constants.PUSH_NOTIFICATION_TAG_TRANSACTION:
-                TransactionHistoryCacheManager transactionHistoryCacheManager = new TransactionHistoryCacheManager(this);
-                if (isForeground() && isLoggedIn)
-                    transactionHistoryCacheManager.updateCache();
-                else {
-                    transactionHistoryCacheManager.setUpdateNeeded(true);
-                }
         }
 
     }

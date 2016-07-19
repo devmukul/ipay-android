@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.TransactionHistoryCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class LauncherActivity extends BaseActivity {
