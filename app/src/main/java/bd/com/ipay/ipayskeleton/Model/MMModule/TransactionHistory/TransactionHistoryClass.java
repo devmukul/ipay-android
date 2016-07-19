@@ -67,7 +67,7 @@ public class TransactionHistoryClass {
 
         switch (serviceID) {
             case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
-                return getPhoneNumber(description);
+                return receiverInfo;
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
                 return getBankName();
             case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):

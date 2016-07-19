@@ -1,5 +1,8 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 public class TransactionHistoryAdditionalInfo {
     private String userName;
     private String userMobileNumber;
@@ -8,6 +11,7 @@ public class TransactionHistoryAdditionalInfo {
     private String bankAccountName;
     private String bankName;
     private String branchName;
+    //private String bankCode;
 
     public TransactionHistoryAdditionalInfo() {
 
@@ -22,6 +26,7 @@ public class TransactionHistoryAdditionalInfo {
         this.bankAccountName = bankAccountName;
         this.bankName = bankName;
         this.branchName = branchName;
+        //this.bankCode = bankCode;
     }
 
     public String getUserName() {
@@ -51,4 +56,16 @@ public class TransactionHistoryAdditionalInfo {
     public String getBranchName() {
         return branchName;
     }
+
+  /*  public String getBankCode() {
+        return bankCode;
+    }
+
+    public int getBankIcon(Context context) {
+        Resources resources = context.getResources();
+        final int resourceId = resources.getIdentifier("bank" + getBankCode(), "drawable",
+                context.getPackageName());
+        return resourceId;
+        //return resources.getDrawable(resourceId);
+    }*/
 }

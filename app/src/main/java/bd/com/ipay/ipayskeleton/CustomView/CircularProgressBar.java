@@ -59,7 +59,7 @@ public class CircularProgressBar extends FrameLayout {
                     handler.post(new Runnable() {
                         public void run() {
                             mProgressBar.setProgress(progressStatus);
-                            mPercentageView.setText(progressStatus + "%");
+                            mPercentageView.setText(progressStatus+"");
                         }
                     });
 

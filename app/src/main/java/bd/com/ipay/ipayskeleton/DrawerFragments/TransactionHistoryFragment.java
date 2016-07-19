@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -693,6 +694,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final String bankName = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountName();
                 final String bankAccountNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountNumber();
                 final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
+                //final Drawable icon =  getResources().getDrawable(userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankIcon(getContext()));
 
                 mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
 
@@ -716,7 +718,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     otherImageView.setImageResource(R.drawable.ic_add_money_large);
-                } else if(serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
+                } else if(serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     otherImageView.setImageResource(R.drawable.ic_withdraw_money_large);
@@ -724,10 +726,10 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     otherImageView.setImageResource(R.drawable.ic_opening_balance);
-                } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
+                } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_mobile_recharge_large);
+                    otherImageView.setImageResource(R.drawable.ic_top);
                 } else {
                     otherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);

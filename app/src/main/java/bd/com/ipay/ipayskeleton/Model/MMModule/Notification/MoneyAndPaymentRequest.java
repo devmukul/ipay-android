@@ -6,7 +6,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class NotificationClass {
+public class MoneyAndPaymentRequest implements Notification {
 
     public Long id;
     public BigDecimal amount;
@@ -20,7 +20,7 @@ public class NotificationClass {
     public List<ItemList> itemList;
 
 
-    public NotificationClass() {
+    public MoneyAndPaymentRequest() {
     }
 
     public List<ItemList> getItemList() {
@@ -45,6 +45,7 @@ public class NotificationClass {
         return requestTime;
     }
 
+    @Override
     public String getTitle() {
         if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Invoice received";
         else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return title;
@@ -63,6 +64,15 @@ public class NotificationClass {
         return serviceID;
     }
 
+    @Override
+    public int getNotificationType() {
+        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+            return Constants.NOTIFICATION_TYPE_REQUEST_MONEY;
+        else
+            return Constants.NOTIFICATION_TYPE_MAKE_PAYMENT;
+    }
+
+    @Override
     public String getDescription() {
 
         String customDescription = "";
@@ -74,5 +84,15 @@ public class NotificationClass {
         }
 
         return customDescription;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return getOriginatorProfile().getUserProfilePicture();
+    }
+
+    @Override
+    public long getTime() {
+        return getRequestTime();
     }
 }
