@@ -35,7 +35,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.BaseIdentification;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetRecommendationRequestsResponse;
@@ -201,7 +200,7 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
 
         mProgressDialog.setMessage(getString(R.string.verifying_user));
         mProgressDialog.show();
-        mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_RECOMMEND_ACTION,
+        mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION,
                 Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity());
         mRecommendActionTask.mHttpResponseListener = this;
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -369,7 +368,7 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
             mProgressDialog.dismiss();
             mGetRecommendationRequestsTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_RECOMMEND_ACTION)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_INTRODUCE_ACTION)) {
 
             try {
                 mIntroduceActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
@@ -444,7 +443,6 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
             private LinearLayout optionsLayout;
             private TextView mSenderName;
             private TextView mSenderMobileNumber;
-            private ImageView mRecommendationStatus;
             private TextView mDate;
             private Button verifyButton;
             private Button rejectRecommendationButton;
@@ -473,10 +471,9 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
 
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                mSenderName = (TextView) itemView.findViewById(R.id.sender_name);
-                mSenderMobileNumber = (TextView) itemView.findViewById(R.id.sender_mobile_number);
-                mRecommendationStatus = (ImageView) itemView.findViewById(R.id.recommendation_status);
-                mDate = (TextView) itemView.findViewById(R.id.request_date);
+                mSenderName = (TextView) itemView.findViewById(R.id.textview_title);
+                mSenderMobileNumber = (TextView) itemView.findViewById(R.id.textview_description);
+                mDate = (TextView) itemView.findViewById(R.id.textview_time);
                 verifyButton = (Button) itemView.findViewById(R.id.verify_button);
                 rejectRecommendationButton = (Button) itemView.findViewById(R.id.reject_button);
                 markAsSpamRecommendationButton = (Button) itemView.findViewById(R.id.mark_as_spam_button);
@@ -869,7 +866,7 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                 return vh;
 
             } else if (viewType == RECOMMENDATION_ITEM_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommendation_requests, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests, parent, false);
                 RecommendationRequestViewHolder vh = new RecommendationRequestViewHolder(v);
                 return vh;
 

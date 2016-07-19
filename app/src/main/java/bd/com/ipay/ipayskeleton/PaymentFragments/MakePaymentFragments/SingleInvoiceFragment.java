@@ -27,7 +27,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.NotificationClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -36,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class SingleInvoiceFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetSingleInvoiceTask = null;
-    private NotificationClass mGetSingleInvoiceResponse;
+    private MoneyAndPaymentRequest mGetSingleInvoiceResponse;
     private ProgressDialog mProgressDialog;
 
     private RecyclerView mReviewRecyclerView;
@@ -121,7 +121,7 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    mGetSingleInvoiceResponse = gson.fromJson(result.getJsonString(), NotificationClass.class);
+                    mGetSingleInvoiceResponse = gson.fromJson(result.getJsonString(), MoneyAndPaymentRequest.class);
                     mMoneyRequestId = mGetSingleInvoiceResponse.getId();
                     mAmount = mGetSingleInvoiceResponse.getAmount();
                     mReceiverName = mGetSingleInvoiceResponse.originatorProfile.getUserName();

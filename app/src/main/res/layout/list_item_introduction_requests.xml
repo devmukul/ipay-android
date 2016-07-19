@@ -4,65 +4,23 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
     android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+    android:paddingTop="@dimen/activity_vertical_margin_card"
     android:background="@android:color/white"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/activity_vertical_margin_card">
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/description_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin_card">
-
-        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-            android:id="@+id/profile_picture"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:scaleType="centerCrop" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/profile_picture"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/title"
-                style="@style/TextStylePrimaryMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
+    <include layout="@layout/view_notification_description" />
 
     <LinearLayout
         android:id="@+id/options_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/description_holder"
         android:layout_marginTop="@dimen/value10"
         android:orientation="vertical"
         android:visibility="gone">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:background="@color/colorDivider" />
 
         <LinearLayout
@@ -71,17 +29,16 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/accept_button"
+                android:id="@+id/verify_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:padding="@dimen/value5"
-                android:text="@string/accept"
+                android:text="@string/verify"
                 android:textSize="12sp" />
 
             <View
-                android:id="@+id/view_1"
                 android:layout_width="1px"
                 android:layout_height="match_parent"
                 android:background="@color/colorDivider" />
@@ -97,11 +54,9 @@
                 android:textSize="12sp" />
 
             <View
-                android:id="@+id/view_2"
                 android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:background="@color/colorDivider"
-                android:visibility="gone" />
+                android:background="@color/colorDivider" />
 
             <Button
                 android:id="@+id/mark_as_spam_button"
@@ -111,17 +66,14 @@
                 android:background="@android:color/transparent"
                 android:padding="@dimen/value5"
                 android:text="@string/mark_as_spam"
-                android:textSize="12sp"
-                android:visibility="gone" />
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
-
 
     <View
         android:id="@+id/divider"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/divider_space"
-        android:layout_below="@+id/options_layout"
         android:background="@color/colorDivider" />
 
 </LinearLayout>
