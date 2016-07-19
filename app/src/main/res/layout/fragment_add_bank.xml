@@ -3,68 +3,104 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     android:orientation="vertical"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:paddingTop="@dimen/activity_horizontal_margin">
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/default_bank_accounts"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_signup_business"
-        android:hint="@string/select_a_bank"
-        android:inputType="textPostalAddress"
-        android:maxLines="1"
-        android:singleLine="true"
-        custom:borderType="up">
+        android:layout_alignParentLeft="true">
+
+        <EditText
+            android:id="@+id/default_bank_accounts"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_a_bank"
+            android:inputType="textPostalAddress"
+            android:maxLines="1"
+            android:singleLine="true"
+            custom:borderType="up" />
 
         <requestFocus />
-    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+    </android.support.design.widget.TextInputLayout>
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/branch_districts"
+    <View style="@style/Divider" />
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_signup_district"
-        android:hint="@string/select_district"
-        android:inputType="textPostalAddress"
-        android:maxLines="1" />
+        android:layout_alignParentLeft="true">
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/bank_branch"
+        <EditText
+            android:id="@+id/branch_districts"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_district"
+            android:inputType="textPostalAddress"
+            android:maxLines="1" />
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_signup_add1"
-        android:hint="@string/bank_branch"
-        android:inputType="textPostalAddress"
-        android:maxLines="1" />
+        android:layout_alignParentLeft="true">
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/bank_account_name"
+        <EditText
+            android:id="@+id/bank_branch"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/bank_branch"
+            android:inputType="textPostalAddress"
+            android:maxLines="1" />
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_signup_add2"
-        android:gravity="center"
-        android:hint="@string/account_name"
-        android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true" />
+        android:layout_alignParentLeft="true">
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/bank_account_number"
+        <EditText
+            android:id="@+id/bank_account_name"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/account_name"
+            android:inputType="text"
+            android:maxLines="1"
+            android:singleLine="true" />
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_signup_add1"
-        android:gravity="center"
-        android:hint="@string/account_number"
-        android:inputType="number"
-        android:maxLines="1"
-        android:singleLine="true"
-        custom:borderType="down" />
+        android:layout_alignParentLeft="true">
+
+        <EditText
+            android:id="@+id/bank_account_number"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/account_number"
+            android:inputType="number"
+            android:maxLines="1"
+            android:singleLine="true"
+            custom:borderType="down" />
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
 
     <Button
         android:id="@+id/button_add_bank"
-        style="@style/ButtonStyleMain"
+        style="@style/PrimaryMidiumButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/add_a_bank" />

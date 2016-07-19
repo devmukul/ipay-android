@@ -24,7 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/portrait">
+        android:layout_toRightOf="@+id/portrait"
+        android:id="@+id/activitylayout">
 
         <TextView
             android:id="@+id/activity_description"
@@ -45,7 +46,6 @@
         android:id="@+id/divider"
         style="@style/Divider"
         android:layout_below="@+id/portrait"
-        android:layout_marginTop="@dimen/value15"
-        android:layout_marginBottom="@dimen/value5"/>
+        android:layout_marginTop="@dimen/value15"/>
 
 </RelativeLayout>
