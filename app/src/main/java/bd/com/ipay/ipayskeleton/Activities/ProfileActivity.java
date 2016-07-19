@@ -99,8 +99,10 @@ public class ProfileActivity extends BaseActivity {
                 break;
             case BASIC_PROFILE:
                 fragment = new BasicInfoFragment();
+                break;
             case PROFILE_PICTURE:
                 fragment = new AccountFragment();
+                break;
             case PARENT:
                 fragment = new BasicInfoFragment();
                 break;
@@ -119,6 +121,7 @@ public class ProfileActivity extends BaseActivity {
                 break;
             case PROFILE_COMPLETENESS:
                 fragment = new ProfileCompletionFragment();
+                break;
             case PROFILE_INFO:
                 fragment = new AccountFragment();
             default:

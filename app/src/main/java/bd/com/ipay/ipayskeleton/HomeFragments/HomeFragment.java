@@ -264,6 +264,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        mProfilePictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
             // Check if the news feed is already cleared or not
@@ -389,7 +397,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     @Override
                     public void onClick(View v) {
                         mProfileCompletionPromptView.setVisibility(View.GONE);
-
                         Intent intent = new Intent(getActivity(), ProfileActivity.class);
                         intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS);
                         startActivity(intent);
