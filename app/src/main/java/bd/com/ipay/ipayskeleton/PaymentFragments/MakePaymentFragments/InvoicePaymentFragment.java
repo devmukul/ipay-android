@@ -83,6 +83,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private long mMoneyRequestId;
     private String mTitle;
     private Button buttonScanQRCode;
+    private TextView mEmptyListTextView;
 
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
@@ -96,6 +97,8 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         buttonScanQRCode = (Button) v.findViewById(R.id.button_scan_qr_code);
         mProgressDialog = new ProgressDialog(getActivity());
 
+
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mNotificationListAdapter = new NotificationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
@@ -347,6 +350,10 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             mProgressDialog.dismiss();
 
         }
+
+        if (moneyRequestList != null && moneyRequestList.size() == 0 ) {
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
     private class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
