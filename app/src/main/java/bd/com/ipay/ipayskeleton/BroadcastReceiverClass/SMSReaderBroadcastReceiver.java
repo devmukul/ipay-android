@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 
@@ -48,6 +50,7 @@ public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
 
     public void matchOTP(String message, Context context) {
 
+        //Log.d("mmmmmmmmmmmmmmmmmmm", message);
         String makePattern = ".*" + Constants.ApplicationTag +".*(\\d{6}).*";
         Pattern pattern = Pattern.compile(makePattern);
         Matcher matcher = pattern.matcher(message);
