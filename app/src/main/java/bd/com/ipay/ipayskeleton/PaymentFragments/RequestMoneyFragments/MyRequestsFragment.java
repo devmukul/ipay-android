@@ -52,6 +52,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
     private RecyclerView.LayoutManager mLayoutManager;
     private List<RequestsSentClass> pendingMoneyRequestClasses;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView mEmptyListTextView;
 
     private int historyPageCount = 0;
 
@@ -62,6 +63,8 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
         mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_my_requests);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
+
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mOtherRequestsAdapter = new PendingListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mPendingListRecyclerView.setLayoutManager(mLayoutManager);
@@ -217,6 +220,10 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
             mProgressDialog.dismiss();
             mCancelRequestTask = null;
         }
+
+        if (pendingMoneyRequestClasses != null && pendingMoneyRequestClasses.size() == 0 ) {
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
     public class PendingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

@@ -10,7 +10,7 @@ public class Introducer {
 
     }
 
-    public String getprofilePictureUrl() { return profilePictureUrl ; }
+    public String getProfilePictureUrl() { return profilePictureUrl ; }
 
     public String getName() {
         return name;

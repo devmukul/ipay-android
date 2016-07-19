@@ -40,7 +40,7 @@ public class ProfileActivity extends BaseActivity {
             Bundle args = setBundle(targetFragment);
             switchToFragment(targetFragment, args, false);
         } else {
-            switchToAccountFragment();
+            switchToProfileFragment();
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -135,7 +135,7 @@ public class ProfileActivity extends BaseActivity {
         ft.commit();
     }
 
-    public void switchToAccountFragment() {
+    public void switchToProfileFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 

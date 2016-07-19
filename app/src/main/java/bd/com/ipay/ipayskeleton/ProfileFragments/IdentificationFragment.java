@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +34,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.BaseIdentification;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetRecommendationRequestsResponse;
@@ -39,6 +43,9 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introduced;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.RecommendationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.AskForIntroductionResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -60,9 +67,17 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
     private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
     private AskForIntroductionResponse mAskForIntroductionResponse;
 
-    private List<RecommendationRequest> mRecommendationRequestList;
+    private HttpRequestGetAsyncTask mGetRecommendationRequestsTask = null;
+    private GetIntroductionRequestsResponse mRecommendationRequestsResponse;
+
+    private HttpRequestPostAsyncTask mRecommendActionTask = null;
+    private IntroduceActionResponse mIntroduceActionResponse;
+
+    private List<IntroductionRequestClass> mRecommendationRequestList;
+    private List<RecommendationRequest> mSentRequestList;
     private List<Introduced> mIntroducedList;
     private List<Introducer> mIntroducerList;
+    //private List<BaseIdentification> mBaseList;
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mRecyclerView;
@@ -103,6 +118,7 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
             getIntroducerList();
             getIntroducedList();
             getSentRequestList();
+            getRecommendationRequestsList();
         }
 
         mIntroduceAdapter = new IntroduceAdapter();
@@ -165,8 +181,43 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
         mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getRecommendationRequestsList() {
+        if (mGetRecommendationRequestsTask != null) {
+            return;
+        }
+
+        mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
+                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity());
+        mGetRecommendationRequestsTask.mHttpResponseListener = this;
+        mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
+        if (requestID == 0) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.verifying_user));
+        mProgressDialog.show();
+        mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_RECOMMEND_ACTION,
+                Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity());
+        mRecommendActionTask.mHttpResponseListener = this;
+        mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void refreshIntroductionRequestList() {
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            getRecommendationRequestsList();
+        }
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) throws RuntimeException {
+
+
+        mGetRecommendationRequestsTask = null;
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
 					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
@@ -209,6 +260,7 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                         mIntroducerList.clear();
                         mIntroducerList.addAll(tempIntroducerClasses);
                     }
+                    //mBaseList.addAll(mIntroducerList);
                     mIntroduceAdapter.notifyDataSetChanged();
 
                 } else {
@@ -232,6 +284,7 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                         mIntroducedList.clear();
                         mIntroducedList.addAll(tempIntroducedClasses);
                     }
+                    //mBaseList.addAll(mIntroducedList);
                     mIntroduceAdapter.notifyDataSetChanged();
 
                 } else {
@@ -246,14 +299,15 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mSentRequestListResponse = gson.fromJson(result.getJsonString(), GetRecommendationRequestsResponse.class);
 
-                    if (mRecommendationRequestList == null) {
-                        mRecommendationRequestList = mSentRequestListResponse.getSentRequestList();
+                    if (mSentRequestList == null) {
+                        mSentRequestList = mSentRequestListResponse.getSentRequestList();
                     } else {
                         List<RecommendationRequest> tempIntroducerClasses;
                         tempIntroducerClasses = mSentRequestListResponse.getSentRequestList();
-                        mRecommendationRequestList.clear();
-                        mRecommendationRequestList.addAll(tempIntroducerClasses);
+                        mSentRequestList.clear();
+                        mSentRequestList.addAll(tempIntroducerClasses);
                     }
+                    //mBaseList.addAll(mSentRequestList);
                     mIntroduceAdapter.notifyDataSetChanged();
 
                 } else {
@@ -284,13 +338,69 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
             }
             mProgressDialog.dismiss();
             mAskForRecommendationTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS)) {
+
+            if (this.isAdded()) setContentShown(true);
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mRecommendationRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
+
+                    if (mRecommendationRequestList == null) {
+                        mRecommendationRequestList = mRecommendationRequestsResponse.getVerificationRequestList();
+                    } else {
+                        List<IntroductionRequestClass> tempRecommendationRequestsClasses;
+                        tempRecommendationRequestsClasses = mRecommendationRequestsResponse.getVerificationRequestList();
+                        mRecommendationRequestList.clear();
+                        mRecommendationRequestList.addAll(tempRecommendationRequestsClasses);
+                    }
+
+                    if (mRecommendationRequestList != null)
+                        mIntroduceAdapter.notifyDataSetChanged();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            }
+
+            mProgressDialog.dismiss();
+            mGetRecommendationRequestsTask = null;
+
+        } else if (result.getApiCommand().equals(Constants.COMMAND_RECOMMEND_ACTION)) {
+
+            try {
+                mIntroduceActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    // Refresh recommendation requests list
+                    if (mRecommendationRequestList != null)
+                        mRecommendationRequestList.clear();
+                    mRecommendationRequestList = null;
+                    refreshIntroductionRequestList();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mRecommendActionTask = null;
         }
 
         try {
             if (isAdded())
                 setContentShown(true);
             if (mIntroducerList != null && mIntroducerList.size() == 0 && mIntroducedList != null
-                    && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
+                    && mIntroducedList.size() == 0 && mSentRequestList != null && mSentRequestList.size() == 0)
                 mEmptyListTextView.setVisibility(View.VISIBLE);
             else mEmptyListTextView.setVisibility(View.GONE);
         } catch (Exception e) {
@@ -307,6 +417,8 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
         private static final int INTRODUCED_LIST_HEADER_VIEW = 4;
         private static final int SENT_REQUEST_LIST_ITEM_VIEW = 5;
         private static final int SENT_REQUEST_LIST_HEADER_VIEW = 6;
+        private static final int RECOMMENDATION_ITEM_VIEW = 7;
+        private static final int RECOMMENDATION_HEADER_VIEW = 8;
 
         public IntroduceAdapter() {
         }
@@ -328,6 +440,17 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
             private RoundedImageView mRequestedProfilePictureView;
             private ImageView mSentRequestStatus;
             private TextView mTimeView;
+
+            private LinearLayout optionsLayout;
+            private TextView mSenderName;
+            private TextView mSenderMobileNumber;
+            private ImageView mRecommendationStatus;
+            private TextView mDate;
+            private Button verifyButton;
+            private Button rejectRecommendationButton;
+            private Button markAsSpamRecommendationButton;
+            private ProfileImageView mProfileImageView;
+
             private View divider;
 
             public ViewHolder(final View itemView) {
@@ -348,6 +471,16 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                 mRequestedProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 mSentRequestStatus = (ImageView) itemView.findViewById(R.id.request_status);
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
+
+                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
+                mSenderName = (TextView) itemView.findViewById(R.id.sender_name);
+                mSenderMobileNumber = (TextView) itemView.findViewById(R.id.sender_mobile_number);
+                mRecommendationStatus = (ImageView) itemView.findViewById(R.id.recommendation_status);
+                mDate = (TextView) itemView.findViewById(R.id.request_date);
+                verifyButton = (Button) itemView.findViewById(R.id.verify_button);
+                rejectRecommendationButton = (Button) itemView.findViewById(R.id.reject_button);
+                markAsSpamRecommendationButton = (Button) itemView.findViewById(R.id.mark_as_spam_button);
+
                 divider = itemView.findViewById(R.id.divider);
 
             }
@@ -419,12 +552,13 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
 
                 }
 
+                //Toast.makeText(getActivity(), "list er size : " + mBaseList.size() , Toast.LENGTH_LONG).show();
 
                 final String introducerName = mIntroducerList.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
                 final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy").format(mIntroducerList.get(pos).getIntroducedDate());
-                String imageUrl = mIntroducerList.get(pos).getprofilePictureUrl();
+                String imageUrl = mIntroducerList.get(pos).getProfilePictureUrl();
                 setProfilePicture(imageUrl, mIntroducerProfilePictureView, introducerName);
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
@@ -454,7 +588,7 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
 
                 final String introducedName = mIntroducedList.get(pos).getName();
                 final String introducedMobileNumber = mIntroducedList.get(pos).getMobileNumber();
-                String imageUrl = mIntroducedList.get(pos).getprofilePictureUrl();
+                String imageUrl = mIntroducedList.get(pos).getProfilePictureUrl();
                 setProfilePicture(imageUrl, mIntroducedProfilePictureView, introducedName);
                 mIntroducedName.setText(introducedName);
                 mIntroducedMobileNumber.setText(introducedMobileNumber);
@@ -479,7 +613,7 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                 if(pos==0) {
                     itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
 
-                } else if(pos== mRecommendationRequestList.size() -1) {
+                } else if(pos== mSentRequestList.size() -1) {
                     divider.setVisibility(View.GONE);
                     itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
 
@@ -488,10 +622,10 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
 
                 }
 
-                final String RequestedName = mRecommendationRequestList.get(pos).getName();
-                final String RequestedMobileNumber = mRecommendationRequestList.get(pos).getMobileNumber();
-                final String requestStatus = mRecommendationRequestList.get(pos).getStatus();
-                String imageUrl = mRecommendationRequestList.get(pos).getProfilePictureUrl();
+                final String RequestedName = mSentRequestList.get(pos).getName();
+                final String RequestedMobileNumber = mSentRequestList.get(pos).getMobileNumber();
+                final String requestStatus = mSentRequestList.get(pos).getStatus();
+                String imageUrl = mSentRequestList.get(pos).getProfilePictureUrl();
                 setProfilePicture(imageUrl, mRequestedProfilePictureView, RequestedName);
                 mRequestedName.setText(RequestedName);
                 mRequestedMobileNumber.setText(RequestedMobileNumber);
@@ -507,6 +641,152 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                     mSentRequestStatus.setImageResource(R.drawable.ic_notverified3x);
                 }
 
+            }
+
+            public void bindViewRecommendationList(int pos) {
+
+                if (mIntroducerList == null && mIntroducedList == null && mSentRequestList == null) pos = pos - 1;
+                else if (mIntroducerList == null && mIntroducedList == null) {
+                    if (mSentRequestList.size() == 0) pos = pos - 1;
+                    else pos = pos - mSentRequestList.size() - 2;
+                } else if (mIntroducerList == null && mSentRequestList == null) {
+                    if (mIntroducedList.size() == 0) pos = pos - 1;
+                    else pos = pos - mIntroducedList.size() - 2;
+                } else if (mIntroducedList == null && mSentRequestList == null) {
+                    if (mIntroducerList.size() == 0) pos = pos - 1;
+                    else pos = pos - mIntroducerList.size() - 2;
+                } else if (mIntroducedList == null) {
+                    if (mIntroducerList.size() == 0 && mSentRequestList.size() == 0 ) pos = pos - 1;
+                    else if(mIntroducerList.size() == 0) pos = pos - mSentRequestList.size() - 2;
+                    else if(mSentRequestList.size() == 0) pos = pos - mIntroducerList.size() - 2;
+                    else pos = pos - mIntroducerList.size() - mSentRequestList.size() - 3;
+                } else if (mIntroducerList == null) {
+                    if (mIntroducedList.size() == 0 && mSentRequestList.size() == 0 ) pos = pos - 1;
+                    else if(mIntroducedList.size() == 0) pos = pos - mSentRequestList.size() - 2;
+                    else if(mSentRequestList.size() == 0) pos = pos - mIntroducedList.size() - 2;
+                    else pos = pos - mIntroducedList.size() - mSentRequestList.size() - 3;
+                } else if (mSentRequestList == null) {
+                    if (mIntroducerList.size() == 0 && mIntroducedList.size() == 0 ) pos = pos - 1;
+                    else if(mIntroducerList.size() == 0) pos = pos - mIntroducedList.size() - 2;
+                    else if(mIntroducedList.size() == 0) pos = pos - mIntroducerList.size() - 2;
+                    else pos = pos - mIntroducerList.size() - mIntroducedList.size() - 3;
+                } else {
+                    if (mIntroducedList.size() == 0 && mIntroducerList.size() == 0 && mSentRequestList.size() == 0) pos = pos - 1;
+                    else if (mIntroducedList.size() == 0 && mSentRequestList.size() == 0) pos = pos - mIntroducerList.size() - 2;
+                    else if (mIntroducerList.size() == 0 && mSentRequestList.size() == 0) pos = pos - mIntroducedList.size() - 2;
+                    else if (mIntroducerList.size() == 0 && mIntroducedList.size() == 0) pos = pos - mSentRequestList.size() - 2;
+                    else if (mIntroducerList.size() == 0) {
+                        pos = pos - mIntroducedList.size() - mSentRequestList.size() - 3;
+                    } else if (mIntroducedList.size() == 0) {
+                        pos = pos - mIntroducerList.size() - mSentRequestList.size() - 3;
+                    } else if (mSentRequestList.size() == 0) {
+                        pos = pos - mIntroducerList.size() - mIntroducedList.size() - 3;
+                    }
+                    else pos = pos - mIntroducedList.size() - mIntroducerList.size() - mSentRequestList.size() - 4;
+                }
+
+                if (mRecommendationRequestList.size() == 1) {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+
+                } else if (pos == 0) {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
+
+                } else if(pos == mRecommendationRequestList.size() -1) {
+                    divider.setVisibility(View.GONE);
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
+
+                } else {
+                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
+
+                }
+
+                final String imageUrl = mRecommendationRequestList.get(pos).getProfilePictureUrl();
+                final long requestID = mRecommendationRequestList.get(pos).getId();
+                final String senderName = mRecommendationRequestList.get(pos).getSenderName();
+                final String senderMobileNumber = mRecommendationRequestList.get(pos).getSenderMobileNumber();
+                final String recommendationStatus = mRecommendationRequestList.get(pos).getStatus();
+                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(mRecommendationRequestList.get(pos).getDate());
+
+                mSenderName.setText(senderName);
+                mSenderMobileNumber.setText(senderMobileNumber);
+                mDate.setText(time);
+
+
+                //mProfileImageView.setProfilePicture( imageUrl, false);
+
+                optionsLayout.setVisibility(View.GONE);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
+                            if (optionsLayout.getVisibility() == View.VISIBLE) {
+                                optionsLayout.setVisibility(View.GONE);
+                            }
+                            else optionsLayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
+                verifyButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
+                            new android.app.AlertDialog.Builder(getActivity())
+                                    .setTitle(R.string.are_you_sure)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Do nothing
+                                        }
+                                    })
+                                    .show();
+                    }
+                });
+
+                rejectRecommendationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
+                            new android.app.AlertDialog.Builder(getActivity())
+                                    .setTitle(R.string.are_you_sure)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Do nothing
+                                        }
+                                    })
+                                    .show();
+                    }
+                });
+
+                markAsSpamRecommendationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
+                            new android.app.AlertDialog.Builder(getActivity())
+                                    .setTitle(R.string.are_you_sure)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Do nothing
+                                        }
+                                    })
+                                    .show();
+                    }
+                });
             }
         }
 
@@ -546,6 +826,19 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
             }
         }
 
+        private class RecommendationListHeaderViewHolder extends ViewHolder {
+            public RecommendationListHeaderViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        private class RecommendationRequestViewHolder extends ViewHolder {
+            public RecommendationRequestViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -575,7 +868,17 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                 SentRequestListHeaderViewHolder vh = new SentRequestListHeaderViewHolder(v);
                 return vh;
 
-            } else  {
+            } else if (viewType == RECOMMENDATION_ITEM_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommendation_requests, parent, false);
+                RecommendationRequestViewHolder vh = new RecommendationRequestViewHolder(v);
+                return vh;
+
+            } else if (viewType == RECOMMENDATION_HEADER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommendation_requests_header, parent, false);
+                RecommendationListHeaderViewHolder vh = new RecommendationListHeaderViewHolder(v);
+                return vh;
+
+            } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me, parent, false);
                 SentRequestListItemViewHolder vh = new SentRequestListItemViewHolder(v);
                 return vh;
@@ -608,6 +911,10 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                     IntroducerListItemViewHolder vh = (IntroducerListItemViewHolder) holder;
                     vh.bindViewForIntroducerList(position);
 
+                } else if (holder instanceof RecommendationRequestViewHolder) {
+                    RecommendationRequestViewHolder vh = (RecommendationRequestViewHolder) holder;
+                    vh.bindViewRecommendationList(position);
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -619,35 +926,52 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
 
             int introducerListSize = 0;
             int introducedListSize = 0;
-            int recommendationRequestsListSize = 0;
+            int sentRequestsListSize = 0;
+            int recommendationRequestListSize = 0;
 
-            if (mIntroducerList == null && mRecommendationRequestList == null && mIntroducedList == null)
+            if (mIntroducerList == null && mSentRequestList == null && mIntroducedList == null && mRecommendationRequestList == null )
                 return 0;
 
 
             // Get the sizes of the lists
-            if (mRecommendationRequestList != null)
-                recommendationRequestsListSize = mRecommendationRequestList.size();
+            if (mSentRequestList != null)
+                sentRequestsListSize = mSentRequestList.size();
             if (mIntroducerList != null)
                 introducerListSize = mIntroducerList.size();
             if (mIntroducedList != null)
                 introducedListSize = mIntroducedList.size();
+            if(mRecommendationRequestList != null)
+                recommendationRequestListSize = mRecommendationRequestList.size();
 
 
-            if (introducerListSize > 0 && introducedListSize > 0 && recommendationRequestsListSize > 0)
-                return 1 + introducerListSize + 1 + introducedListSize + 1 + recommendationRequestsListSize;
-            else if (introducerListSize > 0 && introducedListSize > 0 && recommendationRequestsListSize == 0)
+            if (introducerListSize > 0 && introducedListSize > 0 && sentRequestsListSize > 0 && recommendationRequestListSize == 0)
+                return 1 + introducerListSize + 1 + introducedListSize + 1 + sentRequestsListSize;
+            else if (introducerListSize > 0 && introducedListSize > 0 && sentRequestsListSize > 0 && recommendationRequestListSize > 0)
+                return 1 + introducerListSize + 1 + introducedListSize + 1 + sentRequestsListSize + 1 +recommendationRequestListSize ;
+            else if (introducerListSize > 0 && introducedListSize > 0 && sentRequestsListSize == 0 && recommendationRequestListSize == 0)
                 return 1 + introducerListSize + 1 + introducedListSize;
-            else if (introducerListSize > 0 && introducedListSize == 0 && recommendationRequestsListSize > 0)
-                return 1 + introducerListSize + 1 + recommendationRequestsListSize;
-            else if (introducerListSize == 0 && introducedListSize > 0 && recommendationRequestsListSize > 0)
-                return 1 + recommendationRequestsListSize + 1 + introducedListSize;
-            else if (introducerListSize > 0 && introducedListSize == 0 && recommendationRequestsListSize == 0)
+            else if (introducerListSize > 0 && introducedListSize > 0 && sentRequestsListSize == 0 && recommendationRequestListSize > 0)
+                return 1 + introducerListSize + 1 + introducedListSize + 1 + recommendationRequestListSize;
+            else if (introducerListSize > 0 && introducedListSize == 0 && sentRequestsListSize > 0 && recommendationRequestListSize == 0)
+                return 1 + introducerListSize + 1 + sentRequestsListSize;
+            else if (introducerListSize > 0 && introducedListSize == 0 && sentRequestsListSize > 0 && recommendationRequestListSize > 0)
+                return 1 + introducerListSize + 1 + sentRequestsListSize + 1 + recommendationRequestListSize;
+            else if (introducerListSize == 0 && introducedListSize > 0 && sentRequestsListSize > 0 && recommendationRequestListSize == 0)
+                return 1 + sentRequestsListSize + 1 + introducedListSize;
+            else if (introducerListSize == 0 && introducedListSize > 0 && sentRequestsListSize > 0 && recommendationRequestListSize > 0)
+                return 1 + sentRequestsListSize + 1 + introducedListSize + 1 + recommendationRequestListSize;
+            else if (introducerListSize > 0 && introducedListSize == 0 && sentRequestsListSize == 0 && recommendationRequestListSize == 0)
                 return 1 + introducerListSize;
-            else if (introducerListSize == 0 && introducedListSize > 0 && recommendationRequestsListSize == 0)
+            else if (introducerListSize > 0 && introducedListSize == 0 && sentRequestsListSize == 0 && recommendationRequestListSize > 0)
+                return 1 + introducerListSize + 1 + recommendationRequestListSize;
+            else if (introducerListSize == 0 && introducedListSize > 0 && sentRequestsListSize == 0 && recommendationRequestListSize == 0)
                 return 1 + introducedListSize;
-            else if (introducerListSize == 0 && introducedListSize == 0 && recommendationRequestsListSize > 0)
-                return 1 + recommendationRequestsListSize;
+            else if (introducerListSize == 0 && introducedListSize > 0 && sentRequestsListSize == 0 && recommendationRequestListSize > 0)
+                return 1 + introducedListSize + 1 + recommendationRequestListSize;
+            else if (introducerListSize == 0 && introducedListSize == 0 && sentRequestsListSize > 0 && recommendationRequestListSize == 0)
+                return 1 + sentRequestsListSize;
+            else if (introducerListSize == 0 && introducedListSize == 0 && sentRequestsListSize > 0 && recommendationRequestListSize > 0)
+                return 1 + sentRequestsListSize +1 + recommendationRequestListSize;
             else return 0;
 
         }
@@ -657,19 +981,22 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
 
             int introducerListSize = 0;
             int introducedListSize = 0;
-            int recommendationRequestsListSize = 0;
+            int sentRequestsListSize = 0;
+            int recommendationRequestListSize = 0;
 
-            if (mRecommendationRequestList == null && mIntroducerList == null && mIntroducedList == null)
+            if (mSentRequestList == null && mIntroducerList == null && mIntroducedList == null && mRecommendationRequestList == null)
                 return super.getItemViewType(position);
 
-            if (mRecommendationRequestList != null)
-                recommendationRequestsListSize = mRecommendationRequestList.size();
+            if (mSentRequestList != null)
+                sentRequestsListSize = mSentRequestList.size();
             if (mIntroducerList != null)
                 introducerListSize = mIntroducerList.size();
             if (mIntroducedList != null)
                 introducedListSize = mIntroducedList.size();
+            if(mRecommendationRequestList != null)
+                recommendationRequestListSize = mRecommendationRequestList.size();
 
-            if (recommendationRequestsListSize > 0 && introducerListSize > 0 && introducedListSize > 0) {
+            if (sentRequestsListSize > 0 && introducerListSize > 0 && introducedListSize > 0 && recommendationRequestListSize == 0) {
                 if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
                 else if (position == introducerListSize + 1)
                     return INTRODUCED_LIST_HEADER_VIEW;
@@ -681,7 +1008,23 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                     return SENT_REQUEST_LIST_ITEM_VIEW;
                 else return INTRODUCER_LIST_ITEM_VIEW;
 
-            } else if (recommendationRequestsListSize > 0 && introducerListSize > 0 && introducedListSize == 0) {
+            } else if (sentRequestsListSize > 0 && introducerListSize > 0 && introducedListSize > 0 && recommendationRequestListSize > 0) {
+                if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
+                else if (position == introducerListSize + 1)
+                    return INTRODUCED_LIST_HEADER_VIEW;
+                else if (position > introducerListSize + 1 && position < introducerListSize + 1 + introducedListSize + 1)
+                    return INTRODUCED_LIST_ITEM_VIEW;
+                else if (position == introducerListSize + 1 + introducedListSize + 1)
+                    return SENT_REQUEST_LIST_HEADER_VIEW;
+                else if (position > introducerListSize + 1 + introducedListSize + 1 && position < introducerListSize + introducedListSize + sentRequestsListSize + 3)
+                    return SENT_REQUEST_LIST_ITEM_VIEW;
+                else if (position == introducerListSize + 1 + introducedListSize + 1 + sentRequestsListSize +1)
+                    return RECOMMENDATION_HEADER_VIEW;
+                else if (position > introducerListSize + introducedListSize + sentRequestsListSize + 3)
+                    return RECOMMENDATION_ITEM_VIEW;
+                else return INTRODUCER_LIST_ITEM_VIEW;
+
+            } else if (sentRequestsListSize > 0 && introducerListSize > 0 && introducedListSize == 0  && recommendationRequestListSize == 0) {
                 if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
                 else if (position == introducerListSize + 1)
                     return SENT_REQUEST_LIST_HEADER_VIEW;
@@ -689,7 +1032,19 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                     return SENT_REQUEST_LIST_ITEM_VIEW;
                 else return INTRODUCER_LIST_ITEM_VIEW;
 
-            } else if (recommendationRequestsListSize > 0 && introducerListSize == 0 && introducedListSize > 0) {
+            }  else if (sentRequestsListSize > 0 && introducerListSize > 0 && introducedListSize == 0  && recommendationRequestListSize > 0) {
+                if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
+                else if (position == introducerListSize + 1)
+                    return SENT_REQUEST_LIST_HEADER_VIEW;
+                else if (position > introducerListSize + 1 && position < introducerListSize + sentRequestsListSize + 2)
+                    return SENT_REQUEST_LIST_ITEM_VIEW;
+                else if (position == introducerListSize + 1 + sentRequestsListSize + 1)
+                    return RECOMMENDATION_HEADER_VIEW;
+                else if (position > introducerListSize + sentRequestsListSize + 2)
+                    return RECOMMENDATION_ITEM_VIEW;
+                else return INTRODUCER_LIST_ITEM_VIEW;
+
+            } else if (sentRequestsListSize > 0 && introducerListSize == 0 && introducedListSize > 0  && recommendationRequestListSize == 0) {
                 if (position == 0) return INTRODUCED_LIST_HEADER_VIEW;
                 else if (position == introducedListSize + 1)
                     return SENT_REQUEST_LIST_HEADER_VIEW;
@@ -697,7 +1052,19 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                     return SENT_REQUEST_LIST_ITEM_VIEW;
                 else return INTRODUCED_LIST_ITEM_VIEW;
 
-            } else if (recommendationRequestsListSize == 0 && introducerListSize > 0 && introducedListSize > 0) {
+            } else if (sentRequestsListSize > 0 && introducerListSize == 0 && introducedListSize > 0  && recommendationRequestListSize > 0) {
+                if (position == 0) return INTRODUCED_LIST_HEADER_VIEW;
+                else if (position == introducedListSize + 1)
+                    return SENT_REQUEST_LIST_HEADER_VIEW;
+                else if (position > introducedListSize + 1 && position < introducerListSize + introducedListSize + 2)
+                    return SENT_REQUEST_LIST_ITEM_VIEW;
+                else if (position == sentRequestsListSize + introducedListSize + 2)
+                    return RECOMMENDATION_HEADER_VIEW;
+                else if (position > sentRequestsListSize + introducedListSize + 2)
+                    return RECOMMENDATION_ITEM_VIEW;
+                else return INTRODUCED_LIST_ITEM_VIEW;
+
+            } else if (sentRequestsListSize == 0 && introducerListSize > 0 && introducedListSize > 0  && recommendationRequestListSize == 0) {
                 if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
                 else if (position == introducerListSize + 1)
                     return INTRODUCED_LIST_HEADER_VIEW;
@@ -705,15 +1072,49 @@ public class IdentificationFragment extends ProgressFragment implements HttpResp
                     return INTRODUCED_LIST_ITEM_VIEW;
                 else return INTRODUCER_LIST_ITEM_VIEW;
 
-            } else if (recommendationRequestsListSize > 0 && introducerListSize == 0 && introducedListSize == 0) {
+            } else if (sentRequestsListSize == 0 && introducerListSize > 0 && introducedListSize > 0  && recommendationRequestListSize > 0) {
+                if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
+                else if (position == introducerListSize + 1)
+                    return INTRODUCED_LIST_HEADER_VIEW;
+                else if (position > introducerListSize + 1 && position < introducerListSize + introducedListSize + 2)
+                    return INTRODUCED_LIST_ITEM_VIEW;
+                else if (position == introducerListSize + introducedListSize + 2)
+                    return RECOMMENDATION_HEADER_VIEW;
+                else if (position > introducerListSize + introducedListSize + 2)
+                    return RECOMMENDATION_ITEM_VIEW;
+                else return INTRODUCER_LIST_ITEM_VIEW;
+
+            } else if (sentRequestsListSize > 0 && introducerListSize == 0 && introducedListSize == 0  && recommendationRequestListSize == 0) {
                 if (position == 0) return SENT_REQUEST_LIST_HEADER_VIEW;
                 else return SENT_REQUEST_LIST_ITEM_VIEW;
 
-            } else if (recommendationRequestsListSize == 0 && introducerListSize > 0 && introducedListSize == 0) {
+            } else if (sentRequestsListSize > 0 && introducerListSize == 0 && introducedListSize == 0  && recommendationRequestListSize > 0) {
+                if (position == 0) return SENT_REQUEST_LIST_HEADER_VIEW;
+                else if (position == sentRequestsListSize + 1)
+                    return RECOMMENDATION_HEADER_VIEW;
+                else if (position > sentRequestsListSize + 1)
+                    return RECOMMENDATION_ITEM_VIEW;
+                else return SENT_REQUEST_LIST_ITEM_VIEW;
+
+            } else if (sentRequestsListSize == 0 && introducerListSize > 0 && introducedListSize == 0  && recommendationRequestListSize == 0) {
                 if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
                 else return INTRODUCER_LIST_ITEM_VIEW;
-            } else if (recommendationRequestsListSize == 0 && introducerListSize == 0 && introducedListSize > 0) {
+            } else if (sentRequestsListSize == 0 && introducerListSize > 0 && introducedListSize == 0  && recommendationRequestListSize > 0) {
+                if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
+                else if (position == introducerListSize + 1)
+                    return RECOMMENDATION_HEADER_VIEW;
+                else if (position > introducerListSize + 1)
+                    return RECOMMENDATION_ITEM_VIEW;
+                else return INTRODUCER_LIST_ITEM_VIEW;
+            } else if (sentRequestsListSize == 0 && introducerListSize == 0 && introducedListSize > 0  && recommendationRequestListSize == 0) {
                 if (position == 0) return INTRODUCED_LIST_HEADER_VIEW;
+                else return INTRODUCED_LIST_ITEM_VIEW;
+            } else if (sentRequestsListSize == 0 && introducerListSize == 0 && introducedListSize > 0  && recommendationRequestListSize > 0) {
+                if (position == 0) return INTRODUCED_LIST_HEADER_VIEW;
+                else if (position == introducedListSize + 1)
+                    return RECOMMENDATION_HEADER_VIEW;
+                else if (position > introducedListSize + 1)
+                    return RECOMMENDATION_ITEM_VIEW;
                 else return INTRODUCED_LIST_ITEM_VIEW;
             }
             return super.getItemViewType(position);

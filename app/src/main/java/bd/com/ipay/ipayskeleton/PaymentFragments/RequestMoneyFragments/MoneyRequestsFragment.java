@@ -78,6 +78,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
     private long mMoneyRequestId;
     private String mTitle;
     private String mDescription;
+    private TextView mEmptyListTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
         mProgressDialog = new ProgressDialog(getActivity());
 
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mNotificationListAdapter = new NotificationListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
@@ -295,6 +297,9 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             mRejectRequestTask = null;
 
         }
+        if (moneyRequestList != null && moneyRequestList.size() == 0 ) {
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
     private class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -503,7 +508,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
         @Override
         public int getItemCount() {
-            if (moneyRequestList == null) {
+            if (moneyRequestList == null || moneyRequestList.size() == 0) {
                 return 0;
             } else {
                 return 1 + moneyRequestList.size() + 1; // header, money requests list, footer
@@ -518,10 +523,11 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
             if (position == 0)
                 return MONEY_REQUEST_HEADER_VIEW;
-            else if (position == getItemCount() - 1)
+            else if (position == getItemCount() - 1) {
                 return FOOTER_VIEW;
-            else
+            } else
                 return MONEY_REQUEST_ITEM_VIEW;
+
         }
     }
 

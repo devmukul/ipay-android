@@ -571,7 +571,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
         @Override
         public int getItemCount() {
-            if (moneyRequestList == null) {
+            if (moneyRequestList == null || moneyRequestList.size() == 0) {
                 return 0;
             } else {
                 return 1 + moneyRequestList.size() + 1; // header, money requests list, footer
