@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -117,9 +118,8 @@ public class RequestMoneyReviewActivity extends BaseActivity implements HttpResp
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
                     String profilePicture = null;
-                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-                    }
+                    Log.d("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
+                    profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
 
                     switchToRequestReviewFragment(name, profilePicture);
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
