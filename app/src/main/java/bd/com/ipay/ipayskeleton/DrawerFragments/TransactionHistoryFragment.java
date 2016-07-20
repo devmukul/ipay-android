@@ -252,6 +252,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         historyPageCount = 0;
         if (userTransactionHistoryClasses != null)
             userTransactionHistoryClasses.clear();
+        setContentShown(false);
         getTransactionHistory();
     }
 
@@ -552,14 +553,15 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     }
 
-    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses,
-                                        boolean hasNext) {
-        if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-            userTransactionHistoryClasses = transactionHistoryClasses;
-        } else {
-            List<TransactionHistoryClass> tempTransactionHistoryClasses;
-            tempTransactionHistoryClasses = transactionHistoryClasses;
-            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
+        if (transactionHistoryClasses != null) {
+            if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
+                userTransactionHistoryClasses = transactionHistoryClasses;
+            } else {
+                List<TransactionHistoryClass> tempTransactionHistoryClasses;
+                tempTransactionHistoryClasses = transactionHistoryClasses;
+                userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+            }
         }
 
         this.hasNext = hasNext;
@@ -648,7 +650,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
             public void bindView(int pos) {
 
-                if (pos == userTransactionHistoryClasses.size() -1) divider.setVisibility(View.GONE);
+                if (pos == userTransactionHistoryClasses.size() - 1) divider.setVisibility(View.GONE);
                 else divider.setVisibility(View.VISIBLE);
 
                 final String detailDescription = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
