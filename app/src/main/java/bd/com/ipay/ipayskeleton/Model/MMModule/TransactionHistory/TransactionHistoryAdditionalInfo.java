@@ -11,7 +11,7 @@ public class TransactionHistoryAdditionalInfo {
     private String bankAccountName;
     private String bankName;
     private String branchName;
-    //private String bankCode;
+    private String bankCode;
 
     public TransactionHistoryAdditionalInfo() {
 
@@ -26,7 +26,7 @@ public class TransactionHistoryAdditionalInfo {
         this.bankAccountName = bankAccountName;
         this.bankName = bankName;
         this.branchName = branchName;
-        //this.bankCode = bankCode;
+        this.bankCode = bankCode;
     }
 
     public String getUserName() {
@@ -57,7 +57,7 @@ public class TransactionHistoryAdditionalInfo {
         return branchName;
     }
 
-  /*  public String getBankCode() {
+    public String getBankCode() {
         return bankCode;
     }
 
@@ -67,5 +67,5 @@ public class TransactionHistoryAdditionalInfo {
                 context.getPackageName());
         return resourceId;
         //return resources.getDrawable(resourceId);
-    }*/
+    }
 }

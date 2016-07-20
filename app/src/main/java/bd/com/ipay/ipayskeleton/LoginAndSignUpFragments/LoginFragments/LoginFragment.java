@@ -128,15 +128,15 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
 
         if (SignupOrLoginActivity.mMobileNumber != null) {
-            mPasswordLoginView.requestFocus();
-
+            mPasswordLoginView.getEditText().requestFocus();
             String mobileNumber = ContactEngine.formatMobileNumberBD(SignupOrLoginActivity.mMobileNumber);
             mUserNameLoginView.setText(mobileNumber);
-        } else if (pref.contains(Constants.USERID)) {
-            mPasswordLoginView.requestFocus();
-            mUserNameLoginView.setEnabled(false);
-            mInfoView.setVisibility(View.VISIBLE);
+        }
 
+        if (pref.contains(Constants.USERID)) {
+            mPasswordLoginView.getEditText().requestFocus();
+            mUserNameLoginView.getEditText().setEnabled(false);
+            mInfoView.setVisibility(View.VISIBLE);
             String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
             mUserNameLoginView.setText(mobileNumber);
         }
