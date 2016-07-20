@@ -26,6 +26,9 @@ public class Constants {
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
     public static final String DEVICE_ID = "DEVICE_ID";
+    public static final String STRING_TO_ENCODE = "STRING_TO_ENCODE";
+    public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
+    public static final String EVENT_ID = "EVENT_ID";
 
     public static final String SMS_READER_BROADCAST_RECEIVER_PDUS = "pdus";
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";

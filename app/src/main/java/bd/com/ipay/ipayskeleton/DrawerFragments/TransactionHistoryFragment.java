@@ -7,9 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.ContentObserver;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -424,7 +421,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 }
             };
 
-
     private void getTransactionHistory() {
         if (mTransactionHistoryTask != null) {
             return;
@@ -446,9 +442,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,double balance, String purpose, String time, Integer statusCode,
-                                                 String description, String transactionID, String receiverMobileNumber, String receiverName, String photoUri,
-                                                 int serviceId, String mBankName, String mBankAccountNumber, String receiver, String bankCode, int bankIcon) {
+    private void showTransactionHistoryDialogue(double amount, double fee, double netAmount, double balance, String purpose, String time, Integer statusCode,
+                                                String description, String transactionID, String receiverMobileNumber, String receiverName, String photoUri,
+                                                int serviceId, String mBankName, String mBankAccountNumber, String receiver, String bankCode, int bankIcon) {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.transaction_details)
                 .customView(R.layout.dialog_transaction_details, true)
@@ -485,39 +481,38 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         transactionIDTextView.setText(getString(R.string.transaction_id) + " " + transactionID);
         netAmountTextView.setText(Utilities.formatTaka(netAmount));
         balanceTextView.setText(Utilities.formatTaka(balance));
-        if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK  || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
+        if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
             purposeLayout.setVisibility(View.GONE);
-        }
-        else if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
+        } else if (purpose != null && purpose.length() > 0) purposeTextView.setText(purpose);
         else purposeLayout.setVisibility(View.GONE);
 
-        if(serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+        if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
             mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(mBankName);
             mMobileNumberView.setText(mBankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if ( ! bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+            if (!bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
             else otherImageView.setImageResource(R.drawable.ic_tran_add);
 
-        } else if(serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
+        } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
             mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(mBankName);
             mMobileNumberView.setText(mBankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if ( ! bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+            if (!bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
             else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
-        } else if(serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
+        } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
             mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(R.string.opening_balance_to);
             mMobileNumberView.setText(mMobileNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_opening_balance);
+            otherImageView.setImageResource(R.drawable.ic_openingbalance);
 
-        } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
+        } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
             mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(R.string.recharge_to);
             mMobileNumberView.setText(receiver);
@@ -577,7 +572,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mTransactionHistoryTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
@@ -650,7 +645,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
             public void bindView(int pos) {
 
-                if (pos == userTransactionHistoryClasses.size() - 1) divider.setVisibility(View.GONE);
+                if (pos == userTransactionHistoryClasses.size() - 1)
+                    divider.setVisibility(View.GONE);
                 else divider.setVisibility(View.VISIBLE);
 
                 TransactionHistoryClass transactionHistory = userTransactionHistoryClasses.get(pos);
@@ -694,21 +690,21 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 netAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
-                if(serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    if ( ! bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+                    if (!bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
                     else otherImageView.setImageResource(R.drawable.ic_tran_add);
-                } else if(serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    if ( ! bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+                    if (!bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
                     else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
-                } else if(serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_opening_balance);
-                } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+                    otherImageView.setImageResource(R.drawable.ic_openingbalance);
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     otherImageView.setImageResource(R.drawable.ic_top);
