@@ -305,7 +305,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     }
 
     private void setProfilePicture(String url) {
-        Log.d("URL", url.toString());
         try {
             if (!url.equals("")) {
                 Glide.with(getActivity())

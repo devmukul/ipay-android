@@ -498,15 +498,54 @@ public class Utilities {
     }
 
     public static String getImage(List<UserProfilePictureClass> profilePictureClasses, String quality) {
+        String imageQualityHigh = null;
+        String imageQualityMedium = null;
+        String imageQualityLow = null;
+
         for (UserProfilePictureClass profilePicture : profilePictureClasses) {
-            if (profilePicture.getQuality().equals(quality))
-                return profilePicture.getUrl();
+            switch (profilePicture.getQuality()) {
+                case Constants.IMAGE_QUALITY_HIGH:
+                    imageQualityHigh = profilePicture.getUrl();
+                    break;
+                case Constants.IMAGE_QUALITY_MEDIUM:
+                    imageQualityMedium = profilePicture.getUrl();
+                    break;
+                case Constants.IMAGE_QUALITY_LOW:
+                    imageQualityLow = profilePicture.getUrl();
+                    break;
+            }
         }
 
+        switch (quality) {
+            case Constants.IMAGE_QUALITY_HIGH:
+                if (imageQualityHigh != null)
+                    return imageQualityHigh;
+                else if (imageQualityMedium != null)
+                    return imageQualityMedium;
+                else if (imageQualityLow != null)
+                    return imageQualityLow;
+                break;
+            case Constants.IMAGE_QUALITY_MEDIUM:
+                if (imageQualityMedium != null)
+                    return imageQualityMedium;
+                else if (imageQualityHigh != null)
+                    return imageQualityHigh;
+                else if (imageQualityLow != null)
+                    return imageQualityLow;
+                break;
+            case Constants.IMAGE_QUALITY_LOW:
+                if (imageQualityLow != null)
+                    return imageQualityLow;
+                else if (imageQualityHigh != null)
+                    return imageQualityHigh;
+                else if (imageQualityMedium != null)
+                    return imageQualityMedium;
+                break;
+        }
         return "";
     }
 
-    public static void setActionBarTitle(Activity activity,String title) {
+    public static void setActionBarTitle(Activity activity, String title) {
         activity.getActionBar().setTitle(title);
     }
 }
