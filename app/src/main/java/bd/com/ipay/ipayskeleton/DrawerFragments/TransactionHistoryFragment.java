@@ -515,7 +515,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mMobileNumberView.setText(mMobileNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_opening_balance);
+            otherImageView.setImageResource(R.drawable.ic_openingbalance);
 
         } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
             mNameView.setVisibility(View.VISIBLE);
@@ -707,7 +707,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 } else if(serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_opening_balance);
+                    otherImageView.setImageResource(R.drawable.ic_openingbalance);
                 } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
