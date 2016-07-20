@@ -42,6 +42,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AccountSettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -50,9 +53,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessActivity;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.ActivityLogFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
@@ -375,9 +375,12 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
+        int id = item.getItemId();
         // Handle navigation view item clicks here.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (id == R.id.nav_home) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -403,7 +406,8 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_user_activity) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ActivityLogFragment()).commit();
+            Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
+            startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_manage_business) {
@@ -413,7 +417,8 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_about) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new AboutFragment()).commit();
+            Intent intent = new Intent(HomeActivity.this, AboutActivity.class);
+            startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_event) {
@@ -424,7 +429,8 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_security_settings) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountSettingsFragment()).commit();
+            Intent intent = new Intent(HomeActivity.this, AccountSettingsActivity.class);
+            startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_logout) {

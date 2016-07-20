@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,7 +51,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private TextView mPrivacyPolicy;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
-    private CheckBox mOtherCheckBox;
     private CheckBox mAgreementCheckBox;
     private IconifiedEditText mPromoCodeEditText;
     private IconifiedEditText mBirthdayEditText;
@@ -84,7 +84,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
-        mOtherCheckBox = (CheckBox) v.findViewById(R.id.checkBoxOther);
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
         mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
         mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
@@ -113,30 +112,26 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
-        mMaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mFemaleCheckBox.setChecked(false);
-                if (isChecked) mOtherCheckBox.setChecked(false);
+            public void onClick(View view) {
+                mMaleCheckBox.setChecked(true);
+                mFemaleCheckBox.setChecked(false);
+                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                mMaleCheckBox.setTextColor((Color.WHITE));
             }
         });
 
-        mFemaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mFemaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mMaleCheckBox.setChecked(false);
-                if (isChecked) mOtherCheckBox.setChecked(false);
+            public void onClick(View view) {
+                mFemaleCheckBox.setChecked(true);
+                mMaleCheckBox.setChecked(false);
+                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                mFemaleCheckBox.setTextColor((Color.WHITE));
+
             }
         });
-
-        mOtherCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mMaleCheckBox.setChecked(false);
-                if (isChecked) mFemaleCheckBox.setChecked(false);
-            }
-        });
-
         mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
 
         mNextButton.setOnClickListener(new View.OnClickListener() {

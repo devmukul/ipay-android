@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -25,7 +26,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddBankDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
@@ -64,11 +64,11 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
     private ArrayList<String> mBranchNames;
     private ArrayList<Bank> bankNames;
 
-    private IconifiedEditText mBankListSelection;
-    private IconifiedEditText mDistrictSelection;
-    private IconifiedEditText mBankBranchSelection;
-    private IconifiedEditText mAccountNameEditText;
-    private IconifiedEditText mAccountNumberEditText;
+    private EditText mBankListSelection;
+    private EditText mDistrictSelection;
+    private EditText mBankBranchSelection;
+    private EditText mAccountNameEditText;
+    private EditText mAccountNumberEditText;
     private Button addBank;
 
     private ResourceSelectorDialog<Bank> bankSelectorDialog;
@@ -98,11 +98,11 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mBankListSelection = (IconifiedEditText) v.findViewById(R.id.default_bank_accounts);
-        mDistrictSelection = (IconifiedEditText) v.findViewById(R.id.branch_districts);
-        mBankBranchSelection = (IconifiedEditText) v.findViewById(R.id.bank_branch);
-        mAccountNameEditText = (IconifiedEditText) v.findViewById(R.id.bank_account_name);
-        mAccountNumberEditText = (IconifiedEditText) v.findViewById(R.id.bank_account_number);
+        mBankListSelection = (EditText) v.findViewById(R.id.default_bank_accounts);
+        mDistrictSelection = (EditText) v.findViewById(R.id.branch_districts);
+        mBankBranchSelection = (EditText) v.findViewById(R.id.bank_branch);
+        mAccountNameEditText = (EditText) v.findViewById(R.id.bank_account_name);
+        mAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
         addBank = (Button) v.findViewById(R.id.button_add_bank);
 
         mSelectedBankId = -1;

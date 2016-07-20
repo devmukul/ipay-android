@@ -9,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import bd.com.ipay.ipayskeleton.Activities.EventActivity;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MyRequestsFragment;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class EventFragments extends Fragment implements View.OnClickListener {
+public class InOutListHolderFragment extends Fragment implements View.OnClickListener {
 
     public static final int NUMBER_OF_TABS = 2;
     public static final int TAB_FIRST = 0;
@@ -26,6 +28,10 @@ public class EventFragments extends Fragment implements View.OnClickListener {
     private TextView secondTab;
     private View firstTabIndicator;
     private View secondTabIndicator;
+
+    private long eventID;
+    private PeopleParticipatedFragment mPeopleParticipatedFragment;
+    private PeopleAbsentFragment mPeopleAbsentFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,16 +50,30 @@ public class EventFragments extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_event_list_fragments, container, false);
+        View v = inflater.inflate(R.layout.fragment_in_out_list_fragments, container, false);
         viewPager = (ViewPager) v.findViewById(R.id.eventViewPager);
 
-        firstTab = (TextView) v.findViewById(R.id.events_tab);
+        firstTab = (TextView) v.findViewById(R.id.in_tab);
         firstTab.setOnClickListener(this);
-        secondTab = (TextView) v.findViewById(R.id.tickets_tab);
+        secondTab = (TextView) v.findViewById(R.id.out_tab);
         secondTab.setOnClickListener(this);
 
-        firstTabIndicator = v.findViewById(R.id.events_tab_indicator);
-        secondTabIndicator = v.findViewById(R.id.payments_tab_indicator);
+        firstTabIndicator = v.findViewById(R.id.in_tab_indicator);
+        secondTabIndicator = v.findViewById(R.id.out_tab_indicator);
+
+        if (getArguments() != null)
+            eventID = getArguments().getLong(Constants.EVENT_ID);
+        else {
+            Toast.makeText(getActivity(), R.string.event_not_found, Toast.LENGTH_LONG).show();
+            ((EventActivity) getActivity()).switchToEventFragments();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putLong(Constants.EVENT_ID, eventID);
+        mPeopleParticipatedFragment = new PeopleParticipatedFragment();
+        mPeopleParticipatedFragment.setArguments(bundle);
+        mPeopleAbsentFragment = new PeopleAbsentFragment();
+        mPeopleAbsentFragment.setArguments(bundle);
 
         return v;
     }
@@ -114,10 +134,10 @@ public class EventFragments extends Fragment implements View.OnClickListener {
             Fragment fragment;
             switch (pos) {
                 case 0:
-                    fragment = new MyEventsFragment();
+                    fragment = mPeopleParticipatedFragment;
                     break;
                 case 1:
-                    fragment = new MyTicketsFragment();
+                    fragment = mPeopleAbsentFragment;
                     break;
                 default:
                     fragment = new Fragment();
@@ -134,10 +154,10 @@ public class EventFragments extends Fragment implements View.OnClickListener {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.events_tab:
+            case R.id.in_tab:
                 viewPager.setCurrentItem(TAB_FIRST);
                 break;
-            case R.id.tickets_tab:
+            case R.id.out_tab:
                 viewPager.setCurrentItem(TAB_SECOND);
                 break;
             default:

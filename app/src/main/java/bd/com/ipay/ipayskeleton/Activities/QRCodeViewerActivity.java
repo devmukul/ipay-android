@@ -1,13 +1,14 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -19,18 +20,33 @@ import bd.com.ipay.ipayskeleton.Utilities.QRCodeEncoder;
 
 public class QRCodeViewerActivity extends BaseActivity {
 
+    private String stringToEncode = "";
+    private String titleOfTheActivity = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.qr_code_viewer);
-        setAccountQrCode();
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            stringToEncode = intent.getStringExtra(Constants.STRING_TO_ENCODE);
+            titleOfTheActivity = intent.getStringExtra(Constants.ACTIVITY_TITLE);
+        } else {
+            Toast.makeText(QRCodeViewerActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        if (titleOfTheActivity != null) setTitle(titleOfTheActivity);
+
+        if (stringToEncode != null) setQrCode(stringToEncode);
+        else {
+            Toast.makeText(QRCodeViewerActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
-    private void setAccountQrCode() {
-        String userName = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE)
-                .getString(Constants.USERID, "").replaceAll("\\D", "");
-
+    private void setQrCode(String stringToEncode) {
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
         Display display = manager.getDefaultDisplay();
         Point point = new Point();
@@ -41,7 +57,7 @@ public class QRCodeViewerActivity extends BaseActivity {
         smallerDimension = smallerDimension * 3 / 4;
 
         // Encode with a QR Code image
-        QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(userName, null,
+        QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(stringToEncode, null,
                 Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(),
                 smallerDimension);
         try {
