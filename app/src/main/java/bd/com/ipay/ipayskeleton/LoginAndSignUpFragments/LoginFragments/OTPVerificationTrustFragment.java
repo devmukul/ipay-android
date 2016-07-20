@@ -84,9 +84,11 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
         //enable broadcast receiver to get the text message to get the OTP
         mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
+
         mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
             @Override
             public void onTextMessageReceive(String otp) {
+
                 mOTPEditText.setText(otp);
                 mActivateButton.performClick();
             }
