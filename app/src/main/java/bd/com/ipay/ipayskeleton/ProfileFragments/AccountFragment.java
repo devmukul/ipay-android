@@ -60,12 +60,10 @@ public class AccountFragment extends Fragment {
         mDocuments = (IconifiedTextViewWithButton) v.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
 
-        ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
-
-        mName = profileInfoCacheManager.getName();
-        mMobileNumber = profileInfoCacheManager.getMobileNumber();
-        mProfilePicture = profileInfoCacheManager.getProfileImageUrl();
-        mVerificationStatus = profileInfoCacheManager.getVerificationStatus();
+        mName = ProfileInfoCacheManager.getName();
+        mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
+        mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
+        mVerificationStatus = ProfileInfoCacheManager.getVerificationStatus();
 
         setProfileInformation();
 
@@ -111,9 +109,6 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
-                new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
-
         return v;
     }
 
@@ -121,7 +116,8 @@ public class AccountFragment extends Fragment {
         Log.d("Profile Pic", mProfilePicture);
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
-        mProfilePictureView.setProfilePicture(mProfilePicture, false);
+        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                mProfilePicture, false);
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -131,22 +127,5 @@ public class AccountFragment extends Fragment {
             }
         }
     }
-
-    @Override
-    public void onDestroyView() {
-        Log.d("Broadcast receiver", "unregister receiver");
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
-
-        super.onDestroyView();
-    }
-
-    private BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Log.d("Broadcast received", newProfilePicture);
-            mProfilePictureView.setProfilePicture(newProfilePicture, true);
-        }
-    };
 
 }

@@ -366,13 +366,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     public void updateProfileData() {
-        ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
+        Log.d("Profile Pic Home", ProfileInfoCacheManager.getProfileImageUrl());
+        mNameView.setText(ProfileInfoCacheManager.getName());
+        mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
+        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                ProfileInfoCacheManager.getProfileImageUrl(), false);
 
-        mNameView.setText(profileInfoCacheManager.getName());
-        mMobileNumberView.setText(profileInfoCacheManager.getMobileNumber());
-        mProfilePictureView.setProfilePicture(profileInfoCacheManager.getProfileImageUrl(), false);
-
-        if (profileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
+        if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
             mVerificationStatusView.setVisibility(View.VISIBLE);
         else
             mVerificationStatusView.setVisibility(View.GONE);
@@ -611,7 +611,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Log.d("Broadcast received home", newProfilePicture);
+            Log.d("Broadcast home fragment", newProfilePicture);
             mProfilePictureView.setProfilePicture(newProfilePicture, true);
         }
     };
