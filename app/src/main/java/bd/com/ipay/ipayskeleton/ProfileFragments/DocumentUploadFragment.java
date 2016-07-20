@@ -198,8 +198,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         // If push is delayed, we would not see the updated document list when we back
                         // to the document list fragment. Setting the update flag to true to force load
                         // the list.
-                        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
-                        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
 
                         Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
                         ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();

@@ -137,8 +137,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mUserNameLoginView.setEnabled(false);
             mInfoView.setVisibility(View.VISIBLE);
 
-            ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
-            String mobileNumber = ContactEngine.formatMobileNumberBD(profileInfoCacheManager.getMobileNumber());
+            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
             mUserNameLoginView.setText(mobileNumber);
         }
 
@@ -149,9 +148,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             attemptLogin();
         }
 
-        ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getContext());
-        if (!profileInfoCacheManager.getProfileImageUrl().isEmpty()) {
-            mProfileImageView.setProfilePicture(profileInfoCacheManager.getProfileImageUrl(), true);
+        if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
+            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                    ProfileInfoCacheManager.getProfileImageUrl(), true);
         } else {
             mProfileImageView.setProfilePicture(R.drawable.ic_user_pic);
         }
