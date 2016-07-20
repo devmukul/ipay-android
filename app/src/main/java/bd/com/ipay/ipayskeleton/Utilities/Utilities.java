@@ -56,6 +56,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -495,6 +496,10 @@ public class Utilities {
             return filePath.substring(0, filePath.lastIndexOf('.'));
         else
             return "";
+    }
+
+    public static String[] parseEventTicket(String qrcodeEncoded) {
+        return qrcodeEncoded.split(":");
     }
 
     public static String getImage(List<UserProfilePictureClass> profilePictureClasses, String quality) {

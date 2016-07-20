@@ -99,6 +99,7 @@
     <string name="create_invoice">Create Invoice</string>
     <string name="create_event">Create Event</string>
     <string name="in_out_list_button">In out list</string>
+    <string name="verify_ticket">Verify ticket</string>
     <string name="no_contacts">No Contacts Available</string>
     <string name="no_verified_contacts">No verified contacts available in your account</string>
     <string name="contacts">Contacts</string>
@@ -308,6 +309,7 @@
     <string name="account_number">Account Number</string>
     <string name="scan_my_qr">iPay Me</string>
     <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>
+    <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
     <string name="oath_sign_up">I agree to the </string>
     <string name="check_if_addresses_are_same">Check if address of account holder is same as business address.</string>
     <string name="ipay_balance">iPay Balance</string>
@@ -425,6 +427,7 @@
     <string name="filter_system_event">System Events</string>
     <string name="filter">Filter</string>
     <string name="verification">Verification</string>
+    <string name="ticket_verified">Ticket Verified</string>
     <string name="introduce">Introduce</string>
     <string name="introducers">Introducers</string>
     <string name="in_progress">In Progress</string>
@@ -706,7 +709,7 @@
     <string name="exit">Exit</string>
     <string name="request_for_storage_permission">The app needs to access your files to function properly. Please allow it to access your files.</string>
     <string name="request_for_camera_permission">QR code scanner requires camera permission to work properly</string>
-    <string name="error_permission_denied">Camera permission is denied</string>
+    <string name="error_camera_permission_denied">Camera permission is denied</string>
     <string name="log_in">Log In</string>
     <string name="sign_up">Sign Up</string>
     <string name="do_you">do you...</string>
