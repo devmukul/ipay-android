@@ -203,9 +203,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     public void setTitle()
     {
         getActivity().setTitle(R.string.activity_log);
-        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(false);
-        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
-
     }
 
     @Override

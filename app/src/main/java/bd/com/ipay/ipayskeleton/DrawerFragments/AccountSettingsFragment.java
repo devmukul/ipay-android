@@ -113,7 +113,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_account_settings, container, false);
-        ((HomeActivity) getActivity()).setTitle(R.string.security_settings);
+        setTitle();
 
         mEnterPINEditText = (IconifiedEditText) v.findViewById(R.id.new_pin);
         mConfirmPINEditText = (IconifiedEditText) v.findViewById(R.id.confirm_pin);
@@ -292,6 +292,11 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         mLogoutTask.mHttpResponseListener = this;
 
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void setTitle()
+    {
+        getActivity().setTitle(R.string.security_settings);
     }
 
     private void attemptSavePIN() {

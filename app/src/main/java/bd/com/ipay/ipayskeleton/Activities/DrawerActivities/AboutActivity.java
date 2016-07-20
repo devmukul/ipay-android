@@ -1,7 +1,52 @@
 package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
-/**
- * Created by maliha.sarwat on 7/20/16.
- */
-public class AboutActivity {
+import android.content.Context;
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
+import bd.com.ipay.ipayskeleton.R;
+
+public class AboutActivity extends BaseActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_about);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        switchToAboutFragment();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+                getSupportFragmentManager().popBackStack();
+            else {
+                finish();
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    public void switchToAboutFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new AboutFragment()).commit();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+        else
+            super.onBackPressed();
+    }
+    @Override
+    public Context setContext() {
+        return AboutActivity.this;
+    }
 }

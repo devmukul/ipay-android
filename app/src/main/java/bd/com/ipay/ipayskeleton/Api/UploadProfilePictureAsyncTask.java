@@ -45,7 +45,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
         if (Utilities.isConnectionAvailable(mContext))
             mHttpResponseObject = uploadImage(imagePath);
         else
-            Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
+            return null;
 
         return mHttpResponseObject;
     }

@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
@@ -18,6 +19,9 @@ public class ManageBanksActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_banks);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mFabAddNewBank = (FloatingActionButton) findViewById(R.id.fab_add_new_bank);
 
         mFabAddNewBank.setOnClickListener(new View.OnClickListener() {
@@ -30,6 +34,19 @@ public class ManageBanksActivity extends BaseActivity {
         switchToBankAccountsFragment();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+                getSupportFragmentManager().popBackStack();
+            else {
+                finish();
+            }
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public void onBackPressed() {
         if (!switchedToAddBankFragment) super.onBackPressed();

@@ -16,8 +16,7 @@ public class ActivityLogActivity extends BaseActivity {
         setContentView(R.layout.activity_activity_log);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ActivityLogFragment()).commit();
+        switchToActivityLogFragment();
     }
 
     @Override
@@ -32,6 +31,11 @@ public class ActivityLogActivity extends BaseActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void switchToActivityLogFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new ActivityLogFragment()).commit();
     }
 
     @Override

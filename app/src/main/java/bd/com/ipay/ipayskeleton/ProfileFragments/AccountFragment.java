@@ -49,7 +49,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private String mProfilePicture = "";
     private String mVerificationStatus = null;
 
-    private String mSelectedImagePath;
+    private String mSelectedImagePath = "";
 
     private IconifiedTextViewWithButton mBasicInfo;
     private IconifiedTextViewWithButton mEmail;
@@ -82,6 +82,8 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mDocuments = (IconifiedTextViewWithButton) v.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
 
+        mProgressDialog = new ProgressDialog(getActivity());
+
         mName = ProfileInfoCacheManager.getName();
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
@@ -92,7 +94,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mProfilePictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getActivity(), getString(R.string.select_an_image));
+                Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getContext(), getString(R.string.select_an_image));
                 startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
             }
         });
@@ -141,30 +143,9 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         return v;
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        switch (requestCode) {
-            case ACTION_PICK_PROFILE_PICTURE:
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
-                    if (uri == null) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(),
-                                    R.string.could_not_load_image,
-                                    Toast.LENGTH_SHORT).show();
-                    } else {
-                        setProfilePicture(uri.toString());
-                        updateProfilePicture(uri);
-                    }
-                }
-                break;
-            default:
-                super.onActivityResult(requestCode, resultCode, intent);
-        }
-    }
 
     private void setProfilePicture(String url) {
-        mProfilePictureView.setProfilePicture(mProfilePicture, false);
+        mProfilePictureView.setProfilePicture(url, false);
 
     }
 
@@ -179,6 +160,28 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
         mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ACTION_PICK_PROFILE_PICTURE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data);
+                    if (uri == null) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(),
+                                    R.string.could_not_load_image,
+                                    Toast.LENGTH_SHORT).show();
+                    } else {
+                        setProfilePicture(uri.toString());
+                        updateProfilePicture(uri);
+                    }
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void setProfileInformation() {
@@ -206,6 +209,8 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
+
+
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
@@ -215,8 +220,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
-                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
 
                     Intent intent = new Intent(Constants.PROFILE_PICTURE_UPDATE_BROADCAST);
                     intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);

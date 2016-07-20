@@ -112,21 +112,24 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
-        mMaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mFemaleCheckBox.setChecked(false);
+            public void onClick(View view) {
+                mMaleCheckBox.setChecked(true);
+                mFemaleCheckBox.setChecked(false);
                 mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
                 mMaleCheckBox.setTextColor((Color.WHITE));
             }
         });
 
-        mFemaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mFemaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mMaleCheckBox.setChecked(false);
+            public void onClick(View view) {
+                mFemaleCheckBox.setChecked(true);
+                mMaleCheckBox.setChecked(false);
                 mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
                 mFemaleCheckBox.setTextColor((Color.WHITE));
+
             }
         });
         mDeviceID = DeviceIdFactory.getDeviceId(getActivity());

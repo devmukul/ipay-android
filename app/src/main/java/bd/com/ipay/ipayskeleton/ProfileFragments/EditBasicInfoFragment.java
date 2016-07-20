@@ -6,12 +6,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,26 +19,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
-
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.DownloadImageFromUrlAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -50,18 +37,14 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfilePictureResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.StorageManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBasicInfoFragment extends Fragment implements HttpResponseListener {
@@ -167,21 +150,24 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mMaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mFemaleCheckBox.setChecked(false);
+            public void onClick(View view) {
+                mMaleCheckBox.setChecked(true);
+                mFemaleCheckBox.setChecked(false);
                 mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
                 mMaleCheckBox.setTextColor((Color.WHITE));
             }
         });
 
-        mFemaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mFemaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mMaleCheckBox.setChecked(false);
+            public void onClick(View view) {
+                mFemaleCheckBox.setChecked(true);
+                mMaleCheckBox.setChecked(false);
                 mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
                 mFemaleCheckBox.setTextColor((Color.WHITE));
+
             }
         });
 
@@ -309,7 +295,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
             mFemaleCheckBox.setTextColor((Color.WHITE));
         }
-        //setProfilePicture(mProfilePicture);
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener =
