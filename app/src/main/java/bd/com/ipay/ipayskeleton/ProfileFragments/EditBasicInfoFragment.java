@@ -348,10 +348,9 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                         // But by default, the basic info stored in our database is refreshed only when a push is received.
                         // It might be the case that push notification is not yet received on the phone and user already
                         // navigated to the basic info page. To handle this case, we are setting updateNeeded to true.
-                        PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
-                        pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, true);
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, true);
 
-                        ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
+                        getActivity().onBackPressed();
                     }
                 } else {
                     if (getActivity() != null)
@@ -371,8 +370,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(getActivity());
-                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
 
                     Intent intent = new Intent(Constants.PROFILE_PICTURE_UPDATE_BROADCAST);
                     intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);

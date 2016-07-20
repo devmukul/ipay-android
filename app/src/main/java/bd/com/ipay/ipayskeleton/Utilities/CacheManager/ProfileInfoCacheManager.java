@@ -9,35 +9,35 @@ import android.support.v4.content.LocalBroadcastManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileInfoCacheManager {
-    private SharedPreferences pref;
-    private Context context;
+    private static SharedPreferences pref;
+    private static Context context;
 
-    public ProfileInfoCacheManager(Context context) {
-        this.context = context;
+    public static void initialize(Context context) {
+        ProfileInfoCacheManager.context = context;
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
-    public String getName() {
+    public static String getName() {
         return pref.getString(Constants.USER_NAME, "");
     }
 
-    public String getMobileNumber() {
+    public static String getMobileNumber() {
         return pref.getString(Constants.USERID, "");
     }
 
-    public String getProfileImageUrl() {
+    public static String getProfileImageUrl() {
         return pref.getString(Constants.PROFILE_PICTURE, "");
     }
 
-    public String getVerificationStatus() {
+    public static String getVerificationStatus() {
         return pref.getString(Constants.VERIFICATION_STATUS, "");
     }
 
-    public int getAccountType() {
+    public static int getAccountType() {
         return pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
     }
 
-    public void updateCache(String name, String mobileNumber, String profileImageUrl, String verificationStatus) {
+    public static void updateCache(String name, String mobileNumber, String profileImageUrl, String verificationStatus) {
         pref.edit()
                 .putString(Constants.USER_NAME, name)
                 .putString(Constants.USERID, mobileNumber)
@@ -51,7 +51,7 @@ public class ProfileInfoCacheManager {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    public void updateCache(String name, String profileImageUrl, String verificationStatus) {
+    public static void updateCache(String name, String profileImageUrl, String verificationStatus) {
         pref.edit()
                 .putString(Constants.USER_NAME, name)
                 .putString(Constants.PROFILE_PICTURE, profileImageUrl)

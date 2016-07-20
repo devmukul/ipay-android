@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private RequestMoneyResponse mRequestMoneyResponse;
 
     private ProgressDialog mProgressDialog;
-
-    private SharedPreferences pref;
 
     private BigDecimal mAmount;
     private String mReceiverName;
@@ -79,8 +78,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
 
         mProgressDialog = new ProgressDialog(getActivity());
-
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
 

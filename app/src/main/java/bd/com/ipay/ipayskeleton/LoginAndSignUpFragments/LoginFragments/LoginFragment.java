@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,17 +129,16 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
 
         if (SignupOrLoginActivity.mMobileNumber != null) {
-            mPasswordLoginView.requestFocus();
-
+            mPasswordLoginView.getEditText().requestFocus();
             String mobileNumber = ContactEngine.formatMobileNumberBD(SignupOrLoginActivity.mMobileNumber);
             mUserNameLoginView.setText(mobileNumber);
-        } else if (pref.contains(Constants.USERID)) {
-            mPasswordLoginView.requestFocus();
-            mUserNameLoginView.setEnabled(false);
-            mInfoView.setVisibility(View.VISIBLE);
+        }
 
-            ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
-            String mobileNumber = ContactEngine.formatMobileNumberBD(profileInfoCacheManager.getMobileNumber());
+        if (pref.contains(Constants.USERID)) {
+            mPasswordLoginView.getEditText().requestFocus();
+            mUserNameLoginView.getEditText().setEnabled(false);
+            mInfoView.setVisibility(View.VISIBLE);
+            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
             mUserNameLoginView.setText(mobileNumber);
         }
 
@@ -149,9 +149,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             attemptLogin();
         }
 
-        ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getContext());
-        if (!profileInfoCacheManager.getProfileImageUrl().isEmpty()) {
-            mProfileImageView.setProfilePicture(profileInfoCacheManager.getProfileImageUrl(), true);
+        if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
+            Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
+            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                    ProfileInfoCacheManager.getProfileImageUrl(), true);
         } else {
             mProfileImageView.setProfilePicture(R.drawable.ic_user_pic);
         }

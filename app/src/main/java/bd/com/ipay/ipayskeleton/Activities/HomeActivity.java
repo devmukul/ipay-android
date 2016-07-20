@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -97,7 +95,7 @@ public class HomeActivity extends BaseActivity
 
     private TextView mMobileNumberView;
     private TextView mNameView;
-    private ProfileImageView mPortrait;
+    private ProfileImageView mProfileImageView;
     private SharedPreferences pref;
     private String mUserID;
     private int mAccountType;
@@ -183,7 +181,7 @@ public class HomeActivity extends BaseActivity
 
         mMobileNumberView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
-        mPortrait = (ProfileImageView) mNavigationView.getHeaderView(0).findViewById(R.id.portrait);
+        mProfileImageView = (ProfileImageView) mNavigationView.getHeaderView(0).findViewById(R.id.portrait);
         mMobileNumberView.setText(mUserID);
         mNavigationView.setNavigationItemSelectedListener(this);
 
@@ -523,8 +521,7 @@ public class HomeActivity extends BaseActivity
         boolean isProfilePictureUpdated = true;
         try {
             // TODO migration code, remove try-catch later
-            PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(this);
-            isProfilePictureUpdated = pushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE);
+            isProfilePictureUpdated = PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -578,16 +575,13 @@ public class HomeActivity extends BaseActivity
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mNameView.setText(mGetUserInfoResponse.getName());
 
-                    String imageUrl = Constants.BASE_URL_FTP_SERVER +
-                            Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
+                    String imageUrl = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
                     //saving user info in shared preference
-                    ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(this);
-                    profileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
+                    ProfileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
 
-                    PushNotificationStatusHolder pushNotificationStatusHolder = new PushNotificationStatusHolder(this);
-                    pushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
-                    mPortrait.setProfilePicture(imageUrl,false);
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
 
                 } else {
@@ -645,8 +639,8 @@ public class HomeActivity extends BaseActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Log.d("Broadcast received home", newProfilePicture);
-            mPortrait.setProfilePicture(newProfilePicture, true);
+            Log.d("Broadcast home activity", newProfilePicture);
+            mProfileImageView.setProfilePicture(newProfilePicture, true);
         }
     };
 }

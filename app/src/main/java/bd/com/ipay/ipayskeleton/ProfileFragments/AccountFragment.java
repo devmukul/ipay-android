@@ -82,12 +82,10 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mDocuments = (IconifiedTextViewWithButton) v.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
 
-        ProfileInfoCacheManager profileInfoCacheManager = new ProfileInfoCacheManager(getActivity());
-
-        mName = profileInfoCacheManager.getName();
-        mMobileNumber = profileInfoCacheManager.getMobileNumber();
-        mProfilePicture = profileInfoCacheManager.getProfileImageUrl();
-        mVerificationStatus = profileInfoCacheManager.getVerificationStatus();
+        mName = ProfileInfoCacheManager.getName();
+        mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
+        mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
+        mVerificationStatus = ProfileInfoCacheManager.getVerificationStatus();
 
         setProfileInformation();
 
@@ -141,9 +139,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
-                new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
-
         return v;
     }
     @Override
@@ -187,10 +182,11 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     private void setProfileInformation() {
-        Log.d("Profile Pic", mProfilePicture);
+        Log.d("Profile Pic Account", mProfilePicture);
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
-        setProfilePicture(mProfilePicture);
+        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                mProfilePicture, false);
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -200,24 +196,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             }
         }
     }
-
-    @Override
-    public void onDestroyView() {
-        Log.d("Broadcast receiver", "unregister receiver");
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
-
-        super.onDestroyView();
-    }
-
-    private BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Log.d("Broadcast received", newProfilePicture);
-            mProfilePictureView.setProfilePicture(newProfilePicture, true);
-        }
-    };
-
 
     public void httpResponseReceiver(HttpResponseObject result) {
         mProgressDialog.dismiss();

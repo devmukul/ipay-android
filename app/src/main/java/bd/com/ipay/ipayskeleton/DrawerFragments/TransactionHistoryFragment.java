@@ -198,7 +198,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setContentShown(false);
         getTransactionHistory();
     }
@@ -253,6 +252,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         historyPageCount = 0;
         if (userTransactionHistoryClasses != null)
             userTransactionHistoryClasses.clear();
+        setContentShown(false);
         getTransactionHistory();
     }
 
@@ -448,7 +448,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     private void showTransactionHistoryDialogue(double amount, double fee, double netAmount,double balance, String purpose, String time, Integer statusCode,
                                                  String description, String transactionID, String receiverMobileNumber, String receiverName, String photoUri,
-                                                 int serviceId, String mBankName, String mBankAccountNumber, String receiver) {
+                                                 int serviceId, String mBankName, String mBankAccountNumber, String receiver, String bankCode, int bankIcon) {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.transaction_details)
                 .customView(R.layout.dialog_transaction_details, true)
@@ -497,14 +497,17 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mMobileNumberView.setText(mBankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_add_money_large);
+            if ( ! bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+            else otherImageView.setImageResource(R.drawable.ic_tran_add);
 
         } else if(serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
             mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(mBankName);
+            mMobileNumberView.setText(mBankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_withdraw_money_large);
+            if ( ! bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+            else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
         } else if(serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
             mNameView.setVisibility(View.VISIBLE);
@@ -520,7 +523,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mMobileNumberView.setText(receiver);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_mobile_recharge_large);
+            otherImageView.setImageResource(R.drawable.ic_top);
 
         } else {
             if (receiverName == null || receiverName.isEmpty()) {
@@ -550,14 +553,15 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     }
 
-    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses,
-                                        boolean hasNext) {
-        if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-            userTransactionHistoryClasses = transactionHistoryClasses;
-        } else {
-            List<TransactionHistoryClass> tempTransactionHistoryClasses;
-            tempTransactionHistoryClasses = transactionHistoryClasses;
-            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
+        if (transactionHistoryClasses != null) {
+            if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
+                userTransactionHistoryClasses = transactionHistoryClasses;
+            } else {
+                List<TransactionHistoryClass> tempTransactionHistoryClasses;
+                tempTransactionHistoryClasses = transactionHistoryClasses;
+                userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+            }
         }
 
         this.hasNext = hasNext;
@@ -606,7 +610,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
-            setContentShown(true);
+            if (this.isAdded()) setContentShown(true);
         }
     }
 
@@ -646,27 +650,31 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
             public void bindView(int pos) {
 
-                if (pos == userTransactionHistoryClasses.size() -1) divider.setVisibility(View.GONE);
+                if (pos == userTransactionHistoryClasses.size() - 1) divider.setVisibility(View.GONE);
                 else divider.setVisibility(View.VISIBLE);
 
-                final String detailDescription = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
-                final String description = userTransactionHistoryClasses.get(pos).getShortDescription(mMobileNumber);
-                final String receiver = userTransactionHistoryClasses.get(pos).getReceiver();
-                final String responseTime = new SimpleDateFormat("dd/MM/yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getResponseTime());
-                final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
-                final double fee = userTransactionHistoryClasses.get(pos).getFee();
-                final String netAmountWithSign = userTransactionHistoryClasses.get(pos).getNetAmountFormatted(userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserMobileNumber());
-                final double netAmount = userTransactionHistoryClasses.get(pos).getNetAmount();
-                final String transactionID = userTransactionHistoryClasses.get(pos).getTransactionID();
-                final String purpose = userTransactionHistoryClasses.get(pos).getPurpose();
-                final Integer statusCode = userTransactionHistoryClasses.get(pos).getStatusCode();
-                final double balance = userTransactionHistoryClasses.get(pos).getBalance();
-                final String imageUrl = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserProfilePic();
-                final String name = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserName();
-                final String mobileNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserMobileNumber();
-                final String bankName = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountName();
-                final String bankAccountNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountNumber();
-                final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
+                TransactionHistoryClass transactionHistory = userTransactionHistoryClasses.get(pos);
+
+                final String detailDescription = transactionHistory.getDescription(mMobileNumber);
+                final String description = transactionHistory.getShortDescription(mMobileNumber);
+                final String receiver = transactionHistory.getReceiver();
+                final String responseTime = new SimpleDateFormat("dd/MM/yy, h:mm a").format(transactionHistory.getResponseTime());
+                final double amountWithoutProcessing = transactionHistory.getAmount();
+                final double fee = transactionHistory.getFee();
+                final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
+                final double netAmount = transactionHistory.getNetAmount();
+                final String transactionID = transactionHistory.getTransactionID();
+                final String purpose = transactionHistory.getPurpose();
+                final Integer statusCode = transactionHistory.getStatusCode();
+                final double balance = transactionHistory.getBalance();
+                final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
+                final String name = transactionHistory.getAdditionalInfo().getUserName();
+                final String mobileNumber = transactionHistory.getAdditionalInfo().getUserMobileNumber();
+                final String bankName = transactionHistory.getAdditionalInfo().getBankName();
+                final String bankAccountNumber = transactionHistory.getAdditionalInfo().getBankAccountNumber();
+                final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
+                final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
+                final int serviceId = transactionHistory.getServiceID();
 
                 mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
 
@@ -689,11 +697,13 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 if(serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_add_money_large);
+                    if ( ! bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+                    else otherImageView.setImageResource(R.drawable.ic_tran_add);
                 } else if(serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_withdraw_money_large);
+                    if ( ! bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+                    else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
                 } else if(serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
@@ -701,7 +711,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 } else if(serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_topup);
+                    otherImageView.setImageResource(R.drawable.ic_top);
                 } else {
                     otherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
@@ -713,7 +723,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing())
                             showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount, balance, purpose, responseTime,
-                                    statusCode, detailDescription, transactionID,mobileNumber,name,imageUrl,serviceId,bankName,bankAccountNumber, receiver);
+                                    statusCode, detailDescription, transactionID, mobileNumber, name, imageUrl, serviceId, bankName, bankAccountNumber, receiver, bankCode, bankIcon);
                     }
                 });
 
