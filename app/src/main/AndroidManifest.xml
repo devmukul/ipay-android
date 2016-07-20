@@ -171,7 +171,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.QRCodeViewerActivity"
-            android:label="@string/request_money"
+            android:label="@string/qr_code"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />

@@ -98,6 +98,7 @@
     <string name="account_type_personal">Personal Account</string>
     <string name="create_invoice">Create Invoice</string>
     <string name="create_event">Create Event</string>
+    <string name="in_out_list_button">In out list</string>
     <string name="no_contacts">No Contacts Available</string>
     <string name="no_verified_contacts">No verified contacts available in your account</string>
     <string name="contacts">Contacts</string>
@@ -181,6 +182,7 @@
     <string name="could_not_accept_money_request">Could not accept the request. Please try again later.</string>
     <string name="could_not_fetch_the_number">Could not fetch the mobile number.</string>
     <string name="progress_dialog_text_logging_in">Signing in...</string>
+    <string name="event_not_found">Event not found. The event might have been removed.</string>
     <string name="progress_dialog_send_for_recommendation">Sending recommendation request...</string>
     <string name="progress_dialog_saving_new_pass">Saving new password...</string>
     <string name="no_linked_bank_found">No linked bank account found</string>
@@ -373,6 +375,7 @@
     <string name="news_feed_get_failed">Could not fetch news feed</string>
     <string name="transaction_history_get_failed">Could not fetch transaction histories</string>
     <string name="pending_get_failed">Could not fetch pending requests</string>
+    <string name="events_get_failed">Could not fetch my events</string>
     <string name="recharging_balance">Processing mobile recharge...</string>
     <string name="saving_pin">Saving PIN...</string>
     <string name="failed_add_trusted_device">Could not add trusted device</string>

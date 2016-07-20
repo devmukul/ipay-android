@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/event_tickets_tabs"
+            android:id="@+id/in_out_tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -26,7 +26,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/events_tab"
+                    android:id="@+id/in_tab"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:clickable="true"
@@ -38,7 +38,7 @@
                     android:textSize="16sp" />
 
                 <View
-                    android:id="@+id/events_tab_indicator"
+                    android:id="@+id/in_tab_indicator"
                     android:layout_width="fill_parent"
                     android:layout_height="3dp"
                     android:background="@android:color/white" />
@@ -51,7 +51,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tickets_tab"
+                    android:id="@+id/out_tab"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:clickable="true"
@@ -63,7 +63,7 @@
                     android:textSize="16sp" />
 
                 <View
-                    android:id="@+id/payments_tab_indicator"
+                    android:id="@+id/out_tab_indicator"
                     android:layout_width="fill_parent"
                     android:layout_height="3dp" />
             </LinearLayout>
@@ -71,7 +71,7 @@
         </LinearLayout>
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/eventViewPager"
+            android:id="@+id/in_out_viewpager"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
 

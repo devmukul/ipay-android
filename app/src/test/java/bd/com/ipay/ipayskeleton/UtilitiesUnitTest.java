@@ -18,8 +18,14 @@ public class UtilitiesUnitTest {
     }
 
     @Test
-    public void isValueAvailable_IncorrectFormat_ReturnsFalse(){
+    public void isValueAvailable_IncorrectFormat_ReturnsFalse() {
         assertThat(Utilities.isValueAvailable(new BigDecimal(-1)), is(false));
+    }
+
+    @Test
+    public void formatTakaWithComma_CorrectFormat_ReturnsTrue() {
+        assertThat(Utilities.formatTakaWithComma(10000000), is("৳10,000,000.00"));
+        assertThat(Utilities.formatTakaWithComma(0.3569), is("৳0.36"));
     }
 
 }

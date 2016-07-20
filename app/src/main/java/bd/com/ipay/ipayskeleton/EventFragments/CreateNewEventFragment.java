@@ -34,7 +34,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.CreateNewEventResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.GetEventCategoriesResponse;
 import bd.com.ipay.ipayskeleton.R;
