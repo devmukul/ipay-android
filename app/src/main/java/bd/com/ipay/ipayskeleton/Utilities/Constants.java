@@ -232,6 +232,8 @@ public class Constants {
     public static final String URL_GET_NEWS_FEED = "resource/news";
 
     // Request Rest
+
+    public static final String URL_GET_All_NOTIFICATIONS = "requests/received/all-list";
     public static final String URL_GET_NOTIFICATIONS = "requests/received";
     public static final String URL_GET_SENT_REQUESTS = "requests/sent";
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";

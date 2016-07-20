@@ -188,7 +188,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Gson gson = new Gson();
         String json = gson.toJson(mGetMoneyAndPaymentRequest);
         mGetMoneyAndPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS,
-                Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_GET_All_NOTIFICATIONS, json, getActivity());
         mGetMoneyAndPaymentRequestTask.mHttpResponseListener = this;
         mGetMoneyAndPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
