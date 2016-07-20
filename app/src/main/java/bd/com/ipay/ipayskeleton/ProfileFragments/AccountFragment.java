@@ -113,7 +113,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void setProfileInformation() {
-        Log.d("Profile Pic", mProfilePicture);
+        Log.d("Profile Pic Account", mProfilePicture);
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +

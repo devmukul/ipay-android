@@ -253,6 +253,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         historyPageCount = 0;
         if (userTransactionHistoryClasses != null)
             userTransactionHistoryClasses.clear();
+        setContentShown(false);
         getTransactionHistory();
     }
 
@@ -550,14 +551,15 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     }
 
-    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses,
-                                        boolean hasNext) {
-        if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-            userTransactionHistoryClasses = transactionHistoryClasses;
-        } else {
-            List<TransactionHistoryClass> tempTransactionHistoryClasses;
-            tempTransactionHistoryClasses = transactionHistoryClasses;
-            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
+        if (transactionHistoryClasses != null) {
+            if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
+                userTransactionHistoryClasses = transactionHistoryClasses;
+            } else {
+                List<TransactionHistoryClass> tempTransactionHistoryClasses;
+                tempTransactionHistoryClasses = transactionHistoryClasses;
+                userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+            }
         }
 
         this.hasNext = hasNext;
@@ -646,27 +648,28 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
             public void bindView(int pos) {
 
-                if (pos == userTransactionHistoryClasses.size() -1) divider.setVisibility(View.GONE);
+                if (pos == userTransactionHistoryClasses.size() - 1) divider.setVisibility(View.GONE);
                 else divider.setVisibility(View.VISIBLE);
 
-                final String detailDescription = userTransactionHistoryClasses.get(pos).getDescription(mMobileNumber);
-                final String description = userTransactionHistoryClasses.get(pos).getShortDescription(mMobileNumber);
-                final String receiver = userTransactionHistoryClasses.get(pos).getReceiver();
-                final String responseTime = new SimpleDateFormat("dd/MM/yy, h:mm a").format(userTransactionHistoryClasses.get(pos).getResponseTime());
-                final double amountWithoutProcessing = userTransactionHistoryClasses.get(pos).getAmount();
-                final double fee = userTransactionHistoryClasses.get(pos).getFee();
-                final String netAmountWithSign = userTransactionHistoryClasses.get(pos).getNetAmountFormatted(userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserMobileNumber());
-                final double netAmount = userTransactionHistoryClasses.get(pos).getNetAmount();
-                final String transactionID = userTransactionHistoryClasses.get(pos).getTransactionID();
-                final String purpose = userTransactionHistoryClasses.get(pos).getPurpose();
-                final Integer statusCode = userTransactionHistoryClasses.get(pos).getStatusCode();
-                final double balance = userTransactionHistoryClasses.get(pos).getBalance();
-                final String imageUrl = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserProfilePic();
-                final String name = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserName();
-                final String mobileNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getUserMobileNumber();
-                final String bankName = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountName();
-                final String bankAccountNumber = userTransactionHistoryClasses.get(pos).getAdditionalInfo().getBankAccountNumber();
-                final int serviceId = userTransactionHistoryClasses.get(pos).getServiceID();
+                final TransactionHistoryClass transactionHistory = userTransactionHistoryClasses.get(pos);
+                final String detailDescription = transactionHistory.getDescription(mMobileNumber);
+                final String description = transactionHistory.getShortDescription(mMobileNumber);
+                final String receiver = transactionHistory.getReceiver();
+                final String responseTime = new SimpleDateFormat("dd/MM/yy, h:mm a").format(transactionHistory.getResponseTime());
+                final double amountWithoutProcessing = transactionHistory.getAmount();
+                final double fee = transactionHistory.getFee();
+                final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
+                final double netAmount = transactionHistory.getNetAmount();
+                final String transactionID = transactionHistory.getTransactionID();
+                final String purpose = transactionHistory.getPurpose();
+                final Integer statusCode = transactionHistory.getStatusCode();
+                final double balance = transactionHistory.getBalance();
+                final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
+                final String name = transactionHistory.getAdditionalInfo().getUserName();
+                final String mobileNumber = transactionHistory.getAdditionalInfo().getUserMobileNumber();
+                final String bankName = transactionHistory.getAdditionalInfo().getBankAccountName();
+                final String bankAccountNumber = transactionHistory.getAdditionalInfo().getBankAccountNumber();
+                final int serviceId = transactionHistory.getServiceID();
 
                 mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
 
@@ -713,7 +716,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing())
                             showTransactionHistoryDialogue(amountWithoutProcessing, fee, netAmount, balance, purpose, responseTime,
-                                    statusCode, detailDescription, transactionID,mobileNumber,name,imageUrl,serviceId,bankName,bankAccountNumber, receiver);
+                                    statusCode, detailDescription, transactionID, mobileNumber,
+                                    name, imageUrl, serviceId, bankName, bankAccountNumber, receiver);
                     }
                 });
 

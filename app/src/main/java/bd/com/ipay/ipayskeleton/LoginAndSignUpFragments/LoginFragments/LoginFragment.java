@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,6 +150,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         }
 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
+            Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                     ProfileInfoCacheManager.getProfileImageUrl(), true);
         } else {
