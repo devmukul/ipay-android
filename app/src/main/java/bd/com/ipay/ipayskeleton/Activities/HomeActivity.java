@@ -104,8 +104,6 @@ public class HomeActivity extends BaseActivity
     private ProgressDialog mProgressDialog;
     private NavigationView mNavigationView;
 
-    public static boolean newsFeedLoadedOnce = false;
-
     public static boolean switchedToHomeFragment = true;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
@@ -213,7 +211,7 @@ public class HomeActivity extends BaseActivity
             Log.w("Token", TokenManager.getToken());
         }
 
-        //attemptRequestForPermission();
+        attemptRequestForPermission();
         sendAnalytics();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -254,7 +252,8 @@ public class HomeActivity extends BaseActivity
     }
 
     private void attemptRequestForPermission() {
-        String[] requiredPermissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
+        String[] requiredPermissions = {Manifest.permission.READ_CONTACTS};
+
         List<String> permissionsToRequest = new ArrayList<>();
         for (String permission : requiredPermissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
@@ -327,28 +326,6 @@ public class HomeActivity extends BaseActivity
                                 SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(this, mGetAllContactsResponse);
                                 syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             }
-                        }
-                    } else if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            getProfileInfo();
-                        } else {
-                            MaterialDialog.Builder dialog = new MaterialDialog.Builder(this);
-                            dialog.content(getString(R.string.request_for_storage_permission))
-                                    .positiveText(R.string.allow_access)
-                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            attemptRequestForPermission();
-                                        }
-                                    })
-                                    .negativeText(R.string.exit)
-                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            finish();
-                                        }
-                                    })
-                                    .show();
                         }
                     }
                 }

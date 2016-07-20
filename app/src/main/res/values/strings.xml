@@ -146,6 +146,7 @@
     <string name="bank_verification_help_html"><![CDATA[<b><small>We sent some money in your bank account.</small></b>\n<small>Please click</small> <big><b>Verify</b></big> <small>and then enter the amount we sent in your bank account to complete the verification process.</small>]]></string>
     <string name="discard">Discard</string>
     <string name="ipay_contacts">iPay</string>
+    <string name="invited_contacts">Invited</string>
     <string name="my_requests">My Requests</string>
     <string name="invoices_sent">Sent Invoices</string>
     <string name="invoices_received">Invoices Received</string>
