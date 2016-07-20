@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -42,9 +46,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfilePictureResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
@@ -69,25 +75,23 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private HttpRequestGetAsyncTask mGetOccupationTask = null;
     private GetOccupationResponse mGetOccupationResponse;
 
+    private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
+
+
     private RoundedImageView mProfilePictureView;
-    private ImageButton mEditProfilePictureButton;
-
     private EditText mNameEditText;
-
     private EditText mFathersNameEditText;
     private EditText mMothersNameEditText;
-
     private EditText mDateOfBirthEditText;
-    private Spinner mOccupationSpinner;
-    private Spinner mGenderSpinner;
-
+    private EditText mOccupationEditText;
+    private CheckBox mFemaleCheckBox;
+    private CheckBox mMaleCheckBox;
     private ImageView mDatePickerButton;
+    private Button mInfoSaveButton;
 
     private ProgressDialog mProgressDialog;
 
     private SharedPreferences pref;
-
-    private final int ACTION_PICK_PROFILE_PICTURE = 100;
 
     private String mMobileNumber;
     private String mName = "";
@@ -97,7 +101,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private String mFathersName = "";
     private String mMothersName = "";
 
-    private int mOccupation = 0;
+    private int mOccupation = -1;
     private String mGender = "";
 
     private List<Occupation> mOccupationList;
@@ -118,8 +122,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         super.onCreateOptionsMenu(menu, inflater);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
-
-        inflater.inflate(R.menu.save, menu);
     }
 
     @Override
@@ -141,9 +143,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         View v = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
 
         getActivity().setTitle(getString(R.string.edit_basic_info));
-
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-
         Bundle bundle = getArguments();
 
         mMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
@@ -154,40 +154,53 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
-
         mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
-        mEditProfilePictureButton = (ImageButton) v.findViewById(R.id.button_profile_picture_edit);
+        mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
         mNameEditText = (EditText) v.findViewById(R.id.name);
-
         mFathersNameEditText = (EditText) v.findViewById(R.id.fathers_name);
         mMothersNameEditText = (EditText) v.findViewById(R.id.mothers_name);
-
         mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
-
+        mOccupationEditText = (EditText) v.findViewById(R.id.occupationEditText);
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
+        mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
+        mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
 
-        mOccupationSpinner = (Spinner) v.findViewById(R.id.occupation);
-        mGenderSpinner = (Spinner) v.findViewById(R.id.gender);
+        mProgressDialog = new ProgressDialog(getActivity());
 
-        mProfilePictureView.setOnClickListener(new View.OnClickListener() {
+        mMaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getActivity(), getString(R.string.select_an_image));
-                startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) mFemaleCheckBox.setChecked(false);
+                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                mMaleCheckBox.setTextColor((Color.WHITE));
             }
         });
 
-        mEditProfilePictureButton.setOnClickListener(new View.OnClickListener() {
+        mFemaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getActivity(), getString(R.string.select_an_image));
-                startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) mMaleCheckBox.setChecked(false);
+                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                mFemaleCheckBox.setTextColor((Color.WHITE));
             }
         });
 
-        ArrayAdapter<CharSequence> mAdapterGender = new ArrayAdapter<CharSequence>(getActivity(),
-                android.R.layout.simple_dropdown_item_1line, GenderList.genderNames);
-        mGenderSpinner.setAdapter(mAdapterGender);
+        mOccupationEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOccupationTypeResourceSelectorDialog.show();
+            }
+        });
+
+        mInfoSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (verifyUserInputs()) {
+                    Utilities.hideKeyboard(getActivity());
+                    attemptSaveBasicInfo();
+                }
+            }
+        });
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
@@ -197,14 +210,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 dialog.show();
             }
         });
-
-        mProgressDialog = new ProgressDialog(getActivity());
-        mOccupationNameList = new ArrayList<>();
-        mOccupationNameList.add(getString(R.string.loading));
-
-        mAdapterOccupation = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, mOccupationNameList);
-        mOccupationSpinner.setAdapter(mAdapterOccupation);
 
         setProfileInformation();
         getOccupationList();
@@ -222,18 +227,17 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mFathersName = mFathersNameEditText.getText().toString().trim();
         mMothersName = mMothersNameEditText.getText().toString().trim();
 
-        mGender = GenderList.genderNameToCodeMap.get(
-                mGenderSpinner.getSelectedItem().toString());
+        if (mMaleCheckBox.isChecked())
+            mGender = GenderList.genderNameToCodeMap.get(
+                    getString(R.string.male));
 
-        if (mOccupationSpinner.getSelectedItemPosition() == 0) {
-            focusView = mOccupationSpinner.getSelectedView();
-            cancel = true;
-            ((TextView) mOccupationSpinner.getSelectedView()).setError("");
-        } else {
-            if (mOccupationSpinner.getSelectedItemPosition() - 1 < mOccupationList.size()) {
-                mOccupation = mOccupationList.get(
-                        mOccupationSpinner.getSelectedItemPosition() - 1).getId();
-            }
+        if (mFemaleCheckBox.isChecked())
+            mGender = GenderList.genderNameToCodeMap.get(
+                    getString(R.string.female));
+
+        if (mOccupation < 0) {
+            mOccupationEditText.setError(getString(R.string.please_enter_occupation));
+            return false;
         }
 
         if (mName.isEmpty()) {
@@ -291,51 +295,21 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mDateOfBirthEditText.setText(mDateOfBirth);
 
         String[] genderArray = GenderList.genderNames;
-        for (int i = 0; i < genderArray.length; i++) {
-            String genderCode = GenderList.genderNameToCodeMap.get(
-                    genderArray[i]);
-            if (genderCode.equals(mGender)) {
-                mGenderSpinner.setSelection(i);
-                break;
-            }
+
+        if (mGender.equals(GenderList.genderNameToCodeMap.get(
+                genderArray[0]))) {
+            mMaleCheckBox.setChecked(true);
+            mFemaleCheckBox.setChecked(false);
+            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        } else if (mGender.equals(GenderList.genderNameToCodeMap.get(
+                genderArray[1]))) {
+            mMaleCheckBox.setChecked(false);
+            mFemaleCheckBox.setChecked(true);
+            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+            mFemaleCheckBox.setTextColor((Color.WHITE));
         }
-
-        setProfilePicture(mProfilePicture);
-
-    }
-
-    private void setProfilePicture(String url) {
-        Log.d("URL", url.toString());
-        try {
-            if (!url.equals("")) {
-                Glide.with(getActivity())
-                        .load(url)
-                        .crossFade()
-                        .error(R.drawable.ic_person)
-                        .transform(new CircleTransform(getActivity()))
-                        .into(mProfilePictureView);
-            } else {
-                Glide.with(getActivity())
-                        .load(R.drawable.ic_person)
-                        .crossFade()
-                        .into(mProfilePictureView);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateProfilePicture(Uri selectedImageUri) {
-        mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
-        mProgressDialog.show();
-
-        mSelectedImagePath = selectedImageUri.getPath();
-
-        mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
-                mSelectedImagePath, getActivity());
-        mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
-        mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+        //setProfilePicture(mProfilePicture);
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener =
@@ -347,33 +321,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 }
             };
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        switch (requestCode) {
-            case ACTION_PICK_PROFILE_PICTURE:
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
-                    if (uri == null) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(),
-                                    R.string.could_not_load_image,
-                                    Toast.LENGTH_SHORT).show();
-                    } else {
-                        setProfilePicture(uri.toString());
-                        updateProfilePicture(uri);
-                    }
-
-                }
-                break;
-            default:
-                super.onActivityResult(requestCode, resultCode, intent);
-        }
-    }
-
     public void httpResponseReceiver(HttpResponseObject result) {
         mProgressDialog.dismiss();
-
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mSetProfileInfoTask = null;
@@ -447,18 +396,19 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mOccupationList = mGetOccupationResponse.getOccupations();
 
-                    mOccupationNameList.clear();
-                    mOccupationNameList.add(getString(R.string.select_one));
-                    mOccupationNameList.addAll(mGetOccupationResponse.getOccupationNames());
+                    setOccupationAdapter(mOccupationList);
 
                     for (int i = 0; i < mOccupationList.size(); i++) {
                         if (mOccupationList.get(i).getId() == mOccupation) {
-                            mOccupationSpinner.setSelection(i + 1);
+                            String occupation = mGetOccupationResponse.getOccupation(mOccupation);
+                            if (occupation != null) {
+                                mOccupationEditText.setText(occupation);
+                            }
+
                             break;
                         }
                     }
 
-                    mAdapterOccupation.notifyDataSetChanged();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_loading_occupation_list, Toast.LENGTH_LONG).show();
@@ -471,5 +421,16 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
             mGetOccupationTask = null;
         }
+    }
+
+    private void setOccupationAdapter(List<Occupation> occupationList) {
+        mOccupationTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), occupationList, mOccupation);
+        mOccupationTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int id, String name) {
+                mOccupationEditText.setText(name);
+                mOccupation = id;
+            }
+        });
     }
 }

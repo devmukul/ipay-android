@@ -2,8 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/profile_info_form"
@@ -13,72 +12,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin">
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/profile_picture"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:clickable="true"
-                    android:scaleType="centerCrop"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_person"
-                    app:riv_border_color="@color/colorPrimary"
-                    app:riv_border_width="1dip"
-                    app:riv_corner_radius="75dip"
-                    app:riv_oval="false" />
-
-                <ImageButton
-                    android:id="@+id/button_profile_picture_edit"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:src="@drawable/ic_edit_white_24dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignTop="@+id/profile_picture"
-                    android:layout_alignRight="@+id/profile_picture"
-                    android:background="@drawable/background_blue_circle"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/profile_picture"
-                    android:orientation="vertical"
-                    android:id="@+id/linearLayout">
-
-                    <TextView
-                        android:id="@+id/name_text"
-                        style="@style/TextStylePrimaryLarge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_vertical_margin"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/mobile_number_text"
-                        style="@style/TextStylePrimaryMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/name_text"
-                        android:layout_marginLeft="@dimen/activity_vertical_margin" />
-
-                    <TextView
-                        android:id="@+id/dob_text"
-                        style="@style/TextStylePrimaryMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/mobile_number_text"
-                        android:layout_marginLeft="@dimen/activity_vertical_margin"
-                        android:visibility="gone" />
-
-                </LinearLayout>
-            </RelativeLayout>
+            android:orientation="vertical"
+            android:paddingTop="@dimen/value15">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -87,100 +22,25 @@
 
                 <EditText
                     android:id="@+id/name"
+                    style="@style/CustomEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/name"
                     android:inputType="textPersonName"
                     android:maxLines="1"
-                    android:singleLine="true" >
+                    android:singleLine="true">
 
-                    <requestFocus/>
+                    <requestFocus />
                 </EditText>
 
-
-
             </android.support.design.widget.TextInputLayout>
 
 
-            <!-- Relative Names -->
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/fathers_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/fathers_name"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/mothers_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/mothers_name"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
+            <View style="@style/Divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextStylePrimarySmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="@string/occupation" />
-
-                <Spinner
-                    android:id="@+id/occupation"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextStylePrimarySmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="@string/gender" />
-
-                <Spinner
-                    android:id="@+id/gender"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -191,6 +51,7 @@
 
                     <EditText
                         android:id="@+id/birthdayEditText"
+                        style="@style/CustomEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/birthday_dd_mm_yy"
@@ -204,30 +65,125 @@
 
                 <ImageView
                     android:id="@+id/myDatePickerButton"
-                    style="@style/ButtonStyleAccentSmall"
+                    style="@style/ButtonStyleWithIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:clickable="true"
                     android:padding="@dimen/value5"
-                    android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
+                    android:src="@drawable/ic_calendar"/>
             </LinearLayout>
 
+            <View style="@style/Divider" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/occupationEditText"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/occupation"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:focusable="false"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/Divider" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/gender"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/gender"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:focusable="false"/>
+            </android.support.design.widget.TextInputLayout>
+
+                <CheckBox
+                    android:id="@+id/checkBoxMale"
+                    style="@style/CheckBoxStyle"
+                    android:layout_toLeftOf="@+id/checkBoxFemale"
+                    android:background="@drawable/background_left_round_checkbox"
+                    android:button="@null"
+
+                    android:text="Male"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/value12" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxFemale"
+                    style="@style/CheckBoxStyle"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/value5"
+                    android:background="@drawable/background_right_round_checkbox"
+                    android:button="@null"
+                    android:checked="true"
+                    android:text="@string/female"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/value12" />
+            </RelativeLayout>
+
+            <View style="@style/Divider" />
+
+            <!-- Relative Names -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/fathers_name"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/fathers_name"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <View style="@style/Divider" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/mothers_name"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/mothers_name"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/Divider" />
+
+            <Button
+                android:id="@+id/button_save"
+                style="@style/PrimaryMidiumButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab_save"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_gravity="bottom|right"-->
-        <!--android:layout_marginBottom="?android:attr/actionBarSize"-->
-        <!--android:src="@drawable/ic_save_black_24dp"-->
-        <!--app:backgroundTint="@color/background_fab"-->
-        <!--app:borderWidth="0dp"-->
-        <!--app:elevation="4dp"-->
-        <!--app:fabSize="normal" />-->
-
 </android.support.design.widget.CoordinatorLayout>

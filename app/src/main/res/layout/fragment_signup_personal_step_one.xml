@@ -115,21 +115,11 @@
             <CheckBox
                 android:id="@+id/checkBoxFemale"
                 style="@style/CheckBoxStyle"
-                android:layout_toLeftOf="@+id/checkBoxOther"
-                android:background="@drawable/background_no_round_checkbox"
-                android:button="@null"
-                android:text="@string/female"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/value12" />
-
-            <CheckBox
-                android:id="@+id/checkBoxOther"
-                style="@style/CheckBoxStyle"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/value5"
                 android:background="@drawable/background_right_round_checkbox"
                 android:button="@null"
-                android:text="Other"
+                android:text="@string/female"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/value12" />
         </RelativeLayout>
