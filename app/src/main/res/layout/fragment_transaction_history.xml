@@ -221,24 +221,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <LinearLayout
-            style="@style/ListHeaderStyle"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/money_request_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/transaction_history"
-                android:textColor="@color/zxinglib_status_text"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
         <TextView
             android:id="@+id/empty_list_text"
             android:layout_width="wrap_content"

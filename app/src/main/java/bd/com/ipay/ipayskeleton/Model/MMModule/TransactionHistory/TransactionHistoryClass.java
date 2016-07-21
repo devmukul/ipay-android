@@ -284,32 +284,32 @@ public class TransactionHistoryClass {
             case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                 return "TopUp Rollback";
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
-                return "Withdraw Money";
+                return "Withdraw Money Rollback";
             case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                 return "Opening Balance";
             case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
-                    return "Send Money";
+                    return "Money Sent";
                 }
                 else if (receiverInfo.equals(userMobileNumber)) {
-                    return "Receive Money";
+                    return "Money Received";
                 }
                 else {
                     return "No Information Available";
                 }
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
-                return "Add Money";
+                return "Money Added";
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                return "Withdraw Money";
+                return "Money Withdrawn";
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return "Mobile TopUp";
             case (Constants.SERVICE_ID_REQUEST_INVOICE):
             case (Constants.TRANSACTION_HISTORY_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
-                    return "Make Payment";
+                    return "Payment Made";
                 }
                 else if (receiverInfo.equals(userMobileNumber)) {
-                    return "Receive Payment";
+                    return "Payment Received";
                 }
                 else {
                     return "No Information Available";
