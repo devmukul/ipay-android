@@ -286,7 +286,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().invalidateOptionsMenu();
 
         updateProfileData();
         refreshBalance();

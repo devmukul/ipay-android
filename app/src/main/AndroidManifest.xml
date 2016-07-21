@@ -78,42 +78,36 @@
         <activity
             android:name=".Activities.PaymentActivities.SendMoneyActivity"
             android:label="@string/send_money"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.SingleInvoiceActivity"
             android:label="@string/invoice_details"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.MakePaymentActivity"
             android:label="@string/payment"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.ForgotPasswordActivity"
             android:label="@string/password_recovery"
-            android:parentActivityName=".Activities.SignupOrLoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.AddMoneyActivity"
             android:label="@string/add_money"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.WithdrawMoneyActivity"
             android:label="@string/withdraw_money"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -130,33 +124,28 @@
         <activity
             android:name=".Activities.PaymentActivities.RequestMoneyActivity"
             android:label="@string/request_money"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation" />
         <activity
             android:name=".Activities.PaymentActivities.TopUpActivity"
             android:label="@string/topup"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Activities.PaymentActivities.PaymentMakingActivity"
             android:label="@string/make_payment"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.EventActivity"
             android:label="@string/events"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.ManageBanksActivity"
             android:label="@string/events"
-            android:parentActivityName=".Activities.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />

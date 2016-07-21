@@ -168,14 +168,6 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if (!isDialogFragment())
-            getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
     public void onDestroyView() {
         getLoaderManager().destroyLoader(CONTACTS_QUERY_LOADER);
         mCursor = null;

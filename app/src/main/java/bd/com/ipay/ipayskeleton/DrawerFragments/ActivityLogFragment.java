@@ -94,12 +94,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         if (menu.findItem(R.id.action_search_contacts) != null)

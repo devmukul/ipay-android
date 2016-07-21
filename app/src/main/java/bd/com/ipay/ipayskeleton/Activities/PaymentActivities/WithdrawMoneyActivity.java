@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import java.math.BigDecimal;
 
@@ -25,6 +26,18 @@ public class WithdrawMoneyActivity extends BaseActivity {
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new WithdrawMoneyFragment()).commit();
 
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
