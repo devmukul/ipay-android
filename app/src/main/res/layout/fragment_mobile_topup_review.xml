@@ -88,8 +88,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/service_charge"
-                android:orientation="vertical">
+                android:id="@+id/service_charge_with_net_amount"
+                android:orientation="vertical"
+                android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/service_charge_holder"

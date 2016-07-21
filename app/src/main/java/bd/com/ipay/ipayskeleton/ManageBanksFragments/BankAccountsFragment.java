@@ -150,8 +150,8 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
-        if(getActivity()!=null)
-        mProgressDialog.show();
+        if (getActivity() != null)
+            mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
         mGetBankTask.mHttpResponseListener = this;
@@ -343,14 +343,15 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
             public void bindView(int pos) {
 
-                if(pos == mListUserBankClasses.size() -1) divider.setVisibility(View.GONE);
+                if (pos == mListUserBankClasses.size() - 1) divider.setVisibility(View.GONE);
 
                 final long bankAccountID = mListUserBankClasses.get(pos).getBankAccountId();
                 final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();
                 final String bankName = mListUserBankClasses.get(pos).getBankName();
                 final String branchName = mListUserBankClasses.get(pos).getBranchName();
                 final String verificationStatus = mListUserBankClasses.get(pos).getVerificationStatus();
-                final Drawable icon =  getResources().getDrawable(mListUserBankClasses.get(pos).getBankIcon(getContext()));
+                Drawable icon = getResources().getDrawable(mListUserBankClasses.get(pos).getBankIcon(getContext()));
+
                 mBankAccountNumber.setText(mListUserBankClasses.get(pos).getAccountNumber());
                 mBankName.setText(bankName);
                 mBranchName.setText(branchName);
