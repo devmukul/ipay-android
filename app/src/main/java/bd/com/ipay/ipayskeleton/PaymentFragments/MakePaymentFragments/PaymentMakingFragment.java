@@ -150,10 +150,9 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (result.matches("[0-9]+") && result.length() > 2) {
-                            ContactEngine.formatMobileNumberBD(result);
-                            mMobileNumberEditText.setText("+" + result);
-                        } else if (getActivity() != null)
+                        if (ContactEngine.isValidNumber(result)) {
+                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
+                        }  else if (getActivity() != null)
                             Toast.makeText(getActivity(), getResources().getString(
                                     R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT).show();
 
