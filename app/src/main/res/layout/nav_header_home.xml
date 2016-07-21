@@ -46,6 +46,4 @@
             android:text="01782192128"
             android:textColor="@android:color/white" />
     </LinearLayout>
-
-
 </RelativeLayout>

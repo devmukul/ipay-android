@@ -20,7 +20,8 @@
             android:inputType="textPostalAddress"
             android:maxLines="1"
             android:singleLine="true"
-            custom:borderType="up" />
+            custom:borderType="up"
+            android:focusable="false"/>
 
         <requestFocus />
     </android.support.design.widget.TextInputLayout>
@@ -39,7 +40,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/select_district"
             android:inputType="textPostalAddress"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:focusable="false"/>
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />
@@ -56,7 +58,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/bank_branch"
             android:inputType="textPostalAddress"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:focusable="false"/>
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />

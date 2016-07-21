@@ -671,6 +671,7 @@
         <item name="android:paddingTop">@dimen/value10</item>
         <item name="android:paddingBottom">@dimen/value10</item>
         <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
