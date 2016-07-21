@@ -104,10 +104,10 @@ public class DataHelper {
     }
 
     public Cursor searchFriends(String query) {
-        return searchFriends(query, false);
+        return searchFriends(query, false, false);
     }
 
-    public Cursor searchFriends(String query, boolean verifiedOnly) {
+    public Cursor searchFriends(String query, boolean memberOnly, boolean verifiedOnly) {
         Cursor cursor = null;
 
         try {
@@ -117,6 +117,8 @@ public class DataHelper {
                     + " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'";
             if (verifiedOnly)
                 queryString += " AND " + DBConstants.KEY_VERIFICATION_STATUS + " = " + DBConstants.VERIFIED_USER;
+            if (memberOnly)
+                queryString += " AND " + DBConstants.KEY_IS_MEMBER + " = " + DBConstants.IPAY_MEMBER;
             queryString += " ORDER BY " + DBConstants.KEY_IS_MEMBER + " DESC, "
                     + DBConstants.KEY_NAME + " COLLATE NOCASE";
 
@@ -169,8 +171,8 @@ public class DataHelper {
     }
 
 
-    public List<FriendNode> getFriendList(String query, boolean verifiedOnly) {
-        Cursor cursor = searchFriends(query, verifiedOnly);
+    public List<FriendNode> getFriendList(String query, boolean memberOnly, boolean verifiedOnly) {
+        Cursor cursor = searchFriends(query, memberOnly, verifiedOnly);
         List<FriendNode> friends = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
@@ -201,7 +203,7 @@ public class DataHelper {
     }
 
     public List<FriendNode> getFriendList() {
-        return getFriendList("", false);
+        return getFriendList("", false, false);
     }
 
 }

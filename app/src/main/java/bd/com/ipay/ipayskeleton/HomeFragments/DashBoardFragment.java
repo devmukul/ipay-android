@@ -97,14 +97,7 @@ public class DashBoardFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-
                 Utilities.hideKeyboard(getActivity());
-
-                if (position == CONTACTS_TAB) {
-                    if ((mContactsHolderFragment != null)) {
-                        mContactsHolderFragment.onFocus();
-                    }
-                }
             }
 
             @Override
@@ -137,8 +130,7 @@ public class DashBoardFragment extends Fragment {
         payTab.setCustomView(payTabView);
 
     }
-    public void setTitle()
-    {
+    public void setTitle() {
         //getActivity().setTitle(R.string.activity_log);
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(true);
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
