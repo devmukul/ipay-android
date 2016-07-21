@@ -14,6 +14,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -74,7 +76,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private List<Email> mEmails;
     private EmailListAdapter mEmailListAdapter;
 
-    private Button mAddNewEmailButton;
     private RecyclerView mEmailListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -85,6 +86,22 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.add, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_add) {
+            showAddNewEmailDialog();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -101,7 +118,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         getActivity().setTitle(R.string.email);
 
-        mAddNewEmailButton = (Button) v.findViewById(R.id.button_add_email);
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
@@ -111,13 +127,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         mLayoutManager = new LinearLayoutManager(getActivity());
         mEmailListRecyclerView.setLayoutManager(mLayoutManager);
         mEmailListRecyclerView.setAdapter(mEmailListAdapter);
-
-        mAddNewEmailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddNewEmailDialog();
-            }
-        });
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -440,18 +449,18 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 final String verificationStatus = email.getVerificationStatus();
 
                 if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)) {
-                    mVerificationStatus.setImageResource(R.drawable.ic_verified3x);
+                    mVerificationStatus.setImageResource(R.drawable.ic_verified);
                     mVerificationStatus.setColorFilter(null);
 
                     makePrimaryButton.setVisibility(View.VISIBLE);
                 } else if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)) {
-                    mVerificationStatus.setImageResource(R.drawable.ic_wip);
+                    mVerificationStatus.setImageResource(R.drawable.ic_pending);
                     mVerificationStatus.setColorFilter(Color.GRAY);
 
                     makePrimaryButton.setVisibility(View.GONE);
                     divider.setVisibility(View.GONE);
                 } else {
-                    mVerificationStatus.setImageResource(R.drawable.ic_notverified3x);
+                    mVerificationStatus.setImageResource(R.drawable.ic_notverified);
                     mVerificationStatus.setColorFilter(null);
 
                     makePrimaryButton.setVisibility(View.GONE);

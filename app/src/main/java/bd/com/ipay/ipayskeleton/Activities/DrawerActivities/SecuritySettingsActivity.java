@@ -8,6 +8,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.SecuritySettingsFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecuritySettingsActivity extends BaseActivity {
 
@@ -26,6 +27,7 @@ public class SecuritySettingsActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Utilities.hideKeyboard(this);
             if (switchedToPasswordRecoveryFragment)
                 switchToAccountSettingsFragment();
             else {
@@ -35,6 +37,15 @@ public class SecuritySettingsActivity extends BaseActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Utilities.hideKeyboard(this);
+        if (switchedToPasswordRecoveryFragment)
+            switchToAccountSettingsFragment();
+        else
+            super.onBackPressed();
     }
 
     public void switchToAccountSettingsFragment() {

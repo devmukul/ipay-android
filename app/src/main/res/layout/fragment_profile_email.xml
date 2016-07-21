@@ -3,7 +3,6 @@
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 <LinearLayout
@@ -19,25 +18,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button_add_email"
-            style="@style/ButtonStyleLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_an_email" />
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:clipToPadding="false"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-                android:background="@drawable/background_rounded_white"/>
+                android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
 
     </LinearLayout>
-
 </LinearLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>

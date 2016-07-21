@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -44,12 +45,12 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
     private Context context;
 
-    private IconifiedEditText mAddressLine1Field;
-    private IconifiedEditText mAddressLine2Field;
-    private IconifiedEditText mThanaSelection;
-    private IconifiedEditText mDistrictSelection;
-    private IconifiedEditText mCountrySelection;
-    private IconifiedEditText mPostalCodeField;
+    private EditText mAddressLine1Field;
+    private EditText mAddressLine2Field;
+    private EditText mThanaSelection;
+    private EditText mDistrictSelection;
+    private EditText mCountrySelection;
+    private EditText mPostalCodeField;
 
     private ResourceSelectorDialog<District> districtSelectorDialog;
     private ResourceSelectorDialog<Thana> thanaSelectorDialog;
@@ -74,13 +75,13 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
         View v = inflate(context, R.layout.view_address_input, null);
 
-        mAddressLine1Field = (IconifiedEditText) v.findViewById(R.id.address_line_1);
-        mAddressLine2Field = (IconifiedEditText) v.findViewById(R.id.address_line_2);
-        mThanaSelection = (IconifiedEditText) v.findViewById(R.id.thana);
-        mDistrictSelection = (IconifiedEditText) v.findViewById(R.id.district);
-        mCountrySelection = (IconifiedEditText) v.findViewById(R.id.country);
+        mAddressLine1Field = (EditText) v.findViewById(R.id.address_line_1);
+        mAddressLine2Field = (EditText) v.findViewById(R.id.address_line_2);
+        mThanaSelection = (EditText) v.findViewById(R.id.thana);
+        mDistrictSelection = (EditText) v.findViewById(R.id.district);
+        mCountrySelection = (EditText) v.findViewById(R.id.country);
         mCountrySelection.setEnabled(false);
-        mPostalCodeField = (IconifiedEditText) v.findViewById(R.id.postcode);
+        mPostalCodeField = (EditText) v.findViewById(R.id.postcode);
 
         addView(v);
         getDistrictList();

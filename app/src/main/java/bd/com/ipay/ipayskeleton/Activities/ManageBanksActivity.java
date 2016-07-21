@@ -9,6 +9,7 @@ import android.view.View;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ManageBanksActivity extends BaseActivity {
 
@@ -37,8 +38,10 @@ public class ManageBanksActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (switchedToAddBankFragment)
+            Utilities.hideKeyboard(this);
+            if (switchedToAddBankFragment) {
                 switchToBankAccountsFragment();
+            }
             else {
                 finish();
             }
@@ -46,6 +49,14 @@ public class ManageBanksActivity extends BaseActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (switchedToAddBankFragment)
+            switchToBankAccountsFragment();
+        else
+            super.onBackPressed();
     }
 
     public void switchToBankAccountsFragment() {

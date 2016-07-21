@@ -248,6 +248,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         historyPageCount = 0;
         if (userTransactionHistoryClasses != null)
             userTransactionHistoryClasses.clear();
+        setContentShown(false);
+        mSwipeRefreshLayout.setRefreshing(false);
         getTransactionHistory();
     }
 
@@ -572,7 +574,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mTransactionHistoryTask = null;
-            mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;

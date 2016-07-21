@@ -21,11 +21,11 @@
         app:riv_oval="false" />
 
     <RelativeLayout
+        android:id="@+id/activitylayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/portrait"
-        android:id="@+id/activitylayout">
+        android:layout_toRightOf="@+id/portrait">
 
         <TextView
             android:id="@+id/activity_description"
@@ -43,9 +43,11 @@
     </RelativeLayout>
 
     <View
-        android:id="@+id/divider"
-        style="@style/Divider"
+        android:id="@+id/divider1"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_space"
         android:layout_below="@+id/portrait"
-        android:layout_marginTop="@dimen/value15"/>
-
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:background="@color/colorDivider" />
 </RelativeLayout>
