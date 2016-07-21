@@ -84,6 +84,14 @@
 
             <View style="@style/Divider" />
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/service_charge_with_net_amount"
+                android:orientation="vertical"
+                android:visibility="gone">
+
             <LinearLayout
                 android:id="@+id/service_charge_holder"
                 android:layout_width="match_parent"
@@ -119,6 +127,8 @@
             </LinearLayout>
 
             <View style="@style/Divider" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/topup_package"
