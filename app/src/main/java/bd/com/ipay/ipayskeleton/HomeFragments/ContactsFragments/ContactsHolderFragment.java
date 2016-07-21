@@ -2,11 +2,9 @@ package bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +30,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private Button mAllContactsSelector;
     private Button miPayContactsSelector;
 
-    private AllContactsFragment mAllContactsFragment;
-    private IPayContactsFragment mIPayContactsFragment;
+    private IPayContactsFragment miPayAllContactsFragment;
+    private IPayContactsFragment miPayMemberContactsFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,18 +69,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         switchToiPayContacts();
     }
 
-    // Called when the user navigates to this fragment.
-    // We can't use onResume because onResume does not get called when the user switch between tabs.
-    public void onFocus() {
-        if (mAllContactsFragment != null) {
-            mAllContactsFragment.onFocus();
-        }
-        if (mIPayContactsFragment != null) {
-            mIPayContactsFragment.onFocus();
-        }
-
-    }
-
     private void setEnabled(Button button, boolean isEnabled) {
         if (isEnabled) {
             button.setBackgroundResource(R.drawable.drawable_contact_selector_active);
@@ -107,10 +93,11 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
         try {
             if (getActivity() != null) {
-                if (mAllContactsFragment == null)
-                    mAllContactsFragment = new AllContactsFragment();
-                mAllContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-                getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mAllContactsFragment).commit();
+                if (miPayAllContactsFragment == null) {
+                    miPayAllContactsFragment = new IPayContactsFragment();
+                }
+                miPayAllContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+                getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, miPayAllContactsFragment).commit();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,10 +109,15 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         setEnabled(mAllContactsSelector, false);
 
         try {
-            if (mIPayContactsFragment == null)
-                mIPayContactsFragment = new IPayContactsFragment();
-            mIPayContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
-            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, mIPayContactsFragment).commit();
+            if (miPayMemberContactsFragment == null) {
+                miPayMemberContactsFragment = new IPayContactsFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(Constants.IPAY_MEMBERS_ONLY, true);
+                miPayMemberContactsFragment.setArguments(bundle);
+            }
+            miPayMemberContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
+            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, miPayMemberContactsFragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }

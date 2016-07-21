@@ -100,11 +100,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
-//    private List<TransactionHistoryClass> userTransactionHistoryClasses;
-//    private RecyclerView.LayoutManager mTransactionHistoryLayoutManager;
-//    private RecyclerView mTransactionHistoryRecyclerView;
-//    private TransactionHistoryAndNewsFeedAdapter mTransactionHistoryAndNewsFeedAdapter;
-
     private View mProfileCompletionPromptView;
 
     private final int pageCount = 0;
@@ -274,9 +269,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            // Check if the news feed is already cleared or not
-            if (!HomeActivity.newsFeedLoadedOnce) getNewsFeed();
-
             getProfileCompletionStatus();
         }
 
@@ -314,7 +306,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initiateScan();
                 } else {
-                    Toast.makeText(getActivity(), R.string.error_permission_denied, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
                 }
                 return;
             }
@@ -480,20 +472,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void getNewsFeed() {
-        if (mGetNewsFeedTask != null) {
-            return;
-        }
-
-        GetNewsFeedRequestBuilder mGetNewsFeedRequestBuilder = new GetNewsFeedRequestBuilder(pageCount);
-
-        String mUri = mGetNewsFeedRequestBuilder.getGeneratedUri();
-        mGetNewsFeedTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_NEWS_FEED,
-                mUri, getActivity());
-        mGetNewsFeedTask.mHttpResponseListener = this;
-        mGetNewsFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     private void getProfileCompletionStatus() {
         if (mGetProfileCompletionStatusTask != null) {
             return;
@@ -546,39 +524,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
             refreshBalanceButton.clearAnimation();
             mRefreshBalanceTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_NEWS_FEED)) {
-
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                try {
-                    mGetNewsFeedResponse = gson.fromJson(result.getJsonString(), GetNewsFeedResponse.class);
-
-                    if (newsFeedResponsesList == null) {
-                        newsFeedResponsesList = mGetNewsFeedResponse.getNewsFeed();
-                    } else {
-                        List<News> tempUserActivityResponsesList;
-                        tempUserActivityResponsesList = mGetNewsFeedResponse.getNewsFeed();
-                        newsFeedResponsesList.addAll(tempUserActivityResponsesList);
-                    }
-
-                    HomeActivity.newsFeedLoadedOnce = true;
-                    // TODO: Handle news feed hasNext in future
-//                    mTransactionHistoryAndNewsFeedAdapter.notifyDataSetChanged();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.news_feed_get_failed, Toast.LENGTH_LONG).show();
-                }
-
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.news_feed_get_failed, Toast.LENGTH_LONG).show();
-            }
-
-
-            mGetNewsFeedTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
             try {

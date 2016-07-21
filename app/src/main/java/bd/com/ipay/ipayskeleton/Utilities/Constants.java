@@ -21,6 +21,7 @@ public class Constants {
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
+    public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
@@ -235,6 +236,8 @@ public class Constants {
     public static final String URL_GET_NEWS_FEED = "resource/news";
 
     // Request Rest
+
+    public static final String URL_GET_All_NOTIFICATIONS = "requests/received/all-list";
     public static final String URL_GET_NOTIFICATIONS = "requests/received";
     public static final String URL_GET_SENT_REQUESTS = "requests/sent";
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";

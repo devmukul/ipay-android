@@ -332,5 +332,13 @@
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:text="@string/in_out_list_button" />
 
+        <Button
+            android:id="@+id/verify_ticket_button"
+            style="@style/ButtonStyleMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/in_out_list_button" />
+
     </LinearLayout>
 </ScrollView>
