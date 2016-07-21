@@ -359,7 +359,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     public void updateProfileData() {
-        Log.d("Profile Pic Home", ProfileInfoCacheManager.getProfileImageUrl());
         mNameView.setText(ProfileInfoCacheManager.getName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +

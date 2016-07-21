@@ -572,9 +572,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void postProcessNotificationList() {
-        Log.d("Notification", "Trying to post process...");
         if (isAllNotificationsLoaded()) {
-            Log.d("Notification", "Merging and refreshing list");
 
             mNotifications = mergeNotificationLists();
             if (isAdded()) {
@@ -588,8 +586,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mNotificationListAdapter.notifyDataSetChanged();
                 setContentShown(true);
             }
-
-            Log.d("Notification", "Updating badge count...");
 
             // We just can't call something like getActivity().onNotificationUpdate.. because
             // getActivity() might return if user hasn't yet navigated to the notification fragment.

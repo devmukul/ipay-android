@@ -366,9 +366,7 @@ public class HomeActivity extends BaseActivity
         Log.d("Notification Count", badgeCount + "");
         if (mOptionsMenu != null) {
             if (badgeCount > 0) {
-                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_notifications_white_24dp), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
-            } else {
-//                ActionItemBadge.hide(mOptionsMenu.findItem(R.id.action_notification));
+                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
             }
         }
     }
