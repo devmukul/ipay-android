@@ -69,7 +69,6 @@
 
             </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
-
             <Button
                 android:id="@+id/login_button"
                 style="@style/PrimaryButton"
