@@ -128,7 +128,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 new GetAvailableBankAsyncTask.BankLoadListener() {
                     @Override
                     public void onLoadSuccess(List<Bank> banks) {
-                        mProgressDialog.dismiss();
                         getBankList();
                     }
 
@@ -141,8 +140,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     }
                 });
 
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
-        mProgressDialog.show();
         mGetAvailableBankAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -151,9 +148,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
-        if (getActivity() != null)
-            mProgressDialog.show();
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
         mGetBankTask.mHttpResponseListener = this;
@@ -252,7 +246,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
-            mProgressDialog.dismiss();
             mGetBankTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_A_BANK)) {

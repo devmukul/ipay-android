@@ -36,10 +36,10 @@ public class IconifiedButton extends FrameLayout {
     private void initView(Context context, AttributeSet attrs) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.view_iconified_button, this, true);
+        View v = inflater.inflate(R.layout.view_iconified_button, this, true);
 
-        mImageView = (ImageView) findViewById(R.id.icon);
-        mButton = (Button) findViewById(R.id.button);
+        mImageView = (ImageView) v.findViewById(R.id.icon);
+        mButton = (Button) v.findViewById(R.id.button);
 
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconifiedButton, 0, 0);

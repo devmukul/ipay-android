@@ -266,6 +266,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
 
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mTransactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+
         return v;
     }
 
@@ -281,6 +284,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public void onDestroyView() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileInfoUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mTransactionHistoryBroadcastReceiver);
 
         super.onDestroyView();
     }
@@ -539,6 +543,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
             Log.d("Broadcast home fragment", newProfilePicture);
             mProfilePictureView.setProfilePicture(newProfilePicture, true);
+        }
+    };
+
+    private BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("Broadcast received", "Home Fragment");
+            refreshBalance();
         }
     };
 }
