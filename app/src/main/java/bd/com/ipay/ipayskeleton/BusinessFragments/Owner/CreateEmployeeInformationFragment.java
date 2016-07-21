@@ -42,6 +42,8 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
     private long mAssociationId;
 
     private ProgressDialog mProgressDialog;
+    private boolean isReturnedFromContactPicker = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,26 +54,16 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
         }
 
         View v = inflater.inflate(R.layout.fragment_employee_information, container, false);
-        if(mAssociationId == 0) getActivity().setTitle(R.string.create_employee);
+        if (mAssociationId == 0) getActivity().setTitle(R.string.create_employee);
         else getActivity().setTitle(R.string.edit_employee);
 
         mMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.mobile_number);
         mDesignationEditText = (IconifiedEditText) v.findViewById(R.id.designation);
 
-        if(mAssociationId == 0) {
-            mMobileNumberEditText.setEnabled(true);
-        }
-        else {
-            mMobileNumberEditText.setText(getArguments().getString(Constants.MOBILE_NUMBER));
-            mDesignationEditText.setText(getArguments().getString(Constants.DESIGNATION));
-            mMobileNumberEditText.getEditText().setEnabled(false);
-
-        }
-
         mSelectMobileNumberFromContactsButton = (ImageView) v.findViewById(R.id.select_mobile_number_from_contacts);
         mContinueButton = (Button) v.findViewById(R.id.button_continue);
 
-        if(mAssociationId == 0) {
+        if (mAssociationId == 0) {
             mSelectMobileNumberFromContactsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -102,6 +94,18 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
     public void onResume() {
         super.onResume();
 
+        if (mAssociationId == 0) {
+            mMobileNumberEditText.setEnabled(true);
+            if (!isReturnedFromContactPicker) {
+                mMobileNumberEditText.setText("");
+                mDesignationEditText.setText("");
+            } else isReturnedFromContactPicker = false;
+
+        } else {
+            mMobileNumberEditText.setText(getArguments().getString(Constants.MOBILE_NUMBER));
+            mDesignationEditText.setText(getArguments().getString(Constants.DESIGNATION));
+            mMobileNumberEditText.getEditText().setEnabled(false);
+        }
     }
 
     private boolean verifyUserInputs() {
@@ -161,11 +165,13 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(mAssociationId == 0) {
+        if (mAssociationId == 0) {
             if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
-                if (mobileNumber != null)
+                if (mobileNumber != null) {
                     mMobileNumberEditText.setText(mobileNumber);
+                    isReturnedFromContactPicker = true;
+                }
             }
         }
     }

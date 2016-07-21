@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
@@ -53,11 +52,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Balance.RefreshBalanceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.GetNewsFeedResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed.News;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -71,16 +66,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private RefreshBalanceResponse mRefreshBalanceResponse;
 
-    private HttpRequestGetAsyncTask mGetNewsFeedTask = null;
-    private GetNewsFeedResponse mGetNewsFeedResponse;
-
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
 
-    private SharedPreferences pref;
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
-    public static List<News> newsFeedResponsesList;
 
     private TextView mNameView;
     private TextView mMobileNumberView;
@@ -98,12 +88,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private ImageView refreshBalanceButton;
 
-
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
     private View mProfileCompletionPromptView;
-
-    private final int pageCount = 0;
 
     private static boolean profileCompletionPromptShown = false;
 
@@ -120,7 +107,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mProfileCompletionPromptView = v.findViewById(R.id.profile_completion);
 
@@ -153,9 +139,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE)
+        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
             mMakePaymentButton.setText(getString(R.string.make_payment));
-        else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE)
+        else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
             mMakePaymentButton.setText(getString(R.string.create_invoice));
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +197,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
+                if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
                     PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                         @Override
                         public void ifPinAdded() {
@@ -220,7 +206,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         }
                     });
                     makePaymentPinChecker.execute();
-                } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+                } else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
                     Intent intent = new Intent(getActivity(), MakePaymentActivity.class);
                     startActivity(intent);
                 }
@@ -286,7 +272,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().invalidateOptionsMenu();
 
         updateProfileData();
         refreshBalance();
@@ -310,7 +295,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 } else {
                     Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
                 }
-                return;
             }
         }
     }
@@ -360,7 +344,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     public void updateProfileData() {
-        Log.d("Profile Pic Home", ProfileInfoCacheManager.getProfileImageUrl());
         mNameView.setText(ProfileInfoCacheManager.getName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
@@ -465,11 +448,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         rotation.setRepeatCount(Animation.INFINITE);
         refreshBalanceButton.startAnimation(rotation);
 
-        RefreshBalanceRequest mLoginModel = new RefreshBalanceRequest(pref.getString(Constants.USERID, ""));
-        Gson gson = new Gson();
-        String json = gson.toJson(mLoginModel);
         mRefreshBalanceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REFRESH_BALANCE,
-                Constants.BASE_URL_SM + Constants.URL_REFRESH_BALANCE, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REFRESH_BALANCE, null, getActivity());
         mRefreshBalanceTask.mHttpResponseListener = this;
         mRefreshBalanceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -492,7 +472,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.dismiss();
 
             mRefreshBalanceTask = null;
-            mGetNewsFeedTask = null;
             mGetProfileCompletionStatusTask = null;
 
             if (getActivity() != null)

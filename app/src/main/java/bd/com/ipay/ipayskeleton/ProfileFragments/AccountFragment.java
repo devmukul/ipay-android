@@ -1,15 +1,19 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,8 +64,9 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
     private SetProfilePictureResponse mSetProfilePictureResponse;
 
-
     private ProgressDialog mProgressDialog;
+
+    public static final int REQUEST_CODE_PERMISSION = 1001;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,8 +99,12 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mProfilePictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getContext(), getString(R.string.select_an_image));
-                startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
+                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                    Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getContext(), getString(R.string.select_an_image));
+                    startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
+                } else {
+                    DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
+                }
             }
         });
 
@@ -142,6 +151,19 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         });
 
         return v;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                    Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getContext(), getString(R.string.select_an_image));
+                    startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
+                } else {
+                    Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
+                }
+        }
     }
 
     private void setProfilePicture(String url) {

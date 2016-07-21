@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -54,6 +55,8 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
 
+    public static final int REQUEST_CODE_PERMISSION = 1001;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +95,11 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         mSelectFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectDocument();
+                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                    selectDocument();
+                } else {
+                    DocumentPicker.requestRequiredPermissions(DocumentUploadFragment.this, REQUEST_CODE_PERMISSION);
+                }
             }
         });
 
@@ -165,14 +172,24 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         String fileName = temp[temp.length - 1];
                         mSelectFileField.setText(fileName);
                     }
-//                    else
-//                        mSelectFileField.setText(getString(R.string.no_file_selected));
                 } else {
                     mSelectFileField.setText(getString(R.string.no_file_selected));
                 }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, intent);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                    selectDocument();
+                } else {
+                    Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
+                }
         }
     }
 

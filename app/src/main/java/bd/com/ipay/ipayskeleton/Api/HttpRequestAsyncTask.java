@@ -41,10 +41,6 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
 
     boolean error = false;
 
-    public HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext) {
-        this(API_COMMAND, mUri, mContext, null);
-    }
-
     public HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
         this.API_COMMAND = API_COMMAND;
         this.mUri = mUri;
@@ -58,6 +54,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         if (Utilities.isConnectionAvailable(mContext))
             mHttpResponse = makeRequest();
         else {
+            Log.d("Error", API_COMMAND);
             error = true;
             return null;
         }

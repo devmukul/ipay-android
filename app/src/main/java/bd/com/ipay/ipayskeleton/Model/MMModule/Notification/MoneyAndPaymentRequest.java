@@ -48,7 +48,7 @@ public class MoneyAndPaymentRequest implements Notification {
     @Override
     public String getTitle() {
         if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Invoice received";
-        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return title;
+        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return "Money Request Received";
         else return title;
     }
 

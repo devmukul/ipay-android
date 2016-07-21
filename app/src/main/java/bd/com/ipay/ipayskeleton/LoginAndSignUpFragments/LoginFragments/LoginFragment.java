@@ -7,16 +7,13 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.Selection;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,8 +42,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private LoginResponse mLoginResponseModel;
 
     private ProfileImageView mProfileImageView;
-    private IconifiedEditText mUserNameLoginView;
-    private IconifiedEditText mPasswordLoginView;
+    private IconifiedEditText mUserNameEditText;
+    private IconifiedEditText mPasswordEditText;
     private Button mButtonLogin;
     private Button mButtonForgetPassword;
     private Button mButtonJoinUs;
@@ -62,6 +59,18 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
+
+        if (pref.contains(Constants.USERID)) {
+            mPasswordEditText.setText("");
+            mPasswordEditText.getEditText().requestFocus();
+            mUserNameEditText.getEditText().setEnabled(false);
+            mInfoView.setVisibility(View.VISIBLE);
+            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
+            mUserNameEditText.setText(mobileNumber);
+        } else {
+            mPasswordEditText.setText("");
+            mUserNameEditText.setText("");
+        }
     }
 
     @Override
@@ -80,8 +89,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
         mButtonJoinUs = (Button) v.findViewById(R.id.join_us_button);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mUserNameLoginView = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
-        mPasswordLoginView = (IconifiedEditText) v.findViewById(R.id.login_password);
+        mUserNameEditText = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
+        mPasswordEditText = (IconifiedEditText) v.findViewById(R.id.login_password);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
@@ -127,25 +136,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-
-        if (SignupOrLoginActivity.mMobileNumber != null) {
-            mPasswordLoginView.getEditText().requestFocus();
-            String mobileNumber = ContactEngine.formatMobileNumberBD(SignupOrLoginActivity.mMobileNumber);
-            mUserNameLoginView.setText(mobileNumber);
-        }
-
-        if (pref.contains(Constants.USERID)) {
-            mPasswordLoginView.getEditText().requestFocus();
-            mUserNameLoginView.getEditText().setEnabled(false);
-            mInfoView.setVisibility(View.VISIBLE);
-            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
-            mUserNameLoginView.setText(mobileNumber);
-        }
-
         // Auto Login
         if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
-            mPasswordLoginView.setText("qqqqqqq1");
-            //           mUserNameLoginView.setText("+8801677258077");
+            mPasswordEditText.setText("qqqqqqq1");
+            //           mUserNameEditText.setText("+8801677258077");
             attemptLogin();
         }
 
@@ -163,36 +157,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     @Override
     public void onPause() {
         super.onPause();
-        Utilities.hideKeyboard(getContext(),getView());
-    }
-
-    void putConstantStringInFront(final IconifiedEditText edt, final String constString) {
-        edt.setText(constString);
-        Selection.setSelection(edt.getText(), edt.getText().length());
-
-
-        edt.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!s.toString().startsWith(constString)) {
-                    edt.setText(constString);
-                    Selection.setSelection(edt.getText(), edt.getText().length());
-
-                }
-
-            }
-        });
+        Utilities.hideKeyboard(getContext(), getView());
     }
 
     private void attemptLogin() {
@@ -200,13 +165,15 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
+        Log.d("V Edittext", mUserNameEditText.getText().toString());
+
         // Reset errors.
-        mPasswordLoginView.setError(null);
+        mPasswordEditText.setError(null);
 
         // Store values at the time of the login attempt.
 
-        mPasswordLogin = mPasswordLoginView.getText().toString().trim();
-        mUserNameLogin = ContactEngine.formatMobileNumberBD(mUserNameLoginView.getText().toString().trim());
+        mPasswordLogin = mPasswordEditText.getText().toString().trim();
+        mUserNameLogin = ContactEngine.formatMobileNumberBD(mUserNameEditText.getText().toString().trim());
 
         boolean cancel = false;
         View focusView = null;
@@ -214,14 +181,14 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = InputValidator.isPasswordValid(mPasswordLogin);
         if (passwordValidationMsg.length() > 0) {
-            mPasswordLoginView.setError(passwordValidationMsg);
-            focusView = mPasswordLoginView;
+            mPasswordEditText.setError(passwordValidationMsg);
+            focusView = mPasswordEditText;
             cancel = true;
         }
 
         if (!ContactEngine.isValidNumber(mUserNameLogin)) {
-            mUserNameLoginView.setError(getString(R.string.error_invalid_mobile_number));
-            focusView = mUserNameLoginView;
+            mUserNameEditText.setError(getString(R.string.error_invalid_mobile_number));
+            focusView = mUserNameEditText;
             cancel = true;
         }
 
@@ -268,7 +235,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         if (getActivity() != null) mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mLoginTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();

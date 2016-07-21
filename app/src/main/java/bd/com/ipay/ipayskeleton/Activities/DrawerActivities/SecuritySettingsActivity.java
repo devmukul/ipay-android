@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.SecuritySettingsFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 
@@ -39,7 +39,7 @@ public class SecuritySettingsActivity extends BaseActivity {
 
     public void switchToAccountSettingsFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new AccountSettingsFragment()).commit();
+                new SecuritySettingsFragment()).commit();
         switchedToPasswordRecoveryFragment = false;
 
     }

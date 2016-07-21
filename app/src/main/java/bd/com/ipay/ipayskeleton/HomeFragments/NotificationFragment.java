@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -33,6 +34,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
@@ -119,6 +121,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private boolean mSwitchToEmployeeFragment;
 
+    public OnNotificationUpdateListener mOnNotificationUpdateListener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,19 +161,21 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getMoneyAndPaymentRequest();
-            getIntroductionRequestList();
-            getBusinessInvitationList();
-        }
-
-        setContentShown(false);
+        // We try to fetch all notification lists as soon as the home activity
+        // is launched. So when the user navigates to this fragment, it might be possible that
+        // all the lists have already been loaded. We have to call postProcessNotificationList
+        // to properly update the view.
+        postProcessNotificationList();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().invalidateOptionsMenu();
+    public void setOnNotificationUpdateListener(OnNotificationUpdateListener listener) {
+        this.mOnNotificationUpdateListener = listener;
+    }
+
+    public void getNotificationLists(Context context) {
+        getMoneyAndPaymentRequest(context);
+        getIntroductionRequestList(context);
+        getBusinessInvitationList(context);
     }
 
     @Override
@@ -179,7 +185,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             menu.findItem(R.id.action_search_contacts).setVisible(false);
     }
 
-    private void getMoneyAndPaymentRequest() {
+    private void getMoneyAndPaymentRequest(Context context) {
         if (mGetMoneyAndPaymentRequestTask != null) {
             return;
         }
@@ -188,30 +194,28 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Gson gson = new Gson();
         String json = gson.toJson(mGetMoneyAndPaymentRequest);
         mGetMoneyAndPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS,
-                Constants.BASE_URL_SM + Constants.URL_GET_All_NOTIFICATIONS, json, getActivity());
-        mGetMoneyAndPaymentRequestTask.mHttpResponseListener = this;
+                Constants.BASE_URL_SM + Constants.URL_GET_All_NOTIFICATIONS, json, context, this);
         mGetMoneyAndPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void getIntroductionRequestList() {
+    private void getIntroductionRequestList(Context context) {
         if (mGetIntroductionRequestTask != null) {
             return;
         }
 
         mGetIntroductionRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
-                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity());
-        mGetIntroductionRequestTask.mHttpResponseListener = this;
+                Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, context, this);
         mGetIntroductionRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void getBusinessInvitationList() {
+    private void getBusinessInvitationList(Context context) {
         if (mGetBusinessInvitationTask != null) {
             return;
         }
 
         BusinessListRequestBuilder businessListRequestBuilder = new BusinessListRequestBuilder();
         mGetBusinessInvitationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_LIST,
-                businessListRequestBuilder.getPendingBusinessListUri(), getActivity(), this);
+                businessListRequestBuilder.getPendingBusinessListUri(), context, this);
         mGetBusinessInvitationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -252,21 +256,21 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private void refreshMoneyAndPaymentRequestList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
             mMoneyAndPaymentRequests = null;
-            getMoneyAndPaymentRequest();
+            getMoneyAndPaymentRequest(getActivity());
         }
     }
 
     private void refreshIntroductionRequestList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
             mIntroductionRequests = null;
-            getIntroductionRequestList();
+            getIntroductionRequestList(getActivity());
         }
     }
 
     private void refreshBusinessInvitationList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
             mBusinessInvitations = null;
-            getBusinessInvitationList();
+            getBusinessInvitationList(getActivity());
         }
     }
 
@@ -366,9 +370,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mConfirmBusinessInvitationTask = null;
             mGetBusinessInvitationTask = null;
             mGetIntroductionRequestTask = null;
-            mSwipeRefreshLayout.setRefreshing(false);
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+
+            if (isAdded()) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+            }
+
             return;
         }
 
@@ -564,23 +572,25 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void postProcessNotificationList() {
-        Log.d("Notification", "Trying to post process...");
         if (isAllNotificationsLoaded()) {
-            Log.d("Notification", "Merging and refreshing list");
 
             mNotifications = mergeNotificationLists();
+            if (isAdded()) {
+                if (mNotifications.isEmpty()) {
+                    mEmptyListTextView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyListTextView.setVisibility(View.GONE);
+                }
 
-            if (mNotifications.isEmpty()) {
-                mEmptyListTextView.setVisibility(View.VISIBLE);
-            } else {
-                mEmptyListTextView.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
+                mNotificationListAdapter.notifyDataSetChanged();
+                setContentShown(true);
             }
 
-            mSwipeRefreshLayout.setRefreshing(false);
-            mNotificationListAdapter.notifyDataSetChanged();
-
-            if (isAdded())
-                setContentShown(true);
+            // We just can't call something like getActivity().onNotificationUpdate.. because
+            // getActivity() might return if user hasn't yet navigated to the notification fragment.
+            if (mOnNotificationUpdateListener != null && mNotifications != null)
+                mOnNotificationUpdateListener.onNotificationUpdate(mNotifications);
         }
     }
 
@@ -918,5 +928,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         public int getItemViewType(int position) {
             return mNotifications.get(position).getNotificationType();
         }
+    }
+
+    public interface OnNotificationUpdateListener {
+        void onNotificationUpdate(List<Notification> notifications);
     }
 }
