@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,12 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
         mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
 
         String result = getArguments().getString(Constants.RESULT);
-        getSingleInvoice(Integer.parseInt(result));
+        if (TextUtils.isDigitsOnly(result))
+            getSingleInvoice(Integer.parseInt(result));
+        else {
+            Toast.makeText(getActivity(), R.string.not_a_valid_invoice_id, Toast.LENGTH_LONG).show();
+            getActivity().finish();
+        }
 
         paymentReviewAdapter = new PaymentReviewAdapter();
         mLayoutManager = new LinearLayoutManager(this.getActivity());
@@ -251,6 +257,7 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
                 mTotalView.setText(Utilities.formatTaka(mAmount));
                 mPinField = (EditText) itemView.findViewById(R.id.pin);
 
+                mMakePaymentButton.setVisibility(View.VISIBLE);
                 mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

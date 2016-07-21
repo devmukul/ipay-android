@@ -668,6 +668,7 @@
     <string name="select_a_file">Select a file</string>
     <string name="failed_fetching_money_requests">Failed to fetch money requests</string>
     <string name="failed_fetching_single_invoice">Failed to fetch invoice</string>
+    <string name="not_a_valid_invoice_id">Please scan a valid invoice Id</string>
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
     <string name="complete_now">COMPLETE NOW</string>
     <string name="later">LATER</string>

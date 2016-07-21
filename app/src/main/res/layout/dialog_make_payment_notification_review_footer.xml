@@ -98,6 +98,7 @@
         android:layout_marginLeft="@dimen/value12"
         android:layout_marginRight="@dimen/value12"
         android:layout_marginTop="@dimen/value20"
-        android:layout_marginBottom="@dimen/value20"/>
+        android:layout_marginBottom="@dimen/value20"
+        android:visibility="gone"/>
 
 </LinearLayout>
