@@ -244,12 +244,10 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     private void refreshTransactionHistory() {
         Log.d("Transaction History", "Refreshing...");
-        setContentShown(false);
 
         historyPageCount = 0;
         if (userTransactionHistoryClasses != null)
             userTransactionHistoryClasses.clear();
-        setContentShown(false);
         getTransactionHistory();
     }
 
