@@ -59,6 +59,18 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
+
+        if (pref.contains(Constants.USERID)) {
+            mPasswordEditText.setText("");
+            mPasswordEditText.getEditText().requestFocus();
+            mUserNameEditText.getEditText().setEnabled(false);
+            mInfoView.setVisibility(View.VISIBLE);
+            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
+            mUserNameEditText.setText(mobileNumber);
+        } else {
+            mPasswordEditText.setText("");
+            mUserNameEditText.setText("");
+        }
     }
 
     @Override
@@ -124,14 +136,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        if (pref.contains(Constants.USERID)) {
-            mPasswordEditText.getEditText().requestFocus();
-            mUserNameEditText.getEditText().setEnabled(false);
-            mInfoView.setVisibility(View.VISIBLE);
-            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
-            mUserNameEditText.setText(mobileNumber);
-        }
-
         // Auto Login
         if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
             mPasswordEditText.setText("qqqqqqq1");
@@ -151,14 +155,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        Utilities.hideKeyboard(getContext(),getView());
+        Utilities.hideKeyboard(getContext(), getView());
     }
 
     private void attemptLogin() {
@@ -236,7 +235,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         if (getActivity() != null) mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mLoginTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();

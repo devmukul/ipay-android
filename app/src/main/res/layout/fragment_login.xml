@@ -16,11 +16,11 @@
             android:id="@+id/ipay_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin_card"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            android:orientation="vertical">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/profile_picture"
@@ -28,7 +28,7 @@
                 android:layout_height="@dimen/login_profile_image_size"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/value30"/>
+                android:layout_marginBottom="@dimen/value30" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -50,11 +50,11 @@
                     android:id="@+id/login_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_info_outline_black_24dp"
-                    android:paddingRight="@dimen/activity_horizontal_margin_card"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:visibility="gone"/>
+                    android:layout_centerVertical="true"
+                    android:paddingRight="@dimen/activity_horizontal_margin_card"
+                    android:src="@drawable/ic_info_outline_black_24dp"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -72,12 +72,12 @@
 
             <Button
                 android:id="@+id/login_button"
+                style="@style/PrimaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/PrimaryButton"
-                android:imeOptions="actionDone"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:text="@string/action_login"/>
+                android:imeOptions="actionDone"
+                android:text="@string/action_login" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
