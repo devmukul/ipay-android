@@ -86,6 +86,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private TextView mMobileNumberView;
     private ImageView mVerificationStatusView;
     private ProfileImageView mProfilePictureView;
+    private View mProfileInfo;
 
     private View mAddMoneyButton;
     private View mWithdrawMoneyButton;
@@ -131,6 +132,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (ImageView) v.findViewById(R.id.verification_status);
         mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        mProfileInfo = v.findViewById(R.id.profile_info);
 
         mAddMoneyButton = v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = v.findViewById(R.id.button_withdraw_money);
@@ -259,7 +261,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        mProfilePictureView.setOnClickListener(new View.OnClickListener() {
+        mProfileInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
