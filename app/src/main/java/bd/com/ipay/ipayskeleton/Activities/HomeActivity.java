@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
+import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +57,7 @@ import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
@@ -100,6 +102,11 @@ public class HomeActivity extends BaseActivity
 
     private ProgressDialog mProgressDialog;
     private NavigationView mNavigationView;
+
+    private NotificationFragment mNotificationFragment;
+    private Menu mOptionsMenu;
+
+    private int mBadgeCount = 0;
 
     public static boolean switchedToHomeFragment = true;
 
@@ -208,6 +215,18 @@ public class HomeActivity extends BaseActivity
             Log.w("Token", TokenManager.getToken());
         }
 
+        mNotificationFragment = new NotificationFragment();
+        mNotificationFragment.setOnNotificationUpdateListener(new NotificationFragment.OnNotificationUpdateListener() {
+            @Override
+            public void onNotificationUpdate(List<Notification> notifications) {
+                updateNotificationBadgeCount(notifications.size());
+            }
+        });
+        // We need to show the notification badge count. So loading the notification lists to count
+        // the number of pending notifications. Once the notifications are loaded, updateNotificationBadgeCount()
+        // is called from NotificationFragment.
+        mNotificationFragment.getNotificationLists(this);
+
         attemptRequestForPermission();
         sendAnalytics();
 
@@ -219,6 +238,10 @@ public class HomeActivity extends BaseActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home_activity, menu);
+        mOptionsMenu = menu;
+
+        // If the menu is recreated, then restore the previous badge count
+        updateNotificationBadgeCount(mBadgeCount);
         return true;
     }
 
@@ -227,7 +250,7 @@ public class HomeActivity extends BaseActivity
         switch (item.getItemId()) {
 
             case R.id.action_notification:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new NotificationFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, mNotificationFragment).commit();
                 switchedToHomeFragment = false;
                 return true;
 
@@ -335,6 +358,17 @@ public class HomeActivity extends BaseActivity
         mNavigationView.getMenu().getItem(0).setChecked(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
         switchedToHomeFragment = true;
+    }
+
+    public void updateNotificationBadgeCount(int badgeCount) {
+        mBadgeCount = badgeCount;
+
+        Log.d("Notification Count", badgeCount + "");
+        if (mOptionsMenu != null) {
+            if (badgeCount > 0) {
+                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+            }
+        }
     }
 
     public void setDrawerMenuVisibility(int id, boolean visible) {
@@ -491,17 +525,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void checkForUpdateFromPush() {
-        // Get the changes
-        boolean isProfilePictureUpdated = true;
-        try {
-            // TODO migration code, remove try-catch later
-            isProfilePictureUpdated = PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Take actions
-        if (isProfilePictureUpdated) {
+        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
             getProfileInfo();
         }
     }

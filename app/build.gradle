@@ -8,7 +8,7 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 39
+        versionCode 40
         versionName "0.28.3"
         multiDexEnabled true
     }
@@ -70,12 +70,18 @@ dependencies {
     // Bottom Sheet
     compile 'com.flipboard:bottomsheet-core:1.5.0'
     compile 'com.flipboard:bottomsheet-commons:1.5.0'
+
     compile files('libs/libphonenumber-7.2.8.jar')
     compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
     compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
     compile 'com.google.android.gms:play-services-gcm:9.2.1'
     compile 'com.google.android.gms:play-services-places:9.2.1'
     compile 'com.android.support:multidex:1.0.1'
+
+    // Notification badge
+    compile 'com.mikepenz:actionitembadge:3.2.6@aar'
+    compile 'com.mikepenz:iconics-core:2.6.6@aar'
+
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.9.5"
 }

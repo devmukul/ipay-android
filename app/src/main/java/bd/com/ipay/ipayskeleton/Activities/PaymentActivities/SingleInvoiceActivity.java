@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.SingleInvoiceFragment;
@@ -28,6 +29,18 @@ public class SingleInvoiceActivity extends BaseActivity {
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, singleInvoiceFragment).commit();
 
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
