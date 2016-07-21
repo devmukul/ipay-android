@@ -33,8 +33,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 
@@ -43,7 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AccountSettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -64,7 +62,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.Profile
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
-import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
@@ -334,16 +331,10 @@ public class HomeActivity extends BaseActivity
 
         }
     }
-
     public void switchToDashBoard() {
         mNavigationView.getMenu().getItem(0).setChecked(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
         switchedToHomeFragment = true;
-    }
-
-    public void switchToPasswordRecovery() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new TrustedNetworkFragment()).commit();
-        switchedToHomeFragment = false;
     }
 
     public void setDrawerMenuVisibility(int id, boolean visible) {
@@ -406,7 +397,7 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_security_settings) {
 
-            Intent intent = new Intent(HomeActivity.this, AccountSettingsActivity.class);
+            Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 

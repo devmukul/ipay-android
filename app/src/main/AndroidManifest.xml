@@ -229,7 +229,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.DrawerActivities.AccountSettingsActivity"
+            android:name=".Activities.DrawerActivities.SecuritySettingsActivity"
             android:label="@string/security_settings"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"

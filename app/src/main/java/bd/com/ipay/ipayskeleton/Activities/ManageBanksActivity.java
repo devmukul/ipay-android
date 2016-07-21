@@ -37,21 +37,14 @@ public class ManageBanksActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0)
-                getSupportFragmentManager().popBackStack();
+            if (switchedToAddBankFragment)
+                switchToBankAccountsFragment();
             else {
                 finish();
             }
             return true;
         } else {
             return super.onOptionsItemSelected(item);
-        }
-    }
-    @Override
-    public void onBackPressed() {
-        if (!switchedToAddBankFragment) super.onBackPressed();
-        else {
-            switchToBankAccountsFragment();
         }
     }
 

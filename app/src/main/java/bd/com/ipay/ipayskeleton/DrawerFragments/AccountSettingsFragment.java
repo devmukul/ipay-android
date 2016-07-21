@@ -30,7 +30,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -197,7 +197,7 @@ public class AccountSettingsFragment extends Fragment implements HttpResponseLis
         passwordRecoveryHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HomeActivity) getActivity()).switchToPasswordRecovery();
+                ((SecuritySettingsActivity) getActivity()).switchToPasswordRecovery();
             }
         });
 
