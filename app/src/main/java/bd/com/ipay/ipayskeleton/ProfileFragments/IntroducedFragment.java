@@ -66,12 +66,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_introduced_requests, container, false);

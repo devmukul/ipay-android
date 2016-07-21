@@ -73,11 +73,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().invalidateOptionsMenu();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
