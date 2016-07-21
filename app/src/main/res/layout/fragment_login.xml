@@ -30,26 +30,33 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/value30"/>
 
-            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                android:id="@+id/login_mobile_number"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableLeft="@drawable/ic_number"
-                android:hint="@string/prompt_mobile"
-                android:inputType="phone"
-                android:maxLength="14"
-                custom:borderType="up">
+                android:layout_height="wrap_content">
+
+                <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+                    android:id="@+id/login_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_number"
+                    android:hint="@string/prompt_mobile"
+                    android:inputType="phone"
+                    android:maxLength="14"
+                    custom:borderType="up">
+
+                </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
 
                 <ImageView
                     android:id="@+id/login_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_info_outline_black_24dp"
-                    android:layout_gravity="right|center"
                     android:paddingRight="@dimen/activity_horizontal_margin_card"
-                    android:visibility="invisible"/>
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"/>
 
-            </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+            </RelativeLayout>
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
                 android:id="@+id/login_password"

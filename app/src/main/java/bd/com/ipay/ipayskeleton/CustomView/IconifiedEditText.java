@@ -47,9 +47,9 @@ public class IconifiedEditText extends FrameLayout {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.view_iconified_edit_text, this, true);
 
-        mImageView = (ImageView) findViewById(R.id.icon);
-        mEditText = (EditText) findViewById(R.id.edit_text);
-        mDivider = findViewById(R.id.divider);
+        mImageView = (ImageView) v.findViewById(R.id.icon);
+        mEditText = (EditText) v.findViewById(R.id.edit_text);
+        mDivider = v.findViewById(R.id.divider);
 
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconifiedEditText, 0, 0);
