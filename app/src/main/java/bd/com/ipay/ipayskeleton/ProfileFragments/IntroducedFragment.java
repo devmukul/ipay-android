@@ -74,10 +74,10 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_introducer_requests, container, false);
+        View v = inflater.inflate(R.layout.fragment_introduced_requests, container, false);
         (getActivity()).setTitle(R.string.profile_introducers);
 
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.list_introducer_requests);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.list_introduced_requests);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
         mProgressDialog = new ProgressDialog(getActivity());
