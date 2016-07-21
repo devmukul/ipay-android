@@ -2,8 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/colorPrimary">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,94 +10,117 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
-        <include
-            layout="@layout/layout_progress_container" />
+        <include layout="@layout/layout_progress_container" />
 
         <LinearLayout
             android:id="@+id/content_container"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/present_address_holder"
-                android:orientation="vertical"
+                android:id="@+id/present_address_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin_double">
+                android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/present_address_holder"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/AddressViewHeader"
-                    android:text="@string/present_address"
-                    android:textColor="@android:color/white"/>
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textview_present_address"
-                    style="@style/ProfileAddressTextStyle" />
+                    <TextView
+                        style="@style/AddressViewHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/present_address"/>
 
-                <Button
+                    <TextView
+                        android:id="@+id/textview_present_address"
+                        style="@style/ProfileAddressTextStyle" />
+                </LinearLayout>
+
+                <ImageButton
                     android:id="@+id/button_edit_present_address"
-                    style="@style/PrimaryButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/edit"/>
-
+                    style="@style/EditIconButton"
+                    android:src="@drawable/ic_editgrey"></ImageButton>
             </LinearLayout>
 
+            <View style="@style/Divider" />
+
             <LinearLayout
-                android:id="@+id/permanent_address_holder"
-                android:orientation="vertical"
+                android:id="@+id/permanent_address_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin_double">
+                android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/permanent_address_holder"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/AddressViewHeader"
-                    android:text="@string/permanent_address"
-                    android:textColor="@android:color/white"/>
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textview_permanent_address"
-                    style="@style/ProfileAddressTextStyle" />
+                    <TextView
+                        style="@style/AddressViewHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/permanent_address" />
 
-                <Button
+                    <TextView
+                        android:id="@+id/textview_permanent_address"
+                        style="@style/ProfileAddressTextStyle" />
+                </LinearLayout>
+
+                <ImageButton
                     android:id="@+id/button_edit_permanent_address"
-                    style="@style/PrimaryButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/edit"/>
-
+                    style="@style/EditIconButton"
+                    android:src="@drawable/ic_editgrey" />
             </LinearLayout>
 
+            <View style="@style/Divider" />
+
             <LinearLayout
-                android:id="@+id/office_address_holder"
-                android:orientation="vertical"
+                android:id="@+id/office_address_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin_double">
+                android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/office_address_holder"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/AddressViewHeader"
-                    android:text="@string/office_address"
-                    android:textColor="@android:color/white"/>
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textview_office_address"
-                    style="@style/ProfileAddressTextStyle" />
+                    <TextView
+                        style="@style/AddressViewHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/office_address" />
 
-                <Button
+                    <TextView
+                        android:id="@+id/textview_office_address"
+                        style="@style/ProfileAddressTextStyle" />
+                </LinearLayout>
+
+                <ImageButton
                     android:id="@+id/button_edit_office_address"
-                    style="@style/PrimaryButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/edit"/>
-
+                    style="@style/EditIconButton"
+                    android:src="@drawable/ic_editgrey" />
             </LinearLayout>
 
             <Button
@@ -106,21 +128,21 @@
                 style="@style/PrimaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_present_address"/>
+                android:text="@string/add_present_address" />
 
             <Button
                 android:id="@+id/button_add_permanent_address"
                 style="@style/PrimaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_permanent_address"/>
+                android:text="@string/add_permanent_address" />
 
             <Button
                 android:id="@+id/button_add_office_address"
                 style="@style/PrimaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_office_address"/>
+                android:text="@string/add_office_address" />
 
         </LinearLayout>
     </LinearLayout>

@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,9 +57,9 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     private View mPermanentAddressHolder;
     private View mOfficeAddressHolder;
 
-    private Button mPresentAddressEditButton;
-    private Button mPermanentAddressEditButton;
-    private Button mOfficeAddressEditButton;
+    private ImageButton mPresentAddressEditButton;
+    private ImageButton mPermanentAddressEditButton;
+    private ImageButton mOfficeAddressEditButton;
 
     private Button mPresentAddressAddButton;
     private Button mPermanentAddressAddButton;
@@ -91,9 +92,9 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         mPermanentAddressView = (TextView) v.findViewById(R.id.textview_permanent_address);
         mOfficeAddressView = (TextView) v.findViewById(R.id.textview_office_address);
 
-        mPresentAddressEditButton = (Button) v.findViewById(R.id.button_edit_present_address);
-        mPermanentAddressEditButton = (Button) v.findViewById(R.id.button_edit_permanent_address);
-        mOfficeAddressEditButton = (Button) v.findViewById(R.id.button_edit_office_address);
+        mPresentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_present_address);
+        mPermanentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_permanent_address);
+        mOfficeAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_address);
 
         mPresentAddressAddButton = (Button) v.findViewById(R.id.button_add_present_address);
         mPermanentAddressAddButton = (Button) v.findViewById(R.id.button_add_permanent_address);
