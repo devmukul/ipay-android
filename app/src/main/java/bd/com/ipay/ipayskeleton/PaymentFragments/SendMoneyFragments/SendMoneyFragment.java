@@ -124,7 +124,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         }
     }
 
-    private void initiateScan() {
+    public void initiateScan() {
         IntentIntegrator.forFragment(this).initiateScan();
     }
 

@@ -120,7 +120,7 @@
                 android:background="@drawable/background_right_round_checkbox"
                 android:button="@null"
                 android:text="@string/female"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/value12" />
         </RelativeLayout>
 

@@ -6,9 +6,12 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AccountSettingsFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 
-public class AccountSettingsActivity extends BaseActivity {
+public class SecuritySettingsActivity extends BaseActivity {
+
+    private boolean switchedToPasswordRecoveryFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +26,8 @@ public class AccountSettingsActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0)
-                getSupportFragmentManager().popBackStack();
+            if (switchedToPasswordRecoveryFragment)
+                switchToAccountSettingsFragment();
             else {
                 finish();
             }
@@ -34,22 +37,21 @@ public class AccountSettingsActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
-            getSupportFragmentManager().popBackStack();
-        else
-            super.onBackPressed();
-    }
-
     public void switchToAccountSettingsFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new AccountSettingsFragment()).commit();
+        switchedToPasswordRecoveryFragment = false;
 
+    }
+
+    public void switchToPasswordRecovery() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new TrustedNetworkFragment()).commit();
+        switchedToPasswordRecoveryFragment = true;
     }
 
     @Override
     public Context setContext() {
-        return AccountSettingsActivity.this;
+        return SecuritySettingsActivity.this;
     }
 }
