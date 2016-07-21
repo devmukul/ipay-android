@@ -221,7 +221,6 @@ public class CreateNewEventFragment extends Fragment implements HttpResponseList
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_EVENT_CATEGORIES)) {

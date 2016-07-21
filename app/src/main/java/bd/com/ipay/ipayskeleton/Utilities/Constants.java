@@ -6,7 +6,6 @@ public class Constants {
     public static final String PICTURE_FOLDER = "/iPay";
     public static final String GENDER_MALE = "M";
     public static final String GENDER_FEMALE = "F";
-    public static final String EMAIL = "EMAIL";
     public static final String USERID = "USERID";
     public static final String USER_NAME = "USER_NAME";
     public static final String UUID = "UUID";
@@ -16,7 +15,6 @@ public class Constants {
     public static final String LOGGED_IN = "LOGGED_IN";
     public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
     public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
-    public static final String GCM_REGISTRATION_COMPLETE = "GCM_REGISTRATION_COMPLETE";
     public static final String PASSWORD = "PASSWORD";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
@@ -88,8 +86,6 @@ public class Constants {
     public static final String BANK_ACCOUNT_ID = "bank_account_id";
     public static final String BANK_CODE = "bank_code";
 
-
-    public static final String SERVICE_CHARGE = "service_charge";
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
 
@@ -367,7 +363,6 @@ public class Constants {
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
     public static final String COMMAND_GET_SERVICE_CHARGE = "COMMAND_GET_SERVICE_CHARGE";
-    public static final String COMMAND_SEND_MONEY_QUERY = "COMMAND_SEND_MONEY_QUERY";
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
     public static final String COMMAND_GET_USER_ACTIVITIES = "COMMAND_GET_USER_ACTIVITIES";
     public static final String COMMAND_GET_TRANSACTION_HISTORY = "COMMAND_GET_TRANSACTION_HISTORY";
@@ -375,8 +370,6 @@ public class Constants {
     public static final String COMMAND_ADD_TRUSTED_DEVICE = "COMMAND_ADD_TRUSTED_DEVICE";
     public static final String COMMAND_GET_TRUSTED_DEVICES = "COMMAND_GET_TRUSTED_DEVICES";
     public static final String COMMAND_REMOVE_TRUSTED_DEVICE = "COMMAND_REMOVE_TRUSTED_DEVICE";
-    public static final String COMMAND_GET_PENDING_REQUESTS_OTHERS = "COMMAND_GET_PENDING_REQUESTS_OTHERS";
-    public static final String COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED = "COMMAND_GET_PENDING_PAYMENT_REQUESTS_RECEIVED";
     public static final String COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT = "COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT";
     public static final String COMMAND_CANCEL_REQUESTS_MONEY = "COMMAND_CANCEL_REQUESTS_MONEY";
     public static final String COMMAND_ACCEPT_REQUESTS_MONEY = "COMMAND_ACCEPT_REQUESTS_MONEY";
@@ -395,8 +388,6 @@ public class Constants {
     public static final String COMMAND_SEND_FOR_VERIFICATION_BANK = "COMMAND_SEND_FOR_VERIFICATION_BANK";
     public static final String COMMAND_VERIFICATION_BANK_WITH_AMOUNT = "COMMAND_VERIFICATION_BANK_WITH_AMOUNT";
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
-    public static final String COMMAND_GET_PROFILE_PICTURE_URL = "COMMAND_GET_PROFILE_PICTURE_URL";
-    public static final String COMMAND_DOWNLOAD_PROFILE_PICTURE = "COMMAND_DOWNLOAD_PROFILE_PICTURE";
     public static final String COMMAND_TOPUP_REQUEST = "COMMAND_TOPUP_REQUEST";
     public static final String COMMAND_SET_PIN = "COMMAND_SET_PIN";
     public static final String COMMAND_CHANGE_PASSWORD = "COMMAND_CHANGE_PASSWORD";
@@ -407,36 +398,36 @@ public class Constants {
     public static final String COMMAND_GET_INTRODUCER_LIST = "COMMAND_GET_INTRODUCER_LIST";
     public static final String COMMAND_GET_INTRODUCED_LIST = "COMMAND_GET_INTRODUCED_LIST";
     public static final String COMMAND_GET_SENT_REQUEST_LIST = "COMMAND_GET_SENT_REQUEST_LIST";
-    public static final String COMMAND_EMAIL_VERIFICATION_REQUEST = "COMMAND_EMAIL_VERIFICATION_REQUEST";
     public static final String COMMAND_SET_PROFILE_INFO_REQUEST = "COMMAND_SET_PROFILE_INFO_REQUEST";
     public static final String COMMAND_SET_USER_ADDRESS_REQUEST = "COMMAND_SET_USER_ADDRESS_REQUEST";
     public static final String COMMAND_GET_BANK_LIST = "COMMAND_GET_BANK_LIST";
     public static final String COMMAND_GET_RECOMMENDATION_REQUESTS = "COMMAND_GET_RECOMMENDATION_REQUESTS";
     public static final String COMMAND_ADD_MONEY = "COMMAND_ADD_MONEY";
     public static final String COMMAND_INTRODUCE_ACTION = "COMMAND_INTRODUCE_ACTION";
-    public static final String COMMAND_INVITEE_ACTION = "COMMAND_INVITEE_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
-    public static final String COMMAND_GET_NEWS_FEED = "COMMAND_GET_NEWS_FEED";
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
     public static final String COMMAND_EVENT_CATEGORIES = "COMMAND_EVENT_CATEGORIES";
-    public static final String COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND = "COMMAND_DOWNLOAD_PROFILE_PICTURE_FRIEND";
     public static final String COMMAND_UPLOAD_DOCUMENT = "COMMAND_UPLOAD_DOCUMENT";
     public static final String COMMAND_GET_DOCUMENT_ACCESS_TOKEN = "COMMAND_GET_DOCUMENT_ACCESS_TOKEN";
-    public static final String COMMAND_UPLOAD_NATIONAL_ID = "COMMAND_UPLOAD_NATIONAL_ID";
-    public static final String COMMAND_UPLOAD_PASSPORT = "COMMAND_UPLOAD_PASSPORT";
-    public static final String COMMAND_UPLOAD_DRIVING_LICENSE = "COMMAND_UPLOAD_DRIVING_LICENSE";
-    public static final String COMMAND_UPLOAD_BIRTH_CERTIFICATE = "COMMAND_UPLOAD_BIRTH_CERTIFICATE";
-    public static final String COMMAND_UPLOAD_TIN = "COMMAND_UPLOAD_TIN";
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
     public static final String COMMAND_GET_MONEY_REQUESTS = "COMMAND_GET_MONEY_REQUESTS";
     public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
     public static final String COMMAND_GET_FRIENDS = "COMMAND_GET_FRIENDS";
     public static final String COMMAND_ADD_FRIENDS = "COMMAND_ADD_FRIENDS";
     public static final String COMMAND_UPDATE_FRIENDS = "COMMAND_UPDATE_FRIENDS";
-    public static final String COMMAND_DELETE_FRIENDS = "COMMAND_DELETE_FRIENDS";
-    public static final String COMMAND_GET_BUSINESS_RULE= "COMMAND_GET_BUSINESS_RULE";
-    public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE= "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
-
+    public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
+    public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
+    public static final String COMMAND_GET_MY_EVENTS = "COMMAND_GET_MY_EVENTS";
+    public static final String COMMAND_GET_MY_TICKETS = "COMMAND_GET_MY_TICKETS";
+    public static final String COMMAND_GET_EVENT_PARTICIPANTS_IN_LIST = "COMMAND_GET_EVENT_PARTICIPANTS_IN_LIST";
+    public static final String COMMAND_GET_EVENT_PARTICIPANTS_OUT_LIST = "COMMAND_GET_EVENT_PARTICIPANTS_OUT_LIST";
+    public static final String COMMAND_VERIFY_TICKET = "COMMAND_VERIFY_TICKET";
+    public static final String COMMAND_ACCEPT_EVENT_PAYMENT = "COMMAND_ACCEPT_EVENT_PAYMENT";
+    public static final String COMMAND_REJECT_EVENT_PAYMENT = "COMMAND_REJECT_EVENT_PAYMENT";
+    public static final String COMMAND_GET_EVENT_DETAILS = "COMMAND_GET_EVENT_DETAILS";
+    public static final String COMMAND_CREATE_EVENT = "COMMAND_CREATE_EVENT";
+    public static final String COMMAND_GET_EVENT_TYPE = "COMMAND_GET_EVENT_TYPE";
+    public static final String COMMAND_GET_EVENT_VISIBILITY_TYPE = "COMMAND_GET_EVENT_VISIBILITY_TYPE";
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";
@@ -452,7 +443,6 @@ public class Constants {
     // Email
     public static final String COMMAND_GET_EMAILS = "COMMAND_GET_EMAILS";
     public static final String COMMAND_ADD_NEW_EMAIL = "COMMAND_ADD_NEW_EMAIL";
-    public static final String COMMAND_EMAIL_VERIFICATION = "COMMAND_EMAIL_VERIFICATION";
     public static final String COMMAND_EMAIL_MAKE_PRIMARY = "COMMAND_EMAIL_MAKE_PRIMARY";
     public static final String COMMAND_DELETE_EMAIL = "COMMAND_DELETE_EMAIL";
 
@@ -589,24 +579,24 @@ public class Constants {
     public static final String INVOICE_RATE_TAG = "rate";
     public static final String INVOICE_TITLE_TAG = "title";
 
-    public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT="SENDMONEY_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT="SENDMONEY_MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = "SENDMONEY_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = "SENDMONEY_MAX_AMOUNT_SINGLE";
 
 
-    public static final String SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT="ADDMONEY_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT="ADDMONEY_MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT = "ADDMONEY_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT = "ADDMONEY_MAX_AMOUNT_SINGLE";
 
 
-    public static final String SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT="TOPUP_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT="TOPUP_MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT = "TOPUP_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT = "TOPUP_MAX_AMOUNT_SINGLE";
 
 
-    public static final String SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT="WITHDRAW_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT="WITHDRAW_MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT = "WITHDRAW_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT = "WITHDRAW_MAX_AMOUNT_SINGLE";
 
 
-    public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT="MAKEPAYMENT_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT="MAKEPAYMENT_MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "MAKEPAYMENT_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "MAKEPAYMENT_MAX_AMOUNT_SINGLE";
 
 
     public static final int INVOICE_STATUS_ACCEPTED = 200;
