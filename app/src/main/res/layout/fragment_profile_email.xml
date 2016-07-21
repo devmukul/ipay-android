@@ -27,7 +27,6 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
 
     </LinearLayout>
-
 </LinearLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>

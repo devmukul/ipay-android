@@ -377,12 +377,12 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 if (requestStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
                     mSentRequestStatus.setImageResource(R.drawable.ic_sync_problem_black_24dp);
                 } else if (requestStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_APPROVED)) {
-                    mSentRequestStatus.setImageResource(R.drawable.ic_verified3x);
+                    mSentRequestStatus.setImageResource(R.drawable.ic_verified);
                 } else if (requestStatus.equals(Constants.INTRODUCTION_REQUEST_STATUS_SPAM)) {
                     mSentRequestStatus.setImageResource(R.drawable.ic_error_black_24dp);
                 } else {
                     // INTRODUCTION_REQUEST_STATUS_REJECTED
-                    mSentRequestStatus.setImageResource(R.drawable.ic_notverified3x);
+                    mSentRequestStatus.setImageResource(R.drawable.ic_notverified);
                 }
 
             }
