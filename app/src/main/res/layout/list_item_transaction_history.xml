@@ -38,12 +38,9 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/receiver"
+                android:id="@+id/activity_description"
                 style="@style/TransactionHistoryLeftTextViewStyle"
-                android:layout_toLeftOf="@+id/net_amount"
-                android:textSize="13sp"
-                android:fontFamily="sans-serif-light"
-                android:textStyle="bold"/>
+                android:layout_toLeftOf="@+id/net_amount" />
 
             <TextView
                 android:id="@+id/net_amount"
@@ -58,14 +55,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/activity_description"
-                style="@style/TransactionHistoryLeftTextViewStyle"
-                android:layout_toLeftOf="@+id/status_description" />
 
             <TextView
-                android:id="@+id/status_description"
-                style="@style/TransactionHistoryRightTextViewStyle" />
+                android:id="@+id/receiver"
+                style="@style/TransactionHistoryLeftTextViewStyle"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-light"
+                android:textStyle="bold" />
+
 
         </RelativeLayout>
 
@@ -83,12 +80,22 @@
                 android:id="@+id/amount"
                 style="@style/TransactionHistoryRightTextViewStyle" />
 
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/time"
                 style="@style/TransactionHistoryLeftTextViewStyle"
-                android:layout_below="@+id/amount"
+                android:layout_toLeftOf="@+id/status_description"
                 android:textColor="@color/colorBlackTransparent"
                 android:textSize="11sp"/>
+
+            <TextView
+                android:id="@+id/status_description"
+                style="@style/TransactionHistoryRightTextViewStyle" />
 
         </RelativeLayout>
     </LinearLayout>
