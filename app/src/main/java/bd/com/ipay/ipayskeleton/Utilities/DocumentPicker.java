@@ -1,15 +1,21 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +29,27 @@ public class DocumentPicker {
 
     private static final String TAG = "Picker";
     private static final String TEMP_DOCUMENT_NAME = "document.jpg";
+
+    private static final String[] NECESSARY_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
+
+    public static boolean ifNecessaryPermissionExists(Context context) {
+        for (String permission : NECESSARY_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+
+        return true;
+    }
+
+    public static void requestRequiredPermissions(Fragment fragment, int permissionCode) {
+        List<String> requiredPermissions = new ArrayList<>();
+        for (String permission : NECESSARY_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(fragment.getActivity(), permission) != PackageManager.PERMISSION_GRANTED)
+                requiredPermissions.add(permission);
+        }
+
+        fragment.requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
+    }
 
     public static Intent getPickImageIntent(Context context, String chooserTitle) {
 

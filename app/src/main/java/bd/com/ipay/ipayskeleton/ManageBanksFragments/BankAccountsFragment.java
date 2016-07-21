@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -50,7 +51,7 @@ import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
-public class BankAccountsFragment extends Fragment implements HttpResponseListener {
+public class BankAccountsFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestDeleteAsyncTask mRemoveBankAccountTask = null;
     private RemoveBankAccountResponse mRemoveBankAccountResponse;
@@ -107,7 +108,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        setContentShown(false);
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE))
             getBankList();
         else {
@@ -139,6 +140,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                         }
                     }
                 });
+
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
         mProgressDialog.show();
         mGetAvailableBankAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -235,7 +237,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
-
+            if (this.isAdded()) setContentShown(true);
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -376,7 +378,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 } else {
 
                     // Bank verification status pending
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_wip);
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_pending);
                     mBankVerifiedStatus.setColorFilter(Color.GRAY);
 
                     verifyDivider.setVisibility(View.VISIBLE);

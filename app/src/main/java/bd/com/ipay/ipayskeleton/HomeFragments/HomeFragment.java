@@ -295,7 +295,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 } else {
                     Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
                 }
-                return;
             }
         }
     }
