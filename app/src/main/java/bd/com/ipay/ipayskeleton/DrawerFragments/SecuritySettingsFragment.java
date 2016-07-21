@@ -56,7 +56,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AccountSettingsFragment extends Fragment implements HttpResponseListener {
+public class SecuritySettingsFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
