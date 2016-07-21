@@ -78,7 +78,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     private View mServiceChargeHolder;
     private View mTopUpHolder;
-    private View mServiceCharge;
+    private View mServiceChargeWithNetAmountHolder;
     private List<String> mArraypackages;
     private List<String> mArrayoperators;
 
@@ -107,7 +107,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         mTopupButton = (Button) v.findViewById(R.id.button_topup);
         mServiceChargeHolder = v.findViewById(R.id.service_charge_holder);
         mTopUpHolder = v.findViewById(R.id.topup_holder);
-        mServiceCharge = v.findViewById(R.id.service_charge);
+        mServiceChargeWithNetAmountHolder = v.findViewById(R.id.service_charge);
         mProgressDialog = new ProgressDialog(getActivity());
         mMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
 
@@ -208,11 +208,11 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         if( serviceCharge.compareTo(BigDecimal.ZERO) == 0 ) {
-            mServiceCharge.setVisibility(View.GONE);
+            mServiceChargeWithNetAmountHolder.setVisibility(View.GONE);
 
         }
         else {
-            mServiceCharge.setVisibility(View.VISIBLE);
+            mServiceChargeWithNetAmountHolder.setVisibility(View.VISIBLE);
             mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
             mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
 
