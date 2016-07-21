@@ -369,7 +369,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     verifyButton.setVisibility(View.GONE);
 
                 } else if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified3x);
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified);
                     mBankVerifiedStatus.setColorFilter(Color.RED);
 
                     verifyDivider.setVisibility(View.GONE);
