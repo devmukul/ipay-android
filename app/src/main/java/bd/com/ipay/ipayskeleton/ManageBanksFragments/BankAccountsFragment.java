@@ -378,7 +378,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 } else {
 
                     // Bank verification status pending
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_wip);
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_pending);
                     mBankVerifiedStatus.setColorFilter(Color.GRAY);
 
                     verifyDivider.setVisibility(View.VISIBLE);
