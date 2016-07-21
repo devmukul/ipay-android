@@ -18,13 +18,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button_add_email"
-            style="@style/ButtonStyleLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_an_email" />
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_email"
                 android:layout_width="match_parent"

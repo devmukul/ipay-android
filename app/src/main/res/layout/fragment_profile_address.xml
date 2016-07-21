@@ -22,15 +22,14 @@
                 android:id="@+id/present_address_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/present_address_holder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
                     android:layout_weight="1"
                     android:gravity="left"
                     android:orientation="vertical">
@@ -39,7 +38,7 @@
                         style="@style/AddressViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/present_address"/>
+                        android:text="@string/present_address" />
 
                     <TextView
                         android:id="@+id/textview_present_address"
@@ -52,97 +51,89 @@
                     android:src="@drawable/ic_editgrey"></ImageButton>
             </LinearLayout>
 
-            <View style="@style/Divider" />
-
             <LinearLayout
-                android:id="@+id/permanent_address_view"
-                android:layout_width="match_parent"
+                android:id="@+id/permanent_address_view_holder"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+
+                <View style="@style/DividerWithoutMargin" />
 
                 <LinearLayout
-                    android:id="@+id/permanent_address_holder"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/permanent_address_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        style="@style/AddressViewHeader"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/permanent_address_holder"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/permanent_address" />
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textview_permanent_address"
-                        style="@style/ProfileAddressTextStyle" />
+                        <TextView
+                            style="@style/AddressViewHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/permanent_address" />
+
+                        <TextView
+                            android:id="@+id/textview_permanent_address"
+                            style="@style/ProfileAddressTextStyle" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/button_edit_permanent_address"
+                        style="@style/EditIconButton"
+                        android:src="@drawable/ic_editgrey" />
                 </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/button_edit_permanent_address"
-                    style="@style/EditIconButton"
-                    android:src="@drawable/ic_editgrey" />
             </LinearLayout>
-
-            <View style="@style/Divider" />
 
             <LinearLayout
-                android:id="@+id/office_address_view"
-                android:layout_width="match_parent"
+                android:id="@+id/office_address_view_holder"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_double"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <View style="@style/DividerWithoutMargin" />
 
                 <LinearLayout
-                    android:id="@+id/office_address_holder"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/office_address_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        style="@style/AddressViewHeader"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/office_address_holder"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/office_address" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textview_office_address"
-                        style="@style/ProfileAddressTextStyle" />
+                        <TextView
+                            style="@style/AddressViewHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/office_address" />
+
+                        <TextView
+                            android:id="@+id/textview_office_address"
+                            style="@style/ProfileAddressTextStyle" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/button_edit_office_address"
+                        style="@style/EditIconButton"
+                        android:src="@drawable/ic_editgrey" />
                 </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/button_edit_office_address"
-                    style="@style/EditIconButton"
-                    android:src="@drawable/ic_editgrey" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/button_add_present_address"
-                style="@style/PrimaryButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_present_address" />
-
-            <Button
-                android:id="@+id/button_add_permanent_address"
-                style="@style/PrimaryButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_permanent_address" />
-
-            <Button
-                android:id="@+id/button_add_office_address"
-                style="@style/PrimaryButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_office_address" />
 
         </LinearLayout>
     </LinearLayout>

@@ -360,7 +360,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
 
 
                 if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_verified3x);
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
                     mBankVerifiedStatus.clearColorFilter();
 
                     verifyDivider.setVisibility(View.GONE);
@@ -376,7 +376,7 @@ public class BankAccountsFragment extends Fragment implements HttpResponseListen
                 } else {
 
                     // Bank verification status pending
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_wip);
+                    mBankVerifiedStatus.setImageResource(R.drawable.ic_pending);
                     mBankVerifiedStatus.setColorFilter(Color.GRAY);
 
                     verifyDivider.setVisibility(View.VISIBLE);

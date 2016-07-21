@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class AddressFragment extends ProgressFragment implements HttpResponseListener {
@@ -53,6 +53,8 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     private TextView mPermanentAddressView;
     private TextView mOfficeAddressView;
 
+    private View mPermanentAddressviewHolder;
+    private View mOfficeAddressviewHolder;
     private View mPresentAddressHolder;
     private View mPermanentAddressHolder;
     private View mOfficeAddressHolder;
@@ -60,10 +62,6 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     private ImageButton mPresentAddressEditButton;
     private ImageButton mPermanentAddressEditButton;
     private ImageButton mOfficeAddressEditButton;
-
-    private Button mPresentAddressAddButton;
-    private Button mPermanentAddressAddButton;
-    private Button mOfficeAddressAddButton;
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
@@ -96,14 +94,12 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         mPermanentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_permanent_address);
         mOfficeAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_address);
 
-        mPresentAddressAddButton = (Button) v.findViewById(R.id.button_add_present_address);
-        mPermanentAddressAddButton = (Button) v.findViewById(R.id.button_add_permanent_address);
-        mOfficeAddressAddButton = (Button) v.findViewById(R.id.button_add_office_address);
+        mPermanentAddressviewHolder = v.findViewById(R.id.permanent_address_view_holder);
+        mOfficeAddressviewHolder = v.findViewById(R.id.office_address_view_holder);
 
         mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
         mPermanentAddressHolder = v.findViewById(R.id.permanent_address_holder);
         mOfficeAddressHolder = v.findViewById(R.id.office_address_holder);
-
         /**
          * Get district list first.
          * Then get all thanas within that district.
@@ -122,31 +118,33 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     }
 
     private void loadAddresses() {
+        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
+            mPermanentAddressviewHolder.setVisibility(View.VISIBLE);
+            mOfficeAddressviewHolder.setVisibility(View.GONE);
+
+            if (mPermanentAddress == null) {
+                mPermanentAddressView.setVisibility(View.GONE);
+            } else {
+                mPermanentAddressHolder.setVisibility(View.VISIBLE);
+                mPermanentAddressView.setText(mPermanentAddress.toString(mThanaList, mDistrictList));
+            }
+        } else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
+            mPermanentAddressviewHolder.setVisibility(View.GONE);
+            mOfficeAddressviewHolder.setVisibility(View.VISIBLE);
+
+            if (mOfficeAddress == null) {
+                mOfficeAddressView.setVisibility(View.GONE);
+            } else {
+                mOfficeAddressHolder.setVisibility(View.VISIBLE);
+                mOfficeAddressView.setText(mOfficeAddress.toString(mThanaList, mDistrictList));
+            }
+        }
+
         if (mPresentAddress == null) {
-            mPresentAddressHolder.setVisibility(View.GONE);
-            mPresentAddressAddButton.setVisibility(View.VISIBLE);
+            mPresentAddressView.setVisibility(View.GONE);
         } else {
             mPresentAddressHolder.setVisibility(View.VISIBLE);
-            mPresentAddressAddButton.setVisibility(View.GONE);
             mPresentAddressView.setText(mPresentAddress.toString(mThanaList, mDistrictList));
-        }
-
-        if (mPermanentAddress == null) {
-            mPermanentAddressHolder.setVisibility(View.GONE);
-            mPermanentAddressAddButton.setVisibility(View.VISIBLE);
-        } else {
-            mPermanentAddressHolder.setVisibility(View.VISIBLE);
-            mPermanentAddressAddButton.setVisibility(View.GONE);
-            mPermanentAddressView.setText(mPermanentAddress.toString(mThanaList, mDistrictList));
-        }
-
-        if (mOfficeAddress == null) {
-            mOfficeAddressHolder.setVisibility(View.GONE);
-            mOfficeAddressAddButton.setVisibility(View.VISIBLE);
-        } else {
-            mOfficeAddressHolder.setVisibility(View.VISIBLE);
-            mOfficeAddressAddButton.setVisibility(View.GONE);
-            mOfficeAddressView.setText(mOfficeAddress.toString(mThanaList, mDistrictList));
         }
 
         final Bundle presentAddressBundle = new Bundle();
@@ -164,13 +162,6 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         if (mOfficeAddress != null)
             officeAddressBundle.putSerializable(Constants.ADDRESS, mOfficeAddress);
 
-        mPresentAddressAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
-            }
-        });
-
         mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,24 +169,10 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
             }
         });
 
-        mPermanentAddressAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
-            }
-        });
-
         mPermanentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((ProfileActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
-            }
-        });
-
-        mOfficeAddressAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToEditAddressFragment(officeAddressBundle);
             }
         });
 
@@ -233,7 +210,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetUserAddressTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();

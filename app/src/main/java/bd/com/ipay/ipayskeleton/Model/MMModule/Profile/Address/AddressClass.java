@@ -86,7 +86,7 @@ public class AddressClass implements Serializable {
 
         if (getAddressLine1() != null)
             builder.append(getAddressLine1()).append("\n");
-        if (getAddressLine2() != null)
+        if (getAddressLine2().length()>0)
             builder.append(getAddressLine2()).append("\n");
 
         String thanaName = getThana(thanaList);
@@ -98,7 +98,7 @@ public class AddressClass implements Serializable {
             builder.append(districtName.trim()).append(" ");
 
         if (getPostalCode() != null)
-            builder.append(getPostalCode());
+            builder.append(" - " +getPostalCode());
         builder.append("\n");
         if (getCountry() != null)
             builder.append(getCountry());

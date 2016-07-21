@@ -1,74 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/address_line_1"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPostalAddress"
-        android:drawableLeft="@drawable/ic_signup_add1"
-        custom:borderType="up"
-        android:hint="@string/address_line_1"
-        android:maxLines="1"
-        android:singleLine="true">
-        <requestFocus/>
-    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/address_line_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/prompt_business_addr_line2"
-        android:inputType="textPostalAddress"
-        android:drawableLeft="@drawable/ic_signup_add2"
-        android:maxLines="1">
-    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+        <EditText
+            android:id="@+id/address_line_1"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_line_1"
+            android:inputType="textPostalAddress"
+            android:maxLines="1"
+            android:singleLine="true">
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/district"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/district"
-        android:inputType="textPostalAddress"
-        android:drawableLeft="@drawable/ic_signup_district"
-        android:maxLines="1">
-    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+            <requestFocus />
+        </EditText>
+    </android.support.design.widget.TextInputLayout>
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/thana"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/thana"
-        android:inputType="textPostalAddress"
-        android:drawableLeft="@drawable/ic_signup_thana"
-        android:maxLines="1">
-    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+    <View style="@style/Divider" />
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/postcode"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/postcode"
-        android:inputType="number"
-        android:drawableLeft="@drawable/ic_signup_pcode"
-        android:maxLines="1"
-        android:maxLength="4">
-    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+        android:layout_height="wrap_content">
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/country"
+        <EditText
+            android:id="@+id/address_line_2"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/prompt_business_addr_line2"
+            android:inputType="textPostalAddress"
+            android:maxLines="1"></EditText>
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/country"
-        android:inputType="textPostalAddress"
-        android:drawableLeft="@drawable/ic_signup_country"
-        custom:borderType="down"
-        android:enabled="false"
-        android:text="Bangladesh"
-        android:maxLines="1">
-    </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/district"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/district"
+            android:inputType="textPostalAddress"
+            android:maxLines="1">
+
+        </EditText>
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/thana"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/thana"
+            android:inputType="textPostalAddress"
+            android:maxLines="1"></EditText>
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/postcode"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/postcode"
+            android:inputType="number"
+            android:maxLength="4"
+            android:maxLines="1"></EditText>
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/country"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:hint="@string/country"
+            android:inputType="textPostalAddress"
+            android:maxLines="1"
+            android:text="Bangladesh"></EditText>
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
+
 </LinearLayout>
