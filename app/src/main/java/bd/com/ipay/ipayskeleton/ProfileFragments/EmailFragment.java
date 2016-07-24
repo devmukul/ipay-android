@@ -171,12 +171,14 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         final EditText emailView = (EditText) view.findViewById(R.id.edit_text_email);
 
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 String email = emailView.getText().toString().trim();
 
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
 
                 if (!InputValidator.isValidEmail(email)) {
@@ -184,6 +186,13 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 } else {
                     addNewEmail(email);
                 }
+            }
+        });
+
+        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
             }
         });
 
