@@ -71,7 +71,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mTitleView = (TextView) v.findViewById(R.id.textview_title);
-        mDescriptionHolder = v.findViewById(R.id.description_holder);
+        mDescriptionHolder = v.findViewById(R.id.layout_description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
