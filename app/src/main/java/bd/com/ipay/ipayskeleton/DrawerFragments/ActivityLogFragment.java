@@ -85,6 +85,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private Calendar toDate = null;
 
     private boolean hasNext = false;
+    private boolean clearListAfterLoading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -161,10 +162,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    historyPageCount = 0;
-                    if (userActivityResponsesList != null) userActivityResponsesList.clear();
-                    setContentShown(false);
-                    mSwipeRefreshLayout.setRefreshing(false);
+                    clearListAfterLoading = true;
                     getUserActivities();
                 }
             }
@@ -497,8 +495,9 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 try {
                     mUserActivityResponse = gson.fromJson(result.getJsonString(), UserActivityResponse.class);
 
-                    if (userActivityResponsesList == null || userActivityResponsesList.size() == 0) {
+                    if (clearListAfterLoading || userActivityResponsesList == null || userActivityResponsesList.size() == 0) {
                         userActivityResponsesList = mUserActivityResponse.getActivities();
+                        clearListAfterLoading = false;
                     } else {
                         List<UserActivityClass> tempUserActivityResponsesList;
                         tempUserActivityResponsesList = mUserActivityResponse.getActivities();
