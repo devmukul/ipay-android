@@ -45,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -196,7 +197,7 @@ public class HomeActivity extends BaseActivity
         checkForUpdateFromPush();
 
         // Sync contacts
-        getContacts();
+        new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         // Start service for GCM
         if (Utilities.checkPlayServices(HomeActivity.this)) {
@@ -301,16 +302,6 @@ public class HomeActivity extends BaseActivity
             bundle.putString(AnalyticsConstants.DEVICE_LONG_LAT, longLat);
 
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-    }
-
-    private void getContacts() {
-        if (mGetAllContactsTask != null) {
-            return;
-        }
-
-        mGetAllContactsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_GET_FRIENDS, this, this);
-        mGetAllContactsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void addToTrustedDeviceList() {
@@ -592,20 +583,6 @@ public class HomeActivity extends BaseActivity
 
             mGetProfileInfoTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_FRIENDS)) {
-            try {
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    FriendNode[] friendNodeArray = gson.fromJson(result.getJsonString(), FriendNode[].class);
-                    mGetAllContactsResponse = Arrays.asList(friendNodeArray);
-
-                    SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(this, mGetAllContactsResponse);
-                    syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    Log.e(getString(R.string.contacts_sync_failed), result.getStatus() + "");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
 
             try {
