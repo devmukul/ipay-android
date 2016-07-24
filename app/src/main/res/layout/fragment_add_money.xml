@@ -107,7 +107,7 @@
 
         <Button
             android:id="@+id/button_cash_in"
-            style="@style/PrimaryMidiumButton"
+            style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/continue_add_money" />

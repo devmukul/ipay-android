@@ -15,10 +15,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_add_black_24dp"
+        android:src="@drawable/ic_addw"
         app:fabSize="normal"
         app:elevation="4dp"
         app:borderWidth="0dp"
-        app:backgroundTint="@color/background_fab"/>
+        app:backgroundTint="@color/colorPrimary"/>
 
 </RelativeLayout>

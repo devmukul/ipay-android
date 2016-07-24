@@ -117,7 +117,7 @@
 
         <Button
             android:id="@+id/button_recharge"
-            style="@style/PrimaryMidiumButton"
+            style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/continue_mobile_recharge" />

@@ -179,7 +179,7 @@
 
         <Button
             android:id="@+id/button_topup"
-            style="@style/PrimaryMidiumButton"
+            style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/recharge_now" />

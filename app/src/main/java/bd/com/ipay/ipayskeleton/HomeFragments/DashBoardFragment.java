@@ -131,7 +131,6 @@ public class DashBoardFragment extends Fragment {
 
     }
     public void setTitle() {
-        //getActivity().setTitle(R.string.activity_log);
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(true);
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 

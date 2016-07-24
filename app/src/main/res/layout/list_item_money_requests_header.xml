@@ -14,5 +14,5 @@
         android:text="@string/invoice_requests_header"
         android:textStyle="bold" />
 
-    <View style="@style/DividerWithoutMargin" />
+    <View style="@style/DividerWithoutMarginPadding" />
 </LinearLayout>

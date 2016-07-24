@@ -736,6 +736,8 @@
     <string name="see_other_activity">See Other Activity</string>
     <string name="manage_employees">Manage Employees</string>
     <string name="request_payment">Request Payment</string>
+    <string name="received_request">Received Requests</string>
+    <string name="sent_request">Sent Requests</string>
     <string name="request_invoice">Request Invoice</string>
     <string name="pay_bills">Pay Bills</string>
     <string name="update_info">Update Info</string>

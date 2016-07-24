@@ -103,7 +103,7 @@
 
     <Button
         android:id="@+id/button_add_bank"
-        style="@style/PrimaryMidiumButton"
+        style="@style/PrimaryMediumButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/add_a_bank" />
