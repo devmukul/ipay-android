@@ -363,7 +363,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
 
     private void setUpBottomSheet() {
         mSheetViewNonSubscriber = getActivity().getLayoutInflater()
-                .inflate(R.layout.sheet_view_contact_non_subscriber, null);
+                .inflate(R.layout.sheet_view_contact_non_member, null);
         Button mInviteButton = (Button) mSheetViewNonSubscriber.findViewById(R.id.button_invite);
         mInviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,7 +377,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         });
 
         mSheetViewSubscriber = getActivity().getLayoutInflater()
-                .inflate(R.layout.sheet_view_contact_subscriber, null);
+                .inflate(R.layout.sheet_view_contact_member, null);
 
         Button mSendMoneyButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_send_money);
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
