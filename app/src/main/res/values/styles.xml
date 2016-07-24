@@ -250,8 +250,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginBottom">@dimen/value20</item>
-        <item name="android:layout_marginLeft">@dimen/value12</item>
-        <item name="android:layout_marginRight">@dimen/value12</item>
+        <item name="android:layout_marginLeft">@dimen/value15</item>
+        <item name="android:layout_marginRight">@dimen/value15</item>
         <item name="android:layout_marginTop">@dimen/value20</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
     </style>
@@ -323,7 +323,7 @@
         <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
         <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
         <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:padding">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:padding">@dimen/value15</item>
         <item name="android:gravity">left</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
@@ -376,7 +376,7 @@
 
     <style name="TextStylePrimarySmall" parent="@android:style/Widget.TextView">
         <item name="android:textSize">14.0sp</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -394,7 +394,7 @@
 
     <style name="TextStylePrimaryMedium" parent="@android:style/Widget.TextView">
         <item name="android:textSize">18.0sp</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:gravity">left</item>
     </style>
 
@@ -411,7 +411,7 @@
 
     <style name="TextStylePrimaryLarge" parent="@android:style/Widget.TextView">
         <item name="android:textSize">22.0sp</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -688,7 +688,7 @@
         <item name="android:paddingTop">@dimen/value10</item>
         <item name="android:paddingBottom">@dimen/value10</item>
         <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
-        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin_semi_double</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
@@ -752,7 +752,6 @@
 
     <!-- Transaction History -->
     <style name="TransactionHistoryFilterCheckboxStyle">
-        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="TransactionHistoryLeftTextViewStyle">
@@ -763,7 +762,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">12sp</item>
     </style>
 
@@ -772,7 +771,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">12sp</item>
     </style>
 

@@ -66,7 +66,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        Log.i("Push Found", "From: " + from + ", data: " + data);
+        Log.w("Push Found", "From: " + from + ", data: " + data);
 
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
         boolean isLoggedIn = pref.getBoolean(Constants.LOGGED_IN, false);

@@ -113,7 +113,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.SendMoneyReviewActivity"
-            android:label="@string/review_and_send"
+            android:label="@string/send_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
@@ -163,7 +163,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.RequestMoneyReviewActivity"
-            android:label="@string/review_and_request"
+            android:label="@string/request_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
@@ -175,13 +175,13 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.AddMoneyReviewActivity"
-            android:label="@string/review_and_add_money"
+            android:label="@string/add_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.WithdrawMoneyReviewActivity"
-            android:label="@string/review_and_withdraw_money"
+            android:label="@string/withdraw_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />

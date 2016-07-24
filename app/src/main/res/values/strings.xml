@@ -46,6 +46,7 @@
     <string name="address_line_2">Address Line 2</string>
     <string name="invalid_address_line_1">Please enter Address Line 1</string>
     <string name="invalid_address_line_2">Please enter Address Line 2</string>
+    <string name="select_from_date_first">Please select the from date first</string>
 
     <string name="invalid_business_name">Enter a business name</string>
     <string name="thana">Thana</string>

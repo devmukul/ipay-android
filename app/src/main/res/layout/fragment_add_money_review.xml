@@ -44,7 +44,9 @@
 
                     <TextView
                         android:id="@+id/textview_bank_name"
-                        style="@style/TextViewUserInfoPrimary" />
+                        style="@style/TextViewUserInfoPrimary"
+                        android:ellipsize="end"
+                        android:singleLine="true"/>
 
                     <TextView
                         android:id="@+id/textview_account_number"
@@ -129,8 +131,7 @@
 
             <TextView
                 android:id="@+id/textview_description"
-                style="@style/TextViewDescription"
-                android:gravity="center" />
+                style="@style/TextViewDescription" />
         </LinearLayout>
 
         <Button

@@ -192,5 +192,9 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         return null;
     }
 
+    protected Context getContext() {
+        return mContext;
+    }
+
     abstract protected HttpRequestBase getRequest();
 }

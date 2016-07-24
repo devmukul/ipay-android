@@ -87,6 +87,12 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mDocuments = (IconifiedTextViewWithButton) v.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
 
+        /*if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
+            mProfileCompleteness.setVisibility(View.VISIBLE);
+        else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
+            mProfileCompleteness.setVisibility(View.GONE);*/
+
+
         mProgressDialog = new ProgressDialog(getActivity());
 
         mName = ProfileInfoCacheManager.getName();

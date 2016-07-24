@@ -42,61 +42,34 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
     private static boolean contactsSyncedOnce;
 
-    private Activity context;
+    private Context context;
     private List<FriendNode> serverContacts;
-    ArrayList<FriendNode> downloadContacts;
 
-    public SyncContactsAsyncTask(Activity context, List<FriendNode> serverContacts) {
+    public SyncContactsAsyncTask(Context context, List<FriendNode> serverContacts) {
         this.context = context;
         this.serverContacts = serverContacts;
     }
 
     @Override
     protected ContactEngine.ContactDiff doInBackground(String... params) {
-        if (contactsSyncedOnce)
-            return null;
 
-        contactsSyncedOnce = true;
-
-        DataHelper mDatahelper = DataHelper.getInstance(context);
-        List<FriendNode> databaseContacts = mDatahelper.getFriendList();
-
-        Map<String, FriendInfo> databaseMap = new HashMap<>();
-        for (FriendNode friend : databaseContacts) {
-            databaseMap.put(friend.getPhoneNumber(), friend.getInfo());
-        }
-
-        downloadContacts = new ArrayList<>();
-
-        for (final FriendNode serverFriend: serverContacts) {
-            final String profilePictureUrl = serverFriend.getInfo().getProfilePictureUrl();
-
-            if (databaseMap.containsKey(serverFriend.getPhoneNumber())) {
-                long serverUpdateTime = serverFriend.getInfo().getUpdateTime();
-                FriendInfo databaseFriend = databaseMap.get(serverFriend.getPhoneNumber());
-                long updateTime = databaseFriend.getUpdateTime();
-
-                if (serverUpdateTime > updateTime) {
-                    // Download the profile picture for the updated contacts and store it in local storage
-                    if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
-                        downloadContacts.add(serverFriend);
-                    }
-                }
-            } else {
-                // Download the profile picture for the new contacts and store it in local storage
-                if (profilePictureUrl != null && !profilePictureUrl.isEmpty()){
-                    downloadContacts.add(serverFriend);
-                }
-            }
-        }
-
+        // Save the friend list fetched from the server into the database
         DataHelper dataHelper = DataHelper.getInstance(context);
         dataHelper.createFriends(serverContacts);
 
+        // IMPORTANT: Perform this check only after saving all server contacts into the database!
+        if (contactsSyncedOnce)
+            return null;
+        else
+            contactsSyncedOnce = true;
+
         if (ContextCompat.checkSelfPermission(context,
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+
+            // Read phone contacts
             List<FriendNode> phoneContacts = ContactEngine.getAllContacts(context);
 
+            // Calculate the difference between phone contacts and server contacts
             ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
 
             Log.i("New Contacts", contactDiff.newFriends.toString());
@@ -114,13 +87,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         if (contactDiff != null) {
             addFriends(contactDiff.newFriends);
             updateFriends(contactDiff.updatedFriends);
-        }
-
-        if (downloadContacts != null) {
-            for (final FriendNode downloadFriend: downloadContacts) {
-//                AsyncTask<Void, Void, String> downloadProfilePictureTask = new DownloadImageFromUrlAsyncTask(downloadFriend.getInfo().getProfilePictureUrl(), downloadFriend.getPhoneNumber());
-//                downloadProfilePictureTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
         }
 
     }
@@ -153,6 +119,9 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             return;
         }
 
+        if (friends.isEmpty())
+            return;
+
         List<InfoUpdateFriend> updateFriends = new ArrayList<>();
         for (FriendNode friend : friends) {
             InfoUpdateFriend infoUpdateFriend = new InfoUpdateFriend(
@@ -183,7 +152,9 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             try {
                 mAddFriendResponse = gson.fromJson(result.getJsonString(), AddFriendResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    // Do nothing
+                    // Server contacts updated, download contacts again
+                    Log.i("Friend", "Create friend successful");
+                    new GetFriendsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     if (mAddFriendResponse != null)
                         Log.e(context.getString(R.string.failed_add_friend), mAddFriendResponse.getMessage());
@@ -198,7 +169,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             try {
                 mUpdateFriendResponse = gson.fromJson(result.getJsonString(), UpdateFriendResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    // Do nothing
+                    Log.i("Friend", "Update friend successful");
+                    // Maybe we should download contacts again?
                 } else {
                     Log.e(context.getString(R.string.failed_update_friend), mUpdateFriendResponse.getMessage());
                 }
