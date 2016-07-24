@@ -735,7 +735,6 @@
 
     <!-- Transaction History -->
     <style name="TransactionHistoryFilterCheckboxStyle">
-        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="TransactionHistoryLeftTextViewStyle">

@@ -115,7 +115,7 @@
                     android:padding="@dimen/value5"
                     android:text="@string/clear_filter"
                     android:textAllCaps="false"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="12sp" />
 
                 <View
@@ -132,7 +132,7 @@
                     android:padding="@dimen/value5"
                     android:text="@string/filter"
                     android:textAllCaps="false"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
@@ -210,7 +210,7 @@
             android:background="@android:color/transparent"
             android:text="@string/clear_filter"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp" />
 
     </LinearLayout>
