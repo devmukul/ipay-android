@@ -175,13 +175,13 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.AddMoneyReviewActivity"
-            android:label="@string/review_and_add_money"
+            android:label="@string/add_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.WithdrawMoneyReviewActivity"
-            android:label="@string/review_and_withdraw_money"
+            android:label="@string/withdraw_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
