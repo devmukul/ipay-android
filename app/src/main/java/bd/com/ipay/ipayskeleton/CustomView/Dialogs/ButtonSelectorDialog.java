@@ -2,27 +2,49 @@ package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AlertDialog.Builder;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ButtonSelectorDialog extends AlertDialog.Builder{
+import bd.com.ipay.ipayskeleton.R;
+
+public class ButtonSelectorDialog extends AlertDialog.Builder {
     private Context context;
 
+    private AlertDialog dialog;
+
     private List<String> resources;
+    private String mName;
     private List<Integer> ids;
 
     private OnResourceSelectedListener onResourceSelectedListener;
     private ArrayAdapter<String> arrayAdapter;
+    private LayoutInflater inflater;
+    private View view;
+    private TextView textViewTitle;
 
-    public ButtonSelectorDialog(Context context, List<String> resources, int selectedItemId) {
+
+    public ButtonSelectorDialog(Context context, String mName, List<String> resources, int selectedItemId) {
         super(context);
         this.context = context;
         this.resources = resources;
+        this.mName = mName;
+
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.dialog_button_selector_header, null);
+        textViewTitle = (TextView) view.findViewById(R.id.textviewTitle);
+        textViewTitle.setText(mName);
+        this.setCustomTitle(view);
+
         setItems(resources, selectedItemId);
+
     }
 
     public void setItems(final List<String> resources, int selectedItemId) {
@@ -34,8 +56,9 @@ public class ButtonSelectorDialog extends AlertDialog.Builder{
 
         int selectedItemPosition = getSelectedItemPosition(selectedItemId);
 
+
         arrayAdapter = new ArrayAdapter<>(context,
-                android.R.layout.simple_spinner_dropdown_item, resources);
+                R.layout.simple_spinner_dropdown_custom_item, resources);
         setSingleChoiceItems(arrayAdapter, selectedItemPosition, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

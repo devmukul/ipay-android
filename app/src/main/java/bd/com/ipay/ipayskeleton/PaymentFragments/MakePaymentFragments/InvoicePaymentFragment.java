@@ -399,10 +399,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 acceptButton = (Button) itemView.findViewById(R.id.accept_button);
                 rejectButton = (Button) itemView.findViewById(R.id.reject_button);
                 divider = itemView.findViewById(R.id.divider);
-
-                mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
-                mButtonSelectorDialog = new ButtonSelectorDialog(getActivity(), mInvoiceActionList, mButtonSelectedId);
-
             }
 
             public void bindViewMoneyRequestList(int pos) {
@@ -430,69 +426,52 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
-                mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
-                mButtonSelectorDialog = new ButtonSelectorDialog(getActivity(), mInvoiceActionList, mButtonSelectedId);
-                mButtonSelectorDialog.setOnResourceSelectedListener(new ButtonSelectorDialog.OnResourceSelectedListener() {
-                    @Override
-                    public void onResourceSelected(int id, String name) {
-                        Toast.makeText(getActivity(), name, Toast.LENGTH_LONG).show();
-                    }
-                });
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        mButtonSelectorDialog.show();
-                        /*if (optionsLayout.getVisibility() == View.VISIBLE)
-                            optionsLayout.setVisibility(View.GONE);
-                        else optionsLayout.setVisibility(View.VISIBLE);*/
-                    }
-                });
-
-                acceptButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        mMoneyRequestId = id;
-                        mAmount = amount;
-                        mReceiverName = name;
-                        mReceiverMobileNumber = mobileNumber;
-                        mPhotoUri = imageUrl;
-                        mTitle = title;
-                        mVat = vat;
-                        mItemList = itemList;
-
-                        ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                                mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
-                                new ReviewDialogFinishListener() {
-                                    @Override
-                                    public void onReviewFinish() {
-                                        refreshNotificationList();
-                                    }
-                                });
-                        dialog.show();
-                    }
-                });
-
-
-                rejectButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                        rejectDialog.content(R.string.confirm_request_rejection);
-                        rejectDialog.positiveText(R.string.yes);
-                        rejectDialog.negativeText(R.string.no);
-                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                        mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
+                        mButtonSelectorDialog = new ButtonSelectorDialog(getActivity(), name, mInvoiceActionList, mButtonSelectedId);
+                        mButtonSelectorDialog.setOnResourceSelectedListener(new ButtonSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                rejectRequestMoney(id);
+                            public void onResourceSelected(int selectedIndex, String mName) {
+                                if (selectedIndex == 0) {
+                                    mMoneyRequestId = id;
+                                    mAmount = amount;
+                                    mReceiverName = name;
+                                    mReceiverMobileNumber = mobileNumber;
+                                    mPhotoUri = imageUrl;
+                                    mTitle = title;
+                                    mVat = vat;
+                                    mItemList = itemList;
+
+                                    ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                                            mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                                            new ReviewDialogFinishListener() {
+                                                @Override
+                                                public void onReviewFinish() {
+                                                    refreshNotificationList();
+                                                }
+                                            });
+                                    dialog.show();
+                                } else if (selectedIndex == 1) {
+                                    MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                                    rejectDialog.content(R.string.confirm_request_rejection);
+                                    rejectDialog.positiveText(R.string.yes);
+                                    rejectDialog.negativeText(R.string.no);
+                                    rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            rejectRequestMoney(id);
+                                        }
+                                    });
+                                    rejectDialog.show();
+                                }
                             }
                         });
-                        rejectDialog.show();
+                        mButtonSelectorDialog.show();
                     }
                 });
-
             }
 
             public void bindViewHeader() {

@@ -266,6 +266,16 @@
         <item name="android:paddingRight">@dimen/value12</item>
     </style>
 
+    <style name="CustomSpinnerStyle" parent="@android:style/Widget.Spinner.DropDown">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:paddingTop">@dimen/value6</item>
+        <item name="android:paddingBottom">@dimen/value6</item>
+        <item name="android:paddingLeft">@dimen/value12</item>
+        <item name="android:paddingRight">@dimen/value12</item>
+    </style>
+
     <!-- Document Upload -->
     <style name="DocumentUploadLabel">
         <item name="android:textSize">18sp</item>
@@ -320,8 +330,7 @@
     </style>
 
     <style name="ListHeaderStyleWhite">
-        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
-        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin_semi_double</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
         <item name="android:padding">@dimen/activity_horizontal_margin_card</item>
         <item name="android:gravity">left</item>
         <item name="android:textStyle">bold</item>
