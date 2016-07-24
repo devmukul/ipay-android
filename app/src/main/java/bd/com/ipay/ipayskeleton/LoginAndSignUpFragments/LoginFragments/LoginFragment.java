@@ -71,6 +71,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mPasswordEditText.setText("");
             mUserNameEditText.setText("");
         }
+
+        // Auto Login
+        if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
+            mPasswordEditText.setText("qqqqqqq1");
+            //           mUserNameEditText.setText("+8801677258077");
+            attemptLogin();
+        }
     }
 
     @Override
@@ -135,13 +142,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         .show();
             }
         });
-
-        // Auto Login
-        if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
-            mPasswordEditText.setText("qqqqqqq1");
-            //           mUserNameEditText.setText("+8801677258077");
-            attemptLogin();
-        }
 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
             Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
