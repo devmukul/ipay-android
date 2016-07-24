@@ -28,12 +28,14 @@ import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfilePictureResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -46,8 +48,9 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private ProfileImageView mProfilePictureView;
     private TextView mNameView;
     private TextView mMobileNumberView;
+    private TextView mProfileCompletionStatusView;
     private ImageView mVerificationStatusView;
-    private final int ACTION_PICK_PROFILE_PICTURE = 100;
+
     private String mName = "";
     private String mMobileNumber = "";
     private String mProfilePicture = "";
@@ -64,9 +67,13 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
     private SetProfilePictureResponse mSetProfilePictureResponse;
 
+    private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
+    private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
+
     private ProgressDialog mProgressDialog;
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
+    private final int ACTION_PICK_PROFILE_PICTURE = 100;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,6 +85,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mProfileCompletionStatusView = (TextView) v.findViewById(R.id.textview_profile_completion_status);
         mVerificationStatusView = (ImageView) v.findViewById(R.id.textview_verification_status);
 
         mBasicInfo = (IconifiedTextViewWithButton) v.findViewById(R.id.basic_info);
@@ -156,6 +164,8 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        getProfileCompletionStatus();
+
         return v;
     }
 
@@ -170,6 +180,16 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
                 }
         }
+    }
+
+    private void getProfileCompletionStatus() {
+        if (mGetProfileCompletionStatusTask != null) {
+            return;
+        }
+
+        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void setProfilePicture(String url) {
@@ -233,6 +253,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUploadProfilePictureAsyncTask = null;
+            mGetProfileCompletionStatusTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -265,6 +286,26 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             }
 
             mUploadProfilePictureAsyncTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
+            try {
+                mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProfileCompletionStatusView.setText("Your profile is " +
+                            mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
+                            + "complete. Complete profile to get verified.");
+                    mProfileCompletionStatusView.setVisibility(View.VISIBLE);
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG).show();
+            }
+
+            mGetProfileCompletionStatusTask = null;
         }
     }
 
