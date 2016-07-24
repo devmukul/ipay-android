@@ -94,13 +94,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
-    private int mYear;
-    private int mMonth;
-    private int mDay;
 
     private boolean hasNext = false;
+    private boolean clearListAfterLoading;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -245,11 +244,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private void refreshTransactionHistory() {
         Log.d("Transaction History", "Refreshing...");
 
-        historyPageCount = 0;
-        if (userTransactionHistoryClasses != null)
-            userTransactionHistoryClasses.clear();
-        setContentShown(false);
-        mSwipeRefreshLayout.setRefreshing(false);
+        clearListAfterLoading = true;
         getTransactionHistory();
     }
 
@@ -549,8 +544,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
         if (transactionHistoryClasses != null) {
-            if (userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
+            if (clearListAfterLoading || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
                 userTransactionHistoryClasses = transactionHistoryClasses;
+                clearListAfterLoading = false;
             } else {
                 List<TransactionHistoryClass> tempTransactionHistoryClasses;
                 tempTransactionHistoryClasses = transactionHistoryClasses;
@@ -691,12 +687,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    if (!bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+                    if (bankCode != null) otherImageView.setImageResource(bankIcon);
                     else otherImageView.setImageResource(R.drawable.ic_tran_add);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    if (!bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+                    if (bankCode != null) otherImageView.setImageResource(bankIcon);
                     else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
