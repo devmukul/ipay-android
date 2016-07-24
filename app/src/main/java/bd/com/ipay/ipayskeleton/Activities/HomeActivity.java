@@ -198,6 +198,11 @@ public class HomeActivity extends BaseActivity
 
         // Sync contacts
         new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        // Contact sync is done as follows: first all the contacts are downloaded from the server
+        // (#GetFriendsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
+        // Then difference with phone contacts is calculated, and this difference is sent to the
+        // server. If there is any new contact on the phone, we download all contacts from the
+        // server again to keep phone and server contacts in sync.
 
         // Start service for GCM
         if (Utilities.checkPlayServices(HomeActivity.this)) {
