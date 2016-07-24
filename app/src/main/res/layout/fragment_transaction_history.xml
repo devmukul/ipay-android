@@ -38,8 +38,8 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="date"
                     android:maxLines="1"
-                    android:textColor="@android:color/white"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -73,7 +73,6 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="date"
                     android:maxLines="1"
-                    android:textColor="@android:color/white"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>

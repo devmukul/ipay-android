@@ -275,17 +275,24 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             @Override
             public void onClick(View v) {
 
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                final Date fromDateStart;
-                try {
-                    fromDateStart = sdf.parse(Constants.STARTING_DATE_OF_IPAY);
+                Calendar calendar = Calendar.getInstance();
+                if (!mFromDateEditText.getText().toString().equals("")) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    final Date fromDate;
+                    try {
+                        fromDate = sdf.parse(mFromDateEditText.getText().toString().trim());
+                        calendar.setTime(fromDate);
+                        DatePickerDialog dpd = new DatePickerDialog(getActivity(), mFromDateSetListener, calendar.get(Calendar.YEAR)
+                                , calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                        dpd.show();
 
-                    DatePickerDialog dpd = new DatePickerDialog(getActivity(), mFromDateSetListener, Constants.STARTING_YEAR
-                            , Constants.STARTING_MONTH, Constants.STARTING_DATE);
-                    dpd.getDatePicker().setMinDate(fromDateStart.getTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    DatePickerDialog dpd = new DatePickerDialog(getActivity(), mFromDateSetListener, calendar.get(Calendar.YEAR)
+                            , calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                     dpd.show();
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -306,7 +313,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     dpd.show();
 
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Toast.makeText(getActivity(), R.string.select_from_date_first, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -374,24 +381,18 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
-                    mYear = year;
-                    mMonth = monthOfYear + 1;
-                    mDay = dayOfMonth;
-
                     fromDate = Calendar.getInstance();
                     fromDate.clear();
                     fromDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     fromDate.set(Calendar.MONTH, monthOfYear);
                     fromDate.set(Calendar.YEAR, year);
 
-                    String fromDatePicker, fromMonthPicker, fromYearPicker;
-                    if (mDay < 10) fromDatePicker = "0" + mDay;
-                    else fromDatePicker = mDay + "";
-                    if (mMonth < 10) fromMonthPicker = "0" + mMonth;
-                    else fromMonthPicker = mMonth + "";
-                    fromYearPicker = mYear + "";
+                    toDate = fromDate;
 
-                    mFromDateEditText.setText(fromDatePicker + "/" + fromMonthPicker + "/" + fromYearPicker);
+                    String fromDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
+
+                    mFromDateEditText.setText(fromDateStr);
+                    mToDateEditText.setText(fromDateStr);
                 }
             };
 
@@ -399,10 +400,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
-                    mYear = year;
-                    mMonth = monthOfYear + 1;
-                    mDay = dayOfMonth;
-
                     toDate = Calendar.getInstance();
                     toDate.clear();
                     toDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -410,14 +407,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     toDate.set(Calendar.YEAR, year);
                     toDate.add(Calendar.DATE, 1);
 
-                    String toDatePicker, toMonthPicker, toYearPicker;
-                    if (mDay < 10) toDatePicker = "0" + mDay;
-                    else toDatePicker = mDay + "";
-                    if (mMonth < 10) toMonthPicker = "0" + mMonth;
-                    else toMonthPicker = mMonth + "";
-                    toYearPicker = mYear + "";
+                    String toDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
 
-                    mToDateEditText.setText(toDatePicker + "/" + toMonthPicker + "/" + toYearPicker);
+                    mToDateEditText.setText(toDateStr);
                 }
             };
 
