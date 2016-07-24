@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -38,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -62,10 +66,11 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
-    private RecyclerView mNotificationsRecyclerView;
-    private NotificationListAdapter mNotificationListAdapter;
+    private RecyclerView mInvoiceRecyclerView;
+    private InvoiceListAdapter mInvoiceListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<MoneyAndPaymentRequest> moneyRequestList;
+    private List<String> mInvoiceActionList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ProgressDialog mProgressDialog;
@@ -82,7 +87,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private String mPhotoUri;
     private long mMoneyRequestId;
     private String mTitle;
-    private Button buttonScanQRCode;
+    private ImageView buttonScanQRCode;
     private TextView mEmptyListTextView;
 
 
@@ -90,19 +95,19 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_money_requests, container, false);
+        View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
-        buttonScanQRCode = (Button) v.findViewById(R.id.button_scan_qr_code);
+        mInvoiceRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
+        buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         mProgressDialog = new ProgressDialog(getActivity());
 
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mNotificationListAdapter = new NotificationListAdapter();
+        mInvoiceListAdapter = new InvoiceListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
-        mNotificationsRecyclerView.setAdapter(mNotificationListAdapter);
+        mInvoiceRecyclerView.setLayoutManager(mLayoutManager);
+        mInvoiceRecyclerView.setAdapter(mInvoiceListAdapter);
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
@@ -120,7 +125,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[] {Manifest.permission.CAMERA},
+                    requestPermissions(new String[]{Manifest.permission.CAMERA},
                             REQUEST_CODE_PERMISSION);
                 } else initiateScan();
             }
@@ -265,7 +270,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                     }
 
                     hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
-                    mNotificationListAdapter.notifyDataSetChanged();
+                    mInvoiceListAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -322,7 +327,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                     mItemList = mGetSingleInvoiceResponse.getItemList();
 
                     ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                            mReceiverName, mPhotoUri, mAmount, mTitle , Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                            mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
                             new ReviewDialogFinishListener() {
                                 @Override
                                 public void onReviewFinish() {
@@ -351,18 +356,18 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
         }
 
-        if (moneyRequestList != null && moneyRequestList.size() == 0 ) {
+        if (moneyRequestList != null && moneyRequestList.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
-    private class NotificationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class InvoiceListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
         private static final int MONEY_REQUEST_HEADER_VIEW = 5;
 
-        public NotificationListAdapter() {
+        public InvoiceListAdapter() {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -373,11 +378,8 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
             private TextView headerView;
 
-            private LinearLayout optionsLayout;
-            private Button acceptButton;
-            private Button rejectButton;
             private ProfileImageView mProfileImageView;
-            private View divider;
+            private CustomSelectorDialog mCustomSelectorDialog;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -389,27 +391,10 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 headerView = (TextView) itemView.findViewById(R.id.money_request_header);
-
-                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                acceptButton = (Button) itemView.findViewById(R.id.accept_button);
-                rejectButton = (Button) itemView.findViewById(R.id.reject_button);
-                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindViewMoneyRequestList(int pos) {
                 final MoneyAndPaymentRequest moneyRequest = moneyRequestList.get(pos - 1);
-
-                if(pos-1 == 0) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-
-                } else if(pos-1 == moneyRequestList.size() -1) {
-                    divider.setVisibility(View.GONE);
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
-
-                } else {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
-
-                }
 
                 final long id = moneyRequest.getId();
                 final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
@@ -436,55 +421,49 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (optionsLayout.getVisibility() == View.VISIBLE)
-                            optionsLayout.setVisibility(View.GONE);
-                        else optionsLayout.setVisibility(View.VISIBLE);
-                    }
-                });
 
-                acceptButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        mMoneyRequestId = id;
-                        mAmount = amount;
-                        mReceiverName = name;
-                        mReceiverMobileNumber = mobileNumber;
-                        mPhotoUri = imageUrl;
-                        mTitle = title;
-                        mVat = vat;
-                        mItemList = itemList;
-
-                        ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                                mReceiverName, mPhotoUri, mAmount, mTitle , Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
-                                new ReviewDialogFinishListener() {
-                                    @Override
-                                    public void onReviewFinish() {
-                                        refreshNotificationList();
-                                    }
-                                });
-                        dialog.show();
-                    }
-                });
-
-
-                rejectButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                        rejectDialog.content(R.string.confirm_request_rejection);
-                        rejectDialog.positiveText(R.string.yes);
-                        rejectDialog.negativeText(R.string.no);
-                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                        mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                rejectRequestMoney(id);
+                            public void onResourceSelected(int selectedIndex, String mName) {
+                                if (selectedIndex == 0) {
+                                    mMoneyRequestId = id;
+                                    mAmount = amount;
+                                    mReceiverName = name;
+                                    mReceiverMobileNumber = mobileNumber;
+                                    mPhotoUri = imageUrl;
+                                    mTitle = title;
+                                    mVat = vat;
+                                    mItemList = itemList;
+
+                                    ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                                            mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                                            new ReviewDialogFinishListener() {
+                                                @Override
+                                                public void onReviewFinish() {
+                                                    refreshNotificationList();
+                                                }
+                                            });
+                                    dialog.show();
+                                } else if (selectedIndex == 1) {
+                                    MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                                    rejectDialog.content(R.string.confirm_request_rejection);
+                                    rejectDialog.positiveText(R.string.yes);
+                                    rejectDialog.negativeText(R.string.no);
+                                    rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            rejectRequestMoney(id);
+                                        }
+                                    });
+                                    rejectDialog.show();
+                                }
                             }
                         });
-                        rejectDialog.show();
+                        mCustomSelectorDialog.show();
                     }
                 });
-
             }
 
             public void bindViewHeader() {

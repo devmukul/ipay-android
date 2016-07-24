@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ListHeaderStyle"
+    style="@style/ListHeaderStyleWhite"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/money_request_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/money_requests_header"
-        android:textColor="@color/zxinglib_status_text"
+        android:gravity="center_vertical"
+        android:padding="@dimen/value10"
+        android:text="@string/invoice_requests_header"
         android:textStyle="bold" />
 
+    <View style="@style/DividerWithoutMargin" />
 </LinearLayout>

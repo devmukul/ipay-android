@@ -846,4 +846,8 @@
         <item>Friend</item>
     </string-array>
 
+    <string-array name="invoice_action">
+        <item>Accept</item>
+        <item>Reject</item>
+    </string-array>
 </resources>

@@ -118,7 +118,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Activities.PaymentActivities.PaymentReviewActivity"
-            android:label="@string/review_and_payment"
+            android:label="@string/make_payment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
