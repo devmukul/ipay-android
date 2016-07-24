@@ -428,7 +428,9 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     fromDate.set(Calendar.MONTH, monthOfYear);
                     fromDate.set(Calendar.YEAR, year);
 
-                    toDate = fromDate;
+                    toDate = Calendar.getInstance();
+                    toDate.setTime(fromDate.getTime());
+                    toDate.add(Calendar.DATE, 1);
 
                     String fromDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
 
@@ -447,6 +449,11 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     toDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     toDate.set(Calendar.MONTH, monthOfYear);
                     toDate.set(Calendar.YEAR, year);
+
+                    // If we want to filter activities until August 1, 2016, we actually need to set toDate to
+                    // August 2, 2016 while sending request to server. Why? Because August 1, 2016 means
+                    // 12:00:00 am at August 1, whereas we need to show all activities until 11:59:59 pm.
+                    // Simplest way to do this is to just show all activities until 12:00 am in the next day.
                     toDate.add(Calendar.DATE, 1);
 
                     String toDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
