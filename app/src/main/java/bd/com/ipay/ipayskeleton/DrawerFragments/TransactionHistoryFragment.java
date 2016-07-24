@@ -387,7 +387,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     fromDate.set(Calendar.MONTH, monthOfYear);
                     fromDate.set(Calendar.YEAR, year);
 
-                    toDate = fromDate;
+                    toDate = Calendar.getInstance();
+                    toDate.setTime(fromDate.getTime());
+                    toDate.add(Calendar.DATE, 1);
 
                     String fromDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
 
@@ -405,6 +407,11 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     toDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     toDate.set(Calendar.MONTH, monthOfYear);
                     toDate.set(Calendar.YEAR, year);
+
+                    // If we want to filter transactions until August 1, 2016, we actually need to set toDate to
+                    // August 2, 2016 while sending request to server. Why? Because August 1, 2016 means
+                    // 12:00:00 am at August 1, whereas we need to show all transactions until 11:59:59 pm.
+                    // Simplest way to do this is to just show all transactions until 12:00 am in the next day.
                     toDate.add(Calendar.DATE, 1);
 
                     String toDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
@@ -792,7 +799,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         @Override
         public int getItemCount() {
-            if (userTransactionHistoryClasses != null)
+            if (userTransactionHistoryClasses != null && !userTransactionHistoryClasses.isEmpty())
                 return userTransactionHistoryClasses.size() + 1;
             else return 0;
         }

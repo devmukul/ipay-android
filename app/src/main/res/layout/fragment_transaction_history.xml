@@ -1,240 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout android:id="@+id/swipe_refresh_layout"
+<bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f2f2f2"
-    android:orientation="vertical">
-
-    <include layout="@layout/layout_progress_container" />
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/date_filter_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_height="match_parent"
+        android:background="#f2f2f2"
+        android:orientation="vertical">
+
+        <include layout="@layout/layout_progress_container" />
 
         <LinearLayout
+            android:id="@+id/date_filter_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <EditText
-                    android:id="@+id/fromEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/from_date"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="date"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <ImageView
-                android:id="@+id/fromDatePicker"
-                style="@style/ButtonStyleAccentSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:clickable="true"
-                android:padding="@dimen/value5"
-                android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <EditText
-                    android:id="@+id/toEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/to_date"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="date"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <ImageView
-                android:id="@+id/toDatePicker"
-                style="@style/ButtonStyleAccentSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:clickable="true"
-                android:padding="@dimen/value5"
-                android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/value10"
             android:orientation="vertical"
-            android:visibility="visible">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/colorDivider" />
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/value25"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/button_clear_filter_date"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/fromEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/from_date"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="date"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/fromDatePicker"
+                    style="@style/ButtonStyleAccentSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:clickable="true"
                     android:padding="@dimen/value5"
-                    android:text="@string/clear_filter"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="12sp" />
+                    android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/toEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/to_date"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="date"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/toDatePicker"
+                    style="@style/ButtonStyleAccentSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:clickable="true"
+                    android:padding="@dimen/value5"
+                    android:src="@drawable/ic_perm_contact_calendar_white_24dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/value10"
+                android:orientation="vertical"
+                android:visibility="visible">
 
                 <View
-                    android:layout_width="1px"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
                     android:background="@color/colorDivider" />
 
-                <Button
-                    android:id="@+id/button_filter_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:padding="@dimen/value5"
-                    android:text="@string/filter"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="12sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/value25"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_clear_filter_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:padding="@dimen/value5"
+                        android:text="@string/clear_filter"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorDivider" />
+
+                    <Button
+                        android:id="@+id/button_filter_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:padding="@dimen/value5"
+                        android:text="@string/filter"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/event_filters_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <CheckBox
-            android:id="@+id/filter_send_money"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/event_filters_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/TransactionHistoryFilterCheckboxStyle"
-            android:text="@string/filter_send_money" />
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <CheckBox
-            android:id="@+id/filter_request_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/filter_request_money"
-            style="@style/TransactionHistoryFilterCheckboxStyle"
-            android:visibility="gone" />
+            <CheckBox
+                android:id="@+id/filter_send_money"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_send_money" />
 
-        <CheckBox
-            android:id="@+id/filter_add_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TransactionHistoryFilterCheckboxStyle"
-            android:text="@string/filter_add_money" />
+            <CheckBox
+                android:id="@+id/filter_request_money"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_request_money"
+                android:visibility="gone" />
 
-        <CheckBox
-            android:id="@+id/filter_withdraw_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TransactionHistoryFilterCheckboxStyle"
-            android:text="@string/filter_withdraw_money" />
+            <CheckBox
+                android:id="@+id/filter_add_money"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_add_money" />
 
-        <CheckBox
-            android:id="@+id/filter_top_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TransactionHistoryFilterCheckboxStyle"
-            android:text="@string/filter_top_up" />
+            <CheckBox
+                android:id="@+id/filter_withdraw_money"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_withdraw_money" />
 
-        <CheckBox
-            android:id="@+id/filter_payment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TransactionHistoryFilterCheckboxStyle"
-            android:text="@string/filter_payment" />
+            <CheckBox
+                android:id="@+id/filter_top_up"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_top_up" />
 
-        <CheckBox
-            android:id="@+id/filter_opening_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TransactionHistoryFilterCheckboxStyle"
-            android:text="@string/filter_opening_balance" />
+            <CheckBox
+                android:id="@+id/filter_payment"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_payment" />
 
-        <CheckBox
-            android:id="@+id/filter_education"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TransactionHistoryFilterCheckboxStyle"
-            android:text="@string/filter_education" />
+            <CheckBox
+                android:id="@+id/filter_opening_balance"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_opening_balance" />
 
-        <Button
-            android:id="@+id/button_clear_filter_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/transparent"
-            android:text="@string/clear_filter"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
-            android:textSize="12sp" />
+            <CheckBox
+                android:id="@+id/filter_education"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_education" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/button_clear_filter_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/transparent"
+                android:text="@string/clear_filter"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp" />
 
-    <LinearLayout
-        android:id="@+id/content_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/empty_list_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:text="@string/empty_transaction_history"
-            android:textColor="@color/zxinglib_status_text"/>
+        <LinearLayout
+            android:id="@+id/content_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/empty_list_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:text="@string/empty_transaction_history" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_transaction_history"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
 </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>
