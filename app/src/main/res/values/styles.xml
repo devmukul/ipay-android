@@ -319,6 +319,14 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="ListHeaderStyleWhite">
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin_semi_double</item>
+        <item name="android:padding">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="ButtonStyleSmall" parent="@android:style/Widget.Button">
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@android:color/white</item>
