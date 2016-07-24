@@ -23,5 +23,8 @@
         android:singleLine="true"
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_size_small_medium" />
+
+    <View style="@style/DividerWithoutMargin" />
 </RelativeLayout>
+
 

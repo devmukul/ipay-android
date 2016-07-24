@@ -376,13 +376,8 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
             private TextView headerView;
 
-            private LinearLayout optionsLayout;
-            private Button acceptButton;
-            private Button rejectButton;
             private ProfileImageView mProfileImageView;
-            private View divider;
             private ButtonSelectorDialog mButtonSelectorDialog;
-            private int mButtonSelectedId;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -394,11 +389,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 headerView = (TextView) itemView.findViewById(R.id.money_request_header);
-
-                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                acceptButton = (Button) itemView.findViewById(R.id.accept_button);
-                rejectButton = (Button) itemView.findViewById(R.id.reject_button);
-                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindViewMoneyRequestList(int pos) {
@@ -431,7 +421,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                     public void onClick(View v) {
 
                         mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
-                        mButtonSelectorDialog = new ButtonSelectorDialog(getActivity(), name, mInvoiceActionList, mButtonSelectedId);
+                        mButtonSelectorDialog = new ButtonSelectorDialog(getActivity(), name, mInvoiceActionList);
                         mButtonSelectorDialog.setOnResourceSelectedListener(new ButtonSelectorDialog.OnResourceSelectedListener() {
                             @Override
                             public void onResourceSelected(int selectedIndex, String mName) {

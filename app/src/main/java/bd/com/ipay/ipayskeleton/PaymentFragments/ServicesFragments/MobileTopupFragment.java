@@ -300,7 +300,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_operator_listview);
+        dialog.setContentView(R.layout.dialog_custom_listview);
         pop_up_list = (ListView) dialog.findViewById(R.id.custom_list);
         OperatorAdapter adapter = new OperatorAdapter(getActivity(), moperatorList);
         pop_up_list.setAdapter(adapter);
