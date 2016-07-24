@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,7 +87,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private String mPhotoUri;
     private long mMoneyRequestId;
     private String mTitle;
-    private Button buttonScanQRCode;
+    private ImageView buttonScanQRCode;
     private TextView mEmptyListTextView;
 
 
@@ -97,7 +99,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mInvoiceRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
-        buttonScanQRCode = (Button) v.findViewById(R.id.button_scan_qr_code);
+        buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         mProgressDialog = new ProgressDialog(getActivity());
 
 

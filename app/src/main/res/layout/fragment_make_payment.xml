@@ -6,16 +6,25 @@
 
     <include layout="@layout/layout_progress_container" />
 
-    <Button
+    <ImageView
         android:id="@+id/button_scan_qr_code"
-        style="@style/ButtonStyleSmall"
-        android:layout_width="match_parent"
+        style="@style/ButtonStyleWithIcon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/scan_receiver"/>
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_toLeftOf="@+id/select_receiver_from_contacts"
+        android:padding="@dimen/value20"
+        android:src="@drawable/ic_qrc3" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scan_receiver"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/value10"/>
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/value5"
+        android:layout_height="@dimen/value10"
         android:background="@color/colorLightGray"
         android:layout_marginTop="@dimen/value4">
     </View>
