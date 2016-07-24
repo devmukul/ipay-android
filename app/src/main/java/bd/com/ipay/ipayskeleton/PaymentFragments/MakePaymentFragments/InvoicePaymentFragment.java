@@ -39,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ButtonSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -377,7 +377,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             private TextView headerView;
 
             private ProfileImageView mProfileImageView;
-            private ButtonSelectorDialog mButtonSelectorDialog;
+            private CustomSelectorDialog mCustomSelectorDialog;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -421,8 +421,8 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                     public void onClick(View v) {
 
                         mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
-                        mButtonSelectorDialog = new ButtonSelectorDialog(getActivity(), name, mInvoiceActionList);
-                        mButtonSelectorDialog.setOnResourceSelectedListener(new ButtonSelectorDialog.OnResourceSelectedListener() {
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
                             public void onResourceSelected(int selectedIndex, String mName) {
                                 if (selectedIndex == 0) {
@@ -459,7 +459,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                                 }
                             }
                         });
-                        mButtonSelectorDialog.show();
+                        mCustomSelectorDialog.show();
                     }
                 });
             }

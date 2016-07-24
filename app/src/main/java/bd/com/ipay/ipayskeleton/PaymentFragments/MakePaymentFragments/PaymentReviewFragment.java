@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mNetReceivedView;
+    private View mLinearLayoutDescriptionHolder;
     private Button mPaymentButton;
 
 
@@ -77,6 +79,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mLinearLayoutDescriptionHolder = v.findViewById(R.id.layout_description_holder);
+        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
@@ -98,7 +102,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mMobileNumberView.setText(mReceiverMobileNumber);
 
         if (mDescription == null || mDescription.isEmpty()) {
-            mDescriptionView.setVisibility(View.GONE);
+            mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
         } else {
             mDescriptionView.setText(mDescription);
         }

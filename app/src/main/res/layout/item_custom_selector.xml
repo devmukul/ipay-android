@@ -6,7 +6,7 @@
     android:padding="@dimen/value5">
 
     <TextView
-        android:id="@+id/textViewButtonName"
+        android:id="@+id/textViewSelectorName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
