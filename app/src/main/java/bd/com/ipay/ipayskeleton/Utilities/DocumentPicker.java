@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,7 +13,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -110,7 +108,6 @@ public class DocumentPicker {
         return list;
     }
 
-    public static String getFileFromResult(Context context, Intent returnedIntent) {
     public static String getFilePathFromResult(Context context, int resultCode, Intent returnedIntent) {
         try {
             File documentFile = getTempFile(context);
