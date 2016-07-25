@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 

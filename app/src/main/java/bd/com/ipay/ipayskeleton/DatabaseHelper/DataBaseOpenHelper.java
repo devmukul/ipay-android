@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.DatabaseHelper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DataBaseOpenHelper extends SQLiteOpenHelper {
 

@@ -98,7 +98,7 @@ public class AddressClass implements Serializable {
             builder.append(districtName.trim()).append(" ");
 
         if (getPostalCode() != null)
-            builder.append(" - " +getPostalCode());
+            builder.append(" - ").append(getPostalCode());
         builder.append("\n");
         if (getCountry() != null)
             builder.append(getCountry());

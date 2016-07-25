@@ -2,10 +2,6 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
 import android.net.Uri;
 
-import org.apache.http.client.utils.URIBuilder;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

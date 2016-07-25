@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Bank;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 
 
 public class UserBankClass {

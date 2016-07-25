@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -11,7 +10,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.StorageManager;
 
 public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String> {

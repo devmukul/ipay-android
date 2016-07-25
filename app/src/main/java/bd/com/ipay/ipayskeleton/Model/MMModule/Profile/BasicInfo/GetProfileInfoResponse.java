@@ -2,11 +2,8 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class GetProfileInfoResponse {
 

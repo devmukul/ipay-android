@@ -4,7 +4,6 @@ import android.util.Log;
 
 import org.apache.http.Header;
 
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

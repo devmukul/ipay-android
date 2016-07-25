@@ -50,7 +50,7 @@ public class ContactEngine {
         String sortOrder = Contacts.DISPLAY_NAME
                 + " COLLATE LOCALIZED ASC";
 
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         if (context == null)
             return names;
         Cursor cursor = context.getContentResolver().query(uri, projection,
@@ -67,7 +67,7 @@ public class ContactEngine {
     }
 
     public static ArrayList<String> getContactNumbers(Context context) {
-        ArrayList<String> numbers = new ArrayList<String>();
+        ArrayList<String> numbers = new ArrayList<>();
         if (context == null)
             return numbers;
         Cursor cursor = context.getContentResolver().query(Phone.CONTENT_URI, null, null, null, null);
@@ -171,7 +171,7 @@ public class ContactEngine {
                                              String accountName, String accountType, String name, String number) {
         if (BuildConfig.DEBUG)
             Log.i(TAG, "Adding contact: " + name);
-        ArrayList<ContentProviderOperation> operationList = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
         ContentProviderOperation.Builder builder = ContentProviderOperation
                 .newInsert(RawContacts.CONTENT_URI);
@@ -342,7 +342,7 @@ public class ContactEngine {
     }
 
     public static ArrayList<PhoneName> loadAllPhones(Context context) {
-        ArrayList<PhoneName> listAllPhones = new ArrayList<PhoneName>();
+        ArrayList<PhoneName> listAllPhones = new ArrayList<>();
         Uri uri = Phone.CONTENT_URI;
         String[] projection = new String[]{
                 Phone._ID,

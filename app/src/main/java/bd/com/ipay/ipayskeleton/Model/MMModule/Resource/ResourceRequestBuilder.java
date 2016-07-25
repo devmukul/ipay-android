@@ -2,11 +2,6 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Resource;
 
 import android.net.Uri;
 
-import org.apache.http.client.utils.URIBuilder;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public abstract class ResourceRequestBuilder {

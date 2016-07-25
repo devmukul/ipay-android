@@ -2,9 +2,7 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -13,11 +11,9 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -27,8 +23,6 @@ import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -56,14 +50,11 @@ import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
-import bd.com.ipay.ipayskeleton.R;
 
 public class Utilities {
 
@@ -112,7 +103,7 @@ public class Utilities {
                     }
                 }
             }
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         } // for now eat exceptions
         return "";
     }
@@ -175,7 +166,7 @@ public class Utilities {
         } finally {
             try {
                 is.close();
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -221,7 +212,7 @@ public class Utilities {
                 if (buf.length() > 0) buf.deleteCharAt(buf.length() - 1);
                 return buf.toString();
             }
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         } // for now eat exceptions
         return "";
         /*try {
@@ -239,7 +230,7 @@ public class Utilities {
         String line = null;
         try {
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();

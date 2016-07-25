@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.graphics.Color;
-import android.graphics.drawable.Icon;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;

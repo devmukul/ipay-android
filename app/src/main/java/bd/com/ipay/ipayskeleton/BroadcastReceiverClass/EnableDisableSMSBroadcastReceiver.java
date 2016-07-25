@@ -3,8 +3,6 @@ package bd.com.ipay.ipayskeleton.BroadcastReceiverClass;
 
 import android.content.Context;
 import android.content.IntentFilter;
-import android.util.Log;
-import android.widget.Toast;
 
 public class EnableDisableSMSBroadcastReceiver {
 

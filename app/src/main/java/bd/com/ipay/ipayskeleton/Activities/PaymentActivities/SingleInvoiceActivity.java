@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;

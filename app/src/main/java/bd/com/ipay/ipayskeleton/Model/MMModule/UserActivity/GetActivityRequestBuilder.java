@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity;
 
 import android.net.Uri;
 
-import java.net.URLEncoder;
 import java.security.InvalidParameterException;
 import java.util.Calendar;
 

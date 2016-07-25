@@ -2,8 +2,6 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
 import android.net.Uri;
 
-import java.net.URLEncoder;
-
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class BusinessListRequestBuilder {

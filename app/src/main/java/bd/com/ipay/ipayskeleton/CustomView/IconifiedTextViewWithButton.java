@@ -6,16 +6,13 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.R;
 
-/**
- * Created by yapi on 6/22/16.
- */
+
 public class IconifiedTextViewWithButton extends FrameLayout {
 
     private ImageView mImageView;

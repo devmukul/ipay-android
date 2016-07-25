@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;

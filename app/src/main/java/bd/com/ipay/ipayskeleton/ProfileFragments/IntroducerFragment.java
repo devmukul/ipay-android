@@ -195,6 +195,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                         Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
             }
 
 
@@ -218,6 +219,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                         Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
             }
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
