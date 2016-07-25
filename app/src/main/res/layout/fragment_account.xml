@@ -25,7 +25,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="left"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_semi_double"
                     android:layout_marginLeft="@dimen/value30"
                     android:layout_marginTop="@dimen/activity_vertical_margin_semi_double" />
 
