@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Education;
 
-public class GetInstitutionsResponse {
+public class Institution {
 
     private long institutionId;
     private String address;
@@ -14,7 +14,7 @@ public class GetInstitutionsResponse {
     private String responsibleContactPersonAddress;
     private String responsibleContactPersonEmail;
 
-    public long getInstitutionId() {
+    public long getId() {
         return institutionId;
     }
 

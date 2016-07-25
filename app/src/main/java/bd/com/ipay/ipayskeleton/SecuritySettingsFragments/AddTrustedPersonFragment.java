@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Account_Security_Settings_Fragments;
+package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 
 import android.support.v4.app.Fragment;

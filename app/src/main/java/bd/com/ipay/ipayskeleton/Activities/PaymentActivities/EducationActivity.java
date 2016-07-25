@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.EventFragments.EventFragments;
+import bd.com.ipay.ipayskeleton.EducationFragments.SelectInstitutionFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 public class EducationActivity extends BaseActivity {
@@ -16,10 +16,9 @@ public class EducationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_education);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         switchToSelectInstituteFragment();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class EducationActivity extends BaseActivity {
 
     public void switchToSelectInstituteFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new EventFragments()).commit();
+                .replace(R.id.fragment_container, new SelectInstitutionFragment()).commit();
         switchedToSelectInstituteFragment = true;
     }
 
