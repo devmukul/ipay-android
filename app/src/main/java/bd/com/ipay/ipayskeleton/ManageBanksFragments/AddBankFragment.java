@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddBankDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
@@ -72,8 +73,8 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
     private Button addBank;
 
     private ResourceSelectorDialog<Bank> bankSelectorDialog;
-    private AddBankDialog<String> districtSelectorDialog;
-    private AddBankDialog<String> bankBranchSelectorDialog;
+    private CustomSelectorDialog districtSelectorDialog;
+    private CustomSelectorDialog bankBranchSelectorDialog;
     private int mSelectedBranchId = -1;
     private int mSelectedBankId = -1;
     private int mSelectedDistrictId = -1;
@@ -147,7 +148,7 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
 
     private void setBankAdapter(List<Bank> bankList) {
 
-        bankSelectorDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_a_bank),bankList, mSelectedBankId);
+        bankSelectorDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_a_bank), bankList, mSelectedBankId);
         bankSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -169,10 +170,10 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
 
     private void setDistrictAdapter(List<String> districtList) {
 
-        districtSelectorDialog = new AddBankDialog<>(getContext(), districtList, mSelectedDistrictId);
-        districtSelectorDialog.setOnDistrictSelectedListener(new AddBankDialog.OnDistrictSelectedListener() {
+        districtSelectorDialog = new CustomSelectorDialog(getContext(), getString(R.string.district), districtList);
+        districtSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
             @Override
-            public void onDistrictSelected(int id, String name) {
+            public void onResourceSelected(int id, String name) {
                 mDistrictSelection.setError(null);
                 mDistrictSelection.setText(name);
                 mSelectedDistrictId = id;
@@ -185,7 +186,6 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
                 }
 
                 mBranchNames.clear();
-                mBranchNames.add(getString(R.string.select_one));
                 for (BankBranch bankBranch : mBranches) {
                     mBranchNames.add(bankBranch.getName());
                 }
@@ -204,10 +204,10 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
 
     private void setBankBranchAdapter(List<String> bankBranchList) {
 
-        bankBranchSelectorDialog = new AddBankDialog<>(getContext(), bankBranchList, mSelectedBankId);
-        bankBranchSelectorDialog.setOnDistrictSelectedListener(new AddBankDialog.OnDistrictSelectedListener() {
+        bankBranchSelectorDialog = new CustomSelectorDialog(getContext(), getString(R.string.bank_branch), bankBranchList);
+        bankBranchSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
             @Override
-            public void onDistrictSelected(int id, String name) {
+            public void onResourceSelected(int id, String name) {
                 mBankBranchSelection.setError(null);
                 mBankBranchSelection.setText(name);
                 mSelectedBranchId = id;
@@ -320,7 +320,6 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
                     mGetBankBranchesResponse = gson.fromJson(result.getJsonString(), GetBankBranchesResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mDistrictNames.clear();
-                        mDistrictNames.add(getString(R.string.select_one));
 
                         bankDistrictToBranchMap = new HashMap<>();
 
