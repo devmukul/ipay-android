@@ -48,7 +48,7 @@
                 <ImageButton
                     android:id="@+id/button_edit_present_address"
                     style="@style/EditIconButton"
-                    android:src="@drawable/ic_editgrey2"></ImageButton>
+                    android:src="@drawable/ic_editgrey2"/>
             </LinearLayout>
 
             <LinearLayout

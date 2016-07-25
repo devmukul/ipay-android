@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/prompt_business_addr_line2"
             android:inputType="textPostalAddress"
-            android:maxLines="1"></EditText>
+            android:maxLines="1"/>
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />
@@ -72,7 +72,7 @@
             android:hint="@string/thana"
             android:inputType="textPostalAddress"
             android:maxLines="1"
-            android:focusable="false"></EditText>
+            android:focusable="false"/>
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />
@@ -89,7 +89,7 @@
             android:hint="@string/postcode"
             android:inputType="number"
             android:maxLength="4"
-            android:maxLines="1"></EditText>
+            android:maxLines="1"/>
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />
@@ -107,7 +107,7 @@
             android:hint="@string/country"
             android:inputType="textPostalAddress"
             android:maxLines="1"
-            android:text="Bangladesh"></EditText>
+            android:text="Bangladesh"/>
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />

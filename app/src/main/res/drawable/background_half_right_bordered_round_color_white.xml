@@ -6,5 +6,5 @@
         android:bottomLeftRadius="0dp"
         android:topLeftRadius="0dp"
         android:topRightRadius="3dp"/>
-    <stroke android:width="@dimen/iconified_button_border_width" android:color="@color/colorPrimary"></stroke>
+    <stroke android:width="@dimen/iconified_button_border_width" android:color="@color/colorPrimary"/>
 </shape>
