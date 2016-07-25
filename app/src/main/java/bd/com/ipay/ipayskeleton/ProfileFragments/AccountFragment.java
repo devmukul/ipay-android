@@ -72,7 +72,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
     private ProgressDialog mProgressDialog;
 
-    public static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_PERMISSION = 1001;
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
 
     @Override
@@ -203,7 +203,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
     }
 
-    public void updateProfilePicture(Uri selectedImageUri) {
+    private void updateProfilePicture(Uri selectedImageUri) {
         mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
         mProgressDialog.show();
 
