@@ -157,7 +157,7 @@ public class DocumentPicker {
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
                     Bitmap convertedBitmap = CameraUtilities.handleSamplingAndRotationBitmap(context,
-                            isCamera ? selectedImage : returnedIntent.getData());
+                            isCamera ? selectedImage : returnedIntent.getData(), isCamera);
 
                     // Save to file
                     File tempFile = getTempFile(context);

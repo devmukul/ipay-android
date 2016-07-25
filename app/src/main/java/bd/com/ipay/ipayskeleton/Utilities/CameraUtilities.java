@@ -1,11 +1,14 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +31,7 @@ public class CameraUtilities {
      * @return Bitmap image results
      * @throws IOException
      */
-    public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage)
+    public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage, boolean fromCamera)
             throws IOException {
         int MAX_HEIGHT = 512;
         int MAX_WIDTH = 512;
@@ -48,7 +51,8 @@ public class CameraUtilities {
         imageStream = context.getContentResolver().openInputStream(selectedImage);
         Bitmap img = BitmapFactory.decodeStream(imageStream, null, options);
 
-        img = rotateImageIfRequired(img, selectedImage);
+        img = rotateImageIfRequired(context, img, selectedImage, fromCamera);
+
         return img;
     }
 
@@ -108,20 +112,38 @@ public class CameraUtilities {
      * @param selectedImage Image URI
      * @return The resulted Bitmap after manipulation
      */
-    private static Bitmap rotateImageIfRequired(Bitmap img, Uri selectedImage) throws IOException {
+    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage, boolean fromCamera) throws IOException {
 
         ExifInterface ei = new ExifInterface(selectedImage.getPath());
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                return rotateImage(img, 90);
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                return rotateImage(img, 180);
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return rotateImage(img, 270);
-            default:
-                return img;
+        if (fromCamera) {
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            Log.w("Orientation - Camera", orientation + "");
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    return rotateImage(img, 90);
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    return rotateImage(img, 180);
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    return rotateImage(img, 270);
+                default:
+                    return img;
+            }
+        } else {
+            String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+            Cursor cur = context.getContentResolver().query(selectedImage, orientationColumn, null, null, null);
+            int orientation = 0;
+            if (cur != null && cur.moveToFirst()) {
+                orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+            }
+            if (cur != null)
+                cur.close();
+
+            Log.w("Orientation - Gallery", orientation + "");
+
+            return rotateImage(img, orientation);
         }
     }
 
