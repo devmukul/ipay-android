@@ -208,8 +208,8 @@
     <style name="TextViewProfileInfoLabel" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">@dimen/value15</item>
-        <item name="android:paddingBottom">@dimen/value15</item>
+        <item name="android:paddingTop">@dimen/value10</item>
+        <item name="android:paddingBottom">@dimen/value10</item>
         <item name="android:paddingLeft">@dimen/value15</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
         <item name="android:layout_weight">0.5</item>
@@ -219,8 +219,8 @@
     <style name="TextViewProfileInfo" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">@dimen/value15</item>
-        <item name="android:paddingBottom">@dimen/value15</item>
+        <item name="android:paddingTop">@dimen/value10</item>
+        <item name="android:paddingBottom">@dimen/value10</item>
         <item name="android:paddingRight">@dimen/value15</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
         <item name="android:textColor">@color/colorPrimary</item>
@@ -327,10 +327,10 @@
     </style>
 
     <style name="ListHeaderStyle">
-        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
-        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginTop">@dimen/value5</item>
+        <item name="android:layout_marginBottom">@dimen/value5</item>
         <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:padding">@dimen/value15</item>
+        <item name="android:padding">@dimen/value10</item>
         <item name="android:gravity">left</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>

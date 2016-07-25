@@ -1,10 +1,11 @@
-package bd.com.ipay.ipayskeleton.ProfileFragments;
+package bd.com.ipay.ipayskeleton.Account_Security_Settings_Fragments;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -58,7 +60,8 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     private List<TrustedPerson> mTrustedPersons;
     private TrustedPersonListAdapter mTrustedPersonListAdapter;
 
-    private Button mAddTrustedPersonButton;
+    private FloatingActionButton mAddTrustedPersonButton;
+
     private RecyclerView mTrustedPersonListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -82,10 +85,9 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trusted_network, container, false);
+        setTitle();
 
-        //getActivity().setTitle(R.string.password_recovery);
-
-        mAddTrustedPersonButton = (Button) v.findViewById(R.id.button_add_trusted_person);
+        mAddTrustedPersonButton = (FloatingActionButton) v.findViewById(R.id.fab_add_trusted_person);
         mTrustedPersonListRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_person);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
@@ -99,7 +101,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         mAddTrustedPersonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddTrustedPersonDialog();
+                ((SecuritySettingsActivity) getActivity()).switchToAddTrustedPerson();
             }
         });
 
@@ -130,6 +132,14 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             else {
                 processGetTrustedPersonList(json);
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            getTrustedPersons();
         }
     }
 
@@ -234,13 +244,17 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         dialog.show();
     }
 
+    public void setTitle() {
+        getActivity().setTitle(R.string.password_recovery);
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTrustedPersonsTask = null;
             mAddTrustedPersonTask = null;
             mSetAccountRecoveryPersonTask = null;
@@ -272,7 +286,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.failed_loading_trusted_person_list, Toast.LENGTH_LONG).show();
-                ((HomeActivity) getActivity()).switchToDashBoard();
+                ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
             }
 
             mSwipeRefreshLayout.setRefreshing(false);

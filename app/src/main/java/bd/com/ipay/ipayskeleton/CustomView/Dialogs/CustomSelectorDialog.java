@@ -34,7 +34,7 @@ public class CustomSelectorDialog extends AlertDialog {
         this.mTitle = mTitle;
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        viewTitle = inflater.inflate(R.layout.dialog_button_selector_header, null);
+        viewTitle = inflater.inflate(R.layout.dialog_selector_header, null);
         textViewTitle = (TextView) viewTitle.findViewById(R.id.textviewTitle);
         textViewTitle.setText(mTitle);
         this.setCustomTitle(viewTitle);

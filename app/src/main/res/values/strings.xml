@@ -359,6 +359,7 @@
     <string name="please_enter_minimum_amount">Please enter minimum amount. of BDT </string>
     <string name="please_enter_not_more_than_max_amount">Please enter not more than. of BDT </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
+    <string name="please_select_relation">Please select a relation</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
     <string name="end_date">End date (dd/mm/yyyy)</string>
     <string name="sign_up_with_ipay">sign up with iPay</string>
@@ -855,6 +856,10 @@
 
     <string-array name="my_request_action">
         <item>Cancel</item>
+    </string-array>
+
+    <string-array name="trusted_device_action">
+        <item>Remove</item>
     </string-array>
 
 </resources>
