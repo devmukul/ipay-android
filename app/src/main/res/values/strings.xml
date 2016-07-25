@@ -86,12 +86,15 @@
     <string name="load_more">Load more...</string>
     <string name="no_more_results">No more results to show</string>
     <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
+    <string name="get_all_institution_failed">Failed to load institutions.</string>
     <string name="confirm_query">Are you sure?</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
     <string name="profile_info_get_failed">Failed to fetch profile information.</string>
     <string name="account_type_business">Business Account</string>
     <string name="all_contacts">All</string>
+    <string name="select_an_institution">Select Institution</string>
+    <string name="select_session">Select Session</string>
     <string name="save">Save</string>
     <string name="got_it">GOT IT</string>
     <string name="bank_verification_help_html"><![CDATA[<b><small>We sent some money in your bank account.</small></b>\n<small>Please click</small> <big><b>Verify</b></big> <small>and then enter the amount we sent in your bank account to complete the verification process.</small>]]></string>
