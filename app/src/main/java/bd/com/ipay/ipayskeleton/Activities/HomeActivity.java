@@ -330,6 +330,8 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 for (int i = 0; i < permissions.length; i++) {
