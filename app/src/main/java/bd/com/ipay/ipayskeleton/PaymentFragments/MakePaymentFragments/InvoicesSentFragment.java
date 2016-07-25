@@ -396,9 +396,13 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
         @Override
         public int getItemCount() {
-            if (pendingPaymentClasses != null)
-                return pendingPaymentClasses.size() + 1;
-            else return 0;
+
+            if (pendingPaymentClasses == null || pendingPaymentClasses.size() == 0) {
+                return 0;
+            } else {
+                return 1 + pendingPaymentClasses.size();
+            }
+
         }
 
         @Override
