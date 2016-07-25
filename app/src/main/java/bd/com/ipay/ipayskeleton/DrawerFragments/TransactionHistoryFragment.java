@@ -229,13 +229,13 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 if (eventFilterLayout.getVisibility() == View.VISIBLE)
                     eventFilterLayout.setVisibility(View.GONE);
                 dateFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(dateFilterLayout, getActivity());
+                Utilities.setLayoutAnim_slideDown(dateFilterLayout);
                 return true;
             case R.id.action_filter_by_event:
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
                 eventFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(eventFilterLayout, getActivity());
+                Utilities.setLayoutAnim_slideDown(eventFilterLayout);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -373,7 +373,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         dateFilterLayout.setVisibility(View.GONE);
     }
 
-    private DatePickerDialog.OnDateSetListener mFromDateSetListener =
+    private final DatePickerDialog.OnDateSetListener mFromDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
@@ -394,7 +394,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 }
             };
 
-    private DatePickerDialog.OnDateSetListener mToDateSetListener =
+    private final DatePickerDialog.OnDateSetListener mToDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
@@ -612,16 +612,16 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mTransactionDescriptionView;
-            private TextView mTimeView;
-            private TextView mReceiverView;
-            private TextView loadMoreTextView;
-            private TextView mAmountTextView;
-            private TextView statusDescriptionView;
-            private TextView netAmountView;
-            private ImageView otherImageView;
-            private ProfileImageView mProfileImageView;
-            private View divider;
+            private final TextView mTransactionDescriptionView;
+            private final TextView mTimeView;
+            private final TextView mReceiverView;
+            private final TextView loadMoreTextView;
+            private final TextView mAmountTextView;
+            private final TextView statusDescriptionView;
+            private final TextView netAmountView;
+            private final ImageView otherImageView;
+            private final ProfileImageView mProfileImageView;
+            private final View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -720,7 +720,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
             }
 
-            public void bindViewFooter(int pos) {
+            public void bindViewFooter() {
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
                 else loadMoreTextView.setText(R.string.no_more_results);
             }
@@ -767,15 +767,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             if (viewType == FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
 
-                FooterViewHolder vh = new FooterViewHolder(v);
-
-                return vh;
+                return new FooterViewHolder(v);
             }
 
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
 
-            NormalViewHolder vh = new NormalViewHolder(v);
-            return vh;
+            return new NormalViewHolder(v);
         }
 
         @Override
@@ -787,7 +784,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     vh.bindView(position);
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindViewFooter(position);
+                    vh.bindViewFooter();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -812,7 +809,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         }
     }
 
-    private BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("Broadcast received", "Transaction History");

@@ -20,7 +20,7 @@ public class FriendInfo {
         this.profilePictureUrl = profilePictureUrl;
     }
 
-    public FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, long updateAt, String profilePictureUrl) {
+    private FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, long updateAt, String profilePictureUrl) {
         this.accountType = accountType;
         this.isMember = isMember;
         this.isVerified = isVerified;

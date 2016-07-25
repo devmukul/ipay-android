@@ -14,10 +14,10 @@ import bd.com.ipay.ipayskeleton.R;
 
 public class EventFragments extends Fragment implements View.OnClickListener {
 
-    public static final int NUMBER_OF_TABS = 2;
-    public static final int TAB_FIRST = 0;
-    public static final int TAB_SECOND = 1;
-    public static int selectedTab = 0;
+    private static final int NUMBER_OF_TABS = 2;
+    private static final int TAB_FIRST = 0;
+    private static final int TAB_SECOND = 1;
+    private static int selectedTab = 0;
 
     private ViewPager viewPager;
     private FragmentStatePagerAdapter adapter;

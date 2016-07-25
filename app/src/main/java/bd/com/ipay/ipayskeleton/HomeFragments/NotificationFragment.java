@@ -119,7 +119,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private boolean mSwitchToEmployeeFragment;
 
-    public OnNotificationUpdateListener mOnNotificationUpdateListener;
+    private OnNotificationUpdateListener mOnNotificationUpdateListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -217,7 +217,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mGetBusinessInvitationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    protected void attemptGetServiceCharge(int serviceId) {
+    private void attemptGetServiceCharge(int serviceId) {
 
         if (mServiceChargeTask != null) {
             return;
@@ -380,192 +380,200 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS)) {
-            mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS:
+                mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    try {
+                        mMoneyAndPaymentRequests = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                }
+
+                mGetMoneyAndPaymentRequestTask = null;
+                postProcessNotificationList();
+
+                break;
+            case Constants.COMMAND_GET_RECOMMENDATION_REQUESTS:
                 try {
-                    mMoneyAndPaymentRequests = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                    mIntroductionRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mIntroductionRequests = mIntroductionRequestsResponse.getVerificationRequestList();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                }
+
+                mGetIntroductionRequestTask = null;
+                postProcessNotificationList();
+
+                break;
+            case Constants.COMMAND_GET_BUSINESS_LIST:
+                try {
+                    mGetBusinessListResponse = gson.fromJson(result.getJsonString(), GetBusinessListResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mBusinessInvitations = mGetBusinessListResponse.getBusinessList();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mGetBusinessListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                }
+
+                mGetBusinessInvitationTask = null;
+                postProcessNotificationList();
+
+                break;
+            case Constants.COMMAND_GET_SERVICE_CHARGE:
+                mProgressDialog.dismiss();
+                try {
+                    mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (mGetServiceChargeResponse != null) {
+                            mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
+
+                            if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
+                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            } else {
+                                showReviewDialog();
+                            }
+
+                        } else {
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                }
+
+                mServiceChargeTask = null;
+                break;
+            case Constants.COMMAND_INTRODUCE_ACTION:
+
+                try {
+                    mIntroduceActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        // Refresh recommendation requests list
+                        if (mIntroductionRequests != null)
+                            mIntroductionRequests.clear();
+                        mIntroductionRequests = null;
+                        refreshIntroductionRequestList();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
 
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
-            }
+                mProgressDialog.dismiss();
+                mRecommendActionTask = null;
+                break;
+            case Constants.COMMAND_CONFIRM_BUSINESS_INVITATION:
+                try {
+                    mConfirmBusinessInvitationResponse = gson.fromJson(result.getJsonString(), ConfirmBusinessInvitationResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (mSwitchToEmployeeFragment) {
+                            mSwitchToEmployeeFragment = false;
+                        }
 
-            mGetMoneyAndPaymentRequestTask = null;
-            postProcessNotificationList();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS)) {
-            try {
-                mIntroductionRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
+                    refreshBusinessInvitationList();
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mIntroductionRequests = mIntroductionRequestsResponse.getVerificationRequestList();
-                } else {
+                } catch (Exception e) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_confirming_business_invitation, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            }
 
-            mGetIntroductionRequestTask = null;
-            postProcessNotificationList();
+                mProgressDialog.dismiss();
+                mConfirmBusinessInvitationTask = null;
+                break;
+            case Constants.COMMAND_REJECT_REQUESTS_MONEY:
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_LIST)) {
-            try {
-                mGetBusinessListResponse = gson.fromJson(result.getJsonString(), GetBusinessListResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mBusinessInvitations = mGetBusinessListResponse.getBusinessList();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mGetBusinessListResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            }
-
-            mGetBusinessInvitationTask = null;
-            postProcessNotificationList();
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
-            mProgressDialog.dismiss();
-            try {
-                mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (mGetServiceChargeResponse != null) {
-                        mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
-
-                        if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        } else {
-                            showReviewDialog();
+                try {
+                    mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            RequestMoneyAcceptRejectOrCancelResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            refreshMoneyAndPaymentRequestList();
                         }
 
                     } else {
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } else {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            }
-
-            mServiceChargeTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_INTRODUCE_ACTION)) {
-
-            try {
-                mIntroduceActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Refresh recommendation requests list
-                    if (mIntroductionRequests != null)
-                        mIntroductionRequests.clear();
-                    mIntroductionRequests = null;
-                    refreshIntroductionRequestList();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mRecommendActionTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_CONFIRM_BUSINESS_INVITATION)) {
-            try {
-                mConfirmBusinessInvitationResponse = gson.fromJson(result.getJsonString(), ConfirmBusinessInvitationResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (mSwitchToEmployeeFragment) {
-                        mSwitchToEmployeeFragment = false;
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                 } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-                refreshBusinessInvitationList();
-
-            } catch (Exception e) {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_confirming_business_invitation, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mConfirmBusinessInvitationTask = null;
-        }
-        else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
-
-            try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                        RequestMoneyAcceptRejectOrCancelResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        refreshMoneyAndPaymentRequestList();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mRejectRequestTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_PAYMENT_REQUEST)) {
-
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                try {
-                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                            PaymentAcceptRejectOrCancelResponse.class);
-                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        refreshMoneyAndPaymentRequestList();
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
                 }
 
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-            }
+                mProgressDialog.dismiss();
+                mRejectRequestTask = null;
 
-            mProgressDialog.dismiss();
-            mRejectPaymentTask = null;
+                break;
+            case Constants.COMMAND_REJECT_PAYMENT_REQUEST:
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    try {
+                        mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                                PaymentAcceptRejectOrCancelResponse.class);
+                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            refreshMoneyAndPaymentRequestList();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+                }
+
+                mProgressDialog.dismiss();
+                mRejectPaymentTask = null;
+                break;
         }
     }
 
@@ -624,11 +632,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
 
         public class NotificationViewHolder extends RecyclerView.ViewHolder {
-            private TextView mTitleView;
-            private TextView mDescriptionView;
-            private TextView mTimeView;
-            private LinearLayout optionsLayout;
-            private ProfileImageView mProfileImageView;
+            private final TextView mTitleView;
+            private final TextView mDescriptionView;
+            private final TextView mTimeView;
+            private final LinearLayout optionsLayout;
+            private final ProfileImageView mProfileImageView;
 
             public NotificationViewHolder(final View itemView) {
                 super(itemView);
@@ -687,8 +695,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class MoneyAndPaymentRequestViewHolder extends NotificationViewHolder {
 
-            private Button acceptButton;
-            private Button rejectButton;
+            private final Button acceptButton;
+            private final Button rejectButton;
 
             public MoneyAndPaymentRequestViewHolder(final View itemView) {
                 super(itemView);
@@ -770,9 +778,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class IntroductionRequestViewHolder extends NotificationViewHolder {
 
-            private Button verifyButton;
-            private Button rejectRecommendationButton;
-            private Button markAsSpamRecommendationButton;
+            private final Button verifyButton;
+            private final Button rejectRecommendationButton;
+            private final Button markAsSpamRecommendationButton;
 
             public IntroductionRequestViewHolder(final View itemView) {
                 super(itemView);
@@ -843,9 +851,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class BusinessInvitationViewHolder extends NotificationViewHolder {
 
-            private Button mAcceptButton;
-            private Button mRejectButton;
-            private Button mMarkSpamButton;
+            private final Button mAcceptButton;
+            private final Button mRejectButton;
+            private final Button mMarkSpamButton;
 
             public BusinessInvitationViewHolder(View itemView) {
                 super(itemView);
@@ -891,17 +899,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
             if (viewType == Constants.NOTIFICATION_TYPE_INTROUDCTION_REQUEST) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests, parent, false);
-                IntroductionRequestViewHolder vh = new IntroductionRequestViewHolder(v);
-                return vh;
+                return new IntroductionRequestViewHolder(v);
 
             } else if (viewType == Constants.NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_invitation, parent, false);
-                BusinessInvitationViewHolder vh = new BusinessInvitationViewHolder(v);
-                return vh;
+                return new BusinessInvitationViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
-                MoneyAndPaymentRequestViewHolder vh = new MoneyAndPaymentRequestViewHolder(v);
-                return vh;
+                return new MoneyAndPaymentRequestViewHolder(v);
             }
         }
 

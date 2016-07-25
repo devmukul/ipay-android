@@ -192,8 +192,8 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     }
 
     private void getOperatorandPackage() {
-        mpackageList = new ArrayList<TopUpPackageClass>();
-        moperatorList = new ArrayList<OperatorClass>();
+        mpackageList = new ArrayList<>();
+        moperatorList = new ArrayList<>();
         mArraypackages = Arrays.asList(getResources().getStringArray(R.array.package_type));
         mArrayoperators = Arrays.asList(getResources().getStringArray(R.array.mobile_operators));
 
@@ -313,7 +313,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
     }
 
-    protected void attemptGetBusinessRule(int serviceID) {
+    private void attemptGetBusinessRule(int serviceID) {
 
         if (mGetBusinessRuleTask != null) {
             return;
@@ -333,7 +333,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             mProgressDialog.dismiss();
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -382,7 +381,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
     public class OperatorAdapter extends ArrayAdapter<OperatorClass> {
 
-        private LayoutInflater inflater;
+        private final LayoutInflater inflater;
 
         public OperatorAdapter(Context context, List<OperatorClass> objects) {
             super(context, 0, objects);
@@ -411,7 +410,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                     R.drawable.ic_teletalk,
 
             };
-            int operatorID = position;
 
             operatorimageView.setImageResource(images[position]);
             operatorNameView.setText(operator.getName());

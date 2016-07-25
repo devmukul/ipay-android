@@ -1,14 +1,14 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney;
 
-public class PendingMoneyRequestClass {
+class PendingMoneyRequestClass {
 
-    public Long id;
-    public String senderMobileNumber;
-    public String receiverMobileNumber;
-    public double amount;
-    public Long requestTime;
-    public String title;
-    public String description;
+    private Long id;
+    private String senderMobileNumber;
+    private String receiverMobileNumber;
+    private double amount;
+    private Long requestTime;
+    private String title;
+    private String description;
 
     public Long getId() {
         return id;

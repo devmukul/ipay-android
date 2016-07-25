@@ -35,18 +35,18 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
     private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
 
-    private BigDecimal mAmount;
-    private BigDecimal mServiceCharge;
-    private String mReceiverName;
-    private String mReceiverMobileNumber;
-    private String mPhotoUri;
-    private long requestId;
-    private String mTitle;
-    private String mDescription;
-    private int mServiceID;
+    private final BigDecimal mAmount;
+    private final BigDecimal mServiceCharge;
+    private final String mReceiverName;
+    private final String mReceiverMobileNumber;
+    private final String mPhotoUri;
+    private final long requestId;
+    private final String mTitle;
+    private final String mDescription;
+    private final int mServiceID;
 
     private ProgressDialog mProgressDialog;
-    private ReviewDialogFinishListener mReviewFinishListener;
+    private final ReviewDialogFinishListener mReviewFinishListener;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
@@ -76,7 +76,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         initializeView();
     }
 
-    public void initializeView() {
+    private void initializeView() {
         customView(R.layout.dialog_notification_review, true);
 
         View v = this.build().getCustomView();

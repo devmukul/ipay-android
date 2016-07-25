@@ -34,8 +34,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
     private static boolean contactsSyncedOnce;
 
-    private Context context;
-    private List<FriendNode> serverContacts;
+    private final Context context;
+    private final List<FriendNode> serverContacts;
 
     public SyncContactsAsyncTask(Context context, List<FriendNode> serverContacts) {
         this.context = context;

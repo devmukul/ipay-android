@@ -4,16 +4,16 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 
 public class SignupRequestPersonal {
 
-    private String mobileNumber;
-    private String deviceId;
-    private String name;
-    private String dob;
-    private String password;
-    private String gender;
-    private String otp;
-    private String promoCode;
-    private int accountType;
-    private AddressClass presentAddress;
+    private final String mobileNumber;
+    private final String deviceId;
+    private final String name;
+    private final String dob;
+    private final String password;
+    private final String gender;
+    private final String otp;
+    private final String promoCode;
+    private final int accountType;
+    private final AddressClass presentAddress;
 
     public SignupRequestPersonal(String mobileNumber, String deviceId, String name,
                                  String dob, String password, String gender,

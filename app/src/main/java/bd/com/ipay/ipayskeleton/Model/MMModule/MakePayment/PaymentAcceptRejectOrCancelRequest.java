@@ -2,7 +2,7 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment;
 
 public class PaymentAcceptRejectOrCancelRequest {
 
-    private long requestId;
+    private final long requestId;
     private String pin;
 
     public PaymentAcceptRejectOrCancelRequest(long requestId, String pin) {

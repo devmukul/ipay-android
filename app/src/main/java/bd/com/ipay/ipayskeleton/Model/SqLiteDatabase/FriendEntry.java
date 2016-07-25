@@ -1,12 +1,12 @@
 package bd.com.ipay.ipayskeleton.Model.SqLiteDatabase;
 
-public class FriendEntry {
+class FriendEntry {
 
-    private String mobileNumber;
-    private String name;
-    private int accountType;
-    private String profilePicture;
-    private int isVerified;
+    private final String mobileNumber;
+    private final String name;
+    private final int accountType;
+    private final String profilePicture;
+    private final int isVerified;
 
     public FriendEntry(String mobileNumber, String name, int accountType, String profilePicture, int isVerified) {
         this.mobileNumber = mobileNumber;

@@ -33,7 +33,7 @@ public class ActivityLogActivity extends BaseActivity {
         }
     }
 
-    public void switchToActivityLogFragment() {
+    private void switchToActivityLogFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new ActivityLogFragment()).commit();
     }

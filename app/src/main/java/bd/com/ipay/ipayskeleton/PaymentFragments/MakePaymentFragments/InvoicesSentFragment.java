@@ -222,14 +222,14 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mSenderName;
-            private TextView mAmount;
-            private TextView mDescription;
-            private TextView mTime;
-            private ImageView mCancel;
-            private ImageView statusView;
-            private TextView loadMoreTextView;
-            private ProfileImageView mProfileImageView;
+            private final TextView mSenderName;
+            private final TextView mAmount;
+            private final TextView mDescription;
+            private final TextView mTime;
+            private final ImageView mCancel;
+            private final ImageView statusView;
+            private final TextView loadMoreTextView;
+            private final ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -319,7 +319,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
             }
 
 
-            public void bindViewFooter(int pos) {
+            public void bindViewFooter() {
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
                 else loadMoreTextView.setText(R.string.no_more_results);
             }
@@ -365,15 +365,12 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
             if (viewType == FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
 
-                FooterViewHolder vh = new FooterViewHolder(v);
-
-                return vh;
+                return new FooterViewHolder(v);
             }
 
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending_invoices_sent, parent, false);
 
-            NormalViewHolder vh = new NormalViewHolder(v);
-            return vh;
+            return new NormalViewHolder(v);
         }
 
         @Override
@@ -386,7 +383,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindViewFooter(position);
+                    vh.bindViewFooter();
                 }
 
             } catch (Exception e) {

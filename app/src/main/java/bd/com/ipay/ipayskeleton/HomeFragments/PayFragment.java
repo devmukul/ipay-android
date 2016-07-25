@@ -69,7 +69,7 @@ public class PayFragment extends Fragment {
 
     private class WalletActionListAdapter extends ArrayAdapter<ServiceAction> {
 
-        private int mResource;
+        private final int mResource;
 
         public WalletActionListAdapter(Context context, int resource, List<ServiceAction> serviceActionList) {
             super(context, resource, serviceActionList);
@@ -129,7 +129,7 @@ public class PayFragment extends Fragment {
     }
 
     private class ServiceAction {
-        private String text;
+        private final String text;
 
         public ServiceAction(String text) {
             this.text = text;

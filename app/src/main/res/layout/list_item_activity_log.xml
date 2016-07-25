@@ -21,7 +21,6 @@
         app:riv_oval="false" />
 
     <RelativeLayout
-        android:id="@+id/activitylayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

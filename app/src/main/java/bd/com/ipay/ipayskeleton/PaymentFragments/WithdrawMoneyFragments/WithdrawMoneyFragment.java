@@ -35,7 +35,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -115,7 +114,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         return v;
     }
 
-    protected void attemptGetBusinessRule(int serviceID) {
+    private void attemptGetBusinessRule(int serviceID) {
 
         if (mGetBusinessRuleTask != null) {
             return;
@@ -133,7 +132,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         GetAvailableBankAsyncTask mGetAvailableBankAsyncTask = new GetAvailableBankAsyncTask(getActivity(),
                 new GetAvailableBankAsyncTask.BankLoadListener() {
                     @Override
-                    public void onLoadSuccess(List<Bank> banks) {
+                    public void onLoadSuccess() {
                         mProgressDialog.dismiss();
                         getBankList();
                     }

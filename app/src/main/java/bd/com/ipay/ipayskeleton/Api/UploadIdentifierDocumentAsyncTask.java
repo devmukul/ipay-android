@@ -27,11 +27,11 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, HttpResponseObject> {
 
-    private Context mContext;
-    private String imagePath;
-    private String API_COMMAND;
-    private String documentIdNumber;
-    private String documentType;
+    private final Context mContext;
+    private final String imagePath;
+    private final String API_COMMAND;
+    private final String documentIdNumber;
+    private final String documentType;
 
     public HttpResponseListener mHttpResponseListener;
 

@@ -19,7 +19,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/present_address_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
@@ -60,7 +59,6 @@
                 <View style="@style/DividerWithoutMargin" />
 
                 <LinearLayout
-                    android:id="@+id/permanent_address_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/activity_horizontal_margin"
@@ -103,7 +101,6 @@
                 <View style="@style/DividerWithoutMargin" />
 
                 <LinearLayout
-                    android:id="@+id/office_address_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/activity_horizontal_margin"

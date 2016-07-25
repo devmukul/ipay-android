@@ -264,14 +264,14 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     public class DocumentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mDocumentTypeNameView;
-            private TextView mDocumentIdView;
-            private ImageView mVerificationStatus;
-            private LinearLayout mOptionsLayout;
-            private Button mUploadButton;
-            private Button mPreviewButton;
-            private View mDivider;
-            private View mRecyclarDivider;
+            private final TextView mDocumentTypeNameView;
+            private final TextView mDocumentIdView;
+            private final ImageView mVerificationStatus;
+            private final LinearLayout mOptionsLayout;
+            private final Button mUploadButton;
+            private final Button mPreviewButton;
+            private final View mDivider;
+            private final View mRecyclarDivider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -368,9 +368,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_document,
                     parent, false);
 
-            ViewHolder vh = new ViewHolder(v);
-
-            return vh;
+            return new ViewHolder(v);
         }
 
         @Override
@@ -398,11 +396,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     }
 
     public static class IdentificationDocumentDetails {
-        private String documentType;
-        private String documentTypeName;
-        private String documentId;
-        private String verificationStatus;
-        private String documentUrl;
+        private final String documentType;
+        private final String documentTypeName;
+        private final String documentId;
+        private final String verificationStatus;
+        private final String documentUrl;
 
         public IdentificationDocumentDetails(String documentType, String documentTypeName, String documentId, String verificationStatus, String documentUrl) {
             this.documentType = documentType;

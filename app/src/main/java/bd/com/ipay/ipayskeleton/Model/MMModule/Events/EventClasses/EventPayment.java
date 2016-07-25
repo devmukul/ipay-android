@@ -4,15 +4,15 @@ import java.math.BigDecimal;
 
 public class EventPayment {
 
-    public long id;
-    public long deliveryTime;
-    public long requestTime;
-    public String receiverAccountId;
-    public String senderAccountId;
-    public String senderInformation;
-    public String transactionId;
-    public BigDecimal receiverAmount;
-    public BigDecimal senderAmount;
+    private long id;
+    private long deliveryTime;
+    private long requestTime;
+    private String receiverAccountId;
+    private String senderAccountId;
+    private String senderInformation;
+    private String transactionId;
+    private BigDecimal receiverAmount;
+    private BigDecimal senderAmount;
 
     public long getId() {
         return id;

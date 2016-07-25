@@ -92,7 +92,7 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
     public void onResume() {
         super.onResume();
         if (Utilities.isConnectionAvailable(getActivity())) {
-            getParticipantsList(eventID);
+            getParticipantsList();
         }
     }
 
@@ -104,14 +104,14 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
             if (listOfParticipants != null)
                 listOfParticipants.clear();
             listOfParticipants = null;
-            getParticipantsList(eventID);
+            getParticipantsList();
 
         } else if (getActivity() != null)
             Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
     }
 
     // TODO: modify the function with proper url and request POJO
-    private void getParticipantsList(long eventID) {
+    private void getParticipantsList() {
         if (mGetParticipantsListTask != null) {
             return;
         }
@@ -187,11 +187,11 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mSenderNumber;
-            private TextView mTime;
-            private TextView mDescription;
-            private ProfileImageView mProfileImageView;
-            private View divider;
+            private final TextView mSenderNumber;
+            private final TextView mTime;
+            private final TextView mDescription;
+            private final ProfileImageView mProfileImageView;
+            private final View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -226,9 +226,7 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
             // TODO: modify the list item layout as per requirement
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_my_events, parent, false);
 
-            ViewHolder vh = new ViewHolder(v);
-
-            return vh;
+            return new ViewHolder(v);
         }
 
         @Override

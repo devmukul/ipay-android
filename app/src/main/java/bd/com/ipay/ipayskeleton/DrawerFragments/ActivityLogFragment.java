@@ -110,13 +110,13 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 if (eventFilterLayout.getVisibility() == View.VISIBLE)
                     eventFilterLayout.setVisibility(View.GONE);
                 dateFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(dateFilterLayout, getActivity());
+                Utilities.setLayoutAnim_slideDown(dateFilterLayout);
                 return true;
             case R.id.action_filter_by_event:
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
                 eventFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(eventFilterLayout, getActivity());
+                Utilities.setLayoutAnim_slideDown(eventFilterLayout);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -190,7 +190,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
         return v;
     }
-    public void setTitle()
+    private void setTitle()
     {
         getActivity().setTitle(R.string.activity_log);
     }
@@ -412,7 +412,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
     }
 
-    private DatePickerDialog.OnDateSetListener mFromDateSetListener =
+    private final DatePickerDialog.OnDateSetListener mFromDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
@@ -433,7 +433,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 }
             };
 
-    private DatePickerDialog.OnDateSetListener mToDateSetListener =
+    private final DatePickerDialog.OnDateSetListener mToDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
@@ -526,10 +526,10 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private RoundedImageView mPortrait;
-            private TextView mTransactionDescription;
-            private TextView mTime;
-            private TextView loadMoreTextView;
+            private final RoundedImageView mPortrait;
+            private final TextView mTransactionDescription;
+            private final TextView mTime;
+            private final TextView loadMoreTextView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -577,7 +577,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 }
             }
 
-            public void bindViewFooter(int pos) {
+            public void bindViewFooter() {
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
                 else loadMoreTextView.setText(R.string.no_more_results);
             }
@@ -621,16 +621,12 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             if (viewType == FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
 
-                FooterViewHolder vh = new FooterViewHolder(v);
-
-                return vh;
+                return new FooterViewHolder(v);
             }
 
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_activity_log, parent, false);
 
-            NormalViewHolder vh = new NormalViewHolder(v);
-
-            return vh;
+            return new NormalViewHolder(v);
         }
 
         @Override
@@ -641,7 +637,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     vh.bindView(position);
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindViewFooter(position);
+                    vh.bindViewFooter();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

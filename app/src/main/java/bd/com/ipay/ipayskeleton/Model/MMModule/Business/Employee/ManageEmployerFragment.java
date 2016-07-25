@@ -109,14 +109,14 @@ public class ManageEmployerFragment extends ProgressFragment implements HttpResp
     private class EmployerAdapter extends RecyclerView.Adapter<EmployerAdapter.EmployerViewHolder> {
         public class EmployerViewHolder extends RecyclerView.ViewHolder {
 
-            private ProfileImageView mProfilePictureView;
-            private TextView mNameView;
-            private TextView mMobileNumberView;
+            private final ProfileImageView mProfilePictureView;
+            private final TextView mNameView;
+            private final TextView mMobileNumberView;
 
-            private View mOptionsLayout;
-            private Button mSwitchAccountButton;
-            private Button mShowPrivilegesButton;
-            private Button mResignButton;
+            private final View mOptionsLayout;
+            private final Button mSwitchAccountButton;
+            private final Button mShowPrivilegesButton;
+            private final Button mResignButton;
 
             public EmployerViewHolder(View itemView) {
                 super(itemView);
@@ -181,9 +181,7 @@ public class ManageEmployerFragment extends ProgressFragment implements HttpResp
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item_manage_employer, parent, false);
 
-            EmployerViewHolder vh = new EmployerViewHolder(v);
-
-            return vh;
+            return new EmployerViewHolder(v);
         }
 
         @Override

@@ -63,17 +63,17 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private int mOperatorCode;
     private String mError_message;
 
-    public TextView mReceiverView;
+    private TextView mReceiverView;
     private TextView mMobileNumberView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mTotalView;
     private TextView mPackageView;
     private TextView mOperatorView;
-    public ProfileImageView mProfileImageView;
+    private ProfileImageView mProfileImageView;
     private ImageView mOperatorImageView;
-    public LinearLayout mInvitationLayout;
-    public CheckBox mInvitationCheckBox;
+    private LinearLayout mInvitationLayout;
+    private CheckBox mInvitationCheckBox;
     private Button mTopupButton;
 
     private View mServiceChargeHolder;
@@ -280,90 +280,94 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_TOPUP_REQUEST)) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_TOPUP_REQUEST:
 
-            try {
-                mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
+                try {
+                    mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
-                } else {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+                        getActivity().setResult(Activity.RESULT_OK);
+                        getActivity().finish();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        getActivity().setResult(Activity.RESULT_OK);
+                        getActivity().finish();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mTopupTask = null;
+                mProgressDialog.dismiss();
+                mTopupTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
-            try {
-                mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                break;
+            case Constants.COMMAND_GET_USER_INFO:
+                try {
+                    mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String name = mGetUserInfoResponse.getName();
-                    String profilePicture = null;
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String name = mGetUserInfoResponse.getName();
+                        String profilePicture = null;
 
-                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-                    }
-                    mReceiverView.setText(name);
-                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
-
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-
-                    mInvitationLayout.setVisibility(View.VISIBLE);
-                } else {
-                    mInvitationLayout.setVisibility(View.VISIBLE);
-                    String name = ContactEngine.getContactNameFromNumber(getActivity(), mMobileNumber);
-                    if (name != null)
+                        if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                            profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        }
                         mReceiverView.setText(name);
-                    Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
-                    mProfileImageView.setProfilePicture(photoUri.toString(), false);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
+
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+
+                        mInvitationLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        mInvitationLayout.setVisibility(View.VISIBLE);
+                        String name = ContactEngine.getContactNameFromNumber(getActivity(), mMobileNumber);
+                        if (name != null)
+                            mReceiverView.setText(name);
+                        Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
+                        mProfileImageView.setProfilePicture(photoUri.toString(), false);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
-            }
 
-            mProgressDialog.dismiss();
-            mGetProfileInfoTask = null;
+                mProgressDialog.dismiss();
+                mGetProfileInfoTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
-            try {
-                mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
+                break;
+            case Constants.COMMAND_SEND_INVITE:
+                try {
+                    mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
+                        }
+
+                    } else if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
-                } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
+                    }
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
-                }
-            }
+                mProgressDialog.dismiss();
+                mSendInviteTask = null;
 
-            mProgressDialog.dismiss();
-            mSendInviteTask = null;
-
+                break;
         }
     }
 }

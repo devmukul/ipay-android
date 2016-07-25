@@ -51,7 +51,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private long mBankAccountId;
     private String mBankName;
     private String mBankAccountNumber;
-    String mError_message;
+    private String mError_message;
     private int mBankCode;
 
     private LinearLayout mLinearLayoutDescriptionHolder;

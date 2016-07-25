@@ -11,7 +11,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.Withdraw
 
 public class WithdrawMoneyActivity extends BaseActivity {
 
-    public static MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

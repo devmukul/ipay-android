@@ -49,7 +49,7 @@ public class HttpResponseObject {
         this.headers = headers;
     }
 
-    public String getHeaderValue(String headerName) {
+    private String getHeaderValue(String headerName) {
         for (Header header : headers) {
             Log.w(header.getName(), header.getValue());
             if (header.getName().equals(headerName))

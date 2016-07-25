@@ -14,6 +14,6 @@ public class OperatorClass {
         this.name = name;
     }
 
-    String name;
+    private String name;
 
 }

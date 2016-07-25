@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -20,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
@@ -34,14 +32,14 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
 
     public HttpResponseListener mHttpResponseListener;
 
-    protected String mUri;
-    private Context mContext;
-    private String API_COMMAND;
+    final String mUri;
+    private final Context mContext;
+    private final String API_COMMAND;
     private HttpResponse mHttpResponse;
 
-    boolean error = false;
+    private boolean error = false;
 
-    public HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
+    HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
         this.API_COMMAND = API_COMMAND;
         this.mUri = mUri;
         this.mContext = mContext;
@@ -91,7 +89,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
             StringBuilder sb = new StringBuilder();
 
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
@@ -170,7 +168,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         mHttpResponseListener.httpResponseReceiver(null);
     }
 
-    public HttpResponse makeRequest() {
+    private HttpResponse makeRequest() {
         try {
             HttpRequestBase httpRequest = getRequest();
 
@@ -182,15 +180,13 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             httpRequest.setHeader("Accept", "application/json");
             httpRequest.setHeader("Content-type", "application/json");
             return new DefaultHttpClient().execute(httpRequest);
-        } catch (UnsupportedEncodingException | ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    protected Context getContext() {
+    Context getContext() {
         return mContext;
     }
 

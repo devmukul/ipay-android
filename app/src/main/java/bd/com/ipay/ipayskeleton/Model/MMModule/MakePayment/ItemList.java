@@ -3,12 +3,12 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment;
 import java.math.BigDecimal;
 
 public class ItemList {
-    public Long id;
-    public BigDecimal rate;
-    public BigDecimal quantity;
-    public String item;
-    public String description;
-    public BigDecimal amount;
+    private Long id;
+    private BigDecimal rate;
+    private BigDecimal quantity;
+    private String item;
+    private String description;
+    private BigDecimal amount;
 
     public ItemList() {
     }

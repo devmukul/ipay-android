@@ -12,7 +12,7 @@ public class ProfileCompletionStatusResponse {
     private List<String> tagList;
     private List<Integer> tagwiseScorePercentage;
     private int completionPercentage;
-    public boolean completedMandetoryFields;
+    private boolean completedMandetoryFields;
 
     private int basicInfoItemCount = 0;
     private int addressItemCount = 0;
@@ -24,11 +24,11 @@ public class ProfileCompletionStatusResponse {
     private double identificationCompletionSum = 0;
     private double linkBankCompletionSum = 0;
 
-    private List<PropertyDetails> basicInfoCompletionDetails = new ArrayList<>();
-    private List<PropertyDetails> addressCompletionDetails = new ArrayList<>();
-    private List<PropertyDetails> identificationCompletionDetails = new ArrayList<>();
-    private List<PropertyDetails> linkBankCompletionDetails = new ArrayList<>();
-    private List<PropertyDetails> otherCompletionDetails = new ArrayList<>();
+    private final List<PropertyDetails> basicInfoCompletionDetails = new ArrayList<>();
+    private final List<PropertyDetails> addressCompletionDetails = new ArrayList<>();
+    private final List<PropertyDetails> identificationCompletionDetails = new ArrayList<>();
+    private final List<PropertyDetails> linkBankCompletionDetails = new ArrayList<>();
+    private final List<PropertyDetails> otherCompletionDetails = new ArrayList<>();
 
     public String getMessage() {
         return message;
@@ -81,7 +81,7 @@ public class ProfileCompletionStatusResponse {
         return (int) Math.round(linkBankCompletionSum / linkBankItemCount);
     }
 
-    public double getPropertyCompletionPercentage(int threshold, int value) {
+    private double getPropertyCompletionPercentage(int threshold, int value) {
         if (value >= threshold)
             return 100;
         else
@@ -140,10 +140,10 @@ public class ProfileCompletionStatusResponse {
     }
 
     public class PropertyDetails implements Comparable<PropertyDetails>{
-        private String propertyName;
-        private int value;
-        private int threshold;
-        private int tag;
+        private final String propertyName;
+        private final int value;
+        private final int threshold;
+        private final int tag;
 
         public PropertyDetails(int value, int threshold, int tag, String propertyName) {
             this.value = value;

@@ -32,7 +32,7 @@ public class AboutActivity extends BaseActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-    public void switchToAboutFragment() {
+    private void switchToAboutFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new AboutFragment()).commit();
     }

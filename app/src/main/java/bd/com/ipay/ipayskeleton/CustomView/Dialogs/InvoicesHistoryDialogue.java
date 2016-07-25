@@ -26,17 +26,17 @@ public class InvoicesHistoryDialogue extends MaterialDialog.Builder {
     private InvoiceReviewAdapter invoiceReviewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ItemList mItemList[];
-    public BigDecimal mAmount;
+    private final ItemList[] mItemList;
+    private final BigDecimal mAmount;
     private BigDecimal mNetAmount;
-    private BigDecimal mVat;
+    private final BigDecimal mVat;
 
-    private String mDescription;
-    private String mTime;
-    private  long id;
-    private int status;
-    private Context context;
-    private String mTitle;
+    private final String mDescription;
+    private final String mTime;
+    private final long id;
+    private final int status;
+    private final Context context;
+    private final String mTitle;
 
     public InvoicesHistoryDialogue(Context context,String title, String description, String time, long id, BigDecimal amount, BigDecimal vat, ItemList[] itemList, int status) {
         super(context);
@@ -54,7 +54,7 @@ public class InvoicesHistoryDialogue extends MaterialDialog.Builder {
         initializeView();
     }
 
-    public void initializeView() {
+    private void initializeView() {
 
         MaterialDialog dialog = new MaterialDialog.Builder(this.getContext())
                 .title(R.string.invoice_details)
@@ -92,15 +92,15 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             final TextView timeTextView;
             final TextView invoiceIDTextView;
 
-            private TextView mItemNameView;
-            private TextView mQuantityView;
-            private TextView mAmountView;
+            private final TextView mItemNameView;
+            private final TextView mQuantityView;
+            private final TextView mAmountView;
 
 
-            private TextView mNetAmountView;
-            private TextView mVatView;
-            private TextView mTotalView;
-            private TextView mStatusView;
+            private final TextView mNetAmountView;
+            private final TextView mVatView;
+            private final TextView mTotalView;
+            private final TextView mStatusView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -130,14 +130,14 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 mAmountView.setText(Utilities.formatTaka(mItemList[pos].getAmount()));
             }
 
-            public void bindViewForHeader(int pos) {
+            public void bindViewForHeader() {
                 titleTextView.setText(mTitle);
                 descriptionTextView.setText(mDescription);
                 timeTextView.setText(mTime);
                 invoiceIDTextView.setText(context.getString(R.string.invoice_id) + " " + String.valueOf(id));
             }
 
-            public void bindViewForFooter(int pos) {
+            public void bindViewForFooter() {
                 mNetAmount = mAmount.subtract(mVat);
                 mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
                 mVatView.setText(Utilities.formatTaka(mVat));
@@ -189,18 +189,15 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             View v;
             if (viewType == INVOICE_DETAILS_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_sent_invoice_details_header, parent, false);
-                ListHeaderViewHolder vh = new ListHeaderViewHolder(v);
-                return vh;
+                return new ListHeaderViewHolder(v);
 
             } else if (viewType == INVOICE_DETAILS_LIST_FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_sent_invoice_details_footer, parent, false);
-                ListFooterViewHolder vh = new ListFooterViewHolder(v);
-                return vh;
+                return new ListFooterViewHolder(v);
 
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_make_payment_notification_review, parent, false);
-                ListItemViewHolder vh = new ListItemViewHolder(v);
-                return vh;
+                return new ListItemViewHolder(v);
             }
         }
 
@@ -213,11 +210,11 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 } else if (holder instanceof ListHeaderViewHolder) {
                     ListHeaderViewHolder vh = (ListHeaderViewHolder) holder;
-                    vh.bindViewForHeader(position);
+                    vh.bindViewForHeader();
 
                 } else if (holder instanceof ListFooterViewHolder) {
                     ListFooterViewHolder vh = (ListFooterViewHolder) holder;
-                    vh.bindViewForFooter(position);
+                    vh.bindViewForFooter();
                 }
 
             } catch (Exception e) {

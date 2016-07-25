@@ -49,7 +49,7 @@ public class BusinessType implements Resource, Parcelable {
         dest.writeString(this.name);
     }
 
-    protected BusinessType(Parcel in) {
+    private BusinessType(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
     }

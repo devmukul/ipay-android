@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class AddMoneyActivity extends BaseActivity {
 
     private SharedPreferences pref;
-    public static MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

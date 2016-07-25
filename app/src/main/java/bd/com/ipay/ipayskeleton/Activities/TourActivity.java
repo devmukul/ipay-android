@@ -31,7 +31,7 @@ public class TourActivity extends BaseActivity {
     private IconifiedButton buttonSignUp;
     private PagerIndicator mPagerIndicator;
 
-    private int[] tourBackgroundLayouts = {R.layout.tour_first_page, R.layout.tour_second_page,
+    private final int[] tourBackgroundLayouts = {R.layout.tour_first_page, R.layout.tour_second_page,
             R.layout.tour_third_page, R.layout.tour_fourth_page};
 
     @Override
@@ -143,15 +143,13 @@ public class TourActivity extends BaseActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View view = inflater.inflate(layout, null);
-
-            return view;
+            return inflater.inflate(layout, null);
         }
     }
 
     private class TourPagerAdapter extends FragmentPagerAdapter {
 
-        ArrayList<Fragment> fragments;
+        final ArrayList<Fragment> fragments;
 
         public TourPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
             super(fm);

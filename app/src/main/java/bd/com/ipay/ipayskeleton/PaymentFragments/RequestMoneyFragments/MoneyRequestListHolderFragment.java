@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -33,7 +32,7 @@ public class MoneyRequestListHolderFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_money_request_list_holder, container, false);
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new MoneyRequestListFragmentAdapter(getChildFragmentManager(), getActivity()));
+        viewPager.setAdapter(new MoneyRequestListFragmentAdapter(getChildFragmentManager()));
 
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -69,12 +68,12 @@ public class MoneyRequestListHolderFragment extends Fragment {
 
 
     public class MoneyRequestListFragmentAdapter extends FragmentPagerAdapter {
-        private String[] tabTitles = new String[]{
+        private final String[] tabTitles = new String[]{
                 getString(R.string.request_from_other),
                 getString(R.string.my_requests),
         };
 
-        public MoneyRequestListFragmentAdapter(FragmentManager fm, Context context) {
+        public MoneyRequestListFragmentAdapter(FragmentManager fm) {
             super(fm);
         }
 

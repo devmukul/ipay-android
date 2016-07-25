@@ -23,7 +23,7 @@ public class GetBusinessRuleWithServiceChargeRequestBuilder {
         return generatedUri;
     }
 
-    public void setGeneratedUri(String generatedUri) {
+    private void setGeneratedUri(String generatedUri) {
         this.generatedUri = generatedUri;
     }
 }

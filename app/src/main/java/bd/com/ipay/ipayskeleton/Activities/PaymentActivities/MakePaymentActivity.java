@@ -65,7 +65,7 @@ public class MakePaymentActivity extends BaseActivity {
         switchedToInvoicesList = true;
     }
 
-    public void switchToCreateInvoiceFragment() {
+    private void switchToCreateInvoiceFragment() {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new CreateInvoiceFragmentStepOne()).commit();

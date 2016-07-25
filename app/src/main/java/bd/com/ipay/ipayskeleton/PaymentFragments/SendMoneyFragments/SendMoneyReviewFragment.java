@@ -50,7 +50,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private String mSenderMobileNumber;
     private String mPhotoUri;
     private String mDescription;
-    String mError_message;
+    private String mError_message;
 
     private LinearLayout mLinearLayoutDescriptionHolder;
     private ProfileImageView mProfileImageView;

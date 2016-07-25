@@ -19,9 +19,7 @@ public class StorageManager {
                 + Constants.PICTURE_FOLDER);
         if (!dir.exists()) dir.mkdir();
 
-        File file = new File(dir, mobileNumber.replaceAll("[^0-9]", "") + ".jpg");
-
-        return file;
+        return new File(dir, mobileNumber.replaceAll("[^0-9]", "") + ".jpg");
     }
 
     public static void fileCopy(File src, File dst) {

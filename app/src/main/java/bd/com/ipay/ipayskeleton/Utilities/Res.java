@@ -7,8 +7,8 @@ import bd.com.ipay.ipayskeleton.R;
 /**
  * Contains the ids of the common resources used throught the app
  */
-public class Res {
-    public static int[] BACKGROUNDS = {
+class Res {
+    private static final int[] BACKGROUNDS = {
             R.drawable.background_portrait_circle,
             R.drawable.background_portrait_circle_blue,
             R.drawable.background_portrait_circle_brightpink,

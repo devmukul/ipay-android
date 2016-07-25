@@ -2,12 +2,12 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
 public class SetProfileInfoRequest {
 
-    public String name;
-    public String gender;
-    public String dob;
-    public int occupation;
-    public String father;
-    public String mother;
+    private final String name;
+    private final String gender;
+    private final String dob;
+    private final int occupation;
+    private final String father;
+    private final String mother;
 
     public SetProfileInfoRequest(String name, String gender, String dob, int occupation, String father, String mother) {
         this.name = name;

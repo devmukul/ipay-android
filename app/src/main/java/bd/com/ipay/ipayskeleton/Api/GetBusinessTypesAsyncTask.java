@@ -55,8 +55,8 @@ public class GetBusinessTypesAsyncTask extends HttpRequestGetAsyncTask {
     }
 
     public interface BusinessTypeLoadListener {
-        public void onLoadSuccess(List<BusinessType> businessTypes);
+        void onLoadSuccess(List<BusinessType> businessTypes);
 
-        public void onLoadFailed();
+        void onLoadFailed();
     }
 }

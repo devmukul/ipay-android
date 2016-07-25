@@ -4,15 +4,15 @@ import java.math.BigDecimal;
 
 public class FeeCharge {
 
-    public int messageType;
-    public int messageId;
-    public int moduleId;
-    public int clientIP;
-    public int clientTokenId;
-    public int clientUserAgent;
-    public BigDecimal maxTransactionFee;
-    public BigDecimal perTransactionFlatFee;
-    public BigDecimal perTransactionVeriableCharge;
+    private int messageType;
+    private int messageId;
+    private int moduleId;
+    private int clientIP;
+    private int clientTokenId;
+    private int clientUserAgent;
+    private BigDecimal maxTransactionFee;
+    private BigDecimal perTransactionFlatFee;
+    private BigDecimal perTransactionVeriableCharge;
 
     public FeeCharge() {
     }
@@ -65,18 +65,18 @@ public class FeeCharge {
         this.clientUserAgent = clientUserAgent;
     }
 
-    public BigDecimal getMaxTransactionFee() {
+    private BigDecimal getMaxTransactionFee() {
         return maxTransactionFee;
     }
 
-    public BigDecimal getPerTransactionFlatFee() {
+    private BigDecimal getPerTransactionFlatFee() {
         if (perTransactionFlatFee == null)
             return BigDecimal.ZERO;
         else
             return perTransactionFlatFee;
     }
 
-    public BigDecimal getPerTransactionVeriableCharge() {
+    private BigDecimal getPerTransactionVeriableCharge() {
         if (perTransactionVeriableCharge == null)
             return BigDecimal.ZERO;
         else

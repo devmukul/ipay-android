@@ -1,10 +1,10 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion;
 
-public class CompletionStatus {
-    public String property;
-    public int value;
-    public int threshold;
-    public int tag;
+class CompletionStatus {
+    private String property;
+    private int value;
+    private int threshold;
+    private int tag;
 
     public String getProperty() {
         return property;

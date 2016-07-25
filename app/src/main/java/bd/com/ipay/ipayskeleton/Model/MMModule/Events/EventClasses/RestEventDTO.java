@@ -5,25 +5,25 @@ import java.util.List;
 
 public class RestEventDTO {
 	
-	public long id;
-	public BigDecimal charge;
-	public long endTime;
-	public int maxNumOfParticipants;
-	public String name;
-	public int selectedParticipantsType;
-	public long startTime;
-	public RestEventCategoryDTO eventCategoryBean;
-	public RestEventCreatorDTO eventCreatorBean;
-	public List<RestEventParticipantDTO>eventParticipantList;
-	public int status;
-	public String contactName;
-	public String  contactNumber ;
-	public String  eventDescription;
-	public String  eventLink;
-	public String locationLattitude = "Dhaka";
-	public String locationLongitude= "Dhaka";
-	public int maxNumberFromOneAccount = 1;
-	public String  accountName;
+	private long id;
+	private BigDecimal charge;
+	private long endTime;
+	private int maxNumOfParticipants;
+	private String name;
+	private int selectedParticipantsType;
+	private long startTime;
+	private RestEventCategoryDTO eventCategoryBean;
+	private RestEventCreatorDTO eventCreatorBean;
+	private List<RestEventParticipantDTO>eventParticipantList;
+	private int status;
+	private String contactName;
+	private String  contactNumber ;
+	private String  eventDescription;
+	private String  eventLink;
+	private final String locationLattitude = "Dhaka";
+	private final String locationLongitude= "Dhaka";
+	private final int maxNumberFromOneAccount = 1;
+	private String  accountName;
 
 	public RestEventDTO() {
 	}

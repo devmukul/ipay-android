@@ -4,11 +4,11 @@ import android.net.Uri;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class GetNewsFeedRequestBuilder {
+class GetNewsFeedRequestBuilder {
 
     private final String PARAM_PAGE = "page";
 
-    private int page;
+    private final int page;
     private String generatedUri;
 
     public GetNewsFeedRequestBuilder(int page) {
@@ -28,7 +28,7 @@ public class GetNewsFeedRequestBuilder {
         return generatedUri;
     }
 
-    public void setGeneratedUri(String generatedUri) {
+    private void setGeneratedUri(String generatedUri) {
         this.generatedUri = generatedUri;
     }
 }

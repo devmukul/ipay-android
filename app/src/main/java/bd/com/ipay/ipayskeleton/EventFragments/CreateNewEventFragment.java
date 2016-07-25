@@ -42,7 +42,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateNewEventFragment extends Fragment implements HttpResponseListener {
 
-    private int PLACE_PICKER_REQUEST = 1;
+    private final int PLACE_PICKER_REQUEST = 1;
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestPostAsyncTask mCreateEventTask = null;

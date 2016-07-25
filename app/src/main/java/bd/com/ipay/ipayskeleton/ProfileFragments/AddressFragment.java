@@ -34,6 +34,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
+@SuppressWarnings("IfCanBeSwitch")
 public class AddressFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetUserAddressTask = null;
@@ -220,71 +221,75 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_ADDRESS_REQUEST)) {
-            try {
-                mGetUserAddressResponse = gson.fromJson(result.getJsonString(), GetUserAddressResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mPresentAddress = mGetUserAddressResponse.getPresentAddress();
-                    mPermanentAddress = mGetUserAddressResponse.getPermanentAddress();
-                    mOfficeAddress = mGetUserAddressResponse.getOfficeAddress();
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_USER_ADDRESS_REQUEST:
+                try {
+                    mGetUserAddressResponse = gson.fromJson(result.getJsonString(), GetUserAddressResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mPresentAddress = mGetUserAddressResponse.getPresentAddress();
+                        mPermanentAddress = mGetUserAddressResponse.getPermanentAddress();
+                        mOfficeAddress = mGetUserAddressResponse.getOfficeAddress();
 
-                    loadAddresses();
-                    setContentShown(true);
-                } else {
+                        loadAddresses();
+                        setContentShown(true);
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                        ((HomeActivity) getActivity()).switchToDashBoard();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
-                    ((HomeActivity) getActivity()).switchToDashBoard();
+                    if (getActivity() != null) getActivity().finish();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
-                if (getActivity() != null) getActivity().finish();
-            }
 
-            mGetUserAddressTask = null;
+                mGetUserAddressTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_THANA_LIST)) {
-            try {
-                mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mThanaList = mGetThanaResponse.getThanas();
-                    getUserAddress();
+                break;
+            case Constants.COMMAND_GET_THANA_LIST:
+                try {
+                    mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mThanaList = mGetThanaResponse.getThanas();
+                        getUserAddress();
 
-                } else {
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                        getActivity().finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
                     getActivity().finish();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
-                getActivity().finish();
-            }
 
-            mGetThanaListAsyncTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_DISTRICT_LIST)) {
-            try {
-                mGetDistrictResponse = gson.fromJson(result.getJsonString(), GetDistrictResponse.class);
+                mGetThanaListAsyncTask = null;
+                break;
+            case Constants.COMMAND_GET_DISTRICT_LIST:
+                try {
+                    mGetDistrictResponse = gson.fromJson(result.getJsonString(), GetDistrictResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mDistrictList = mGetDistrictResponse.getDistricts();
-                    getThanaList();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mDistrictList = mGetDistrictResponse.getDistricts();
+                        getThanaList();
 
-                } else {
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                        getActivity().finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
                     getActivity().finish();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
-                getActivity().finish();
-            }
 
-            mGetDistrictListAsyncTask = null;
+                mGetDistrictListAsyncTask = null;
+                break;
         }
     }
 }

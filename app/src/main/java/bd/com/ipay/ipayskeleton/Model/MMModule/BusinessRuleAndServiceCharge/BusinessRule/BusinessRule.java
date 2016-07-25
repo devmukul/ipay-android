@@ -3,21 +3,21 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.Bus
 import java.math.BigDecimal;
 
 public class BusinessRule {
-    public int serviceID;
-    public int ruleCode;
-    public int userType;
-    public int userClass;
-    public int status;
-    public int ruleCreatorAccountID;
-    public int lastUpdateAdminAccountID;
-    public long createTime;
-    public long lastUpdateTime;
-    public String serviceName;
-    public String ruleID;
-    public String ruleName;
-    public String alarmValueGreater;
-    public BigDecimal ruleValue;
-    public int id;
+    private int serviceID;
+    private int ruleCode;
+    private int userType;
+    private int userClass;
+    private int status;
+    private int ruleCreatorAccountID;
+    private int lastUpdateAdminAccountID;
+    private long createTime;
+    private long lastUpdateTime;
+    private String serviceName;
+    private String ruleID;
+    private String ruleName;
+    private String alarmValueGreater;
+    private BigDecimal ruleValue;
+    private int id;
 
     public int getServiceID() {
         return serviceID;

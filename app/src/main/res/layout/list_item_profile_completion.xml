@@ -23,7 +23,6 @@
             android:layout_centerVertical="true"/>
 
         <LinearLayout
-            android:id="@+id/profile_completion_details_holder"
             android:layout_toLeftOf="@+id/verification_status"
             android:orientation="vertical"
             android:layout_centerVertical="true"

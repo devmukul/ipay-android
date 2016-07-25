@@ -2,10 +2,10 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed;
 
 import java.util.List;
 
-public class GetNewsFeedResponse {
+class GetNewsFeedResponse {
 
-    public List<News> newsFeed;
-    public boolean hasNext;
+    private List<News> newsFeed;
+    private boolean hasNext;
 
     public GetNewsFeedResponse() {
     }

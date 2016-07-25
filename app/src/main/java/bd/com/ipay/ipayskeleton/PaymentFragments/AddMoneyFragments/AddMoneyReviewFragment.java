@@ -63,7 +63,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     private TextView mTotalView;
     private Button mAddMoneyButton;
     private RoundedImageView mBankIcon;
-    String mError_message;
+    private String mError_message;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

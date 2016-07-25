@@ -2,10 +2,10 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney;
 
 public class WithdrawMoneyRequest {
 
-    public long bankAccountId;
-    private double amount;
-    private String description;
-    private String pin;
+    private final long bankAccountId;
+    private final double amount;
+    private final String description;
+    private final String pin;
 
     public WithdrawMoneyRequest(long bankAccountId, double amount, String description, String pin) {
         this.bankAccountId = bankAccountId;

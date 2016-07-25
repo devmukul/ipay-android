@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.Friend;
 import java.util.List;
 
 public class AddFriendRequest {
-    private List<InfoAddFriend> newFriends;
+    private final List<InfoAddFriend> newFriends;
 
     public AddFriendRequest(List<InfoAddFriend> newFriends) {
         this.newFriends = newFriends;

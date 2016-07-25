@@ -55,7 +55,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
 
-    public static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_PERMISSION = 1001;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -164,7 +164,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         switch (requestCode) {
             case ACTION_UPLOAD_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFileFromResult(getActivity(), resultCode, intent);
+                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), resultCode, intent);
                     mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
 
                     if (filePath != null) {

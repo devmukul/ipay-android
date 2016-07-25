@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/personal_signup_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -9,12 +8,10 @@
     android:background="@color/colorPrimary">
 
     <ScrollView
-        android:id="@+id/business_login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/ipay_business_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -56,7 +53,6 @@
                 android:layout_height="wrap_content">
 
                 <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                    android:id="@+id/gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_gender"
@@ -137,7 +133,6 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:id="@+id/business_address_wrapper_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"

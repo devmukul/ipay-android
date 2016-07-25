@@ -1,9 +1,9 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses;
 
 public class RestEventCategoryDTO {
-    public  Long id;
-    public  String description;
-    public String name;
+    private Long id;
+    private String description;
+    private String name;
 
     public RestEventCategoryDTO() {
     }

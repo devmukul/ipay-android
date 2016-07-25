@@ -30,22 +30,22 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
 
-    private Context context;
+    private final Context context;
 
-    public static final long DISCONNECT_TIMEOUT = 300000; // 5 min = 5 * 60 * 1000 ms
+    private static final long DISCONNECT_TIMEOUT = 300000; // 5 min = 5 * 60 * 1000 ms
 
     public BaseActivity() {
         this.context = setContext();
     }
 
-    public abstract Context setContext();
+    protected abstract Context setContext();
 
-    private Handler disconnectHandler = new Handler() {
+    private final Handler disconnectHandler = new Handler() {
         public void handleMessage(Message msg) {
         }
     };
 
-    private Runnable disconnectCallback = new Runnable() {
+    private final Runnable disconnectCallback = new Runnable() {
         @Override
         public void run() {
             if (!((Activity) context).isFinishing()) {
@@ -58,12 +58,12 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         }
     };
 
-    public void resetDisconnectTimer() {
+    private void resetDisconnectTimer() {
         disconnectHandler.removeCallbacks(disconnectCallback);
         disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
     }
 
-    public void stopDisconnectTimer() {
+    private void stopDisconnectTimer() {
         disconnectHandler.removeCallbacks(disconnectCallback);
     }
 
@@ -84,7 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         stopDisconnectTimer();
     }
 
-    public void refreshToken() {
+    void refreshToken() {
         if (HomeActivity.mRefreshTokenAsyncTask != null) {
             HomeActivity.mRefreshTokenAsyncTask.cancel(true);
             HomeActivity.mRefreshTokenAsyncTask = null;

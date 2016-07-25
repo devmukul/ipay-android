@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
  * Depending on that, show proper dialog to the user.
  */
 public class BankListValidator {
-    private List<UserBankClass> mListUserBankClasses;
+    private final List<UserBankClass> mListUserBankClasses;
 
     public BankListValidator(List<UserBankClass> mListUserBankClasses) {
         this.mListUserBankClasses = mListUserBankClasses;
@@ -29,10 +29,7 @@ public class BankListValidator {
     public boolean isBankAdded() {
         if (mListUserBankClasses == null)
             return false;
-        else if (mListUserBankClasses.isEmpty())
-            return false;
-        else
-            return true;
+        else return !mListUserBankClasses.isEmpty();
     }
 
     public boolean isVerifiedBankAdded() {

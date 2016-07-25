@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFra
 public class SendMoneyActivity extends BaseActivity {
 
     private SendMoneyFragment sendMoneyFragment;
-    public static MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

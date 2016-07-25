@@ -136,7 +136,7 @@ public class EmployeeInformationDetailsFragment extends Fragment implements Http
 
         public class EmployeePrivilegeViewHolder extends RecyclerView.ViewHolder {
 
-            private CheckBox mPrivilegeCheckBox;
+            private final CheckBox mPrivilegeCheckBox;
 
             public EmployeePrivilegeViewHolder(View itemView) {
                 super(itemView);
@@ -158,8 +158,7 @@ public class EmployeeInformationDetailsFragment extends Fragment implements Http
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item_privilege, parent, false);
-            EmployeePrivilegeViewHolder vh = new EmployeePrivilegeViewHolder(v);
-            return vh;
+            return new EmployeePrivilegeViewHolder(v);
         }
 
         @Override

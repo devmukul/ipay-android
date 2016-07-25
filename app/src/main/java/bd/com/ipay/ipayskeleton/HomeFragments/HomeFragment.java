@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private ImageView refreshBalanceButton;
 
-    public static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private View mProfileCompletionPromptView;
 
@@ -303,7 +303,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
     }
 
-    public void initiateScan() {
+    private void initiateScan() {
         IntentIntegrator.forSupportFragment(this).initiateScan();
     }
 
@@ -347,7 +347,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             menu.findItem(R.id.action_search_contacts).setVisible(false);
     }
 
-    public void updateProfileData() {
+    private void updateProfileData() {
         mNameView.setText(ProfileInfoCacheManager.getName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
@@ -530,14 +530,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
     }
 
-    private BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             updateProfileData();
         }
     };
 
-    private BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
@@ -546,7 +546,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
     };
 
-    private BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("Broadcast received", "Home Fragment");

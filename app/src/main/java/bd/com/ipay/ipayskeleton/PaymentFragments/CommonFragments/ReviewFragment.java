@@ -45,18 +45,18 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
 
     // Service ID used to query the service charge
-    public abstract int getServiceID();
+    protected abstract int getServiceID();
 
     // The original amount you have entered in the previous page
-    public abstract BigDecimal getAmount();
+    protected abstract BigDecimal getAmount();
 
     /**
      * This method will be called once the service charge loading is finished. You should populate
      * the service charge and net amount view withing this method.
      */
-    public abstract void onServiceChargeLoadFinished(BigDecimal serviceCharge);
+    protected abstract void onServiceChargeLoadFinished(BigDecimal serviceCharge);
 
-    public abstract void onPinLoadFinished(boolean isPinRequired);
+    protected abstract void onPinLoadFinished(boolean isPinRequired);
 
     protected void attemptGetServiceCharge() {
 
@@ -153,22 +153,31 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
                         if (mBusinessRulesResponseWithServiceCharge.getBusinessRules() != null) {
                             for (BusinessRule rule : mBusinessRulesResponseWithServiceCharge.getBusinessRules()) {
-                                if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                    SendMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                                    SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                    AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                                    AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT)) {
-                                    TopUpActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT)) {
-                                    TopUpActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                    WithdrawMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                                    WithdrawMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                switch (rule.getRuleID()) {
+                                    case Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                                        SendMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                                        SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                                        AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                                        AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT:
+                                        TopUpActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT:
+                                        TopUpActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                                        WithdrawMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                                        WithdrawMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
                                 }
                             }
                         }

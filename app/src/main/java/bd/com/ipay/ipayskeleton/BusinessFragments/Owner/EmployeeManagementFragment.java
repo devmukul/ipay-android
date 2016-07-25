@@ -172,16 +172,16 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
     public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private class EmployeeViewHolder extends RecyclerView.ViewHolder {
-            private ProfileImageView mProfileImageView;
-            private TextView mNameView;
-            private TextView mMobileNumberView;
-            private TextView mDesignationView;
-            private ImageView mStatusView;
-            private View mOptionsLayout;
-            private Button mViewButton;
-            private Button mRemoveButton;
-            private Button mEditButton;
-            private View divider;
+            private final ProfileImageView mProfileImageView;
+            private final TextView mNameView;
+            private final TextView mMobileNumberView;
+            private final TextView mDesignationView;
+            private final ImageView mStatusView;
+            private final View mOptionsLayout;
+            private final Button mViewButton;
+            private final Button mRemoveButton;
+            private final Button mEditButton;
+            private final View divider;
 
             public EmployeeViewHolder(View itemView) {
                 super(itemView);
@@ -218,15 +218,19 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                     mDesignationView.setVisibility(View.GONE);
                 }
 
-                if (employee.getStatus().equals(Constants.BUSINESS_INVITATION_ACCEPTED)) {
-                    mStatusView.setImageResource(R.drawable.ic_verified3x);
-                    mStatusView.setColorFilter(null);
-                } else if (employee.getStatus().equals(Constants.BUSINESS_STATUS_PENDING)) {
-                    mStatusView.setImageResource(R.drawable.ic_wip);
-                    mStatusView.setColorFilter(Color.GRAY);
-                } else {
-                    mStatusView.setImageResource(R.drawable.ic_notverified3x);
-                    mStatusView.setColorFilter(null);
+                switch (employee.getStatus()) {
+                    case Constants.BUSINESS_INVITATION_ACCEPTED:
+                        mStatusView.setImageResource(R.drawable.ic_verified3x);
+                        mStatusView.setColorFilter(null);
+                        break;
+                    case Constants.BUSINESS_STATUS_PENDING:
+                        mStatusView.setImageResource(R.drawable.ic_wip);
+                        mStatusView.setColorFilter(Color.GRAY);
+                        break;
+                    default:
+                        mStatusView.setImageResource(R.drawable.ic_notverified3x);
+                        mStatusView.setColorFilter(null);
+                        break;
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -275,9 +279,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_employee,
                     parent, false);
 
-            EmployeeViewHolder vh = new EmployeeViewHolder(v);
-
-            return vh;
+            return new EmployeeViewHolder(v);
         }
 
         @Override

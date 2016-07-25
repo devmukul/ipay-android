@@ -1,14 +1,14 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses;
 
-public class RestEventDetailDTO {
+class RestEventDetailDTO {
 
-    public Long id;
-    public String contactName;
-    public String contactNumber;
-    public String eventDetail;
-    public String locationLattitude;
-    public String locationLongitude;
-    public String eventLink;
+    private Long id;
+    private String contactName;
+    private String contactNumber;
+    private String eventDetail;
+    private String locationLattitude;
+    private String locationLongitude;
+    private String eventLink;
 
     public RestEventDetailDTO() {
     }

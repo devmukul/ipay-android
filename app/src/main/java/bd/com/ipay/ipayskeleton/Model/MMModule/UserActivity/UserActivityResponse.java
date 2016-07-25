@@ -4,8 +4,8 @@ import java.util.List;
 
 public class UserActivityResponse {
 
-    public List<UserActivityClass> activities;
-    public boolean hasNext;
+    private List<UserActivityClass> activities;
+    private boolean hasNext;
 
     public UserActivityResponse() {
     }

@@ -6,7 +6,7 @@ import java.util.Map;
 
 
 public class GenderList {
-    public static final String[] genderCodes = {
+    private static final String[] genderCodes = {
             "M", "F", "O"
     };
 

@@ -6,16 +6,16 @@ import android.content.res.Resources;
 
 
 public class UserBankClass {
-    public long bankAccountId;
-    public long bankBranchId;
-    public int accountType;
-    public String accountName;
-    public String accountNumber;
-    public Integer accountStatus;
-    public String verificationStatus;
-    public String bankName;
-    public String branchName;
-    public String bankCode;
+    private long bankAccountId;
+    private long bankBranchId;
+    private int accountType;
+    private String accountName;
+    private String accountNumber;
+    private Integer accountStatus;
+    private String verificationStatus;
+    private String bankName;
+    private String branchName;
+    private String bankCode;
 
 
     public String getBankName() {
@@ -54,7 +54,7 @@ public class UserBankClass {
         return verificationStatus;
     }
 
-    public String getBankCode() {
+    private String getBankCode() {
         return bankCode;
     }
 

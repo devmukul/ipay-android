@@ -108,7 +108,7 @@ public class HomeActivity extends BaseActivity
 
     private int mBadgeCount = 0;
 
-    public static boolean switchedToHomeFragment = true;
+    private static boolean switchedToHomeFragment = true;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -330,6 +330,8 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 for (int i = 0; i < permissions.length; i++) {
@@ -355,7 +357,7 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = true;
     }
 
-    public void updateNotificationBadgeCount(int badgeCount) {
+    private void updateNotificationBadgeCount(int badgeCount) {
         mBadgeCount = badgeCount;
 
         Log.d("Notification Count", badgeCount + "");
@@ -366,7 +368,7 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    public void setDrawerMenuVisibility(int id, boolean visible) {
+    private void setDrawerMenuVisibility(int id, boolean visible) {
         mNavigationView.getMenu().findItem(id).setVisible(visible);
     }
 
@@ -540,72 +542,76 @@ public class HomeActivity extends BaseActivity
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_LOG_OUT:
 
-            try {
-                mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
+                try {
+                    mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    finish();
-                    Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        finish();
+                        Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(HomeActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(HomeActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
-            }
+                mProgressDialog.dismiss();
+                mLogoutTask = null;
 
-            mProgressDialog.dismiss();
-            mLogoutTask = null;
+                break;
+            case Constants.COMMAND_GET_USER_INFO:
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+                try {
+                    mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mNameView.setText(mGetUserInfoResponse.getName());
 
-            try {
-                mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mNameView.setText(mGetUserInfoResponse.getName());
+                        String imageUrl = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
-                    String imageUrl = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
+                        //saving user info in shared preference
+                        ProfileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
 
-                    //saving user info in shared preference
-                    ProfileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
-
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
-                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
 
-                } else {
+                    } else {
+                        Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
-            }
 
-            mGetProfileInfoTask = null;
+                mGetProfileInfoTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
+                break;
+            case Constants.COMMAND_ADD_TRUSTED_DEVICE:
 
-            try {
-                mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
+                try {
+                    mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String UUID = mAddToTrustedDeviceResponse.getUUID();
-                    pref.edit().putString(Constants.UUID, UUID).apply();
-                } else {
-                    Toast.makeText(this, mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String UUID = mAddToTrustedDeviceResponse.getUUID();
+                        pref.edit().putString(Constants.UUID, UUID).apply();
+                    } else {
+                        Toast.makeText(this, mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
-            }
+                mAddTrustedDeviceTask = null;
 
-            mAddTrustedDeviceTask = null;
-
+                break;
         }
     }
 
@@ -614,7 +620,7 @@ public class HomeActivity extends BaseActivity
         return HomeActivity.this;
     }
 
-    private BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);

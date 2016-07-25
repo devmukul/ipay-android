@@ -186,72 +186,77 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         }
 
         Gson gson = new Gson();
-        if (result.getApiCommand().equals(Constants.COMMAND_CREATE_EMPLOYEE)) {
-            try {
-                mCreateEmployeeResponse = gson.fromJson(result.getJsonString(), CreateEmployeeResponse.class);
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_CREATE_EMPLOYEE:
+                try {
+                    mCreateEmployeeResponse = gson.fromJson(result.getJsonString(), CreateEmployeeResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((BusinessActivity) getActivity()).switchToEmployeeManagementFragment();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ((BusinessActivity) getActivity()).switchToEmployeeManagementFragment();
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                } else {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                } catch (Exception e) {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.new_employee_creation_failed, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.new_employee_creation_failed, Toast.LENGTH_LONG).show();
-            }
-        } else if (result.getApiCommand().equals(Constants.COMMAND_UPDATE_EMPLOYEE)) {
-            try {
-                mEditEmployeeResponse = gson.fromJson(result.getJsonString(), UpdateEmployeeResponse.class);
+                break;
+            case Constants.COMMAND_UPDATE_EMPLOYEE:
+                try {
+                    mEditEmployeeResponse = gson.fromJson(result.getJsonString(), UpdateEmployeeResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((BusinessActivity) getActivity()).switchToEmployeeManagementFragment();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ((BusinessActivity) getActivity()).switchToEmployeeManagementFragment();
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                } else {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                } catch (Exception e) {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.edit_employee_details_failed, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.edit_employee_details_failed, Toast.LENGTH_LONG).show();
-            }
-        }  else if (result.getApiCommand().equals(Constants.COMMAND_GET_EMPLOYEE_DETAILS)) {
-            try {
-                mGetEmployeeDetailsResponse = gson.fromJson(result.getJsonString(), GetEmployeeDetailsResponse.class);
+                break;
+            case Constants.COMMAND_GET_EMPLOYEE_DETAILS:
+                try {
+                    mGetEmployeeDetailsResponse = gson.fromJson(result.getJsonString(), GetEmployeeDetailsResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                        mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
+                            mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
 
-                        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture, false);
-                        mNameView.setText(mEmployeeDetails.getName());
-                        mMobileNumberView.setText(mEmployeeDetails.getMobileNumber());
+                            mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture, false);
+                            mNameView.setText(mEmployeeDetails.getName());
+                            mMobileNumberView.setText(mEmployeeDetails.getMobileNumber());
 
-                        if (!mEmployeeDetails.getDesignation().equals("")) mDesignationView.setText(mEmployeeDetails.getDesignation());
-                        else mDesignationView.setVisibility(View.GONE);
+                            if (!mEmployeeDetails.getDesignation().equals(""))
+                                mDesignationView.setText(mEmployeeDetails.getDesignation());
+                            else mDesignationView.setVisibility(View.GONE);
 
-                        mPrivilegeList = mEmployeeDetails.getPrivilegeList();
-                        mEmployeePrivilegeAdapter.notifyDataSetChanged();
+                            mPrivilegeList = mEmployeeDetails.getPrivilegeList();
+                            mEmployeePrivilegeAdapter.notifyDataSetChanged();
 
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                } else {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                } catch (Exception e) {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.fetching_employee_details_failed, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.fetching_employee_details_failed, Toast.LENGTH_LONG).show();
-            }
+                break;
         }
     }
 
@@ -259,7 +264,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
         public class EmployeePrivilegeViewHolder extends RecyclerView.ViewHolder {
 
-            private CheckBox mPrivilegeCheckBox;
+            private final CheckBox mPrivilegeCheckBox;
 
             public EmployeePrivilegeViewHolder(View itemView) {
                 super(itemView);
@@ -285,8 +290,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item_privilege, parent, false);
-            EmployeePrivilegeViewHolder vh = new EmployeePrivilegeViewHolder(v);
-            return vh;
+            return new EmployeePrivilegeViewHolder(v);
         }
 
         @Override

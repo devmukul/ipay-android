@@ -2,10 +2,10 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.ForgetPassword;
 
 public class ForgetPasswordRequest {
 
-    private String name;
-    private String mobileNumber;
-    private String dob;
-    private String deviceId;
+    private final String name;
+    private final String mobileNumber;
+    private final String dob;
+    private final String deviceId;
 
     public ForgetPasswordRequest(String name, String mobileNumber, String dob, String deviceId) {
         this.name = name;

@@ -2,15 +2,15 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses;
 
 public class RestEventParticipantDTO {
 
-	public long id;
+	private long id;
 
-	public String participantDetailedInformation ="";
+	private final String participantDetailedInformation ="";
 
-	public String participantMobileNumber;
+	private String participantMobileNumber;
 
-	public String participantName;
+	private String participantName;
 
-	public RestEventDTO event;
+	private RestEventDTO event;
 
 	public RestEventParticipantDTO() {
 	}

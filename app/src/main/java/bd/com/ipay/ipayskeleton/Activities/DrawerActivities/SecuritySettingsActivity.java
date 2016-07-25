@@ -57,7 +57,7 @@ public class SecuritySettingsActivity extends BaseActivity {
             super.onBackPressed();
     }
 
-    public void switchToAccountSettingsFragment() {
+    private void switchToAccountSettingsFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new SecuritySettingsFragment()).commit();
         switchedToSettingsFragment = false;

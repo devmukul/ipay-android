@@ -180,11 +180,11 @@ public class MyTicketsFragment extends ProgressFragment implements HttpResponseL
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mSenderNumber;
-            private TextView mTime;
-            private TextView mDescription;
-            private ProfileImageView mProfileImageView;
-            private View divider;
+            private final TextView mSenderNumber;
+            private final TextView mTime;
+            private final TextView mDescription;
+            private final ProfileImageView mProfileImageView;
+            private final View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -229,9 +229,7 @@ public class MyTicketsFragment extends ProgressFragment implements HttpResponseL
             // TODO: modify the list item layout as per requirement
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_my_events, parent, false);
 
-            ViewHolder vh = new ViewHolder(v);
-
-            return vh;
+            return new ViewHolder(v);
         }
 
         @Override

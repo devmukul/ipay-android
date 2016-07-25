@@ -7,27 +7,27 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses.RestEventCate
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses.RestEventCreatorDTO;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses.RestEventParticipantDTO;
 
-public class CreateNewEventRequest {
+class CreateNewEventRequest {
 
-    private Long id;
-    private BigDecimal charge;
-    private Long endTime;
-    private Integer maxNumOfParticipants;
-    private String name;
-    private Integer selectedParticipantsType;
-    private Long startTime;
-    private RestEventCategoryDTO eventCategoryBean;
-    private RestEventCreatorDTO eventCreatorBean;
-    private List<RestEventParticipantDTO> eventParticipantList;
-    private int status;
-    private String contactName;
-    private String contactNumber;
-    private String eventDescription;
-    private String eventLink;
+    private final Long id;
+    private final BigDecimal charge;
+    private final Long endTime;
+    private final Integer maxNumOfParticipants;
+    private final String name;
+    private final Integer selectedParticipantsType;
+    private final Long startTime;
+    private final RestEventCategoryDTO eventCategoryBean;
+    private final RestEventCreatorDTO eventCreatorBean;
+    private final List<RestEventParticipantDTO> eventParticipantList;
+    private final int status;
+    private final String contactName;
+    private final String contactNumber;
+    private final String eventDescription;
+    private final String eventLink;
     private String locationLattitude = "Dhaka";
     private String locationLongitude = "Dhaka";
     private int maxNumberFromOneAccount = 1;
-    private String accountName;
+    private final String accountName;
 
     public CreateNewEventRequest(Long id, BigDecimal charge, Long endTime, Integer maxNumOfParticipants, String name, Integer selectedParticipantsType, Long startTime, RestEventCategoryDTO eventCategoryBean, RestEventCreatorDTO eventCreatorBean, List<RestEventParticipantDTO> eventParticipantList, int status, String contactName, String contactNumber, String eventDescription, String eventLink, String locationLattitude, String locationLongitude, int maxNumberFromOneAccount, String accountName) {
         this.id = id;

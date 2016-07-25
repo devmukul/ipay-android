@@ -4,11 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class TrustedOtpReceiver implements Parcelable {
-    private long personId;
-    private String name;
-    private String relationship;
-    private String mobileNumber;
-    private boolean eligibleForAccountRecovery;
+    private final long personId;
+    private final String name;
+    private final String relationship;
+    private final String mobileNumber;
+    private final boolean eligibleForAccountRecovery;
 
     public TrustedOtpReceiver(long personId, String name, String relationship, String mobileNumber, boolean eligibleForAccountRecovery) {
         this.personId = personId;
@@ -42,7 +42,7 @@ public class TrustedOtpReceiver implements Parcelable {
         return CREATOR;
     }
 
-    public TrustedOtpReceiver(Parcel src) {
+    private TrustedOtpReceiver(Parcel src) {
         personId = src.readLong();
         name = src.readString();
         relationship = src.readString();

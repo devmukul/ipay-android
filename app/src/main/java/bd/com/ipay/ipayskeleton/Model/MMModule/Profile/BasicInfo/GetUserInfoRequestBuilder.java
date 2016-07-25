@@ -10,7 +10,7 @@ public class GetUserInfoRequestBuilder {
 
     private final String PARAM_LOGIN_ID = "loginId";
 
-    private String loginId;
+    private final String loginId;
     private String generatedUri;
 
     public GetUserInfoRequestBuilder(String loginId) {
@@ -31,7 +31,7 @@ public class GetUserInfoRequestBuilder {
         return generatedUri;
     }
 
-    public void setGeneratedUri(String generatedUri) {
+    private void setGeneratedUri(String generatedUri) {
         this.generatedUri = generatedUri;
     }
 }

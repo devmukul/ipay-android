@@ -119,7 +119,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 } else {
                     Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
                 }
-                return;
             }
         }
     }
@@ -219,7 +218,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
     }
 
-    protected void attemptGetBusinessRule(int serviceID) {
+    private void attemptGetBusinessRule(int serviceID) {
 
         if (mGetBusinessRuleTask != null) {
             return;
@@ -239,7 +238,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            return;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

@@ -4,9 +4,9 @@ import java.util.List;
 
 public class GetMoneyAndPaymentRequestResponse {
 
-    public List<MoneyAndPaymentRequest> requests;
-    public boolean hasNext;
-    public String message;
+    private List<MoneyAndPaymentRequest> requests;
+    private boolean hasNext;
+    private String message;
 
     public GetMoneyAndPaymentRequestResponse() {
     }

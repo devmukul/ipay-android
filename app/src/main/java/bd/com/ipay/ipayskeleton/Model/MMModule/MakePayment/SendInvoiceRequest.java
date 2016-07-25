@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 public class SendInvoiceRequest {
 
-    private BigDecimal amount;
-    private String clientUserMobileNumber;
-    private String description;
-    private int requestId;
-    private BigDecimal vat;
+    private final BigDecimal amount;
+    private final String clientUserMobileNumber;
+    private final String description;
+    private final int requestId;
+    private final BigDecimal vat;
 
     public SendInvoiceRequest(BigDecimal amount, String clientUserMobileNumber, String description, int requestId, BigDecimal vat) {
         this.amount = amount;

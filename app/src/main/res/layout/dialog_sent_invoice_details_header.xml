@@ -47,7 +47,6 @@
         android:weightSum="3">
 
         <TextView
-            android:id="@+id/text_item"
             style="@style/ReviewItemLabelStyle.Dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,7 +55,6 @@
             android:text="@string/item" />
 
         <TextView
-            android:id="@+id/text_quantity"
             style="@style/ReviewItemLabelStyle.Dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +63,6 @@
             android:text="@string/quantity" />
 
         <TextView
-            android:id="@+id/text_amount"
             style="@style/ReviewItemLabelStyle.Dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

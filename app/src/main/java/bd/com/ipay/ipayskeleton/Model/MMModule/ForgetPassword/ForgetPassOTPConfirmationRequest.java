@@ -4,11 +4,11 @@ import java.util.List;
 
 public class ForgetPassOTPConfirmationRequest {
 
-    private String mobileNumber;
-    private String deviceId;
-    private String otp;
-    private String newPassword;
-    private List<TrustedOtp> trustedOtps;
+    private final String mobileNumber;
+    private final String deviceId;
+    private final String otp;
+    private final String newPassword;
+    private final List<TrustedOtp> trustedOtps;
 
     public ForgetPassOTPConfirmationRequest(String mobileNumber, String deviceId, String otp, String newPassword, List<TrustedOtp> trustedOtps) {
         this.mobileNumber = mobileNumber;

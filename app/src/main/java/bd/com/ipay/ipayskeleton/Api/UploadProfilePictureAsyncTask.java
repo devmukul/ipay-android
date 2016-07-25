@@ -25,9 +25,9 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpResponseObject> {
 
-    private Context mContext;
-    private String imagePath;
-    private String API_COMMAND;
+    private final Context mContext;
+    private final String imagePath;
+    private final String API_COMMAND;
     public HttpResponseListener mHttpResponseListener;
 
     public UploadProfilePictureAsyncTask(String API_COMMAND, String imagePath, Context mContext) {

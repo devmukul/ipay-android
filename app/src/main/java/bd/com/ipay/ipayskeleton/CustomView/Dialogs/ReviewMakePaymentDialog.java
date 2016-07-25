@@ -40,19 +40,19 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
     private PaymentReviewAdapter paymentReviewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private List<ItemList> mItemList;
-    public BigDecimal mAmount;
+    private final List<ItemList> mItemList;
+    private final BigDecimal mAmount;
     private BigDecimal mNetAmount;
-    private BigDecimal mVat;
-    private String mReceiverName;
-    private String mReceiverMobileNumber;
-    private String mPhotoUri;
-    private long requestId;
-    private String mTitle;
-    private int mServiceID;
+    private final BigDecimal mVat;
+    private final String mReceiverName;
+    private final String mReceiverMobileNumber;
+    private final String mPhotoUri;
+    private final long requestId;
+    private final String mTitle;
+    private final int mServiceID;
 
     private ProgressDialog mProgressDialog;
-    private ReviewDialogFinishListener mReviewFinishListener;
+    private final ReviewDialogFinishListener mReviewFinishListener;
 
     public ReviewMakePaymentDialog(Context context, long moneyRequestId, String receiverMobileNumber, String receiverName, String photoUri, BigDecimal amount,
                                    String title, int serviceID, BigDecimal vat, List<ItemList> itemList, ReviewDialogFinishListener reviewFinishListener) {
@@ -71,7 +71,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
         initializeView();
     }
 
-    public void initializeView() {
+    private void initializeView() {
         customView(R.layout.dialog_make_payment_notification_review, true);
 
         View v = this.build().getCustomView();
@@ -89,7 +89,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
         negativeText(R.string.cancel);
     }
 
-    void initializeButtonActions(final EditText mPinFieldView) {
+    private void initializeButtonActions(final EditText mPinFieldView) {
         onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -101,8 +101,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                     // So when the MAKE PAYMENT button is clicked we force scroll to top to make the views attached to the list items to refresh their reference again
                     mLayoutManager.scrollToPosition(0);
 
-                    View focusView = mPinFieldView;
-                    focusView.requestFocus();
+                    mPinFieldView.requestFocus();
                     mPinFieldView.setError(getContext().getString(R.string.failed_empty_pin));
 
                 } else {
@@ -191,17 +190,17 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            private TextView mItemNameView;
-            private TextView mQuantityView;
-            private TextView mAmountView;
+            private final TextView mItemNameView;
+            private final TextView mQuantityView;
+            private final TextView mAmountView;
             private EditText mPinField;
-            private ProfileImageView mProfileImageView;
-            private TextView mNameView;
-            private TextView mMobileNumberView;
-            private TextView mTitleView;
-            private TextView mNetAmountView;
-            private TextView mVatView;
-            private TextView mTotalView;
+            private final ProfileImageView mProfileImageView;
+            private final TextView mNameView;
+            private final TextView mMobileNumberView;
+            private final TextView mTitleView;
+            private final TextView mNetAmountView;
+            private final TextView mVatView;
+            private final TextView mTotalView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -229,7 +228,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                 mAmountView.setText(Utilities.formatTaka(mItemList.get(pos).getAmount()));
             }
 
-            public void bindViewForHeader(int pos) {
+            public void bindViewForHeader() {
                 if (mReceiverName == null || mReceiverName.isEmpty()) {
                     mNameView.setVisibility(View.GONE);
                 } else {
@@ -247,7 +246,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                 mProfileImageView.setProfilePicture(mPhotoUri, false);
             }
 
-            public void bindViewForFooter(int pos) {
+            public void bindViewForFooter() {
                 mNetAmount = mAmount.subtract(mVat);
                 mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
                 mVatView.setText(Utilities.formatTaka(mVat));
@@ -282,18 +281,15 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
             View v;
             if (viewType == NOTIFICATION_REVIEW_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_make_payment_notification_review_header, parent, false);
-                ListHeaderViewHolder vh = new ListHeaderViewHolder(v);
-                return vh;
+                return new ListHeaderViewHolder(v);
 
             } else if (viewType == NOTIFICATION_REVIEW_LIST_FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_make_payment_notification_review_footer, parent, false);
-                ListFooterViewHolder vh = new ListFooterViewHolder(v);
-                return vh;
+                return new ListFooterViewHolder(v);
 
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_make_payment_notification_review, parent, false);
-                ListItemViewHolder vh = new ListItemViewHolder(v);
-                return vh;
+                return new ListItemViewHolder(v);
             }
         }
 
@@ -306,11 +302,11 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
 
                 } else if (holder instanceof ListHeaderViewHolder) {
                     ListHeaderViewHolder vh = (ListHeaderViewHolder) holder;
-                    vh.bindViewForHeader(position);
+                    vh.bindViewForHeader();
 
                 } else if (holder instanceof ListFooterViewHolder) {
                     ListFooterViewHolder vh = (ListFooterViewHolder) holder;
-                    vh.bindViewForFooter(position);
+                    vh.bindViewForFooter();
                 }
 
             } catch (Exception e) {

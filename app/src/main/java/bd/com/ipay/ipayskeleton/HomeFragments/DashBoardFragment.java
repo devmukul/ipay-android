@@ -130,7 +130,7 @@ public class DashBoardFragment extends Fragment {
         payTab.setCustomView(payTabView);
 
     }
-    public void setTitle() {
+    private void setTitle() {
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(true);
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 

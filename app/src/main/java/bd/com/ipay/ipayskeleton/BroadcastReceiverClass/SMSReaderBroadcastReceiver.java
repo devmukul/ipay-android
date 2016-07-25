@@ -35,7 +35,7 @@ public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
                         message[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                         OtpMessage = message[i].getMessageBody();
 
-                        matchOTP(OtpMessage, context);
+                        matchOTP(OtpMessage);
 
                     }
                 }
@@ -46,7 +46,7 @@ public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    public void matchOTP(String message, Context context) {
+    private void matchOTP(String message) {
 
         String makePattern = ".*" + Constants.ApplicationTag +".*(\\d{6}).*";
         Pattern pattern = Pattern.compile(makePattern);

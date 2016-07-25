@@ -14,17 +14,16 @@ import bd.com.ipay.ipayskeleton.R;
 public class ParallaxScrollView extends ScrollView {
 
     public final static double NO_ZOOM = 1;
-    private ArrayList<OnOverScrollByListener> mOnOverScrollByList = new ArrayList<>();
-    private ArrayList<OnTouchEventListener> mOnTouchEventList = new ArrayList<>();
+    private final ArrayList<OnOverScrollByListener> mOnOverScrollByList = new ArrayList<>();
+    private final ArrayList<OnTouchEventListener> mOnTouchEventList = new ArrayList<>();
     private ImageView mImageView;
     private int mDrawableMaxHeight = -1;
     private int mImageViewHeight = -1;
-    private OnOverScrollByListener onScroll = new OnOverScrollByListener() {
+    private final OnOverScrollByListener onScroll = new OnOverScrollByListener() {
 
         @Override
-        public boolean overScrollBy(int deltaX, int deltaY, int scrollX,
-                                    int scrollY, int scrollRangeX, int scrollRangeY,
-                                    int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+        public boolean overScrollBy(int deltaY,
+                                    boolean isTouchEvent) {
 
             if (mImageView.getHeight() <= mDrawableMaxHeight && isTouchEvent) {
 
@@ -64,7 +63,7 @@ public class ParallaxScrollView extends ScrollView {
 
         }
     };
-    private OnTouchEventListener onTouched = new OnTouchEventListener() {
+    private final OnTouchEventListener onTouched = new OnTouchEventListener() {
 
         @Override
         public void onTouchEvent(MotionEvent ev) {
@@ -131,13 +130,13 @@ public class ParallaxScrollView extends ScrollView {
         for (int i = 0; i < mOnOverScrollByList.size(); i++) {
 
             isCollapseAnimation = mOnOverScrollByList.get(i).overScrollBy(
-                    deltaX, deltaY, scrollX, scrollY, scrollRangeX,
-                    scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent)
+                    deltaY,
+                    isTouchEvent)
                     || isCollapseAnimation;
 
         }
 
-        return isCollapseAnimation ? true : super.overScrollBy(deltaX, deltaY,
+        return isCollapseAnimation || super.overScrollBy(deltaX, deltaY,
                 scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX,
                 maxOverScrollY, isTouchEvent);
 
@@ -190,7 +189,7 @@ public class ParallaxScrollView extends ScrollView {
      *                  1.
      */
 
-    public void setViewsBounds(double zoomRatio) {
+    private void setViewsBounds(double zoomRatio) {
 
         if (mImageViewHeight == -1) {
 

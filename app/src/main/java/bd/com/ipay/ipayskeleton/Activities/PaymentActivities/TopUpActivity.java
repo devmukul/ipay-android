@@ -11,7 +11,7 @@ import bd.com.ipay.ipayskeleton.R;
 
 public class TopUpActivity extends BaseActivity {
 
-    public static MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

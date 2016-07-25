@@ -14,12 +14,12 @@ import bd.com.ipay.ipayskeleton.R;
 
 public class CircularProgressBar extends FrameLayout {
     private Context context;
-    private int duration = 3000;
+    private final int duration = 3000;
 
     private ProgressBar mProgressBar;
     private TextView mPercentageView;
     private int progressStatus;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
 
     public CircularProgressBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);

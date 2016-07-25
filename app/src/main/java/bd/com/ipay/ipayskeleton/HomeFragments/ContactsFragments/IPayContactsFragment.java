@@ -158,7 +158,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         return v;
     }
 
-    public void resetSearchKeyword() {
+    private void resetSearchKeyword() {
         if (mSearchView != null && !mQuery.isEmpty()) {
             Log.d("Loader", "Resetting.. Previous query: " + mQuery);
             mQuery = "";
@@ -254,11 +254,11 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
 
     }
 
-    protected boolean isDialogFragment() {
+    boolean isDialogFragment() {
         return false;
     }
 
-    protected boolean shouldShowIPayUserIcon() {
+    private boolean shouldShowIPayUserIcon() {
         return true;
     }
 
@@ -275,7 +275,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         return true;
     }
 
-    protected void populateList(Cursor cursor, String emptyText) {
+    private void populateList(Cursor cursor, String emptyText) {
         this.mCursor = cursor;
 
         if (cursor != null && !cursor.isClosed() && cursor.getCount() > 0) {
@@ -291,8 +291,8 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
     /**
      * Must be called after show(Non)SubscriberSheet
      */
-    protected void setContactInformationInSheet(String contactName, String contactNumber,
-                                                String imageUrl, final int backgroundColor, boolean isMember, boolean isVerified, int accountType) {
+    private void setContactInformationInSheet(String contactName,
+                                              String imageUrl, final int backgroundColor, boolean isMember, boolean isVerified, int accountType) {
         if (selectedBottomSheetView == null)
             return;
 
@@ -349,7 +349,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         }
     }
 
-    protected void setPlaceHolderImage(ImageView contactImage, int backgroundColor) {
+    private void setPlaceHolderImage(ImageView contactImage, int backgroundColor) {
         contactImage.setBackgroundResource(backgroundColor);
         Glide.with(getActivity())
                 .load(R.drawable.people)
@@ -421,7 +421,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         });
     }
 
-    protected void sendRecommendationRequest(String mobileNumber) {
+    private void sendRecommendationRequest(String mobileNumber) {
         if (mAskForRecommendationTask != null) {
             return;
         }
@@ -523,7 +523,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         }
     }
 
-    protected void showMemberSheet(boolean isVerified) {
+    private void showMemberSheet(boolean isVerified) {
         if (mBottomSheetLayout == null)
             return;
 
@@ -543,7 +543,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         mBottomSheetLayout.expandSheet();
     }
 
-    protected void showNonMemberSheet(String mobileNumber) {
+    private void showNonMemberSheet(String mobileNumber) {
         if (mBottomSheetLayout == null)
             return;
 
@@ -559,11 +559,11 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         mBottomSheetLayout.expandSheet();
     }
 
-    protected void setSelectedName(String name) {
+    private void setSelectedName(String name) {
         this.mSelectedName = name;
     }
 
-    protected void setSelectedNumber(String contactNumber) {
+    private void setSelectedNumber(String contactNumber) {
         this.mSelectedNumber = contactNumber;
     }
 
@@ -574,7 +574,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         private static final int FRIEND_VIEW = 100;
 
         public class EmptyViewHolder extends RecyclerView.ViewHolder {
-            public TextView mEmptyDescription;
+            public final TextView mEmptyDescription;
 
             public EmptyViewHolder(View itemView) {
                 super(itemView);
@@ -591,15 +591,15 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private View itemView;
+            private final View itemView;
 
-            private TextView mPortraitTextView;
-            private TextView mNameView;
-            private RoundedImageView mProfilePictureView;
-            private TextView mMobileNumberView;
-            private ImageView isSubscriber;
-            private ImageView mVerificationStatus;
-            private TextView inviteStatusTextView;
+            private final TextView mPortraitTextView;
+            private final TextView mNameView;
+            private final RoundedImageView mProfilePictureView;
+            private final TextView mMobileNumberView;
+            private final ImageView isSubscriber;
+            private final ImageView mVerificationStatus;
+            private final TextView inviteStatusTextView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -703,7 +703,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
                                     }
 
                                     setContactInformationInSheet(name,
-                                            phoneNumber, profilePictureUrl, randomProfileBackgroundColor,
+                                            profilePictureUrl, randomProfileBackgroundColor,
                                             isMember, isVerified, accountType);
                                 }
                             }, 100);
@@ -714,6 +714,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
 
         }
 
+        @SuppressWarnings("UnnecessaryLocalVariable")
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -721,12 +722,10 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
 
             if (viewType == EMPTY_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
-                EmptyViewHolder vh = new EmptyViewHolder(v);
-                return vh;
+                return new EmptyViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_contact, parent, false);
-                ViewHolder vh = new ViewHolder(v);
-                return vh;
+                return new ViewHolder(v);
             }
         }
 
