@@ -188,11 +188,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void setProfilePicture(String url) {
-        mProfilePictureView.setProfilePicture(url, false);
-
-    }
-
     private void updateProfilePicture(Uri selectedImageUri) {
         mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
         mProgressDialog.show();
@@ -218,7 +213,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                                     R.string.could_not_load_image,
                                     Toast.LENGTH_SHORT).show();
                     } else {
-                        setProfilePicture(uri.toString());
+                        mProfilePictureView.setProfilePicture(uri.getPath(), true);
                         updateProfilePicture(uri);
                     }
                 }
@@ -245,13 +240,17 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     public void httpResponseReceiver(HttpResponseObject result) {
-        mProgressDialog.dismiss();
+        if (getActivity() != null) {
+            mProgressDialog.dismiss();
+        }
+
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUploadProfilePictureAsyncTask = null;
             mGetProfileCompletionStatusTask = null;
-            if (getActivity() != null)
+            if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            }
             return;
         }
 

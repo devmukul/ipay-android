@@ -164,7 +164,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         switch (requestCode) {
             case ACTION_UPLOAD_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFileFromResult(getActivity(), intent);
+                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), resultCode, intent);
                     mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
 
                     if (filePath != null) {

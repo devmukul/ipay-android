@@ -483,7 +483,7 @@ public class Utilities {
 
     public static String getExtension(String filePath) {
         if (filePath != null && filePath.lastIndexOf('.') >= 0)
-            return filePath.substring(0, filePath.lastIndexOf('.'));
+            return filePath.substring(0, filePath.lastIndexOf('.')).toLowerCase();
         else
             return "";
     }

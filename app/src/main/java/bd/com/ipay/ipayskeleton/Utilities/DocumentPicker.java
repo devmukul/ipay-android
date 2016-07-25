@@ -2,16 +2,19 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -108,6 +111,7 @@ public class DocumentPicker {
     }
 
     public static String getFileFromResult(Context context, Intent returnedIntent) {
+    public static String getFilePathFromResult(Context context, int resultCode, Intent returnedIntent) {
         try {
             File documentFile = getTempFile(context);
 
@@ -130,7 +134,6 @@ public class DocumentPicker {
     }
 
     public static Uri getDocumentFromResult(Context context, int resultCode, Intent returnedIntent) {
-        Log.e(TAG, "getDocumentFromResult, resultCode: " + resultCode);
         Uri selectedImage = null;
         try {
             File documentFile = getTempFile(context);
@@ -149,6 +152,19 @@ public class DocumentPicker {
                     selectedImage = Uri.parse(Utilities.getFilePath(context, returnedIntent.getData()));
                 }
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
+
+                String fileExtension = Utilities.getExtension(selectedImage.getPath());
+                if (isCamera || !fileExtension.endsWith("pdf")) {
+                    Log.d(TAG, "Converting: " + selectedImage.getPath());
+                    // Convert the image - handle auto rotate problem in some devices, scale down
+                    // image if necessary (max 512*512)
+                    Bitmap convertedBitmap = CameraUtilities.handleSamplingAndRotationBitmap(context, selectedImage);
+
+                    // Save to file
+                    File tempFile = getTempFile(context);
+                    CameraUtilities.saveBitmapToFile(convertedBitmap, tempFile);
+                    selectedImage = Uri.fromFile(tempFile);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
