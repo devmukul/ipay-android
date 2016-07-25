@@ -158,8 +158,8 @@ public class HomeActivity extends BaseActivity
         toggle.syncState();
 
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        mUserID = pref.getString(Constants.USERID, "");
-        mAccountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
+        mUserID = ProfileInfoCacheManager.getMobileNumber();
+        mAccountType = ProfileInfoCacheManager.getAccountType();
         mDeviceID = DeviceIdFactory.getDeviceId(HomeActivity.this);
 
         pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
@@ -487,7 +487,7 @@ public class HomeActivity extends BaseActivity
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
-        LogoutRequest mLogoutModel = new LogoutRequest(pref.getString(Constants.USERID, ""));
+        LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
 
@@ -506,7 +506,7 @@ public class HomeActivity extends BaseActivity
             return;
         }
 
-        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(pref.getString(Constants.USERID, ""));
+        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(ProfileInfoCacheManager.getMobileNumber());
 
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,

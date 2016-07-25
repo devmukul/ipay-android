@@ -3,31 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:fillViewport="true"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/value5"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="@dimen/value15">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                android:id="@+id/mobile_number"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_signup_number"
-                android:hint="@string/mobile_number"
-                android:inputType="phone"
-                android:maxLength="14"
-                android:maxLines="1"
-                app:borderType="up" />
+                android:layout_alignParentLeft="true"
+                android:theme="@style/CustomTextInputLayout">
+
+                <EditText
+                    android:id="@+id/mobile_number"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/mobile_number"
+                    android:inputType="phone"
+                    android:maxLength="14"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
 
             <ImageView
                 android:id="@+id/button_show_qr_code"
@@ -40,6 +44,7 @@
 
             <ImageView
                 android:id="@+id/select_sender_from_contacts"
+                style="@style/ButtonStyleWithIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -48,45 +53,71 @@
 
         </RelativeLayout>
 
-        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-            android:id="@+id/amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_enter3x"
-            android:hint="@string/enter_amount"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:singleLine="true" />
+        <View style="@style/Divider" />
 
-        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-            android:id="@+id/title_request"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_signup_number"
-            android:gravity="center"
-            android:hint="@string/add_title"
-            android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true" />
+            android:layout_alignParentLeft="true"
+            android:theme="@style/CustomTextInputLayout">
 
-        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-            android:id="@+id/description"
+            <EditText
+                android:id="@+id/amount"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_amount"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_note3x"
-            android:hint="@string/send_money_description"
-            android:inputType="text"
-            android:maxLines="1"
-            android:singleLine="true"
-            app:borderType="down" />
+            android:layout_alignParentLeft="true"
+            android:theme="@style/CustomTextInputLayout">
+
+            <EditText
+                android:id="@+id/title_request"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/add_title"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:theme="@style/CustomTextInputLayout">
+
+            <EditText
+                android:id="@+id/description"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/send_money_description"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
 
         <Button
             android:id="@+id/button_request_money"
-            style="@style/PrimaryButton"
+            style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:text="@string/continue_request_money" />
-
     </LinearLayout>
 </ScrollView>

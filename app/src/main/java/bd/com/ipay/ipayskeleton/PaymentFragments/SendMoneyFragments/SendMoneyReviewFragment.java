@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -43,8 +44,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private SendMoneyResponse mSendMoneyResponse;
 
     private ProgressDialog mProgressDialog;
-
-    private SharedPreferences pref;
 
     private BigDecimal mAmount;
     private String mReceiverName;
@@ -88,8 +87,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        mSenderMobileNumber = pref.getString(Constants.USERID, "");
+        mSenderMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
 

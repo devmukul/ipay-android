@@ -53,6 +53,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHis
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -116,7 +117,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         SharedPreferences pref = getActivity()
                 .getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        mMobileNumber = pref.getString(Constants.USERID, "");
+        mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);

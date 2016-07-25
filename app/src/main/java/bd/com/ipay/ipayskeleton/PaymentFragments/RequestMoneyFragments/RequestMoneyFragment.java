@@ -32,28 +32,28 @@ public class RequestMoneyFragment extends Fragment {
     private Button buttonRequest;
     private ImageView buttonSelectFromContacts;
     private ImageView buttonShowQRCode;
-    private IconifiedEditText mMobileNumberEditText;
-    private IconifiedEditText mDescriptionEditText;
-    private IconifiedEditText mAmountEditText;
-    private IconifiedEditText mTitleEditText;
+    private EditText mMobileNumberEditText;
+    private EditText mDescriptionEditText;
+    private EditText mAmountEditText;
+    private EditText mTitleEditText;
     private ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_request_money, container, false);
-        mMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.mobile_number);
+        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         buttonShowQRCode = (ImageView) v.findViewById(R.id.button_show_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_sender_from_contacts);
         buttonRequest = (Button) v.findViewById(R.id.button_request_money);
-        mDescriptionEditText = (IconifiedEditText) v.findViewById(R.id.description);
-        mAmountEditText = (IconifiedEditText) v.findViewById(R.id.amount);
+        mDescriptionEditText = (EditText) v.findViewById(R.id.description);
+        mAmountEditText = (EditText) v.findViewById(R.id.amount);
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
         }
 
-        mTitleEditText = (IconifiedEditText) v.findViewById(R.id.title_request);
+        mTitleEditText = (EditText) v.findViewById(R.id.title_request);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
