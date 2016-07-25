@@ -331,7 +331,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 removeButton = (Button) itemView.findViewById(R.id.remove_button);
                 verifyButton = (Button) itemView.findViewById(R.id.verify_button);
-                verifyDivider = (View) itemView.findViewById(R.id.verify_divider);
+                verifyDivider = itemView.findViewById(R.id.verify_divider);
                 divider = itemView.findViewById(R.id.divider);
                 bankIcon = (RoundedImageView) itemView.findViewById(R.id.portrait);
             }

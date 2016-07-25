@@ -79,8 +79,8 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
-        mUserBankNameList = new ArrayList<String>();
-        mUserBankAccountNumberList = new ArrayList<String>();
+        mUserBankNameList = new ArrayList<>();
+        mUserBankAccountNumberList = new ArrayList<>();
 
         // It might be possible that we have failed to load the available bank list during
         // application startup. In that case first try to load the available bank list first, and
@@ -236,7 +236,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         builderSingle.setIcon(R.drawable.ic_account_balance_black_24dp);
         builderSingle.setTitle(getString(R.string.select_a_bank));
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.select_dialog_singlechoice);
 
         for (int i = 0; i < mUserBankNameList.size(); i++) {

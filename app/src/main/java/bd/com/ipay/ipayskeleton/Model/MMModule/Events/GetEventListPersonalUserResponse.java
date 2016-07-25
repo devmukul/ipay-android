@@ -6,7 +6,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses.Event;
 
 public class GetEventListPersonalUserResponse {
 
-    public ArrayList<Event> eventList = new ArrayList<Event>();
+    public ArrayList<Event> eventList = new ArrayList<>();
 
     public GetEventListPersonalUserResponse() {
     }

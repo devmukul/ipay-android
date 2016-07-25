@@ -150,6 +150,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mSendInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @SuppressWarnings("Convert2Diamond")
     private void attemptSaveInvoice() {
         if (mSaveInvoiceTask != null) {
             return;

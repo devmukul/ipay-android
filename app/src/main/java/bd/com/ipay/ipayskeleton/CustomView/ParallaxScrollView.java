@@ -14,8 +14,8 @@ import bd.com.ipay.ipayskeleton.R;
 public class ParallaxScrollView extends ScrollView {
 
     public final static double NO_ZOOM = 1;
-    private ArrayList<OnOverScrollByListener> mOnOverScrollByList = new ArrayList<OnOverScrollByListener>();
-    private ArrayList<OnTouchEventListener> mOnTouchEventList = new ArrayList<OnTouchEventListener>();
+    private ArrayList<OnOverScrollByListener> mOnOverScrollByList = new ArrayList<>();
+    private ArrayList<OnTouchEventListener> mOnTouchEventList = new ArrayList<>();
     private ImageView mImageView;
     private int mDrawableMaxHeight = -1;
     private int mImageViewHeight = -1;

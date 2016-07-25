@@ -124,7 +124,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
         mResendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ForgotPasswordActivity) getActivity()).finish();
+                getActivity().finish();
             }
         });
 

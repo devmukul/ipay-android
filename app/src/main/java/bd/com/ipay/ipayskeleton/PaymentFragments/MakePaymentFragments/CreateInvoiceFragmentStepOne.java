@@ -181,7 +181,7 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
     }
 
     public CharSequence[] getNameAndPhoneList(Uri data) {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
 
         Cursor cursor = getActivity().getContentResolver().query(data, null, null,
                 null, null);

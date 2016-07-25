@@ -57,7 +57,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         mProgressDialog = new ProgressDialog(getActivity());
         mParticipantsListRecyclerView = (RecyclerView) v.findViewById(R.id.list_all_participants);
         mAddNewParticipant = (LinearLayout) v.findViewById(R.id.add_new_participant_layout);
-        selectedParticipants = new ArrayList<Participant>();
+        selectedParticipants = new ArrayList<>();
 
         mParticipantsListAdapter = new ParticipantsListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
