@@ -2,8 +2,8 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
 public class UserProfilePictureClass {
 
-    private String url;
-    private String quality;
+    private final String url;
+    private final String quality;
 
     public UserProfilePictureClass(String url, String quality) {
         this.url = url;

@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
-public class GetProfilePictureResponse {
+class GetProfilePictureResponse {
 
     private String message;
 

@@ -152,7 +152,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                     setPinArrow.setImageResource(R.drawable.ic_arrow_drop_down_black_24dp);
                 } else {
                     mPINChangeLayout.setVisibility(View.VISIBLE);
-                    Utilities.setLayoutAnim_slideDown(mPINChangeLayout, getActivity());
+                    Utilities.setLayoutAnim_slideDown(mPINChangeLayout);
                     setPinArrow.setImageResource(R.drawable.ic_arrow_drop_up_black_24dp);
                 }
             }
@@ -166,7 +166,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                     changePassArrow.setImageResource(R.drawable.ic_arrow_drop_down_black_24dp);
                 } else {
                     mPassChangeLayout.setVisibility(View.VISIBLE);
-                    Utilities.setLayoutAnim_slideDown(mPassChangeLayout, getActivity());
+                    Utilities.setLayoutAnim_slideDown(mPassChangeLayout);
                     changePassArrow.setImageResource(R.drawable.ic_arrow_drop_up_black_24dp);
                 }
             }
@@ -180,7 +180,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                     trustedDevicesArrow.setImageResource(R.drawable.ic_arrow_drop_down_black_24dp);
                 } else {
                     mTrustedDevicesLayout.setVisibility(View.VISIBLE);
-                    Utilities.setLayoutAnim_slideDown(mTrustedDevicesLayout, getActivity());
+                    Utilities.setLayoutAnim_slideDown(mTrustedDevicesLayout);
                     trustedDevicesArrow.setImageResource(R.drawable.ic_arrow_drop_up_black_24dp);
 
 
@@ -289,7 +289,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void setTitle()
+    private void setTitle()
     {
         getActivity().setTitle(R.string.security_settings);
     }
@@ -407,7 +407,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void showTrustedDeviceRemoveConfirmationDialog(final long id, String name) {
+    private void showTrustedDeviceRemoveConfirmationDialog(final long id) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog
                 .setMessage(getString(R.string.confirmation_remove_trusted_device))
@@ -586,7 +586,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
     public class TrustedDeviceAdapter extends ArrayAdapter<TrustedDevice> {
 
-        private LayoutInflater inflater;
+        private final LayoutInflater inflater;
 
         public TrustedDeviceAdapter(Context context, List<TrustedDevice> objects) {
             super(context, 0, objects);
@@ -663,7 +663,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                 @Override
                 public void onClick(View v) {
                     showTrustedDeviceRemoveConfirmationDialog(
-                            trustedDevice.getId(), trustedDevice.getDeviceName());
+                            trustedDevice.getId());
                 }
             });
 

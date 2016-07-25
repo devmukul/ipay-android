@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.TopUp;
 
-public class CheckTopupStatusResponse {
+class CheckTopupStatusResponse {
 
     private String token;
     private String deviceId;

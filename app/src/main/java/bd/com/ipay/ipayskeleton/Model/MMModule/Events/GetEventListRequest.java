@@ -1,8 +1,8 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Events;
 
-public class GetEventListRequest {
+class GetEventListRequest {
 
-    private String mobileNumber;
+    private final String mobileNumber;
 
     public GetEventListRequest(String mobileNumber) {
         this.mobileNumber = mobileNumber;

@@ -5,21 +5,21 @@ import java.util.List;
 
 public class Event {
 
-    public long id;
-    public BigDecimal charge;
-    public long endTime;
-    public int maxNumOfParticipants;
-    public int maxNumberFromOneAccount;
-    public int selectedParticipantsType;
-    public long startTime;
-    public EventCategory eventCategoryBean;
-    public EventCreator eventCreatorBean;
-    public EventDetail eventDetailBean;
-    public EventStatus eventStatusBean;
-    public List<EventParticipant> eventParticipants;
-    public List<EventPayment> eventPayments;
-    public long creationDateTime;
-    public long updateDateTime;
+    private long id;
+    private BigDecimal charge;
+    private long endTime;
+    private int maxNumOfParticipants;
+    private int maxNumberFromOneAccount;
+    private int selectedParticipantsType;
+    private long startTime;
+    private EventCategory eventCategoryBean;
+    private EventCreator eventCreatorBean;
+    private EventDetail eventDetailBean;
+    private EventStatus eventStatusBean;
+    private List<EventParticipant> eventParticipants;
+    private List<EventPayment> eventPayments;
+    private long creationDateTime;
+    private long updateDateTime;
 
     public Event() {
     }

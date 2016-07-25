@@ -2,11 +2,11 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney;
 
 public class SendMoneyRequest {
 
-    private String sender;
-    private String receiver;
-    private double amount;
-    private String description;
-    private String pin;
+    private final String sender;
+    private final String receiver;
+    private final double amount;
+    private final String description;
+    private final String pin;
 
     public SendMoneyRequest(String sender, String receiver, String amount, String description, String pin) {
         this.sender = sender;

@@ -119,7 +119,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private boolean mSwitchToEmployeeFragment;
 
-    public OnNotificationUpdateListener mOnNotificationUpdateListener;
+    private OnNotificationUpdateListener mOnNotificationUpdateListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -217,7 +217,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mGetBusinessInvitationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    protected void attemptGetServiceCharge(int serviceId) {
+    private void attemptGetServiceCharge(int serviceId) {
 
         if (mServiceChargeTask != null) {
             return;
@@ -624,11 +624,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
 
         public class NotificationViewHolder extends RecyclerView.ViewHolder {
-            private TextView mTitleView;
-            private TextView mDescriptionView;
-            private TextView mTimeView;
-            private LinearLayout optionsLayout;
-            private ProfileImageView mProfileImageView;
+            private final TextView mTitleView;
+            private final TextView mDescriptionView;
+            private final TextView mTimeView;
+            private final LinearLayout optionsLayout;
+            private final ProfileImageView mProfileImageView;
 
             public NotificationViewHolder(final View itemView) {
                 super(itemView);
@@ -687,8 +687,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class MoneyAndPaymentRequestViewHolder extends NotificationViewHolder {
 
-            private Button acceptButton;
-            private Button rejectButton;
+            private final Button acceptButton;
+            private final Button rejectButton;
 
             public MoneyAndPaymentRequestViewHolder(final View itemView) {
                 super(itemView);
@@ -770,9 +770,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class IntroductionRequestViewHolder extends NotificationViewHolder {
 
-            private Button verifyButton;
-            private Button rejectRecommendationButton;
-            private Button markAsSpamRecommendationButton;
+            private final Button verifyButton;
+            private final Button rejectRecommendationButton;
+            private final Button markAsSpamRecommendationButton;
 
             public IntroductionRequestViewHolder(final View itemView) {
                 super(itemView);
@@ -843,9 +843,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class BusinessInvitationViewHolder extends NotificationViewHolder {
 
-            private Button mAcceptButton;
-            private Button mRejectButton;
-            private Button mMarkSpamButton;
+            private final Button mAcceptButton;
+            private final Button mRejectButton;
+            private final Button mMarkSpamButton;
 
             public BusinessInvitationViewHolder(View itemView) {
                 super(itemView);
@@ -891,17 +891,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
             if (viewType == Constants.NOTIFICATION_TYPE_INTROUDCTION_REQUEST) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests, parent, false);
-                IntroductionRequestViewHolder vh = new IntroductionRequestViewHolder(v);
-                return vh;
+                return new IntroductionRequestViewHolder(v);
 
             } else if (viewType == Constants.NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_invitation, parent, false);
-                BusinessInvitationViewHolder vh = new BusinessInvitationViewHolder(v);
-                return vh;
+                return new BusinessInvitationViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
-                MoneyAndPaymentRequestViewHolder vh = new MoneyAndPaymentRequestViewHolder(v);
-                return vh;
+                return new MoneyAndPaymentRequestViewHolder(v);
             }
         }
 

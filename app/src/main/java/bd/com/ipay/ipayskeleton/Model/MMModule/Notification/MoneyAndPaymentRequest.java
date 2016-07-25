@@ -8,16 +8,16 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class MoneyAndPaymentRequest implements Notification {
 
-    public Long id;
-    public BigDecimal amount;
-    public Long requestTime;
-    public String title;
-    public int serviceID;
+    private Long id;
+    private BigDecimal amount;
+    private Long requestTime;
+    private String title;
+    private int serviceID;
     public String description;
     public UserProfile originatorProfile;
-    public UserProfile receiverProfile;
-    public BigDecimal vat;
-    public List<ItemList> itemList;
+    private UserProfile receiverProfile;
+    private BigDecimal vat;
+    private List<ItemList> itemList;
 
 
     public MoneyAndPaymentRequest() {

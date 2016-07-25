@@ -4,14 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TrustedDevice {
-    public long id;
-    public String deviceName;
-    public String deviceId;
-    public String browserName;
-    public boolean isMobileBrowser;
-    public String screenSize;
-    public String osName;
-    public long createdTime;
+    private long id;
+    private String deviceName;
+    private String deviceId;
+    private String browserName;
+    private boolean isMobileBrowser;
+    private String screenSize;
+    private String osName;
+    private long createdTime;
 
     public TrustedDevice() {
 

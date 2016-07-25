@@ -63,17 +63,17 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private int mOperatorCode;
     private String mError_message;
 
-    public TextView mReceiverView;
+    private TextView mReceiverView;
     private TextView mMobileNumberView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mTotalView;
     private TextView mPackageView;
     private TextView mOperatorView;
-    public ProfileImageView mProfileImageView;
+    private ProfileImageView mProfileImageView;
     private ImageView mOperatorImageView;
-    public LinearLayout mInvitationLayout;
-    public CheckBox mInvitationCheckBox;
+    private LinearLayout mInvitationLayout;
+    private CheckBox mInvitationCheckBox;
     private Button mTopupButton;
 
     private View mServiceChargeHolder;

@@ -2,12 +2,12 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses;
 
 public class Participant {
 
-    public long id;
-    public String participantName;
-    public String participantMobileNumber;
-    public String participantDetailedInformation;
-    public long creationDateTime;
-    public long updateDateTime;
+    private long id;
+    private String participantName;
+    private String participantMobileNumber;
+    private String participantDetailedInformation;
+    private long creationDateTime;
+    private long updateDateTime;
 
     public Participant() {
     }

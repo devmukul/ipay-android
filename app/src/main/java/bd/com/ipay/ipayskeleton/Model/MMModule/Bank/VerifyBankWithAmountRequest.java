@@ -2,8 +2,8 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Bank;
 
 public class VerifyBankWithAmountRequest {
 
-    private Long userBankID;
-    private Double amount;
+    private final Long userBankID;
+    private final Double amount;
 
     public VerifyBankWithAmountRequest(Long userBankID, double amount) {
         this.userBankID = userBankID;

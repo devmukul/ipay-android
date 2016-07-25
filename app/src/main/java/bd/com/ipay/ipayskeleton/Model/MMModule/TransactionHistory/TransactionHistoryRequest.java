@@ -2,11 +2,11 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
 public class TransactionHistoryRequest {
 
-    private Integer serviceID;
-    private int page;
-    private Long fromDate;
-    private Long toDate;
-    private Integer limit;
+    private final Integer serviceID;
+    private final int page;
+    private final Long fromDate;
+    private final Long toDate;
+    private final Integer limit;
 
     public TransactionHistoryRequest(Integer serviceID, int page, Long fromDate, Long toDate, Integer limit) {
         this.serviceID = serviceID;

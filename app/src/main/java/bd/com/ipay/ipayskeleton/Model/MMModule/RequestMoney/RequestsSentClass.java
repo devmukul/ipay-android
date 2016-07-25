@@ -7,14 +7,14 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class RequestsSentClass {
 
-    public Long id;
-    public BigDecimal amount;
-    public Long requestTime;
-    public String title;
-    public Long serviceID;
-    public String description;
-    public UserProfile originatorProfile;
-    public UserProfile receiverProfile;
+    private Long id;
+    private BigDecimal amount;
+    private Long requestTime;
+    private String title;
+    private Long serviceID;
+    private String description;
+    private UserProfile originatorProfile;
+    private UserProfile receiverProfile;
 
     public RequestsSentClass() {
     }
@@ -40,7 +40,7 @@ public class RequestsSentClass {
         else return title;
     }
 
-    public UserProfile getOriginatorProfile() {
+    private UserProfile getOriginatorProfile() {
         return originatorProfile;
     }
 

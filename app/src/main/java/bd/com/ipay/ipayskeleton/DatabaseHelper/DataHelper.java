@@ -16,7 +16,7 @@ public class DataHelper {
 
     private static final int DATABASE_VERSION = 5;
 
-    private Context context;
+    private final Context context;
     private static DataHelper instance = null;
     private static DataBaseOpenHelper dOpenHelper;
 
@@ -171,7 +171,7 @@ public class DataHelper {
     }
 
 
-    public List<FriendNode> getFriendList(String query, boolean memberOnly, boolean verifiedOnly) {
+    private List<FriendNode> getFriendList(String query, boolean memberOnly, boolean verifiedOnly) {
         Cursor cursor = searchFriends(query, memberOnly, verifiedOnly);
         List<FriendNode> friends = new ArrayList<>();
 

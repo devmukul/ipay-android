@@ -423,14 +423,14 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         }
 
         public class EmailViewHolder extends RecyclerView.ViewHolder {
-            private TextView mEmailView;
-            private TextView mIsPrimaryView;
-            private ImageView mVerificationStatus;
-            private LinearLayout optionsLayout;
-            private Button removeButton;
-            private Button makePrimaryButton;
-            private View divider;
-            private View divider1;
+            private final TextView mEmailView;
+            private final TextView mIsPrimaryView;
+            private final ImageView mVerificationStatus;
+            private final LinearLayout optionsLayout;
+            private final Button removeButton;
+            private final Button makePrimaryButton;
+            private final View divider;
+            private final View divider1;
 
             public EmailViewHolder(final View itemView) {
                 super(itemView);
@@ -519,9 +519,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_email,
                     parent, false);
 
-            EmailViewHolder vh = new EmailViewHolder(v);
-
-            return vh;
+            return new EmailViewHolder(v);
         }
 
         @Override

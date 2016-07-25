@@ -7,18 +7,18 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class PendingPaymentClass {
 
-    public Long id;
-    public BigDecimal amount;
-    public Long requestTime;
-    public String title;
-    public Long serviceID;
+    private Long id;
+    private BigDecimal amount;
+    private Long requestTime;
+    private String title;
+    private Long serviceID;
     public String description;
-    public UserProfile originatorProfile;
-    public UserProfile receiverProfile;
-    public int status;
-    public BigDecimal vat;
-    public BigDecimal total;
-    public ItemList[] itemList;
+    private UserProfile originatorProfile;
+    private UserProfile receiverProfile;
+    private int status;
+    private BigDecimal vat;
+    private BigDecimal total;
+    private ItemList[] itemList;
 
 
     public ItemList[] getItemList() {
@@ -54,7 +54,7 @@ public class PendingPaymentClass {
         return title;
     }
 
-    public UserProfile getOriginatorProfile() {
+    private UserProfile getOriginatorProfile() {
         return originatorProfile;
     }
 

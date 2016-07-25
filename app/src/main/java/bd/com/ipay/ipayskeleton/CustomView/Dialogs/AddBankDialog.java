@@ -10,8 +10,7 @@ import java.util.List;
 
 public class AddBankDialog<E extends String> extends AlertDialog.Builder {
 
-    private List<E> stringList;
-    private Context context;
+    private final Context context;
 
     private List<Integer> ids;
     private List<String> names;
@@ -22,11 +21,10 @@ public class AddBankDialog<E extends String> extends AlertDialog.Builder {
     public AddBankDialog(Context context, List<E> stringList, int selectedItemId) {
         super(context);
         this.context = context;
-        this.stringList = stringList;
         setItems(stringList, selectedItemId);
     }
 
-    public void setItems(List<E> stringList, int selectedItemId) {
+    private void setItems(List<E> stringList, int selectedItemId) {
         ids = new ArrayList<>();
         names = new ArrayList<>();
 
@@ -60,7 +58,7 @@ public class AddBankDialog<E extends String> extends AlertDialog.Builder {
         void onDistrictSelected(int id, String name);
     }
 
-    public int getSelectedItemPosition(int id) {
+    private int getSelectedItemPosition(int id) {
         for (int i = 0; i < ids.size(); i++) {
             if (ids.get(i) == id) {
                 return i;

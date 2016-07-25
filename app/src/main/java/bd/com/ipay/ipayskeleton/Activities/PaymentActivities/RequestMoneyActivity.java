@@ -64,14 +64,14 @@ public class RequestMoneyActivity extends BaseActivity {
         }
     }
 
-    public void switchToRequestListFragment() {
+    private void switchToRequestListFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new MoneyRequestListHolderFragment()).commit();
         mFabRequestMoney.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
 
-    public void switchToRequestMoneyFragment() {
+    private void switchToRequestMoneyFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
         mFabRequestMoney.setVisibility(View.GONE);

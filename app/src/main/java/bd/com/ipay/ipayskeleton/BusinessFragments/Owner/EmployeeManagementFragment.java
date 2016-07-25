@@ -172,16 +172,16 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
     public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private class EmployeeViewHolder extends RecyclerView.ViewHolder {
-            private ProfileImageView mProfileImageView;
-            private TextView mNameView;
-            private TextView mMobileNumberView;
-            private TextView mDesignationView;
-            private ImageView mStatusView;
-            private View mOptionsLayout;
-            private Button mViewButton;
-            private Button mRemoveButton;
-            private Button mEditButton;
-            private View divider;
+            private final ProfileImageView mProfileImageView;
+            private final TextView mNameView;
+            private final TextView mMobileNumberView;
+            private final TextView mDesignationView;
+            private final ImageView mStatusView;
+            private final View mOptionsLayout;
+            private final Button mViewButton;
+            private final Button mRemoveButton;
+            private final Button mEditButton;
+            private final View divider;
 
             public EmployeeViewHolder(View itemView) {
                 super(itemView);
@@ -275,9 +275,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_employee,
                     parent, false);
 
-            EmployeeViewHolder vh = new EmployeeViewHolder(v);
-
-            return vh;
+            return new EmployeeViewHolder(v);
         }
 
         @Override

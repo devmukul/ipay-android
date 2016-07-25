@@ -40,7 +40,7 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
                     CommonData.setAvailableBanks(availableBanks);
 
                     if (listener != null) {
-                        listener.onLoadSuccess(availableBanks);
+                        listener.onLoadSuccess();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -57,8 +57,8 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
     }
 
     public interface BankLoadListener {
-        public void onLoadSuccess(List<Bank> banks);
+        void onLoadSuccess();
 
-        public void onLoadFailed();
+        void onLoadFailed();
     }
 }

@@ -88,7 +88,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private TextView mEmptyListTextView;
 
 
-    public static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_PERMISSION = 1001;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -141,12 +141,11 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 } else {
                     Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
                 }
-                return;
             }
         }
     }
 
-    public void initiateScan() {
+    private void initiateScan() {
         IntentIntegrator.forSupportFragment(this).initiateScan();
     }
 
@@ -364,19 +363,19 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
         private static final int MONEY_REQUEST_HEADER_VIEW = 5;
 
-        private int ACTION_ACCEPT=0;
-        private int ACTION_REJECT=1;
+        private final int ACTION_ACCEPT=0;
+        private final int ACTION_REJECT=1;
 
         public InvoiceListAdapter() {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mDescriptionView;
-            private TextView mTitleView;
-            private TextView mTimeView;
-            private TextView loadMoreTextView;
-            private TextView headerView;
-            private ProfileImageView mProfileImageView;
+            private final TextView mDescriptionView;
+            private final TextView mTitleView;
+            private final TextView mTimeView;
+            private final TextView loadMoreTextView;
+            private final TextView headerView;
+            private final ProfileImageView mProfileImageView;
 
             private CustomSelectorDialog mCustomSelectorDialog;
             private List<String> mInvoiceActionList;
@@ -426,7 +425,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int selectedIndex, String mName) {
+                            public void onResourceSelected(int selectedIndex) {
                                 if (selectedIndex == ACTION_ACCEPT) {
                                     mMoneyRequestId = id;
                                     mAmount = amount;
@@ -518,19 +517,16 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
             if (viewType == FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
-                FooterViewHolder vh = new FooterViewHolder(v);
-                return vh;
+                return new FooterViewHolder(v);
 
             } else if (viewType == MONEY_REQUEST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_requests_header, parent, false);
-                MoneyRequestHeaderViewHolder vh = new MoneyRequestHeaderViewHolder(v);
-                return vh;
+                return new MoneyRequestHeaderViewHolder(v);
 
             } else {
                 // MONEY_REQUEST_ITEM_VIEW
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
-                MoneyRequestViewHolder vh = new MoneyRequestViewHolder(v);
-                return vh;
+                return new MoneyRequestViewHolder(v);
             }
         }
 

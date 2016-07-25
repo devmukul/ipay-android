@@ -222,7 +222,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mPersonalAddressView.resetInformation();
     }
 
-    private DatePickerDialog.OnDateSetListener mDateSetListener =
+    private final DatePickerDialog.OnDateSetListener mDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {

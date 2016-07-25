@@ -13,16 +13,17 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.R;
 
 public class CustomSelectorDialog extends AlertDialog {
-    private Context context;
+    private final Context context;
 
-    private List<String> resources;
-    private String mTitle;
+    private final List<String> resources;
+    private final String mTitle;
 
     private OnResourceSelectedListener onResourceSelectedListener;
 
-    private LayoutInflater inflater;
-    private View view, viewTitle;
-    private TextView textViewTitle;
+    private final LayoutInflater inflater;
+    private final View view;
+    private final View viewTitle;
+    private final TextView textViewTitle;
     private ListView popUpList;
 
 
@@ -46,7 +47,7 @@ public class CustomSelectorDialog extends AlertDialog {
 
     }
 
-    public void setItems(final List<String> resources) {
+    private void setItems(final List<String> resources) {
 
         popUpList = (ListView) view.findViewById(R.id.custom_list);
         CustomAdapter adapter = new CustomAdapter(context, resources);
@@ -57,7 +58,7 @@ public class CustomSelectorDialog extends AlertDialog {
                 String name = resources.get(i);
 
                 if (onResourceSelectedListener != null)
-                    onResourceSelectedListener.onResourceSelected(i, name);
+                    onResourceSelectedListener.onResourceSelected(i);
                 dismiss();
             }
         });
@@ -68,12 +69,12 @@ public class CustomSelectorDialog extends AlertDialog {
     }
 
     public interface OnResourceSelectedListener {
-        void onResourceSelected(int id, String name);
+        void onResourceSelected(int id);
     }
 
     private class CustomAdapter extends ArrayAdapter<String> {
 
-        private LayoutInflater inflater;
+        private final LayoutInflater inflater;
 
         public CustomAdapter(Context context, List<String> objects) {
             super(context, 0, objects);

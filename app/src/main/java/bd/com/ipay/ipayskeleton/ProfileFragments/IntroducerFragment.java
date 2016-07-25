@@ -268,20 +268,20 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            private TextView mPortraitTextView;
+            private final TextView mPortraitTextView;
 
-            private TextView mIntroducerName;
-            private TextView mIntroducerMobileNumber;
-            private RoundedImageView mIntroducerProfilePictureView;
+            private final TextView mIntroducerName;
+            private final TextView mIntroducerMobileNumber;
+            private final RoundedImageView mIntroducerProfilePictureView;
 
-            private TextView mRequestedName;
-            private TextView mRequestedMobileNumber;
-            private RoundedImageView mRequestedProfilePictureView;
-            private ImageView mSentRequestStatus;
-            private TextView mTimeView;
+            private final TextView mRequestedName;
+            private final TextView mRequestedMobileNumber;
+            private final RoundedImageView mRequestedProfilePictureView;
+            private final ImageView mSentRequestStatus;
+            private final TextView mTimeView;
 
 
-            private View divider;
+            private final View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -455,22 +455,18 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
             if (viewType == INTRODUCER_LIST_ITEM_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introducer_list, parent, false);
-                IntroducerListItemViewHolder vh = new IntroducerListItemViewHolder(v);
-                return vh;
+                return new IntroducerListItemViewHolder(v);
 
             } else if (viewType == INTRODUCER_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introducer_list_header, parent, false);
-                IntroducerListHeaderViewHolder vh = new IntroducerListHeaderViewHolder(v);
-                return vh;
+                return new IntroducerListHeaderViewHolder(v);
             } else if (viewType == SENT_REQUEST_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me_header, parent, false);
-                SentRequestListHeaderViewHolder vh = new SentRequestListHeaderViewHolder(v);
-                return vh;
+                return new SentRequestListHeaderViewHolder(v);
 
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me, parent, false);
-                SentRequestListItemViewHolder vh = new SentRequestListItemViewHolder(v);
-                return vh;
+                return new SentRequestListItemViewHolder(v);
 
             }
         }

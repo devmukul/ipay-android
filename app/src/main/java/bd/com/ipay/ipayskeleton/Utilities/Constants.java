@@ -124,7 +124,7 @@ public class Constants {
     public static final String BASE_URL_SM;
     public static final String BASE_URL_FRIEND;
     public static final String BASE_URL_FTP_SERVER;
-    public static final String SERVER_NAME;
+    private static final String SERVER_NAME;
 
     static {
         if (SERVER_TYPE == 1) {
@@ -291,7 +291,6 @@ public class Constants {
     // User Rest
     public static final String URL_GET_USER_INFO = "user/userinfo";
     public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
-    ;
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
 
     // User Rest (Profile Completion)

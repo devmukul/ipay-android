@@ -1,8 +1,8 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo;
 
-public class GetProfilePictureRequest {
+class GetProfilePictureRequest {
 
-    public String mobileNumber;
+    private final String mobileNumber;
 
     public GetProfilePictureRequest(String mobileNumber) {
         this.mobileNumber = mobileNumber;

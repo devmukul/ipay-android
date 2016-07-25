@@ -81,7 +81,6 @@ public class CreateInvoiceReviewActivity extends BaseActivity {
                 mUri, this, this);
 
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        ;
     }
 
     @Override

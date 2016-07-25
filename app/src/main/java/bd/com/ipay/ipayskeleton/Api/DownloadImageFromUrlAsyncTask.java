@@ -12,10 +12,10 @@ import java.net.URLConnection;
 
 import bd.com.ipay.ipayskeleton.Utilities.StorageManager;
 
-public class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String> {
+class DownloadImageFromUrlAsyncTask extends AsyncTask<Void, Void, String> {
 
-    private String mProfilePictureUrl;
-    private String mUserID;
+    private final String mProfilePictureUrl;
+    private final String mUserID;
 
     public DownloadImageFromUrlAsyncTask(String mProfilePictureUrl, String mUserID) {
         Log.d("Downloading picture", mUserID + " : " + mProfilePictureUrl);

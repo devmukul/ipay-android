@@ -128,8 +128,8 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             return;
         }
 
-        GetMoneyAndPaymentRequest mTransactionHistoryRequest = new GetMoneyAndPaymentRequest(
-                pageCount, Constants.SERVICE_ID_REQUEST_MONEY);
+        GetMoneyAndPaymentRequest mTransactionHistoryRequest = new GetMoneyAndPaymentRequest(pageCount,
+                Constants.SERVICE_ID_REQUEST_MONEY);
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
@@ -138,7 +138,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
         mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    protected void attemptGetServiceCharge() {
+    private void attemptGetServiceCharge() {
 
         if (mServiceChargeTask != null) {
             return;
@@ -306,18 +306,18 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
-        private int ACTION_ACCEPT=0;
-        private int ACTION_REJECT=1;
+        private final int ACTION_ACCEPT=0;
+        private final int ACTION_REJECT=1;
 
         public NotificationListAdapter() {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mDescriptionView;
-            private TextView mTitleView;
-            private TextView mTimeView;
-            private TextView loadMoreTextView;
-            private ProfileImageView mProfileImageView;
+            private final TextView mDescriptionView;
+            private final TextView mTitleView;
+            private final TextView mTimeView;
+            private final TextView loadMoreTextView;
+            private final ProfileImageView mProfileImageView;
 
             private CustomSelectorDialog mCustomSelectorDialog;
             private List<String> mReceivedRequestActionList;
@@ -364,7 +364,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mReceivedRequestActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int selectedIndex, String mName) {
+                            public void onResourceSelected(int selectedIndex) {
                                 if (selectedIndex == ACTION_ACCEPT) {
                                     mMoneyRequestId = id;
                                     mAmount = amount;
@@ -432,6 +432,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             }
         }
 
+        @SuppressWarnings("UnnecessaryLocalVariable")
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -439,14 +440,12 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
             if (viewType == FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
-                FooterViewHolder vh = new FooterViewHolder(v);
-                return vh;
+                return new FooterViewHolder(v);
 
             } else {
                 // MONEY_REQUEST_ITEM_VIEW
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
-                MoneyRequestViewHolder vh = new MoneyRequestViewHolder(v);
-                return vh;
+                return new MoneyRequestViewHolder(v);
             }
         }
 

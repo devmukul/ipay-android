@@ -233,12 +233,12 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mSenderNumber;
-            private TextView mTime;
-            private TextView mDescription;
-            private ProfileImageView mProfileImageView;
-            private View divider;
-            private int ACTION_CANCEL=0;
+            private final TextView mSenderNumber;
+            private final TextView mTime;
+            private final TextView mDescription;
+            private final ProfileImageView mProfileImageView;
+            private final View divider;
+            private final int ACTION_CANCEL=0;
 
             private CustomSelectorDialog mCustomSelectorDialog;
             private List<String> mMyRequestActionList;
@@ -274,7 +274,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mMyRequestActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int selectedIndex, String mName) {
+                            public void onResourceSelected(int selectedIndex) {
                                 if (selectedIndex == ACTION_CANCEL) {
                                     showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
                                 }
@@ -295,9 +295,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
             View v;
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending_request_money_me, parent, false);
 
-            ViewHolder vh = new ViewHolder(v);
-
-            return vh;
+            return new ViewHolder(v);
         }
 
         @Override

@@ -4,14 +4,14 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class IntroductionRequestClass implements Notification {
-    public long id;
-    public String senderMobileNumber;
-    public String senderName;
-    public long senderAccountId;
-    public long verifierAccountId;
-    public long date;
-    public String status;
-    public String profilePictureUrl;
+    private long id;
+    private String senderMobileNumber;
+    private String senderName;
+    private long senderAccountId;
+    private long verifierAccountId;
+    private long date;
+    private String status;
+    private String profilePictureUrl;
 
     public String getProfilePictureUrl() {
         return profilePictureUrl;

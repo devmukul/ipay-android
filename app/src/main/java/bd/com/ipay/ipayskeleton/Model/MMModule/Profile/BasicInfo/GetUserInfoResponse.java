@@ -7,10 +7,10 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePict
 
 public class GetUserInfoResponse {
 
-    public String message;
-    public String name;
-    public List<UserProfilePictureClass> profilePictures = new ArrayList<>();
-    public String accountStatus;
+    private String message;
+    private String name;
+    private final List<UserProfilePictureClass> profilePictures = new ArrayList<>();
+    private String accountStatus;
 
     public GetUserInfoResponse() {
     }

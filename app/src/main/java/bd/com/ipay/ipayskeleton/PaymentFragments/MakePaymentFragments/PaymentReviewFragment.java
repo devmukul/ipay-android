@@ -51,7 +51,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private String mDescription;
-    String mError_message;
+    private String mError_message;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;

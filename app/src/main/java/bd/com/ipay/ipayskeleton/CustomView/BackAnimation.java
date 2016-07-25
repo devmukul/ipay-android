@@ -5,14 +5,14 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-public class BackAnimation extends Animation {
-    int targetHeight;
-    int originalHeight;
-    int extraHeight;
-    View view;
-    boolean down;
+class BackAnimation extends Animation {
+    private final int targetHeight;
+    private final int originalHeight;
+    private final int extraHeight;
+    private final View view;
+    private final boolean down;
 
-    protected BackAnimation(View view, int targetHeight, boolean down) {
+    BackAnimation(View view, int targetHeight, boolean down) {
         this.view = view;
         this.targetHeight = targetHeight;
         this.down = down;

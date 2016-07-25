@@ -48,7 +48,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
     private ArrayList<Participant> selectedParticipants;
     private LinearLayout mAddNewParticipant;
 
-    private int pageCount = 0;
+    private final int pageCount = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -203,10 +203,10 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mParticipantMobileNumber;
-            private TextView mParticipantName;
-            private TextView mParticipantDetails;
-            private CheckBox mSelectCheckbox;
+            private final TextView mParticipantMobileNumber;
+            private final TextView mParticipantName;
+            private final TextView mParticipantDetails;
+            private final CheckBox mSelectCheckbox;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -264,9 +264,7 @@ public class SelectParticipantsFromListFragment extends Fragment implements Http
             View v;
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_event_participant, parent, false);
 
-            ViewHolder vh = new ViewHolder(v);
-
-            return vh;
+            return new ViewHolder(v);
         }
 
         @Override

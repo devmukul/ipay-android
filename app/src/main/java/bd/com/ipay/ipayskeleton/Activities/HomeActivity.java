@@ -108,7 +108,7 @@ public class HomeActivity extends BaseActivity
 
     private int mBadgeCount = 0;
 
-    public static boolean switchedToHomeFragment = true;
+    private static boolean switchedToHomeFragment = true;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -357,7 +357,7 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = true;
     }
 
-    public void updateNotificationBadgeCount(int badgeCount) {
+    private void updateNotificationBadgeCount(int badgeCount) {
         mBadgeCount = badgeCount;
 
         Log.d("Notification Count", badgeCount + "");
@@ -368,7 +368,7 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    public void setDrawerMenuVisibility(int id, boolean visible) {
+    private void setDrawerMenuVisibility(int id, boolean visible) {
         mNavigationView.getMenu().findItem(id).setVisible(visible);
     }
 
@@ -616,7 +616,7 @@ public class HomeActivity extends BaseActivity
         return HomeActivity.this;
     }
 
-    private BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);

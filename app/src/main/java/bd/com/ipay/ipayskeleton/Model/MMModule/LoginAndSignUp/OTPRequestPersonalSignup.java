@@ -2,10 +2,10 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp;
 
 public class OTPRequestPersonalSignup {
 
-    private String mobileNumber;
-    private String deviceId;
-    private int accountType;
-    private String promoCode;
+    private final String mobileNumber;
+    private final String deviceId;
+    private final int accountType;
+    private final String promoCode;
 
     public OTPRequestPersonalSignup(String mobileNumber, String deviceId, int accountType, String promoCode) {
         this.mobileNumber = mobileNumber;

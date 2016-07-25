@@ -4,7 +4,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses.Event;
 
-public class GetEventsListResponse {
+class GetEventsListResponse {
 
     private List<Event> eventList;
 

@@ -9,14 +9,14 @@ public abstract class ResourceRequestBuilder {
     private static final String PARAM_FILTER = "filter";
 
     private String generatedUri;
-    protected long filter;
+    private final long filter;
 
-    public ResourceRequestBuilder() {
+    ResourceRequestBuilder() {
         filter = -1;
         generateUri();
     }
 
-    public ResourceRequestBuilder(long filter) {
+    ResourceRequestBuilder(long filter) {
         this.filter = filter;
         generateUri();
     }
@@ -36,13 +36,13 @@ public abstract class ResourceRequestBuilder {
         setGeneratedUri(uri.toString());
     }
 
-    public abstract String getResourceType();
+    protected abstract String getResourceType();
 
     public String getGeneratedUri() {
         return generatedUri;
     }
 
-    public void setGeneratedUri(String generatedUri) {
+    private void setGeneratedUri(String generatedUri) {
         this.generatedUri = generatedUri;
     }
 }

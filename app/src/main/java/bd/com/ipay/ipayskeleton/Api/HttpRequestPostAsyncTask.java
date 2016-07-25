@@ -11,7 +11,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
 
-    private String mJsonString;
+    private final String mJsonString;
 
     public HttpRequestPostAsyncTask(String API_COMMAND, String mUri, String mJsonString,
                                     Context mContext, HttpResponseListener listener) {

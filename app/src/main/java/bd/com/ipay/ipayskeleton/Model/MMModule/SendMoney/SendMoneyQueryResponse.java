@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney;
 
-public class SendMoneyQueryResponse {
+class SendMoneyQueryResponse {
 
     private String sender;
     private String receiver;

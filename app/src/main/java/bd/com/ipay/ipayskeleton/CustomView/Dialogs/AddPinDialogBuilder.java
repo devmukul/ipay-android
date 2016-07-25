@@ -33,7 +33,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
     private EditText mConfirmPinField;
     private EditText mPasswordField;
 
-    private AddPinListener mAddPinListener;
+    private final AddPinListener mAddPinListener;
 
     public AddPinDialogBuilder(Context context, AddPinListener addPinListener) {
         super(context);
@@ -140,7 +140,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
                     if (getContext() != null)
                         Toast.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                    mAddPinListener.onPinAddSuccess(mSetPinResponse);
+                    mAddPinListener.onPinAddSuccess();
                 } else {
                     if (getContext() != null)
                         Toast.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -157,6 +157,6 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
     }
 
     public interface AddPinListener {
-        void onPinAddSuccess(SetPinResponse setPinResponse);
+        void onPinAddSuccess();
     }
 }

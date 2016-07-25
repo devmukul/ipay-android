@@ -107,7 +107,7 @@ public class DocumentPicker {
         return list;
     }
 
-    public static String getFileFromResult(Context context, int resultCode, Intent returnedIntent) {
+    public static String getFileFromResult(Context context, Intent returnedIntent) {
         try {
             File documentFile = getTempFile(context);
 

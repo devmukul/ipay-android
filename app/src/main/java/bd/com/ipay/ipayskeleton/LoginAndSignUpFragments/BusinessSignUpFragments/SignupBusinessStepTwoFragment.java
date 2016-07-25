@@ -113,7 +113,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
         }
     }
 
-    GetBusinessTypesAsyncTask.BusinessTypeLoadListener businessTypeLoadListener =
+    private final GetBusinessTypesAsyncTask.BusinessTypeLoadListener businessTypeLoadListener =
             new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
                 @Override
                 public void onLoadSuccess(List<BusinessType> businessTypes) {

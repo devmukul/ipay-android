@@ -54,7 +54,7 @@ public class AddressClass implements Serializable {
         return postalCode;
     }
 
-    public String getThana(List<Thana> thanaList) {
+    private String getThana(List<Thana> thanaList) {
         if (thanaList != null) {
             for (Thana thana : thanaList) {
                 if (thana.getId() == this.thana)
@@ -66,7 +66,7 @@ public class AddressClass implements Serializable {
         return null;
     }
 
-    public String getDistrict(List<District> districtList) {
+    private String getDistrict(List<District> districtList) {
         if (districtList != null) {
             for (District district : districtList) {
                 if (district.getId() == this.district)
@@ -77,7 +77,7 @@ public class AddressClass implements Serializable {
         return null;
     }
 
-    public String getCountry() {
+    private String getCountry() {
         return CountryList.countryCodeToCountryNameMap.get(country);
     }
 

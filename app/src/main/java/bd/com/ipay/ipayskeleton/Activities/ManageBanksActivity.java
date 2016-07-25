@@ -66,7 +66,7 @@ public class ManageBanksActivity extends BaseActivity {
         switchedToAddBankFragment = false;
     }
 
-    public void switchToAddNewBankFragment() {
+    private void switchToAddNewBankFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new AddBankFragment()).commit();
         mFabAddNewBank.setVisibility(View.GONE);

@@ -1,13 +1,13 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.NewsFeed;
 
-public class News {
-    public long id;
-    public String title;
-    public String description;
-    public String subDescription;
-    public String imageUrl;
-    public String imageThumbnailUrl;
-    public String newsLink;
+class News {
+    private long id;
+    private String title;
+    private String description;
+    private String subDescription;
+    private String imageUrl;
+    private String imageThumbnailUrl;
+    private String newsLink;
 
     public News() {
     }

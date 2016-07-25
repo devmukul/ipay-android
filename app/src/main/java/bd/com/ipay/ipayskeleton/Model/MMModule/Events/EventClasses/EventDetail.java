@@ -1,15 +1,15 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses;
 
 public class EventDetail {
-    public long id;
-    public String contactName;
-    public String contactNumber;
-    public String eventDescription;
-    public String locationLattitude;
-    public String locationLongitude;
-    public String eventLink;
-    public long creationDateTime;
-    public long updateDateTime;
+    private long id;
+    private String contactName;
+    private String contactNumber;
+    private String eventDescription;
+    private String locationLattitude;
+    private String locationLongitude;
+    private String eventLink;
+    private long creationDateTime;
+    private long updateDateTime;
 
     public EventDetail() {
     }

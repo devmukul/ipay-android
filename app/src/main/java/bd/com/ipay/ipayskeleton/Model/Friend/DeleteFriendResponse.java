@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.Friend;
 
-public class DeleteFriendResponse {
+class DeleteFriendResponse {
     private String message;
 
     public String getMessage() {

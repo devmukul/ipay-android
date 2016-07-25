@@ -75,7 +75,7 @@ public class EventActivity extends BaseActivity {
         switchedToEventFragments = false;
     }
 
-    public void switchToCreateNewEventFragment() {
+    private void switchToCreateNewEventFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new CreateNewEventFragment()).commit();
         mFabCreateNewEvent.setVisibility(View.GONE);

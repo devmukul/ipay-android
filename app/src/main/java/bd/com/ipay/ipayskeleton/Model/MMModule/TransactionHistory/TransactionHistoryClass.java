@@ -5,22 +5,22 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistoryClass {
 
-    private String originatingMobileNumber;
-    private String receiverInfo;
-    private double amount;
-    private double fee;
-    private double netAmount;
-    private double balance;
-    private int serviceID;
-    private int statusCode;
-    private String purpose;
-    private String statusDescription;
-    private String description;
-    private String transactionID;
-    private long time;
-    private long requestTime;
-    private long responseTime;
-    private TransactionHistoryAdditionalInfo additionalInfo;
+    private final String originatingMobileNumber;
+    private final String receiverInfo;
+    private final double amount;
+    private final double fee;
+    private final double netAmount;
+    private final double balance;
+    private final int serviceID;
+    private final int statusCode;
+    private final String purpose;
+    private final String statusDescription;
+    private final String description;
+    private final String transactionID;
+    private final long time;
+    private final long requestTime;
+    private final long responseTime;
+    private final TransactionHistoryAdditionalInfo additionalInfo;
 
     public TransactionHistoryClass(String originatingMobileNumber, String receiverInfo, double amount,
                                    double fee, double netAmount, double balance, int serviceID, int statusCode,

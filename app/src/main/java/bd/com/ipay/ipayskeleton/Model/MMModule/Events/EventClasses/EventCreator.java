@@ -3,11 +3,11 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses;
 import java.io.Serializable;
 
 public class EventCreator implements Serializable {
-    public long id;
-    public String ipayAccountId;
-    public String ipayAccountName;
-    public long creationDateTime;
-    public long updateDateTime;
+    private long id;
+    private String ipayAccountId;
+    private String ipayAccountName;
+    private long creationDateTime;
+    private long updateDateTime;
 
     public EventCreator() {
     }

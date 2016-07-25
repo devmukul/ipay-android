@@ -4,8 +4,8 @@ import java.util.List;
 
 public class GetPendingRequestResponse {
 
-    public List<RequestsSentClass> requests;
-    public boolean hasNext;
+    private List<RequestsSentClass> requests;
+    private boolean hasNext;
 
     public GetPendingRequestResponse() {
     }

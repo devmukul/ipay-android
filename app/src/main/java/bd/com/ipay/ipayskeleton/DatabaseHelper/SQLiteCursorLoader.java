@@ -28,15 +28,15 @@ import java.util.Arrays;
  * and {@link #setProjection(String[])}.
  */
 public abstract class SQLiteCursorLoader extends AsyncTaskLoader<Cursor> {
-    final ForceLoadContentObserver mObserver;
+    private final ForceLoadContentObserver mObserver;
 
-    Uri mUri;
-    String[] mProjection;
-    String mSelection;
-    String[] mSelectionArgs;
-    String mSortOrder;
+    private Uri mUri;
+    private String[] mProjection;
+    private String mSelection;
+    private String[] mSelectionArgs;
+    private String mSortOrder;
 
-    Cursor mCursor;
+    private Cursor mCursor;
 
     /* Runs on a worker thread */
     @Override

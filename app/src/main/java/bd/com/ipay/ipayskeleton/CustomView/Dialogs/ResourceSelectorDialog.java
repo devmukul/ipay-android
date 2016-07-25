@@ -12,8 +12,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Resource;
 
 public class ResourceSelectorDialog<E extends Resource> extends AlertDialog.Builder {
 
-    private List<E> resources;
-    private Context context;
+    private final List<E> resources;
+    private final Context context;
 
     private List<Integer> ids;
     private List<String> names;
@@ -28,7 +28,7 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog.Buil
         setItems(resources, selectedItemId);
     }
 
-    public void setItems(List<E> resources, int selectedItemId) {
+    private void setItems(List<E> resources, int selectedItemId) {
         ids = new ArrayList<>();
         names = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog.Buil
         void onResourceSelected(int id, String name);
     }
 
-    public int getSelectedItemPosition(int id) {
+    private int getSelectedItemPosition(int id) {
         for (int i = 0; i < ids.size(); i++) {
             if (ids.get(i) == id) {
                 return i;

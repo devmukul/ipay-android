@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 public class RefreshBalanceResponse {
 
-    public BigDecimal balance;
-    public String statusDescription;
+    private BigDecimal balance;
+    private String statusDescription;
 
     public RefreshBalanceResponse() {
 

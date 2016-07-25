@@ -37,7 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EventDetailsFragment extends ProgressFragment implements HttpResponseListener {
 
-    public static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_PERMISSION = 1001;
 
     // TODO: Pass to create event fragment with some arguments while user needs to edit the event
 
@@ -138,7 +138,7 @@ public class EventDetailsFragment extends ProgressFragment implements HttpRespon
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
-        getEventDetails(eventID);
+        getEventDetails();
     }
 
     private void initiateScan() {
@@ -146,7 +146,7 @@ public class EventDetailsFragment extends ProgressFragment implements HttpRespon
     }
 
     // TODO: Modify the request
-    private void getEventDetails(long eventId) {
+    private void getEventDetails() {
         if (mGetEventDetailsTask != null) {
             return;
         }
@@ -161,7 +161,7 @@ public class EventDetailsFragment extends ProgressFragment implements HttpRespon
     }
 
     // TODO: Modify the request
-    private void verifyTicket(long eventId, long transactionID) {
+    private void verifyTicket() {
         if (mVerifyTicketTask != null) {
             return;
         }
@@ -185,7 +185,6 @@ public class EventDetailsFragment extends ProgressFragment implements HttpRespon
                 } else {
                     Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
                 }
-                return;
             }
         }
     }

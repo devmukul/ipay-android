@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee;
 
-public class ResignBusinessResponse {
+class ResignBusinessResponse {
     private String message;
 
     public String getMessage() {

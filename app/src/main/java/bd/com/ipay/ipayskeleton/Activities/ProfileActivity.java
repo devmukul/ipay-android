@@ -144,7 +144,7 @@ public class ProfileActivity extends BaseActivity {
         ft.commit();
     }
 
-    public void switchToProfileFragment() {
+    private void switchToProfileFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 

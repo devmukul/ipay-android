@@ -3,11 +3,11 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp;
 
 public class OTPRequestTrustedDevice {
 
-    private String mobileNumber;
-    private String password;
-    private String deviceId;
-    private int accountType;
-    private String promoCode;
+    private final String mobileNumber;
+    private final String password;
+    private final String deviceId;
+    private final int accountType;
+    private final String promoCode;
 
     public OTPRequestTrustedDevice(String mobileNumber, String password, String deviceId, int accountType, String promoCode) {
         this.mobileNumber = mobileNumber;

@@ -43,7 +43,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
@@ -126,7 +125,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         GetAvailableBankAsyncTask mGetAvailableBankAsyncTask = new GetAvailableBankAsyncTask(getActivity(),
                 new GetAvailableBankAsyncTask.BankLoadListener() {
                     @Override
-                    public void onLoadSuccess(List<Bank> banks) {
+                    public void onLoadSuccess() {
                         getBankList();
                     }
 
@@ -309,16 +308,16 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mBankName;
-            private TextView mBankAccountNumber;
-            private ImageView mBankVerifiedStatus;
-            private TextView mBranchName;
-            private LinearLayout optionsLayout;
-            private Button removeButton;
-            private Button verifyButton;
-            private View verifyDivider;
-            private View divider;
-            private RoundedImageView bankIcon;
+            private final TextView mBankName;
+            private final TextView mBankAccountNumber;
+            private final ImageView mBankVerifiedStatus;
+            private final TextView mBranchName;
+            private final LinearLayout optionsLayout;
+            private final Button removeButton;
+            private final Button verifyButton;
+            private final View verifyDivider;
+            private final View divider;
+            private final RoundedImageView bankIcon;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -427,8 +426,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
                                     if (mAmountEditText.getText().toString().trim().length() == 0) {
                                         mAmountEditText.setError(getString(R.string.please_enter_amount));
-                                        View focusView = mAmountEditText;
-                                        focusView.requestFocus();
+                                        mAmountEditText.requestFocus();
                                         Toast.makeText(getActivity(), R.string.please_enter_amount, Toast.LENGTH_LONG).show();
 
                                     } else {
@@ -475,9 +473,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_bank_accounts,
                     parent, false);
 
-            ViewHolder vh = new ViewHolder(v);
-
-            return vh;
+            return new ViewHolder(v);
         }
 
         @Override

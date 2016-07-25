@@ -1,10 +1,10 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents;
 
 public class IdentificationDocument {
-    public String documentType;
-    public String documentIdNumber;
-    public String documentVerificationStatus;
-    public String documentUrl;
+    private String documentType;
+    private String documentIdNumber;
+    private String documentVerificationStatus;
+    private String documentUrl;
 
     public String getDocumentUrl() {
         return documentUrl;

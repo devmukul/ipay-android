@@ -3,10 +3,10 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment;
 
 public class PaymentRequest {
 
-    private String mobileNumber;
-    private double amount;
-    private String description;
-    private String pin;
+    private final String mobileNumber;
+    private final double amount;
+    private final String description;
+    private final String pin;
 
     public PaymentRequest(String mobileNumber, String amount, String description, String pin) {
         this.mobileNumber = mobileNumber;

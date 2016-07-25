@@ -14,7 +14,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.PinInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
 
 /**
@@ -23,14 +22,14 @@ import bd.com.ipay.ipayskeleton.R;
  */
 public class PinChecker implements HttpResponseListener {
 
-    private Context mContext;
-    private PinCheckerListener mPinCheckerListener;
+    private final Context mContext;
+    private final PinCheckerListener mPinCheckerListener;
 
     private HttpRequestGetAsyncTask mGetPinInfoTask = null;
     private PinInfoResponse mPinInfoResponse;
 
-    private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
+    private final ProgressDialog mProgressDialog;
+    private final SharedPreferences pref;
 
     private boolean cancel;
 
@@ -107,7 +106,7 @@ public class PinChecker implements HttpResponseListener {
                         } else {
                             AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(mContext, new AddPinDialogBuilder.AddPinListener() {
                                 @Override
-                                public void onPinAddSuccess(SetPinResponse setPinResponse) {
+                                public void onPinAddSuccess() {
 
                                 }
                             });

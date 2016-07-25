@@ -2,9 +2,9 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses;
 
 public class RestEventCreatorDTO {
 
-	public Long id;
-	public String ipayAccountId;
-	public String ipayAccountName;
+	private Long id;
+	private String ipayAccountId;
+	private String ipayAccountName;
 
 	public RestEventCreatorDTO() {
 	}

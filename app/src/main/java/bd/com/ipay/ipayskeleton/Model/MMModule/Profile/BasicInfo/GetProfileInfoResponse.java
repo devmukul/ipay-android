@@ -7,20 +7,20 @@ import java.util.List;
 
 public class GetProfileInfoResponse {
 
-    public String message;
-    public String mobileNumber;
-    public String name;
-    public String gender;
-    public String dob;
-    public int occupation;
-    public int accountType;
-    public String verificationStatus;
-    public int verifiedByCount;
-    public String father;
-    public String mother;
-    public long signupTime;
+    private String message;
+    private String mobileNumber;
+    private String name;
+    private String gender;
+    private String dob;
+    private int occupation;
+    private int accountType;
+    private String verificationStatus;
+    private int verifiedByCount;
+    private String father;
+    private String mother;
+    private long signupTime;
 
-    public List<UserProfilePictureClass> profilePictures = new ArrayList<>();
+    private final List<UserProfilePictureClass> profilePictures = new ArrayList<>();
 
     public String getMessage() {
         return message;

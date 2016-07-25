@@ -126,11 +126,11 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         private static final int VIEW_TYPE_HEADER = 100;
 
         public abstract class ProfileCompletionViewHolder extends RecyclerView.ViewHolder {
-            private View itemView;
-            private ImageView profileCompletionIcon;
-            private TextView titleView;
-            private TextView currentStatusView;
-            private ImageView verificationStatus;
+            private final View itemView;
+            private final ImageView profileCompletionIcon;
+            private final TextView titleView;
+            private final TextView currentStatusView;
+            private final ImageView verificationStatus;
 
             public ProfileCompletionViewHolder(final View itemView) {
                 super(itemView);
@@ -224,7 +224,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         }
 
         public class HeaderViewHolder extends RecyclerView.ViewHolder {
-            private TextView headerView;
+            private final TextView headerView;
 
             public HeaderViewHolder(final View itemView) {
                 super(itemView);
@@ -298,8 +298,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
 
             if (viewType == VIEW_TYPE_HEADER) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_header, parent, false);
-                HeaderViewHolder vh = new HeaderViewHolder(v);
-                return vh;
+                return new HeaderViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_profile_completion, parent, false);
                 RecyclerView.ViewHolder vh;
@@ -379,7 +378,6 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             if (position < tempPosition) {
                 ((LinkBankViewHolder) holder).bindViewProfileCompletion(
                         (position - (tempPosition - mProfileCompletionStatusResponse.getLinkBankCompletionDetails().size())));
-                return;
             }
 
         }

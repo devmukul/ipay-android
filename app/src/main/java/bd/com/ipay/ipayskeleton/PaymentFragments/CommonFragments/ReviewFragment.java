@@ -45,18 +45,18 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
 
     // Service ID used to query the service charge
-    public abstract int getServiceID();
+    protected abstract int getServiceID();
 
     // The original amount you have entered in the previous page
-    public abstract BigDecimal getAmount();
+    protected abstract BigDecimal getAmount();
 
     /**
      * This method will be called once the service charge loading is finished. You should populate
      * the service charge and net amount view withing this method.
      */
-    public abstract void onServiceChargeLoadFinished(BigDecimal serviceCharge);
+    protected abstract void onServiceChargeLoadFinished(BigDecimal serviceCharge);
 
-    public abstract void onPinLoadFinished(boolean isPinRequired);
+    protected abstract void onPinLoadFinished(boolean isPinRequired);
 
     protected void attemptGetServiceCharge() {
 

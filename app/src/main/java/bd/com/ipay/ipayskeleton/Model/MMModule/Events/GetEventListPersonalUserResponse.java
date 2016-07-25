@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses.Event;
 
-public class GetEventListPersonalUserResponse {
+class GetEventListPersonalUserResponse {
 
-    public ArrayList<Event> eventList = new ArrayList<>();
+    private final ArrayList<Event> eventList = new ArrayList<>();
 
     public GetEventListPersonalUserResponse() {
     }

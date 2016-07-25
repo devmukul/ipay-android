@@ -34,14 +34,14 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
 
     public HttpResponseListener mHttpResponseListener;
 
-    protected String mUri;
-    private Context mContext;
-    private String API_COMMAND;
+    final String mUri;
+    private final Context mContext;
+    private final String API_COMMAND;
     private HttpResponse mHttpResponse;
 
-    boolean error = false;
+    private boolean error = false;
 
-    public HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
+    HttpRequestAsyncTask(String API_COMMAND, String mUri, Context mContext, HttpResponseListener listener) {
         this.API_COMMAND = API_COMMAND;
         this.mUri = mUri;
         this.mContext = mContext;
@@ -170,7 +170,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         mHttpResponseListener.httpResponseReceiver(null);
     }
 
-    public HttpResponse makeRequest() {
+    private HttpResponse makeRequest() {
         try {
             HttpRequestBase httpRequest = getRequest();
 
@@ -190,7 +190,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         return null;
     }
 
-    protected Context getContext() {
+    Context getContext() {
         return mContext;
     }
 

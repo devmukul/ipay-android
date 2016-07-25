@@ -433,8 +433,8 @@ public class ContactEngine {
             return null;
     }
 
-    public static Bitmap loadContactPhotoHighResolution(Context c,
-                                                        long contactId) {
+    private static Bitmap loadContactPhotoHighResolution(Context c,
+                                                         long contactId) {
 
         Bitmap bitmap = null;
 
@@ -467,7 +467,7 @@ public class ContactEngine {
             return null;
     }
 
-    public static Bitmap loadContactPhoto(Context c, long contactId) {
+    private static Bitmap loadContactPhoto(Context c, long contactId) {
         if (contactId < 0)
             return null;
         InputStream is = Contacts.openContactPhotoInputStream(
@@ -495,8 +495,8 @@ public class ContactEngine {
             return null;
     }
 
-    public static String fetchContactIdFromPhoneNumber(Context c,
-                                                       String phoneNumber) {
+    private static String fetchContactIdFromPhoneNumber(Context c,
+                                                        String phoneNumber) {
         if (phoneNumber == null || phoneNumber.equals(""))
             return "-1";
         Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
@@ -519,7 +519,7 @@ public class ContactEngine {
         return contactId;
     }
 
-    public static Uri getPhotoUri(Context context, long _id) {
+    private static Uri getPhotoUri(Context context, long _id) {
         try {
             Cursor cur = context
                     .getContentResolver()
@@ -588,8 +588,8 @@ public class ContactEngine {
         return phoneContactID;
     }
 
-    public static long getContactIDFromNumber(Context context,
-                                              String contactNumber) {
+    private static long getContactIDFromNumber(Context context,
+                                               String contactNumber) {
         // contactNumber = Uri.encode(contactNumber);
         if (contactNumber == null || contactNumber.equals(""))
             return -1;
@@ -746,12 +746,11 @@ public class ContactEngine {
                 Uri.encode(number));
         String[] projection = new String[]{PhoneLookup.DISPLAY_NAME,
                 PhoneLookup.LOOKUP_KEY};
-        Cursor cursor = context.getContentResolver().query(uri, projection,
+        return context.getContentResolver().query(uri, projection,
                 null, null, null);
-        return cursor;
     }
 
-    public static Uri getPhotoUriNew(Context context, long _id) {
+    private static Uri getPhotoUriNew(Context context, long _id) {
         String[] CONTACTS_SUMMARY_PROJECTION;
         if (android.os.Build.VERSION.SDK_INT > 10) {
             CONTACTS_SUMMARY_PROJECTION = new String[]{
@@ -1049,10 +1048,10 @@ public class ContactEngine {
     }
 
     public static class ContactData {
-        public long contactID;
-        public String name;
-        public String mobileNumber;
-        public String photoUri;
+        public final long contactID;
+        public final String name;
+        public final String mobileNumber;
+        public final String photoUri;
 
         public ContactData(long contactID, String name, String mobileNumber, String photoUri) {
             this.contactID = contactID;
@@ -1063,8 +1062,8 @@ public class ContactEngine {
     }
 
     public static class ContactDiff {
-        public List<FriendNode> newFriends;
-        public List<FriendNode> updatedFriends;
+        public final List<FriendNode> newFriends;
+        public final List<FriendNode> updatedFriends;
 
         public ContactDiff() {
             newFriends = new ArrayList<>();

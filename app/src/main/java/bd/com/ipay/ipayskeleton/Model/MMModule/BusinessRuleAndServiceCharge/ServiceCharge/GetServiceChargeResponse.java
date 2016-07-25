@@ -4,26 +4,26 @@ import java.math.BigDecimal;
 
 public class GetServiceChargeResponse {
 
-    public BigDecimal maxTransactionFee;
-    public BigDecimal perTransactionFlatFee;
-    public BigDecimal perTransactionVeriableCharge;
-    public Boolean isPinRequired;
+    private BigDecimal maxTransactionFee;
+    private BigDecimal perTransactionFlatFee;
+    private BigDecimal perTransactionVeriableCharge;
+    private Boolean isPinRequired;
 
     public GetServiceChargeResponse() {
     }
 
-    public BigDecimal getMaxTransactionFee() {
+    private BigDecimal getMaxTransactionFee() {
         return maxTransactionFee;
     }
 
-    public BigDecimal getPerTransactionFlatFee() {
+    private BigDecimal getPerTransactionFlatFee() {
         if (perTransactionFlatFee == null)
             return BigDecimal.ZERO;
         else
             return perTransactionFlatFee;
     }
 
-    public BigDecimal getPerTransactionVeriableCharge() {
+    private BigDecimal getPerTransactionVeriableCharge() {
         if (perTransactionVeriableCharge == null)
             return BigDecimal.ZERO;
         else

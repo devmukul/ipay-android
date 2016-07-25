@@ -2,10 +2,10 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp;
 
 public class CheckPromoCodeRequest {
 
-    private String mobileNumber;
-    private String deviceId;
-    private String promoCode;
-    private String captcha;
+    private final String mobileNumber;
+    private final String deviceId;
+    private final String promoCode;
+    private final String captcha;
 
     public CheckPromoCodeRequest(String mobileNumber, String deviceId, String promoCode, String captcha) {
         this.mobileNumber = mobileNumber;

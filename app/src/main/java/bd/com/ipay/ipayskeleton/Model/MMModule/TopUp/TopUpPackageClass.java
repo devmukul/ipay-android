@@ -55,7 +55,7 @@ public class TopUpPackageClass implements Resource, Parcelable  {
         dest.writeString(this.name);
     }
 
-    protected TopUpPackageClass(Parcel in) {
+    private TopUpPackageClass(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
     }

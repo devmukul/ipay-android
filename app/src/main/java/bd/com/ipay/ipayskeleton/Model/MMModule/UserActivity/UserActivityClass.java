@@ -2,11 +2,11 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity;
 
 public class UserActivityClass {
 
-    public long id;
-    public long accountId;
-    public int type;
-    public String description;
-    public long time;
+    private long id;
+    private long accountId;
+    private int type;
+    private String description;
+    private long time;
 
     public UserActivityClass() {
     }

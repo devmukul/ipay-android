@@ -192,18 +192,18 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            private TextView mItemNameView;
-            private TextView mQuantityView;
-            private TextView mAmountView;
+            private final TextView mItemNameView;
+            private final TextView mQuantityView;
+            private final TextView mAmountView;
             private EditText mPinField;
-            private ProfileImageView mProfileImageView;
-            private TextView mNameView;
-            private TextView mMobileNumberView;
-            private TextView mTitleView;
-            private TextView mNetAmountView;
-            private TextView mVatView;
-            private TextView mTotalView;
-            private Button mMakePaymentButton;
+            private final ProfileImageView mProfileImageView;
+            private final TextView mNameView;
+            private final TextView mMobileNumberView;
+            private final TextView mTitleView;
+            private final TextView mNetAmountView;
+            private final TextView mVatView;
+            private final TextView mTotalView;
+            private final Button mMakePaymentButton;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -232,7 +232,7 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
                 mAmountView.setText(Utilities.formatTaka(mItemList.get(pos).getAmount()));
             }
 
-            public void bindViewForHeader(int pos) {
+            public void bindViewForHeader() {
                 if (mReceiverName == null || mReceiverName.isEmpty()) {
                     mNameView.setVisibility(View.GONE);
                 } else {
@@ -250,7 +250,7 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
                 mProfileImageView.setProfilePicture(mPhotoUri, false);
             }
 
-            public void bindViewForFooter(int pos) {
+            public void bindViewForFooter() {
                 mNetAmount = mAmount.subtract(mVat);
                 mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
                 mVatView.setText(Utilities.formatTaka(mVat));
@@ -306,18 +306,15 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
             View v;
             if (viewType == NOTIFICATION_REVIEW_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_make_payment_notification_review_header, parent, false);
-                ListHeaderViewHolder vh = new ListHeaderViewHolder(v);
-                return vh;
+                return new ListHeaderViewHolder(v);
 
             } else if (viewType == NOTIFICATION_REVIEW_LIST_FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_make_payment_notification_review_footer, parent, false);
-                ListFooterViewHolder vh = new ListFooterViewHolder(v);
-                return vh;
+                return new ListFooterViewHolder(v);
 
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_make_payment_notification_review, parent, false);
-                ListItemViewHolder vh = new ListItemViewHolder(v);
-                return vh;
+                return new ListItemViewHolder(v);
             }
         }
 
@@ -330,11 +327,11 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
 
                 } else if (holder instanceof ListHeaderViewHolder) {
                     ListHeaderViewHolder vh = (ListHeaderViewHolder) holder;
-                    vh.bindViewForHeader(position);
+                    vh.bindViewForHeader();
 
                 } else if (holder instanceof ListFooterViewHolder) {
                     ListFooterViewHolder vh = (ListFooterViewHolder) holder;
-                    vh.bindViewForFooter(position);
+                    vh.bindViewForFooter();
                 }
 
             } catch (Exception e) {

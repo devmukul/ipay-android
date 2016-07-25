@@ -4,10 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Privilege implements Parcelable {
-    private String name;
+    private final String name;
     private boolean hasAuthority;
 
-    public Privilege(String name, boolean hasAuthority) {
+    private Privilege(String name, boolean hasAuthority) {
         this.name = name;
         this.hasAuthority = hasAuthority;
     }
@@ -40,7 +40,7 @@ public class Privilege implements Parcelable {
         dest.writeByte(this.hasAuthority ? (byte) 1 : (byte) 0);
     }
 
-    protected Privilege(Parcel in) {
+    private Privilege(Parcel in) {
         this.name = in.readString();
         this.hasAuthority = in.readByte() != 0;
     }

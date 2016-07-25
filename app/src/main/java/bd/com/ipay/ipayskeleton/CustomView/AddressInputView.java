@@ -256,9 +256,8 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         int thana = mSelectedThanaId;
         int district = mSelectedDistrictId;
 
-        AddressClass addressClass = new AddressClass(addressLine1, addressLine2, country,
+        return new AddressClass(addressLine1, addressLine2, country,
                 district, thana, postalCode);
-        return addressClass;
     }
 
     @Override

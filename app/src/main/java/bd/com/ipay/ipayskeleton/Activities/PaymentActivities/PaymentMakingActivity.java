@@ -18,7 +18,7 @@ public class PaymentMakingActivity extends BaseActivity {
     private FloatingActionButton mFabMakingPayment;
     private boolean switchedToPendingList = true;
 
-    public static MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +60,14 @@ public class PaymentMakingActivity extends BaseActivity {
         }
     }
 
-    public void switchToPaymentMakingFragment() {
+    private void switchToPaymentMakingFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new PaymentMakingFragment()).commit();
         mFabMakingPayment.setVisibility(View.GONE);
         switchedToPendingList = false;
     }
 
-    public void switchToInvoicePaymentFrament() {
+    private void switchToInvoicePaymentFrament() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new InvoicePaymentFragment()).commit();
         mFabMakingPayment.setVisibility(View.VISIBLE);

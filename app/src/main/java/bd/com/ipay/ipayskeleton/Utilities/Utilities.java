@@ -287,7 +287,7 @@ public class Utilities {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void setFontSize(View view, float fontSize) {
+    private static void setFontSize(View view, float fontSize) {
         try {
             Class[] paramFloat = new Class[1];
             paramFloat[0] = Float.TYPE;
@@ -364,7 +364,7 @@ public class Utilities {
         return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
     }
 
-    public static void setLayoutAnim_slideDown(ViewGroup panel, Context ctx) {
+    public static void setLayoutAnim_slideDown(ViewGroup panel) {
 
         AnimationSet set = new AnimationSet(true);
 

@@ -203,7 +203,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         return v;
     }
 
-    public boolean verifyUserInputs() {
+    private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
 
@@ -297,7 +297,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         }
     }
 
-    private DatePickerDialog.OnDateSetListener mDateSetListener =
+    private final DatePickerDialog.OnDateSetListener mDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {

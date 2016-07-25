@@ -63,9 +63,8 @@ public class TransactionHistoryAdditionalInfo {
 
     public int getBankIcon(Context context) {
         Resources resources = context.getResources();
-        final int resourceId = resources.getIdentifier("bank" + getBankCode(), "drawable",
+        return resources.getIdentifier("bank" + getBankCode(), "drawable",
                 context.getPackageName());
-        return resourceId;
         //return resources.getDrawable(resourceId);
     }
 }

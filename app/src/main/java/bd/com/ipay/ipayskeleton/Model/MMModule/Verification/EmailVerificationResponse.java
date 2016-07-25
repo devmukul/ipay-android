@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Verification;
 
-public class EmailVerificationResponse {
+class EmailVerificationResponse {
 
     private String message;
 

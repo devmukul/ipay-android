@@ -4,15 +4,15 @@ import android.net.Uri;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class GetEventListPersonalUserRequestBuilder {
+class GetEventListPersonalUserRequestBuilder {
 
     private final String PARAM_CATEGORY_ID = "categoryId";
     private final String PARAM_START_TIME = "startTime";
     private final String PARAM_END_TIME = "endTime";
 
-    private long categoryId;
-    private long startTime;
-    private long endTime;
+    private final long categoryId;
+    private final long startTime;
+    private final long endTime;
 
     private String generatedUri;
 
@@ -38,7 +38,7 @@ public class GetEventListPersonalUserRequestBuilder {
         return generatedUri;
     }
 
-    public void setGeneratedUri(String generatedUri) {
+    private void setGeneratedUri(String generatedUri) {
         this.generatedUri = generatedUri;
     }
 

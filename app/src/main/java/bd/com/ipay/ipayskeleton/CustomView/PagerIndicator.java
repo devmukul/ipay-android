@@ -24,14 +24,14 @@ public class PagerIndicator extends RecyclerView {
     private int mUnselectedResource;
     private boolean mClickable;
     private int mDirection;
-    private PagerIndicatorAdapter mAdapter;
+    private final PagerIndicatorAdapter mAdapter;
     private int mCount = 0;
 
     private int mSelectedPosition = 0;
 
-    private Context mContext;
+    private final Context mContext;
 
-    private LinearLayoutManager mLayoutManager;
+    private final LinearLayoutManager mLayoutManager;
 
     public PagerIndicator(Context context) {
         this(context, null);
@@ -103,7 +103,7 @@ public class PagerIndicator extends RecyclerView {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            public ImageView indicatorImage;
+            public final ImageView indicatorImage;
 
             public ViewHolder(View itemView) {
                 super(itemView);

@@ -229,7 +229,7 @@
     <string name="please_login_again">Please sign in again.</string>
     <string name="sending_otp">Sending OTP in your mobile...</string>
     <string name="change_pass_failed">Failed to change password</string>
-    <string name="recharge_success">Mobile recharge successfull.</string>
+    <string name="recharge_success">Mobile recharge successful.</string>
     <string name="pin_save_success">Pin saved successfully.</string>
     <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
     <string name="activate">Activate</string>

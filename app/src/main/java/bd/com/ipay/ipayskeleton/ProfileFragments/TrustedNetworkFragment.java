@@ -335,9 +335,9 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mNameView;
-            private TextView mMobileNumberView;
-            private TextView mRelationshipView;
+            private final TextView mNameView;
+            private final TextView mMobileNumberView;
+            private final TextView mRelationshipView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -364,9 +364,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network,
                     parent, false);
 
-            ViewHolder vh = new ViewHolder(v);
-
-            return vh;
+            return new ViewHolder(v);
         }
 
         @Override

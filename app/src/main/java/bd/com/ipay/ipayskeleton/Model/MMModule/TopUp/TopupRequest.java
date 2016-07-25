@@ -2,15 +2,15 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.TopUp;
 
 public class TopupRequest {
 
-    private long senderAccountID;
-    private String receiverMobileNumber;
-    private int mobileNumberType;
-    private int operatorCode;
-    private double amount;
-    private String countryCode;
-    private int senderAccountUserType;
-    private int senderAccountUserClass;
-    private String pin;
+    private final long senderAccountID;
+    private final String receiverMobileNumber;
+    private final int mobileNumberType;
+    private final int operatorCode;
+    private final double amount;
+    private final String countryCode;
+    private final int senderAccountUserType;
+    private final int senderAccountUserClass;
+    private final String pin;
 
     public TopupRequest(long senderAccountID, String receiverMobileNumber,
                         int mobileNumberType, int operatorCode, double amount, String countryCode,

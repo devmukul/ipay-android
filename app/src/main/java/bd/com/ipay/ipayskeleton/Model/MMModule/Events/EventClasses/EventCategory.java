@@ -2,9 +2,9 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Events.EventClasses;
 
 public class EventCategory {
 
-    private long id;
-    private String description;
-    private String name;
+    private final long id;
+    private final String description;
+    private final String name;
     private long creationDateTime;
     private long updateDateTime;
 
