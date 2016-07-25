@@ -30,8 +30,8 @@ public class CameraUtilities {
      */
     public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage)
             throws IOException {
-        int MAX_HEIGHT = 100;
-        int MAX_WIDTH = 100;
+        int MAX_HEIGHT = 512;
+        int MAX_WIDTH = 512;
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();

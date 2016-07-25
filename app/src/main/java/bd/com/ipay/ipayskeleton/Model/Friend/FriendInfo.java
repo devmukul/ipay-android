@@ -8,29 +8,27 @@ public class FriendInfo {
     private boolean isMember;
     private boolean isVerified;
     private String name;
+    private String originalName;
     private String profilePictureUrl;
     private long updateAt;
-
-    public FriendInfo() {
-
-    }
 
     public FriendInfo(String name, String profilePictureUrl) {
         this.name = name;
         this.profilePictureUrl = profilePictureUrl;
     }
 
-    private FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, long updateAt, String profilePictureUrl) {
+    private FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, String originalName, long updateAt, String profilePictureUrl) {
         this.accountType = accountType;
         this.isMember = isMember;
         this.isVerified = isVerified;
         this.name = name;
+        this.originalName = originalName;
         this.profilePictureUrl = profilePictureUrl;
         this.updateAt = updateAt;
     }
 
-    public FriendInfo(int accountType, int isMember, int verificationStatus, String name,long updateAt, String profilePictureUrl) {
-        this(accountType, isMember == DBConstants.IPAY_MEMBER, verificationStatus == DBConstants.VERIFIED_USER, name, updateAt, profilePictureUrl);
+    public FriendInfo(int accountType, int isMember, int verificationStatus, String name, String originalName, long updateAt, String profilePictureUrl) {
+        this(accountType, isMember == DBConstants.IPAY_MEMBER, verificationStatus == DBConstants.VERIFIED_USER, name, originalName, updateAt, profilePictureUrl);
     }
 
     public int getAccountType() {
@@ -49,6 +47,10 @@ public class FriendInfo {
         return name;
     }
 
+    public String getOriginalName() {
+        return originalName;
+    }
+
     public long getUpdateTime() {
         return updateAt;
     }
@@ -63,10 +65,6 @@ public class FriendInfo {
 
     public void setAccountType(int accountType) {
         this.accountType = accountType;
-    }
-
-    public void setMember(boolean member) {
-        isMember = member;
     }
 
     public void setVerified(boolean verified) {
@@ -88,6 +86,7 @@ public class FriendInfo {
                 ", isMember=" + isMember +
                 ", isVerified=" + isVerified +
                 ", name='" + name + '\'' +
+                ", originalName='" + originalName + '\'' +
                 ", profilePictureUrl='" + profilePictureUrl + '\'' +
                 '}';
     }
