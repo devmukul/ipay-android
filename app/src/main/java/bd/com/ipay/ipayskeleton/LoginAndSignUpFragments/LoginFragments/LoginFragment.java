@@ -24,11 +24,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -85,7 +85,12 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setCancelable(false);
+        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                getActivity().onBackPressed();
+            }
+        });
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
@@ -164,8 +169,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
-        Log.d("V Edittext", mUserNameEditText.getText().toString());
-
         // Reset errors.
         mPasswordEditText.setError(null);
 
@@ -231,7 +234,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (getActivity() != null) mProgressDialog.dismiss();
+        mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
