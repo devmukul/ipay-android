@@ -228,77 +228,81 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
-            if (this.isAdded()) setContentShown(true);
-            try {
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_BANK_LIST:
+                if (this.isAdded()) setContentShown(true);
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    processGetBankListResponse(result.getJsonString());
+                        processGetBankListResponse(result.getJsonString());
 
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            mSwipeRefreshLayout.setRefreshing(false);
-            mGetBankTask = null;
+                mSwipeRefreshLayout.setRefreshing(false);
+                mGetBankTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_A_BANK)) {
+                break;
+            case Constants.COMMAND_REMOVE_A_BANK:
 
-            try {
-                mRemoveBankAccountResponse = gson.fromJson(result.getJsonString(), RemoveBankAccountResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mRemoveBankAccountResponse = gson.fromJson(result.getJsonString(), RemoveBankAccountResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mRemoveBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        // Refresh bank list
+                        if (mListUserBankClasses != null)
+                            mListUserBankClasses.clear();
+                        mListUserBankClasses = null;
+                        getBankList();
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mRemoveBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRemoveBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Refresh bank list
-                    if (mListUserBankClasses != null)
-                        mListUserBankClasses.clear();
-                    mListUserBankClasses = null;
-                    getBankList();
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRemoveBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_remove_bank, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_remove_bank, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mRemoveBankAccountTask = null;
+                mProgressDialog.dismiss();
+                mRemoveBankAccountTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_VERIFICATION_BANK_WITH_AMOUNT)) {
+                break;
+            case Constants.COMMAND_VERIFICATION_BANK_WITH_AMOUNT:
 
-            try {
-                mVerifyBankWithAmountResponse = gson.fromJson(result.getJsonString(), VerifyBankWithAmountResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mVerifyBankWithAmountResponse = gson.fromJson(result.getJsonString(), VerifyBankWithAmountResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        // Refresh bank list
+                        if (mListUserBankClasses != null)
+                            mListUserBankClasses.clear();
+                        mListUserBankClasses = null;
+                        getBankList();
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Refresh bank list
-                    if (mListUserBankClasses != null)
-                        mListUserBankClasses.clear();
-                    mListUserBankClasses = null;
-                    getBankList();
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_to_bank_verification, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_to_bank_verification, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mSendForVerificationWithAmountTask = null;
+                mProgressDialog.dismiss();
+                mSendForVerificationWithAmountTask = null;
+                break;
         }
     }
 
@@ -352,28 +356,32 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 optionsLayout.setVisibility(View.GONE);
 
 
-                if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
-                    mBankVerifiedStatus.clearColorFilter();
+                switch (verificationStatus) {
+                    case Constants.BANK_ACCOUNT_STATUS_VERIFIED:
+                        mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
+                        mBankVerifiedStatus.clearColorFilter();
 
-                    verifyDivider.setVisibility(View.GONE);
-                    verifyButton.setVisibility(View.GONE);
+                        verifyDivider.setVisibility(View.GONE);
+                        verifyButton.setVisibility(View.GONE);
 
-                } else if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED)) {
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified);
-                    mBankVerifiedStatus.setColorFilter(Color.RED);
+                        break;
+                    case Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED:
+                        mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified);
+                        mBankVerifiedStatus.setColorFilter(Color.RED);
 
-                    verifyDivider.setVisibility(View.GONE);
-                    verifyButton.setVisibility(View.GONE);
+                        verifyDivider.setVisibility(View.GONE);
+                        verifyButton.setVisibility(View.GONE);
 
-                } else {
+                        break;
+                    default:
 
-                    // Bank verification status pending
-                    mBankVerifiedStatus.setImageResource(R.drawable.ic_pending);
-                    mBankVerifiedStatus.setColorFilter(Color.GRAY);
+                        // Bank verification status pending
+                        mBankVerifiedStatus.setImageResource(R.drawable.ic_pending);
+                        mBankVerifiedStatus.setColorFilter(Color.GRAY);
 
-                    verifyDivider.setVisibility(View.VISIBLE);
-                    verifyButton.setVisibility(View.VISIBLE);
+                        verifyDivider.setVisibility(View.VISIBLE);
+                        verifyButton.setVisibility(View.VISIBLE);
+                        break;
                 }
 
                 removeButton.setOnClickListener(new View.OnClickListener() {

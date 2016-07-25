@@ -232,107 +232,111 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_SIGN_UP)) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_SIGN_UP:
 
 
-            try {
-                mSignupResponseModel = gson.fromJson(result.getJsonString(), SignupResponsePersonal.class);
-                String message = mSignupResponseModel.getMessage();
-                String otp = mSignupResponseModel.getOtp();
+                try {
+                    mSignupResponseModel = gson.fromJson(result.getJsonString(), SignupResponsePersonal.class);
+                    String message = mSignupResponseModel.getMessage();
+                    String otp = mSignupResponseModel.getOtp();
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).commit();
-                    pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPassword).commit();
-                    pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mName).commit();
-                    pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthday).commit();
-                    pref.edit().putString(Constants.GENDER, SignupOrLoginActivity.mGender).commit();
-                    pref.edit().putString(Constants.USERCOUNTRY, "Bangladesh").commit();   // TODO
-                    pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE).commit();
-                    pref.edit().putBoolean(Constants.LOGGED_IN, true).commit();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).commit();
+                        pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPassword).commit();
+                        pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mName).commit();
+                        pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthday).commit();
+                        pref.edit().putString(Constants.GENDER, SignupOrLoginActivity.mGender).commit();
+                        pref.edit().putString(Constants.USERCOUNTRY, "Bangladesh").commit();   // TODO
+                        pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE).commit();
+                        pref.edit().putBoolean(Constants.LOGGED_IN, true).commit();
 
-                    // Request a login immediately after sign up
-                    if (Utilities.isConnectionAvailable(getActivity()))
-                        attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword, otp);
+                        // Request a login immediately after sign up
+                        if (Utilities.isConnectionAvailable(getActivity()))
+                            attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword, otp);
 
-                    // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
+                        // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
 //                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
-                } else {
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mSignUpTask = null;
+                mProgressDialog.dismiss();
+                mSignUpTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
+                break;
+            case Constants.COMMAND_OTP_VERIFICATION:
 
 
-            try {
-                mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
-                String message = mOtpResponsePersonalSignup.getMessage();
+                try {
+                    mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
+                    String message = mOtpResponsePersonalSignup.getMessage();
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
+
+                        // Start timer again
+                        mTimerTextView.setVisibility(View.VISIBLE);
+                        mResendOTPButton.setEnabled(false);
+                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+
+                            public void onTick(long millisUntilFinished) {
+                                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                            }
+
+                            public void onFinish() {
+                                mTimerTextView.setVisibility(View.INVISIBLE);
+                                mResendOTPButton.setEnabled(true);
+                            }
+                        }.start();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
-
-                    // Start timer again
-                    mTimerTextView.setVisibility(View.VISIBLE);
-                    mResendOTPButton.setEnabled(false);
-                    new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
-
-                        public void onTick(long millisUntilFinished) {
-                            mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
-                        }
-
-                        public void onFinish() {
-                            mTimerTextView.setVisibility(View.INVISIBLE);
-                            mResendOTPButton.setEnabled(true);
-                        }
-                    }.start();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.otp_request_failed, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.otp_request_failed, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mRequestOTPTask = null;
+                mProgressDialog.dismiss();
+                mRequestOTPTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_LOG_IN)) {
+                break;
+            case Constants.COMMAND_LOG_IN:
 
 
-            try {
-                mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
-                String message = mLoginResponseModel.getMessage();
+                try {
+                    mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
+                    String message = mLoginResponseModel.getMessage();
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    Toast.makeText(getActivity(), R.string.signup_successful, Toast.LENGTH_LONG).show();
-                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        Toast.makeText(getActivity(), R.string.signup_successful, Toast.LENGTH_LONG).show();
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
-                } else {
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mLoginTask = null;
+                mProgressDialog.dismiss();
+                mLoginTask = null;
+                break;
         }
     }
 }

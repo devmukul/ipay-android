@@ -455,103 +455,109 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_SET_PIN)) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_SET_PIN:
 
-            try {
-                mSetPinResponse = gson.fromJson(result.getJsonString(), SetPinResponse.class);
+                try {
+                    mSetPinResponse = gson.fromJson(result.getJsonString(), SetPinResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mSavePINTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_CHANGE_PASSWORD)) {
-
-            try {
-                mChangePasswordResponse = gson.fromJson(result.getJsonString(), ChangePasswordResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.change_pass_failed, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mChangePasswordTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
-
-            try {
-                mGetTrustedDeviceResponse = gson.fromJson(result.getJsonString(), GetTrustedDeviceResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    processTrustedDeviceList(result.getJsonString());
-
-                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
-
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-
-            mProgressDialog.dismiss();
-            mGetTrustedDeviceTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_TRUSTED_DEVICE)) {
-
-            try {
-                mRemoveTrustedDeviceResponse = gson.fromJson(result.getJsonString(), RemoveTrustedDeviceResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.success_device_removed, Toast.LENGTH_LONG).show();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG).show();
+                }
 
-                    mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
-                    mProgressDialog.show();
+                mProgressDialog.dismiss();
+                mSavePINTask = null;
 
-                    getTrustedDeviceList();
-                } else {
+                break;
+            case Constants.COMMAND_CHANGE_PASSWORD:
+
+                try {
+                    mChangePasswordResponse = gson.fromJson(result.getJsonString(), ChangePasswordResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.change_pass_failed, Toast.LENGTH_LONG).show();
+                }
+
+                mProgressDialog.dismiss();
+                mChangePasswordTask = null;
+
+                break;
+            case Constants.COMMAND_GET_TRUSTED_DEVICES:
+
+                try {
+                    mGetTrustedDeviceResponse = gson.fromJson(result.getJsonString(), GetTrustedDeviceResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        processTrustedDeviceList(result.getJsonString());
+
+                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
+
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                mProgressDialog.dismiss();
+                mGetTrustedDeviceTask = null;
+
+                break;
+            case Constants.COMMAND_REMOVE_TRUSTED_DEVICE:
+
+                try {
+                    mRemoveTrustedDeviceResponse = gson.fromJson(result.getJsonString(), RemoveTrustedDeviceResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.success_device_removed, Toast.LENGTH_LONG).show();
+                        }
+
+                        mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
+                        mProgressDialog.show();
+
+                        getTrustedDeviceList();
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
 
-            mProgressDialog.cancel();
-            mRemoveTrustedDeviceTask = null;
-        }         if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
+                mProgressDialog.cancel();
+                mRemoveTrustedDeviceTask = null;
+                break;
+        }
+        if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
 
             try {
                 mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);

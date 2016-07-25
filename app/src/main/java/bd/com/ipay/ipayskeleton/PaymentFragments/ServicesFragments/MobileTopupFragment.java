@@ -192,8 +192,8 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     }
 
     private void getOperatorandPackage() {
-        mpackageList = new ArrayList<TopUpPackageClass>();
-        moperatorList = new ArrayList<OperatorClass>();
+        mpackageList = new ArrayList<>();
+        moperatorList = new ArrayList<>();
         mArraypackages = Arrays.asList(getResources().getStringArray(R.array.package_type));
         mArrayoperators = Arrays.asList(getResources().getStringArray(R.array.mobile_operators));
 

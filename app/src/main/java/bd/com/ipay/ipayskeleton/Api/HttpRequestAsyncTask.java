@@ -182,8 +182,6 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             httpRequest.setHeader("Accept", "application/json");
             httpRequest.setHeader("Content-type", "application/json");
             return new DefaultHttpClient().execute(httpRequest);
-        } catch (UnsupportedEncodingException | ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

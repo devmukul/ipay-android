@@ -251,105 +251,109 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_MONEY_REQUESTS)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                try {
-                    mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
-
-                    if (moneyRequestList == null || moneyRequestList.size() == 0) {
-                        moneyRequestList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
-                    } else {
-                        List<MoneyAndPaymentRequest> tempNotificationList;
-                        tempNotificationList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
-                        moneyRequestList.addAll(tempNotificationList);
-                    }
-
-                    hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
-                    mInvoiceListAdapter.notifyDataSetChanged();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
-                }
-
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
-            }
-
-            if (this.isAdded()) setContentShown(true);
-            mGetAllNotificationsTask = null;
-            mSwipeRefreshLayout.setRefreshing(false);
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
-
-            try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                        RequestMoneyAcceptRejectOrCancelResponse.class);
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_MONEY_REQUESTS:
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        refreshNotificationList();
+
+                    try {
+                        mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
+
+                        if (moneyRequestList == null || moneyRequestList.size() == 0) {
+                            moneyRequestList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                        } else {
+                            List<MoneyAndPaymentRequest> tempNotificationList;
+                            tempNotificationList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                            moneyRequestList.addAll(tempNotificationList);
+                        }
+
+                        hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
+                        mInvoiceListAdapter.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mRejectRequestTask = null;
+                if (this.isAdded()) setContentShown(true);
+                mGetAllNotificationsTask = null;
+                mSwipeRefreshLayout.setRefreshing(false);
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SINGLE_INVOICE)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                break;
+            case Constants.COMMAND_REJECT_REQUESTS_MONEY:
 
                 try {
-                    mGetSingleInvoiceResponse = gson.fromJson(result.getJsonString(), MoneyAndPaymentRequest.class);
-                    mMoneyRequestId = mGetSingleInvoiceResponse.getId();
-                    mAmount = mGetSingleInvoiceResponse.getAmount();
-                    mReceiverName = mGetSingleInvoiceResponse.originatorProfile.getUserName();
-                    mReceiverMobileNumber = mGetSingleInvoiceResponse.originatorProfile.getUserMobileNumber();
-                    mPhotoUri = mGetSingleInvoiceResponse.originatorProfile.getUserProfilePicture();
-                    mTitle = mGetSingleInvoiceResponse.getTitle();
-                    mVat = mGetSingleInvoiceResponse.getVat();
-                    mItemList = mGetSingleInvoiceResponse.getItemList();
+                    mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            RequestMoneyAcceptRejectOrCancelResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            refreshNotificationList();
+                        }
 
-                    ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                            mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
-                            new ReviewDialogFinishListener() {
-                                @Override
-                                public void onReviewFinish() {
-                                    refreshNotificationList();
-                                }
-                            });
-                    dialog.show();
-
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+                }
+
+                mProgressDialog.dismiss();
+                mRejectRequestTask = null;
+
+                break;
+            case Constants.COMMAND_GET_SINGLE_INVOICE:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                    try {
+                        mGetSingleInvoiceResponse = gson.fromJson(result.getJsonString(), MoneyAndPaymentRequest.class);
+                        mMoneyRequestId = mGetSingleInvoiceResponse.getId();
+                        mAmount = mGetSingleInvoiceResponse.getAmount();
+                        mReceiverName = mGetSingleInvoiceResponse.originatorProfile.getUserName();
+                        mReceiverMobileNumber = mGetSingleInvoiceResponse.originatorProfile.getUserMobileNumber();
+                        mPhotoUri = mGetSingleInvoiceResponse.originatorProfile.getUserProfilePicture();
+                        mTitle = mGetSingleInvoiceResponse.getTitle();
+                        mVat = mGetSingleInvoiceResponse.getVat();
+                        mItemList = mGetSingleInvoiceResponse.getItemList();
+
+                        ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                                mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                                new ReviewDialogFinishListener() {
+                                    @Override
+                                    public void onReviewFinish() {
+                                        refreshNotificationList();
+                                    }
+                                });
+                        dialog.show();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
                     }
                 }
 
-            } else {
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
-                }
-            }
+                if (this.isAdded()) setContentShown(true);
+                mGetSingleInvoiceTask = null;
+                mSwipeRefreshLayout.setRefreshing(false);
+                mProgressDialog.dismiss();
 
-            if (this.isAdded()) setContentShown(true);
-            mGetSingleInvoiceTask = null;
-            mSwipeRefreshLayout.setRefreshing(false);
-            mProgressDialog.dismiss();
-
+                break;
         }
 
         if (moneyRequestList != null && moneyRequestList.size() == 0) {

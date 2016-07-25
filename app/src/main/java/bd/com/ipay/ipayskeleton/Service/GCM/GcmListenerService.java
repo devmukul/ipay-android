@@ -242,61 +242,68 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         DataHelper dataHelper = DataHelper.getInstance(this);
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
-                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
-                PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
-                PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
-                String imageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
+                    String imageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
-                ProfileInfoCacheManager.updateCache(mGetProfileInfoResponse.getName(),
-                        mGetProfileInfoResponse.getMobileNumber(), imageUrl, mGetProfileInfoResponse.getVerificationStatus());
-            }
+                    ProfileInfoCacheManager.updateCache(mGetProfileInfoResponse.getName(),
+                            mGetProfileInfoResponse.getMobileNumber(), imageUrl, mGetProfileInfoResponse.getVerificationStatus());
+                }
 
-            mGetProfileInfoTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
+                mGetProfileInfoTask = null;
+                break;
+            case Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST:
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
-                PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
-            }
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+                }
 
-            mGetIdentificationDocumentsTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_EMAILS)) {
+                mGetIdentificationDocumentsTask = null;
+                break;
+            case Constants.COMMAND_GET_EMAILS:
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
-                PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
-            }
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
+                }
 
-            mGetEmailsTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
+                mGetEmailsTask = null;
+                break;
+            case Constants.COMMAND_GET_BANK_LIST:
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, result.getJsonString());
-                PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
-            }
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
+                }
 
-            mGetBankTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
+                mGetBankTask = null;
+                break;
+            case Constants.COMMAND_GET_TRUSTED_DEVICES:
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
-                PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
-            }
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
+                }
 
-            mGetTrustedDeviceTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_PERSONS)) {
+                mGetTrustedDeviceTask = null;
+                break;
+            case Constants.COMMAND_GET_TRUSTED_PERSONS:
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, result.getJsonString());
-                PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, false);
-            }
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, false);
+                }
 
-            mGetTrustedPersonsTask = null;
+                mGetTrustedPersonsTask = null;
+                break;
         }
 
     }

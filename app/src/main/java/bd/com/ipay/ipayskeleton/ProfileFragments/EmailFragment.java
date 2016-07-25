@@ -297,94 +297,99 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_EMAILS)) {
-            try {
-                mGetEmailResponse = gson.fromJson(result.getJsonString(), GetEmailResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    processGetEmailListResponse(result.getJsonString());
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_EMAILS:
+                try {
+                    mGetEmailResponse = gson.fromJson(result.getJsonString(), GetEmailResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        processGetEmailListResponse(result.getJsonString());
 
-                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
 
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
-                } else {
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mGetEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ((HomeActivity) getActivity()).switchToDashBoard();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mGetEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_loading_emails, Toast.LENGTH_LONG).show();
                         ((HomeActivity) getActivity()).switchToDashBoard();
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_loading_emails, Toast.LENGTH_LONG).show();
-                    ((HomeActivity) getActivity()).switchToDashBoard();
-                }
-            }
-            mSwipeRefreshLayout.setRefreshing(false);
-            mGetEmailsTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_NEW_EMAIL)) {
-            try {
-                mAddNewEmailResponse = gson.fromJson(result.getJsonString(), AddNewEmailResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    getEmails();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                mSwipeRefreshLayout.setRefreshing(false);
+                mGetEmailsTask = null;
+                break;
+            case Constants.COMMAND_ADD_NEW_EMAIL:
+                try {
+                    mAddNewEmailResponse = gson.fromJson(result.getJsonString(), AddNewEmailResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        getEmails();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mAddNewEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_add_email, Toast.LENGTH_LONG).show();
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_add_email, Toast.LENGTH_LONG).show();
-                }
-            }
 
-            mAddNewEmailTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_DELETE_EMAIL)) {
-            try {
-                mDeleteEmailResponse = gson.fromJson(result.getJsonString(), DeleteEmailResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    getEmails();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mDeleteEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                mAddNewEmailTask = null;
+                break;
+            case Constants.COMMAND_DELETE_EMAIL:
+                try {
+                    mDeleteEmailResponse = gson.fromJson(result.getJsonString(), DeleteEmailResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        getEmails();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mDeleteEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mDeleteEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mDeleteEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_delete_email, Toast.LENGTH_LONG).show();
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_delete_email, Toast.LENGTH_LONG).show();
-                }
-            }
 
-            mDeleteEmailTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_EMAIL_MAKE_PRIMARY)) {
-            try {
-                makePrimaryEmailResponse = gson.fromJson(result.getJsonString(), MakePrimaryEmailResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    getEmails();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), makePrimaryEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                mDeleteEmailTask = null;
+                break;
+            case Constants.COMMAND_EMAIL_MAKE_PRIMARY:
+                try {
+                    makePrimaryEmailResponse = gson.fromJson(result.getJsonString(), MakePrimaryEmailResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        getEmails();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), makePrimaryEmailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), makePrimaryEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), makePrimaryEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_make_primary, Toast.LENGTH_LONG).show();
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_make_primary, Toast.LENGTH_LONG).show();
-                }
-            }
 
-            mMakePrimaryEmailTask = null;
+                mMakePrimaryEmailTask = null;
+                break;
         }
 
     }
@@ -457,22 +462,26 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
                 final String verificationStatus = email.getVerificationStatus();
 
-                if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFIED)) {
-                    mVerificationStatus.setImageResource(R.drawable.ic_verified);
-                    mVerificationStatus.setColorFilter(null);
+                switch (verificationStatus) {
+                    case Constants.EMAIL_VERIFICATION_STATUS_VERIFIED:
+                        mVerificationStatus.setImageResource(R.drawable.ic_verified);
+                        mVerificationStatus.setColorFilter(null);
 
-                    makePrimaryButton.setVisibility(View.VISIBLE);
-                } else if (verificationStatus.equals(Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS)) {
-                    mVerificationStatus.setImageResource(R.drawable.ic_pending);
-                    mVerificationStatus.setColorFilter(Color.GRAY);
+                        makePrimaryButton.setVisibility(View.VISIBLE);
+                        break;
+                    case Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS:
+                        mVerificationStatus.setImageResource(R.drawable.ic_pending);
+                        mVerificationStatus.setColorFilter(Color.GRAY);
 
-                    makePrimaryButton.setVisibility(View.GONE);
-                    divider.setVisibility(View.GONE);
-                } else {
-                    mVerificationStatus.setImageResource(R.drawable.ic_notverified);
-                    mVerificationStatus.setColorFilter(null);
+                        makePrimaryButton.setVisibility(View.GONE);
+                        divider.setVisibility(View.GONE);
+                        break;
+                    default:
+                        mVerificationStatus.setImageResource(R.drawable.ic_notverified);
+                        mVerificationStatus.setColorFilter(null);
 
-                    makePrimaryButton.setVisibility(View.GONE);
+                        makePrimaryButton.setVisibility(View.GONE);
+                        break;
                 }
 
                 if (email.isPrimary()) {

@@ -206,95 +206,99 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_MONEY_REQUESTS)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_MONEY_REQUESTS:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                try {
-                    mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
+                    try {
+                        mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
 
-                    if (moneyRequestList == null || moneyRequestList.size() == 0) {
-                        moneyRequestList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
-                    } else {
-                        List<MoneyAndPaymentRequest> tempNotificationList;
-                        tempNotificationList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
-                        moneyRequestList.addAll(tempNotificationList);
+                        if (moneyRequestList == null || moneyRequestList.size() == 0) {
+                            moneyRequestList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                        } else {
+                            List<MoneyAndPaymentRequest> tempNotificationList;
+                            tempNotificationList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                            moneyRequestList.addAll(tempNotificationList);
+                        }
+
+                        hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
+                        mNotificationListAdapter.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
                     }
 
-                    hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
-                    mNotificationListAdapter.notifyDataSetChanged();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
                 }
 
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
-            }
+                if (this.isAdded()) setContentShown(true);
+                mGetAllNotificationsTask = null;
+                mSwipeRefreshLayout.setRefreshing(false);
 
-            if (this.isAdded()) setContentShown(true);
-            mGetAllNotificationsTask = null;
-            mSwipeRefreshLayout.setRefreshing(false);
+                break;
+            case Constants.COMMAND_GET_SERVICE_CHARGE:
+                mProgressDialog.dismiss();
+                try {
+                    mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SERVICE_CHARGE)) {
-            mProgressDialog.dismiss();
-            try {
-                mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (mGetServiceChargeResponse != null) {
+                            mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (mGetServiceChargeResponse != null) {
-                        mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
+                            if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
+                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            } else {
+                                showReviewDialog();
+                            }
 
-                        if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
                         } else {
-                            showReviewDialog();
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                }
+
+
+                mServiceChargeTask = null;
+                break;
+            case Constants.COMMAND_REJECT_REQUESTS_MONEY:
+
+                try {
+                    mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            RequestMoneyAcceptRejectOrCancelResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            refreshMoneyRequestList();
                         }
 
                     } else {
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        return;
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            }
-
-
-            mServiceChargeTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
-
-            try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                        RequestMoneyAcceptRejectOrCancelResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        refreshMoneyRequestList();
-                    }
-
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mRejectRequestTask = null;
+                mProgressDialog.dismiss();
+                mRejectRequestTask = null;
 
+                break;
         }
         if (moneyRequestList != null && moneyRequestList.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);

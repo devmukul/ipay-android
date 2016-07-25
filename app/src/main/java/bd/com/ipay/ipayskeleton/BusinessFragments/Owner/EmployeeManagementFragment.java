@@ -218,15 +218,19 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                     mDesignationView.setVisibility(View.GONE);
                 }
 
-                if (employee.getStatus().equals(Constants.BUSINESS_INVITATION_ACCEPTED)) {
-                    mStatusView.setImageResource(R.drawable.ic_verified3x);
-                    mStatusView.setColorFilter(null);
-                } else if (employee.getStatus().equals(Constants.BUSINESS_STATUS_PENDING)) {
-                    mStatusView.setImageResource(R.drawable.ic_wip);
-                    mStatusView.setColorFilter(Color.GRAY);
-                } else {
-                    mStatusView.setImageResource(R.drawable.ic_notverified3x);
-                    mStatusView.setColorFilter(null);
+                switch (employee.getStatus()) {
+                    case Constants.BUSINESS_INVITATION_ACCEPTED:
+                        mStatusView.setImageResource(R.drawable.ic_verified3x);
+                        mStatusView.setColorFilter(null);
+                        break;
+                    case Constants.BUSINESS_STATUS_PENDING:
+                        mStatusView.setImageResource(R.drawable.ic_wip);
+                        mStatusView.setColorFilter(Color.GRAY);
+                        break;
+                    default:
+                        mStatusView.setImageResource(R.drawable.ic_notverified3x);
+                        mStatusView.setColorFilter(null);
+                        break;
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {

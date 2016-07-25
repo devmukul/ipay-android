@@ -282,99 +282,103 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_ADD_A_BANK)) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_ADD_A_BANK:
 
-            try {
-                mAddBankResponse = gson.fromJson(result.getJsonString(), AddBankResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG).show();
+                try {
+                    mAddBankResponse = gson.fromJson(result.getJsonString(), AddBankResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                    long bankAccountID = mAddBankResponse.getId();
+                        long bankAccountID = mAddBankResponse.getId();
 
-                    // Refresh bank list
-                    if (mListUserBankClasses != null)
-                        mListUserBankClasses.clear();
-                    mListUserBankClasses = null;
+                        // Refresh bank list
+                        if (mListUserBankClasses != null)
+                            mListUserBankClasses.clear();
+                        mListUserBankClasses = null;
 
-                    // Send the verification status
-                    attemptSendForVerification(bankAccountID);
+                        // Send the verification status
+                        attemptSendForVerification(bankAccountID);
 
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mProgressDialog.dismiss();
-            mAddBankTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_BRANCH_LIST)) {
-
-            try {
-                mGetBankBranchesResponse = gson.fromJson(result.getJsonString(), GetBankBranchesResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mDistrictNames.clear();
-                    mDistrictNames.add(getString(R.string.select_one));
-
-                    bankDistrictToBranchMap = new HashMap<>();
-
-                    for (BankBranch branch : mGetBankBranchesResponse.getAvailableBranches()) {
-                        if (!bankDistrictToBranchMap.containsKey(branch.getDistrict())) {
-                            bankDistrictToBranchMap.put(branch.getDistrict(), new ArrayList<BankBranch>());
-                            mDistrictNames.add(branch.getDistrict());
-                        }
-                        bankDistrictToBranchMap.get(branch.getDistrict()).add(branch);
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
-                    setDistrictAdapter(mDistrictNames);
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mGetBankBranchesResponse.getMessage(), Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_to_fetch_branch, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mGetBankBranchesTask = null;
+                mProgressDialog.dismiss();
+                mAddBankTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_FOR_VERIFICATION_BANK)) {
+                break;
+            case Constants.COMMAND_GET_BANK_BRANCH_LIST:
 
-            try {
-                mVerifyBankAccountResponse = gson.fromJson(result.getJsonString(), VerifyBankAccountResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mGetBankBranchesResponse = gson.fromJson(result.getJsonString(), GetBankBranchesResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mDistrictNames.clear();
+                        mDistrictNames.add(getString(R.string.select_one));
+
+                        bankDistrictToBranchMap = new HashMap<>();
+
+                        for (BankBranch branch : mGetBankBranchesResponse.getAvailableBranches()) {
+                            if (!bankDistrictToBranchMap.containsKey(branch.getDistrict())) {
+                                bankDistrictToBranchMap.put(branch.getDistrict(), new ArrayList<BankBranch>());
+                                mDistrictNames.add(branch.getDistrict());
+                            }
+                            bankDistrictToBranchMap.get(branch.getDistrict()).add(branch);
+                        }
+
+                        setDistrictAdapter(mDistrictNames);
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mGetBankBranchesResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Refresh bank list
-                    if (mListUserBankClasses != null)
-                        mListUserBankClasses.clear();
-                    mListUserBankClasses = null;
-
-                    if (!startedFromProfileCompletion)
-                        ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
-                    else //TODO
-                        Toast.makeText(getActivity(), R.string.bank_added_successfully, Toast.LENGTH_LONG).show();
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_to_fetch_branch, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_to_send_for_bank_verification, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mSendForVerificationTask = null;
+                mProgressDialog.dismiss();
+                mGetBankBranchesTask = null;
+
+                break;
+            case Constants.COMMAND_SEND_FOR_VERIFICATION_BANK:
+
+                try {
+                    mVerifyBankAccountResponse = gson.fromJson(result.getJsonString(), VerifyBankAccountResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        // Refresh bank list
+                        if (mListUserBankClasses != null)
+                            mListUserBankClasses.clear();
+                        mListUserBankClasses = null;
+
+                        if (!startedFromProfileCompletion)
+                            ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
+                        else //TODO
+                            Toast.makeText(getActivity(), R.string.bank_added_successfully, Toast.LENGTH_LONG).show();
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.failed_to_send_for_bank_verification, Toast.LENGTH_LONG).show();
+                }
+
+                mProgressDialog.dismiss();
+                mSendForVerificationTask = null;
+                break;
         }
     }
 

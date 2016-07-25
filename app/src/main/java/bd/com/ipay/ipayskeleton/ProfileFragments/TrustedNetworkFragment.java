@@ -252,69 +252,73 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_PERSONS)) {
-            try {
-                mGetTrustedPersonsResponse = gson.fromJson(result.getJsonString(), GetTrustedPersonsResponse.class);
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_TRUSTED_PERSONS:
+                try {
+                    mGetTrustedPersonsResponse = gson.fromJson(result.getJsonString(), GetTrustedPersonsResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    processGetTrustedPersonList(result.getJsonString());
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        processGetTrustedPersonList(result.getJsonString());
 
-                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, result.getJsonString());
+                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, result.getJsonString());
 
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, false);
-                } else {
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, false);
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mGetTrustedPersonsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ((HomeActivity) getActivity()).switchToDashBoard();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mGetTrustedPersonsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_loading_trusted_person_list, Toast.LENGTH_LONG).show();
                     ((HomeActivity) getActivity()).switchToDashBoard();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_loading_trusted_person_list, Toast.LENGTH_LONG).show();
-                ((HomeActivity) getActivity()).switchToDashBoard();
-            }
 
-            mSwipeRefreshLayout.setRefreshing(false);
-            mGetTrustedPersonsTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_TRUSTED_PERSON)) {
-            try {
-                mAddTrustedPersonResponse = gson.fromJson(result.getJsonString(), AddTrustedPersonResponse.class);
+                mSwipeRefreshLayout.setRefreshing(false);
+                mGetTrustedPersonsTask = null;
+                break;
+            case Constants.COMMAND_ADD_TRUSTED_PERSON:
+                try {
+                    mAddTrustedPersonResponse = gson.fromJson(result.getJsonString(), AddTrustedPersonResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        getTrustedPersons();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    getTrustedPersons();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG).show();
-            }
 
-            mAddTrustedPersonTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_SET_ACCOUNT_RECOVERY_PERSON)) {
-            try {
-                mSetAccountRecoveryPersonResponse = gson.fromJson(result.getJsonString(), SetAccountRecoveryPersonResponse.class);
+                mAddTrustedPersonTask = null;
+                break;
+            case Constants.COMMAND_SET_ACCOUNT_RECOVERY_PERSON:
+                try {
+                    mSetAccountRecoveryPersonResponse = gson.fromJson(result.getJsonString(), SetAccountRecoveryPersonResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mSetAccountRecoveryPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        getTrustedPersons();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mSetAccountRecoveryPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetAccountRecoveryPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    getTrustedPersons();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetAccountRecoveryPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-            }
 
-            mSetAccountRecoveryPersonTask = null;
+                mSetAccountRecoveryPersonTask = null;
+                break;
         }
     }
 

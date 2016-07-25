@@ -321,88 +321,92 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_SET_PROFILE_INFO_REQUEST:
 
-            try {
-                mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
+                try {
+                    mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                        // We need to update the basic info page when user navigates to that page from the current edit page.
-                        // But by default, the basic info stored in our database is refreshed only when a push is received.
-                        // It might be the case that push notification is not yet received on the phone and user already
-                        // navigated to the basic info page. To handle this case, we are setting updateNeeded to true.
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, true);
+                            // We need to update the basic info page when user navigates to that page from the current edit page.
+                            // But by default, the basic info stored in our database is refreshed only when a push is received.
+                            // It might be the case that push notification is not yet received on the phone and user already
+                            // navigated to the basic info page. To handle this case, we are setting updateNeeded to true.
+                            PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, true);
 
-                        getActivity().onBackPressed();
+                            getActivity().onBackPressed();
+                        }
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
                     }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
-            }
 
-            mSetProfileInfoTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
-            try {
-                mSetProfilePictureResponse = gson.fromJson(result.getJsonString(), SetProfilePictureResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
+                mSetProfileInfoTask = null;
+                break;
+            case Constants.COMMAND_SET_PROFILE_PICTURE:
+                try {
+                    mSetProfilePictureResponse = gson.fromJson(result.getJsonString(), SetProfilePictureResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
 
-                    Intent intent = new Intent(Constants.PROFILE_PICTURE_UPDATE_BROADCAST);
-                    intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);
-                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                        Intent intent = new Intent(Constants.PROFILE_PICTURE_UPDATE_BROADCAST);
+                        intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);
+                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT).show();
-            }
-
-            mUploadProfilePictureAsyncTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
-
-            try {
-                mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mOccupationList = mGetOccupationResponse.getOccupations();
-
-                    setOccupationAdapter(mOccupationList);
-
-                    for (int i = 0; i < mOccupationList.size(); i++) {
-                        if (mOccupationList.get(i).getId() == mOccupation) {
-                            String occupation = mGetOccupationResponse.getOccupation(mOccupation);
-                            if (occupation != null) {
-                                mOccupationEditText.setText(occupation);
-                            }
-
-                            break;
-                        }
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT).show();
+                }
 
-                } else {
+                mUploadProfilePictureAsyncTask = null;
+                break;
+            case Constants.COMMAND_GET_OCCUPATIONS_REQUEST:
+
+                try {
+                    mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mOccupationList = mGetOccupationResponse.getOccupations();
+
+                        setOccupationAdapter(mOccupationList);
+
+                        for (int i = 0; i < mOccupationList.size(); i++) {
+                            if (mOccupationList.get(i).getId() == mOccupation) {
+                                String occupation = mGetOccupationResponse.getOccupation(mOccupation);
+                                if (occupation != null) {
+                                    mOccupationEditText.setText(occupation);
+                                }
+
+                                break;
+                            }
+                        }
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.failed_loading_occupation_list, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_loading_occupation_list, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_loading_occupation_list, Toast.LENGTH_LONG).show();
-            }
 
-            mGetOccupationTask = null;
+                mGetOccupationTask = null;
+                break;
         }
     }
 
