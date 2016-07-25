@@ -84,6 +84,7 @@
     <string name="please_wait">Please wait. Loading... </string>
     <string name="loading">Loading... </string>
     <string name="load_more">Load more...</string>
+    <string name="student_id">Student ID</string>
     <string name="no_more_results">No more results to show</string>
     <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
     <string name="get_all_institution_failed">Failed to load institutions.</string>
