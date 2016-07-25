@@ -14,7 +14,7 @@ import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -80,6 +80,7 @@ public class DataHelper {
                     ContentValues values = new ContentValues();
                     values.put(DBConstants.KEY_MOBILE_NUMBER, friendNode.getPhoneNumber());
                     values.put(DBConstants.KEY_NAME, friendNode.getInfo().getName());
+                    values.put(DBConstants.KEY_ORIGINAL_NAME, friendNode.getInfo().getOriginalName());
                     values.put(DBConstants.KEY_ACCOUNT_TYPE, friendNode.getInfo().getAccountType());
                     values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
                     values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
@@ -177,6 +178,7 @@ public class DataHelper {
 
         if (cursor.moveToFirst()) {
             int nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
+            int originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_ORIGINAL_NAME);
             int mobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
             int profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
             int verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
@@ -186,6 +188,7 @@ public class DataHelper {
 
             do {
                 String name = cursor.getString(nameIndex);
+                String originalName = cursor.getString(originalNameIndex);
                 String mobileNumber = cursor.getString(mobileNumberIndex);
                 int verificationStatus = cursor.getInt(verificationStatusIndex);
                 int accountType = cursor.getInt(accountTypeIndex);
@@ -194,7 +197,7 @@ public class DataHelper {
                 int isMember = cursor.getInt(isMemberIndex);
 
                 FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, isMember,
-                        verificationStatus, name, updateTime, profilePictureUrl));
+                        verificationStatus, name, originalName, updateTime, profilePictureUrl));
                 friends.add(friend);
             } while (cursor.moveToNext());
         }

@@ -18,6 +18,7 @@ public class DBConstants {
     public static final String KEY_MOBILE_NUMBER = "mobile_number";
     public static final String KEY_VERIFICATION_STATUS = "verification_status";
     public static final String KEY_NAME = "name";
+    public static final String KEY_ORIGINAL_NAME = "original_name";
     public static final String KEY_ACCOUNT_TYPE = "account_type";
     public static final String KEY_PROFILE_PICTURE = "profile_picture";
     public static final String KEY_IS_MEMBER = "is_member";

@@ -495,8 +495,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 try {
                     mRefreshBalanceResponse = gson.fromJson(result.getJsonString(), RefreshBalanceResponse.class);
                     String balance = mRefreshBalanceResponse.getBalance() + "";
-                    if (balance != null)
-                        balanceView.setText(balance + " " + getString(R.string.bdt));
+                    if (balance != null) {
+                        if (isAdded())
+                            balanceView.setText(balance + " " + getString(R.string.bdt));
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
@@ -507,8 +509,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     Toast.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG).show();
             }
 
-            refreshBalanceButton.clearAnimation();
             mRefreshBalanceTask = null;
+            refreshBalanceButton.clearAnimation();
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
             try {
