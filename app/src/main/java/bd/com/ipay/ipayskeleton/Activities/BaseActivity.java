@@ -20,6 +20,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -106,7 +107,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
 
         SharedPreferences pref;
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        String mUserID = pref.getString(Constants.USERID, "");
+        String mUserID = ProfileInfoCacheManager.getMobileNumber();
 
         LogoutRequest mLogoutModel = new LogoutRequest(mUserID);
         Gson gson = new Gson();

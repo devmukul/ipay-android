@@ -50,6 +50,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceRes
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
@@ -274,7 +275,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         mProgressDialog.show();
 
         pref = getContext().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        LogoutRequest mLogoutModel = new LogoutRequest(pref.getString(Constants.USERID, ""));
+        LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
 

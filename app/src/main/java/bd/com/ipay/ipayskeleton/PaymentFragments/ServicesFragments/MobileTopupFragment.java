@@ -45,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.Busi
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.OperatorClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopUpPackageClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -59,10 +60,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private ImageView mSelectReceiverButton;
     private Button mRechargeButton;
     private TextView mMobileTopUpInfoTextView;
-
-    private RadioGroup mSelectType;
-    private RadioButton mPrepaidRadioButton;
-    private RadioButton mPostPaidRadioButton;
 
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
@@ -145,8 +142,9 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             }
         });
 
-        String verificationStatus = pref.getString(Constants.VERIFICATION_STATUS, Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED);
-        String userMobileNumber = pref.getString(Constants.USERID, "");
+        String verificationStatus = ProfileInfoCacheManager.getVerificationStatus();
+        String userMobileNumber = ProfileInfoCacheManager.getMobileNumber();
+
         mMobileNumberEditText.setText(userMobileNumber);
         setOperator(userMobileNumber);
 

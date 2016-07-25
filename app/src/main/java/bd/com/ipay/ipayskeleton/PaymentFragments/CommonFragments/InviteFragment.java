@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequ
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class InviteFragment extends ProgressFragment implements HttpResponseListener {
@@ -70,7 +71,7 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
             }
         });
 
-        getProfileInfo(pref.getString(Constants.USERID, ""));
+        getProfileInfo(ProfileInfoCacheManager.getMobileNumber());
 
         return v;
     }
