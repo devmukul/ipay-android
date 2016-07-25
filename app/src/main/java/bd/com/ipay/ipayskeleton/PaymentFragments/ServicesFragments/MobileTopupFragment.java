@@ -368,7 +368,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     }
 
     private void setPackageTypeAdapter() {
-        packageClassResourceSelectorDialog = new ResourceSelectorDialog(getActivity(), mpackageList, mSelectedPackageTypeId);
+        packageClassResourceSelectorDialog = new ResourceSelectorDialog(getActivity(),getString(R.string.select_a_package), mpackageList, mSelectedPackageTypeId);
         packageClassResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

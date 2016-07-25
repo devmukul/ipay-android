@@ -134,7 +134,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
 
 
     private void setTypeAdapter(List<BusinessType> businessTypeList) {
-        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), businessTypeList, mSelectedBusinessTypeId);
+        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(),getString(R.string.business_type), businessTypeList, mSelectedBusinessTypeId);
         businessTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

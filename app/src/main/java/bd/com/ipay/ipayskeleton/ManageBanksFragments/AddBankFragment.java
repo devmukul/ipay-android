@@ -147,7 +147,7 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
 
     private void setBankAdapter(List<Bank> bankList) {
 
-        bankSelectorDialog = new ResourceSelectorDialog<>(getContext(), bankList, mSelectedBankId);
+        bankSelectorDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_a_bank),bankList, mSelectedBankId);
         bankSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

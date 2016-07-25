@@ -138,11 +138,9 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
             }
         });
 
-
         if (getArguments() != null && getArguments().getBoolean(Constants.EXPAND_PIN, false)) {
             setPINHeader.performClick();
         }
-
         return v;
     }
 

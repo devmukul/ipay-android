@@ -429,7 +429,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int selectedIndex) {
+                            public void onResourceSelected(int selectedIndex,String name) {
                                 if (selectedIndex == ACTION_ACCEPT) {
                                     mMoneyRequestId = id;
                                     mAmount = amount;
