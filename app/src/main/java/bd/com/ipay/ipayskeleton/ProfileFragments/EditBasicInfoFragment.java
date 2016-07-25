@@ -1,22 +1,15 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -25,25 +18,23 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
+
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfilePictureResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -52,16 +43,11 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
     private SetProfileInfoResponse mSetProfileInfoResponse;
 
-    private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
-    private SetProfilePictureResponse mSetProfilePictureResponse;
-
     private HttpRequestGetAsyncTask mGetOccupationTask = null;
     private GetOccupationResponse mGetOccupationResponse;
 
     private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
 
-
-    private RoundedImageView mProfilePictureView;
     private EditText mNameEditText;
     private EditText mFathersNameEditText;
     private EditText mMothersNameEditText;
@@ -74,12 +60,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
     private ProgressDialog mProgressDialog;
 
-    private SharedPreferences pref;
-
-    private String mMobileNumber;
     private String mName = "";
     private String mDateOfBirth = "";
-    private String mProfilePicture;
 
     private String mFathersName = "";
     private String mMothersName = "";
@@ -88,24 +70,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private String mGender = "";
 
     private List<Occupation> mOccupationList;
-    private List<String> mOccupationNameList;
-
-    private ArrayAdapter<String> mAdapterOccupation;
-
-    private String mSelectedImagePath;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -126,18 +90,14 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         View v = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
 
         getActivity().setTitle(getString(R.string.edit_basic_info));
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         Bundle bundle = getArguments();
 
-        mMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
         mName = bundle.getString(Constants.NAME);
         mFathersName = bundle.getString(Constants.FATHERS_NAME);
         mMothersName = bundle.getString(Constants.MOTHERS_NAME);
-        mProfilePicture = bundle.getString(Constants.PROFILE_PICTURE);
         mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
-        mProfilePictureView = (RoundedImageView) v.findViewById(R.id.profile_picture);
         mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
         mNameEditText = (EditText) v.findViewById(R.id.name);
         mFathersNameEditText = (EditText) v.findViewById(R.id.fathers_name);
@@ -311,7 +271,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mSetProfileInfoTask = null;
-            mUploadProfilePictureAsyncTask = null;
             mGetOccupationTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -350,31 +309,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
                 mSetProfileInfoTask = null;
                 break;
-            case Constants.COMMAND_SET_PROFILE_PICTURE:
-                try {
-                    mSetProfilePictureResponse = gson.fromJson(result.getJsonString(), SetProfilePictureResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
-
-                        Intent intent = new Intent(Constants.PROFILE_PICTURE_UPDATE_BROADCAST);
-                        intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);
-                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT).show();
-                }
-
-                mUploadProfilePictureAsyncTask = null;
-                break;
             case Constants.COMMAND_GET_OCCUPATIONS_REQUEST:
 
                 try {
