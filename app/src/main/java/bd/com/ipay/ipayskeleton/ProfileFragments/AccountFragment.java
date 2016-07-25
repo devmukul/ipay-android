@@ -167,7 +167,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
             getProfileCompletionStatus();
-            mProfileCompletionStatusView.setVisibility(View.VISIBLE);
         } else {
             mProfileCompletionStatusView.setVisibility(View.GONE);
         }
@@ -296,9 +295,12 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mProfileCompletionStatusView.setText("Your profile is " +
-                            mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                            + "complete. Complete profile to get verified.");
+                    if (mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
+                        mProfileCompletionStatusView.setText("Your profile is " +
+                                mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
+                                + "complete. Complete profile to get verified.");
+                    }
+
                     mProfileCompletionStatusView.setVisibility(View.VISIBLE);
                 } else {
                     if (getActivity() != null)
