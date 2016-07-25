@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.IntroducerFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IntroducedFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.TrustedNetworkFragment;
+import bd.com.ipay.ipayskeleton.Account_Security_Settings_Fragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
