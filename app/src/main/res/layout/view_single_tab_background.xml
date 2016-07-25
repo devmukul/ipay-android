@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingTop="@dimen/value5">
+    android:layout_marginTop="@dimen/value10"
+    android:layout_marginBottom="@dimen/value10">
 
     <ImageView
         android:id="@+id/tab_icon"

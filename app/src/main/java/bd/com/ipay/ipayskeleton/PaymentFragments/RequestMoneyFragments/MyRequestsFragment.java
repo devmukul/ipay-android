@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -16,16 +17,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequestResponse;
@@ -235,9 +240,12 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
             private TextView mSenderNumber;
             private TextView mTime;
             private TextView mDescription;
-            private ImageView mCancel;
             private ProfileImageView mProfileImageView;
             private View divider;
+            private int ACTION_CANCEL=0;
+
+            private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mMyRequestActionList;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -245,7 +253,6 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                 mSenderNumber = (TextView) itemView.findViewById(R.id.request_number);
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mDescription = (TextView) itemView.findViewById(R.id.description);
-                mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 divider = itemView.findViewById(R.id.divider);
             }
@@ -257,17 +264,27 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
-                String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
+                final String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 String mobileNumber = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();
                 mTime.setText(time);
                 mSenderNumber.setText(name);
                 mDescription.setText(pendingMoneyRequestClasses.get(pos).getDescription());
 
-                mCancel.setOnClickListener(new View.OnClickListener() {
+                itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
+                        mMyRequestActionList = Arrays.asList(getResources().getStringArray(R.array.my_request_action));
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mMyRequestActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int selectedIndex, String mName) {
+                                if (selectedIndex == ACTION_CANCEL) {
+                                    showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
+                                }
+                            }
+                        });
+                        mCustomSelectorDialog.show();
                     }
                 });
 

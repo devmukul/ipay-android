@@ -26,12 +26,14 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.RequestMoneyReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -195,7 +197,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mRejectRequestTask = null;
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
@@ -271,7 +273,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
 
             mServiceChargeTask = null;
-        }else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
 
             try {
                 mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
@@ -297,7 +299,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             mRejectRequestTask = null;
 
         }
-        if (moneyRequestList != null && moneyRequestList.size() == 0 ) {
+        if (moneyRequestList != null && moneyRequestList.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
@@ -306,7 +308,9 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
 
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
-        private static final int MONEY_REQUEST_HEADER_VIEW = 5;
+
+        private int ACTION_ACCEPT=0;
+        private int ACTION_REJECT=1;
 
         public NotificationListAdapter() {
         }
@@ -318,11 +322,8 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             private TextView loadMoreTextView;
             private ProfileImageView mProfileImageView;
 
-            private LinearLayout optionsLayout;
-            private Button acceptButton;
-            private Button rejectButton;
-
-            private View divider;
+            private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mReceivedRequestActionList;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -333,28 +334,10 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
                 mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-
-                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                acceptButton = (Button) itemView.findViewById(R.id.accept_button);
-                rejectButton = (Button) itemView.findViewById(R.id.reject_button);
-
-                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindViewMoneyRequestList(int pos) {
-                final MoneyAndPaymentRequest moneyRequest = moneyRequestList.get(pos - 1);
-
-                if(pos-1 == 0) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-
-                } else if(pos-1 == moneyRequestList.size() -1) {
-                    divider.setVisibility(View.GONE);
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
-
-                } else {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
-
-                }
+                final MoneyAndPaymentRequest moneyRequest = moneyRequestList.get(pos);
 
                 final long id = moneyRequest.getId();
                 final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
@@ -380,43 +363,37 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (optionsLayout.getVisibility() == View.VISIBLE)
-                            optionsLayout.setVisibility(View.GONE);
-                        else optionsLayout.setVisibility(View.VISIBLE);
-                    }
-                });
-
-                acceptButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        mMoneyRequestId = id;
-                        mAmount = amount;
-                        mReceiverName = name;
-                        mReceiverMobileNumber = mobileNumber;
-                        mPhotoUri = imageUrl;
-                        mTitle = title;
-                        mDescription = description;
-
-                        attemptGetServiceCharge();
-                    }
-                });
-
-
-                rejectButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                        rejectDialog.content(R.string.confirm_request_rejection);
-                        rejectDialog.positiveText(R.string.yes);
-                        rejectDialog.negativeText(R.string.no);
-                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                        mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mReceivedRequestActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                rejectRequestMoney(id);
+                            public void onResourceSelected(int selectedIndex, String mName) {
+                                if (selectedIndex == ACTION_ACCEPT) {
+                                    mMoneyRequestId = id;
+                                    mAmount = amount;
+                                    mReceiverName = name;
+                                    mReceiverMobileNumber = mobileNumber;
+                                    mPhotoUri = imageUrl;
+                                    mTitle = title;
+                                    mDescription = description;
+
+                                    attemptGetServiceCharge();
+                                } else if (selectedIndex == ACTION_REJECT) {
+                                    MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                                    rejectDialog.content(R.string.confirm_request_rejection);
+                                    rejectDialog.positiveText(R.string.yes);
+                                    rejectDialog.negativeText(R.string.no);
+                                    rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            rejectRequestMoney(id);
+                                        }
+                                    });
+                                    rejectDialog.show();
+                                }
                             }
                         });
-                        rejectDialog.show();
+                        mCustomSelectorDialog.show();
                     }
                 });
 
@@ -451,11 +428,6 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             }
         }
 
-        private class MoneyRequestHeaderViewHolder extends ViewHolder {
-            public MoneyRequestHeaderViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
 
         private class MoneyRequestViewHolder extends ViewHolder {
             public MoneyRequestViewHolder(View itemView) {
@@ -471,11 +443,6 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             if (viewType == FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
                 FooterViewHolder vh = new FooterViewHolder(v);
-                return vh;
-
-            } else if (viewType == MONEY_REQUEST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_requests_header, parent, false);
-                MoneyRequestHeaderViewHolder vh = new MoneyRequestHeaderViewHolder(v);
                 return vh;
 
             } else {
@@ -494,9 +461,6 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
                     MoneyRequestViewHolder vh = (MoneyRequestViewHolder) holder;
                     vh.bindViewMoneyRequestList(position);
 
-                } else if (holder instanceof MoneyRequestHeaderViewHolder) {
-                    MoneyRequestHeaderViewHolder vh = (MoneyRequestHeaderViewHolder) holder;
-
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
                     vh.bindViewFooter();
@@ -511,7 +475,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             if (moneyRequestList == null || moneyRequestList.size() == 0) {
                 return 0;
             } else {
-                return 1 + moneyRequestList.size() + 1; // header, money requests list, footer
+                return 1 + moneyRequestList.size(); // header, money requests list, footer
             }
         }
 
@@ -521,9 +485,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
             if (moneyRequestList == null)
                 return super.getItemViewType(position);
 
-            if (position == 0)
-                return MONEY_REQUEST_HEADER_VIEW;
-            else if (position == getItemCount() - 1) {
+            if (position == getItemCount() - 1) {
                 return FOOTER_VIEW;
             } else
                 return MONEY_REQUEST_ITEM_VIEW;

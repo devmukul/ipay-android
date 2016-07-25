@@ -852,4 +852,9 @@
         <item>Accept</item>
         <item>Reject</item>
     </string-array>
+
+    <string-array name="my_request_action">
+        <item>Cancel</item>
+    </string-array>
+
 </resources>

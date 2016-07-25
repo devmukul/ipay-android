@@ -3,27 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+    android:paddingTop="@dimen/activity_vertical_margin_card">
 
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"
         android:layout_height="50dp"
         android:layout_width="50dp"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"/>
 
-
     <TextView
         android:id="@+id/request_number"
-        style="@style/TextStylePrimarySmall"
+        style="@style/TextStylePrimaryMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/profile_picture"
-        android:textStyle="bold" />
+        android:textSize="@dimen/text_size_small_medium"
+        android:layout_toRightOf="@+id/profile_picture" />
 
     <TextView
         android:id="@+id/amount"
@@ -37,7 +36,6 @@
 
     <TextView
         android:id="@+id/description"
-        style="@style/TextStylePrimarySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/amount"
@@ -46,21 +44,10 @@
 
     <TextView
         android:id="@+id/time"
-        style="@style/TextStylePrimarySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/description"
         android:layout_toRightOf="@+id/profile_picture" />
-
-    <ImageView
-        android:id="@+id/cancel_request"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:clickable="true"
-        android:padding="@dimen/value5"
-        android:src="@drawable/ic_cancel_black_24dp" />
 
     <View
         android:id="@+id/divider"

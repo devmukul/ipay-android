@@ -70,7 +70,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private InvoiceListAdapter mInvoiceListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<MoneyAndPaymentRequest> moneyRequestList;
-    private List<String> mInvoiceActionList;
+
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ProgressDialog mProgressDialog;
@@ -367,6 +367,9 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
         private static final int MONEY_REQUEST_HEADER_VIEW = 5;
 
+        private int ACTION_ACCEPT=0;
+        private int ACTION_REJECT=1;
+
         public InvoiceListAdapter() {
         }
 
@@ -375,11 +378,11 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             private TextView mTitleView;
             private TextView mTimeView;
             private TextView loadMoreTextView;
-
             private TextView headerView;
-
             private ProfileImageView mProfileImageView;
+
             private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mInvoiceActionList;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -427,7 +430,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
                             public void onResourceSelected(int selectedIndex, String mName) {
-                                if (selectedIndex == 0) {
+                                if (selectedIndex == ACTION_ACCEPT) {
                                     mMoneyRequestId = id;
                                     mAmount = amount;
                                     mReceiverName = name;
@@ -446,7 +449,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                                                 }
                                             });
                                     dialog.show();
-                                } else if (selectedIndex == 1) {
+                                } else if (selectedIndex == ACTION_REJECT) {
                                     MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
                                     rejectDialog.content(R.string.confirm_request_rejection);
                                     rejectDialog.positiveText(R.string.yes);

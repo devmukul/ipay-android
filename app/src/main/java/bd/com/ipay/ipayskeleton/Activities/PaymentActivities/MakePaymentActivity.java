@@ -64,7 +64,7 @@ public class MakePaymentActivity extends BaseActivity {
         mFabCreateInvoice.setVisibility(View.VISIBLE);
         switchedToInvoicesList = true;
     }
-    
+
     public void switchToCreateInvoiceFragment() {
 
         getSupportFragmentManager().beginTransaction()

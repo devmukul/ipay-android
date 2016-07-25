@@ -24,25 +24,22 @@
         <TextView
             android:id="@+id/textview_title"
             style="@style/TextStylePrimaryMedium"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_small_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="title" />
+            android:layout_alignParentTop="true" />
 
         <TextView
             android:id="@+id/textview_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/sender_name"
-            android:text="5456464544" />
+            android:layout_below="@+id/sender_name"/>
 
         <TextView
             android:id="@+id/textview_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/sender_mobile_number"
-            android:text="date" />
+            android:layout_below="@+id/sender_mobile_number"/>
 
     </LinearLayout>
 </RelativeLayout>
