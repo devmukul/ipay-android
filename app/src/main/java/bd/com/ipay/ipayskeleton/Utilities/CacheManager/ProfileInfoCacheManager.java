@@ -22,7 +22,7 @@ public class ProfileInfoCacheManager {
     }
 
     public static String getMobileNumber() {
-        return ProfileInfoCacheManager.getMobileNumber();
+        return pref.getString(Constants.USERID, "");
     }
 
     public static String getProfileImageUrl() {
