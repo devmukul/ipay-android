@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_vertical_margin_card">
 
     <ImageView
         android:id="@+id/icon"
@@ -19,10 +20,10 @@
         style="@style/TextStylePrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/icon"
         android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/icon"
         android:text="@string/set_pin"
-        android:textSize="@dimen/text_size_small_medium"/>
+        android:textSize="@dimen/text_size_small_medium" />
 
     <ImageView
         android:layout_width="24dp"

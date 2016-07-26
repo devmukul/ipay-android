@@ -8,6 +8,6 @@
     <ListView
         android:id="@+id/list_services"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
+        android:layout_height="wrap_content"
+        android:dividerHeight="@dimen/divider_space"></ListView>
 </RelativeLayout>
