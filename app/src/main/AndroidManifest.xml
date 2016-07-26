@@ -145,7 +145,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activities.PaymentActivities.EducationActivity"
+            android:name=".Activities.PaymentActivities.EducationPaymentActivity"
             android:label="@string/education"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"

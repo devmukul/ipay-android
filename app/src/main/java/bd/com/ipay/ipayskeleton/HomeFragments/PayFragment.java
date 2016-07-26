@@ -18,7 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
@@ -125,7 +125,7 @@ public class PayFragment extends Fragment {
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
-                                        Intent intent = new Intent(getActivity(), EducationActivity.class);
+                                        Intent intent = new Intent(getActivity(), EducationPaymentActivity.class);
                                         startActivity(intent);
                                     }
                                 });
