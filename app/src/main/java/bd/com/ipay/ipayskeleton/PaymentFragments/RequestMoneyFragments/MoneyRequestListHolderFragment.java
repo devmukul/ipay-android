@@ -85,9 +85,9 @@ public class MoneyRequestListHolderFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new MoneyRequestsFragment();
+                return new ReceivedMoneyRequestsFragment();
             } else if (position == 1) {
-                return new MyRequestsFragment();
+                return new SentMoneyRequestsFragment();
             } else {
                 return new Fragment();
             }
