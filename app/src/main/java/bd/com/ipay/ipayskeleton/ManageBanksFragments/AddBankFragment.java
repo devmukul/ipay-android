@@ -169,7 +169,7 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
 
     private void setDistrictAdapter(List<String> districtList) {
 
-        districtSelectorDialog = new CustomSelectorDialog(getContext(), getString(R.string.district), districtList);
+        districtSelectorDialog = new CustomSelectorDialog(getContext(), getString(R.string.select_a_district), districtList);
         districtSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

@@ -302,8 +302,11 @@
     <string name="notification">Notification</string>
     <string name="security_settings">Security Settings</string>
     <string name="participant_already_added">Participant already added.</string>
-    <string name="select_a_package">Select a package</string>
-    <string name="select_an_operator">Select an operator</string>
+    <string name="select_a_district">Select District</string>
+    <string name="select_a_thana">Select Thana</string>
+    <string name="select_an_occupation">Select Occupation</string>
+    <string name="select_a_package">Select Package</string>
+    <string name="select_an_operator">Select Operator</string>
     <string name="recharge_to">Recharge to</string>
     <string name="opening_balance_to">Opening balance to</string>
     <string name="edit">Edit</string>
@@ -324,7 +327,7 @@
     <string name="filter_verification">Verification Events</string>
     <string name="filter_security_changes">Security Changes</string>
     <string name="clear_filter">Clear Filter</string>
-    <string name="select_a_bank">Select a Bank</string>
+    <string name="select_a_bank">Select Bank</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="title_login_page">Login</string>
     <string name="login_info">You can only use one account per device. If you want to use another account from this device, please reinstall the app.</string>
