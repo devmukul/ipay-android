@@ -74,6 +74,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
     private int pageCount = 0;
     private boolean hasNext = false;
+    private boolean clearListAfterLoading;
 
     // These variables hold the information needed to populate the review dialog
     private List<ItemList> mItemList;
@@ -114,6 +115,8 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                pageCount = 0;
+                clearListAfterLoading = true;
                 refreshNotificationList();
             }
         });
@@ -183,8 +186,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private void refreshNotificationList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
             pageCount = 0;
-            if (moneyRequestList != null)
-                moneyRequestList.clear();
+            clearListAfterLoading = true;
             getMakePaymentRequests();
         }
     }
@@ -258,8 +260,9 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                     try {
                         mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
 
-                        if (moneyRequestList == null || moneyRequestList.size() == 0) {
+                        if (moneyRequestList == null || clearListAfterLoading || moneyRequestList.size() == 0) {
                             moneyRequestList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                            clearListAfterLoading = false;
                         } else {
                             List<MoneyAndPaymentRequest> tempNotificationList;
                             tempNotificationList = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
