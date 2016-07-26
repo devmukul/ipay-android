@@ -132,7 +132,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
-            BASE_URL_EDU = "http://10.10.10.11:8085/api/v1/education/";
+            BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
             SERVER_NAME = "dev";
@@ -141,7 +141,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
-            BASE_URL_EDU = "http://10.15.40.11:8085/api/v1/education/";
+            BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
             SERVER_NAME = "test";
@@ -150,7 +150,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
-            BASE_URL_EDU = "http://10.10.40.11:8085/api/v1/education/";
+            BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
             SERVER_NAME = "stage";
@@ -168,7 +168,7 @@ public class Constants {
 
             BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
-            BASE_URL_EDU = "http://192.168.1.105:8085/api/v1/education/";
+            BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
             SERVER_NAME = "local";

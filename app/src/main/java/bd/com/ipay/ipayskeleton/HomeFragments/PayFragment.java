@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
@@ -46,6 +47,7 @@ public class PayFragment extends Fragment {
         } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
             mServiceActionList.add(new ServiceAction(getString(R.string.create_invoice)));
         }
+        mServiceActionList.add(new ServiceAction(getString(R.string.education)));
 
         mServiceActionListView = (ListView) v.findViewById(R.id.list_services);
         mServiceActionListAdapter = new WalletActionListAdapter(getActivity(), R.layout.list_item_services, mServiceActionList);
@@ -115,6 +117,16 @@ public class PayFragment extends Fragment {
                                             intent = new Intent(getActivity(), MakePaymentActivity.class);
                                             startActivity(intent);
                                         }
+                                    }
+                                });
+                                pinChecker.execute();
+                                break;
+                            case 2:
+                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                                    @Override
+                                    public void ifPinAdded() {
+                                        Intent intent = new Intent(getActivity(), EducationActivity.class);
+                                        startActivity(intent);
                                     }
                                 });
                                 pinChecker.execute();
