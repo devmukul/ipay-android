@@ -2,8 +2,12 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class TransactionHistoryAdditionalInfo {
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.EducationPaymentDetails;
+
+public class TransactionHistoryAdditionalInfo implements Parcelable {
     private String userName;
     private String userMobileNumber;
     private String userProfilePic;
@@ -12,10 +16,7 @@ public class TransactionHistoryAdditionalInfo {
     private String bankName;
     private String branchName;
     private String bankCode;
-
-    public TransactionHistoryAdditionalInfo() {
-
-    }
+    private EducationPaymentDetails educationPayment;
 
     public TransactionHistoryAdditionalInfo(String userName, String userMobileNumber, String userProfilePic,
                 String bankAccountNumber, String bankAccountName, String bankName, String branchName) {
@@ -65,6 +66,52 @@ public class TransactionHistoryAdditionalInfo {
         Resources resources = context.getResources();
         return resources.getIdentifier("bank" + getBankCode(), "drawable",
                 context.getPackageName());
-        //return resources.getDrawable(resourceId);
     }
+
+    public EducationPaymentDetails getEducationPayment() {
+        return educationPayment;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.userName);
+        dest.writeString(this.userMobileNumber);
+        dest.writeString(this.userProfilePic);
+        dest.writeString(this.bankAccountNumber);
+        dest.writeString(this.bankAccountName);
+        dest.writeString(this.bankName);
+        dest.writeString(this.branchName);
+        dest.writeString(this.bankCode);
+        dest.writeParcelable(this.educationPayment, flags);
+    }
+
+    protected TransactionHistoryAdditionalInfo(Parcel in) {
+        this.userName = in.readString();
+        this.userMobileNumber = in.readString();
+        this.userProfilePic = in.readString();
+        this.bankAccountNumber = in.readString();
+        this.bankAccountName = in.readString();
+        this.bankName = in.readString();
+        this.branchName = in.readString();
+        this.bankCode = in.readString();
+        this.educationPayment = in.readParcelable(EducationPaymentDetails.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<TransactionHistoryAdditionalInfo> CREATOR = new Parcelable.Creator<TransactionHistoryAdditionalInfo>() {
+        @Override
+        public TransactionHistoryAdditionalInfo createFromParcel(Parcel source) {
+            return new TransactionHistoryAdditionalInfo(source);
+        }
+
+        @Override
+        public TransactionHistoryAdditionalInfo[] newArray(int size) {
+            return new TransactionHistoryAdditionalInfo[size];
+        }
+    };
 }

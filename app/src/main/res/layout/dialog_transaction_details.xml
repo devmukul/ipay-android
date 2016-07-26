@@ -134,6 +134,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/purpose_layout"
         style="@style/TransactionHistoryDetailsRow">
 
         <TextView

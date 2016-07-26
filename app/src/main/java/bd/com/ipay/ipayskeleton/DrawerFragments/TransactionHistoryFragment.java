@@ -486,7 +486,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mMobileNumberView.setText(mBankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if (!bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+            if (bankCode != null) otherImageView.setImageResource(bankIcon);
             else otherImageView.setImageResource(R.drawable.ic_tran_add);
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
@@ -495,7 +495,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mMobileNumberView.setText(mBankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if (!bankCode.equals(null)) otherImageView.setImageResource(bankIcon);
+            if (bankCode != null) otherImageView.setImageResource(bankIcon);
             else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {

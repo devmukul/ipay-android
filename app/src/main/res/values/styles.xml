@@ -671,7 +671,7 @@
 
 
     <!-- Transaction History -->
-    <style name="TransactionHistoryFilterCheckboxStyle"></style>
+    <style name="TransactionHistoryFilterCheckboxStyle"/>
 
     <style name="TransactionHistoryLeftTextViewStyle">
         <item name="android:maxLines">1</item>

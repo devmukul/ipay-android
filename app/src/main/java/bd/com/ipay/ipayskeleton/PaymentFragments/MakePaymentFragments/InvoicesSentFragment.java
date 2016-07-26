@@ -58,6 +58,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
     private int historyPageCount = 0;
     private boolean hasNext = false;
+    private boolean clearListAfterLoading;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
         if (Utilities.isConnectionAvailable(getActivity())) {
 
             historyPageCount = 0;
+            clearListAfterLoading = true;
             getInvoicesPendingRequests();
 
         } else if (getActivity() != null)
@@ -157,11 +159,15 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
                     mGetPendingPaymentsResponse = gson.fromJson(result.getJsonString(), GetPendingPaymentsResponse.class);
 
-                    if (pendingPaymentClasses != null)
-                        pendingPaymentClasses.clear();
-                    pendingPaymentClasses = null;
+                    if (pendingPaymentClasses == null || clearListAfterLoading ) {
+                        clearListAfterLoading = false;
+                        pendingPaymentClasses = mGetPendingPaymentsResponse.getRequests();
 
-                    pendingPaymentClasses = mGetPendingPaymentsResponse.getRequests();
+                    } else {
+                        List<PendingPaymentClass> tempPaymentList;
+                        tempPaymentList = mGetPendingPaymentsResponse.getRequests();
+                        pendingPaymentClasses.addAll(tempPaymentList);
+                    }
 
                     hasNext = mGetPendingPaymentsResponse.isHasNext();
 
