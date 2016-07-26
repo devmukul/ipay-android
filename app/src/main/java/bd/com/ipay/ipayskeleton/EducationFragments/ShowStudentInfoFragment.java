@@ -35,7 +35,7 @@ public class ShowStudentInfoFragment extends Fragment {
         mContinueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((EducationPaymentActivity) getActivity()).switchToEducationPaymentFragment();
+                ((EducationPaymentActivity) getActivity()).switchToPayEducationFeesFragment();
             }
         });
 

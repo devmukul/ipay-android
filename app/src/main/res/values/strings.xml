@@ -45,6 +45,7 @@
     <string name="confirm_password_not_matched">Password did not match</string>
     <string name="confirm_pin_not_matched">Pin did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
+    <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
     <string name="empty_transaction_history">No transaction to show right now.</string>
     <string name="empty_list">Nothing to show right now.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
@@ -55,6 +56,7 @@
     <string name="error_invalid_name">Please enter name</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
     <string name="please_select_institution">Please select an institution</string>
+    <string name="please_select_payment_item">Please select a fee</string>
     <string name="please_select_session">Please select a session</string>
     <string name="please_enter_student_id">Please enter Student ID</string>
     <string name="error_loading_data">Error loading data. Please try again.</string>
@@ -92,8 +94,11 @@
     <string name="no_more_results">No more results to show</string>
     <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
     <string name="get_all_institution_failed">Failed to load institutions.</string>
+    <string name="get_all_enabled_payables_failed">Failed to load available fees.</string>
+    <string name="already_added_payment_item">This fee is already added in your list.</string>
     <string name="get_sessions_failed">Failed to load sessions.</string>
     <string name="get_student_failed">Failed to find the details of the student</string>
+    <string name="get_student_not_found">Found no student with this student ID</string>
     <string name="confirm_query">Are you sure?</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
@@ -101,6 +106,7 @@
     <string name="account_type_business">Business Account</string>
     <string name="all_contacts">All</string>
     <string name="select_an_institution">Select Institution</string>
+    <string name="select_a_fee_item">Select a fee item</string>
     <string name="select_session">Select Session</string>
     <string name="save">Save</string>
     <string name="got_it">GOT IT</string>
@@ -392,6 +398,8 @@
 
     <string name="basic_info">Basic Information</string>
     <string name="student_info">Student Information</string>
+    <string name="pay_education_fee">Pay education fees</string>
+    <string name="add_new_payment_item">Add new payment item</string>
     <string name="profile_documents">Documents</string>
     <string name="profile_introducers">Introducers</string>
     <string name="national_id">National ID</string>

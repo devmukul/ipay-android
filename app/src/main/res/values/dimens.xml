@@ -19,6 +19,7 @@
     <dimen name="value20">20.0dip</dimen>
     <dimen name="value25">25.0dip</dimen>
     <dimen name="value30">30.0dip</dimen>
+    <dimen name="value40">40.0dip</dimen>
     <dimen name="value48">48.0dip</dimen>
     <dimen name="elevation_high">12dp</dimen>
     <dimen name="text_size_medium">20sp</dimen>

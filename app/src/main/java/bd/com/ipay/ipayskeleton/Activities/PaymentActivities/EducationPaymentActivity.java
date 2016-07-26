@@ -4,10 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.EducationFragments.EducationPaymentFragment;
+import bd.com.ipay.ipayskeleton.EducationFragments.AddPayAbleFragment;
+import bd.com.ipay.ipayskeleton.EducationFragments.PayEducationFeesFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.SelectInstitutionFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.ShowStudentInfoFragment;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
 import bd.com.ipay.ipayskeleton.R;
 
 public class EducationPaymentActivity extends BaseActivity {
@@ -17,6 +21,8 @@ public class EducationPaymentActivity extends BaseActivity {
     public static String studentID = "";
     public static int institutionID = -1;
     public static int sessionID = -1;
+    public static ArrayList<PayableItem> mMyPayableItems;
+    public static final String ARGS_ENABLED_PAYABLE_ITEMS = "ARGS_ENABLED_PAYABLE_ITEMS";
 
     public static final String STUDENT_NAME = "STUDENT_NAME";
     public static final String STUDENT_DEPARTMENT = "STUDENT_DEPARTMENT";
@@ -27,6 +33,7 @@ public class EducationPaymentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_education);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mMyPayableItems = new ArrayList<PayableItem>();
 
         switchToSelectInstituteFragment();
     }
@@ -49,16 +56,18 @@ public class EducationPaymentActivity extends BaseActivity {
         }
     }
 
+    private void resetElements() {
+        studentID = "";
+        institutionID = -1;
+        sessionID = -1;
+        mMyPayableItems.clear();
+    }
+
     public void switchToSelectInstituteFragment() {
+        resetElements();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SelectInstitutionFragment()).commit();
         switchedToSelectInstituteFragment = true;
-    }
-
-    public void switchToEducationPaymentFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new EducationPaymentFragment()).commit();
-        switchedToSelectInstituteFragment = false;
     }
 
     public void switchToStudentInfoFragment(Bundle args) {
@@ -68,6 +77,22 @@ public class EducationPaymentActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mShowStudentInfoFragment).commit();
+        switchedToSelectInstituteFragment = false;
+    }
+
+    public void switchToAddPayableFragment(Bundle args) {
+
+        AddPayAbleFragment mAddPayAbleFragment = new AddPayAbleFragment();
+        mAddPayAbleFragment.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mAddPayAbleFragment).commit();
+        switchedToSelectInstituteFragment = false;
+    }
+
+    public void switchToPayEducationFeesFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new PayEducationFeesFragment()).commit();
         switchedToSelectInstituteFragment = false;
     }
 
