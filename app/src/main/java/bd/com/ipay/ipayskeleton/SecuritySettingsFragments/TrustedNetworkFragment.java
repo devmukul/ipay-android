@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Account_Security_Settings_Fragments;
+package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;

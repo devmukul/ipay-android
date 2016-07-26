@@ -4,13 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import bd.com.ipay.ipayskeleton.Account_Security_Settings_Fragments.AddTrustedPersonFragment;
-import bd.com.ipay.ipayskeleton.Account_Security_Settings_Fragments.ChangePasswordFragment;
-import bd.com.ipay.ipayskeleton.Account_Security_Settings_Fragments.SetPinFragment;
-import bd.com.ipay.ipayskeleton.Account_Security_Settings_Fragments.TrustedDeviceFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SetPinFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedDeviceFragment;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.SecuritySettingsFragment;
-import bd.com.ipay.ipayskeleton.Account_Security_Settings_Fragments.TrustedNetworkFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 

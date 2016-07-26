@@ -1,0 +1,42 @@
+package bd.com.ipay.ipayskeleton.Model.MMModule.Education;
+
+public class SemesterOrSession {
+
+    private int sessionId;
+    private String description;
+    private String sessionName;
+    private Institution institute;
+
+    public int getId() {
+        return sessionId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getName() {
+        return sessionName;
+    }
+
+    public Institution getInstitute() {
+        return institute;
+    }
+
+    public void setSessionId(int sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setSessionName(String sessionName) {
+        this.sessionName = sessionName;
+    }
+
+    public void setInstitute(Institution institute) {
+        this.institute = institute;
+    }
+}
+

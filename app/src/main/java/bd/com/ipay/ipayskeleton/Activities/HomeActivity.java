@@ -43,6 +43,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -351,6 +352,7 @@ public class HomeActivity extends BaseActivity
 
         }
     }
+
     public void switchToDashBoard() {
         mNavigationView.getMenu().getItem(0).setChecked(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
@@ -423,6 +425,12 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_event) {
 
             Intent intent = new Intent(HomeActivity.this, EventActivity.class);
+            startActivity(intent);
+            switchedToHomeFragment = false;
+
+        } else if (id == R.id.nav_education) {
+
+            Intent intent = new Intent(HomeActivity.this, EducationActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 

@@ -49,7 +49,7 @@ public class CustomSelectorDialog extends AlertDialog {
     public void setItems(final List<String> resources) {
 
         popUpList = (ListView) view.findViewById(R.id.custom_list);
-        CustomAdapter adapter = new CustomAdapter(context, resources);
+        SelectorAdapter adapter = new SelectorAdapter(context, resources);
         popUpList.setAdapter(adapter);
         popUpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -71,11 +71,11 @@ public class CustomSelectorDialog extends AlertDialog {
         void onResourceSelected(int id, String name);
     }
 
-    private class CustomAdapter extends ArrayAdapter<String> {
+    private class SelectorAdapter extends ArrayAdapter<String> {
 
         private LayoutInflater inflater;
 
-        public CustomAdapter(Context context, List<String> objects) {
+        public SelectorAdapter(Context context, List<String> objects) {
             super(context, 0, objects);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }

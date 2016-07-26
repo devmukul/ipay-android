@@ -47,7 +47,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
-
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
 
@@ -310,8 +309,8 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
-        private final int ACTION_ACCEPT=0;
-        private final int ACTION_REJECT=1;
+        private final int ACTION_ACCEPT = 0;
+        private final int ACTION_REJECT = 1;
 
         public NotificationListAdapter() {
         }
@@ -368,7 +367,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mReceivedRequestActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int selectedIndex,String name) {
+                            public void onResourceSelected(int selectedIndex, String name) {
                                 if (selectedIndex == ACTION_ACCEPT) {
                                     mMoneyRequestId = id;
                                     mAmount = amount;
@@ -379,6 +378,7 @@ public class MoneyRequestsFragment extends ProgressFragment implements HttpRespo
                                     mDescription = description;
 
                                     attemptGetServiceCharge();
+
                                 } else if (selectedIndex == ACTION_REJECT) {
                                     MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
                                     rejectDialog.content(R.string.confirm_request_rejection);
