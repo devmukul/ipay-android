@@ -95,6 +95,7 @@
         <item name="tabTextAppearance">@style/TextAppearanceForDashBoard</item>
         <item name="tabIndicatorHeight">0dp</item>
     </style>
+
     <style name="TabStyleRequestMoney" parent="Widget.Design.TabLayout">
         <item name="tabSelectedTextColor">@android:color/white</item>
         <item name="tabBackground">@drawable/tab_color_selector</item>
@@ -236,14 +237,23 @@
         <item name="android:layout_marginTop">@dimen/value5</item>
         <item name="android:layout_marginBottom">@dimen/value5</item>
         <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:padding">@dimen/value10</item>
+        <item name="android:padding">@dimen/value20</item>
         <item name="android:gravity">left</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ListHeaderStyleWhite">
-        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin_card</item>
+        <item name="android:padding">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ListHeaderStyleWithTopMargin">
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin_card</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin_card</item>
+        <item name="android:layout_marginLeft">@dimen/activity_vertical_margin_card</item>
         <item name="android:padding">@dimen/activity_horizontal_margin_card</item>
         <item name="android:gravity">left</item>
         <item name="android:textStyle">bold</item>
@@ -604,6 +614,7 @@
         <item name="android:layout_marginTop">@dimen/value5</item>
         <item name="android:layout_marginBottom">@dimen/value5</item>
     </style>
+
     <style name="DividerWithoutMargin">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/divider_space</item>
@@ -660,8 +671,7 @@
 
 
     <!-- Transaction History -->
-    <style name="TransactionHistoryFilterCheckboxStyle">
-    </style>
+    <style name="TransactionHistoryFilterCheckboxStyle"></style>
 
     <style name="TransactionHistoryLeftTextViewStyle">
         <item name="android:maxLines">1</item>

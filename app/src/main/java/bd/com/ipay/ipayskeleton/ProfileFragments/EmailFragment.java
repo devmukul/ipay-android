@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -80,6 +81,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private FloatingActionButton mFabAddNewEmail;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -91,17 +93,11 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.add, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add) {
-            showAddNewEmailDialog();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -115,6 +111,14 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_email, container, false);
+        mFabAddNewEmail = (FloatingActionButton) v.findViewById(R.id.fab_add_email);
+
+        mFabAddNewEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddNewEmailDialog();
+            }
+        });
 
         getActivity().setTitle(R.string.email);
 
@@ -172,7 +176,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         final EditText emailView = (EditText) view.findViewById(R.id.edit_text_email);
 
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override

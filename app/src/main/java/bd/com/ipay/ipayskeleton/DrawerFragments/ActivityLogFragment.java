@@ -159,6 +159,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     clearListAfterLoading = true;
+                    historyPageCount = 0;
                     getUserActivities();
                 }
             }
@@ -521,17 +522,16 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     public class ActivityLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
+        private static final int ACTIVITY_LOG_LIST_ITEM_VIEW = 2;
 
-        public ActivityLogAdapter() {
-        }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public class ActivityLogViewHolder extends RecyclerView.ViewHolder {
             private final RoundedImageView mPortrait;
             private final TextView mTransactionDescription;
             private final TextView mTime;
             private final TextView loadMoreTextView;
 
-            public ViewHolder(final View itemView) {
+            public ActivityLogViewHolder(final View itemView) {
                 super(itemView);
 
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
@@ -576,16 +576,15 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                             .into(mPortrait);
                 }
             }
-
-            public void bindViewFooter() {
-                if (hasNext) loadMoreTextView.setText(R.string.load_more);
-                else loadMoreTextView.setText(R.string.no_more_results);
-            }
         }
 
-        public class FooterViewHolder extends ViewHolder {
+        public class FooterViewHolder extends RecyclerView.ViewHolder {
+
+            private TextView mLoadMoreTextView;
+
             public FooterViewHolder(View itemView) {
                 super(itemView);
+
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -596,20 +595,15 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     }
                 });
 
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
-        }
 
-        // Now define the viewholder for Normal list item
-        public class NormalViewHolder extends ViewHolder {
-            public NormalViewHolder(View itemView) {
-                super(itemView);
+            public void bindView() {
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //TODO show absolute time of activity on a Toast or something similar.
-                    }
-                });
+                if (hasNext)
+                    mLoadMoreTextView.setText(R.string.load_more);
+                else
+                    mLoadMoreTextView.setText(R.string.no_more_results);
             }
         }
 
@@ -620,24 +614,22 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
             if (viewType == FOOTER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
-
                 return new FooterViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_activity_log, parent, false);
+                return new ActivityLogViewHolder(v);
             }
-
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_activity_log, parent, false);
-
-            return new NormalViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             try {
-                if (holder instanceof NormalViewHolder) {
-                    NormalViewHolder vh = (NormalViewHolder) holder;
+                if (holder instanceof ActivityLogViewHolder) {
+                    ActivityLogViewHolder vh = (ActivityLogViewHolder) holder;
                     vh.bindView(position);
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindViewFooter();
+                    vh.bindView();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -646,20 +638,20 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
         @Override
         public int getItemCount() {
-            if (userActivityResponsesList != null)
+            if (userActivityResponsesList == null || userActivityResponsesList.isEmpty())
+                return 0;
+            else
                 return userActivityResponsesList.size() + 1;
-            else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
 
-            if (position == userActivityResponsesList.size()) {
-                // This is where we'll add footer.
+            if (position == getItemCount() - 1) {
                 return FOOTER_VIEW;
+            } else {
+                return ACTIVITY_LOG_LIST_ITEM_VIEW;
             }
-
-            return super.getItemViewType(position);
         }
     }
 }

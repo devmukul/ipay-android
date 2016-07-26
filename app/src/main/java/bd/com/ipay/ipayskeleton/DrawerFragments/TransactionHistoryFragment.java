@@ -243,8 +243,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     }
 
     private void refreshTransactionHistory() {
-        Log.d("Transaction History", "Refreshing...");
-
+        historyPageCount = 0;
         clearListAfterLoading = true;
         getTransactionHistory();
     }
@@ -607,9 +606,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
-
-        public TransactionHistoryAdapter() {
-        }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView mTransactionDescriptionView;

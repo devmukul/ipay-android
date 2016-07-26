@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ListHeaderStyle"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/money_request_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/introducer_list_header"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+    android:layout_height="20dp"
+    android:orientation="vertical"
+    android:background="@color/colorBalanceBackground">
 
 </LinearLayout>

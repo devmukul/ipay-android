@@ -22,7 +22,7 @@ public class ProfileCompletionPropertyConstants {
     public static final String VERIFICATION_DOCUMENT = "VERIFICATION_DOCUMENT";
     public static final String ADD_BANK = "ADD_BANK";
     public static final String PARENT = "PARENT";
-    public static final String PROFILE_INFO="PROFILEINFO";
+    public static final String PROFILE_INFO = "PROFILEINFO";
 
     public static final String TAG_BASIC_INFO = "Basic Info";
     public static final String TAG_ADDRESS = "Address";
@@ -59,15 +59,15 @@ public class ProfileCompletionPropertyConstants {
 //        PROPERTY_NAME_TO_ICON_MAP.put(ADD_PIN, "Set up PIN");
 //        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK, "Setup Trusted Network");
 //        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add People Eligible for Password Recovery");
-        PROPERTY_NAME_TO_ICON_MAP.put(INTRODUCER, R.drawable.ic_introducer);
-        PROPERTY_NAME_TO_ICON_MAP.put(BASIC_PROFILE, R.drawable.ic_basic_info);
-        PROPERTY_NAME_TO_ICON_MAP.put(ADDRESS, R.drawable.ic_address);
-        PROPERTY_NAME_TO_ICON_MAP.put(PROFILE_PICTURE, R.drawable.ic_profile_picture);
+        PROPERTY_NAME_TO_ICON_MAP.put(INTRODUCER, R.drawable.ic_introducer_profile);
+        PROPERTY_NAME_TO_ICON_MAP.put(BASIC_PROFILE, R.drawable.ic_basicinfo_profile);
+        PROPERTY_NAME_TO_ICON_MAP.put(ADDRESS, R.drawable.ic_address_profile);
+        PROPERTY_NAME_TO_ICON_MAP.put(PROFILE_PICTURE, R.drawable.ic_profilepic);
 //        PROPERTY_NAME_TO_ICON_MAP.put(VERIFIED_EMAIL, "Add a Verified Email");
-        PROPERTY_NAME_TO_ICON_MAP.put(PHOTOID, R.drawable.ic_photo_id);
-        PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_photo_id);
+        PROPERTY_NAME_TO_ICON_MAP.put(PHOTOID, R.drawable.ic_photoid);
+        PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_photoid);
         PROPERTY_NAME_TO_ICON_MAP.put(ADD_BANK, R.drawable.ic_banks);
-        PROPERTY_NAME_TO_ICON_MAP.put(PARENT, R.drawable.ic_parent_info);
+        PROPERTY_NAME_TO_ICON_MAP.put(PARENT, R.drawable.ic_parent);
     }
 
     static {

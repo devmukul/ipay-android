@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetRecommendationRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introducer;
@@ -63,7 +64,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     private TextView mEmptyListTextView;
     private RelativeLayout mCompleteIntroducerHeaderLayout;
     private TextView mIntroducerStatusTextView;
-    private Button mButtonAskForRecommendation;
+    private ImageView mAskForRecommendation;
     private IntroduceAdapter mIntroduceAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -78,13 +79,12 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_introducer_requests, container, false);
-        (getActivity()).setTitle(R.string.profile_introducers);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.list_introducer_requests);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mCompleteIntroducerHeaderLayout = (RelativeLayout) v.findViewById(R.id.complete_introduction_header);
         mIntroducerStatusTextView = (TextView) v.findViewById(R.id.intoduce_status);
-        mButtonAskForRecommendation = (Button) v.findViewById(R.id.button_ask_for_recommendation);
+        mAskForRecommendation = (ImageView) v.findViewById(R.id.ask_for_recommendation);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -173,7 +173,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                                         + getString(R.string.introducers_to_complete_the_account_verification_process));
                             } else mCompleteIntroducerHeaderLayout.setVisibility(View.GONE);
 
-                            mButtonAskForRecommendation.setOnClickListener(new View.OnClickListener() {
+                            mAskForRecommendation.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
@@ -188,7 +188,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                             mIntroducerList.clear();
                             mIntroducerList.addAll(tempIntroducerClasses);
                         }
-                        //mBaseList.addAll(mIntroducerList);
                         mIntroduceAdapter.notifyDataSetChanged();
 
                     } else {
@@ -265,22 +264,20 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         private static final int INTRODUCER_LIST_ITEM_VIEW = 1;
         private static final int INTRODUCER_LIST_HEADER_VIEW = 2;
         private static final int SENT_REQUEST_LIST_ITEM_VIEW = 5;
-        private static final int SENT_REQUEST_LIST_HEADER_VIEW = 6;
 
         public IntroduceAdapter() {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            private final TextView mPortraitTextView;
 
             private final TextView mIntroducerName;
             private final TextView mIntroducerMobileNumber;
-            private final RoundedImageView mIntroducerProfilePictureView;
+            private final ProfileImageView mIntroducerProfilePictureView;
 
             private final TextView mRequestedName;
             private final TextView mRequestedMobileNumber;
-            private final RoundedImageView mRequestedProfilePictureView;
+            private final ProfileImageView mRequestedProfilePictureView;
             private final ImageView mSentRequestStatus;
             private final TextView mTimeView;
 
@@ -290,15 +287,14 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                mPortraitTextView = (TextView) itemView.findViewById(R.id.portraitTxt);
 
                 mIntroducerName = (TextView) itemView.findViewById(R.id.introducer_name);
                 mIntroducerMobileNumber = (TextView) itemView.findViewById(R.id.introducer_mobile_number);
-                mIntroducerProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mIntroducerProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
 
                 mRequestedName = (TextView) itemView.findViewById(R.id.requested_name);
                 mRequestedMobileNumber = (TextView) itemView.findViewById(R.id.requested_mobile_number);
-                mRequestedProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mRequestedProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.requested_profile_picture);
                 mSentRequestStatus = (ImageView) itemView.findViewById(R.id.request_status);
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
 
@@ -306,89 +302,26 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
             }
 
-            private void setProfilePicture(String url, RoundedImageView pictureView, String name) {
-
-                int position = getAdapterPosition();
-                final int randomColor = position % 10;
-
-                if (name.startsWith("+") && name.length() > 1)
-                    mPortraitTextView.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
-                else mPortraitTextView.setText(String.valueOf(name.charAt(0)).toUpperCase());
-
-
-                if (randomColor == 0)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle);
-                else if (randomColor == 1)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_blue);
-                else if (randomColor == 2)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_brightpink);
-                else if (randomColor == 3)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_cyan);
-                else if (randomColor == 4)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_megenta);
-                else if (randomColor == 5)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_orange);
-                else if (randomColor == 6)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_red);
-                else if (randomColor == 7)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_springgreen);
-                else if (randomColor == 8)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_violet);
-                else if (randomColor == 9)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_yellow);
-                else
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_azure);
-
-                if (url != null) {
-                    url = Constants.BASE_URL_FTP_SERVER + url;
-                    Glide.with(getActivity())
-                            .load(url)
-                            .crossFade()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .into(pictureView);
-                } else {
-                    Glide.with(getActivity())
-                            .load(android.R.color.transparent)
-                            .crossFade()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .into(pictureView);
-                }
-
-            }
 
             public void bindViewForSentRequestList(int pos) {
-
-                pos = pos - 1;
-
-                if(pos==0) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-
-                } else if(pos== mSentRequestList.size() -1) {
-                    divider.setVisibility(View.GONE);
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
-
-                } else {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
-
-                }
 
                 final String RequestedName = mSentRequestList.get(pos).getName();
                 final String RequestedMobileNumber = mSentRequestList.get(pos).getMobileNumber();
                 final String requestStatus = mSentRequestList.get(pos).getStatus();
                 String imageUrl = mSentRequestList.get(pos).getProfilePictureUrl();
-                setProfilePicture(imageUrl, mRequestedProfilePictureView, RequestedName);
+                mRequestedProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mRequestedName.setText(RequestedName);
                 mRequestedMobileNumber.setText(RequestedMobileNumber);
 
                 switch (requestStatus) {
                     case Constants.INTRODUCTION_REQUEST_STATUS_PENDING:
-                        mSentRequestStatus.setImageResource(R.drawable.ic_sync_problem_black_24dp);
+                        mSentRequestStatus.setImageResource(R.drawable.ic_incomplete);
                         break;
                     case Constants.INTRODUCTION_REQUEST_STATUS_APPROVED:
                         mSentRequestStatus.setImageResource(R.drawable.ic_verified);
                         break;
                     case Constants.INTRODUCTION_REQUEST_STATUS_SPAM:
-                        mSentRequestStatus.setImageResource(R.drawable.ic_error_black_24dp);
+                        mSentRequestStatus.setImageResource(R.drawable.ic_warning);
                         break;
                     default:
                         // INTRODUCTION_REQUEST_STATUS_REJECTED
@@ -400,31 +333,14 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
             public void bindViewForIntroducerList(int pos) {
 
-                if (mSentRequestList == null) pos = pos - 1;
-                else {
-                    if (mSentRequestList.size() == 0) pos = pos - 1;
-                    else pos = pos - mSentRequestList.size() - 2;
-                }
-
-
-                if(pos==0) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-
-                } else if(pos== mIntroducerList.size() -1) {
-                    divider.setVisibility(View.GONE);
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
-
-                } else {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
-
-                }
+                if ( mSentRequestList != null && mSentRequestList.size() != 0) pos = pos - mSentRequestList.size() - 1;
 
                 final String introducerName = mIntroducerList.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
                 final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy").format(mIntroducerList.get(pos).getIntroducedDate());
                 String imageUrl = mIntroducerList.get(pos).getProfilePictureUrl();
-                setProfilePicture(imageUrl, mIntroducerProfilePictureView, introducerName);
+                mIntroducerProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
                 if (introducedTime == 0) mTimeView.setVisibility(View.GONE);
@@ -469,10 +385,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             } else if (viewType == INTRODUCER_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introducer_list_header, parent, false);
                 return new IntroducerListHeaderViewHolder(v);
-            } else if (viewType == SENT_REQUEST_LIST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me_header, parent, false);
-                return new SentRequestListHeaderViewHolder(v);
-
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me, parent, false);
                 return new SentRequestListItemViewHolder(v);
@@ -520,11 +432,11 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 introducerListSize = mIntroducerList.size();
 
             if (sentRequestsListSize > 0 && introducerListSize > 0)
-                return 1 + sentRequestsListSize + 1 + introducerListSize ;
+                return sentRequestsListSize + 1 + introducerListSize ;
             else if (introducerListSize > 0 && sentRequestsListSize == 0)
-                return 1 + introducerListSize ;
+                return introducerListSize ;
             else if (introducerListSize == 0 && sentRequestsListSize > 0)
-                return 1 + sentRequestsListSize;
+                return sentRequestsListSize;
             else return 0;
 
         }
@@ -544,22 +456,19 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 introducerListSize = mIntroducerList.size();
 
             if (sentRequestListSize > 0 && introducerListSize > 0) {
-                if (position == 0) return SENT_REQUEST_LIST_HEADER_VIEW;
-                else if (position == sentRequestListSize + 1)
+                if (position == sentRequestListSize )
                     return INTRODUCER_LIST_HEADER_VIEW;
-                else if (position > sentRequestListSize + 1)
+                else if (position > sentRequestListSize )
                     return INTRODUCER_LIST_ITEM_VIEW;
                 else return SENT_REQUEST_LIST_ITEM_VIEW;
 
             } else if (introducerListSize > 0 && sentRequestListSize == 0) {
-                if (position == 0) return INTRODUCER_LIST_HEADER_VIEW;
-                else return INTRODUCER_LIST_ITEM_VIEW;
+                return INTRODUCER_LIST_ITEM_VIEW;
 
             } else if (introducerListSize == 0 && sentRequestListSize > 0) {
-                if (position == 0) return SENT_REQUEST_LIST_HEADER_VIEW;
-                else return SENT_REQUEST_LIST_ITEM_VIEW;
+                return SENT_REQUEST_LIST_ITEM_VIEW;
             }
-            return super.getItemViewType(position);
+            else return SENT_REQUEST_LIST_ITEM_VIEW;
         }
     }
 

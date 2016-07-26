@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,6 +118,7 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
             @Override
             public void onClick(View v) {
                 // The first position is "Select One"
+                View focusView;
                 if (mSelectedBankId < 0) {
                     mBankListSelection.setError(getContext().getString(R.string.please_select_a_bank));
                 } else if (mSelectedDistrictId < 0) {
@@ -126,13 +128,13 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
                 } else if (mAccountNameEditText.getText().toString().trim().length() == 0) {
                     if (getActivity() != null) {
                         mAccountNameEditText.setError(getContext().getString(R.string.please_enter_an_account_name));
-                        View focusView = mAccountNameEditText;
+                        focusView = mAccountNameEditText;
                         focusView.requestFocus();
                     }
                 } else if (mAccountNumberEditText.getText().toString().trim().length() == 0) {
                     if (getActivity() != null) {
                         mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number));
-                        View focusView = mAccountNumberEditText;
+                        focusView = mAccountNumberEditText;
                         focusView.requestFocus();
                     }
                 } else {

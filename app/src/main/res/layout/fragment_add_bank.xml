@@ -7,6 +7,7 @@
     android:paddingTop="@dimen/activity_horizontal_margin">
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/bank_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true">
@@ -16,12 +17,12 @@
             style="@style/CustomEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:hint="@string/select_a_bank"
             android:inputType="textPostalAddress"
             android:maxLines="1"
             android:singleLine="true"
-            custom:borderType="up"
-            android:focusable="false"/>
+            custom:borderType="up" />
 
         <requestFocus />
     </android.support.design.widget.TextInputLayout>
@@ -38,10 +39,10 @@
             style="@style/CustomEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:hint="@string/select_district"
             android:inputType="textPostalAddress"
-            android:maxLines="1"
-            android:focusable="false"/>
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />
@@ -56,10 +57,10 @@
             style="@style/CustomEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:hint="@string/bank_branch"
             android:inputType="textPostalAddress"
-            android:maxLines="1"
-            android:focusable="false"/>
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />

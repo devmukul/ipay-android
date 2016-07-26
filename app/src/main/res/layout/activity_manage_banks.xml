@@ -15,8 +15,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_add_black_24dp"
-        app:backgroundTint="@color/background_fab"
+        android:src="@drawable/ic_addw"
+        app:backgroundTint="@color/colorPrimary"
         app:borderWidth="0dp"
         app:elevation="4dp"
         app:fabSize="normal" />
