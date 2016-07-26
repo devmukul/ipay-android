@@ -1,9 +1,12 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionHistoryClass {
+public class TransactionHistoryClass implements Parcelable {
 
     private final String originatingMobileNumber;
     private final String receiverInfo;
@@ -350,6 +353,8 @@ public class TransactionHistoryClass {
         }
     }
 
+
+
     public double getAmount(String userMobileNumber) {
         if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && (
                 originatingMobileNumber == null || receiverInfo == null))
@@ -405,4 +410,60 @@ public class TransactionHistoryClass {
                 ", additionalInfo=" + additionalInfo +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.originatingMobileNumber);
+        dest.writeString(this.receiverInfo);
+        dest.writeDouble(this.amount);
+        dest.writeDouble(this.fee);
+        dest.writeDouble(this.netAmount);
+        dest.writeDouble(this.balance);
+        dest.writeInt(this.serviceID);
+        dest.writeInt(this.statusCode);
+        dest.writeString(this.purpose);
+        dest.writeString(this.statusDescription);
+        dest.writeString(this.description);
+        dest.writeString(this.transactionID);
+        dest.writeLong(this.time);
+        dest.writeLong(this.requestTime);
+        dest.writeLong(this.responseTime);
+        dest.writeParcelable(this.additionalInfo, flags);
+    }
+
+    protected TransactionHistoryClass(Parcel in) {
+        this.originatingMobileNumber = in.readString();
+        this.receiverInfo = in.readString();
+        this.amount = in.readDouble();
+        this.fee = in.readDouble();
+        this.netAmount = in.readDouble();
+        this.balance = in.readDouble();
+        this.serviceID = in.readInt();
+        this.statusCode = in.readInt();
+        this.purpose = in.readString();
+        this.statusDescription = in.readString();
+        this.description = in.readString();
+        this.transactionID = in.readString();
+        this.time = in.readLong();
+        this.requestTime = in.readLong();
+        this.responseTime = in.readLong();
+        this.additionalInfo = in.readParcelable(TransactionHistoryAdditionalInfo.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<TransactionHistoryClass> CREATOR = new Parcelable.Creator<TransactionHistoryClass>() {
+        @Override
+        public TransactionHistoryClass createFromParcel(Parcel source) {
+            return new TransactionHistoryClass(source);
+        }
+
+        @Override
+        public TransactionHistoryClass[] newArray(int size) {
+            return new TransactionHistoryClass[size];
+        }
+    };
 }
