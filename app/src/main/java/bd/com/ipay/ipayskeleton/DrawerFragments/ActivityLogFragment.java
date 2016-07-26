@@ -159,6 +159,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     clearListAfterLoading = true;
+                    historyPageCount = 0;
                     getUserActivities();
                 }
             }
