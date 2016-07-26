@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranchRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetBankBranchesResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -109,6 +110,8 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
 
         bankNames.addAll((ArrayList) CommonData.getAvailableBanks());
         setBankAdapter(bankNames);
+
+        mAccountNameEditText.setText(ProfileInfoCacheManager.getName());
 
         addBank.setOnClickListener(new View.OnClickListener() {
             @Override
