@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextViewProfileInfoLabel"
+            android:text="@string/name" />
+
+        <TextView
+            android:id="@+id/textview_name"
+            style="@style/TextViewProfileInfo"
+            android:layout_below="@+id/textview_mothers_name" />
+    </LinearLayout>
+
+    <View
+        style="@style/Divider"
+        android:layout_below="@+id/icon" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextViewProfileInfoLabel"
+            android:text="@string/department" />
+
+        <TextView
+            android:id="@+id/textview_department"
+            style="@style/TextViewProfileInfo" />
+    </LinearLayout>
+
+    <View
+        style="@style/Divider"
+        android:layout_below="@+id/icon" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextViewProfileInfoLabel"
+            android:text="@string/mobile_number" />
+
+        <TextView
+            android:id="@+id/textview_mobile_number"
+            style="@style/TextViewProfileInfo" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_continue"
+        style="@style/PrimaryMediumButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/continue_education_payment" />
+</LinearLayout>

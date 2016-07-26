@@ -191,6 +191,13 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             cancel = true;
         }
 
+        if (! (mDescriptionEditText.getText().toString().trim().length() > 0)) {
+            focusView = mDescriptionEditText;
+            mDescriptionEditText.setError(getString(R.string.please_write_note));
+            cancel = true;
+
+        }
+
         if (cancel) {
             focusView.requestFocus();
             return false;

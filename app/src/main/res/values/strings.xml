@@ -77,6 +77,7 @@
     <string name="set_pin">Set PIN</string>
     <string name="change_password">Change Password</string>
     <string name="gender">Gender</string>
+    <string name="department">Department</string>
     <string name="reject">Reject</string>
     <string name="view">View</string>
     <string name="remove">Remove</string>
@@ -92,6 +93,7 @@
     <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
     <string name="get_all_institution_failed">Failed to load institutions.</string>
     <string name="get_sessions_failed">Failed to load sessions.</string>
+    <string name="get_student_failed">Failed to find the details of the student</string>
     <string name="confirm_query">Are you sure?</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
@@ -173,6 +175,7 @@
     <string name="continue_request_money">Continue</string>
     <string name="continue_mobile_recharge">Continue</string>
     <string name="continue_add_money">Continue</string>
+    <string name="continue_education_payment">Continue</string>
     <string name="continue_create_invoice">Continue</string>
     <string name="continue_forget_password">Continue</string>
     <string name="payment">Payment</string>
@@ -247,7 +250,7 @@
     <string name="event_location">Event location</string>
     <string name="enter_vat">VAT in BDT(%) (optional)</string>
     <string name="enter_amount">Enter an amount in BDT</string>
-    <string name="send_money_description">Write a note (Optional)</string>
+    <string name="send_money_description">Write a note</string>
     <string name="description_event">Event description</string>
     <string name="item_description">Item description</string>
     <string name="item_quantity">Item quantity</string>
@@ -260,6 +263,8 @@
     <string name="please_enter_valid_date_of_birth">Please enter a valid date of birth.</string>
     <string name="please_enter_occupation">Please enter your occupation.</string>
     <string name="please_enter_amount">Please enter an amount.</string>
+    <string name="please_write_note">Please write a note.</string>
+    <string name="please_write_title">Please write a title.</string>
     <string name="please_enter_minimum_amount">Please enter minimum amount. of BDT </string>
     <string name="please_enter_not_more_than_max_amount">Please enter not more than. of BDT </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
@@ -386,6 +391,7 @@
     <string name="filter_education">Education</string>
 
     <string name="basic_info">Basic Information</string>
+    <string name="student_info">Student Information</string>
     <string name="profile_documents">Documents</string>
     <string name="profile_introducers">Introducers</string>
     <string name="national_id">National ID</string>
@@ -581,6 +587,8 @@
     <string name="add_money_info">Enter details to add money to your iPay account </string>
     <string name="withdraw_money_info">Enter details to withdraw money from your iPay account </string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
+    <string name="session">Session</string>
+    <string name="student_name">Student Name</string>
 
 
     <string-array name="mobile_operators">

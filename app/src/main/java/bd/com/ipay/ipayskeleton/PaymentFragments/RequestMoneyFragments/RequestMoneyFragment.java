@@ -99,10 +99,24 @@ public class RequestMoneyFragment extends Fragment {
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
+        if (! (mTitleEditText.getText().toString().trim().length() > 0)) {
+            focusView = mTitleEditText;
+            mTitleEditText.setError(getString(R.string.please_write_title));
+            cancel = true;
+
+        }
+
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             cancel = true;
+        }
+
+        if (! (mDescriptionEditText.getText().toString().trim().length() > 0)) {
+            focusView = mDescriptionEditText;
+            mDescriptionEditText.setError(getString(R.string.please_write_note));
+            cancel = true;
+
         }
 
         if (!ContactEngine.isValidNumber(mobileNumber)) {

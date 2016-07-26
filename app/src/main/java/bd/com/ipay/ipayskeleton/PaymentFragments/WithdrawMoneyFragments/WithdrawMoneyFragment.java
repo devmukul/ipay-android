@@ -182,11 +182,20 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                 cancel = true;
             }
         }
+
+        if (! (mDescriptionEditText.getText().toString().trim().length() > 0)) {
+            focusView = mDescriptionEditText;
+            mDescriptionEditText.setError(getString(R.string.please_write_note));
+            cancel = true;
+
+        }
+
         if (!(mBankAccountNumberEditText.getText().toString().trim().length() > 0)) {
             focusView = mBankAccountNumberEditText;
             mBankAccountNumberEditText.setError(getString(R.string.select_a_bank));
             cancel = true;
         }
+
         if (cancel) {
             focusView.requestFocus();
             return false;
