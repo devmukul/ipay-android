@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devspark.progressfragment.ProgressFragment;
@@ -23,12 +26,15 @@ import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introduced;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
@@ -69,7 +75,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_introduced_requests, container, false);
-        (getActivity()).setTitle(R.string.profile_introducers);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.list_introduced_requests);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
@@ -256,123 +261,47 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     private class IntroducdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int RECOMMENDATION_ITEM_VIEW = 1;
-        private static final int RECOMMENDATION_HEADER_VIEW = 2;
-        private static final int INTRODUCED_LIST_ITEM_VIEW = 3;
-        private static final int INTRODUCED_LIST_HEADER_VIEW = 4;
+        private static final int INTRODUCED_LIST_ITEM_VIEW = 2;
+        private static final int INTRODUCED_LIST_HEADER_VIEW = 3;
+
+        private final int ACTION_VERIFY = 0;
+        private final int ACTION_REJECT = 1;
+        private final int ACTION_SPAM = 2;
 
         public IntroducdAdapter() {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            private final TextView mPortraitTextView;
-
-
             private final TextView mIntroducedName;
             private final TextView mIntroducedMobileNumber;
-            private final RoundedImageView mIntroducedProfilePictureView;
+            private final ProfileImageView mIntroducedProfilePictureView;
 
+            private List<String> mReceivedRequestActionList;
+            private CustomSelectorDialog mCustomSelectorDialog;
 
-            private final LinearLayout optionsLayout;
             private final TextView mSenderName;
             private final TextView mSenderMobileNumber;
             private final TextView mDate;
-            private final Button verifyButton;
-            private final Button rejectRecommendationButton;
-            private final Button markAsSpamRecommendationButton;
 
             private final View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                mPortraitTextView = (TextView) itemView.findViewById(R.id.portraitTxt);
-
                 mIntroducedName = (TextView) itemView.findViewById(R.id.introduced_name);
                 mIntroducedMobileNumber = (TextView) itemView.findViewById(R.id.introduced_mobile_number);
-                mIntroducedProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mIntroducedProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.introduced_profile_picture);
 
-                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 mSenderName = (TextView) itemView.findViewById(R.id.textview_title);
                 mSenderMobileNumber = (TextView) itemView.findViewById(R.id.textview_description);
                 mDate = (TextView) itemView.findViewById(R.id.textview_time);
-                verifyButton = (Button) itemView.findViewById(R.id.verify_button);
-                rejectRecommendationButton = (Button) itemView.findViewById(R.id.reject_button);
-                markAsSpamRecommendationButton = (Button) itemView.findViewById(R.id.mark_as_spam_button);
 
                 divider = itemView.findViewById(R.id.divider);
 
             }
 
-            private void setProfilePicture(String url, RoundedImageView pictureView, String name) {
-
-                int position = getAdapterPosition();
-                final int randomColor = position % 10;
-
-                if (name.startsWith("+") && name.length() > 1)
-                    mPortraitTextView.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
-                else mPortraitTextView.setText(String.valueOf(name.charAt(0)).toUpperCase());
-
-
-                if (randomColor == 0)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle);
-                else if (randomColor == 1)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_blue);
-                else if (randomColor == 2)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_brightpink);
-                else if (randomColor == 3)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_cyan);
-                else if (randomColor == 4)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_megenta);
-                else if (randomColor == 5)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_orange);
-                else if (randomColor == 6)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_red);
-                else if (randomColor == 7)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_springgreen);
-                else if (randomColor == 8)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_violet);
-                else if (randomColor == 9)
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_yellow);
-                else
-                    mPortraitTextView.setBackgroundResource(R.drawable.background_portrait_circle_azure);
-
-                if (url != null) {
-                    url = Constants.BASE_URL_FTP_SERVER + url;
-                    Glide.with(getActivity())
-                            .load(url)
-                            .crossFade()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .into(pictureView);
-                } else {
-                    Glide.with(getActivity())
-                            .load(android.R.color.transparent)
-                            .crossFade()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .into(pictureView);
-                }
-
-            }
-
             public void bindViewRecommendationList(int pos) {
-
-                // Decrease pos by 1 as there is a header view now.
-                pos = pos - 1;
-
-                if (mRecommendationRequestList.size() == 1) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-
-                } else if (pos == 0) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-
-                } else if(pos == mRecommendationRequestList.size() -1) {
-                    divider.setVisibility(View.GONE);
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
-
-                } else {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
-
-                }
 
                 final String imageUrl = mRecommendationRequestList.get(pos).getProfilePictureUrl();
                 final long requestID = mRecommendationRequestList.get(pos).getId();
@@ -386,107 +315,75 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 mDate.setText(time);
 
 
-                //mProfileImageView.setProfilePicture( imageUrl, false);
-
-                optionsLayout.setVisibility(View.GONE);
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
-                            if (optionsLayout.getVisibility() == View.VISIBLE) {
-                                optionsLayout.setVisibility(View.GONE);
-                            }
-                            else optionsLayout.setVisibility(View.VISIBLE);
+                            mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.introduce_action));
+                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), senderName, mReceivedRequestActionList);
+                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                                @Override
+                                public void onResourceSelected(int selectedIndex, String name) {
+                                    if (selectedIndex == ACTION_VERIFY) {
+                                        new android.app.AlertDialog.Builder(getActivity())
+                                                .setTitle(R.string.are_you_sure)
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // Do nothing
+                                                    }
+                                                })
+                                                .show();
+
+                                    } else if (selectedIndex == ACTION_REJECT) {
+                                        new android.app.AlertDialog.Builder(getActivity())
+                                                .setTitle(R.string.are_you_sure)
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // Do nothing
+                                                    }
+                                                })
+                                                .show();
+                                    } else if (selectedIndex == ACTION_SPAM) {
+                                        new android.app.AlertDialog.Builder(getActivity())
+                                                .setTitle(R.string.are_you_sure)
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM);
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // Do nothing
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                }
+                            });
+                            mCustomSelectorDialog.show();
                         }
-                    }
-                });
-
-                verifyButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setTitle(R.string.are_you_sure)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // Do nothing
-                                        }
-                                    })
-                                    .show();
-                    }
-                });
-
-                rejectRecommendationButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setTitle(R.string.are_you_sure)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // Do nothing
-                                        }
-                                    })
-                                    .show();
-                    }
-                });
-
-                markAsSpamRecommendationButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setTitle(R.string.are_you_sure)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM);
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // Do nothing
-                                        }
-                                    })
-                                    .show();
                     }
                 });
             }
 
             public void bindViewForIntroducedList(int pos) {
 
-                if (mRecommendationRequestList == null) pos = pos - 1;
-                else {
-                    if (mRecommendationRequestList.size() == 0) pos = pos - 1;
-                    else pos = pos - mRecommendationRequestList.size() - 2;
-                }
-
-                if(pos== 0) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-
-                } else if(pos== mIntroducedList.size() -1) {
-                    divider.setVisibility(View.GONE);
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
-
-                } else {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
-
-                }
+                if (mRecommendationRequestList != null && mRecommendationRequestList.size() != 0 )  pos = pos - mRecommendationRequestList.size() - 1;
 
                 final String introducedName = mIntroducedList.get(pos).getName();
                 final String introducedMobileNumber = mIntroducedList.get(pos).getMobileNumber();
                 String imageUrl = mIntroducedList.get(pos).getProfilePictureUrl();
-                setProfilePicture(imageUrl, mIntroducedProfilePictureView, introducedName);
+                mIntroducedProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mIntroducedName.setText(introducedName);
                 mIntroducedMobileNumber.setText(introducedMobileNumber);
             }
@@ -500,12 +397,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         private class IntroducedListItemViewHolder extends ViewHolder {
             public IntroducedListItemViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        private class RecommendationListHeaderViewHolder extends ViewHolder {
-            public RecommendationListHeaderViewHolder(View itemView) {
                 super(itemView);
             }
         }
@@ -526,17 +417,13 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduced_list, parent, false);
                 return new IntroducedListItemViewHolder(v);
 
-            } else if (viewType == INTRODUCED_LIST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduced_list_header, parent, false);
-                return new IntroducedListHeaderViewHolder(v);
-
             }  else if (viewType == RECOMMENDATION_ITEM_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests, parent, false);
                 return new RecommendationRequestViewHolder(v);
 
             } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommendation_requests_header, parent, false);
-                return new RecommendationListHeaderViewHolder(v);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduced_list_header, parent, false);
+                return new IntroducedListHeaderViewHolder(v);
 
             }
         }
@@ -576,11 +463,11 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 introducedListSize = mIntroducedList.size();
 
             if (recommendationRequestListSize > 0 && introducedListSize > 0)
-                return 1 + recommendationRequestListSize + 1 + introducedListSize ;
+                return recommendationRequestListSize + 1 + introducedListSize ;
             else if (introducedListSize > 0 && recommendationRequestListSize == 0)
-                return 1 + introducedListSize ;
+                return introducedListSize ;
             else if (introducedListSize == 0 && recommendationRequestListSize > 0)
-                return 1 + recommendationRequestListSize;
+                return recommendationRequestListSize;
             else return 0;
 
         }
@@ -600,22 +487,19 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 introducedListSize = mIntroducedList.size();
 
             if (recommendationRequestListSize > 0 && introducedListSize > 0) {
-                if (position == 0) return RECOMMENDATION_HEADER_VIEW;
-                else if (position == recommendationRequestListSize + 1)
+                if (position == recommendationRequestListSize )
                     return INTRODUCED_LIST_HEADER_VIEW;
-                else if (position > recommendationRequestListSize + 1)
+                else if (position > recommendationRequestListSize )
                     return INTRODUCED_LIST_ITEM_VIEW;
                 else return RECOMMENDATION_ITEM_VIEW;
 
             } else if (introducedListSize > 0 && recommendationRequestListSize == 0) {
-                if (position == 0) return INTRODUCED_LIST_HEADER_VIEW;
-                else return INTRODUCED_LIST_ITEM_VIEW;
+               return INTRODUCED_LIST_ITEM_VIEW;
 
             } else if (introducedListSize == 0 && recommendationRequestListSize > 0) {
-                if (position == 0) return RECOMMENDATION_HEADER_VIEW;
-                else return RECOMMENDATION_ITEM_VIEW;
+                return RECOMMENDATION_ITEM_VIEW;
             }
-            return super.getItemViewType(position);
+            else return RECOMMENDATION_ITEM_VIEW;
         }
     }
 

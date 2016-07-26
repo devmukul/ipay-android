@@ -15,6 +15,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.DocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditAddressFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IntroducerFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IntroducedFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
@@ -110,7 +111,7 @@ public class ProfileActivity extends BaseActivity {
                 fragment = new BasicInfoFragment();
                 break;
             case INTRODUCER:
-                fragment = new IntroducerFragment();
+                fragment = new IdentificationHolderFragment();
                 break;
             case INTRODUCED:
                 fragment = new IntroducedFragment();
@@ -231,7 +232,7 @@ public class ProfileActivity extends BaseActivity {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IntroducerFragment()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IdentificationHolderFragment()).addToBackStack(null).commit();
     }
 
     public void switchToProfileInfoFragment() {

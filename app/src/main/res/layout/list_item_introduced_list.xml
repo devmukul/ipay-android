@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
     android:background="@android:color/white">
 
     <RelativeLayout
@@ -12,41 +10,43 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/activity_horizontal_margin">
 
-
-        <include
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
             android:id="@+id/introduced_profile_picture"
-            layout="@layout/contact_portrait_view"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="16dp"  />
 
         <TextView
             android:id="@+id/introduced_name"
             style="@style/TextStylePrimaryMedium"
+            android:textSize="@dimen/text_size_small_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/introduced_profile_picture"
             android:paddingBottom="2dp"
             android:paddingTop="14dp"
-            android:singleLine="true"
-            android:text="Mohsin Khan"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/introduced_mobile_number"
-            style="@style/TextStyleSecondaryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/introduced_name"
             android:layout_toRightOf="@+id/introduced_profile_picture"
             android:gravity="left"
             android:paddingBottom="14dp"
-            android:singleLine="true"
-            android:text="+8801919191919"
-            android:textSize="15sp" />
+            android:singleLine="true" />
+
+        <ImageView
+            android:id="@+id/request_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_verified" />
 
     </RelativeLayout>
 

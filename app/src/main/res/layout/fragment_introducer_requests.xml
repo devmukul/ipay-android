@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:paddingBottom="@dimen/activity_horizontal_margin_card"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/value10">
 
     <include layout="@layout/layout_progress_container" />
 
@@ -18,27 +17,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_rounded_white"
-            android:layout_margin="@dimen/activity_horizontal_margin_card">
+            android:paddingTop="@dimen/value10">
 
             <TextView
                 android:id="@+id/intoduce_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/button_ask_for_recommendation"
-                android:text="@string/at_least_two_introducers"
+                android:layout_toLeftOf="@+id/ask_for_recommendation"
                 android:textColor="@color/background_red"
                 android:layout_margin="@dimen/activity_horizontal_margin"/>
 
-            <Button
-                android:id="@+id/button_ask_for_recommendation"
-                style="@style/MicroButtonPrimary"
+            <ImageView
+                android:id="@+id/ask_for_recommendation"
+                style="@style/ButtonStyleWithIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:text="@string/request_now" />
+                android:clickable="true"
+                android:src="@drawable/ic_contactw"
+                android:background="@color/colorPrimary"
+                android:padding="@dimen/activity_vertical_margin"/>
+
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
@@ -46,7 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/complete_introduction_header"
-            android:layout_marginTop="@dimen/value5"
             android:clipToPadding="false"
             android:scrollbars="vertical"/>
 
