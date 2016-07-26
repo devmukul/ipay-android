@@ -60,6 +60,13 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         nextButton = (Button) v.findViewById(R.id.button_next);
         mSelectedInstitutionId = -1;
 
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptFetchInfoOfTheStudent();
+            }
+        });
+
         return v;
     }
 
@@ -68,6 +75,23 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
         getAllInstitutions();
+    }
+
+    private void attemptFetchInfoOfTheStudent() {
+        if (mSelectedInstitutionId == -1) {
+            institutionSelection.setError(getString(R.string.please_select_institution));
+            return;
+        }
+        if (mSelectedSessionId == -1) {
+            sessionSelection.setError(getString(R.string.please_select_session));
+            return;
+        }
+        if (studentIDEditText.getText().toString().length() == 0) {
+            studentIDEditText.setError(getString(R.string.please_enter_student_id));
+            return;
+        }
+
+
     }
 
     private void setInstitutionsAdapter() {
@@ -140,10 +164,10 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         }
 
         GetSessionRequestBuilder mGetSessionRequestBuilder = new GetSessionRequestBuilder(instituteID);
-        String mUri = mGetSessionRequestBuilder.getGeneratedUri();
+        String mUrl = mGetSessionRequestBuilder.getGeneratedUrl();
 
         mGetSessionsByInstitutionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SESSION_LIST,
-                mUri, getActivity());
+                mUrl, getActivity());
         mGetSessionsByInstitutionTask.mHttpResponseListener = this;
 
         mGetSessionsByInstitutionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

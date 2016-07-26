@@ -340,7 +340,7 @@ public class Constants {
 
     // Education
     public static final String URL_GET_ALL_INSTITUTIONS_LIST = "allinstitutes";
-    public static final String URL_GET_ALL_SESSIONS_LIST = "sessions/allsessions";
+    public static final String URL_GET_ALL_SESSIONS_LIST = "session/allsessions";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;

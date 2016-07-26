@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Education;
 
-public class SemesterOrSession {
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Resource;
+
+public class SemesterOrSession implements Resource{
 
     private int sessionId;
     private String description;
