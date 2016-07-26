@@ -61,8 +61,8 @@
     <View
         android:layout_below="@+id/profile_completion_holder"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="@dimen/divider_space"
         android:background="@color/colorDivider"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"/>
+        android:paddingLeft="@dimen/activity_horizontal_margin_card"
+        android:paddingRight="@dimen/activity_horizontal_margin_card"/>
 </RelativeLayout>

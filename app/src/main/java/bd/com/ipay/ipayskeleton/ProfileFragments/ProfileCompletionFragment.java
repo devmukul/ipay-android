@@ -157,7 +157,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 }
 
                 if (propertyDetails.isCompleted()) {
-                    verificationStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_checkmark));
+                    verificationStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_tick));
                     verificationStatus.setVisibility(View.VISIBLE);
                 } else {
                     titleView.setTextColor(getResources().getColor(R.color.colorTextPrimary));

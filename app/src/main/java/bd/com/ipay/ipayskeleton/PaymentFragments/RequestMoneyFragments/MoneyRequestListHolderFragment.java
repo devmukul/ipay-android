@@ -19,6 +19,8 @@ public class MoneyRequestListHolderFragment extends Fragment {
     private ViewPager viewPager;
     private final int RECEIVED_REQUEST_TAB = 0;
     private final int SENT_REQUEST_TAB = 1;
+    private final int TOTAL_PAGE_COUNT = 2;
+
 
     private TabLayout.Tab mReceivedRequestTab;
     private TabLayout.Tab mSentRequestTab;
@@ -59,8 +61,8 @@ public class MoneyRequestListHolderFragment extends Fragment {
 
     private void setTabIconsWithTexts() {
 
-        ((ImageView) mReceivedRequestTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_walletw);
-        ((ImageView) mSentRequestTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_contact);
+        ((ImageView) mReceivedRequestTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_request_received);
+        ((ImageView) mSentRequestTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_request_sent);
 
         ((TextView) mReceivedRequestTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.received_request));
         ((TextView) mSentRequestTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.sent_request));
@@ -68,18 +70,13 @@ public class MoneyRequestListHolderFragment extends Fragment {
 
 
     public class MoneyRequestListFragmentAdapter extends FragmentPagerAdapter {
-        private final String[] tabTitles = new String[]{
-                getString(R.string.request_from_other),
-                getString(R.string.my_requests),
-        };
-
         public MoneyRequestListFragmentAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public int getCount() {
-            return tabTitles.length;
+            return TOTAL_PAGE_COUNT;
         }
 
         @Override
@@ -93,10 +90,7 @@ public class MoneyRequestListHolderFragment extends Fragment {
             }
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return tabTitles[position];
-        }
+
     }
 
 }

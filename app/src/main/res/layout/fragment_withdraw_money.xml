@@ -47,21 +47,12 @@
                     style="@style/CustomEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
+                    android:focusable="false"
                     android:hint="@string/enter_bank_account_number"
                     android:inputType="phone"
                     android:maxLines="1"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
-
-            <ImageView
-                android:id="@+id/accountPicker"
-                style="@style/ButtonStyleWithIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:clickable="true"
-                android:src="@drawable/ic_bank2" />
         </RelativeLayout>
 
         <View style="@style/Divider" />

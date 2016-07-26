@@ -55,7 +55,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private TextView mLinkABankNoteTextView;
-    private ImageView mBankPicker;
     private List<UserBankClass> mListUserBankClasses;
     private ArrayList<String> mUserBankNameList;
     private ArrayList<String> mUserBankAccountNumberList;
@@ -73,7 +72,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         buttonAddMoney = (Button) v.findViewById(R.id.button_cash_in);
-        mBankPicker = (ImageView) v.findViewById(R.id.accountPicker);
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -102,7 +100,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        mBankPicker.setOnClickListener(new View.OnClickListener() {
+        mBankAccountNumberEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showBankListAlertDialogue();
