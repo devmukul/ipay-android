@@ -274,7 +274,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mMyRequestActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int selectedIndex) {
+                            public void onResourceSelected(int selectedIndex,String name) {
                                 if (selectedIndex == ACTION_CANCEL) {
                                     showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
                                 }

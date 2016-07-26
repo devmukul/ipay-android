@@ -84,14 +84,19 @@
     <string name="please_wait">Please wait. Loading... </string>
     <string name="loading">Loading... </string>
     <string name="load_more">Load more...</string>
+    <string name="student_id">Student ID</string>
     <string name="no_more_results">No more results to show</string>
     <string name="profile_info_fetch_failed">Failed to fetch profile information.</string>
+    <string name="get_all_institution_failed">Failed to load institutions.</string>
+    <string name="get_sessions_failed">Failed to load sessions.</string>
     <string name="confirm_query">Are you sure?</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
     <string name="profile_info_get_failed">Failed to fetch profile information.</string>
     <string name="account_type_business">Business Account</string>
     <string name="all_contacts">All</string>
+    <string name="select_an_institution">Select Institution</string>
+    <string name="select_session">Select Session</string>
     <string name="save">Save</string>
     <string name="got_it">GOT IT</string>
     <string name="bank_verification_help_html"><![CDATA[<b><small>We sent some money in your bank account.</small></b>\n<small>Please click</small> <big><b>Verify</b></big> <small>and then enter the amount we sent in your bank account to complete the verification process.</small>]]></string>
@@ -186,6 +191,7 @@
     <string name="note">Note</string>
     <string name="withdraw_money">Withdraw Money</string>
     <string name="events">Events</string>
+    <string name="education">Education</string>
     <string name="qr_code">QR Code</string>
     <string name="scan_the_qr_code">Please scan the QR Code to send money to this person</string>
     <string name="scan_receiver">Scan QR Code of Receiver</string>
@@ -253,6 +259,8 @@
     <string name="please_enter_amount">Please enter an amount.</string>
     <string name="please_enter_minimum_amount">Please enter minimum amount. of BDT </string>
     <string name="please_enter_not_more_than_max_amount">Please enter not more than. of BDT </string>
+    <string name="please_enter_vat_amount">Please enter VAT amount.</string>
+    <string name="please_select_relation">Please select a relation</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
     <string name="end_date">End date (dd/mm/yyyy)</string>
     <string name="sign_up_with_ipay">sign up with iPay</string>
@@ -294,8 +302,11 @@
     <string name="notification">Notification</string>
     <string name="security_settings">Security Settings</string>
     <string name="participant_already_added">Participant already added.</string>
-    <string name="select_a_package">Select a package</string>
-    <string name="select_an_operator">Select an operator</string>
+    <string name="select_a_district">Select District</string>
+    <string name="select_a_thana">Select Thana</string>
+    <string name="select_an_occupation">Select Occupation</string>
+    <string name="select_a_package">Select Package</string>
+    <string name="select_an_operator">Select Operator</string>
     <string name="recharge_to">Recharge to</string>
     <string name="opening_balance_to">Opening balance to</string>
     <string name="edit">Edit</string>
@@ -316,7 +327,7 @@
     <string name="filter_verification">Verification Events</string>
     <string name="filter_security_changes">Security Changes</string>
     <string name="clear_filter">Clear Filter</string>
-    <string name="select_a_bank">Select a Bank</string>
+    <string name="select_a_bank">Select Bank</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="title_login_page">Login</string>
     <string name="login_info">You can only use one account per device. If you want to use another account from this device, please reinstall the app.</string>
@@ -445,6 +456,7 @@
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="link_banks">Link Banks</string>
+    <string name="manage_banks">Manage Banks</string>
     <string name="select_one">Select One</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
     <string name="failed_loading_pin">Failed loading pin</string>
@@ -607,6 +619,10 @@
 
     <string-array name="my_request_action">
         <item>Cancel</item>
+    </string-array>
+
+    <string-array name="trusted_device_action">
+        <item>Remove</item>
     </string-array>
 
 </resources>

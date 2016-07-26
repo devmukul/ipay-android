@@ -122,6 +122,7 @@ public class Constants {
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
+    public static final String BASE_URL_EDU;
     public static final String BASE_URL_FRIEND;
     public static final String BASE_URL_FTP_SERVER;
     private static final String SERVER_NAME;
@@ -131,6 +132,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
+            BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
             SERVER_NAME = "dev";
@@ -139,6 +141,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
+            BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
             SERVER_NAME = "test";
@@ -147,6 +150,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
+            BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
             SERVER_NAME = "stage";
@@ -155,6 +159,7 @@ public class Constants {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
+            BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/education/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
             SERVER_NAME = "live";
@@ -163,6 +168,7 @@ public class Constants {
 
             BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
+            BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
             SERVER_NAME = "local";
@@ -329,7 +335,12 @@ public class Constants {
     public static final String URL_GET_BUSINESS_LIST = "business/list";
     public static final String URL_CONFIRM_BUSINESS_INVITATION = "business/user/confirm";
 
+    // Event
     public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
+
+    // Education
+    public static final String URL_GET_ALL_INSTITUTIONS_LIST = "allinstitutes";
+    public static final String URL_GET_ALL_SESSIONS_LIST = "sessions/allsessions";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -462,6 +473,10 @@ public class Constants {
     // Business Information (Employee)
     public static final String COMMAND_GET_BUSINESS_LIST = "COMMAND_GET_BUSINESS_LIST";
     public static final String COMMAND_CONFIRM_BUSINESS_INVITATION = "COMMAND_CONFIRM_BUSINESS_INVITATION";
+
+    // Education
+    public static final String COMMAND_GET_INSTITUTION_LIST = "COMMAND_GET_INSTITUTION_LIST";
+    public static final String COMMAND_GET_SESSION_LIST = "COMMAND_GET_SESSION_LIST";
 
     public static final String COUNTRY_CODE_BANGLADESH = "+880";
     public static final int ACTIVITY_LOG_COUNT = 10;

@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/value20"
         android:paddingBottom="@dimen/value5"
         android:paddingTop="@dimen/value5"
@@ -30,7 +29,7 @@
         android:layout_height="24dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
         android:src="@drawable/ic_arrow2" />
 </RelativeLayout>
 

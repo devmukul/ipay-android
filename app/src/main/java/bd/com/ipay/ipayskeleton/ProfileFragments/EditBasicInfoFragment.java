@@ -346,7 +346,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     }
 
     private void setOccupationAdapter(List<Occupation> occupationList) {
-        mOccupationTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), occupationList, mOccupation);
+        mOccupationTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(),getString(R.string.select_an_occupation), occupationList, mOccupation);
         mOccupationTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

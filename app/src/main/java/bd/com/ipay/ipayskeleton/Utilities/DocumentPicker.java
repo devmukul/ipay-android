@@ -153,9 +153,11 @@ public class DocumentPicker {
                 String fileExtension = Utilities.getExtension(selectedImage.getPath());
                 if (isCamera || !fileExtension.endsWith("pdf")) {
                     Log.d(TAG, "Converting: " + selectedImage.getPath());
+
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
-                    Bitmap convertedBitmap = CameraUtilities.handleSamplingAndRotationBitmap(context, selectedImage);
+                    Bitmap convertedBitmap = CameraUtilities.handleSamplingAndRotationBitmap(context,
+                            isCamera ? selectedImage : returnedIntent.getData(), isCamera);
 
                     // Save to file
                     File tempFile = getTempFile(context);

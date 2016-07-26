@@ -27,6 +27,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 "(_id integer primary key autoincrement, " +
                 DBConstants.KEY_MOBILE_NUMBER + " text unique not null, " +
                 DBConstants.KEY_NAME + " text, " +
+                DBConstants.KEY_ORIGINAL_NAME + " text, " +
                 DBConstants.KEY_ACCOUNT_TYPE + " integer default 1, " +
                 DBConstants.KEY_PROFILE_PICTURE + " text, " +
                 DBConstants.KEY_VERIFICATION_STATUS + " integer default 0, " +
@@ -43,6 +44,9 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion <= 5) {
+            db.execSQL("drop table if exists " + DBConstants.DB_TABLE_FRIENDS);
+            createFriendsTable(db);
+        }
     }
 }

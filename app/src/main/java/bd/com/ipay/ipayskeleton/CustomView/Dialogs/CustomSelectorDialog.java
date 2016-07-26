@@ -13,17 +13,16 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.R;
 
 public class CustomSelectorDialog extends AlertDialog {
-    private final Context context;
+    private Context context;
 
-    private final List<String> resources;
-    private final String mTitle;
+    private List<String> resources;
+    private String mTitle;
 
     private OnResourceSelectedListener onResourceSelectedListener;
 
-    private final LayoutInflater inflater;
-    private final View view;
-    private final View viewTitle;
-    private final TextView textViewTitle;
+    private LayoutInflater inflater;
+    private View view, viewTitle;
+    private TextView textViewTitle;
     private ListView popUpList;
 
 
@@ -35,7 +34,7 @@ public class CustomSelectorDialog extends AlertDialog {
         this.mTitle = mTitle;
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        viewTitle = inflater.inflate(R.layout.dialog_button_selector_header, null);
+        viewTitle = inflater.inflate(R.layout.dialog_selector_header, null);
         textViewTitle = (TextView) viewTitle.findViewById(R.id.textviewTitle);
         textViewTitle.setText(mTitle);
         this.setCustomTitle(viewTitle);
@@ -47,10 +46,10 @@ public class CustomSelectorDialog extends AlertDialog {
 
     }
 
-    private void setItems(final List<String> resources) {
+    public void setItems(final List<String> resources) {
 
         popUpList = (ListView) view.findViewById(R.id.custom_list);
-        CustomAdapter adapter = new CustomAdapter(context, resources);
+        SelectorAdapter adapter = new SelectorAdapter(context, resources);
         popUpList.setAdapter(adapter);
         popUpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,7 +57,7 @@ public class CustomSelectorDialog extends AlertDialog {
                 String name = resources.get(i);
 
                 if (onResourceSelectedListener != null)
-                    onResourceSelectedListener.onResourceSelected(i);
+                    onResourceSelectedListener.onResourceSelected(i, name);
                 dismiss();
             }
         });
@@ -69,14 +68,14 @@ public class CustomSelectorDialog extends AlertDialog {
     }
 
     public interface OnResourceSelectedListener {
-        void onResourceSelected(int id);
+        void onResourceSelected(int id, String name);
     }
 
-    private class CustomAdapter extends ArrayAdapter<String> {
+    private class SelectorAdapter extends ArrayAdapter<String> {
 
-        private final LayoutInflater inflater;
+        private LayoutInflater inflater;
 
-        public CustomAdapter(Context context, List<String> objects) {
+        public SelectorAdapter(Context context, List<String> objects) {
             super(context, 0, objects);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
