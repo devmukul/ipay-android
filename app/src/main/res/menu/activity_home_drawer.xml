@@ -39,11 +39,6 @@
             android:icon="@drawable/ic_event_black_24dp"
             android:title="@string/events"
             android:visible="false" />
-        <item
-            android:id="@+id/nav_education"
-            android:icon="@drawable/ic_event_black_24dp"
-            android:title="@string/education"
-            android:visible="true" />
     </group>
     <item
         android:id="@+id/nav_logout"
