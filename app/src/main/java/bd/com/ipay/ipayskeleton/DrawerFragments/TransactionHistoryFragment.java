@@ -145,7 +145,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
         mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
         mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
-        mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_PAYMENT);
+        mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_MAKE_PAYMENT);
         mCheckBoxTypeMap.put(mFilterEducation, Constants.TRANSACTION_HISTORY_EDUCATION);
 
         mFromDateEditText = (EditText) v.findViewById(R.id.fromEditText);

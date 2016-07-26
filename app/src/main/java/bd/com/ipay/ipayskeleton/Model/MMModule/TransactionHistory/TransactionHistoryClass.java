@@ -25,29 +25,6 @@ public class TransactionHistoryClass implements Parcelable {
     private final long responseTime;
     private final TransactionHistoryAdditionalInfo additionalInfo;
 
-    public TransactionHistoryClass(String originatingMobileNumber, String receiverInfo, double amount,
-                                   double fee, double netAmount, double balance, int serviceID, int statusCode,
-                                   String purpose, String statusDescription, String description,
-                                   String transactionID, long time, long requestTime, long responseTime,
-                                   TransactionHistoryAdditionalInfo additionalInfo) {
-        this.originatingMobileNumber = originatingMobileNumber;
-        this.receiverInfo = receiverInfo;
-        this.amount = amount;
-        this.fee = fee;
-        this.netAmount = netAmount;
-        this.balance = balance;
-        this.serviceID = serviceID;
-        this.statusCode = statusCode;
-        this.purpose = purpose;
-        this.statusDescription = statusDescription;
-        this.description = description;
-        this.transactionID = transactionID;
-        this.time = time;
-        this.requestTime = requestTime;
-        this.responseTime = responseTime;
-        this.additionalInfo = additionalInfo;
-    }
-
     public String getOriginatingMobileNumber() {
         return originatingMobileNumber;
     }
@@ -68,30 +45,37 @@ public class TransactionHistoryClass implements Parcelable {
         if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
             return "";
 
-        switch (serviceID) {
-            case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
-                return receiverInfo;
-            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
-                return getBankName();
-            case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
-                return "";
-            case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
-                if (additionalInfo != null)
-                    return additionalInfo.getUserName();
-                else
+        try {
+            switch (serviceID) {
+                case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
+                    return receiverInfo;
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                    return getBankName();
+                case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                     return "";
-            case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
-                return getBankName();
-            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                return getBankName();
-            case (Constants.TRANSACTION_HISTORY_TOP_UP):
-                return receiverInfo;
-            case (Constants.SERVICE_ID_REQUEST_INVOICE):
-            case (Constants.TRANSACTION_HISTORY_PAYMENT):
-                if (additionalInfo != null)
+                case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
+                    if (additionalInfo != null)
+                        return additionalInfo.getUserName();
+                    else
+                        return "";
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
+                    return getBankName();
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
+                    return getBankName();
+                case (Constants.TRANSACTION_HISTORY_TOP_UP):
+                    return receiverInfo;
+                case (Constants.SERVICE_ID_REQUEST_INVOICE):
+                case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
+                    if (additionalInfo != null)
+                        return additionalInfo.getUserName();
+                    else
+                        return "";
+                case Constants.TRANSACTION_HISTORY_EDUCATION:
                     return additionalInfo.getUserName();
-                else
-                    return "";
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return "";
@@ -122,13 +106,15 @@ public class TransactionHistoryClass implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return "-" + Utilities.formatTakaWithComma(netAmount);
                 case (Constants.SERVICE_ID_REQUEST_INVOICE):
-                case (Constants.TRANSACTION_HISTORY_PAYMENT):
+                case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                     if (originatingMobileNumber.equals(userMobileNumber)) {
                         return "+" + Utilities.formatTakaWithComma(netAmount);
                     }
                     else if (receiverInfo.equals(userMobileNumber)) {
                         return "-" + Utilities.formatTakaWithComma(netAmount);
                     }
+                case (Constants.TRANSACTION_HISTORY_EDUCATION):
+                    return "-" + Utilities.formatTakaWithComma(netAmount);
             }
 
             return  Utilities.formatTakaWithComma(netAmount);
@@ -187,136 +173,145 @@ public class TransactionHistoryClass implements Parcelable {
     }
 
     public String getDescription(String userMobileNumber) {
-        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null )
-            return "No information available";
+        try {
+            if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
+                return "No information available";
 
-        switch (serviceID) {
-            case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
-                return "Top up failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
-            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
-                return "Withdraw money failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
-            case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
-                return "Opening balance from iPay";
-            case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
-                if (originatingMobileNumber.equals(userMobileNumber)) {
-                    if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                        return "Sent " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (Successful)";
-                    else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                        return "Sending " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (In progress)";
-                    else {
-                        if (additionalInfo.getUserName() == null)
-                            return "Failed to send money (" + statusDescription + ")";
-                        else
-                            return "Failed to send " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (" + statusDescription + ")";
+            switch (serviceID) {
+                case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
+                    return "Top up failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                    return "Withdraw money failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
+                case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
+                    return "Opening balance from iPay";
+                case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
+                    if (originatingMobileNumber.equals(userMobileNumber)) {
+                        if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                            return "Sent " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (Successful)";
+                        else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                            return "Sending " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (In progress)";
+                        else {
+                            if (additionalInfo.getUserName() == null)
+                                return "Failed to send money (" + statusDescription + ")";
+                            else
+                                return "Failed to send " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (" + statusDescription + ")";
+                        }
+                    } else if (receiverInfo.equals(userMobileNumber)) {
+                        if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                            return "Received " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (Successful)";
+                        else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                            return "Receiving " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (in progress)";
+                        else {
+                            if (additionalInfo.getUserName() == null)
+                                return "Failed to receive money (" + statusDescription + ")";
+                            else
+                                return "Failed to receive " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (" + statusDescription + ")";
+                        }
+                    } else {
+                        return "No information available";
                     }
-                }
-                else if (receiverInfo.equals(userMobileNumber)) {
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                        return "Received "+ Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (Successful)";
+                        return "Added " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (successful)";
                     else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                        return "Receiving "+ Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (in progress)";
-                    else {
-                        if (additionalInfo.getUserName() == null)
-                            return "Failed to receive money (" + statusDescription + ")";
-                        else
-                            return "Failed to receive " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (" + statusDescription + ")";
-                    }
-                }
-                else {
-                    return "No information available";
-                }
-            case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
-                if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                    return "Added " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (successful)";
-                else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                    return "Adding " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (in progress)";
-                else
-                    return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (" + statusDescription + ")";
-            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" +" (successful)";
-                else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                    return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (in progress)";
-                else
-                    return "Failed to transfer " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (" + statusDescription + ")";
-            case (Constants.TRANSACTION_HISTORY_TOP_UP):
-                if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                    return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " (successful)";
-                else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                    return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " (in progress)";
-                else
-                    return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " failed (" + statusDescription + ")";
-            case (Constants.SERVICE_ID_REQUEST_INVOICE):
-            case (Constants.TRANSACTION_HISTORY_PAYMENT):
-                if (originatingMobileNumber.equals(userMobileNumber)) {
+                        return "Adding " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (in progress)";
+                    else
+                        return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (" + statusDescription + ")";
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                        return "Payment of " + Utilities.formatTaka(getNetAmount()) + " sent to " + additionalInfo.getUserName() + " (Successful)";
+                        return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (successful)";
                     else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                        return "Sending payment of " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (In progress)";
-                    else {
-                        if (additionalInfo.getUserName() == null)
-                            return "Payment sending failed (" + statusDescription + ")";
-                        else
-                            return "Sending payment of " + Utilities.formatTaka(getNetAmount()) + "  to " + additionalInfo.getUserName() + " failed (" + statusDescription + ")";
-                    }
-                }
-                else if (receiverInfo.equals(userMobileNumber)) {
+                        return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (in progress)";
+                    else
+                        return "Failed to transfer " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")" + " (" + statusDescription + ")";
+                case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
-                        return "Payment of " + Utilities.formatTaka(getNetAmount()) + " received from " + additionalInfo.getUserName() + " (Successful)";
+                        return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " (successful)";
                     else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
-                        return "Receiving payment of " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (in progress)";
-                    else {
-                        if (additionalInfo.getUserName() == null)
-                            return "Payment receiving failed (" + statusDescription + ")";
-                        else
-                            return "Receiving payment of " + Utilities.formatTaka(getNetAmount()) + "  from " + additionalInfo.getUserName() + " failed (" + statusDescription + ")";
-                    }
-                }
-                else
-                    return "No information available";
+                        return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " (in progress)";
+                    else
+                        return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " failed (" + statusDescription + ")";
+                case (Constants.SERVICE_ID_REQUEST_INVOICE):
+                case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
+                    if (originatingMobileNumber.equals(userMobileNumber)) {
+                        if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                            return "Payment of " + Utilities.formatTaka(getNetAmount()) + " sent to " + additionalInfo.getUserName() + " (Successful)";
+                        else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                            return "Sending payment of " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName() + " (In progress)";
+                        else {
+                            if (additionalInfo.getUserName() == null)
+                                return "Payment sending failed (" + statusDescription + ")";
+                            else
+                                return "Sending payment of " + Utilities.formatTaka(getNetAmount()) + "  to " + additionalInfo.getUserName() + " failed (" + statusDescription + ")";
+                        }
+                    } else if (receiverInfo.equals(userMobileNumber)) {
+                        if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                            return "Payment of " + Utilities.formatTaka(getNetAmount()) + " received from " + additionalInfo.getUserName() + " (Successful)";
+                        else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                            return "Receiving payment of " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName() + " (in progress)";
+                        else {
+                            if (additionalInfo.getUserName() == null)
+                                return "Payment receiving failed (" + statusDescription + ")";
+                            else
+                                return "Receiving payment of " + Utilities.formatTaka(getNetAmount()) + "  from " + additionalInfo.getUserName() + " failed (" + statusDescription + ")";
+                        }
+                    } else
+                        return "No information available";
+                case (Constants.TRANSACTION_HISTORY_EDUCATION):
+                    if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                        return "Education payment of " + Utilities.formatTaka(getNetAmount()) + " for " + additionalInfo.getUserName() + " (Successful)";
+                    else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                        return "Education payment of " + Utilities.formatTaka(getNetAmount()) + " for " + additionalInfo.getUserName() + " (in progress)";
+                    else
+                        return "Education payment of " + Utilities.formatTaka(getNetAmount()) + " for " + additionalInfo.getUserName() + " failed (" + statusDescription + ")";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return "No information available";
     }
 
     public String getShortDescription(String userMobileNumber) {
-        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
-            return "No Information Available";
+        try {
+            if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
+                return "No Information Available";
 
-        switch (serviceID) {
-            case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
-                return "TopUp Rollback";
-            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
-                return "Withdraw Money Rollback";
-            case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
-                return "Opening Balance";
-            case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
-                if (originatingMobileNumber.equals(userMobileNumber)) {
-                    return "Money Sent";
-                }
-                else if (receiverInfo.equals(userMobileNumber)) {
-                    return "Money Received";
-                }
-                else {
-                    return "No Information Available";
-                }
-            case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
-                return "Money Added";
-            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                return "Money Withdrawn";
-            case (Constants.TRANSACTION_HISTORY_TOP_UP):
-                return "Mobile TopUp";
-            case (Constants.SERVICE_ID_REQUEST_INVOICE):
-            case (Constants.TRANSACTION_HISTORY_PAYMENT):
-                if (originatingMobileNumber.equals(userMobileNumber)) {
-                    return "Payment Made";
-                }
-                else if (receiverInfo.equals(userMobileNumber)) {
-                    return "Payment Received";
-                }
-                else {
-                    return "No Information Available";
-                }
+            switch (serviceID) {
+                case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
+                    return "TopUp Rollback";
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                    return "Withdraw Money Rollback";
+                case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
+                    return "Opening Balance";
+                case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
+                    if (originatingMobileNumber.equals(userMobileNumber)) {
+                        return "Money Sent";
+                    } else if (receiverInfo.equals(userMobileNumber)) {
+                        return "Money Received";
+                    } else {
+                        return "No Information Available";
+                    }
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
+                    return "Money Added";
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
+                    return "Money Withdrawn";
+                case (Constants.TRANSACTION_HISTORY_TOP_UP):
+                    return "Mobile TopUp";
+                case (Constants.SERVICE_ID_REQUEST_INVOICE):
+                case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
+                    if (originatingMobileNumber.equals(userMobileNumber)) {
+                        return "Payment Made";
+                    } else if (receiverInfo.equals(userMobileNumber)) {
+                        return "Payment Received";
+                    } else {
+                        return "No Information Available";
+                    }
+                case (Constants.TRANSACTION_HISTORY_EDUCATION):
+                    return "Education Payment";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return "No Information Available";
@@ -353,8 +348,6 @@ public class TransactionHistoryClass implements Parcelable {
         }
     }
 
-
-
     public double getAmount(String userMobileNumber) {
         if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && (
                 originatingMobileNumber == null || receiverInfo == null))
@@ -377,7 +370,7 @@ public class TransactionHistoryClass implements Parcelable {
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return -netAmount;
             case (Constants.SERVICE_ID_REQUEST_INVOICE):
-            case (Constants.TRANSACTION_HISTORY_PAYMENT):
+            case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber))
                     return -netAmount;
                 else if (receiverInfo.equals(userMobileNumber))
