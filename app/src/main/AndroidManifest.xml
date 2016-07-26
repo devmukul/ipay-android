@@ -230,6 +230,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".Activities.TransactionDetailsActivity"
+            android:label="@string/transaction_details"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <!-- Receiver and service -->
 

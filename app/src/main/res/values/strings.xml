@@ -591,6 +591,8 @@
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
+    <string name="net_amount">Net Amount</string>
+    <string name="status">Status</string>
 
 
     <string-array name="mobile_operators">
