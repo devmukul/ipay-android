@@ -712,7 +712,7 @@
         <item name="android:layout_marginRight">2dp</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1.5</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
     <style name="TransactionHistoryDetailsRowRight" parent="@android:style/Widget.TextView">
@@ -722,7 +722,7 @@
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_weight">2</item>
     </style>
 
 </resources>
