@@ -285,13 +285,13 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
+                    if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
                         mProfileCompletionStatusView.setText("Your profile is " +
                                 mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
                                 + "complete. Complete profile to get verified.");
+                        mProfileCompletionStatusView.setVisibility(View.VISIBLE);
                     }
 
-                    mProfileCompletionStatusView.setVisibility(View.VISIBLE);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG).show();
