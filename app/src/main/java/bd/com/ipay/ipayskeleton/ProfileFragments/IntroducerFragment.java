@@ -321,7 +321,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                         mSentRequestStatus.setImageResource(R.drawable.ic_verified);
                         break;
                     case Constants.INTRODUCTION_REQUEST_STATUS_SPAM:
-                        mSentRequestStatus.setImageResource(R.drawable.ic_error_black_24dp);
+                        mSentRequestStatus.setImageResource(R.drawable.ic_warning);
                         break;
                     default:
                         // INTRODUCTION_REQUEST_STATUS_REJECTED
