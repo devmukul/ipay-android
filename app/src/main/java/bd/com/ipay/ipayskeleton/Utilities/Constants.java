@@ -109,7 +109,7 @@ public class Constants {
      * required only for the first time when user tries to login. After that, login request will be
      * automatically sent to the server using the previously used mobile number and default password
      * (qqqqqqq1).
-     * <p>
+     * <p/>
      * *** Set it to false if you are not using the default password ***
      */
     public static final boolean AUTO_LOGIN = true;
@@ -644,4 +644,10 @@ public class Constants {
     public static final int NOTIFICATION_TYPE_MAKE_PAYMENT = 2;
     public static final int NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE = 3;
     public static final int NOTIFICATION_TYPE_INTROUDCTION_REQUEST = 4;
+
+    public static final String ACTION_TYPE_VERIFY = "Verify";
+    public static final String ACTION_TYPE_ACCEPT = "Accept";
+    public static final String ACTION_TYPE_REJECT = "Reject";
+    public static final String ACTION_TYPE_REMOVE = "Remove";
+    public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
 }

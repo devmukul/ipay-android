@@ -32,6 +32,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -42,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.DeleteEmailResponse;
@@ -441,6 +443,9 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             private final View divider;
             private final View divider1;
 
+            private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mEmailActionList;
+
             public EmailViewHolder(final View itemView) {
                 super(itemView);
 
@@ -471,12 +476,14 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                         mVerificationStatus.setImageResource(R.drawable.ic_verified);
                         mVerificationStatus.setColorFilter(null);
 
+                        mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.verified_email_action));
                         makePrimaryButton.setVisibility(View.VISIBLE);
                         break;
                     case Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS:
                         mVerificationStatus.setImageResource(R.drawable.ic_pending);
                         mVerificationStatus.setColorFilter(Color.GRAY);
 
+                        mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_email_action));
                         makePrimaryButton.setVisibility(View.GONE);
                         divider.setVisibility(View.GONE);
                         break;
@@ -484,6 +491,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                         mVerificationStatus.setImageResource(R.drawable.ic_notverified);
                         mVerificationStatus.setColorFilter(null);
 
+                        mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_email_action));
                         makePrimaryButton.setVisibility(View.GONE);
                         break;
                 }
@@ -514,11 +522,18 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     @Override
                     public void onClick(View v) {
                         if (!email.isPrimary()) {
-                            if (optionsLayout.getVisibility() == View.VISIBLE) {
-                                optionsLayout.setVisibility(View.GONE);
-                            } else {
-                                optionsLayout.setVisibility(View.VISIBLE);
-                            }
+                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), email.getEmailAddress(), mEmailActionList);
+                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                                @Override
+                                public void onResourceSelected(int selectedIndex, String name) {
+                                    if (Constants.ACTION_TYPE_REMOVE.equals(name)) {
+                                        showDeleteEmailConfirmationDialog(email);
+                                    } else if (Constants.ACTION_TYPE_MAKE_PRIMARY.equals(name)) {
+                                        makeEmailPrimary(email.getEmailId());
+                                    }
+                                }
+                            });
+                            mCustomSelectorDialog.show();
                         }
                     }
                 });
