@@ -26,7 +26,9 @@
 
                 <TextView
                     android:id="@+id/textview_name"
-                    style="@style/TextViewUserInfoPrimary" />
+                    style="@style/TextViewUserInfoPrimary"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
 
                 <TextView
                     android:id="@+id/textview_mobile_number"
@@ -109,13 +111,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
-                android:text="@string/note"
-                android:textColor="@android:color/white" />
+                android:text="@string/note" />
 
             <TextView
                 android:id="@+id/textview_description"
-                style="@style/TextViewDescription"
-                android:gravity="center" />
+                style="@style/TextViewDescription" />
         </LinearLayout>
 
         <Button

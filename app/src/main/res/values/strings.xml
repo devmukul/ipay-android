@@ -250,7 +250,7 @@
     <string name="event_location">Event location</string>
     <string name="enter_vat">VAT in BDT(%) (optional)</string>
     <string name="enter_amount">Enter an amount in BDT</string>
-    <string name="send_money_description">Write a note (Optional)</string>
+    <string name="send_money_description">Write a note</string>
     <string name="description_event">Event description</string>
     <string name="item_description">Item description</string>
     <string name="item_quantity">Item quantity</string>
@@ -263,6 +263,8 @@
     <string name="please_enter_valid_date_of_birth">Please enter a valid date of birth.</string>
     <string name="please_enter_occupation">Please enter your occupation.</string>
     <string name="please_enter_amount">Please enter an amount.</string>
+    <string name="please_write_note">Please write a note.</string>
+    <string name="please_write_title">Please write a title.</string>
     <string name="please_enter_minimum_amount">Please enter minimum amount. of BDT </string>
     <string name="please_enter_not_more_than_max_amount">Please enter not more than. of BDT </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>

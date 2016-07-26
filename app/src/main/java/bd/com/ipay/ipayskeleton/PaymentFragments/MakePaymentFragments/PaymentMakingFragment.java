@@ -170,6 +170,13 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
+        if (! (mDescriptionEditText.getText().toString().trim().length() > 0)) {
+            focusView = mDescriptionEditText;
+            mDescriptionEditText.setError(getString(R.string.please_write_note));
+            cancel = true;
+
+        }
+
         //validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;

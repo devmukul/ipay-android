@@ -18,11 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -328,7 +325,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                         mSentRequestStatus.setImageResource(R.drawable.ic_notverified);
                         break;
                 }
-
             }
 
             public void bindViewForIntroducerList(int pos) {
