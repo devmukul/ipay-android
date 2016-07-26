@@ -587,6 +587,8 @@
     <string name="add_money_info">Enter details to add money to your iPay account </string>
     <string name="withdraw_money_info">Enter details to withdraw money from your iPay account </string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
+    <string name="session">Session</string>
+    <string name="student_name">Student Name</string>
 
 
     <string-array name="mobile_operators">
