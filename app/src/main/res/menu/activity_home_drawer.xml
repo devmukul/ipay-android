@@ -31,9 +31,14 @@
             android:icon="@drawable/ic_drawer_about"
             android:title="@string/about" />
         <item
-            android:icon="@drawable/ic_drawer_transaction_history"
-            android:title="@string/support"
-            android:visible="false" />
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_helpw"
+            android:title="@string/help" />
+        <item
+            android:id="@+id/nav_invite"
+            android:icon="@drawable/ic_invitew"
+            android:title="@string/invite"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_event"
             android:icon="@drawable/ic_event_black_24dp"

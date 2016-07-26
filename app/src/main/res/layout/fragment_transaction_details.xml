@@ -114,7 +114,7 @@
 
         <TextView
             style="@style/TransactionHistoryDetailsRowLeft"
-            android:text="@string/total_amount" />
+            android:text="@string/net_amount" />
 
         <TextView
             android:id="@+id/netAmount"
@@ -151,7 +151,7 @@
 
         <TextView
             style="@style/TransactionHistoryDetailsRowLeft"
-            android:text="@string/transaction_status" />
+            android:text="@string/status" />
 
         <TextView
             android:id="@+id/status"
