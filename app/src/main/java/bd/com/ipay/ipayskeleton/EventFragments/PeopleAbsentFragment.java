@@ -52,9 +52,9 @@ public class PeopleAbsentFragment extends ProgressFragment implements HttpRespon
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_people_participated, container, false);
+        View v = inflater.inflate(R.layout.fragment_people_absent, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-        mAbsentsListRecyclerView = (RecyclerView) v.findViewById(R.id.list_of_people_participated);
+        mAbsentsListRecyclerView = (RecyclerView) v.findViewById(R.id.list_of_people_absent);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);

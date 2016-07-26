@@ -237,7 +237,7 @@
         <item name="android:layout_marginTop">@dimen/value5</item>
         <item name="android:layout_marginBottom">@dimen/value5</item>
         <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:padding">@dimen/value10</item>
+        <item name="android:padding">@dimen/value20</item>
         <item name="android:gravity">left</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>

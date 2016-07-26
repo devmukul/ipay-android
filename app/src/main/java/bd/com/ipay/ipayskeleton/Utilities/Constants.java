@@ -111,7 +111,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -340,7 +340,7 @@ public class Constants {
 
     // Education
     public static final String URL_GET_ALL_INSTITUTIONS_LIST = "allinstitutes";
-    public static final String URL_GET_ALL_SESSIONS_LIST = "sessions/allsessions";
+    public static final String URL_GET_ALL_SESSIONS_LIST = "session/allsessions";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;

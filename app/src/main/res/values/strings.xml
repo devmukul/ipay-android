@@ -54,6 +54,9 @@
     <string name="error_invalid_first_name">Please enter name</string>
     <string name="error_invalid_name">Please enter name</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
+    <string name="please_select_institution">Please select an institution</string>
+    <string name="please_select_session">Please select a session</string>
+    <string name="please_enter_student_id">Please enter Student ID</string>
     <string name="error_loading_data">Error loading data. Please try again.</string>
     <string name="forgot_password">Forgot your password?</string>
     <string name="join_us">Join Us</string>
@@ -615,6 +618,12 @@
     <string-array name="invoice_action">
         <item>Accept</item>
         <item>Reject</item>
+    </string-array>
+
+    <string-array name="introduce_action">
+        <item>Verify</item>
+        <item>Reject</item>
+        <item>Spam</item>
     </string-array>
 
     <string-array name="my_request_action">

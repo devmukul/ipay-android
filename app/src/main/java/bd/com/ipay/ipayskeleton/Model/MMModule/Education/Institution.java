@@ -1,8 +1,10 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Education;
 
-public class Institution {
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Resource;
 
-    private long institutionId;
+public class Institution implements Resource{
+
+    private int instituteId;
     private String address;
     private String contact;
     private String email;
@@ -14,8 +16,8 @@ public class Institution {
     private String responsibleContactPersonAddress;
     private String responsibleContactPersonEmail;
 
-    public long getId() {
-        return institutionId;
+    public int getId() {
+        return instituteId;
     }
 
     public String getAddress() {

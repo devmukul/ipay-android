@@ -37,7 +37,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MyRequestsFragment extends ProgressFragment implements HttpResponseListener {
+public class SentMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 
@@ -49,27 +49,28 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mPendingListRecyclerView;
-    private PendingListAdapter mOtherRequestsAdapter;
+    private SentMoneyRequestListAdapter mPendingRequestsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<RequestsSentClass> pendingMoneyRequestClasses;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
-    private int historyPageCount = 0;
+    private int pageCount = 0;
+    private boolean hasNext = false;
+    private boolean clearListAfterLoading;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_my_requests, container, false);
+        View v = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
         mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_my_requests);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
-
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mOtherRequestsAdapter = new PendingListAdapter();
+        mPendingRequestsAdapter = new SentMoneyRequestListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mPendingListRecyclerView.setLayoutManager(mLayoutManager);
-        mPendingListRecyclerView.setAdapter(mOtherRequestsAdapter);
+        mPendingListRecyclerView.setAdapter(mPendingRequestsAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -99,15 +100,10 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
 
     private void refreshPendingList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
-
-            historyPageCount = 0;
-            if (pendingMoneyRequestClasses != null)
-                pendingMoneyRequestClasses.clear();
-            pendingMoneyRequestClasses = null;
+            pageCount = 0;
+            clearListAfterLoading = true;
             getPendingRequests();
-
-        } else if (getActivity() != null)
-            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void getPendingRequests() {
@@ -115,7 +111,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
             return;
         }
 
-        GetPendingMoneyRequest mUserActivityRequest = new GetPendingMoneyRequest(historyPageCount, Constants.SERVICE_ID_REQUEST_MONEY);
+        GetPendingMoneyRequest mUserActivityRequest = new GetPendingMoneyRequest(pageCount, Constants.SERVICE_ID_REQUEST_MONEY);
         Gson gson = new Gson();
         String json = gson.toJson(mUserActivityRequest);
         mPendingRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_REQUESTS_ME,
@@ -165,15 +161,17 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
 
                     mGetPendingRequestResponse = gson.fromJson(result.getJsonString(), GetPendingRequestResponse.class);
 
-                    if (pendingMoneyRequestClasses == null) {
+                    if (clearListAfterLoading || pendingMoneyRequestClasses == null) {
                         pendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
+                        clearListAfterLoading = false;
                     } else {
                         List<RequestsSentClass> tempPendingMoneyRequestClasses;
                         tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
                         pendingMoneyRequestClasses.addAll(tempPendingMoneyRequestClasses);
                     }
 
-                    mOtherRequestsAdapter.notifyDataSetChanged();
+                    hasNext = mGetPendingRequestResponse.isHasNext();
+                    mPendingRequestsAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -205,7 +203,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
                     if (pendingMoneyRequestClasses != null)
                         pendingMoneyRequestClasses.clear();
                     pendingMoneyRequestClasses = null;
-                    historyPageCount = 0;
+                    pageCount = 0;
                     getPendingRequests();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -227,23 +225,24 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
-    public class PendingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public class SentMoneyRequestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        public PendingListAdapter() {
-        }
+        private static final int FOOTER_VIEW = 1;
+        private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public class MoneyRequestViewHolder extends RecyclerView.ViewHolder {
             private final TextView mSenderNumber;
             private final TextView mTime;
             private final TextView mDescription;
             private final ProfileImageView mProfileImageView;
             private final View divider;
-            private final int ACTION_CANCEL=0;
+
+            private final int ACTION_CANCEL = 0;
 
             private CustomSelectorDialog mCustomSelectorDialog;
             private List<String> mMyRequestActionList;
 
-            public ViewHolder(final View itemView) {
+            public MoneyRequestViewHolder(final View itemView) {
                 super(itemView);
 
                 mSenderNumber = (TextView) itemView.findViewById(R.id.request_number);
@@ -255,8 +254,7 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
 
             public void bindView(int pos) {
 
-
-                if(pos == pendingMoneyRequestClasses.size() -1) divider.setVisibility(View.GONE);
+                if (pos == pendingMoneyRequestClasses.size() - 1) divider.setVisibility(View.GONE);
 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
@@ -289,21 +287,60 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
             }
         }
 
+        public class FooterViewHolder extends RecyclerView.ViewHolder {
+
+            private TextView mLoadMoreTextView;
+
+            public FooterViewHolder(View itemView) {
+                super(itemView);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (hasNext) {
+                            pageCount = pageCount + 1;
+                            getPendingRequests();
+                        }
+                    }
+                });
+
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+            }
+
+            public void bindView() {
+
+                if (hasNext)
+                    mLoadMoreTextView.setText(R.string.load_more);
+                else
+                    mLoadMoreTextView.setText(R.string.no_more_results);
+            }
+        }
+
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending_request_money_me, parent, false);
+            if (viewType == MONEY_REQUEST_ITEM_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending_request_money_me, parent, false);
+                return new MoneyRequestViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
+                return new FooterViewHolder(v);
+            }
 
-            return new ViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
             try {
-                ViewHolder vh = (ViewHolder) holder;
-                vh.bindView(position);
+                if (holder instanceof  MoneyRequestViewHolder) {
+                    MoneyRequestViewHolder vh = (MoneyRequestViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof FooterViewHolder) {
+                    FooterViewHolder vh = (FooterViewHolder) holder;
+                    vh.bindView();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -312,14 +349,18 @@ public class MyRequestsFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public int getItemCount() {
-            if (pendingMoneyRequestClasses != null)
-                return pendingMoneyRequestClasses.size();
-            else return 0;
+            if (pendingMoneyRequestClasses == null || pendingMoneyRequestClasses.isEmpty())
+                return 0;
+            else
+                return pendingMoneyRequestClasses.size() + 1;
         }
 
         @Override
         public int getItemViewType(int position) {
-            return super.getItemViewType(position);
+            if (position == getItemCount() - 1)
+                return FOOTER_VIEW;
+            else
+                return MONEY_REQUEST_ITEM_VIEW;
         }
     }
 
