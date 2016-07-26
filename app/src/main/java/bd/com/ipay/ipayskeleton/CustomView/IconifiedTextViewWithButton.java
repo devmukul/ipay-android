@@ -55,6 +55,14 @@ public class IconifiedTextViewWithButton extends FrameLayout {
 
     }
 
+    public void setText(String text) {
+        mtextView.setText(text);
+    }
+
+    public void setDrawableLeft(Drawable drawable) {
+        mImageView.setImageDrawable(drawable);
+    }
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return true;

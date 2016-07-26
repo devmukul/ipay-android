@@ -634,4 +634,12 @@
         <item>Remove</item>
     </string-array>
 
+    <string-array name="verified_bank_action">
+        <item>Remove</item>
+    </string-array>
+
+    <string-array name="not_verified_bank_action">
+        <item>Verify</item>
+        <item>Remove</item>
+    </string-array>
 </resources>

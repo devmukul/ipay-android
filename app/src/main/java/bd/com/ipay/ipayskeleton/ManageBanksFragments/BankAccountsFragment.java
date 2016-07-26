@@ -28,6 +28,7 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
@@ -37,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
@@ -316,12 +318,15 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             private final TextView mBankAccountNumber;
             private final ImageView mBankVerifiedStatus;
             private final TextView mBranchName;
-            private final LinearLayout optionsLayout;
-            private final Button removeButton;
-            private final Button verifyButton;
-            private final View verifyDivider;
             private final View divider;
             private final RoundedImageView bankIcon;
+
+            private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mBankActionList;
+
+            private final int ACTION_VERIFIED_BANK_REMOVE = 0;
+            private final int ACTION_NOT_VERIFIED_BANK_REMOVE = 1;
+            private final int ACTION_NOT_VERIFIED_VERIFY = 0;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -330,10 +335,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 mBankName = (TextView) itemView.findViewById(R.id.bank_name);
                 mBankVerifiedStatus = (ImageView) itemView.findViewById(R.id.bank_account_verify_status);
                 mBranchName = (TextView) itemView.findViewById(R.id.bank_branch_name);
-                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                removeButton = (Button) itemView.findViewById(R.id.remove_button);
-                verifyButton = (Button) itemView.findViewById(R.id.verify_button);
-                verifyDivider = itemView.findViewById(R.id.verify_divider);
                 divider = itemView.findViewById(R.id.divider);
                 bankIcon = (RoundedImageView) itemView.findViewById(R.id.portrait);
             }
@@ -353,25 +354,20 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 mBankName.setText(bankName);
                 mBranchName.setText(branchName);
                 bankIcon.setImageDrawable(icon);
-                optionsLayout.setVisibility(View.GONE);
-
 
                 switch (verificationStatus) {
                     case Constants.BANK_ACCOUNT_STATUS_VERIFIED:
                         mBankVerifiedStatus.setImageResource(R.drawable.ic_verified);
                         mBankVerifiedStatus.clearColorFilter();
 
-                        verifyDivider.setVisibility(View.GONE);
-                        verifyButton.setVisibility(View.GONE);
+                        mBankActionList = Arrays.asList(getResources().getStringArray(R.array.verified_bank_action));
 
                         break;
                     case Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED:
                         mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified);
                         mBankVerifiedStatus.setColorFilter(Color.RED);
 
-                        verifyDivider.setVisibility(View.GONE);
-                        verifyButton.setVisibility(View.GONE);
-
+                        mBankActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_bank_action));
                         break;
                     default:
 
@@ -379,96 +375,98 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                         mBankVerifiedStatus.setImageResource(R.drawable.ic_pending);
                         mBankVerifiedStatus.setColorFilter(Color.GRAY);
 
-                        verifyDivider.setVisibility(View.VISIBLE);
-                        verifyButton.setVisibility(View.VISIBLE);
+                        mBankActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_bank_action));
                         break;
                 }
-
-                removeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle(R.string.are_you_sure)
-                                .setMessage(R.string.remove_this_account_query)
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (Utilities.isConnectionAvailable(getActivity())) {
-                                            attemptRemoveBank(bankAccountID);
-                                        }
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // Do nothing
-                                    }
-                                })
-                                .show();
-                    }
-                });
-
-                verifyButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_PENDING)) {
-
-                            MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                                    .title(R.string.enter_the_amount_we_sent)
-                                    .customView(R.layout.dialog_verify_bank_with_amount, true)
-                                    .positiveText(R.string.submit)
-                                    .negativeText(R.string.cancel)
-                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .show();
-
-                            View view = dialog.getCustomView();
-                            final EditText mAmountEditText = (EditText) view.findViewById(R.id.amount);
-
-                            dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                                    if (mAmountEditText.getText().toString().trim().length() == 0) {
-                                        mAmountEditText.setError(getString(R.string.please_enter_amount));
-                                        mAmountEditText.requestFocus();
-                                        Toast.makeText(getActivity(), R.string.please_enter_amount, Toast.LENGTH_LONG).show();
-
-                                    } else {
-                                        String amount = mAmountEditText.getText().toString().trim();
-                                        if (Utilities.isConnectionAvailable(getActivity()))
-                                            attemptVerificationWithAmount(bankAccountID, Double.parseDouble(amount));
-                                        else
-                                            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-                                        dialog.dismiss();
-                                    }
-                                }
-                            });
-
-                        }
-                    }
-                });
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (optionsLayout.getVisibility() == View.VISIBLE)
-                            optionsLayout.setVisibility(View.GONE);
-                        else optionsLayout.setVisibility(View.VISIBLE);
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), bankName, mBankActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int selectedIndex, String name) {
+                                if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+                                    if (selectedIndex == ACTION_VERIFIED_BANK_REMOVE) {
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle(R.string.are_you_sure)
+                                                .setMessage(R.string.remove_this_account_query)
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        if (Utilities.isConnectionAvailable(getActivity())) {
+                                                            attemptRemoveBank(bankAccountID);
+                                                        }
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // Do nothing
+                                                    }
+                                                })
+                                                .show();
+                                    }
 
-                        if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_PENDING))
-                            new MaterialShowcaseView.Builder(getActivity())
-                                    .setTarget(verifyButton)
-                                    .setDismissText(R.string.got_it)
-                                    .setContentText(Html.fromHtml(getString(R.string.bank_verification_help_html)))
-                                    .setDelay(100) // optional but starting animations immediately in onCreate can make them choppy
-                                    .singleUse(bankAccountID + "") // provide a unique ID used to ensure it is only shown once // TODO: removed for now. Comment out later
-                                    .setDismissOnTargetTouch(true)
-                                    .setDismissOnTouch(true)
-                                    .show();
+                                } else {
+                                    if (selectedIndex == ACTION_NOT_VERIFIED_BANK_REMOVE) {
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle(R.string.are_you_sure)
+                                                .setMessage(R.string.remove_this_account_query)
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        if (Utilities.isConnectionAvailable(getActivity())) {
+                                                            attemptRemoveBank(bankAccountID);
+                                                        }
+                                                    }
+                                                })
+                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // Do nothing
+                                                    }
+                                                })
+                                                .show();
+                                    } else if (selectedIndex == ACTION_NOT_VERIFIED_VERIFY) {
+                                        if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_PENDING)) {
+
+                                            MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                                                    .title(R.string.enter_the_amount_we_sent)
+                                                    .customView(R.layout.dialog_verify_bank_with_amount, true)
+                                                    .positiveText(R.string.submit)
+                                                    .negativeText(R.string.cancel)
+                                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                                        @Override
+                                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    })
+                                                    .show();
+
+                                            View view = dialog.getCustomView();
+                                            final EditText mAmountEditText = (EditText) view.findViewById(R.id.amount);
+
+                                            dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
+                                                @Override
+                                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                                    if (mAmountEditText.getText().toString().trim().length() == 0) {
+                                                        mAmountEditText.setError(getString(R.string.please_enter_amount));
+                                                        mAmountEditText.requestFocus();
+                                                        Toast.makeText(getActivity(), R.string.please_enter_amount, Toast.LENGTH_LONG).show();
+
+                                                    } else {
+                                                        String amount = mAmountEditText.getText().toString().trim();
+                                                        if (Utilities.isConnectionAvailable(getActivity()))
+                                                            attemptVerificationWithAmount(bankAccountID, Double.parseDouble(amount));
+                                                        else
+                                                            Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+                                                        dialog.dismiss();
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        mCustomSelectorDialog.show();
                     }
                 });
             }

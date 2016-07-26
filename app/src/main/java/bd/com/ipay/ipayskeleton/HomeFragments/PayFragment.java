@@ -22,6 +22,8 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Pay.PayPropertyConstants;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
@@ -87,8 +89,9 @@ public class PayFragment extends Fragment {
 
                 v = getActivity().getLayoutInflater().inflate(mResource, null);
 
-                TextView actionNameView = (TextView) v.findViewById(R.id.textview_action_name);
-                actionNameView.setText(serviceAction.text);
+                IconifiedTextViewWithButton actionView = (IconifiedTextViewWithButton) v.findViewById(R.id.item_services);
+                actionView.setText(serviceAction.text);
+                actionView.setDrawableLeft(getResources().getDrawable(PayPropertyConstants.PAY_PROPERTY_NAME_TO_ICON_MAP.get(serviceAction.text)));
 
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
