@@ -131,7 +131,8 @@
             android:name=".Activities.PaymentActivities.TopUpActivity"
             android:label="@string/topup"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".Activities.PaymentActivities.PaymentMakingActivity"
             android:label="@string/make_payment"
