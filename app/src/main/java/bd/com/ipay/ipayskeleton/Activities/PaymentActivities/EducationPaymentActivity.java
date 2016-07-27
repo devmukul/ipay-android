@@ -9,9 +9,13 @@ import java.util.ArrayList;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.EducationFragments.AddPayAbleFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.PayEducationFeesFragment;
+import bd.com.ipay.ipayskeleton.EducationFragments.ReviewEducationFeePaymentFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.SelectInstitutionFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.ShowStudentInfoFragment;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.Institution;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.SemesterOrSession;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.Student;
 import bd.com.ipay.ipayskeleton.R;
 
 public class EducationPaymentActivity extends BaseActivity {
@@ -20,7 +24,13 @@ public class EducationPaymentActivity extends BaseActivity {
 
     public static String studentID = "";
     public static int institutionID = -1;
+    public static String institutionName = "";
     public static int sessionID = -1;
+    public static String sessionName = "";
+    public static Institution selectedInstitution = new Institution();
+    public static SemesterOrSession selectedSession = new SemesterOrSession();
+    public static Student selectedStudent = new Student();
+
     public static ArrayList<PayableItem> mMyPayableItems;
     public static final String ARGS_ENABLED_PAYABLE_ITEMS = "ARGS_ENABLED_PAYABLE_ITEMS";
 
@@ -93,6 +103,12 @@ public class EducationPaymentActivity extends BaseActivity {
     public void switchToPayEducationFeesFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new PayEducationFeesFragment()).commit();
+        switchedToSelectInstituteFragment = false;
+    }
+
+    public void switchToPaymentReviewFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new ReviewEducationFeePaymentFragment()).commit();
         switchedToSelectInstituteFragment = false;
     }
 

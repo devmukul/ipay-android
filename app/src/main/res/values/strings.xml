@@ -32,6 +32,8 @@
     <string name="thana">Thana</string>
     <string name="invalid_thana">Please select a Thana</string>
     <string name="district">District</string>
+    <string name="discount_optional">Discount (Optional)</string>
+    <string name="discount">Discount</string>
     <string name="invalid_district">Please select a District</string>
     <string name="postcode">Postcode</string>
     <string name="invalid_postcode">Please enter a valid 4-digit postcode</string>
@@ -103,6 +105,7 @@
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
     <string name="profile_info_get_failed">Failed to fetch profile information.</string>
+    <string name="failed_to_complete_the_payment">Failed to complete the payment.</string>
     <string name="account_type_business">Business Account</string>
     <string name="all_contacts">All</string>
     <string name="select_an_institution">Select Institution</string>
@@ -201,6 +204,7 @@
     <string name="requesting_money">Money request processing...</string>
     <string name="add_money">Add Money</string>
     <string name="note">Note</string>
+    <string name="additional_info">Additional Information</string>
     <string name="withdraw_money">Withdraw Money</string>
     <string name="events">Events</string>
     <string name="education">Education</string>
@@ -257,6 +261,7 @@
     <string name="enter_vat">VAT in BDT(%) (optional)</string>
     <string name="enter_amount">Enter an amount in BDT</string>
     <string name="send_money_description">Write a note</string>
+    <string name="education_payment_description">Write a note</string>
     <string name="description_event">Event description</string>
     <string name="item_description">Item description</string>
     <string name="item_quantity">Item quantity</string>
@@ -276,6 +281,7 @@
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="please_select_relation">Please select a relation</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
+    <string name="zero_value">0.00 BDT</string>
     <string name="end_date">End date (dd/mm/yyyy)</string>
     <string name="sign_up_with_ipay">sign up with iPay</string>
     <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
@@ -313,6 +319,7 @@
     <string name="transaction">Transaction</string>
     <string name="transaction_history">Transaction History</string>
     <string name="about">About</string>
+    <string name="session_text">Session: </string>
     <string name="notification">Notification</string>
     <string name="security_settings">Security Settings</string>
     <string name="participant_already_added">Participant already added.</string>
@@ -433,6 +440,7 @@
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_received">Net Received</string>
+    <string name="net_payable">Net Payable</string>
     <string name="total">Total</string>
     <string name="service_charge">Service Charge</string>
     <string name="topup_received">Topup Received</string>
