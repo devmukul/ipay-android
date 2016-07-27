@@ -62,12 +62,12 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/TextViewProfileInfoLabel"
+                        style="@style/TextViewInfoLabel"
                         android:text="@string/total_amount" />
 
                     <TextView
                         android:id="@+id/textview_amount"
-                        style="@style/TextViewProfileInfo" />
+                        style="@style/TextViewInfo" />
                 </LinearLayout>
 
                 <View style="@style/Divider" />
@@ -78,12 +78,12 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/TextViewProfileInfoLabel"
+                        style="@style/TextViewInfoLabel"
                         android:text="@string/service_charge" />
 
                     <TextView
                         android:id="@+id/textview_service_charge"
-                        style="@style/TextViewProfileInfo" />
+                        style="@style/TextViewInfo" />
                 </LinearLayout>
 
                 <View style="@style/Divider" />
@@ -94,12 +94,12 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/TextViewProfileInfoLabel"
+                        style="@style/TextViewInfoLabel"
                         android:text="@string/total_received" />
 
                     <TextView
                         android:id="@+id/textview_total"
-                        style="@style/TextViewProfileInfo" />
+                        style="@style/TextViewInfo" />
 
                 </LinearLayout>
             </LinearLayout>

@@ -1,161 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/profile"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-            android:id="@+id/profile_picture"
-            style="@style/ReviewImageStyle.Dialog" />
-
-        <ImageView
-            android:id="@+id/other_image"
-            style="@style/ReviewImageStyle.Dialog"
-            android:layout_height="50dp"
-            android:layout_width="50dp"/>
+        android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/profile"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/profile_picture"
+                style="@style/ReviewImageStyle.Dialog" />
+
+            <ImageView
+                android:id="@+id/other_image"
+                style="@style/ReviewImageStyle.Dialog"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textview_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_space"
+            android:layout_marginBottom="@dimen/value2"
+            android:background="@color/colorDivider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
 
             <TextView
-                android:id="@+id/textview_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+                style="@style/TextViewInfoLabel"
+                android:text="@string/transaction_id" />
 
             <TextView
-                android:id="@+id/textview_mobile_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:id="@+id/transaction_id"
+                style="@style/TextViewInfoLabel" />
 
         </LinearLayout>
 
+        <View style="@style/Divider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/your_number" />
+
+            <TextView
+                android:id="@+id/your_number"
+                style="@style/TextViewInfo" />
+        </LinearLayout>
+
+        <View style="@style/Divider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/description" />
+
+            <TextView
+                android:id="@+id/description"
+                style="@style/TextViewInfo"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/value15"
+            android:layout_marginTop="@dimen/value4"
+            android:background="@color/colorLightGray"></View>
+
+
+        <include layout="@layout/view_transaction_details_education_payment" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/amount" />
+
+            <TextView
+                android:id="@+id/amount"
+                style="@style/TextViewInfo" />
+        </LinearLayout>
+
+        <View style="@style/Divider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/fee" />
+
+            <TextView
+                android:id="@+id/fee"
+                style="@style/TextViewInfo" />
+        </LinearLayout>
+
+        <View style="@style/Divider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/net_amount" />
+
+            <TextView
+                android:id="@+id/netAmount"
+                style="@style/TextViewInfo" />
+        </LinearLayout>
+
+        <View style="@style/Divider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/balance" />
+
+            <TextView
+                android:id="@+id/balance"
+                style="@style/TextViewInfo" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/value15"
+            android:layout_marginTop="@dimen/value4"
+            android:background="@color/colorLightGray"></View>
+
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/time" />
+
+            <TextView
+                android:id="@+id/time"
+                style="@style/TextViewInfo"/>
+        </LinearLayout>
+
+
+        <View style="@style/Divider" />
+
+        <LinearLayout
+            android:id="@+id/purpose_layout"
+            style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/purpose" />
+
+            <TextView
+                android:id="@+id/purpose"
+                style="@style/TextViewInfo" />
+        </LinearLayout>
+
+        <View style="@style/Divider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/status" />
+
+            <TextView
+                android:id="@+id/status"
+                style="@style/TextViewInfo" />
+        </LinearLayout>
+
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/colorDivider"
-        android:layout_marginBottom="2dp"/>
-
-
-
-    <TextView
-        android:id="@+id/description"
-        style="@style/TextStylePrimarySmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center" />
-
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center" />
-
-    <TextView
-        android:id="@+id/transaction_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-        android:gravity="center" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-        android:background="@color/colorAccent" />
-
-    <include
-        layout="@layout/view_transaction_details_education_payment" />
-
-    <LinearLayout
-        style="@style/TransactionHistoryDetailsRow">
-
-        <TextView
-            style="@style/TransactionHistoryDetailsRowLeft"
-            android:text="@string/amount" />
-
-        <TextView
-            android:id="@+id/amount"
-            style="@style/TransactionHistoryDetailsRowRight"/>
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/TransactionHistoryDetailsRow">
-
-        <TextView
-            style="@style/TransactionHistoryDetailsRowLeft"
-            android:text="@string/fee" />
-
-        <TextView
-            android:id="@+id/fee"
-            style="@style/TransactionHistoryDetailsRowRight" />
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/TransactionHistoryDetailsRow">
-
-        <TextView
-            style="@style/TransactionHistoryDetailsRowLeft"
-            android:text="@string/net_amount" />
-
-        <TextView
-            android:id="@+id/netAmount"
-            style="@style/TransactionHistoryDetailsRowRight" />
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/TransactionHistoryDetailsRow">
-
-        <TextView
-            style="@style/TransactionHistoryDetailsRowLeft"
-            android:text="@string/balance" />
-
-        <TextView
-            android:id="@+id/balance"
-            style="@style/TransactionHistoryDetailsRowRight" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/purpose_layout"
-        style="@style/TransactionHistoryDetailsRow">
-
-        <TextView
-            style="@style/TransactionHistoryDetailsRowLeft"
-            android:text="@string/purpose" />
-
-        <TextView
-            android:id="@+id/purpose"
-            style="@style/TransactionHistoryDetailsRowRight"/>
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/TransactionHistoryDetailsRow">
-
-        <TextView
-            style="@style/TransactionHistoryDetailsRowLeft"
-            android:text="@string/status" />
-
-        <TextView
-            android:id="@+id/status"
-            style="@style/TransactionHistoryDetailsRowRight" />
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

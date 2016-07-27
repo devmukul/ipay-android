@@ -10,12 +10,12 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextViewProfileInfoLabel"
+            style="@style/TextViewInfoLabel"
             android:text="@string/name" />
 
         <TextView
             android:id="@+id/textview_name"
-            style="@style/TextViewProfileInfo"
+            style="@style/TextViewInfo"
             android:layout_below="@+id/textview_mothers_name" />
     </LinearLayout>
 
@@ -29,12 +29,12 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextViewProfileInfoLabel"
+            style="@style/TextViewInfoLabel"
             android:text="@string/department" />
 
         <TextView
             android:id="@+id/textview_department"
-            style="@style/TextViewProfileInfo" />
+            style="@style/TextViewInfo" />
     </LinearLayout>
 
     <View
@@ -47,12 +47,12 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/TextViewProfileInfoLabel"
+            style="@style/TextViewInfoLabel"
             android:text="@string/mobile_number" />
 
         <TextView
             android:id="@+id/textview_mobile_number"
-            style="@style/TextViewProfileInfo" />
+            style="@style/TextViewInfo" />
     </LinearLayout>
 
     <Button

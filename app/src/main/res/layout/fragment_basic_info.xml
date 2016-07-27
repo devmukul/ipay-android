@@ -50,12 +50,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/name" />
 
                 <TextView
                     android:id="@+id/textview_name"
-                    style="@style/TextViewProfileInfo"
+                    style="@style/TextViewInfo"
                     android:layout_below="@+id/textview_mothers_name" />
             </LinearLayout>
 
@@ -68,12 +68,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/date_of_birth" />
 
                 <TextView
                     android:id="@+id/textview_dob"
-                    style="@style/TextViewProfileInfo"/>
+                    style="@style/TextViewInfo"/>
             </LinearLayout>
 
             <View
@@ -87,12 +87,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/occupation" />
 
                 <TextView
                     android:id="@+id/textview_occupation"
-                    style="@style/TextViewProfileInfo"/>
+                    style="@style/TextViewInfo"/>
             </LinearLayout>
 
             <View
@@ -105,12 +105,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/gender" />
 
                 <TextView
                     android:id="@+id/textview_gender"
-                    style="@style/TextViewProfileInfo"/>
+                    style="@style/TextViewInfo"/>
             </LinearLayout>
 
             <View
@@ -123,12 +123,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/fathers_name"/>
 
                 <TextView
                     android:id="@+id/textview_fathers_name"
-                    style="@style/TextViewProfileInfo"/>
+                    style="@style/TextViewInfo"/>
             </LinearLayout>
 
             <View
@@ -141,12 +141,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/mothers_name" />
 
                 <TextView
                     android:id="@+id/textview_mothers_name"
-                    style="@style/TextViewProfileInfo"/>
+                    style="@style/TextViewInfo"/>
             </LinearLayout>
 
             <View
@@ -159,12 +159,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/member_since" />
 
                 <TextView
                     android:id="@+id/textview_signup"
-                    style="@style/TextViewProfileInfo"/>
+                    style="@style/TextViewInfo"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

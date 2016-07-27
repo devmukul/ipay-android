@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -100,7 +101,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mProgressDialog = new ProgressDialog(getActivity());
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        mDocumentUploadInfoView = (TextView) v.findViewById(R.id.textview_document_upload_info);
+        //mDocumentUploadInfoView = (TextView) v.findViewById(R.id.textview_document_upload_info);
         mDocumentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_documents);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
@@ -269,7 +270,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private final ImageView mVerificationStatus;
             private final LinearLayout mOptionsLayout;
             private final Button mUploadButton;
-            private final Button mPreviewButton;
+            private  Button mPreviewButton;
             private final View mDivider;
             private final View mRecyclarDivider;
 
@@ -277,12 +278,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 super(itemView);
 
                 mDocumentTypeNameView = (TextView) itemView.findViewById(R.id.textview_document_type);
-                mDocumentIdView = (TextView) itemView.findViewById(R.id.textview_document_id);
+                mDocumentIdView = (EditText) itemView.findViewById(R.id.edit_text_document_id);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.document_verification_status);
 
-                mOptionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
+                mOptionsLayout = (LinearLayout) itemView.findViewById(R.id.upload_layout);
                 mUploadButton = (Button) itemView.findViewById(R.id.button_upload);
-                mPreviewButton = (Button) itemView.findViewById(R.id.button_preview);
+                //mPreviewButton = (Button) itemView.findViewById(R.id.button_preview);
                 mDivider = itemView.findViewById(R.id.divider);
                 mRecyclarDivider = itemView.findViewById(R.id.divider_recyclar);
 
@@ -343,11 +344,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Bundle bundle = new Bundle();
+                       /* Bundle bundle = new Bundle();
                         bundle.putString(Constants.DOCUMENT_TYPE, identificationDocumentDetail.getDocumentType());
                         bundle.putString(Constants.DOCUMENT_TYPE_NAME, identificationDocumentDetail.getDocumentTypeName());
                         bundle.putString(Constants.DOCUMENT_ID, identificationDocumentDetail.getDocumentId());
-                        ((ProfileActivity) getActivity()).switchToDocumentUploadFragment(bundle);
+                        ((ProfileActivity) getActivity()).switchToDocumentUploadFragment(bundle);*/
                     }
                 });
 
