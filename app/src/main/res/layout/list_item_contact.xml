@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     android:orientation="horizontal">
 
     <include
@@ -31,7 +33,6 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/is_member"
         android:layout_toRightOf="@+id/contact_portrait_view"
-        android:text="Name"
         android:paddingBottom="2dp"
         android:paddingTop="10dp"
         android:singleLine="true"
@@ -48,8 +49,7 @@
         android:layout_below="@+id/name"
         android:paddingBottom="2dp"
         android:singleLine="true"
-        android:textSize="14sp"
-        android:text="Real Name" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/mobile_number"
@@ -62,8 +62,7 @@
         android:gravity="left"
         android:paddingBottom="10dp"
         android:singleLine="true"
-        android:textSize="14sp"
-        android:text="Mobile"/>
+        android:textSize="14sp" />
 
     <View
         android:layout_width="match_parent"
