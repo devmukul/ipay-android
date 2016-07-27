@@ -601,6 +601,7 @@
     <string name="student_name">Student Name</string>
     <string name="net_amount">Net Amount</string>
     <string name="status">Status</string>
+    <string name="topup_rollback">TopUp Rollback</string>
 
 
     <string-array name="mobile_operators">

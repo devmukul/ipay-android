@@ -92,7 +92,6 @@ public class TransactionDetailsFragment extends Fragment {
         }
 
         if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
-            mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(bankName);
             mMobileNumberView.setText(bankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
@@ -101,7 +100,6 @@ public class TransactionDetailsFragment extends Fragment {
             else otherImageView.setImageResource(R.drawable.ic_tran_add);
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
-            mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(bankName);
             mMobileNumberView.setText(bankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
@@ -110,7 +108,6 @@ public class TransactionDetailsFragment extends Fragment {
             else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
-            mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(R.string.opening_balance_to);
             mMobileNumberView.setText(mMobileNumber);
             mProfileImageView.setVisibility(View.GONE);
@@ -118,22 +115,23 @@ public class TransactionDetailsFragment extends Fragment {
             otherImageView.setImageResource(R.drawable.ic_openingbalance);
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
-            mNameView.setVisibility(View.VISIBLE);
             mNameView.setText(R.string.recharge_to);
             mMobileNumberView.setText(receiver);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
             otherImageView.setImageResource(R.drawable.ic_top);
 
+        } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+            mNameView.setText(R.string.topup_rollback);
+            mMobileNumberView.setText(receiver);
+            mProfileImageView.setVisibility(View.GONE);
+            otherImageView.setVisibility(View.VISIBLE);
+            otherImageView.setImageResource(R.drawable.ic_top);
         } else {
-            if (otherName == null || otherName.isEmpty()) {
-                mNameView.setVisibility(View.GONE);
-
-            } else {
-                mNameView.setVisibility(View.VISIBLE);
+            if (otherName != null) {
                 mNameView.setText(otherName);
-
             }
+
             mMobileNumberView.setText(otherMobileNumber);
             otherImageView.setVisibility(View.GONE);
             mProfileImageView.setVisibility(View.VISIBLE);
