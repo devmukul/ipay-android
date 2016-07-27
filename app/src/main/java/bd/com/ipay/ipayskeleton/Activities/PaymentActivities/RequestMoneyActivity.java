@@ -8,8 +8,8 @@ import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
-import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
+import bd.com.ipay.ipayskeleton.R;
 
 public class RequestMoneyActivity extends BaseActivity {
 
@@ -38,7 +38,7 @@ public class RequestMoneyActivity extends BaseActivity {
         if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
             switchToRequestMoneyFragment();
         else
-            switchToRequestListFragment();
+            switchToMoneyRequestListFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -60,18 +60,29 @@ public class RequestMoneyActivity extends BaseActivity {
         } else if (switchedToPendingList) {
             super.onBackPressed();
         } else {
-            switchToRequestListFragment();
+            switchToMoneyRequestListFragment();
         }
     }
 
-    private void switchToRequestListFragment() {
+    public void switchToMoneyRequestListFragment() {
+        switchToMoneyRequestListFragment(false);
+    }
+
+    public void switchToMoneyRequestListFragment(boolean switchToSentRequestsFragment) {
+        MoneyRequestListHolderFragment moneyRequestListHolderFragment = new MoneyRequestListHolderFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(MoneyRequestListHolderFragment.SWITCH_TO_SENT_REQUESTS, switchToSentRequestsFragment);
+        moneyRequestListHolderFragment.setArguments(bundle);
+
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MoneyRequestListHolderFragment()).commit();
+                .replace(R.id.fragment_container, moneyRequestListHolderFragment).commit();
+
         mFabRequestMoney.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
 
-    private void switchToRequestMoneyFragment() {
+    public void switchToRequestMoneyFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
         mFabRequestMoney.setVisibility(View.GONE);
