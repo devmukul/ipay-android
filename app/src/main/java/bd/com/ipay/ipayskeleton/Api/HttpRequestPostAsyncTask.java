@@ -6,6 +6,7 @@ import android.util.Log;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.protocol.HTTP;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -34,8 +35,9 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
         HttpPost httpPost = new HttpPost(mUri);
 
         try {
-            if (mJsonString != null)
-                httpPost.setEntity(new StringEntity(mJsonString));
+            if (mJsonString != null) {
+                httpPost.setEntity(new StringEntity(mJsonString, HTTP.UTF_8));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
