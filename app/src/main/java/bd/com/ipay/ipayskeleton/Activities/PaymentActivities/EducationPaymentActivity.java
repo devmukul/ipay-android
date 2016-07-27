@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.R;
 public class EducationPaymentActivity extends BaseActivity {
 
     private boolean switchedToSelectInstituteFragment = true;
+    private boolean switchedToPaymentReviewFragment = false;
 
     public static String studentID = "";
     public static int institutionID = -1;
@@ -60,7 +61,8 @@ public class EducationPaymentActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (switchedToSelectInstituteFragment) super.onBackPressed();
+        if (switchedToPaymentReviewFragment) switchToPayEducationFeesFragment();
+        else if (switchedToSelectInstituteFragment) super.onBackPressed();
         else {
             switchToSelectInstituteFragment();
         }
@@ -78,6 +80,7 @@ public class EducationPaymentActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SelectInstitutionFragment()).commit();
         switchedToSelectInstituteFragment = true;
+        switchedToPaymentReviewFragment = false;
     }
 
     public void switchToStudentInfoFragment(Bundle args) {
@@ -88,6 +91,7 @@ public class EducationPaymentActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mShowStudentInfoFragment).commit();
         switchedToSelectInstituteFragment = false;
+        switchedToPaymentReviewFragment = false;
     }
 
     public void switchToAddPayableFragment(Bundle args) {
@@ -98,18 +102,21 @@ public class EducationPaymentActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mAddPayAbleFragment).commit();
         switchedToSelectInstituteFragment = false;
+        switchedToPaymentReviewFragment = false;
     }
 
     public void switchToPayEducationFeesFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new PayEducationFeesFragment()).commit();
         switchedToSelectInstituteFragment = false;
+        switchedToPaymentReviewFragment = false;
     }
 
     public void switchToPaymentReviewFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new ReviewEducationFeePaymentFragment()).commit();
         switchedToSelectInstituteFragment = false;
+        switchedToPaymentReviewFragment = true;
     }
 
     @Override

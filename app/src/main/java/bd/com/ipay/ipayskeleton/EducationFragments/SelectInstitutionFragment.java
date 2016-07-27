@@ -108,7 +108,6 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         EducationPaymentActivity.sessionName = mSelectedSessionName;
         EducationPaymentActivity.studentID = studentIDEditText.getText().toString().trim();
 
-        EducationPaymentActivity.selectedStudent = mStudent;
         for (Institution institution : mInstitutions) {
             if (institution.getId() == mSelectedInstitutionId) {
                 EducationPaymentActivity.selectedInstitution = institution;
@@ -300,6 +299,8 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
                         bundle.putString(EducationPaymentActivity.STUDENT_NAME, mStudent.getParticipantName());
                         bundle.putString(EducationPaymentActivity.STUDENT_MOBILE_NUMBER, mStudent.getParticipantMobileNumber());
                         bundle.putString(EducationPaymentActivity.STUDENT_DEPARTMENT, mStudent.getDepartment().getDepartmentName());
+                        EducationPaymentActivity.selectedStudent = mStudent;
+
                         ((EducationPaymentActivity) getActivity()).switchToStudentInfoFragment(bundle);
                     } catch (Exception e) {
                         if (getActivity() != null)

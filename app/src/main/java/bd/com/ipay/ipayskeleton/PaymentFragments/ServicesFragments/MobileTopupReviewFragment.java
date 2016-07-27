@@ -145,7 +145,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
         if (!Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_TOP_UP);
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_TOP_UP);
         else
             attemptGetServiceCharge();
 

@@ -43,7 +43,6 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
     private GetBusinessRulesWithServiceChargeResponse mBusinessRulesResponseWithServiceCharge;
 
-
     // Service ID used to query the service charge
     protected abstract int getServiceID();
 
@@ -87,7 +86,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
         mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    protected void attemptGetBusinessRulewithServiceCharge(int serviceID) {
+    protected void attemptGetBusinessRuleWithServiceCharge(int serviceID) {
 
         if (mGetBusinessRuleTask != null) return;
 

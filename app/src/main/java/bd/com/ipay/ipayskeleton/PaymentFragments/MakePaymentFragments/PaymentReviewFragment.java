@@ -133,7 +133,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         // Check if Min or max amount is available
         if (!Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
         else
             attemptGetServiceCharge();
         return v;

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -21,6 +22,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
@@ -29,6 +31,9 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.EducationInvoice;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.InvoicePayableAccountRelation;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.MakeEducationPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
@@ -40,7 +45,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ReviewEducationFeePaymentFragment extends ReviewFragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mPaymentTask = null;
+    private HttpRequestPostAsyncTask mEducationPaymentTask = null;
     private PaymentResponse mPaymentResponse;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
@@ -111,7 +116,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
         // Check if Min or max amount is available
         if (!Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
         else
             attemptGetServiceCharge();
         return v;
@@ -200,32 +205,60 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
             pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    attemptPayment(pinInputDialogBuilder.getPin());
+                    if (validateInputs())
+                        attemptEducationalPayment(pinInputDialogBuilder.getPin());
                 }
             });
             pinInputDialogBuilder.build().show();
         } else {
             if (validateInputs())
-                attemptPayment(null);
+                attemptEducationalPayment(null);
         }
     }
 
-    private void attemptPayment(String pin) {
-        if (mPaymentTask != null) {
+    private void attemptEducationalPayment(String pin) {
+        if (mEducationPaymentTask != null) {
             return;
         }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
         mProgressDialog.show();
-//        PaymentRequest mPaymentRequest = new PaymentRequest(
-//                ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
-//                mAmount.toString(), mDescription, pin);
-//        Gson gson = new Gson();
-//        String json = gson.toJson(mPaymentRequest);
-//        mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,
-//                Constants.BASE_URL_SM + Constants.URL_PAYMENT, json, getActivity());
-//        mPaymentTask.mHttpResponseListener = this;
-//        mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        EducationInvoice mEducationInvoice = prepareForPayment();
+        String mDescription = mWriteANoteEditText.getText().toString().trim();
+        if (mDescription.length() == 0) mDescription = null;
+
+        MakeEducationPaymentRequest makeEducationPaymentRequest = new MakeEducationPaymentRequest(mDescription, pin, mEducationInvoice);
+        Gson gson = new Gson();
+        String json = gson.toJson(makeEducationPaymentRequest);
+        mEducationPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_MAKE_PAYMENT_EDUCATION,
+                Constants.BASE_URL_EDU + Constants.URL_MAKE_PAYMENT_EDUCATION, json, getActivity());
+        mEducationPaymentTask.mHttpResponseListener = this;
+        mEducationPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private EducationInvoice prepareForPayment() {
+        EducationInvoice mEducationInvoice = new EducationInvoice();
+        mEducationInvoice.setUpdateTime(null);
+        mEducationInvoice.setCreationTime(null);
+        mEducationInvoice.setSession(EducationPaymentActivity.selectedSession);
+        mEducationInvoice.setEventParticipant(EducationPaymentActivity.selectedStudent);
+        mEducationInvoice.setDiscount(mDiscount);
+        mEducationInvoice.setVat(mVat);
+        mEducationInvoice.setInstitute(EducationPaymentActivity.selectedInstitution);
+        mEducationInvoice.setTotalFee(mNetPayableAmount);
+
+        ArrayList<InvoicePayableAccountRelation> mInvoicePayableAccountRelations = new ArrayList<InvoicePayableAccountRelation>();
+        for (PayableItem payableItem : EducationPaymentActivity.mMyPayableItems) {
+            InvoicePayableAccountRelation mInvoicePayableAccountRelation = new InvoicePayableAccountRelation();
+            mInvoicePayableAccountRelation.setFee(payableItem.getInstituteFee().doubleValue());
+            mInvoicePayableAccountRelation.setPayableAccountHead(payableItem.getPayableAccountHead());
+            mInvoicePayableAccountRelations.add(mInvoicePayableAccountRelation);
+        }
+
+        InvoicePayableAccountRelation[] mInvoicePayableAccountRelationArray = new InvoicePayableAccountRelation[mInvoicePayableAccountRelations.size()];
+        mEducationInvoice.setInvoicePayableAccountRelations(mInvoicePayableAccountRelations.toArray(mInvoicePayableAccountRelationArray));
+
+        return mEducationInvoice;
     }
 
     private void showErrorDialog() {
@@ -268,7 +301,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mPaymentTask = null;
+            mEducationPaymentTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.payment_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
             return;
@@ -276,7 +309,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_MAKE_PAYMENT_EDUCATION)) {
 
             try {
                 mPaymentResponse = gson.fromJson(result.getJsonString(), PaymentResponse.class);
@@ -295,7 +328,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
             }
 
             mProgressDialog.dismiss();
-            mPaymentTask = null;
+            mEducationPaymentTask = null;
         }
     }
 }
