@@ -6,15 +6,16 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin">
 
         <LinearLayout
             android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="@dimen/value4"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingRight="@dimen/activity_horizontal_margin">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
@@ -37,7 +38,7 @@
                     android:id="@+id/textview_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
+                    android:layout_marginBottom="@dimen/value6"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textStyle="bold" />
 
@@ -50,12 +51,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_space"
-            android:layout_marginBottom="@dimen/value2"
-            android:background="@color/colorDivider" />
-
         <LinearLayout style="@style/LinearLayoutHolder">
 
             <TextView
@@ -64,7 +59,7 @@
 
             <TextView
                 android:id="@+id/transaction_id"
-                style="@style/TextViewInfoLabel" />
+                style="@style/TextViewInfo" />
 
         </LinearLayout>
 
@@ -91,7 +86,7 @@
 
             <TextView
                 android:id="@+id/description"
-                style="@style/TextViewInfo"/>
+                style="@style/TextViewInfo" />
         </LinearLayout>
 
         <View
@@ -99,7 +94,6 @@
             android:layout_height="@dimen/value15"
             android:layout_marginTop="@dimen/value4"
             android:background="@color/colorLightGray"></View>
-
 
         <include layout="@layout/view_transaction_details_education_payment" />
 
@@ -167,26 +161,32 @@
 
             <TextView
                 android:id="@+id/time"
-                style="@style/TextViewInfo"/>
-        </LinearLayout>
-
-
-        <View style="@style/Divider" />
-
-        <LinearLayout
-            android:id="@+id/purpose_layout"
-            style="@style/LinearLayoutHolder">
-
-            <TextView
-                style="@style/TextViewInfoLabel"
-                android:text="@string/purpose" />
-
-            <TextView
-                android:id="@+id/purpose"
                 style="@style/TextViewInfo" />
         </LinearLayout>
 
+
         <View style="@style/Divider" />
+
+
+        <LinearLayout
+            android:id="@+id/purpose_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/purpose" />
+
+                <TextView
+                    android:id="@+id/purpose"
+                    style="@style/TextViewInfo" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+        </LinearLayout>
 
         <LinearLayout style="@style/LinearLayoutHolder">
 

@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,7 @@ public class TransactionDetailsFragment extends Fragment {
     private TextView balanceTextView;
     private TextView purposeTextView;
     private TextView statusTextView;
+    private TextView mobileNumberTextView;
     private LinearLayout purposeLayout;
     private ProfileImageView mProfileImageView;
     private ImageView otherImageView;
@@ -54,6 +57,7 @@ public class TransactionDetailsFragment extends Fragment {
         balanceTextView = (TextView) v.findViewById(R.id.balance);
         purposeTextView = (TextView) v.findViewById(R.id.purpose);
         statusTextView = (TextView) v.findViewById(R.id.status);
+        mobileNumberTextView = (TextView) v.findViewById(R.id.your_number);
         purposeLayout = (LinearLayout) v.findViewById(R.id.purpose_layout);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
@@ -66,9 +70,10 @@ public class TransactionDetailsFragment extends Fragment {
         timeTextView.setText(new SimpleDateFormat("dd/MM/yy, h:mm a").format(transactionHistory.getResponseTime()));
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
-        transactionIDTextView.setText(getString(R.string.transaction_id) + " " + transactionHistory.getTransactionID());
+        transactionIDTextView.setText(transactionHistory.getTransactionID());
         netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
         balanceTextView.setText(Utilities.formatTaka(transactionHistory.getBalance()));
+        mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
         int serviceId = transactionHistory.getServiceID();
         String purpose = transactionHistory.getPurpose();
@@ -86,8 +91,7 @@ public class TransactionDetailsFragment extends Fragment {
             purposeLayout.setVisibility(View.GONE);
         } else if (purpose != null && purpose.length() > 0) {
             purposeTextView.setText(purpose);
-        }
-        else {
+        } else {
             purposeLayout.setVisibility(View.GONE);
         }
 
