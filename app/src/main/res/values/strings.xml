@@ -32,18 +32,20 @@
     <string name="thana">Thana</string>
     <string name="invalid_thana">Please select a Thana</string>
     <string name="district">District</string>
+    <string name="discount_optional">Discount (Optional)</string>
+    <string name="discount">Discount</string>
     <string name="invalid_district">Please select a District</string>
     <string name="postcode">Postcode</string>
     <string name="invalid_postcode">Please enter a valid 4-digit postcode</string>
     <string name="occupation">Occupation</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="contact_us">Contact Us</string>
-    <string name="help_faq">Help/FAQ</string>
-    <string name="terms">Terms and Privacy Policy</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
     <string name="contact_person_mobile_number">Mobile number of contact person</string>
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>
-    <string name="confirm_pin_not_matched">Pin did not match</string>
+    <string name="confirm_pin_not_matched">PIN did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
     <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
     <string name="empty_transaction_history">No transaction to show right now.</string>
@@ -103,6 +105,7 @@
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
     <string name="profile_info_get_failed">Failed to fetch profile information.</string>
+    <string name="failed_to_complete_the_payment">Failed to complete the payment.</string>
     <string name="account_type_business">Business Account</string>
     <string name="all_contacts">All</string>
     <string name="select_an_institution">Select Institution</string>
@@ -201,6 +204,7 @@
     <string name="requesting_money">Money request processing...</string>
     <string name="add_money">Add Money</string>
     <string name="note">Note</string>
+    <string name="additional_info">Additional Information</string>
     <string name="withdraw_money">Withdraw Money</string>
     <string name="events">Events</string>
     <string name="education">Education</string>
@@ -228,7 +232,7 @@
     <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
     <string name="failed_to_send_for_bank_verification">Failed to send request.</string>
     <string name="failed_to_bank_verification">Failed to verify your bank account. Please try again later.</string>
-    <string name="failed_empty_pin">Pin cannot be empty</string>
+    <string name="failed_empty_pin">PIN cannot be empty</string>
     <string name="account_number">Account Number</string>
     <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
@@ -239,8 +243,8 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="submit">Submit</string>
-    <string name="terms_condition"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
-    <string name="privacy_policy"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
+    <string name="terms_condition_url"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
+    <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="try_again_later">Could not connect to iPay. Please try again later.</string>
@@ -257,6 +261,7 @@
     <string name="enter_vat">VAT in BDT(%) (optional)</string>
     <string name="enter_amount">Enter an amount in BDT</string>
     <string name="send_money_description">Write a note</string>
+    <string name="education_payment_description">Write a note</string>
     <string name="description_event">Event description</string>
     <string name="item_description">Item description</string>
     <string name="item_quantity">Item quantity</string>
@@ -276,6 +281,7 @@
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="please_select_relation">Please select a relation</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
+    <string name="zero_value">0.00 BDT</string>
     <string name="end_date">End date (dd/mm/yyyy)</string>
     <string name="sign_up_with_ipay">sign up with iPay</string>
     <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
@@ -313,6 +319,7 @@
     <string name="transaction">Transaction</string>
     <string name="transaction_history">Transaction History</string>
     <string name="about">About</string>
+    <string name="session_text">Session: </string>
     <string name="notification">Notification</string>
     <string name="security_settings">Security Settings</string>
     <string name="participant_already_added">Participant already added.</string>
@@ -433,6 +440,7 @@
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_received">Net Received</string>
+    <string name="net_payable">Net Payable</string>
     <string name="total">Total</string>
     <string name="service_charge">Service Charge</string>
     <string name="topup_received">Topup Received</string>
@@ -441,7 +449,7 @@
     <string name="invite_this_person_to_ipay">Invite this person to iPay</string>
     <string name="unknown_number">Unknown Number</string>
     <string name="recharge_now">Top Up</string>
-    <string name="enter_pin">Enter Pin</string>
+    <string name="enter_pin">Enter PIN</string>
     <string name="ok">OK</string>
     <string name="request_now">Request Now</string>
     <string name="you_will_receive">You will receive</string>
@@ -476,7 +484,7 @@
     <string name="manage_banks">Manage Banks</string>
     <string name="select_one">Select One</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
-    <string name="failed_loading_pin">Failed loading pin</string>
+    <string name="failed_loading_pin">Failed loading PIN</string>
     <string name="add_a_trusted_person">Add a trusted person</string>
     <string name="failed_loading_trusted_person_list">Failed loading trusted person list</string>
     <string name="progress_dialog_adding_as_trusted_person">Adding as a trusted person</string>

@@ -7,12 +7,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +19,6 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -42,6 +39,9 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
     private PayablesListAdapter mPayablesListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mFabCreatePayable;
+    private RelativeLayout mPayLayout;
+    private ImageView mPayNowButton;
+    private TextView mAddedItemsTextView;
 
     private ArrayList<PayableItem> mEnabledPayableItemList;
 
@@ -54,6 +54,9 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
         mEnabledPayableItemList = new ArrayList<PayableItem>();
 
         mEmptyTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mAddedItemsTextView = (TextView) v.findViewById(R.id.items_added_text);
+        mPayNowButton = (ImageView) v.findViewById(R.id.pay_now_button);
+        mPayLayout = (RelativeLayout) v.findViewById(R.id.pay_now_layout);
         mFabCreatePayable = (FloatingActionButton) v.findViewById(R.id.fab_create_payable);
         mPayablesRecyclerView = (RecyclerView) v.findViewById(R.id.list_payables);
         mPayablesListAdapter = new PayablesListAdapter();
@@ -72,6 +75,18 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
                     bundle.putParcelableArrayList(EducationPaymentActivity.ARGS_ENABLED_PAYABLE_ITEMS, mEnabledPayableItemList);
                     ((EducationPaymentActivity) getActivity()).switchToAddPayableFragment(bundle);
                 }
+            }
+        });
+
+        if (EducationPaymentActivity.mMyPayableItems.size() > 0) {
+            mPayLayout.setVisibility(View.VISIBLE);
+            mAddedItemsTextView.setText("You have added " + EducationPaymentActivity.mMyPayableItems.size() + " fee items.");
+        }
+
+        mPayNowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((EducationPaymentActivity) getActivity()).switchToPaymentReviewFragment();
             }
         });
 

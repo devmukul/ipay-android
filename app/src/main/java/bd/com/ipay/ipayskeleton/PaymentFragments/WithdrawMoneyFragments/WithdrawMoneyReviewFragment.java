@@ -129,7 +129,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         // Check if Min or max amount is available
         if (!Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_WITHDRAW_MONEY);
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_WITHDRAW_MONEY);
         else
             attemptGetServiceCharge();
 

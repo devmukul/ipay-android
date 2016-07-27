@@ -74,11 +74,11 @@
                     android:background="@color/colorDivider" />
 
                 <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
-                    android:id="@+id/help"
+                    android:id="@+id/terms_of_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_faq3x"
-                    android:text="@string/help_faq" />
+                    android:text="@string/terms_of_service" />
 
                 <View
                     android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_terms3x"
-                    android:text="@string/terms" />
+                    android:text="@string/privacy_policy" />
 
 
             </LinearLayout>

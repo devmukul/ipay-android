@@ -45,7 +45,9 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
 
     private ResourceSelectorDialog sessionsSelectorDialog;
     private int mSelectedSessionId = -1;
+    private String mSelectedSessionName = "";
     private int mSelectedInstitutionId = -1;
+    private String mSelectedInstitutionName = "";
     private EditText institutionSelection;
 
     private EditText sessionSelection;
@@ -101,8 +103,24 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
 
         Utilities.hideKeyboard(getContext(), studentIDEditText.getRootView());
         EducationPaymentActivity.institutionID = mSelectedInstitutionId;
+        EducationPaymentActivity.institutionName = mSelectedInstitutionName;
         EducationPaymentActivity.sessionID = mSelectedSessionId;
+        EducationPaymentActivity.sessionName = mSelectedSessionName;
         EducationPaymentActivity.studentID = studentIDEditText.getText().toString().trim();
+
+        for (Institution institution : mInstitutions) {
+            if (institution.getId() == mSelectedInstitutionId) {
+                EducationPaymentActivity.selectedInstitution = institution;
+                break;
+            }
+        }
+
+        for (SemesterOrSession session : mSemesterOrSessions) {
+            if (session.getId() == mSelectedSessionId) {
+                EducationPaymentActivity.selectedSession = session;
+                break;
+            }
+        }
 
         return true;
     }
@@ -122,6 +140,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
                 institutionSelection.setError(null);
                 institutionSelection.setText(name);
                 mSelectedInstitutionId = id;
+                mSelectedInstitutionName = name;
                 mSelectedSessionId = -1;
                 getSessionsByInstituteID(mSelectedInstitutionId);
             }
@@ -150,6 +169,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
                 sessionSelection.setError(null);
                 sessionSelection.setText(name);
                 mSelectedSessionId = id;
+                mSelectedSessionName = name;
             }
         });
 
@@ -279,6 +299,8 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
                         bundle.putString(EducationPaymentActivity.STUDENT_NAME, mStudent.getParticipantName());
                         bundle.putString(EducationPaymentActivity.STUDENT_MOBILE_NUMBER, mStudent.getParticipantMobileNumber());
                         bundle.putString(EducationPaymentActivity.STUDENT_DEPARTMENT, mStudent.getDepartment().getDepartmentName());
+                        EducationPaymentActivity.selectedStudent = mStudent;
+
                         ((EducationPaymentActivity) getActivity()).switchToStudentInfoFragment(bundle);
                     } catch (Exception e) {
                         if (getActivity() != null)

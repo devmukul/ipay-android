@@ -125,7 +125,15 @@ public class AddPayAbleFragment extends Fragment {
         PayableItem mPayableItem = payableItemsMap.get(mSelectedPaymentItemID);
         mPayableItem.setInstituteFee(new BigDecimal(Double.parseDouble(paymentAmount.getText().toString().trim())));
 
-        if (!EducationPaymentActivity.mMyPayableItems.contains(mPayableItem)) {
+        boolean addedAlready = false;
+        for (PayableItem loopPayableItem : EducationPaymentActivity.mMyPayableItems) {
+            if (loopPayableItem.getId() == mPayableItem.getId()) {
+                addedAlready = true;
+                break;
+            }
+        }
+
+        if (!addedAlready) {
             EducationPaymentActivity.mMyPayableItems.add(mPayableItem);
             ((EducationPaymentActivity) getActivity()).switchToPayEducationFeesFragment();
 

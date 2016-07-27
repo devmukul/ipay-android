@@ -20,6 +20,17 @@ public class InvoicePayableAccountRelation implements Parcelable {
         return fee;
     }
 
+    public void setInvoicePayableAccountRelation(Integer invoicePayableAccountRelation) {
+        this.invoicePayableAccountRelation = invoicePayableAccountRelation;
+    }
+
+    public void setPayableAccountHead(PayableAccountHead payableAccountHead) {
+        this.payableAccountHead = payableAccountHead;
+    }
+
+    public void setFee(Double fee) {
+        this.fee = fee;
+    }
 
     @Override
     public int describeContents() {

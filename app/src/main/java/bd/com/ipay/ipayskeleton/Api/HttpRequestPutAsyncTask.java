@@ -6,6 +6,7 @@ import android.util.Log;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.protocol.HTTP;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -35,7 +36,7 @@ public class HttpRequestPutAsyncTask extends HttpRequestAsyncTask {
 
         try {
             if (mJsonString != null)
-                httpPut.setEntity(new StringEntity(mJsonString));
+                httpPut.setEntity(new StringEntity(mJsonString, HTTP.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
         }
