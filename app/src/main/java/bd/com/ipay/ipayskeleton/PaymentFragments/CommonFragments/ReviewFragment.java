@@ -102,7 +102,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (isAdded())
+        if (mProgressDialog != null && isAdded())
             mProgressDialog.dismiss();
 
         if (result == null) {
