@@ -56,6 +56,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private RecyclerView.LayoutManager mLayoutManager;
     private List<UserActivityClass> userActivityResponsesList;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView mEmptyListTextView;
 
     private LinearLayout eventFilterLayout;
     private LinearLayout dateFilterLayout;
@@ -64,8 +65,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private CheckBox mSystemEventCheckBox;
     private CheckBox mSecurityChangeCheckBox;
     private CheckBox mVerificationCheckBox;
-    private CheckBox mMoneySentCheckBox;
-    private CheckBox mMoneyReceivedCheckBox;
     private Button mClearEventFilterButton;
 
     private EditText mFromDateEditText;
@@ -131,6 +130,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         activityLogTypes = getResources().getStringArray(R.array.activity_log_types);
         mActivityLogRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
         mActivityLogAdapter = new ActivityLogAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -141,8 +141,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         dateFilterLayout = (LinearLayout) v.findViewById(R.id.date_filter_layout);
         mClearEventFilterButton = (Button) v.findViewById(R.id.button_clear_filter_event);
         mChangeProfileCheckBox = (CheckBox) v.findViewById(R.id.filter_profile_changes);
-        mMoneySentCheckBox = (CheckBox) v.findViewById(R.id.filter_money_out);
-        mMoneyReceivedCheckBox = (CheckBox) v.findViewById(R.id.filter_money_in);
         mSecurityChangeCheckBox = (CheckBox) v.findViewById(R.id.filter_security_changes);
         mVerificationCheckBox = (CheckBox) v.findViewById(R.id.filter_verification_changes);
         mSystemEventCheckBox = (CheckBox) v.findViewById(R.id.filter_system_event);
@@ -286,8 +284,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 mChangeProfileCheckBox.setChecked(false);
                 mVerificationCheckBox.setChecked(false);
                 mSecurityChangeCheckBox.setChecked(false);
-                mMoneySentCheckBox.setChecked(false);
-                mMoneyReceivedCheckBox.setChecked(false);
                 mSystemEventCheckBox.setChecked(false);
 
                 historyPageCount = 0;
@@ -304,46 +300,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     type = Constants.ACTIVITY_TYPE_CHANGE_PROFILE;
                     mVerificationCheckBox.setChecked(false);
                     mSecurityChangeCheckBox.setChecked(false);
-                    mMoneySentCheckBox.setChecked(false);
-                    mMoneyReceivedCheckBox.setChecked(false);
-                    mSystemEventCheckBox.setChecked(false);
-                } else type = null;
-
-                historyPageCount = 0;
-                if (userActivityResponsesList != null) userActivityResponsesList.clear();
-                getUserActivities();
-                eventFilterLayout.setVisibility(View.GONE);
-            }
-        });
-
-        mMoneyReceivedCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMoneyReceivedCheckBox.isChecked()) {
-                    type = Constants.ACTIVITY_TYPE_MONEY_IN;
-                    mVerificationCheckBox.setChecked(false);
-                    mSecurityChangeCheckBox.setChecked(false);
-                    mChangeProfileCheckBox.setChecked(false);
-                    mMoneySentCheckBox.setChecked(false);
-                    mSystemEventCheckBox.setChecked(false);
-                } else type = null;
-
-                historyPageCount = 0;
-                if (userActivityResponsesList != null) userActivityResponsesList.clear();
-                getUserActivities();
-                eventFilterLayout.setVisibility(View.GONE);
-            }
-        });
-
-        mMoneySentCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMoneySentCheckBox.isChecked()) {
-                    type = Constants.ACTIVITY_TYPE_MONEY_OUT;
-                    mVerificationCheckBox.setChecked(false);
-                    mSecurityChangeCheckBox.setChecked(false);
-                    mMoneyReceivedCheckBox.setChecked(false);
-                    mChangeProfileCheckBox.setChecked(false);
                     mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
@@ -361,8 +317,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     type = Constants.ACTIVITY_TYPE_CHANGE_SECURITY;
                     mVerificationCheckBox.setChecked(false);
                     mChangeProfileCheckBox.setChecked(false);
-                    mMoneyReceivedCheckBox.setChecked(false);
-                    mMoneySentCheckBox.setChecked(false);
                     mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
@@ -380,8 +334,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     type = Constants.ACTIVITY_TYPE_VERIFICATION;
                     mChangeProfileCheckBox.setChecked(false);
                     mSecurityChangeCheckBox.setChecked(false);
-                    mMoneyReceivedCheckBox.setChecked(false);
-                    mMoneySentCheckBox.setChecked(false);
                     mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
@@ -399,8 +351,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     type = Constants.ACTIVITY_TYPE_SYSTEM_EVENT;
                     mChangeProfileCheckBox.setChecked(false);
                     mSecurityChangeCheckBox.setChecked(false);
-                    mMoneyReceivedCheckBox.setChecked(false);
-                    mMoneySentCheckBox.setChecked(false);
                     mChangeProfileCheckBox.setChecked(false);
                 } else type = null;
 
@@ -517,6 +467,10 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             mSwipeRefreshLayout.setRefreshing(false);
             mUserActivityTask = null;
         }
+
+        if (userActivityResponsesList != null && userActivityResponsesList.size() == 0)
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        else mEmptyListTextView.setVisibility(View.GONE);
     }
 
     public class ActivityLogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

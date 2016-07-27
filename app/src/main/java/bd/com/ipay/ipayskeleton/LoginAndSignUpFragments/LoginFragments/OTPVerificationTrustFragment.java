@@ -206,20 +206,19 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
+        if (isAdded()) mProgressDialog.dismiss();
+
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
             mLoginTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_LOG_IN)) {
-
 
             try {
                 mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
@@ -246,8 +245,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
             }
-
-            mProgressDialog.dismiss();
             mLoginTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
@@ -277,7 +274,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
             }
 
-            mProgressDialog.dismiss();
             mRequestOTPTask = null;
 
         }

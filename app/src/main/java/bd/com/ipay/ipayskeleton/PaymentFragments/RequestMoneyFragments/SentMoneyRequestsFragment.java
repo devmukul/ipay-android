@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -260,10 +261,9 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingMoneyRequestClasses.get(pos).getRequestTime());
                 final String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                String mobileNumber = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();
                 mTime.setText(time);
                 mSenderNumber.setText(name);
-                mDescription.setText(pendingMoneyRequestClasses.get(pos).getDescription());
+                mDescription.setText(Utilities.formatTaka(pendingMoneyRequestClasses.get(pos).getAmount()));
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -17,16 +17,18 @@ import bd.com.ipay.ipayskeleton.R;
 
 public class MoneyRequestListHolderFragment extends Fragment {
     private ViewPager viewPager;
+
     private final int RECEIVED_REQUEST_TAB = 0;
     private final int SENT_REQUEST_TAB = 1;
     private final int TOTAL_PAGE_COUNT = 2;
-
 
     private TabLayout.Tab mReceivedRequestTab;
     private TabLayout.Tab mSentRequestTab;
 
     private View mReceivedRequestTabView;
     private View mSentRequestTabView;
+
+    public static final String SWITCH_TO_SENT_REQUESTS = "SWITCH_TO_SENT_REQUESTS";
 
     @Nullable
     @Override
@@ -41,7 +43,12 @@ public class MoneyRequestListHolderFragment extends Fragment {
 
         mReceivedRequestTab = tabLayout.getTabAt(RECEIVED_REQUEST_TAB);
         mSentRequestTab = tabLayout.getTabAt(SENT_REQUEST_TAB);
+
         setupCustomViewsForTabLayout();
+
+        if (getArguments().getBoolean(SWITCH_TO_SENT_REQUESTS, false)) {
+            mSentRequestTab.select();
+        }
 
         return v;
     }
