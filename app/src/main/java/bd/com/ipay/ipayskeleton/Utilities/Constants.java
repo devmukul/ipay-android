@@ -342,7 +342,9 @@ public class Constants {
     // Education
     public static final String URL_GET_ALL_INSTITUTIONS_LIST = "allinstitutes";
     public static final String URL_GET_ALL_SESSIONS_LIST = "session/allsessions";
+    public static final String URL_GET_ENABLED_PAYABLES_LIST = "enabledpayableitem";
     public static final String URL_GET_STUDENT_INFO_BY_STUDENT_ID = "studentdetailsbyrollno";
+    public static final String URL_GET_ENABLED_PAYABLE_ITEMS = "enabledpayableitem";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -479,6 +481,7 @@ public class Constants {
     // Education
     public static final String COMMAND_GET_INSTITUTION_LIST = "COMMAND_GET_INSTITUTION_LIST";
     public static final String COMMAND_GET_SESSION_LIST = "COMMAND_GET_SESSION_LIST";
+    public static final String COMMAND_GET_ENABLED_PAYABLES_LIST = "COMMAND_GET_ENABLED_PAYABLES_LIST";
     public static final String COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID = "COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID";
 
     public static final String COUNTRY_CODE_BANGLADESH = "+880";

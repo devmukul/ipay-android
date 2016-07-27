@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+
+    <TextView
+        android:id="@+id/payable_item_name"
+        style="@style/TextStylePrimaryMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/profile_picture" />
+
+    <TextView
+        android:id="@+id/payable_item_description"
+        style="@style/TextStylePrimarySmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/payable_item_name"
+        android:layout_toRightOf="@+id/profile_picture" />
+
+    <TextView
+        android:id="@+id/amount"
+        style="@style/TextStylePrimarySmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/payable_item_description"
+        android:layout_toRightOf="@+id/profile_picture"
+        android:gravity="left" />
+
+    <ImageView
+        android:id="@+id/remove"
+        android:layout_width="@dimen/value30"
+        android:layout_height="@dimen/value30"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:padding="@dimen/value5"
+        android:src="@drawable/ic_cancel_black_24dp" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_space"
+        android:layout_below="@+id/profile_picture"
+        android:background="@color/colorDivider" />
+
+</RelativeLayout>
