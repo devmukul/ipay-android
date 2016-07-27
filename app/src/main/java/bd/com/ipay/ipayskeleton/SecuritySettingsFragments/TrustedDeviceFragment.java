@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TrustedDeviceFragment extends Fragment implements HttpResponseListener {
+public class TrustedDeviceFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetTrustedDeviceTask = null;
     private GetTrustedDeviceResponse mGetTrustedDeviceResponse = null;
@@ -71,6 +71,8 @@ public class TrustedDeviceFragment extends Fragment implements HttpResponseListe
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        setContentShown(false);
 
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE))
             getTrustedDeviceList();
@@ -212,6 +214,8 @@ public class TrustedDeviceFragment extends Fragment implements HttpResponseListe
         mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mTrustedDeviceList);
         mTrustedDevicesListView.setAdapter(mTrustedDeviceAdapter);
         Utilities.setUpNonScrollableListView(mTrustedDevicesListView);
+
+        setContentShown(true);
     }
 
     public class TrustedDeviceAdapter extends ArrayAdapter<TrustedDevice> {
@@ -236,7 +240,7 @@ public class TrustedDeviceFragment extends Fragment implements HttpResponseListe
 
 
             RelativeLayout layout_item_view = (RelativeLayout) view.findViewById(R.id.layout_list_item_trusted_device);
-            ImageView deviceimageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
+            ImageView deviceImageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
             TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
             TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);
 
@@ -246,25 +250,26 @@ public class TrustedDeviceFragment extends Fragment implements HttpResponseListe
                     R.drawable.ic_android3x,
                     R.drawable.ic_ios3x
             };
+
             String deviceID = trustedDevice.getDeviceId();
             String Android = "android";
             String IOS = "ios";
             String Computer = "browser";
             if (deviceID.toLowerCase().contains(Android.toLowerCase())) {
-                deviceimageView.setImageResource(images[1]);
+                deviceImageView.setImageResource(images[1]);
 
             } else if (deviceID.toLowerCase().contains(IOS.toLowerCase())) {
-                deviceimageView.setImageResource(images[2]);
+                deviceImageView.setImageResource(images[2]);
 
             } else if (deviceID.toLowerCase().contains(Computer.toLowerCase())) {
-                deviceimageView.setImageResource(images[0]);
+                deviceImageView.setImageResource(images[0]);
 
             }
 
-            String mDeviceID = "mobile-android-";
-            mDeviceID = mDeviceID.concat(DeviceIdFactory.getDeviceId(getActivity()));
+            String myDeviceID = "mobile-android-";
+            myDeviceID = myDeviceID.concat(DeviceIdFactory.getDeviceId(getActivity()));
 
-            if (mDeviceID.equals(deviceID)) {
+            if (myDeviceID.equals(deviceID)) {
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimaryLighter));
             }
 
