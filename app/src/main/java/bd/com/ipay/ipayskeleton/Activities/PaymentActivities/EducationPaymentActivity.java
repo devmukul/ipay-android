@@ -17,6 +17,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.SemesterOrSession;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.Student;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EducationPaymentActivity extends BaseActivity {
 
@@ -77,6 +78,7 @@ public class EducationPaymentActivity extends BaseActivity {
 
     public void switchToSelectInstituteFragment() {
         resetElements();
+        Utilities.hideKeyboard(EducationPaymentActivity.this);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SelectInstitutionFragment()).commit();
         switchedToSelectInstituteFragment = true;
@@ -85,6 +87,7 @@ public class EducationPaymentActivity extends BaseActivity {
 
     public void switchToStudentInfoFragment(Bundle args) {
 
+        Utilities.hideKeyboard(EducationPaymentActivity.this);
         ShowStudentInfoFragment mShowStudentInfoFragment = new ShowStudentInfoFragment();
         mShowStudentInfoFragment.setArguments(args);
 
@@ -96,6 +99,7 @@ public class EducationPaymentActivity extends BaseActivity {
 
     public void switchToAddPayableFragment(Bundle args) {
 
+        Utilities.hideKeyboard(EducationPaymentActivity.this);
         AddPayAbleFragment mAddPayAbleFragment = new AddPayAbleFragment();
         mAddPayAbleFragment.setArguments(args);
 
@@ -106,6 +110,7 @@ public class EducationPaymentActivity extends BaseActivity {
     }
 
     public void switchToPayEducationFeesFragment() {
+        Utilities.hideKeyboard(EducationPaymentActivity.this);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new PayEducationFeesFragment()).commit();
         switchedToSelectInstituteFragment = false;
@@ -113,6 +118,7 @@ public class EducationPaymentActivity extends BaseActivity {
     }
 
     public void switchToPaymentReviewFragment() {
+        Utilities.hideKeyboard(EducationPaymentActivity.this);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new ReviewEducationFeePaymentFragment()).commit();
         switchedToSelectInstituteFragment = false;

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -34,8 +35,8 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.EducationInvoice;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.InvoicePayableAccountRelation;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.MakeEducationPaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.MakeEducationPaymentResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -46,7 +47,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class ReviewEducationFeePaymentFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mEducationPaymentTask = null;
-    private PaymentResponse mPaymentResponse;
+    private MakeEducationPaymentResponse mPaymentResponse;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
@@ -61,6 +62,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
     private TextView mNetPayableView;
     private TextView mVatView;
     private EditText mWriteANoteEditText;
+    private TextInputLayout mWriteANoteLayout;
     private EditText mDiscountEditText;
     private TextView mAmountView;
     private Button mPaymentButton;
@@ -84,6 +86,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
 
         mDiscountEditText = (EditText) v.findViewById(R.id.discount);
         mWriteANoteEditText = (EditText) v.findViewById(R.id.description);
+        mWriteANoteLayout = (TextInputLayout) v.findViewById(R.id.write_a_note_layout);
         mPaymentButton = (Button) v.findViewById(R.id.button_payment);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -102,13 +105,15 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
                             PaymentMakingActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                     if (mError_message == null) {
-                        attemptPaymentWithPinCheck();
+                        if (validateInputs())
+                            attemptPaymentWithPinCheck();
 
                     } else {
                         showErrorDialog();
                     }
                 } else {
-                    attemptPaymentWithPinCheck();
+                    if (validateInputs())
+                        attemptPaymentWithPinCheck();
                 }
             }
         });
@@ -187,10 +192,10 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
     }
 
     private boolean validateInputs() {
-        mWriteANoteEditText.setError(null);
+        mWriteANoteLayout.setError(null);
 
         if (mWriteANoteEditText.getText().toString().trim().length() == 0) {
-            mWriteANoteEditText.setError(getString(R.string.please_write_note));
+            mWriteANoteLayout.setError(getString(R.string.please_write_note));
             mWriteANoteEditText.requestFocus();
             return false;
         }
@@ -205,14 +210,12 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
             pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    if (validateInputs())
-                        attemptEducationalPayment(pinInputDialogBuilder.getPin());
+                    attemptEducationalPayment(pinInputDialogBuilder.getPin());
                 }
             });
             pinInputDialogBuilder.build().show();
         } else {
-            if (validateInputs())
-                attemptEducationalPayment(null);
+            attemptEducationalPayment(null);
         }
     }
 
@@ -312,16 +315,16 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
         if (result.getApiCommand().equals(Constants.COMMAND_MAKE_PAYMENT_EDUCATION)) {
 
             try {
-                mPaymentResponse = gson.fromJson(result.getJsonString(), PaymentResponse.class);
+                mPaymentResponse = gson.fromJson(result.getJsonString(), MakeEducationPaymentResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mPaymentResponse.getStatusMessage(), Toast.LENGTH_LONG).show();
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mPaymentResponse.getStatusMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
