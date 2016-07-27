@@ -72,8 +72,6 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
         Bundle bundle = getArguments();
 
-        attemptGetServiceCharge();
-
         this.requestId = bundle.getLong(Constants.MONEY_REQUEST_ID);
         this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
         this.mReceiverName = bundle.getString(Constants.NAME);
@@ -85,6 +83,8 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         this.mItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
 
         mReviewRecyclerView.setAdapter(paymentReviewAdapter);
+
+        attemptGetServiceCharge();
         return v;
     }
 
@@ -256,7 +256,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
             public void bindViewForFooter() {
                 mNetAmount = mAmount.subtract(mVat);
 
-                if (mServiceCharge.compareTo(BigDecimal.ZERO) <=0) {
+                if (mServiceCharge.compareTo(BigDecimal.ZERO) <= 0) {
                     mServiceChargeHolder.setVisibility(View.GONE);
 
                 } else {
