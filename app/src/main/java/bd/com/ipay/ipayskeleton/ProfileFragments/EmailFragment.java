@@ -437,10 +437,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             private final TextView mEmailView;
             private final TextView mIsPrimaryView;
             private final ImageView mVerificationStatus;
-            private final LinearLayout optionsLayout;
-            private final Button removeButton;
-            private final Button makePrimaryButton;
-            private final View divider;
             private final View divider1;
 
             private CustomSelectorDialog mCustomSelectorDialog;
@@ -452,14 +448,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 mEmailView = (TextView) itemView.findViewById(R.id.textview_email);
                 mIsPrimaryView = (TextView) itemView.findViewById(R.id.textview_is_primary);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.email_verification_status);
-
-                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                divider = itemView.findViewById(R.id.divider);
                 divider1 = itemView.findViewById(R.id.divider1);
-
-                removeButton = (Button) itemView.findViewById(R.id.button_remove);
-                makePrimaryButton = (Button) itemView.findViewById(R.id.button_make_primary);
-
             }
 
             public void bindView(int pos) {
@@ -477,44 +466,23 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                         mVerificationStatus.setColorFilter(null);
 
                         mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.verified_email_action));
-                        makePrimaryButton.setVisibility(View.VISIBLE);
                         break;
                     case Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS:
                         mVerificationStatus.setImageResource(R.drawable.ic_pending);
                         mVerificationStatus.setColorFilter(Color.GRAY);
 
                         mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_email_action));
-                        makePrimaryButton.setVisibility(View.GONE);
-                        divider.setVisibility(View.GONE);
                         break;
                     default:
                         mVerificationStatus.setImageResource(R.drawable.ic_notverified);
                         mVerificationStatus.setColorFilter(null);
 
                         mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_email_action));
-                        makePrimaryButton.setVisibility(View.GONE);
                         break;
                 }
-
                 if (email.isPrimary()) {
                     mIsPrimaryView.setVisibility(View.VISIBLE);
-
-                    optionsLayout.setVisibility(View.GONE);
                 }
-
-                removeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showDeleteEmailConfirmationDialog(email);
-                    }
-                });
-
-                makePrimaryButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        makeEmailPrimary(email.getEmailId());
-                    }
-                });
 
                 mEmailView.setText(email.getEmailAddress());
 
@@ -525,10 +493,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                             mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), email.getEmailAddress(), mEmailActionList);
                             mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                                 @Override
-                                public void onResourceSelected(int selectedIndex, String name) {
-                                    if (Constants.ACTION_TYPE_REMOVE.equals(name)) {
+                                public void onResourceSelected(int selectedIndex, String action) {
+                                    if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
                                         showDeleteEmailConfirmationDialog(email);
-                                    } else if (Constants.ACTION_TYPE_MAKE_PRIMARY.equals(name)) {
+                                    } else if (Constants.ACTION_TYPE_MAKE_PRIMARY.equals(action)) {
                                         makeEmailPrimary(email.getEmailId());
                                     }
                                 }
