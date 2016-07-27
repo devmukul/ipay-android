@@ -57,11 +57,7 @@
                     style="@style/TextViewProfileInfo" />
             </LinearLayout>
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:layout_below="@+id/icon"
-                android:background="@color/colorDivider" />
+            <View style="@style/Divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,11 +75,7 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:layout_below="@+id/icon"
-                android:background="@color/colorDivider" />
+            <View style="@style/Divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -98,6 +90,8 @@
                     android:id="@+id/textview_vat"
                     style="@style/TextViewProfileInfo" />
             </LinearLayout>
+
+            <View style="@style/Divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -19,11 +19,14 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.GetEnabledPayablesRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
 import bd.com.ipay.ipayskeleton.R;
@@ -174,7 +177,10 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
             private final TextView mPayableItemName;
             private final TextView mAmountTextView;
             private final TextView mDescriptionTextView;
-            private final ImageView mRemoveButton;
+
+            private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mPayableItemActionList;
+            private final int ACTION_REMOVE = 0;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -182,12 +188,11 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 mDescriptionTextView = (TextView) itemView.findViewById(R.id.payable_item_description);
                 mPayableItemName = (TextView) itemView.findViewById(R.id.payable_item_name);
-                mRemoveButton = (ImageView) itemView.findViewById(R.id.remove);
             }
 
             public void bindView(final int pos) {
 
-                String payableItemName = EducationPaymentActivity.mMyPayableItems.get(pos).getName();
+                final String payableItemName = EducationPaymentActivity.mMyPayableItems.get(pos).getName();
                 String payableItemDescription = EducationPaymentActivity.mMyPayableItems.get(pos).getPayableAccountHead().getDescription();
                 BigDecimal amount = EducationPaymentActivity.mMyPayableItems.get(pos).getInstituteFee();
 
@@ -198,14 +203,23 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
                     mDescriptionTextView.setText(payableItemDescription);
                 } else mDescriptionTextView.setVisibility(View.GONE);
 
-                mRemoveButton.setOnClickListener(new View.OnClickListener() {
+                itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        EducationPaymentActivity.mMyPayableItems.remove(pos);
-                        mPayablesListAdapter.notifyDataSetChanged();
+                    public void onClick(View view) {
+                        mPayableItemActionList = Arrays.asList(getResources().getStringArray(R.array.payable_education_action));
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), payableItemName, mPayableItemActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int selectedIndex, String action) {
+                                if (selectedIndex == ACTION_REMOVE) {
+                                    EducationPaymentActivity.mMyPayableItems.remove(pos);
+                                    mPayablesListAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                        mCustomSelectorDialog.show();
                     }
                 });
-
             }
         }
 
