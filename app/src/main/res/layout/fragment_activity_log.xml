@@ -157,18 +157,6 @@
                     android:text="@string/filter_profile_change" />
 
                 <CheckBox
-                    android:id="@+id/filter_money_in"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_received_money" />
-
-                <CheckBox
-                    android:id="@+id/filter_money_out"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/filter_sent_money" />
-
-                <CheckBox
                     android:id="@+id/filter_verification_changes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -205,6 +193,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/activity_horizontal_margin_card" />
+
+            <TextView
+                android:id="@+id/empty_list_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/empty_list" />
+
         </LinearLayout>
     </LinearLayout>
 

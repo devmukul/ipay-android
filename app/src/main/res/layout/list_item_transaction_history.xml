@@ -40,7 +40,10 @@
             <TextView
                 android:id="@+id/activity_description"
                 style="@style/TransactionHistoryLeftTextViewStyle"
-                android:layout_toLeftOf="@+id/net_amount" />
+                android:layout_toLeftOf="@+id/net_amount"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-light"
+                android:textStyle="bold"  />
 
             <TextView
                 android:id="@+id/net_amount"
@@ -58,10 +61,7 @@
 
             <TextView
                 android:id="@+id/receiver"
-                style="@style/TransactionHistoryLeftTextViewStyle"
-                android:textSize="13sp"
-                android:fontFamily="sans-serif-light"
-                android:textStyle="bold" />
+                style="@style/TransactionHistoryLeftTextViewStyle" />
 
 
         </RelativeLayout>

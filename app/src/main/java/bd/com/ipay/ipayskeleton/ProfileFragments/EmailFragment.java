@@ -468,7 +468,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                         mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.verified_email_action));
                         break;
                     case Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS:
-                        mVerificationStatus.setImageResource(R.drawable.ic_pending);
+                        mVerificationStatus.setImageResource(R.drawable.ic_workinprogress);
                         mVerificationStatus.setColorFilter(Color.GRAY);
 
                         mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_email_action));

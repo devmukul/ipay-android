@@ -318,7 +318,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             private final TextView mDescriptionView;
             private final TextView mTitleView;
             private final TextView mTimeView;
-            private final TextView loadMoreTextView;
             private final ProfileImageView mProfileImageView;
 
             private CustomSelectorDialog mCustomSelectorDialog;
@@ -332,7 +331,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 mTimeView = (TextView) itemView.findViewById(R.id.textview_time);
                 mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
             public void bindView(int pos) {
@@ -347,14 +345,10 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
 
-                mDescriptionView.setText(description);
+                mDescriptionView.setText(Utilities.formatTaka(amount));
                 mTimeView.setText(time);
 
-                if (title != null && !title.equals("")) {
-                    mTitleView.setVisibility(View.VISIBLE);
-                    mTitleView.setText(title);
-
-                } else mTitleView.setVisibility(View.GONE);
+                mTitleView.setText(name);
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 

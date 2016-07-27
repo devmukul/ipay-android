@@ -368,7 +368,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     default:
 
                         // Bank verification status pending
-                        mBankVerifiedStatus.setImageResource(R.drawable.ic_pending);
+                        mBankVerifiedStatus.setImageResource(R.drawable.ic_workinprogress);
                         mBankVerifiedStatus.setColorFilter(Color.GRAY);
 
                         mBankActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_bank_action));
