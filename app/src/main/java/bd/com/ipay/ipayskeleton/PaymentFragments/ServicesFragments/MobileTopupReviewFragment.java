@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -322,17 +320,14 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                         String name = ContactEngine.getContactNameFromNumber(getActivity(), mMobileNumber);
-                        Log.w("Mobile Number", mMobileNumber + " " + name);
-                        String number2 = mMobileNumber.substring(3);
-                        Log.w("Mobile Number 2", number2 + " " + ContactEngine.getContactNameFromNumber(getActivity(), number2));
 
                         if (name != null)
                             mReceiverNameView.setText(name);
-                        Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
-                        Log.w("Mobile Pic", photoUri + "");
+
+                        String photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
 
                         if (photoUri != null)
-                            mProfileImageView.setProfilePicture(photoUri.toString(), false);
+                            mProfileImageView.setProfilePicture(photoUri, false);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

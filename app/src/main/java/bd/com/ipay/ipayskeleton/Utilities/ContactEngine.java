@@ -552,24 +552,21 @@ public class ContactEngine {
                 Contacts.Photo.CONTENT_DIRECTORY);
     }
 
-    public static Uri getPhotoUri(Context context, String number) {
-        if (number == null || number.equals(""))
+    public static String getPhotoUri(Context context, String number) {
+        if (number == null || number.isEmpty())
             return null;
-        String photoUri = null;
+
+        String photoUri;
         try {
             Cursor contactLookupCursor = context.getContentResolver().query(
                     Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number)),
-                    new String[] {PhoneLookup.DISPLAY_NAME, PhoneLookup.PHOTO_URI},
+                    new String[] {PhoneLookup.PHOTO_URI},
                     null, null, null);
             if (contactLookupCursor != null) {
                 if (contactLookupCursor.moveToFirst()) {
-                    do {
-                        photoUri = contactLookupCursor.getString(contactLookupCursor
-                                .getColumnIndexOrThrow(PhoneLookup.PHOTO_URI));
-                        if (photoUri != null) {
-                            return Uri.parse(photoUri);
-                        }
-                    } while (contactLookupCursor.moveToNext());
+                    photoUri = contactLookupCursor.getString(contactLookupCursor
+                            .getColumnIndexOrThrow(PhoneLookup.PHOTO_URI));
+                        return photoUri;
                 }
                 contactLookupCursor.close();
             }
