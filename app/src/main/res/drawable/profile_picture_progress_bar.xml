@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/secondaryProgress">
+        <shape
+            android:innerRadius="26dp"
+            android:shape="ring"
+            android:thickness="3.5dp">
+
+            <gradient
+                android:centerColor="@android:color/white"
+                android:endColor="@android:color/white"
+                android:startColor="@android:color/white"
+                android:type="sweep" />
+        </shape>
+    </item>
     <item android:id="@android:id/progress">
         <shape
-            android:innerRadiusRatio="3"
+            android:innerRadius="26dp"
             android:shape="ring"
-            android:thicknessRatio="14.0">
+            android:thickness="3.5dp">
             <gradient
                 android:centerColor="@color/colorDarkOrange"
                 android:centerY="0.50"
@@ -15,3 +28,5 @@
         </shape>
     </item>
 </layer-list>
+
+

@@ -679,7 +679,12 @@
         <item>Make Primary</item>
         <item>Remove</item>
     </string-array>
+
     <string-array name="not_verified_email_action">
+        <item>Remove</item>
+    </string-array>
+
+    <string-array name="payable_education_action">
         <item>Remove</item>
     </string-array>
 </resources>
