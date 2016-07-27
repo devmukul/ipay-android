@@ -32,7 +32,7 @@ public class GetBusinessRulesWithServiceChargeResponse {
 
     public Boolean getPinRequired() {
         if (isPinRequired == null)
-            return false;
+            return true;
         return isPinRequired;
     }
 
