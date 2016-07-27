@@ -58,7 +58,7 @@ import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonDrawableList.LIST_
  * Pass (Constants.VERIFIED_USERS_ONLY, true) in the argument bundle to show only the
  * verified iPay users and (Constants.IPAY_MEMBERS_ONLY, true) to show member users only.
  */
-public class IPayContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener,
         HttpResponseListener {
 
@@ -99,6 +99,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
     private boolean miPayMembersOnly;
 
     private int nameIndex;
+    private int realNameIndex;
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int verificationStatusIndex;
@@ -610,7 +611,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
                 mNameView = (TextView) itemView.findViewById(R.id.name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
                 mProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
-                isSubscriber = (ImageView) itemView.findViewById(R.id.is_subscriber);
+                isSubscriber = (ImageView) itemView.findViewById(R.id.is_member);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
                 inviteStatusTextView = (TextView) itemView.findViewById(R.id.invite_status);
             }

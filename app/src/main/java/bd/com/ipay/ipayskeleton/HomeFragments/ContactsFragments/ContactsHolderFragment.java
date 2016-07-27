@@ -30,8 +30,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private Button mAllContactsSelector;
     private Button miPayContactsSelector;
 
-    private IPayContactsFragment miPayAllContactsFragment;
-    private IPayContactsFragment miPayMemberContactsFragment;
+    private ContactsFragment miPayAllContactsFragment;
+    private ContactsFragment miPayMemberContactsFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,7 +94,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         try {
             if (getActivity() != null) {
                 if (miPayAllContactsFragment == null) {
-                    miPayAllContactsFragment = new IPayContactsFragment();
+                    miPayAllContactsFragment = new ContactsFragment();
                 }
                 miPayAllContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
                 getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, miPayAllContactsFragment).commit();
@@ -110,7 +110,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
         try {
             if (miPayMemberContactsFragment == null) {
-                miPayMemberContactsFragment = new IPayContactsFragment();
+                miPayMemberContactsFragment = new ContactsFragment();
 
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(Constants.IPAY_MEMBERS_ONLY, true);
