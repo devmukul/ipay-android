@@ -99,7 +99,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private boolean miPayMembersOnly;
 
     private int nameIndex;
-    private int realNameIndex;
+    private int originalNameIndex;
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int verificationStatusIndex;
@@ -228,6 +228,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 if (cursor != null) {
                     nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
+                    originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_ORIGINAL_NAME);
                     phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
@@ -596,6 +597,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
             private final TextView mPortraitTextView;
             private final TextView mNameView;
+            private final TextView mOriginalNameView;
             private final RoundedImageView mProfilePictureView;
             private final TextView mMobileNumberView;
             private final ImageView isSubscriber;
@@ -609,6 +611,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 mPortraitTextView = (TextView) itemView.findViewById(R.id.portraitTxt);
                 mNameView = (TextView) itemView.findViewById(R.id.name);
+                mOriginalNameView = (TextView) itemView.findViewById(R.id.original_name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
                 mProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
                 isSubscriber = (ImageView) itemView.findViewById(R.id.is_member);
@@ -621,6 +624,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 mCursor.moveToPosition(pos);
 
                 final String name = mCursor.getString(nameIndex);
+                final String originalName = mCursor.getString(originalNameIndex);
                 final String phoneNumber = mCursor.getString(phoneNumberIndex);
                 final String profilePictureUrl = mCursor.getString(profilePictureUrlIndex);
                 final boolean isVerified = mCursor.getInt(verificationStatusIndex) == DBConstants.VERIFIED_USER;
@@ -631,6 +635,13 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 mNameView.setText(name);
                 mMobileNumberView.setText(phoneNumber);
+
+                if (isMember) {
+                    mOriginalNameView.setVisibility(View.VISIBLE);
+                    mOriginalNameView.setText(originalName);
+                } else {
+                    mOriginalNameView.setVisibility(View.GONE);
+                }
 
                 if (!isMember && isInvited)
                     inviteStatusTextView.setVisibility(View.VISIBLE);

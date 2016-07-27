@@ -45,7 +45,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add people eligible for password recovery");
         PROPERTY_NAME_TO_TITLE_MAP.put(INTRODUCER, "Get Introduced by Other iPay Users");
         PROPERTY_NAME_TO_TITLE_MAP.put(BASIC_PROFILE, "Complete Basic Profile Information");
-        PROPERTY_NAME_TO_TITLE_MAP.put(ADDRESS, "Add Present, Permanent and Office Addresses");
+        PROPERTY_NAME_TO_TITLE_MAP.put(ADDRESS, "Add Present and Permanent Addresses");
         PROPERTY_NAME_TO_TITLE_MAP.put(PROFILE_PICTURE, "Add a Profile Picture");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a verified email");
         PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Photo Identification");

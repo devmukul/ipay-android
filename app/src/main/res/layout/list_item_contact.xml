@@ -33,13 +33,13 @@
         android:layout_toRightOf="@+id/contact_portrait_view"
         android:text="Name"
         android:paddingBottom="2dp"
-        android:paddingTop="14dp"
+        android:paddingTop="10dp"
         android:singleLine="true"
         android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/real_name"
+        android:id="@+id/original_name"
         style="@style/TextStylePrimaryMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
         android:layout_below="@+id/name"
         android:paddingBottom="2dp"
         android:singleLine="true"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:text="Real Name" />
 
     <TextView
@@ -56,13 +56,13 @@
         style="@style/TextStyleSecondaryMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/real_name"
+        android:layout_below="@+id/original_name"
         android:layout_toLeftOf="@+id/is_member"
         android:layout_toRightOf="@+id/contact_portrait_view"
         android:gravity="left"
-        android:paddingBottom="14dp"
+        android:paddingBottom="10dp"
         android:singleLine="true"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:text="Mobile"/>
 
     <View

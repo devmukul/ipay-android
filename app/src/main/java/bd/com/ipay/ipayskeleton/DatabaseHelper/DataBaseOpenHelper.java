@@ -44,7 +44,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion <= 5) {
+        if (oldVersion <= 6) {
             db.execSQL("drop table if exists " + DBConstants.DB_TABLE_FRIENDS);
             createFriendsTable(db);
         }

@@ -14,7 +14,7 @@ import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -53,6 +53,7 @@ public class DataHelper {
             ContentValues values = new ContentValues();
             values.put(DBConstants.KEY_MOBILE_NUMBER, friendNode.getPhoneNumber());
             values.put(DBConstants.KEY_NAME, friendNode.getInfo().getName());
+            values.put(DBConstants.KEY_ORIGINAL_NAME, friendNode.getInfo().getOriginalName());
             values.put(DBConstants.KEY_ACCOUNT_TYPE, friendNode.getInfo().getAccountType());
             values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
             values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
