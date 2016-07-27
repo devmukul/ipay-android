@@ -15,12 +15,11 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/value4"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingRight="@dimen/activity_horizontal_margin">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/profile_picture"
-                style="@style/ReviewImageStyle.Dialog" />
+                style="@style/ReviewImageStyle" />
 
             <ImageView
                 android:id="@+id/other_image"
@@ -59,7 +58,7 @@
 
             <TextView
                 android:id="@+id/transaction_id"
-                style="@style/TextViewInfo" />
+                style="@style/TextViewInfoColorPrimary" />
 
         </LinearLayout>
 
@@ -73,7 +72,7 @@
 
             <TextView
                 android:id="@+id/your_number"
-                style="@style/TextViewInfo" />
+                style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
         <View style="@style/Divider" />
@@ -86,7 +85,7 @@
 
             <TextView
                 android:id="@+id/description"
-                style="@style/TextViewInfo" />
+                style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
         <View
@@ -105,7 +104,7 @@
 
             <TextView
                 android:id="@+id/amount"
-                style="@style/TextViewInfo" />
+                style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
         <View style="@style/Divider" />
@@ -118,7 +117,7 @@
 
             <TextView
                 android:id="@+id/fee"
-                style="@style/TextViewInfo" />
+                style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
         <View style="@style/Divider" />
@@ -131,7 +130,7 @@
 
             <TextView
                 android:id="@+id/netAmount"
-                style="@style/TextViewInfo" />
+                style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
         <View style="@style/Divider" />
@@ -144,7 +143,7 @@
 
             <TextView
                 android:id="@+id/balance"
-                style="@style/TextViewInfo" />
+                style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
         <View
@@ -161,7 +160,7 @@
 
             <TextView
                 android:id="@+id/time"
-                style="@style/TextViewInfo" />
+                style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
 
@@ -182,7 +181,7 @@
 
                 <TextView
                     android:id="@+id/purpose"
-                    style="@style/TextViewInfo" />
+                    style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -196,7 +195,7 @@
 
             <TextView
                 android:id="@+id/status"
-                style="@style/TextViewInfo" />
+                style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
     </LinearLayout>

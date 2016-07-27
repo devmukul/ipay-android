@@ -360,7 +360,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mReceivedRequestActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int selectedIndex, String name) {
+                            public void onResourceSelected(int selectedIndex, String action) {
                                 if (selectedIndex == ACTION_ACCEPT) {
                                     mMoneyRequestId = id;
                                     mAmount = amount;

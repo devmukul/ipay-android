@@ -72,7 +72,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
     }
 
     private void initializeView() {
-        customView(R.layout.dialog_make_payment_notification_review, true);
+        customView(R.layout.fragment_make_payment_notification_review, true);
 
         View v = this.build().getCustomView();
         autoDismiss(false);

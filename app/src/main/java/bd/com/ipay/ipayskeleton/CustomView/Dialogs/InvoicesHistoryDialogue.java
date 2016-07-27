@@ -58,7 +58,7 @@ public class InvoicesHistoryDialogue extends MaterialDialog.Builder {
 
         MaterialDialog dialog = new MaterialDialog.Builder(this.getContext())
                 .title(R.string.invoice_details)
-                .customView(R.layout.dialog_make_payment_notification_review, true)
+                .customView(R.layout.fragment_make_payment_notification_review, true)
                 .negativeText(R.string.ok)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override

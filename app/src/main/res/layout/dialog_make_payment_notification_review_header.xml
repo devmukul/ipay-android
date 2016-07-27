@@ -2,8 +2,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/activity_vertical_margin_card"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
     android:layout_marginTop="@dimen/activity_vertical_margin_card"
     android:orientation="vertical">
 
@@ -16,7 +14,7 @@
 
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
             android:id="@+id/profile_picture"
-            style="@style/ReviewImageStyle.Dialog" />
+            style="@style/ReviewImageStyle" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,43 +45,36 @@
         android:layout_height="1px"
         android:background="@color/colorDivider" />
 
-    <TextView
-        android:id="@+id/textview_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin_card"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin_card"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
 
         <TextView
-            style="@style/ReviewItemLabelStyle.Dialog"
+            style="@style/TextViewInfoLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/item"
+            android:textStyle="bold" />
+
+        <TextView
+            style="@style/ReviewItemLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/item" />
+            android:text="@string/quantity"
+            android:textStyle="bold" />
 
         <TextView
-            style="@style/ReviewItemLabelStyle.Dialog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/TextViewInfo"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/quantity" />
-
-        <TextView
-            style="@style/ReviewItemLabelStyle.Dialog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".8"
-            android:gravity="center"
-            android:text="@string/amount" />
+            android:text="@string/amount"
+            android:textStyle="bold" />
     </LinearLayout>
+
+    <View style="@style/Divider" />
+
 </LinearLayout>

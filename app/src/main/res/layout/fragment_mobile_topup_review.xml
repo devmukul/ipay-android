@@ -79,7 +79,7 @@
 
                 <TextView
                     android:id="@+id/textview_amount"
-                    style="@style/TextViewInfo" />
+                    style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -104,7 +104,7 @@
 
                 <TextView
                     android:id="@+id/textview_service_charge"
-                    style="@style/TextViewInfo" />
+                    style="@style/TextViewInfoColorPrimary" />
 
             </LinearLayout>
 
@@ -122,7 +122,7 @@
 
                 <TextView
                     android:id="@+id/textview_total"
-                    style="@style/TextViewInfo" />
+                    style="@style/TextViewInfoColorPrimary" />
 
             </LinearLayout>
 
@@ -141,7 +141,7 @@
 
                 <TextView
                     android:id="@+id/textview_package"
-                    style="@style/TextViewInfo" />
+                    style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
             <View style="@style/Divider" />

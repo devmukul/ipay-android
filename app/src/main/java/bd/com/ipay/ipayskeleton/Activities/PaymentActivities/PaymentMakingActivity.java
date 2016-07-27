@@ -6,8 +6,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHistoryFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoicePaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentMakingFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -17,7 +21,6 @@ public class PaymentMakingActivity extends BaseActivity {
 
     private FloatingActionButton mFabMakingPayment;
     private boolean switchedToPendingList = true;
-
     public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     @Override
@@ -74,6 +77,15 @@ public class PaymentMakingActivity extends BaseActivity {
         switchedToPendingList = true;
     }
 
+    public void switchToInvoiceHistoryFrament(Bundle bundle) {
+
+
+        InvoiceHistoryFragment invoiceHistoryFragment = new InvoiceHistoryFragment();
+        invoiceHistoryFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, invoiceHistoryFragment).commit();
+        mFabMakingPayment.setVisibility(View.GONE);
+        switchedToPendingList = true;
+    }
 
     @Override
     public Context setContext() {

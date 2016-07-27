@@ -8,8 +8,10 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,9 +32,11 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -432,7 +436,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int selectedIndex,String name) {
+                            public void onResourceSelected(int selectedIndex,String action) {
                                 if (selectedIndex == ACTION_ACCEPT) {
                                     mMoneyRequestId = id;
                                     mAmount = amount;
@@ -443,15 +447,8 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                                     mVat = vat;
                                     mItemList = itemList;
 
-                                    ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                                            mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
-                                            new ReviewDialogFinishListener() {
-                                                @Override
-                                                public void onReviewFinish() {
-                                                    refreshNotificationList();
-                                                }
-                                            });
-                                    dialog.show();
+                                    launchInvoiceHistoryFragment();
+
                                 } else if (selectedIndex == ACTION_REJECT) {
                                     MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
                                     rejectDialog.content(R.string.confirm_request_rejection);
@@ -579,6 +576,22 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 return FOOTER_VIEW;
             else
                 return MONEY_REQUEST_ITEM_VIEW;
+        }
+
+        private void launchInvoiceHistoryFragment() {
+
+            Bundle bundle = new Bundle();
+            bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+            bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
+            bundle.putString(Constants.NAME, mReceiverName);
+            bundle.putInt(Constants.MONEY_REQUEST_SERVICE_ID, Constants.SERVICE_ID_REQUEST_MONEY);
+            bundle.putString(Constants.VAT, mVat.toString());
+            bundle.putString(Constants.PHOTO_URI, mPhotoUri);
+            bundle.putString(Constants.AMOUNT, mAmount.toString());
+            bundle.putString(Constants.TITLE, mTitle);
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG,new ArrayList<>(mItemList));
+
+            ((PaymentMakingActivity) getActivity()).switchToInvoiceHistoryFrament(bundle);
         }
     }
 

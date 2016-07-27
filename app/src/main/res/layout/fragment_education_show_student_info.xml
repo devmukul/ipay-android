@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/textview_name"
-            style="@style/TextViewInfo"
+            style="@style/TextViewInfoColorPrimary"
             android:layout_below="@+id/textview_mothers_name" />
     </LinearLayout>
 
@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/textview_department"
-            style="@style/TextViewInfo" />
+            style="@style/TextViewInfoColorPrimary" />
     </LinearLayout>
 
     <View
@@ -52,7 +52,7 @@
 
         <TextView
             android:id="@+id/textview_mobile_number"
-            style="@style/TextViewInfo" />
+            style="@style/TextViewInfoColorPrimary" />
     </LinearLayout>
 
     <Button

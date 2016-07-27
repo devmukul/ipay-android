@@ -1,75 +1,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="@dimen/activity_horizontal_margin_card">
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/review_item_vertical_spacing_dialog"
-        android:orientation="horizontal">
+    <LinearLayout style="@style/LinearLayoutHolder">
 
         <TextView
-            style="@style/ReviewItemLabelStyle.Dialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextViewInfoLabel"
             android:text="@string/total_amount" />
 
         <TextView
             android:id="@+id/textview_net_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right" />
+            style="@style/TextViewInfoColorPrimary" />
 
     </LinearLayout>
+
+    <View style="@style/Divider" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/review_item_vertical_spacing_dialog"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:id="@+id/service_charge_layout">
+
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/service_charge" />
+
+            <TextView
+                android:id="@+id/textview_service_charge"
+                style="@style/TextViewInfoColorPrimary" />
+
+        </LinearLayout>
+
+        <View style="@style/Divider" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/LinearLayoutHolder">
 
         <TextView
-            style="@style/ReviewItemLabelStyle.Dialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextViewInfoLabel"
             android:text="@string/vat" />
 
         <TextView
             android:id="@+id/textview_vat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right" />
+            style="@style/TextViewInfoColorPrimary" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/review_item_vertical_spacing_dialog"
-        android:orientation="horizontal">
+    <View style="@style/Divider" />
+
+    <LinearLayout style="@style/LinearLayoutHolder">
 
         <TextView
-            style="@style/ReviewItemLabelStyle.Dialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextViewInfoLabel"
             android:text="@string/total" />
 
         <TextView
             android:id="@+id/textview_total"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right" />
+            style="@style/TextViewInfoColorPrimary" />
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginBottom="@dimen/activity_vertical_margin_card"
-        android:layout_marginTop="@dimen/activity_vertical_margin_card"
-        android:background="@color/colorDivider" />
+    <View style="@style/Divider" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -83,7 +78,8 @@
             android:hint="@string/enter_pin"
             android:inputType="numberPassword"
             android:maxLines="1"
-            android:singleLine="true">
+            android:singleLine="true"
+            android:visibility="gone">
 
             <requestFocus />
         </EditText>
@@ -91,14 +87,13 @@
 
     <Button
         android:id="@+id/button_make_payment"
-        style="@style/PrimaryButton"
+        style="@style/PrimaryMediumButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/make_payment"
+        android:layout_marginBottom="@dimen/value20"
         android:layout_marginLeft="@dimen/value12"
         android:layout_marginRight="@dimen/value12"
         android:layout_marginTop="@dimen/value20"
-        android:layout_marginBottom="@dimen/value20"
-        android:visibility="gone"/>
+        android:text="@string/make_payment" />
 
 </LinearLayout>

@@ -55,7 +55,7 @@
 
                 <TextView
                     android:id="@+id/textview_name"
-                    style="@style/TextViewInfo"
+                    style="@style/TextViewInfoColorPrimary"
                     android:layout_below="@+id/textview_mothers_name" />
             </LinearLayout>
 
@@ -73,7 +73,7 @@
 
                 <TextView
                     android:id="@+id/textview_dob"
-                    style="@style/TextViewInfo"/>
+                    style="@style/TextViewInfoColorPrimary"/>
             </LinearLayout>
 
             <View
@@ -92,7 +92,7 @@
 
                 <TextView
                     android:id="@+id/textview_occupation"
-                    style="@style/TextViewInfo"/>
+                    style="@style/TextViewInfoColorPrimary"/>
             </LinearLayout>
 
             <View
@@ -110,7 +110,7 @@
 
                 <TextView
                     android:id="@+id/textview_gender"
-                    style="@style/TextViewInfo"/>
+                    style="@style/TextViewInfoColorPrimary"/>
             </LinearLayout>
 
             <View
@@ -128,7 +128,7 @@
 
                 <TextView
                     android:id="@+id/textview_fathers_name"
-                    style="@style/TextViewInfo"/>
+                    style="@style/TextViewInfoColorPrimary"/>
             </LinearLayout>
 
             <View
@@ -146,7 +146,7 @@
 
                 <TextView
                     android:id="@+id/textview_mothers_name"
-                    style="@style/TextViewInfo"/>
+                    style="@style/TextViewInfoColorPrimary"/>
             </LinearLayout>
 
             <View
@@ -164,7 +164,7 @@
 
                 <TextView
                     android:id="@+id/textview_signup"
-                    style="@style/TextViewInfo"/>
+                    style="@style/TextViewInfoColorPrimary"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

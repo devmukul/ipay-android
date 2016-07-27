@@ -171,6 +171,17 @@
         <item name="android:paddingBottom">@dimen/value10</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">right</item>
+    </style>
+
+    <style name="TextViewInfoColorPrimary" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">@dimen/value10</item>
+        <item name="android:paddingBottom">@dimen/value10</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_weight">0.5</item>
         <item name="android:gravity">right</item>
@@ -446,11 +457,18 @@
     <style name="ReviewItemLabelStyle">
         <item name="android:layout_marginRight">4dp</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="ReviewItemLabelStyle.Dialog" parent="ReviewItemLabelStyle">
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="ReviewItemLabel" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:paddingTop">@dimen/value10</item>
+        <item name="android:paddingBottom">@dimen/value10</item>
     </style>
 
     <style name="ReviewItemStyle">
