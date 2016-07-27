@@ -206,10 +206,10 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
     public void httpResponseReceiver(HttpResponseObject result) {
         mProgressDialog.dismiss();
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetAllInstitutionsTask = null;
             mGetSessionsByInstitutionTask = null;
+            mGetStudentInfoByStudentIDTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -285,6 +285,11 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
                             Toast.makeText(getActivity(), R.string.get_student_failed, Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
+
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.get_student_not_found, Toast.LENGTH_SHORT).show();
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.get_student_failed, Toast.LENGTH_SHORT).show();

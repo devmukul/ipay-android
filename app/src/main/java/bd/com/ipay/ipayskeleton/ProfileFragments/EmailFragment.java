@@ -32,6 +32,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -42,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.DeleteEmailResponse;
@@ -435,11 +437,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             private final TextView mEmailView;
             private final TextView mIsPrimaryView;
             private final ImageView mVerificationStatus;
-            private final LinearLayout optionsLayout;
-            private final Button removeButton;
-            private final Button makePrimaryButton;
-            private final View divider;
             private final View divider1;
+
+            private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mEmailActionList;
 
             public EmailViewHolder(final View itemView) {
                 super(itemView);
@@ -447,14 +448,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 mEmailView = (TextView) itemView.findViewById(R.id.textview_email);
                 mIsPrimaryView = (TextView) itemView.findViewById(R.id.textview_is_primary);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.email_verification_status);
-
-                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
-                divider = itemView.findViewById(R.id.divider);
                 divider1 = itemView.findViewById(R.id.divider1);
-
-                removeButton = (Button) itemView.findViewById(R.id.button_remove);
-                makePrimaryButton = (Button) itemView.findViewById(R.id.button_make_primary);
-
             }
 
             public void bindView(int pos) {
@@ -471,42 +465,24 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                         mVerificationStatus.setImageResource(R.drawable.ic_verified);
                         mVerificationStatus.setColorFilter(null);
 
-                        makePrimaryButton.setVisibility(View.VISIBLE);
+                        mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.verified_email_action));
                         break;
                     case Constants.EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS:
                         mVerificationStatus.setImageResource(R.drawable.ic_pending);
                         mVerificationStatus.setColorFilter(Color.GRAY);
 
-                        makePrimaryButton.setVisibility(View.GONE);
-                        divider.setVisibility(View.GONE);
+                        mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_email_action));
                         break;
                     default:
                         mVerificationStatus.setImageResource(R.drawable.ic_notverified);
                         mVerificationStatus.setColorFilter(null);
 
-                        makePrimaryButton.setVisibility(View.GONE);
+                        mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_email_action));
                         break;
                 }
-
                 if (email.isPrimary()) {
                     mIsPrimaryView.setVisibility(View.VISIBLE);
-
-                    optionsLayout.setVisibility(View.GONE);
                 }
-
-                removeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showDeleteEmailConfirmationDialog(email);
-                    }
-                });
-
-                makePrimaryButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        makeEmailPrimary(email.getEmailId());
-                    }
-                });
 
                 mEmailView.setText(email.getEmailAddress());
 
@@ -514,11 +490,18 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     @Override
                     public void onClick(View v) {
                         if (!email.isPrimary()) {
-                            if (optionsLayout.getVisibility() == View.VISIBLE) {
-                                optionsLayout.setVisibility(View.GONE);
-                            } else {
-                                optionsLayout.setVisibility(View.VISIBLE);
-                            }
+                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), email.getEmailAddress(), mEmailActionList);
+                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                                @Override
+                                public void onResourceSelected(int selectedIndex, String action) {
+                                    if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
+                                        showDeleteEmailConfirmationDialog(email);
+                                    } else if (Constants.ACTION_TYPE_MAKE_PRIMARY.equals(action)) {
+                                        makeEmailPrimary(email.getEmailId());
+                                    }
+                                }
+                            });
+                            mCustomSelectorDialog.show();
                         }
                     }
                 });

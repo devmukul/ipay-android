@@ -55,7 +55,7 @@ public class ProfileCompletionPropertyConstants {
     }
 
     static {
-        PROPERTY_NAME_TO_ICON_MAP.put(VERIFY_BANK, R.drawable.ic_banks);
+        PROPERTY_NAME_TO_ICON_MAP.put(VERIFY_BANK, R.drawable.ic_bankteal);
 //        PROPERTY_NAME_TO_ICON_MAP.put(ADD_PIN, "Set up PIN");
 //        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK, "Setup Trusted Network");
 //        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add People Eligible for Password Recovery");
@@ -66,7 +66,7 @@ public class ProfileCompletionPropertyConstants {
 //        PROPERTY_NAME_TO_ICON_MAP.put(VERIFIED_EMAIL, "Add a Verified Email");
         PROPERTY_NAME_TO_ICON_MAP.put(PHOTOID, R.drawable.ic_photoid);
         PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_photoid);
-        PROPERTY_NAME_TO_ICON_MAP.put(ADD_BANK, R.drawable.ic_banks);
+        PROPERTY_NAME_TO_ICON_MAP.put(ADD_BANK, R.drawable.ic_bankteal);
         PROPERTY_NAME_TO_ICON_MAP.put(PARENT, R.drawable.ic_parent);
     }
 

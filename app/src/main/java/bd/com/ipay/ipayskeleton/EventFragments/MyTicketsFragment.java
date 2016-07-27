@@ -56,7 +56,6 @@ public class MyTicketsFragment extends ProgressFragment implements HttpResponseL
         mTicketsListRecyclerView = (RecyclerView) v.findViewById(R.id.list_my_tickets);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
-
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mMyTicketsAdapter = new MyEventsListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
