@@ -32,7 +32,7 @@ public class GetServiceChargeResponse {
 
     public boolean isPinRequired() {
         if (isPinRequired == null)
-            return false;
+            return true;
         else
             return isPinRequired;
     }
@@ -57,19 +57,4 @@ public class GetServiceChargeResponse {
 
 
     }
-
-//    public String getServiceChargeDescription(BigDecimal amount) {
-//        BigDecimal calculatedServiceCharge = getPerTransactionFlatFee().add(((getPerTransactionVeriableCharge().multiply(amount))).divide(new BigDecimal(100)));
-//        BigDecimal actualServiceCharge;
-//
-//        if (getMaxTransactionFee().compareTo(calculatedServiceCharge) > 0)
-//            actualServiceCharge = calculatedServiceCharge;
-//        else actualServiceCharge = getMaxTransactionFee();
-//
-//        if (actualServiceCharge.compareTo(new BigDecimal(0)) == 0)
-//            return "There are no extra charges for this transaction!";
-//        else if (actualServiceCharge.compareTo(new BigDecimal(0)) > 0)
-//            return "You'll be charged " + actualServiceCharge + " Tk. for this transaction.";
-//        else return null;
-//    }
 }

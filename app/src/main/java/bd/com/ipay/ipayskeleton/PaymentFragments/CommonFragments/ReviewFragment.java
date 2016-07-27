@@ -102,8 +102,19 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
-        if (mProgressDialog != null)
+        if (isAdded())
             mProgressDialog.dismiss();
+
+        if (result == null) {
+            mGetBusinessRuleTask = null;
+            mServiceChargeTask = null;
+
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+            }
+
+            return;
+        }
 
         Gson gson = new Gson();
 
