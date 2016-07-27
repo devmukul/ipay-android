@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -213,8 +212,14 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetUserAddressTask = null;
-            if (getActivity() != null)
+            mGetDistrictListAsyncTask = null;
+            mGetThanaListAsyncTask = null;
+
+            if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
+            }
+
             return;
         }
 
@@ -233,15 +238,17 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                         loadAddresses();
                         setContentShown(true);
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
-                        ((HomeActivity) getActivity()).switchToDashBoard();
+                            getActivity().onBackPressed();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
-                    if (getActivity() != null) getActivity().finish();
+                        getActivity().onBackPressed();
+                    }
                 }
 
                 mGetUserAddressTask = null;
@@ -255,15 +262,17 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                         getUserAddress();
 
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
-                        getActivity().finish();
+                            getActivity().onBackPressed();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
-                    getActivity().finish();
+                        getActivity().onBackPressed();
+                    }
                 }
 
                 mGetThanaListAsyncTask = null;
@@ -277,15 +286,17 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                         getThanaList();
 
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
-                        getActivity().finish();
+                            getActivity().onBackPressed();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
-                    getActivity().finish();
+                        getActivity().onBackPressed();
+                    }
                 }
 
                 mGetDistrictListAsyncTask = null;

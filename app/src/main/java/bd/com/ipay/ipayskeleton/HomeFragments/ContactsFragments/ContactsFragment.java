@@ -58,7 +58,7 @@ import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonDrawableList.LIST_
  * Pass (Constants.VERIFIED_USERS_ONLY, true) in the argument bundle to show only the
  * verified iPay users and (Constants.IPAY_MEMBERS_ONLY, true) to show member users only.
  */
-public class IPayContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener,
         HttpResponseListener {
 
@@ -99,6 +99,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
     private boolean miPayMembersOnly;
 
     private int nameIndex;
+    private int originalNameIndex;
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int verificationStatusIndex;
@@ -227,6 +228,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
 
                 if (cursor != null) {
                     nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
+                    originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_ORIGINAL_NAME);
                     phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
@@ -595,6 +597,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
 
             private final TextView mPortraitTextView;
             private final TextView mNameView;
+            private final TextView mOriginalNameView;
             private final RoundedImageView mProfilePictureView;
             private final TextView mMobileNumberView;
             private final ImageView isSubscriber;
@@ -608,9 +611,10 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
 
                 mPortraitTextView = (TextView) itemView.findViewById(R.id.portraitTxt);
                 mNameView = (TextView) itemView.findViewById(R.id.name);
+                mOriginalNameView = (TextView) itemView.findViewById(R.id.original_name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
                 mProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
-                isSubscriber = (ImageView) itemView.findViewById(R.id.is_subscriber);
+                isSubscriber = (ImageView) itemView.findViewById(R.id.is_member);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
                 inviteStatusTextView = (TextView) itemView.findViewById(R.id.invite_status);
             }
@@ -620,6 +624,7 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
                 mCursor.moveToPosition(pos);
 
                 final String name = mCursor.getString(nameIndex);
+                final String originalName = mCursor.getString(originalNameIndex);
                 final String phoneNumber = mCursor.getString(phoneNumberIndex);
                 final String profilePictureUrl = mCursor.getString(profilePictureUrlIndex);
                 final boolean isVerified = mCursor.getInt(verificationStatusIndex) == DBConstants.VERIFIED_USER;
@@ -630,6 +635,13 @@ public class IPayContactsFragment extends Fragment implements LoaderManager.Load
 
                 mNameView.setText(name);
                 mMobileNumberView.setText(phoneNumber);
+
+                if (isMember) {
+                    mOriginalNameView.setVisibility(View.VISIBLE);
+                    mOriginalNameView.setText(originalName);
+                } else {
+                    mOriginalNameView.setVisibility(View.GONE);
+                }
 
                 if (!isMember && isInvited)
                     inviteStatusTextView.setVisibility(View.VISIBLE);

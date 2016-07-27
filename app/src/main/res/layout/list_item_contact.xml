@@ -29,38 +29,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/is_subscriber"
+        android:layout_toLeftOf="@+id/is_member"
         android:layout_toRightOf="@+id/contact_portrait_view"
+        android:text="Name"
         android:paddingBottom="2dp"
-        android:paddingTop="14dp"
+        android:paddingTop="10dp"
         android:singleLine="true"
         android:textSize="16sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/original_name"
+        style="@style/TextStylePrimaryMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/is_member"
+        android:layout_toRightOf="@+id/contact_portrait_view"
+        android:layout_below="@+id/name"
+        android:paddingBottom="2dp"
+        android:singleLine="true"
+        android:textSize="14sp"
+        android:text="Real Name" />
 
     <TextView
         android:id="@+id/mobile_number"
         style="@style/TextStyleSecondaryMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name"
-        android:layout_toLeftOf="@+id/is_subscriber"
+        android:layout_below="@+id/original_name"
+        android:layout_toLeftOf="@+id/is_member"
         android:layout_toRightOf="@+id/contact_portrait_view"
         android:gravity="left"
-        android:paddingBottom="14dp"
+        android:paddingBottom="10dp"
         android:singleLine="true"
-        android:textSize="15sp" />
+        android:textSize="14sp"
+        android:text="Mobile"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_alignRight="@+id/is_subscriber"
+        android:layout_alignRight="@+id/is_member"
         android:layout_below="@+id/mobile_number"
         android:layout_marginRight="6dp"
         android:layout_toRightOf="@+id/contact_portrait_view"
         android:background="@color/colorDivider" />
 
     <ImageView
-        android:id="@+id/is_subscriber"
+        android:id="@+id/is_member"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_alignParentRight="true"

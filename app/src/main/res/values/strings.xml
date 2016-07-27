@@ -604,6 +604,8 @@
     <string name="net_amount">Net Amount</string>
     <string name="status">Status</string>
     <string name="time">Time</string>
+    <string name="topup_rollback">TopUp Rollback</string>
+
 
     <string-array name="mobile_operators">
         <item>Grameen Phone</item>
