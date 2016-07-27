@@ -349,6 +349,7 @@ public class Constants {
     public static final String URL_GET_ENABLED_PAYABLES_LIST = "enabledpayableitem";
     public static final String URL_GET_STUDENT_INFO_BY_STUDENT_ID = "studentdetailsbyrollno";
     public static final String URL_GET_ENABLED_PAYABLE_ITEMS = "enabledpayableitem";
+    public static final String URL_MAKE_PAYMENT_EDUCATION = "createinvoice";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -487,6 +488,7 @@ public class Constants {
     public static final String COMMAND_GET_SESSION_LIST = "COMMAND_GET_SESSION_LIST";
     public static final String COMMAND_GET_ENABLED_PAYABLES_LIST = "COMMAND_GET_ENABLED_PAYABLES_LIST";
     public static final String COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID = "COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID";
+    public static final String COMMAND_MAKE_PAYMENT_EDUCATION = "COMMAND_MAKE_PAYMENT_EDUCATION";
 
     public static final String COUNTRY_CODE_BANGLADESH = "+880";
     public static final int ACTIVITY_LOG_COUNT = 10;

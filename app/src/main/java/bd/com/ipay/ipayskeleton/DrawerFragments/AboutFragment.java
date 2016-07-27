@@ -35,7 +35,7 @@ public class AboutFragment extends Fragment {
 
         mBuildNumberView = (TextView) v.findViewById(R.id.textview_build_number);
         mContactView = (IconifiedTextViewWithButton) v.findViewById(R.id.contact);
-        mHelpView = (IconifiedTextViewWithButton) v.findViewById(R.id.help);
+        mHelpView = (IconifiedTextViewWithButton) v.findViewById(R.id.terms_of_service);
         mPrivacyView = (IconifiedTextViewWithButton) v.findViewById(R.id.privacy);
 
         try {

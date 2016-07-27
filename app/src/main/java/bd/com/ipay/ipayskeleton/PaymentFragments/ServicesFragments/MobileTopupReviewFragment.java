@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -63,7 +62,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private int mOperatorCode;
     private String mError_message;
 
-    private TextView mReceiverView;
+    private TextView mReceiverNameView;
     private TextView mMobileNumberView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
@@ -94,7 +93,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         mCountryCode = getActivity().getIntent().getStringExtra(Constants.COUNTRY_CODE);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.image_view_profile);
-        mReceiverView = (TextView) v.findViewById(R.id.textview_name);
+        mReceiverNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
@@ -145,7 +144,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
         if (!Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_TOP_UP);
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_TOP_UP);
         else
             attemptGetServiceCharge();
 
@@ -252,10 +251,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private String getUserNameFromContacts(String mobileNumber) {
-        return ContactEngine.getContactNameFromNumber(getActivity(), mobileNumber);
-    }
-
     private void sendInvite(String phoneNumber) {
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
@@ -270,8 +265,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
             mTopupTask = null;
@@ -321,19 +315,19 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                         if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
                             profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
                         }
-                        mReceiverView.setText(name);
+                        mReceiverNameView.setText(name);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-
-                        mInvitationLayout.setVisibility(View.VISIBLE);
-                    } else {
-                        mInvitationLayout.setVisibility(View.VISIBLE);
                         String name = ContactEngine.getContactNameFromNumber(getActivity(), mMobileNumber);
+
                         if (name != null)
-                            mReceiverView.setText(name);
-                        Uri photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
-                        mProfileImageView.setProfilePicture(photoUri.toString(), false);
+                            mReceiverNameView.setText(name);
+
+                        String photoUri = ContactEngine.getPhotoUri(getActivity(), mMobileNumber);
+
+                        if (photoUri != null)
+                            mProfileImageView.setProfilePicture(photoUri, false);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

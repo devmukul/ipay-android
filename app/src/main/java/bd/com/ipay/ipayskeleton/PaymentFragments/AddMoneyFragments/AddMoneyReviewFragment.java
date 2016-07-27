@@ -126,7 +126,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         // Check if Min or max amount is available
         if (!Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRulewithServiceCharge(Constants.SERVICE_ID_ADD_MONEY);
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_ADD_MONEY);
         else
             attemptGetServiceCharge();
 

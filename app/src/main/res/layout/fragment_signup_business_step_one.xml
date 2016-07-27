@@ -235,7 +235,7 @@
                         android:layout_marginLeft="8dp"
                         android:background="@drawable/linked_textview_selector"
                         android:clickable="true"
-                        android:text="@string/terms_condition"
+                        android:text="@string/terms_condition_url"
                         android:textColor="@android:color/white"
                         android:textColorLink="@android:color/white"
                         android:textSize="@dimen/text_size_small" />
@@ -264,7 +264,7 @@
                         android:layout_marginLeft="8dp"
                         android:background="@drawable/linked_textview_selector"
                         android:clickable="true"
-                        android:text="@string/privacy_policy"
+                        android:text="@string/privacy_policy_url"
                         android:textColor="@android:color/white"
                         android:textColorLink="@android:color/white"
                         android:textSize="@dimen/text_size_small" />

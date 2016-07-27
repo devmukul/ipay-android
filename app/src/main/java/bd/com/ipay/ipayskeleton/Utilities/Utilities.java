@@ -543,4 +543,8 @@ public class Utilities {
     public static void setActionBarTitle(Activity activity, String title) {
         activity.getActionBar().setTitle(title);
     }
+
+    public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct){
+        return base.multiply(pct).divide(new BigDecimal(100));
+    }
 }

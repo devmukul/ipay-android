@@ -12,8 +12,13 @@ import com.google.gson.Gson;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -179,7 +184,13 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             httpRequest.setHeader(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID);
             httpRequest.setHeader("Accept", "application/json");
             httpRequest.setHeader("Content-type", "application/json");
-            return new DefaultHttpClient().execute(httpRequest);
+
+            HttpParams httpParams = new BasicHttpParams();
+            HttpProtocolParams.setContentCharset(httpParams, HTTP.UTF_8);
+            HttpProtocolParams.setHttpElementCharset(httpParams, HTTP.UTF_8);
+            HttpClient client = new DefaultHttpClient(httpParams);
+
+            return client.execute(httpRequest);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -552,14 +552,29 @@ public class ContactEngine {
                 Contacts.Photo.CONTENT_DIRECTORY);
     }
 
-    public static Uri getPhotoUri(Context context, String number) {
-        if (number == null || number.equals(""))
+    public static String getPhotoUri(Context context, String number) {
+        if (number == null || number.isEmpty())
             return null;
-        long _id = getContactIDFromNumber(context, number);
-        if (_id == -1)
-            return null;
-        else
-            return getPhotoUri(context, _id);
+
+        String photoUri;
+        try {
+            Cursor contactLookupCursor = context.getContentResolver().query(
+                    Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number)),
+                    new String[] {PhoneLookup.PHOTO_URI},
+                    null, null, null);
+            if (contactLookupCursor != null) {
+                if (contactLookupCursor.moveToFirst()) {
+                    photoUri = contactLookupCursor.getString(contactLookupCursor
+                            .getColumnIndexOrThrow(PhoneLookup.PHOTO_URI));
+                        return photoUri;
+                }
+                contactLookupCursor.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static long getContactIDFromNumber2(Context context,
@@ -622,7 +637,7 @@ public class ContactEngine {
         try {
             Cursor contactLookupCursor = context.getContentResolver().query(
                     Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(contactNumber)),
-                    new String[]{PhoneLookup.DISPLAY_NAME, PhoneLookup._ID},
+                    new String[] {PhoneLookup.DISPLAY_NAME, PhoneLookup._ID},
                     null, null, null);
             if (contactLookupCursor != null) {
                 if (contactLookupCursor.moveToFirst()) {

@@ -155,7 +155,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             mAmountEditText.requestFocus();
             mMobileTopUpInfoTextView.setVisibility(View.VISIBLE);
 
-
         } else {
             mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
                 @Override

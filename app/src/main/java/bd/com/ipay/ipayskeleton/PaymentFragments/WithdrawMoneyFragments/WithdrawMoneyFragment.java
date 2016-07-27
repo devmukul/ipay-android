@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -56,6 +57,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
     private List<UserBankClass> mListUserBankClasses;
     private ArrayList<String> mUserBankNameList;
     private ArrayList<String> mUserBankAccountNumberList;
+    private ArrayList<String> mUserBankList;
     private int selectedBankPosition = 0;
 
     private ProgressDialog mProgressDialog;
@@ -76,6 +78,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
         mUserBankNameList = new ArrayList<>();
         mUserBankAccountNumberList = new ArrayList<>();
+        mUserBankList = new ArrayList<>();
 
         // It might be possible that we have failed to load the available bank list during
         // application startup. In that case first try to load the available bank list first, and
@@ -236,37 +239,17 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
 
 
     private void showBankListAlertDialogue() {
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(getActivity());
-        builderSingle.setIcon(R.drawable.ic_account_balance_black_24dp);
-        builderSingle.setTitle(getString(R.string.select_a_bank));
+        CustomSelectorDialog bankSelectorDialog = new CustomSelectorDialog(getActivity(), getString(R.string.select_a_bank), mUserBankList);
+        bankSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int id, String name) {
+                mBankAccountNumberEditText.setError(null);
+                mBankAccountNumberEditText.setText(name);
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.select_dialog_singlechoice);
+            }
+        });
 
-        for (int i = 0; i < mUserBankNameList.size(); i++) {
-            arrayAdapter.add(mUserBankAccountNumberList.get(i) + "," + mUserBankNameList.get(i));
-        }
-
-        builderSingle.setNegativeButton(
-                R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        builderSingle.setAdapter(
-                arrayAdapter,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final String strName = arrayAdapter.getItem(which);
-                        selectedBankPosition = which;
-                        mBankAccountNumberEditText.setText(strName);
-                        mBankAccountNumberEditText.setError(null);
-                    }
-                });
-        builderSingle.show();
+        bankSelectorDialog.show();
     }
 
     @Override
@@ -306,8 +289,14 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                         for (int i = 0; i < mListUserBankClasses.size(); i++) {
                             mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
                             mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
+                            mUserBankList.add(mListUserBankClasses.get(i).getAccountNumber() + "," + mListUserBankClasses.get(i).getBankName());
                         }
                     }
+
+                    if (mUserBankNameList.size() == 1) {
+                        mBankAccountNumberEditText.setText(mUserBankAccountNumberList.get(0) + "," + mUserBankNameList.get(0));
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -12,10 +12,40 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:id="@+id/pay_now_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_rounded_white"
+            android:paddingTop="@dimen/value10"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/items_added_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_toLeftOf="@+id/ask_for_recommendation"
+                android:textColor="@color/background_red" />
+
+            <ImageView
+                android:id="@+id/pay_now_button"
+                style="@style/ButtonStyleWithIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@color/colorPrimary"
+                android:clickable="true"
+                android:padding="@dimen/activity_vertical_margin"
+                android:src="@drawable/ic_contactw" />
+
+        </RelativeLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_payables"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/pay_now_layout"
             android:layout_marginTop="@dimen/activity_horizontal_margin_card" />
 
         <TextView
