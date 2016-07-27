@@ -24,6 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,6 +95,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private static boolean profileCompletionPromptShown = false;
 
     private CircularProgressBar mProgressBar;
+    private ProgressBar mProgressBarWithoutAnimation;
     private TextView mProfileCompletionMessageView;
     private ImageButton mCloseButton;
 
@@ -126,6 +128,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mMobileTopUpButton = (Button) v.findViewById(R.id.button_mobile_topup);
         mMakePaymentButton = (Button) v.findViewById(R.id.button_make_payment);
         mPayByQRCodeButton = (Button) v.findViewById(R.id.button_pay_by_QR_code);
+
+        mProgressBarWithoutAnimation = (ProgressBar) v.findViewById(R.id.circular_progress_bar);
 
         mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
         mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
@@ -435,7 +439,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                         });
 
                         mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
-
                         mProfileCompletionPromptView.setVisibility(View.VISIBLE);
                     }
                 }
@@ -517,6 +520,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     promptForProfileCompletion();
+                    mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG).show();

@@ -27,13 +27,35 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin_double"
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
-                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                    android:id="@+id/profile_picture"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerVertical="true">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/profile_picture_holder">
+
+                    <ProgressBar
+                        android:id="@+id/circular_progress_bar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:secondaryProgress="100"
+                        android:progressDrawable="@drawable/profile_picture_progress_bar" />
+
+                    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                        android:id="@+id/profile_picture"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true">
 
                 </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/info_layout"
@@ -41,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
-                    android:layout_toRightOf="@+id/profile_picture">
+                    android:layout_toRightOf="@+id/profile_picture_holder">
 
                     <LinearLayout
                         android:id="@+id/name_layout"
