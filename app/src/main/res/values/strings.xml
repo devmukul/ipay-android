@@ -50,6 +50,7 @@
     <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
     <string name="empty_transaction_history">No transaction to show right now.</string>
     <string name="empty_list">Nothing to show right now.</string>
+    <string name="empty_list_for_password_recovery">You have to add at least one people in your trusted network who may help you when you will try to recover your password.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>

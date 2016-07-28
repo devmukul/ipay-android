@@ -200,16 +200,29 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         setContentShown(false);
     }
 
+    private void clearDateFilter() {
+        fromDate = null;
+        toDate = null;
+        mFromDateEditText.setText("");
+        mToDateEditText.setText("");
+    }
+
+    private void clearEventFilter() {
+        type = null;
+        mChangeProfileCheckBox.setChecked(false);
+        mVerificationCheckBox.setChecked(false);
+        mSecurityChangeCheckBox.setChecked(false);
+        mSystemEventCheckBox.setChecked(false);
+    }
+
     private void setActionsForDateFilter() {
 
         clearDateFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dateFilterLayout.setVisibility(View.GONE);
-                fromDate = null;
-                toDate = null;
-                mFromDateEditText.setText("");
-                mToDateEditText.setText("");
+                clearDateFilter();
+                clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -220,6 +233,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             @Override
             public void onClick(View v) {
                 dateFilterLayout.setVisibility(View.GONE);
+                clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -280,11 +294,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mClearEventFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = null;
-                mChangeProfileCheckBox.setChecked(false);
-                mVerificationCheckBox.setChecked(false);
-                mSecurityChangeCheckBox.setChecked(false);
-                mSystemEventCheckBox.setChecked(false);
+                clearDateFilter();
+                clearEventFilter();
 
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
@@ -303,6 +314,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
+                clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -320,6 +332,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
+                clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -337,6 +350,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
+                clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -354,6 +368,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     mChangeProfileCheckBox.setChecked(false);
                 } else type = null;
 
+                clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();

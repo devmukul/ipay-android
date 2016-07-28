@@ -49,13 +49,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     private HttpRequestGetAsyncTask mGetTrustedPersonsTask = null;
     private GetTrustedPersonsResponse mGetTrustedPersonsResponse = null;
 
-    private HttpRequestPostAsyncTask mAddTrustedPersonTask = null;
-    private AddTrustedPersonResponse mAddTrustedPersonResponse = null;
-
-    private HttpRequestPostAsyncTask mSetAccountRecoveryPersonTask = null;
-    private SetAccountRecoveryPersonResponse mSetAccountRecoveryPersonResponse = null;
-
-
     private List<TrustedPerson> mTrustedPersons;
     private TrustedPersonListAdapter mTrustedPersonListAdapter;
 
@@ -65,6 +58,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private TextView mEmptyListTextView;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -90,6 +84,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         mTrustedPersonListRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_person);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mProgressDialog = new ProgressDialog(getActivity());
 
         mTrustedPersonListAdapter = new TrustedPersonListAdapter();
@@ -154,95 +149,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         mGetTrustedPersonsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void addTrustedPerson(AddTrustedPersonRequest addTrustedPersonRequest) {
-        if (mAddTrustedPersonTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_as_trusted_person));
-        mProgressDialog.show();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(addTrustedPersonRequest);
-
-        mAddTrustedPersonTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_PERSON,
-                Constants.BASE_URL_MM + Constants.URL_POST_TRUSTED_PERSONS, json, getActivity(), this);
-        mAddTrustedPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void setAccountRecoveryPerson(long id) {
-        if (mSetAccountRecoveryPersonTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_as_account_recovery_person));
-        mProgressDialog.show();
-
-        SetAccountRecoveryPersonRequest setAccountRecoveryPersonRequest = new SetAccountRecoveryPersonRequest();
-        Gson gson = new Gson();
-        String json = gson.toJson(setAccountRecoveryPersonRequest);
-
-        mSetAccountRecoveryPersonTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_ACCOUNT_RECOVERY_PERSON,
-                Constants.BASE_URL_MM + Constants.URL_POST_TRUSTED_PERSONS + id + Constants.URL_SET_RECOVERY_PERSON,
-                json, getActivity(), this);
-        mSetAccountRecoveryPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void showAddTrustedPersonDialog() {
-
-        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
-                .title(R.string.add_a_trusted_person)
-                .customView(R.layout.dialog_add_new_trusted_person, true)
-                .positiveText(R.string.add)
-                .negativeText(R.string.cancel)
-                .build();
-
-        View view = dialog.getCustomView();
-
-        final TextView nameView = (TextView) view.findViewById(R.id.edit_text_name);
-        final TextView mobileNumberView = (TextView) view.findViewById(R.id.edit_text_mobile_number);
-        final Spinner selectRelationshipSpinner = (Spinner) view.findViewById(R.id.spinner_select_relationship);
-
-        ArrayAdapter<CharSequence> relationshipAdapter = ArrayAdapter.createFromResource(
-                getActivity(), R.array.relationship, android.R.layout.simple_spinner_item);
-        relationshipAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        selectRelationshipSpinner.setAdapter(relationshipAdapter);
-
-        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                //hiding keyboard after add pressed in add a trusted person
-                Utilities.hideKeyboard(getContext(), nameView);
-
-                String name = nameView.getText().toString();
-                String mobileNumber = mobileNumberView.getText().toString();
-                String relationShip = (String) selectRelationshipSpinner.getSelectedItem();
-
-                if (name.isEmpty()) {
-                    Toast.makeText(getActivity(), R.string.error_invalid_name, Toast.LENGTH_LONG).show();
-                } else if (!ContactEngine.isValidNumber(mobileNumber)) {
-                    Toast.makeText(getActivity(), R.string.error_invalid_mobile_number, Toast.LENGTH_LONG).show();
-                } else {
-
-                    AddTrustedPersonRequest addTrustedPersonRequest = new AddTrustedPersonRequest(name,
-                            ContactEngine.formatMobileNumberBD(mobileNumber), relationShip.toUpperCase());
-                    addTrustedPerson(addTrustedPersonRequest);
-                }
-            }
-        });
-
-        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                //hiding keyboard after cancel pressed in add a trusted person
-                Utilities.hideKeyboard(getContext(), nameView);
-            }
-        });
-
-        dialog.show();
-    }
-
     public void setTitle() {
         getActivity().setTitle(R.string.password_recovery);
     }
@@ -255,8 +161,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTrustedPersonsTask = null;
-            mAddTrustedPersonTask = null;
-            mSetAccountRecoveryPersonTask = null;
 
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -290,44 +194,11 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
             mSwipeRefreshLayout.setRefreshing(false);
             mGetTrustedPersonsTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_TRUSTED_PERSON)) {
-            try {
-                mAddTrustedPersonResponse = gson.fromJson(result.getJsonString(), AddTrustedPersonResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    getTrustedPersons();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG).show();
-            }
-
-            mAddTrustedPersonTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_SET_ACCOUNT_RECOVERY_PERSON)) {
-            try {
-                mSetAccountRecoveryPersonResponse = gson.fromJson(result.getJsonString(), SetAccountRecoveryPersonResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetAccountRecoveryPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    getTrustedPersons();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetAccountRecoveryPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-            }
-
-            mSetAccountRecoveryPersonTask = null;
+        }
+        if (mTrustedPersons.isEmpty()) {
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyListTextView.setVisibility(View.GONE);
         }
     }
 

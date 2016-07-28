@@ -252,6 +252,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             @Override
             public void onClick(View v) {
                 clearDateFilters();
+                clearEventFilters();
                 refreshTransactionHistory();
             }
         });
@@ -318,6 +319,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mClearEventFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearDateFilters();
                 clearEventFilters();
                 refreshTransactionHistory();
             }
@@ -330,6 +332,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             eventFilter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    clearDateFilters();
                     if (eventFilter.isChecked()) {
                         type = mCheckBoxTypeMap.get(eventFilter);
                     } else {

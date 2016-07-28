@@ -48,7 +48,8 @@ public class TransactionHistoryClass implements Parcelable {
         try {
             switch (serviceID) {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
-                    return receiverInfo;
+                    if(receiverInfo != null && !receiverInfo.equals("")) return receiverInfo;
+                    else return getPhoneNumber(description);
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
                     return getBankName();
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
