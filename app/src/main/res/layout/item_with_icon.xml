@@ -2,28 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/value5">
+    android:paddingTop="@dimen/value15"
+    android:paddingBottom="@dimen/value15">
 
     <ImageView
-        android:id="@+id/operator_imageView"
+        android:id="@+id/icon_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/value10" />
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="@dimen/activity_vertical_margin_double"
+        android:paddingRight="@dimen/value15"
+        android:src="@drawable/ic_bank2"/>
 
     <TextView
-        android:id="@+id/textview_operator_name"
+        android:id="@+id/textview_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/operator_imageView"
+        android:layout_toRightOf="@+id/icon_imageView"
         android:fontFamily="sans-serif"
         android:gravity="center_horizontal"
         android:singleLine="true"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size_small_medium" />
+        android:textSize="@dimen/text_size_small_medium"
 
-    <View style="@style/DividerWithoutMargin" />
+        android:paddingRight="@dimen/value15"/>
 </RelativeLayout>
 
 
