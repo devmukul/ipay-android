@@ -21,13 +21,31 @@
         android:layout_toRightOf="@+id/profile_picture"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp">
+
         <TextView
             android:id="@+id/textview_title"
+            android:singleLine="true"
+            android:ellipsize="end"
             style="@style/TextStylePrimaryMedium"
             android:textSize="@dimen/text_size_small_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" />
+            android:gravity="left"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/textview_amount"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+
+        <TextView
+            android:id="@+id/textview_amount"
+            style="@style/TransactionHistoryRightTextViewStyle"
+            android:textSize="14dp"
+            android:layout_alignParentTop="true"/>
+        </RelativeLayout>>
 
         <TextView
             android:id="@+id/textview_description"

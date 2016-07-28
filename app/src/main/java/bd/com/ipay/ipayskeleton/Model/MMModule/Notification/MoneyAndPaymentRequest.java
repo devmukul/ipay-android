@@ -31,11 +31,13 @@ public class MoneyAndPaymentRequest implements Notification {
         return vat;
     }
 
-
     public Long getId() {
         return id;
     }
 
+    public String getName() {
+        return getOriginatorProfile().getUserName();
+    }
 
     public BigDecimal getAmount() {
         return amount;

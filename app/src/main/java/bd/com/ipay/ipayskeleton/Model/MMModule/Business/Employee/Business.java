@@ -37,7 +37,7 @@ public class Business implements Notification {
 
     @Override
     public String getTitle() {
-        return "Business Invitation from " + name;
+        return "Business Invitation from ";
     }
 
     @Override

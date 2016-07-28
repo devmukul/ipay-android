@@ -296,7 +296,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
                 final String imageUrl = mRecommendationRequestList.get(pos).getProfilePictureUrl();
                 final long requestID = mRecommendationRequestList.get(pos).getId();
-                final String senderName = mRecommendationRequestList.get(pos).getSenderName();
+                final String senderName = mRecommendationRequestList.get(pos).getName();
                 final String senderMobileNumber = mRecommendationRequestList.get(pos).getSenderMobileNumber();
                 final String recommendationStatus = mRecommendationRequestList.get(pos).getStatus();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(mRecommendationRequestList.get(pos).getDate());

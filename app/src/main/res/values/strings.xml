@@ -660,6 +660,13 @@
         <item>Spam</item>
     </string-array>
 
+    <string-array name="business_action">
+        <item>Accept</item>
+        <item>Reject</item>
+        <item>Spam</item>
+    </string-array>
+
+
     <string-array name="my_request_action">
         <item>Cancel</item>
     </string-array>

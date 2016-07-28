@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -39,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.RequestMoneyReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
@@ -631,9 +633,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
 
+        private final int ACTION_VERIFY = 0;
+        private final int ACTION_REJECT = 1;
+        private final int ACTION_SPAM = 2;
+
         public class NotificationViewHolder extends RecyclerView.ViewHolder {
             private final TextView mTitleView;
-            private final TextView mDescriptionView;
+            private final TextView mNameView;
             private final TextView mTimeView;
             private final LinearLayout optionsLayout;
             private final ProfileImageView mProfileImageView;
@@ -642,7 +648,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 super(itemView);
 
                 mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
-                mDescriptionView = (TextView) itemView.findViewById(R.id.textview_description);
+                mNameView = (TextView) itemView.findViewById(R.id.textview_description);
                 mTimeView = (TextView) itemView.findViewById(R.id.textview_time);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
@@ -666,7 +672,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
 
-                mDescriptionView.setText(notification.getDescription());
+                mNameView.setText(notification.getName());
                 mTimeView.setText(new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(notification.getTime()));
 
                 if (notification.getTitle() != null && !notification.getTitle().equals("")) {
@@ -694,15 +700,15 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
 
         public class MoneyAndPaymentRequestViewHolder extends NotificationViewHolder {
-
-            private final Button acceptButton;
-            private final Button rejectButton;
+            private final TextView mAmountView;
+            private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mInvoiceActionList;
 
             public MoneyAndPaymentRequestViewHolder(final View itemView) {
-                super(itemView);
 
-                acceptButton = (Button) itemView.findViewById(R.id.accept_button);
-                rejectButton = (Button) itemView.findViewById(R.id.reject_button);
+                super(itemView);
+                mAmountView = (TextView) itemView.findViewById(R.id.textview_amount);
+
             }
 
             @Override
@@ -722,54 +728,63 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final BigDecimal vat = moneyAndPaymentRequest.getVat();
                 final List<ItemList> itemList = moneyAndPaymentRequest.getItemList();
 
-                acceptButton.setOnClickListener(new View.OnClickListener() {
+                mAmountView.setText(Utilities.formatTaka(amount));
+
+
+                itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        mMoneyRequestId = id;
-                        mAmount = amount;
-                        mReceiverName = name;
-                        mReceiverMobileNumber = mobileNumber;
-                        mPhotoUri = imageUrl;
-                        mTitle = title;
-                        mDescription = description;
-                        mServiceID = serviceID;
-                        mVat = vat;
-                        mItemList = itemList;
+                        mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int selectedIndex,String action) {
+                                if (selectedIndex == ACTION_VERIFY) {
+                                    mMoneyRequestId = id;
+                                    mAmount = amount;
+                                    mReceiverName = name;
+                                    mReceiverMobileNumber = mobileNumber;
+                                    mPhotoUri = imageUrl;
+                                    mTitle = title;
+                                    mDescription = description;
+                                    mServiceID = serviceID;
+                                    mVat = vat;
+                                    mItemList = itemList;
 
-                        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                            attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
-                        else {
-                            ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                                    mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
-                                    new ReviewDialogFinishListener() {
+                                    if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+                                        attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+                                    else {
+                                        ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
+                                                mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                                                new ReviewDialogFinishListener() {
+                                                    @Override
+                                                    public void onReviewFinish() {
+                                                        refreshMoneyAndPaymentRequestList();
+                                                    }
+                                                });
+                                        dialog.show();
+                                    }
+
+                                } else if (selectedIndex == ACTION_REJECT) {
+                                    MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                                    rejectDialog.content(R.string.are_you_sure);
+                                    rejectDialog.positiveText(R.string.yes);
+                                    rejectDialog.negativeText(R.string.no);
+                                    rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
                                         @Override
-                                        public void onReviewFinish() {
-                                            refreshMoneyAndPaymentRequestList();
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+                                                rejectRequestMoney(id);
+                                            else
+                                                rejectPaymentRequest(id);
                                         }
                                     });
-                            dialog.show();
-                        }
-                    }
-                });
-
-                rejectButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                        rejectDialog.content(R.string.confirm_request_rejection);
-                        rejectDialog.positiveText(R.string.yes);
-                        rejectDialog.negativeText(R.string.no);
-                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                                    rejectRequestMoney(id);
-                                else
-                                    rejectPaymentRequest(id);
+                                    rejectDialog.show();
+                                }
                             }
                         });
-                        rejectDialog.show();
+                        mCustomSelectorDialog.show();
                     }
                 });
 
@@ -778,72 +793,78 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class IntroductionRequestViewHolder extends NotificationViewHolder {
 
-            private final Button verifyButton;
-            private final Button rejectRecommendationButton;
-            private final Button markAsSpamRecommendationButton;
+            private List<String> mReceivedRequestActionList;
+            private CustomSelectorDialog mCustomSelectorDialog;
 
             public IntroductionRequestViewHolder(final View itemView) {
                 super(itemView);
 
-                verifyButton = (Button) itemView.findViewById(R.id.verify_button);
-                rejectRecommendationButton = (Button) itemView.findViewById(R.id.reject_button);
-                markAsSpamRecommendationButton = (Button) itemView.findViewById(R.id.mark_as_spam_button);
             }
 
             @Override
             public void bindView(int pos) {
                 super.bindView(pos);
 
+                final int position = pos ;
                 final IntroductionRequestClass introductionRequest = (IntroductionRequestClass) mNotifications.get(pos);
 
                 final long requestID = introductionRequest.getId();
                 final String recommendationStatus = introductionRequest.getStatus();
 
-                verifyButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setTitle(R.string.are_you_sure)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .show();
-                    }
-                });
 
-                rejectRecommendationButton.setOnClickListener(new View.OnClickListener() {
+                itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setTitle(R.string.are_you_sure)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .show();
-                    }
-                });
+                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
+                            mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.introduce_action));
+                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(),mNotifications.get(position).getName(), mReceivedRequestActionList);
+                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                                @Override
+                                public void onResourceSelected(int selectedIndex, String name) {
+                                    if (selectedIndex == ACTION_VERIFY) {
+                                        MaterialDialog.Builder verifyDialog = new MaterialDialog.Builder(getActivity());
+                                        verifyDialog.content(R.string.are_you_sure);
+                                        verifyDialog.positiveText(R.string.yes);
+                                        verifyDialog.negativeText(R.string.no);
+                                        verifyDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
+                                            }
+                                        });
+                                        verifyDialog.show();
 
-                markAsSpamRecommendationButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING))
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setTitle(R.string.are_you_sure)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM);
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .show();
+                                    } else if (selectedIndex == ACTION_REJECT) {
+                                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                                        rejectDialog.content(R.string.are_you_sure);
+                                        rejectDialog.positiveText(R.string.yes);
+                                        rejectDialog.negativeText(R.string.no);
+                                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
+                                            }
+                                        });
+                                        rejectDialog.show();
+
+                                    } else if (selectedIndex == ACTION_SPAM) {
+                                        MaterialDialog.Builder spamDialog = new MaterialDialog.Builder(getActivity());
+                                        spamDialog.content(R.string.are_you_sure);
+                                        spamDialog.positiveText(R.string.yes);
+                                        spamDialog.negativeText(R.string.no);
+                                        spamDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM);
+                                            }
+                                        });
+                                        spamDialog.show();
+
+                                    }
+                                }
+                            });
+                            mCustomSelectorDialog.show();
+                        }
                     }
                 });
             }
@@ -851,42 +872,73 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class BusinessInvitationViewHolder extends NotificationViewHolder {
 
-            private final Button mAcceptButton;
-            private final Button mRejectButton;
-            private final Button mMarkSpamButton;
+            private List<String> mReceivedRequestActionList;
+            private CustomSelectorDialog mCustomSelectorDialog;
 
             public BusinessInvitationViewHolder(View itemView) {
                 super(itemView);
-
-                mAcceptButton = (Button) itemView.findViewById(R.id.button_accept);
-                mRejectButton = (Button) itemView.findViewById(R.id.button_reject);
-                mMarkSpamButton = (Button) itemView.findViewById(R.id.button_mark_spam);
             }
 
             @Override
             public void bindView(int pos) {
                 super.bindView(pos);
 
+                final int position = pos ;
                 final Business businessInvitation = mBusinessInvitations.get(pos);
 
-                mAcceptButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        acceptBusinessInvitation(businessInvitation.getAssociationId());
-                    }
-                });
 
-                mRejectButton.setOnClickListener(new View.OnClickListener() {
+                itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        rejectBusinessInvitation(businessInvitation.getAssociationId());
-                    }
-                });
 
-                mMarkSpamButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        markBusinessInvitationAsSpam(businessInvitation.getAssociationId());
+                            mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.introduce_action));
+                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(),mNotifications.get(position).getName(), mReceivedRequestActionList);
+                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                                @Override
+                                public void onResourceSelected(int selectedIndex, String name) {
+                                    if (selectedIndex == ACTION_VERIFY) {
+                                        MaterialDialog.Builder verifyDialog = new MaterialDialog.Builder(getActivity());
+                                        verifyDialog.content(R.string.are_you_sure);
+                                        verifyDialog.positiveText(R.string.yes);
+                                        verifyDialog.negativeText(R.string.no);
+                                        verifyDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                acceptBusinessInvitation(businessInvitation.getAssociationId());
+                                            }
+                                        });
+                                        verifyDialog.show();
+
+                                    } else if (selectedIndex == ACTION_REJECT) {
+                                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                                        rejectDialog.content(R.string.are_you_sure);
+                                        rejectDialog.positiveText(R.string.yes);
+                                        rejectDialog.negativeText(R.string.no);
+                                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                rejectBusinessInvitation(businessInvitation.getAssociationId());
+                                            }
+                                        });
+                                        rejectDialog.show();
+
+                                    } else if (selectedIndex == ACTION_SPAM) {
+                                        MaterialDialog.Builder spamDialog = new MaterialDialog.Builder(getActivity());
+                                        spamDialog.content(R.string.are_you_sure);
+                                        spamDialog.positiveText(R.string.yes);
+                                        spamDialog.negativeText(R.string.no);
+                                        spamDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                markBusinessInvitationAsSpam(businessInvitation.getAssociationId());
+                                            }
+                                        });
+                                        spamDialog.show();
+                                    }
+                                }
+                            });
+                            mCustomSelectorDialog.show();
+
                     }
                 });
             }
