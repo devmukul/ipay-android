@@ -43,13 +43,13 @@ public class PayFragment extends Fragment {
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mServiceActionList = new ArrayList<>();
-        mServiceActionList.add(new ServiceAction(getString(R.string.topup)));
         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
             mServiceActionList.add(new ServiceAction(getString(R.string.make_payment)));
         } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
             mServiceActionList.add(new ServiceAction(getString(R.string.create_invoice)));
         }
-        mServiceActionList.add(new ServiceAction(getString(R.string.education)));
+        mServiceActionList.add(new ServiceAction(getString(R.string.topup)));
+        mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
 
         mServiceActionListView = (ListView) v.findViewById(R.id.list_services);
         mServiceActionListAdapter = new WalletActionListAdapter(getActivity(), R.layout.list_item_services, mServiceActionList);

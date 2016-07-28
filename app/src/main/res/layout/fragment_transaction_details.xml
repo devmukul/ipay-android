@@ -64,7 +64,9 @@
 
         <View style="@style/Divider" />
 
-        <LinearLayout style="@style/LinearLayoutHolder">
+        <LinearLayout
+            style="@style/LinearLayoutHolder"
+            android:visibility="gone">
 
             <TextView
                 style="@style/TextViewInfoLabel"
@@ -75,17 +77,30 @@
                 style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
+        <LinearLayout style="@style/LinearLayoutHolder">
+
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/time" />
+
+            <TextView
+                android:id="@+id/time"
+                style="@style/TextViewInfoColorPrimary" />
+        </LinearLayout>
+
         <View style="@style/Divider" />
 
         <LinearLayout style="@style/LinearLayoutHolder">
 
             <TextView
                 style="@style/TextViewInfoLabel"
+                android:layout_weight=".8"
                 android:text="@string/description" />
 
             <TextView
                 android:id="@+id/description"
-                style="@style/TextViewInfoColorPrimary" />
+                style="@style/TextViewInfoColorPrimary"
+                android:layout_weight=".5" />
         </LinearLayout>
 
         <View
@@ -151,21 +166,6 @@
             android:layout_height="@dimen/value15"
             android:layout_marginTop="@dimen/value4"
             android:background="@color/colorLightGray"></View>
-
-        <LinearLayout style="@style/LinearLayoutHolder">
-
-            <TextView
-                style="@style/TextViewInfoLabel"
-                android:text="@string/time" />
-
-            <TextView
-                android:id="@+id/time"
-                style="@style/TextViewInfoColorPrimary" />
-        </LinearLayout>
-
-
-        <View style="@style/Divider" />
-
 
         <LinearLayout
             android:id="@+id/purpose_layout"

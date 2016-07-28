@@ -55,7 +55,7 @@ public class ProfileCompletionPropertyConstants {
     }
 
     static {
-        PROPERTY_NAME_TO_ICON_MAP.put(VERIFY_BANK, R.drawable.ic_bankteal);
+        PROPERTY_NAME_TO_ICON_MAP.put(VERIFY_BANK, R.drawable.ic_bankverified);
 //        PROPERTY_NAME_TO_ICON_MAP.put(ADD_PIN, "Set up PIN");
 //        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK, "Setup Trusted Network");
 //        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add People Eligible for Password Recovery");

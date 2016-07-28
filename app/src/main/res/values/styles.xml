@@ -253,10 +253,13 @@
     <!-- Document Upload -->
 
     <style name="ListHeaderStyle">
-        <item name="android:layout_marginTop">@dimen/value10</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin_semi_double</item>
         <item name="android:layout_marginBottom">@dimen/value5</item>
         <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:padding">@dimen/value10</item>
+        <item name="android:paddingLeft">@dimen/value10</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:paddingTop">@dimen/value5</item>
+        <item name="android:paddingBottom">@dimen/value5</item>
         <item name="android:gravity">left</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
@@ -636,7 +639,7 @@
         <item name="android:paddingTop">@dimen/value10</item>
         <item name="android:paddingBottom">@dimen/value10</item>
         <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
-        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin_semi_double</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin_double</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
