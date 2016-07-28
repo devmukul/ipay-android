@@ -103,7 +103,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private int verificationStatusIndex;
     private int accountTypeIndex;
     private int isMemberIndex;
-    private int updateTimeIndex;
 
     private ContactLoadFinishListener contactLoadFinishListener;
 
@@ -237,7 +236,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
                     accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
-                    updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
                     isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
 
                     if (contactLoadFinishListener != null) {
@@ -268,7 +266,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         return false;
     }
 
-    private boolean shouldShowIPayUserIcon() {
+    public boolean shouldShowIPayUserIcon() {
         return true;
     }
 
@@ -308,7 +306,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         final TextView contactNameView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_contact_name);
         final ImageView contactImage = (ImageView) selectedBottomSheetView.findViewById(R.id.image_contact);
-        final View infoHolderView = selectedBottomSheetView.findViewById(R.id.info_holder);
         TextView isVerifiedView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_is_verified);
         TextView accountTypeView = (TextView) selectedBottomSheetView.findViewById(R.id.textview_account_type);
 
@@ -603,8 +600,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final View itemView;
 
-            private final TextView mNameView;
-            private final TextView mOriginalNameView;
+            private final TextView mName1View;
+            private final TextView mName2View;
             private final ProfileImageView mProfilePictureView;
             private final TextView mMobileNumberView;
             private final ImageView isSubscriber;
@@ -616,8 +613,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 this.itemView = itemView;
 
-                mNameView = (TextView) itemView.findViewById(R.id.name);
-                mOriginalNameView = (TextView) itemView.findViewById(R.id.original_name);
+                mName1View = (TextView) itemView.findViewById(R.id.name1);
+                mName2View = (TextView) itemView.findViewById(R.id.name2);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
                 mProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 isSubscriber = (ImageView) itemView.findViewById(R.id.is_member);
@@ -639,17 +636,21 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 boolean isInvited = isInvited(phoneNumber);
 
-                mNameView.setText(name);
-                mMobileNumberView.setText(phoneNumber);
-
-                if (isMember) {
-                    mOriginalNameView.setVisibility(View.VISIBLE);
-                    mOriginalNameView.setText(originalName);
+                /**
+                 * We need to show original name on the top if exists
+                 */
+                if (originalName != null && !originalName.isEmpty()) {
+                    mName1View.setText(originalName);
+                    mName2View.setVisibility(View.VISIBLE);
+                    mName2View.setText(name);
                 } else {
-                    mOriginalNameView.setVisibility(View.GONE);
+                    mName1View.setText(name);
+                    mName2View.setVisibility(View.GONE);
                 }
 
-                if (!isMember && isInvited)
+                mMobileNumberView.setText(phoneNumber);
+
+                if (!isDialogFragment() && !isMember && isInvited)
                     inviteStatusTextView.setVisibility(View.VISIBLE);
                 else
                     inviteStatusTextView.setVisibility(View.GONE);

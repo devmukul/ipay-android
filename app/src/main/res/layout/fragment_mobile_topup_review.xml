@@ -33,7 +33,6 @@
                     <TextView
                         android:id="@+id/textview_name"
                         style="@style/TextViewUserInfoPrimary"
-                        android:text="@string/unknown_number"
                         android:paddingRight="@dimen/activity_horizontal_margin"/>
 
                     <TextView

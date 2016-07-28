@@ -121,8 +121,14 @@ public class DataHelper {
                 queryString += " AND " + DBConstants.KEY_VERIFICATION_STATUS + " = " + DBConstants.VERIFIED_USER;
             if (memberOnly)
                 queryString += " AND " + DBConstants.KEY_IS_MEMBER + " = " + DBConstants.IPAY_MEMBER;
-            queryString += " ORDER BY " + DBConstants.KEY_IS_MEMBER + " DESC, "
-                    + DBConstants.KEY_NAME + " COLLATE NOCASE";
+
+            // If original name exists, then user original name as the sorting parameter.
+            // Otherwise use normal name as the sorting parameter.
+            queryString += " ORDER BY CASE "
+                    + "WHEN (" + DBConstants.KEY_ORIGINAL_NAME + " IS NULL OR " + DBConstants.KEY_ORIGINAL_NAME + " = '')"
+                    + " THEN " + DBConstants.KEY_NAME
+                    + " ELSE "
+                    + DBConstants.KEY_ORIGINAL_NAME + " END COLLATE NOCASE";
 
             cursor = db.rawQuery(queryString, null);
 

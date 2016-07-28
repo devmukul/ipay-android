@@ -14,20 +14,15 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,11 +32,10 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.OperatorClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopUpPackageClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -62,16 +56,12 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
 
-    private TopUpPackageClass aPackage;
-    private OperatorClass mOperator;
+    private List<String> mPackageList;
+    private List<String> mOperatorList;
 
-    private List<TopUpPackageClass> mpackageList;
-    private List<OperatorClass> moperatorList;
-    private List<String> mArraypackages;
-    private List<String> mArrayoperators;
+    private CustomSelectorDialog mPackageSelectorDialog;
+    private CustomSelectorDialogWithIcon mOperatorSelectorDialog;
 
-    private ResourceSelectorDialog<TopUpPackageClass> packageClassResourceSelectorDialog;
-    private ListView pop_up_list;
     private final int PICK_CONTACT_REQUEST = 100;
     private static final int MOBILE_TOPUP_REVIEW_REQUEST = 101;
     private int mSelectedPackageTypeId = -1;
@@ -94,23 +84,20 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
         mMobileTopUpInfoTextView = (TextView) v.findViewById(R.id.text_view_mobile_restriction_info);
 
-        getOperatorandPackage();
-
-        //Set adapter for package type
-        setPackageTypeAdapter();
+        setOperatorandPackageAdapter();
 
         int mobileNumberType = pref.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
         if (mobileNumberType == Constants.MOBILE_TYPE_PREPAID) {
-            mPackageEditText.setText(mArraypackages.get(Constants.MOBILE_TYPE_PREPAID - 1));
+            mPackageEditText.setText(mPackageList.get(Constants.MOBILE_TYPE_PREPAID - 1));
         } else {
-            mPackageEditText.setText(mArraypackages.get(Constants.MOBILE_TYPE_POSTPAID - 1));
+            mPackageEditText.setText(mPackageList.get(Constants.MOBILE_TYPE_POSTPAID - 1));
         }
 
         mPackageEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                packageClassResourceSelectorDialog.show();
+                mPackageSelectorDialog.show();
             }
         });
 
@@ -118,7 +105,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             @Override
             public void onClick(View v) {
 
-                showOperatorDialog();
+                mOperatorSelectorDialog.show();
             }
         });
 
@@ -183,28 +170,35 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 }
             });
         }
-
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_TOP_UP);
 
         return v;
     }
 
-    private void getOperatorandPackage() {
-        mpackageList = new ArrayList<>();
-        moperatorList = new ArrayList<>();
-        mArraypackages = Arrays.asList(getResources().getStringArray(R.array.package_type));
-        mArrayoperators = Arrays.asList(getResources().getStringArray(R.array.mobile_operators));
+    private void setOperatorandPackageAdapter() {
 
-        for (String mpackage : mArraypackages) {
-            aPackage = new TopUpPackageClass();
-            aPackage.setName(mpackage);
-            mpackageList.add(aPackage);
-        }
-        for (String moperator : mArrayoperators) {
-            mOperator = new OperatorClass(moperator);
-            moperatorList.add(mOperator);
-        }
+        int[] mIconList = getOperatorIcons();
+
+        mPackageList = Arrays.asList(getResources().getStringArray(R.array.package_type));
+        mPackageSelectorDialog = new CustomSelectorDialog(getActivity(), getString(R.string.select_a_package), mPackageList);
+        mPackageSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int selectedIndex, String mPackage) {
+                mPackageEditText.setText(mPackage);
+                mSelectedPackageTypeId = mPackageList.indexOf(mPackage);
+            }
+        });
+
+        mOperatorList = Arrays.asList(getResources().getStringArray(R.array.mobile_operators));
+        mOperatorSelectorDialog = new CustomSelectorDialogWithIcon(getActivity(), getString(R.string.select_an_operator), mOperatorList, mIconList);
+        mOperatorSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialogWithIcon.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int id, String mOperator) {
+                mOperatorEditText.setText(mOperator);
+                mSelectedOperatorTypeId = mOperatorList.indexOf(mOperator);
+            }
+        });
     }
 
     private void setOperator(String phoneNumber) {
@@ -213,7 +207,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         final String[] OPERATOR_PREFIXES = {"17", "18", "16", "19", "15"};
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
             if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
-                mOperatorEditText.setText(mArrayoperators.get(i));
+                mOperatorEditText.setText(mOperatorList.get(i));
                 mSelectedOperatorTypeId = i;
                 break;
             }
@@ -291,24 +285,17 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         startActivityForResult(intent, MOBILE_TOPUP_REVIEW_REQUEST);
     }
 
-    private void showOperatorDialog() {
+    private int[] getOperatorIcons() {
+        //Setting the correct image based on Operator
+        int[] images = {
+                R.drawable.ic_gp,
+                R.drawable.ic_robi,
+                R.drawable.ic_airtel,
+                R.drawable.ic_banglalink,
+                R.drawable.ic_teletalk,
 
-        final Dialog dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_custom_listview);
-        pop_up_list = (ListView) dialog.findViewById(R.id.custom_list);
-        OperatorAdapter adapter = new OperatorAdapter(getActivity(), moperatorList);
-        pop_up_list.setAdapter(adapter);
-        pop_up_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mSelectedOperatorTypeId = i;
-                mOperatorEditText.setText(moperatorList.get(i).getName());
-                dialog.dismiss();
-            }
-        });
-        dialog.setCancelable(true); //  TO NOT DISMISS THE DIALOG
-        dialog.show();
+        };
+        return images;
 
     }
 
@@ -363,58 +350,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             }
 
             mGetBusinessRuleTask = null;
-        }
-    }
-
-    private void setPackageTypeAdapter() {
-        packageClassResourceSelectorDialog = new ResourceSelectorDialog(getActivity(),getString(R.string.select_a_package), mpackageList, mSelectedPackageTypeId);
-        packageClassResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
-            @Override
-            public void onResourceSelected(int id, String name) {
-                mPackageEditText.setText(name);
-                mSelectedPackageTypeId = mArraypackages.indexOf(name);
-            }
-        });
-    }
-
-
-    public class OperatorAdapter extends ArrayAdapter<OperatorClass> {
-
-        private final LayoutInflater inflater;
-
-        public OperatorAdapter(Context context, List<OperatorClass> objects) {
-            super(context, 0, objects);
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final OperatorClass operator = getItem(position);
-
-            View view = convertView;
-            if (view == null)
-                view = inflater.inflate(R.layout.list_item_operator, null);
-
-
-            ImageView operatorimageView = (ImageView) view.findViewById(R.id.operator_imageView);
-            TextView operatorNameView = (TextView) view.findViewById(R.id.textview_operator_name);
-
-
-            //Setting the correct image based on Operator
-            int[] images = {
-                    R.drawable.ic_gp,
-                    R.drawable.ic_robi,
-                    R.drawable.ic_airtel,
-                    R.drawable.ic_banglalink,
-                    R.drawable.ic_teletalk,
-
-            };
-
-            operatorimageView.setImageResource(images[position]);
-            operatorNameView.setText(operator.getName());
-
-
-            return view;
         }
     }
 }
