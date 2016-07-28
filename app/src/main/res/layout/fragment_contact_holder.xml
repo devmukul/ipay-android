@@ -21,7 +21,6 @@
                 android:layout_alignParentLeft="true"
                 android:background="@android:color/transparent"
                 android:textSize="16sp"
-                android:text="Count: 1000"
                 android:textColor="@color/colorTextPrimary"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:layout_centerVertical="true"/>
