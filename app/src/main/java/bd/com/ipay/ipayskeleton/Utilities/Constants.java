@@ -121,14 +121,14 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = true;
+    public static final boolean AUTO_LOGIN = false;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 1;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
