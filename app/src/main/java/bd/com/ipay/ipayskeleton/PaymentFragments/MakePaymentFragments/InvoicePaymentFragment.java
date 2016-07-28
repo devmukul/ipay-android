@@ -17,6 +17,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -89,7 +92,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private String mPhotoUri;
     private long mMoneyRequestId;
     private String mTitle;
-    private ImageView buttonScanQRCode;
     private TextView mEmptyListTextView;
 
 
@@ -101,9 +103,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mInvoiceRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
-        buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         mProgressDialog = new ProgressDialog(getActivity());
-
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mInvoiceListAdapter = new InvoiceListAdapter();
@@ -125,17 +125,32 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             }
         });
 
-        buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            REQUEST_CODE_PERMISSION);
-                } else initiateScan();
-            }
-        });
-
         return v;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.scan_qr_code, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_scan_qr_code) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        REQUEST_CODE_PERMISSION);
+            } else initiateScan();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -374,8 +389,8 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
         private static final int MONEY_REQUEST_HEADER_VIEW = 5;
 
-        private final int ACTION_ACCEPT=0;
-        private final int ACTION_REJECT=1;
+        private final int ACTION_ACCEPT = 0;
+        private final int ACTION_REJECT = 1;
 
         public InvoiceListAdapter() {
         }
@@ -436,7 +451,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int selectedIndex,String action) {
+                            public void onResourceSelected(int selectedIndex, String action) {
                                 if (selectedIndex == ACTION_ACCEPT) {
                                     mMoneyRequestId = id;
                                     mAmount = amount;
@@ -589,7 +604,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             bundle.putString(Constants.PHOTO_URI, mPhotoUri);
             bundle.putString(Constants.AMOUNT, mAmount.toString());
             bundle.putString(Constants.TITLE, mTitle);
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG,new ArrayList<>(mItemList));
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
 
             ((PaymentMakingActivity) getActivity()).switchToInvoiceHistoryFrament(bundle);
         }

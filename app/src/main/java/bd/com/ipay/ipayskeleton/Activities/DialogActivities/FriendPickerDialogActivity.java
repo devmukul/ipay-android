@@ -18,6 +18,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class FriendPickerDialogActivity extends FragmentActivity {
 
     private boolean mShowVerifiedUsersOnly;
+    private boolean miPayMembersOnly;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,11 +27,13 @@ public class FriendPickerDialogActivity extends FragmentActivity {
         setContentView(R.layout.activity_friend_picker);
 
         mShowVerifiedUsersOnly = getIntent().getBooleanExtra(Constants.VERIFIED_USERS_ONLY, false);
+        miPayMembersOnly = getIntent().getBooleanExtra(Constants.IPAY_MEMBERS_ONLY, false);
 
         FriendPickerFragment fragment = new FriendPickerFragment();
 
         Bundle bundle = new Bundle();
         bundle.putBoolean(Constants.VERIFIED_USERS_ONLY, mShowVerifiedUsersOnly);
+        bundle.putBoolean(Constants.IPAY_MEMBERS_ONLY, miPayMembersOnly);
         fragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()

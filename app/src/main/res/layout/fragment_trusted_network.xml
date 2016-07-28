@@ -11,10 +11,10 @@
 
         <include layout="@layout/layout_progress_container" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/content_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <android.support.v4.widget.SwipeRefreshLayout
@@ -32,7 +32,16 @@
                     android:paddingBottom="@dimen/activity_horizontal_margin_double" />
 
             </android.support.v4.widget.SwipeRefreshLayout>
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/empty_list_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/empty_list_for_password_recovery"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 

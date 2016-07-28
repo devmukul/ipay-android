@@ -43,13 +43,13 @@ public class PayFragment extends Fragment {
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mServiceActionList = new ArrayList<>();
-        mServiceActionList.add(new ServiceAction(getString(R.string.topup)));
         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
             mServiceActionList.add(new ServiceAction(getString(R.string.make_payment)));
         } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
             mServiceActionList.add(new ServiceAction(getString(R.string.create_invoice)));
         }
-        mServiceActionList.add(new ServiceAction(getString(R.string.education)));
+        mServiceActionList.add(new ServiceAction(getString(R.string.topup)));
+        mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
 
         mServiceActionListView = (ListView) v.findViewById(R.id.list_services);
         mServiceActionListAdapter = new WalletActionListAdapter(getActivity(), R.layout.list_item_services, mServiceActionList);
@@ -97,19 +97,8 @@ public class PayFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         switch (position) {
-                            // Add Money
                             case 0:
                                 PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                                    @Override
-                                    public void ifPinAdded() {
-                                        Intent intent = new Intent(getActivity(), TopUpActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
-                                pinChecker.execute();
-                                break;
-                            case 1:
-                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
                                         Intent intent;
@@ -120,6 +109,16 @@ public class PayFragment extends Fragment {
                                             intent = new Intent(getActivity(), MakePaymentActivity.class);
                                             startActivity(intent);
                                         }
+                                    }
+                                });
+                                pinChecker.execute();
+                                break;
+                            case 1:
+                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                                    @Override
+                                    public void ifPinAdded() {
+                                        Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                                        startActivity(intent);
                                     }
                                 });
                                 pinChecker.execute();

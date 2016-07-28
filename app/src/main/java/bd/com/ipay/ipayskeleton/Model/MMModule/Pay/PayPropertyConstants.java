@@ -7,7 +7,7 @@ import bd.com.ipay.ipayskeleton.R;
 public class PayPropertyConstants {
     public static final String TOP_UP = "Top Up";
     public static final String MAKE_PAYMENT = "Make Payment";
-    public static final String EDUCATION = "Education";
+    public static final String EDUCATION = "Education Payment";
     public static final String CREATE_INVOICE = "Create Invoice";
 
     public static final HashMap<String, Integer> PAY_PROPERTY_NAME_TO_ICON_MAP = new HashMap<>();

@@ -31,11 +31,13 @@ public class MoneyAndPaymentRequest implements Notification {
         return vat;
     }
 
-
     public Long getId() {
         return id;
     }
 
+    public String getName() {
+        return getOriginatorProfile().getUserName();
+    }
 
     public BigDecimal getAmount() {
         return amount;
@@ -45,11 +47,14 @@ public class MoneyAndPaymentRequest implements Notification {
         return requestTime;
     }
 
-    @Override
-    public String getTitle() {
+    public String getNotificationTitle() {
         if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Invoice received";
         else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return "Money Request Received";
         else return title;
+    }
+
+    public String getTitle() {
+       return title;
     }
 
     public UserProfile getOriginatorProfile() {

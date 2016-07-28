@@ -189,8 +189,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
         return v;
     }
-    private void setTitle()
-    {
+
+    private void setTitle() {
         getActivity().setTitle(R.string.activity_log);
     }
 
@@ -200,16 +200,29 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         setContentShown(false);
     }
 
+    private void clearDateFilter() {
+        fromDate = null;
+        toDate = null;
+        mFromDateEditText.setText("");
+        mToDateEditText.setText("");
+    }
+
+    private void clearEventFilter() {
+        type = null;
+        mChangeProfileCheckBox.setChecked(false);
+        mVerificationCheckBox.setChecked(false);
+        mSecurityChangeCheckBox.setChecked(false);
+        mSystemEventCheckBox.setChecked(false);
+    }
+
     private void setActionsForDateFilter() {
 
         clearDateFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dateFilterLayout.setVisibility(View.GONE);
-                fromDate = null;
-                toDate = null;
-                mFromDateEditText.setText("");
-                mToDateEditText.setText("");
+                clearDateFilter();
+                clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -220,6 +233,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             @Override
             public void onClick(View v) {
                 dateFilterLayout.setVisibility(View.GONE);
+                clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -280,11 +294,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mClearEventFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = null;
-                mChangeProfileCheckBox.setChecked(false);
-                mVerificationCheckBox.setChecked(false);
-                mSecurityChangeCheckBox.setChecked(false);
-                mSystemEventCheckBox.setChecked(false);
+                clearDateFilter();
+                clearEventFilter();
 
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
@@ -303,6 +314,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
+                clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -320,6 +332,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
+                clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -337,6 +350,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
+                clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -354,6 +368,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     mChangeProfileCheckBox.setChecked(false);
                 } else type = null;
 
+                clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -424,7 +439,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUserActivityTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
@@ -521,9 +536,15 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                             .load(R.drawable.ic_verified_log)
                             .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_signin)
-                            .into(mPortrait);
+                    if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_IN)) {
+                        Glide.with(getActivity())
+                                .load(R.drawable.ic_signin)
+                                .into(mPortrait);
+                    } else if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_OUT)) {
+                        Glide.with(getActivity())
+                                .load(R.drawable.ic_signout)
+                                .into(mPortrait);
+                    }
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
                     Glide.with(getActivity())
                             .load(R.drawable.ic_security)

@@ -17,7 +17,6 @@
             android:inputType="numberPassword"
             android:maxLength="4"
             android:maxLines="1"
-            android:gravity="center"
             android:singleLine="true" />
 
     </android.support.design.widget.TextInputLayout>
@@ -35,7 +34,6 @@
             android:inputType="numberPassword"
             android:maxLength="4"
             android:maxLines="1"
-            android:gravity="center"
             android:singleLine="true" />
 
     </android.support.design.widget.TextInputLayout>
@@ -52,7 +50,6 @@
             android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
             android:maxLines="1"
-            android:gravity="center"
             android:singleLine="true" />
 
     </android.support.design.widget.TextInputLayout>

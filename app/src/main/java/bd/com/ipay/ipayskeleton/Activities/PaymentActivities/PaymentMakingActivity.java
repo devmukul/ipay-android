@@ -78,13 +78,11 @@ public class PaymentMakingActivity extends BaseActivity {
     }
 
     public void switchToInvoiceHistoryFrament(Bundle bundle) {
-
-
         InvoiceHistoryFragment invoiceHistoryFragment = new InvoiceHistoryFragment();
         invoiceHistoryFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, invoiceHistoryFragment).commit();
         mFabMakingPayment.setVisibility(View.GONE);
-        switchedToPendingList = true;
+        switchedToPendingList = false;
     }
 
     @Override

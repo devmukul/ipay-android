@@ -22,6 +22,8 @@ public class Constants {
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
+    public static final String SIGNED_IN = "SIGNED IN";
+    public static final String SIGNED_OUT = "SIGNED OUT";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
     public static final String DEVICE_ID = "DEVICE_ID";
@@ -29,6 +31,9 @@ public class Constants {
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
     public static final String EVENT_ID = "EVENT_ID";
     public static final String TITLE = "TITLE";
+    public static final String TAG = "TAG";
+    public static final String INVOICE = "INVOICE";
+    public static final String REQUEST = "REQUEST";
     public static final String TRANSACTION_DETAILS = "TRANSACTION_DETAILS";
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_DETAILS = "MONEY REQUESTS DETAILS";
@@ -116,7 +121,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = true;
+    public static final boolean AUTO_LOGIN = false;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server

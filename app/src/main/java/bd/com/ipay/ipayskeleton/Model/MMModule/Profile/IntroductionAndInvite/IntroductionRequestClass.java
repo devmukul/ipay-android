@@ -21,13 +21,15 @@ public class IntroductionRequestClass implements Notification {
         return id;
     }
 
+
+    public String getName() {
+        return senderName;
+    }
+
     public String getSenderMobileNumber() {
         return senderMobileNumber;
     }
 
-    public String getSenderName() {
-        return senderName;
-    }
 
     public long getSenderAccountId() {
         return senderAccountId;
@@ -46,8 +48,8 @@ public class IntroductionRequestClass implements Notification {
     }
 
     @Override
-    public String getTitle() {
-        return "Introduction Request from " + getSenderName();
+    public String getNotificationTitle() {
+        return "Introduction Request from ";
     }
 
     @Override
