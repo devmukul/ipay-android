@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +35,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.NotificationActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.ReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
@@ -64,8 +68,10 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRe
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHistoryFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationFragment extends ProgressFragment implements HttpResponseListener {
@@ -454,7 +460,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
                                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
                             } else {
-                                showReviewDialog();
+                                launchReceivedRequestFragment();
                             }
 
                         } else {
@@ -755,15 +761,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                     if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
                                         attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
                                     else {
-                                        ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                                                mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
-                                                new ReviewDialogFinishListener() {
-                                                    @Override
-                                                    public void onReviewFinish() {
-                                                        refreshMoneyAndPaymentRequestList();
-                                                    }
-                                                });
-                                        dialog.show();
+                                        launchInvoiceHistoryFragment();
                                     }
 
                                 } else if (selectedIndex == ACTION_REJECT) {
@@ -987,5 +985,40 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     public interface OnNotificationUpdateListener {
         void onNotificationUpdate(List<Notification> notifications);
+    }
+
+    private void launchInvoiceHistoryFragment() {
+
+        Bundle bundle = new Bundle();
+        bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+        bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
+        bundle.putString(Constants.NAME, mReceiverName);
+        bundle.putInt(Constants.MONEY_REQUEST_SERVICE_ID, Constants.SERVICE_ID_REQUEST_MONEY);
+        bundle.putString(Constants.VAT, mVat.toString());
+        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
+        bundle.putString(Constants.AMOUNT, mAmount.toString());
+        bundle.putString(Constants.TITLE, mTitle);
+        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG,new ArrayList<>(mItemList));
+        bundle.putString(Constants.TAG, Constants.INVOICE);
+
+        Intent intent = new Intent (this.getContext(), NotificationActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void launchReceivedRequestFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.AMOUNT, mAmount);
+        bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
+        bundle.putString(Constants.INVOICE_TITLE_TAG, mTitle);
+        bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+        bundle.putString(Constants.NAME, mReceiverName);
+        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
+        bundle.putString(Constants.TAG, Constants.REQUEST);
+
+        Intent intent = new Intent (this.getContext(), NotificationActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

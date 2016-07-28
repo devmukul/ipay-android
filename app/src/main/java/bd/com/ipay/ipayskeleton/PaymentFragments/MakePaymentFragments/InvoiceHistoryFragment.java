@@ -60,6 +60,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_make_payment_notification_review, container, false);
+        getActivity().setTitle(R.string.make_payment);
 
         mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
         paymentReviewAdapter = new PaymentReviewAdapter();
