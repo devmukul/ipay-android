@@ -1,64 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/value15"
-        android:paddingTop="@dimen/value15">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/info_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/value15"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingTop="@dimen/value15">
+
+            <RelativeLayout
+                android:id="@+id/info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textview_document_type"
+                        style="@style/TextStyleSecondaryMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:singleLine="true" />
+
+                    <TextView
+                        android:id="@+id/textview_document_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/document_verification_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:src="@drawable/ic_verified" />
+            </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/options_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
+                android:layout_below="@+id/info_layout"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <android.support.design.widget.TextInputLayout
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="1px"
+                    android:background="@color/colorDivider" />
 
-                    <EditText
-                        android:id="@+id/edit_text_document_id"
-                        style="@style/CustomEditText"
-                        android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_upload"
+                        style="@style/RowButton"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:gravity="center"
-                        android:hint="@string/document_id">
+                        android:layout_weight="1"
+                        android:text="@string/upload" />
 
-                        <requestFocus />
-                    </EditText>
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorDivider" />
 
-                </android.support.design.widget.TextInputLayout>
+                    <Button
+                        android:id="@+id/button_preview"
+                        style="@style/RowButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/preview" />
+
+                </LinearLayout>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/document_verification_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_verified" />
+
         </RelativeLayout>
 
-    </RelativeLayout>
+        <View
+            android:id="@+id/divider_recyclar"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/divider_space"
+            android:background="@color/colorDivider" />
 
-    <View
-        android:id="@+id/divider_recyclar"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/divider_space"
-        android:background="@color/colorDivider" />
-
-    <include
-        android:id="@+id/upload_layout"
-        layout="@layout/view_list_item_document_upload" />
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

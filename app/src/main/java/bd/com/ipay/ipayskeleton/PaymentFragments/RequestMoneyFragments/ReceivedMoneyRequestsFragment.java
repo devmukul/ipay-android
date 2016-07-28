@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.ReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -43,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRe
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ReceivedMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
@@ -313,6 +316,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         private final int ACTION_ACCEPT = 0;
         private final int ACTION_REJECT = 1;
 
+        private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
 
         public class MoneyRequestViewHolder extends RecyclerView.ViewHolder {
             private final TextView mDescriptionView;
@@ -370,7 +374,8 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                                     mTitle = title;
                                     mDescription = description;
 
-                                    attemptGetServiceCharge();
+                                   // attemptGetServiceCharge();
+                                    launchReviewPage();
 
                                 } else if (selectedIndex == ACTION_REJECT) {
                                     MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
@@ -474,6 +479,21 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 return MONEY_REQUEST_ITEM_VIEW;
 
         }
+
+        private void launchReviewPage() {
+
+            Intent intent = new Intent(getActivity(), ReceivedRequestReviewActivity.class);
+            intent.putExtra(Constants.AMOUNT, mAmount);
+            intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+            intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
+            intent.putExtra(Constants.INVOICE_TITLE_TAG, mTitle);
+            intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+            intent.putExtra(Constants.NAME, mReceiverName);
+            intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
+
+            startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
+        }
     }
+
 
 }

@@ -72,7 +72,8 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                getActivity().finish();
+                if (getActivity() != null)
+                    getActivity().finish();
             }
         });
         mProgressDialog.show();

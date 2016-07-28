@@ -1,12 +1,10 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -131,7 +129,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
     @Override
     protected int getServiceID() {
-        return Constants.SERVICE_ID_REQUEST_MONEY;
+        return Constants.SERVICE_ID_MAKE_PAYMENT;
     }
 
     @Override
@@ -301,11 +299,11 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
             View v;
             if (viewType == NOTIFICATION_REVIEW_LIST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_make_payment_notification_review_header, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_make_payment_notification_review_header, parent, false);
                 return new ListHeaderViewHolder(v);
 
             } else if (viewType == NOTIFICATION_REVIEW_LIST_FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_make_payment_notification_review_footer, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_make_payment_notification_review_footer, parent, false);
                 return new ListFooterViewHolder(v);
 
             } else {

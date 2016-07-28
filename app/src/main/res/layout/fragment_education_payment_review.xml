@@ -49,12 +49,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/amount" />
 
                 <TextView
                     android:id="@+id/textview_amount"
-                    style="@style/TextViewProfileInfo" />
+                    style="@style/TextViewInfo" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -65,12 +65,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/discount" />
 
                 <TextView
                     android:id="@+id/textview_discount"
-                    style="@style/TextViewProfileInfo"
+                    style="@style/TextViewInfo"
                     android:hint="@string/zero_value" />
 
             </LinearLayout>
@@ -83,12 +83,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/vat" />
 
                 <TextView
                     android:id="@+id/textview_vat"
-                    style="@style/TextViewProfileInfo" />
+                    style="@style/TextViewInfo" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -99,12 +99,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewProfileInfoLabel"
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/net_payable" />
 
                 <TextView
                     android:id="@+id/textview_net_payable"
-                    style="@style/TextViewProfileInfo" />
+                    style="@style/TextViewInfo" />
             </LinearLayout>
 
         </LinearLayout>

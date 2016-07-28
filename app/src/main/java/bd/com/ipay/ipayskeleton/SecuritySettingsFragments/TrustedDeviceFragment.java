@@ -270,7 +270,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             myDeviceID = myDeviceID.concat(DeviceIdFactory.getDeviceId(getActivity()));
 
             if (myDeviceID.equals(deviceID)) {
-                deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimaryLighter));
+                deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
             }
 
             deviceNameView.setText(trustedDevice.getDeviceName());
