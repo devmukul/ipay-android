@@ -90,7 +90,10 @@
 
         <View style="@style/Divider" />
 
-        <LinearLayout style="@style/LinearLayoutHolder">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 style="@style/TextViewInfoLabel"
@@ -99,8 +102,14 @@
 
             <TextView
                 android:id="@+id/description"
-                style="@style/TextViewInfoColorPrimary"
-                android:layout_weight=".5" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingBottom="@dimen/value10"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_small_medium" />
         </LinearLayout>
 
         <View

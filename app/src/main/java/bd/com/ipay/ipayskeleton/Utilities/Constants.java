@@ -22,6 +22,8 @@ public class Constants {
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
+    public static final String SIGNED_IN = "SIGNED IN";
+    public static final String SIGNED_OUT = "SIGNED OUT";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
     public static final String DEVICE_ID = "DEVICE_ID";
