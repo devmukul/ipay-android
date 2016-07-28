@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
@@ -33,10 +34,13 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private ContactsFragment miPayAllContactsFragment;
     private ContactsFragment miPayMemberContactsFragment;
 
+    private TextView mContactCount;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contact_holder, container, false);
         mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
+        mContactCount = (TextView) v.findViewById(R.id.contact_count);
 
         mAllContactsSelector = (Button) v.findViewById(R.id.button_contacts_all);
         miPayContactsSelector = (Button) v.findViewById(R.id.button_contacts_ipay);
@@ -69,13 +73,15 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         switchToiPayContacts();
     }
 
-    private void setEnabled(Button button, boolean isEnabled) {
+    private void setEnabled(Button button, boolean isEnabled, boolean isLeftButton) {
         if (isEnabled) {
-            button.setBackgroundResource(R.drawable.drawable_contact_selector_active);
+            button.setBackgroundResource(isLeftButton ?
+                    R.drawable.background_contact_selector_active_left :
+                    R.drawable.background_contact_selector_active_right);
             button.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
         } else {
-            button.setBackgroundResource(R.drawable.drawable_contact_selector_inactive);
-            button.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorLightGray));
+            button.setBackgroundResource(R.drawable.background_contact_selector_inactive);
+            button.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorTextPrimary));
         }
     }
 
@@ -88,13 +94,19 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private void switchToAllContacts() {
-        setEnabled(mAllContactsSelector, true);
-        setEnabled(miPayContactsSelector, false);
+        setEnabled(mAllContactsSelector, true, true);
+        setEnabled(miPayContactsSelector, false, true);
 
         try {
             if (getActivity() != null) {
                 if (miPayAllContactsFragment == null) {
                     miPayAllContactsFragment = new ContactsFragment();
+                    miPayAllContactsFragment.setContactLoadFinishListener(new ContactsFragment.ContactLoadFinishListener() {
+                        @Override
+                        public void onContactLoadFinish(int contactCount) {
+                            setContactCount(contactCount);
+                        }
+                    });
                 }
                 miPayAllContactsFragment.setBottomSheetLayout(mBottomSheetLayout);
                 getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, miPayAllContactsFragment).commit();
@@ -104,13 +116,28 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         }
     }
 
+    private void setContactCount(final int contactCount) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mContactCount.setText("Contacts (" + contactCount + ")");
+            }
+        });
+    }
+
     private void switchToiPayContacts() {
-        setEnabled(miPayContactsSelector, true);
-        setEnabled(mAllContactsSelector, false);
+        setEnabled(miPayContactsSelector, true, false);
+        setEnabled(mAllContactsSelector, false, false);
 
         try {
             if (miPayMemberContactsFragment == null) {
                 miPayMemberContactsFragment = new ContactsFragment();
+                miPayMemberContactsFragment.setContactLoadFinishListener(new ContactsFragment.ContactLoadFinishListener() {
+                    @Override
+                    public void onContactLoadFinish(int contactCount) {
+                        setContactCount(contactCount);
+                    }
+                });
 
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(Constants.IPAY_MEMBERS_ONLY, true);
