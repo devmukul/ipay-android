@@ -5,4 +5,5 @@ public class FriendPickerFragment extends ContactsFragment {
     protected boolean isDialogFragment() {
         return true;
     }
+
 }

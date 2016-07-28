@@ -103,7 +103,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private int verificationStatusIndex;
     private int accountTypeIndex;
     private int isMemberIndex;
-    private int updateTimeIndex;
 
     private ContactLoadFinishListener contactLoadFinishListener;
 
@@ -237,7 +236,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
                     accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
-                    updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
                     isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
 
                     if (contactLoadFinishListener != null) {
@@ -268,7 +266,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         return false;
     }
 
-    private boolean shouldShowIPayUserIcon() {
+    public boolean shouldShowIPayUserIcon() {
         return true;
     }
 
@@ -652,7 +650,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 mMobileNumberView.setText(phoneNumber);
 
-                if (!isMember && isInvited)
+                if (!isDialogFragment() && !isMember && isInvited)
                     inviteStatusTextView.setVisibility(View.VISIBLE);
                 else
                     inviteStatusTextView.setVisibility(View.GONE);
