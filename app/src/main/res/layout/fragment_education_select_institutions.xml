@@ -42,14 +42,14 @@
             android:layout_alignParentLeft="true">
 
             <EditText
-                android:id="@+id/sessions"
+                android:id="@+id/student_id"
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:hint="@string/select_session"
+                android:hint="@string/student_id"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
         <View style="@style/Divider" />
@@ -60,14 +60,14 @@
             android:layout_alignParentLeft="true">
 
             <EditText
-                android:id="@+id/student_id"
+                android:id="@+id/sessions"
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/student_id"
+                android:focusable="false"
+                android:hint="@string/select_session"
                 android:inputType="text"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
         <View style="@style/Divider" />
