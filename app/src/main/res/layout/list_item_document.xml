@@ -11,13 +11,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/value15"
-            android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingTop="@dimen/value15">
 
             <RelativeLayout
                 android:id="@+id/info_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -56,44 +56,95 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/info_layout"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:orientation="vertical">
 
                 <View
+                    android:id="@+id/divider"
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="@dimen/divider_space"
                     android:background="@color/colorDivider" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/button_upload"
-                        style="@style/RowButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/upload" />
+                    android:orientation="vertical">
 
                     <View
-                        android:id="@+id/divider"
-                        android:layout_width="1px"
-                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/divider_space"
                         android:background="@color/colorDivider" />
 
-                    <Button
-                        android:id="@+id/button_preview"
-                        style="@style/RowButton"
-                        android:layout_width="0dp"
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/preview" />
+                        android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                        <EditText
+                            android:id="@+id/document_id"
+                            style="@style/CustomEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:hint="@string/document_id">
+
+                            <requestFocus />
+                        </EditText>
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <View style="@style/Divider" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginTop="@dimen/value6">
+
+                        <ImageView
+                            android:id="@+id/button_select_file"
+                            style="@style/ButtonStyleGrey"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="@dimen/activity_vertical_margin"
+                            android:clickable="true"
+                            android:src="@drawable/ic_addw" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/button_select_file">
+
+                            <EditText
+                                android:id="@+id/select_file"
+                                style="@style/CustomEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:hint="@string/select_a_file"
+                                android:inputType="phone"
+                                android:maxLength="14"
+                                android:maxLines="1"
+                                android:singleLine="true" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <Button
+                            android:id="@+id/button_upload"
+                            style="@style/Base.Widget.AppCompat.Button.Borderless"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/button_select_file"
+                            android:gravity="right"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:text="@string/save"
+                            android:textColor="@color/colorLightPrimaryAccent" />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
             </LinearLayout>
-
 
         </RelativeLayout>
 

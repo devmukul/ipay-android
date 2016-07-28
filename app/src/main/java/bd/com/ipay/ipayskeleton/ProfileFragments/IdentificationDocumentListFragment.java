@@ -269,7 +269,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private final ImageView mVerificationStatus;
             private final LinearLayout mOptionsLayout;
             private final Button mUploadButton;
-            private final Button mPreviewButton;
+            // private final Button mPreviewButton;
             private final View mDivider;
             private final View mRecyclarDivider;
 
@@ -282,7 +282,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 mOptionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
                 mUploadButton = (Button) itemView.findViewById(R.id.button_upload);
-                mPreviewButton = (Button) itemView.findViewById(R.id.button_preview);
+                //mPreviewButton = (Button) itemView.findViewById(R.id.button_preview);
                 mDivider = itemView.findViewById(R.id.divider);
                 mRecyclarDivider = itemView.findViewById(R.id.divider_recyclar);
 
@@ -305,7 +305,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mVerificationStatus.setVisibility(View.GONE);
                     mDocumentIdView.setText(R.string.not_submitted);
                     mUploadButton.setText(getString(R.string.upload));
-                    mPreviewButton.setVisibility(View.GONE);
+                    // mPreviewButton.setVisibility(View.GONE);
                     mDivider.setVisibility(View.GONE);
                 }
                 // Document uploaded and verified
@@ -314,7 +314,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mVerificationStatus.setImageResource(R.drawable.ic_verified);
                     mVerificationStatus.setColorFilter(null);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
-                    mPreviewButton.setVisibility(View.GONE);
+                    //mPreviewButton.setVisibility(View.GONE);
                     mDivider.setVisibility(View.GONE);
                 }
                 // Document uploaded but not verified
@@ -324,7 +324,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mVerificationStatus.setColorFilter(Color.GRAY);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
                     mUploadButton.setText(getString(R.string.upload_again));
-                    mPreviewButton.setVisibility(View.VISIBLE);
+                    // mPreviewButton.setVisibility(View.VISIBLE);
                     mDivider.setVisibility(View.VISIBLE);
                 }
                 mDocumentTypeNameView.setText(identificationDocumentDetail.getDocumentTypeName());
@@ -351,13 +351,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     }
                 });
 
-                mPreviewButton.setOnClickListener(new View.OnClickListener() {
+               /* mPreviewButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         getDocumentAccessToken();
                         mSelectedIdentificationDocument = identificationDocumentDetail;
                     }
-                });
+                });*/
             }
         }
 

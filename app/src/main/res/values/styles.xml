@@ -399,6 +399,17 @@
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
 
+    <style name="ButtonStyleGrey" parent="@android:style/Widget.Button">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/colorLightGray</item>
+        <item name="android:paddingTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingBottom">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
     <style name="ButtonStyleWithIcon" parent="@android:style/Widget.ImageButton">
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin_card</item>
