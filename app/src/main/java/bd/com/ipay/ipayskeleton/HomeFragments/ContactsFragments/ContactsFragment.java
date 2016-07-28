@@ -30,19 +30,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
@@ -52,7 +51,6 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
-import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonDrawableList.LIST_ITEM_BACKGROUNDS;
 
 /**
  * Pass (Constants.VERIFIED_USERS_ONLY, true) in the argument bundle to show only the
@@ -595,10 +593,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final View itemView;
 
-            private final TextView mPortraitTextView;
             private final TextView mNameView;
             private final TextView mOriginalNameView;
-            private final RoundedImageView mProfilePictureView;
+            private final ProfileImageView mProfilePictureView;
             private final TextView mMobileNumberView;
             private final ImageView isSubscriber;
             private final ImageView mVerificationStatus;
@@ -609,11 +606,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 this.itemView = itemView;
 
-                mPortraitTextView = (TextView) itemView.findViewById(R.id.portraitTxt);
                 mNameView = (TextView) itemView.findViewById(R.id.name);
                 mOriginalNameView = (TextView) itemView.findViewById(R.id.original_name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
-                mProfilePictureView = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 isSubscriber = (ImageView) itemView.findViewById(R.id.is_member);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
                 inviteStatusTextView = (TextView) itemView.findViewById(R.id.invite_status);
@@ -661,27 +657,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     mVerificationStatus.setVisibility(View.GONE);
                 }
 
-                if (name.startsWith("+") && name.length() > 1)
-                    mPortraitTextView.setText(String.valueOf(name.substring(1).charAt(0)).toUpperCase());
-                else if (name.length() > 0)
-                    mPortraitTextView.setText(String.valueOf(name.charAt(0)).toUpperCase());
-
-                int randomListItemBackgroundColor = LIST_ITEM_BACKGROUNDS[getAdapterPosition() % LIST_ITEM_BACKGROUNDS.length];
-                mPortraitTextView.setBackgroundResource(randomListItemBackgroundColor);
-
-                if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
-                    Glide.with(getActivity())
-                            .load(profilePictureUrl)
-                            .crossFade()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .into(mProfilePictureView);
-                } else {
-                    Glide.with(getActivity())
-                            .load(android.R.color.transparent)
-                            .crossFade()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .into(mProfilePictureView);
-                }
+                mProfilePictureView.setProfilePicture(profilePictureUrl, false);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
