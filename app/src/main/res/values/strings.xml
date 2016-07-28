@@ -615,6 +615,9 @@
     <string name="status">Status</string>
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>
+    <string name="add_a_friend">Add a Friend</string>
+    <string name="progress_dialog_adding_friend">Adding friend...</string>
+    <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
 
 
     <string-array name="mobile_operators">
