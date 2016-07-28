@@ -97,19 +97,8 @@ public class PayFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         switch (position) {
-                            // Add Money
                             case 0:
                                 PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                                    @Override
-                                    public void ifPinAdded() {
-                                        Intent intent = new Intent(getActivity(), TopUpActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
-                                pinChecker.execute();
-                                break;
-                            case 1:
-                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
                                         Intent intent;
@@ -120,6 +109,16 @@ public class PayFragment extends Fragment {
                                             intent = new Intent(getActivity(), MakePaymentActivity.class);
                                             startActivity(intent);
                                         }
+                                    }
+                                });
+                                pinChecker.execute();
+                                break;
+                            case 1:
+                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                                    @Override
+                                    public void ifPinAdded() {
+                                        Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                                        startActivity(intent);
                                     }
                                 });
                                 pinChecker.execute();
