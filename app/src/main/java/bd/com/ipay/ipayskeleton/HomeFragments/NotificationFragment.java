@@ -681,9 +681,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mNameView.setText(notification.getName());
                 mTimeView.setText(new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(notification.getTime()));
 
-                if (notification.getTitle() != null && !notification.getTitle().equals("")) {
+                if (notification.getNotificationTitle() != null && !notification.getNotificationTitle().equals("")) {
                     mTitleView.setVisibility(View.VISIBLE);
-                    mTitleView.setText(notification.getTitle());
+                    mTitleView.setText(notification.getNotificationTitle());
 
                 } else {
                     mTitleView.setVisibility(View.GONE);
