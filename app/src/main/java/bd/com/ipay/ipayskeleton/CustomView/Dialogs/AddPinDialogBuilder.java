@@ -70,21 +70,21 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
                     mPinField.setError(getContext().getString(R.string.error_invalid_pin));
                     focusView = mPinField;
                     focusView.requestFocus();
-                } else if (mConfirmPinField.getText().toString().length() !=4
+                } else if (mConfirmPinField.getText().toString().length() != 4
                         || !(mPinField.getText().toString().equals(mConfirmPinField.getText().toString()))) {
                     mConfirmPinField.setError(getContext().getString(R.string.confirm_pin_not_matched));
                     focusView = mConfirmPinField;
                     focusView.requestFocus();
-                }else if (passwordValidationMsg.length() > 0) {
+                } else if (passwordValidationMsg.length() > 0) {
                     mPasswordField.setError(passwordValidationMsg);
                     focusView = mPasswordField;
                     focusView.requestFocus();
                 } else {
                     dialog.dismiss();
+                    hideKeyboard();
+
                     attemptSavePin(pin, password);
                 }
-
-                Utilities.hideKeyboard(getContext(), mPasswordField);
             }
         });
 
@@ -92,9 +92,16 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                dialog.dismiss();
+                hideKeyboard();
             }
         });
 
+    }
+
+    private void hideKeyboard() {
+        Utilities.hideKeyboard(getContext(), mPinField);
+        Utilities.hideKeyboard(getContext(), mConfirmPinField);
+        Utilities.hideKeyboard(getContext(), mPasswordField);
     }
 
     private void attemptSavePin(String pin, String password) {

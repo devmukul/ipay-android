@@ -85,7 +85,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_mobile_topup_review, container, false);
+        View v = inflater.inflate(R.layout.fragment_mobile_topup_review, container, false);
 
         mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
         mMobileNumberType = getActivity().getIntent().getIntExtra(Constants.MOBILE_NUMBER_TYPE, 1);
