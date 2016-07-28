@@ -6,44 +6,62 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/colorBackground">
+
+        <RelativeLayout
+            android:id="@+id/contact_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/contact_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/transparent"
+                android:textSize="16sp"
+                android:text="Count: 1000"
+                android:textColor="@color/colorTextPrimary"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:layout_centerVertical="true"/>
+
+            <LinearLayout
+                android:id="@+id/contacts_selector"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                android:background="@drawable/background_contact_selector_background"
+                android:visibility="visible">
+
+                <Button
+                    android:id="@+id/button_contacts_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_contacts"
+                    style="@style/ContactsSelectorStyle"/>
+
+                <Button
+                    android:id="@+id/button_contacts_ipay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ipay_contacts"
+                    style="@style/ContactsSelectorStyle"/>
+            </LinearLayout>
+        </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/fragment_container_contacts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/contacts_selector">
+            android:layout_below="@+id/contact_header">
 
         </FrameLayout>
-
-        <LinearLayout
-            android:id="@+id/contacts_selector"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:background="@drawable/drawable_contact_selector_background"
-            android:visibility="visible">
-
-            <Button
-                android:id="@+id/button_contacts_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/all_contacts"
-                style="@style/ContactsSelectorStyle"
-                android:layout_marginRight="1dp"/>
-
-            <Button
-                android:id="@+id/button_contacts_ipay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ipay_contacts"
-                style="@style/ContactsSelectorStyle"
-                android:layout_marginLeft="1dp"/>
-        </LinearLayout>
 
     </RelativeLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

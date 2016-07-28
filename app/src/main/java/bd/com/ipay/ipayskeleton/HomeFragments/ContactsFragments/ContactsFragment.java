@@ -105,6 +105,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private int isMemberIndex;
     private int updateTimeIndex;
 
+    private ContactLoadFinishListener contactLoadFinishListener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +157,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         mRecyclerView.setAdapter(mAdapter);
 
         return v;
+    }
+
+    public void setContactLoadFinishListener(ContactLoadFinishListener contactLoadFinishListener) {
+        this.contactLoadFinishListener = contactLoadFinishListener;
     }
 
     private void resetSearchKeyword() {
@@ -233,6 +239,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
                     updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
                     isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
+
+                    if (contactLoadFinishListener != null) {
+                        contactLoadFinishListener.onContactLoadFinish(cursor.getCount());
+                    }
 
                     this.registerContentObserver(cursor, DBConstants.DB_TABLE_FRIENDS_URI);
                 }
@@ -748,5 +758,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             else
                 return FRIEND_VIEW;
         }
+    }
+
+    public interface ContactLoadFinishListener {
+        void onContactLoadFinish(int contactCount);
     }
 }
