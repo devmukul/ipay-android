@@ -1,10 +1,8 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -235,6 +233,10 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 mAmountEditText.setError(error_message);
                 cancel = true;
             }
+        } else if (!ContactEngine.isValidNumber(mMobileNumberEditText.getText().toString())) {
+            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+            focusView = mMobileNumberEditText;
+            cancel = true;
         }
 
         if (cancel) {
