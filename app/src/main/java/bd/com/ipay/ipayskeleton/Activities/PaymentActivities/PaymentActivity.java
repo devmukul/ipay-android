@@ -12,6 +12,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHis
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoicePaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
 public class PaymentActivity extends BaseActivity {
@@ -40,6 +41,7 @@ public class PaymentActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Utilities.hideKeyboard(this);
         if (item.getItemId() == android.R.id.home) {
             if (switchedToPendingList) {
                 super.onBackPressed();
