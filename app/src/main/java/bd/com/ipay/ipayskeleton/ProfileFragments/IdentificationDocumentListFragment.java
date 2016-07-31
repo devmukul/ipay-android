@@ -109,8 +109,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private int mSelectedItemId = -1;
     private int mActionId = -1;
-    private HashMap<Integer, Uri> mHashmapDocumentURI;
-    private HashMap<Integer, String> mHashmapFilePathURI;
     private Uri mSelectedDocumentUri;
     private ArrayList<DocumentPreviewBindViewHolder> documentPreviewBindViewHolderList;
 
@@ -142,8 +140,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         documentPreviewBindViewHolderList = new ArrayList<DocumentPreviewBindViewHolder>(DOCUMENT_TYPES.length);
         for (int i = 0; i < DOCUMENT_TYPES.length; i++)
             documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
-        mHashmapDocumentURI = new HashMap<Integer, Uri>();
-        mHashmapFilePathURI = new HashMap<Integer, String>();
         return v;
     }
 
@@ -494,6 +490,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     }
                 });
 
+              //  mDocumentIdEditTextView=(EditText) itemView.findViewById(R.id.edit_text_document_id);
                 mDocumentIdEditTextView.setText(documentPreviewBindViewHolderList.get(pos).getmDocumentId());
 
                 mPicker.setOnClickListener(new View.OnClickListener() {
@@ -506,6 +503,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             public void onResourceSelected(int mactionId, String name) {
 
                                 mSelectedItemId = pos;
+                                documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
                                 Log.w("Selected Item", pos + "");
 
                                 if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
@@ -517,23 +515,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             }
                         });
                         customUploadPickerDialog.show();
-                    }
-                });
-
-                mDocumentIdEditTextView.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        Log.w("Position", pos + " " + s);
-                        documentPreviewBindViewHolderList.get(pos).setmDocumentId(s.toString());
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
                     }
                 });
 
