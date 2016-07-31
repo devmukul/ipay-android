@@ -151,7 +151,9 @@ public class CameraUtilities {
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
         Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
-        img.recycle();
+        if (rotatedImg != img)      // Android might reuse the same bitmap again
+            img.recycle();
+
         return rotatedImg;
     }
 
