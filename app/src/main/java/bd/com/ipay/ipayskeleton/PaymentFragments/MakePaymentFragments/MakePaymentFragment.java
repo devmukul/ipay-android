@@ -25,7 +25,7 @@ import com.google.zxing.integration.android.IntentResult;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -33,12 +33,13 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class PaymentMakingFragment extends Fragment implements HttpResponseListener {
+public class MakePaymentFragment extends Fragment implements HttpResponseListener {
 
 
     private final int PICK_CONTACT_REQUEST = 100;
@@ -58,7 +59,7 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_payment, container, false);
+        View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
@@ -185,11 +186,11 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
             cancel = true;
 
         } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    PaymentMakingActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), PaymentMakingActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                    PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
             if (error_message != null) {
                 focusView = mAmountEditText;
@@ -201,6 +202,10 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
         if (!ContactEngine.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+            cancel = true;
+        } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
+            focusView = mMobileNumberEditText;
+            mMobileNumberEditText.setError(getString(R.string.you_cannot_make_payment_to_your_number));
             cancel = true;
         }
 
@@ -259,10 +264,10 @@ public class PaymentMakingFragment extends Fragment implements HttpResponseListe
                     if (businessRuleArray != null) {
                         for (BusinessRule rule : businessRuleArray) {
                             if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
-                                PaymentMakingActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
                             } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
-                                PaymentMakingActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             }
                         }
                     }

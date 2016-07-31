@@ -623,6 +623,10 @@
     <string name="contact_link">https://www.ipay.com.bd</string>
     <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
     <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
+    <string name="you_cannot_send_money_to_your_number">You can\'t send money to your own mobile number</string>
+    <string name="you_cannot_send_invoice_to_your_number">You can\'t send invoice to your own mobile number</string>
+    <string name="you_cannot_make_payment_to_your_number">You can\'t make payment to your own mobile number</string>
+    <string name="you_cannot_request_money_from_your_number">You can\'t request money from your own mobile number</string>
 
 
     <string-array name="mobile_operators">

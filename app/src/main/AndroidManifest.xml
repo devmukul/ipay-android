@@ -89,7 +89,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.MakePaymentActivity"
+            android:name=".Activities.PaymentActivities.InvoiceActivity"
             android:label="@string/payment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
@@ -135,7 +135,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name=".Activities.PaymentActivities.PaymentMakingActivity"
+            android:name=".Activities.PaymentActivities.PaymentActivity"
             android:label="@string/make_payment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"

@@ -266,7 +266,9 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
     private void launchReviewPage() {
 
-        double amount = Double.parseDouble(mAmountEditText.getText().toString().trim());
+        // TODO remove this once gateway problem is fixed. We are doing this now because topup
+        // gateway only accepts integer amount
+        double amount = Math.floor(Double.parseDouble(mAmountEditText.getText().toString().trim()));
         String mobileNumber = mMobileNumberEditText.getText().toString();
 
         int mobileNumberType;

@@ -8,10 +8,8 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -99,7 +96,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
+        View v = inflater.inflate(R.layout.fragment_invoice_payment, container, false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mInvoiceRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
@@ -606,7 +603,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             bundle.putString(Constants.TITLE, mTitle);
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
 
-            ((PaymentMakingActivity) getActivity()).switchToInvoiceHistoryFrament(bundle);
+            ((PaymentActivity) getActivity()).switchToInvoiceHistoryFragment(bundle);
         }
     }
 

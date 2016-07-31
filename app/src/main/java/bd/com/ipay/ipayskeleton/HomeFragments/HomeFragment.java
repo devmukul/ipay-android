@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
@@ -204,13 +204,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                         @Override
                         public void ifPinAdded() {
-                            Intent intent = new Intent(getActivity(), PaymentMakingActivity.class);
+                            Intent intent = new Intent(getActivity(), PaymentActivity.class);
                             startActivity(intent);
                         }
                     });
                     makePaymentPinChecker.execute();
                 } else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
-                    Intent intent = new Intent(getActivity(), MakePaymentActivity.class);
+                    Intent intent = new Intent(getActivity(), InvoiceActivity.class);
                     startActivity(intent);
                 }
             }

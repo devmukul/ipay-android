@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -170,7 +171,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        //validation check of amount
+        // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;
             mAmountEditText.setError(getString(R.string.please_enter_amount));
@@ -200,6 +201,10 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         if (!ContactEngine.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+            cancel = true;
+        } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
+            focusView = mMobileNumberEditText;
+            mMobileNumberEditText.setError(getString(R.string.you_cannot_send_money_to_your_number));
             cancel = true;
         }
 
