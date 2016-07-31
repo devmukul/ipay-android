@@ -5,7 +5,7 @@ import java.util.HashMap;
 import bd.com.ipay.ipayskeleton.R;
 
 public class PayPropertyConstants {
-    public static final String TOP_UP = "Top Up";
+    public static final String TOP_UP = "Mobile TopUp";
     public static final String MAKE_PAYMENT = "Make Payment";
     public static final String EDUCATION = "Education Payment";
     public static final String CREATE_INVOICE = "Create Invoice";

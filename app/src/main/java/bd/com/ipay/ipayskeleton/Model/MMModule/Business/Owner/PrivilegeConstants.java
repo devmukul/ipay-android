@@ -85,7 +85,7 @@ public class PrivilegeConstants {
         PRIVILEGE_NAME_MAP.put(INVOICE, R.string.invoice);
         PRIVILEGE_NAME_MAP.put(ADD_MONEY, R.string.add_money);
         PRIVILEGE_NAME_MAP.put(WITHDRAW_MONEY, R.string.withdraw_money);
-        PRIVILEGE_NAME_MAP.put(TOP_UP, R.string.topup);
+        PRIVILEGE_NAME_MAP.put(TOP_UP, R.string.mobile_topup);
         PRIVILEGE_NAME_MAP.put(EDUCATION_MANAGE, R.string.education_management);
         PRIVILEGE_NAME_MAP.put(FRIEND_READ, R.string.friend_read);
         PRIVILEGE_NAME_MAP.put(FRIEND_WRITE, R.string.friend_write);

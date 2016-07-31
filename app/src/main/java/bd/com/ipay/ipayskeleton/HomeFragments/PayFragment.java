@@ -47,7 +47,7 @@ public class PayFragment extends Fragment {
         } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
             mServiceActionList.add(new ServiceAction(getString(R.string.create_invoice)));
         }
-        mServiceActionList.add(new ServiceAction(getString(R.string.topup)));
+        mServiceActionList.add(new ServiceAction(getString(R.string.mobile_topup)));
         mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
 
         mServiceActionListView = (ListView) v.findViewById(R.id.list_services);
