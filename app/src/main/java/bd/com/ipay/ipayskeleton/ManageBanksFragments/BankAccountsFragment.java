@@ -11,14 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,10 +43,9 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class BankAccountsFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -108,7 +104,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setContentShown(false);
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE))
             getBankList();
         else {
@@ -147,6 +142,8 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         if (mGetBankTask != null) {
             return;
         }
+
+        setContentShown(false);
 
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
@@ -229,10 +226,11 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         }
 
         Gson gson = new Gson();
+        if (this.isAdded())
+            setContentShown(true);
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_BANK_LIST:
-                if (this.isAdded()) setContentShown(true);
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
