@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -9,22 +8,22 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHis
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.ReceivedRequestReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationActivity extends BaseActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        if (bundle.get(Constants.TAG).equals(Constants.INVOICE))
-            switchToInvoiceHistoryFrament(bundle);
-        else if (bundle.get(Constants.TAG).equals(Constants.REQUEST))
+        String tag = getIntent().getStringExtra(Constants.TAG);
+
+        if (tag != null && tag.equals(Constants.INVOICE))
+            switchToInvoiceHistoryFragment(getIntent().getExtras());
+        else if (tag != null && tag.equals(Constants.REQUEST))
             switchToReceivedRequestReviewFragment();
+        else
+            switchToNotificationFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -33,18 +32,19 @@ public class NotificationActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0)
-                getSupportFragmentManager().popBackStack();
-            else {
-                finish();
-            }
+            onBackPressed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
     }
 
-    public void switchToInvoiceHistoryFrament(Bundle bundle) {
+    public void switchToNotificationFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, HomeActivity.mNotificationFragment).commit();
+    }
+
+    public void switchToInvoiceHistoryFragment(Bundle bundle) {
 
         InvoiceHistoryFragment invoiceHistoryFragment = new InvoiceHistoryFragment();
         invoiceHistoryFragment.setArguments(bundle);
@@ -63,6 +63,15 @@ public class NotificationActivity extends BaseActivity {
     @Override
     public Context setContext() {
         return NotificationActivity.this;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+        else {
+            super.onBackPressed();
+        }
     }
 }
 

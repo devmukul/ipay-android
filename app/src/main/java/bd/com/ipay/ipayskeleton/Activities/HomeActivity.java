@@ -103,7 +103,7 @@ public class HomeActivity extends BaseActivity
     private ProgressDialog mProgressDialog;
     private NavigationView mNavigationView;
 
-    private NotificationFragment mNotificationFragment;
+    public static NotificationFragment mNotificationFragment;
     private Menu mOptionsMenu;
 
     private int mBadgeCount = 0;
@@ -255,8 +255,8 @@ public class HomeActivity extends BaseActivity
         switch (item.getItemId()) {
 
             case R.id.action_notification:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, mNotificationFragment).commit();
-                switchedToHomeFragment = false;
+                Intent intent = new Intent(this, NotificationActivity.class);
+                startActivity(intent);
                 return true;
 
             default:

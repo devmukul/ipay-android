@@ -11,7 +11,7 @@ public class DeviceInfoFactory {
     }
 
     public static String getDeviceId(Context context) {
-        return android.os.Build.MODEL + "-" + Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+        return (android.os.Build.MODEL + "-" + Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID)).replaceAll("\\s+", "-");
     }
 }

@@ -25,7 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/portrait">
+        android:layout_toRightOf="@+id/portrait"
+        android:paddingTop="@dimen/value12"
+        android:paddingBottom="@dimen/value12">
 
         <TextView
             android:id="@+id/activity_description"
@@ -46,7 +48,7 @@
         android:id="@+id/divider1"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/divider_space"
-        android:layout_below="@+id/portrait"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:background="@color/colorDivider" />

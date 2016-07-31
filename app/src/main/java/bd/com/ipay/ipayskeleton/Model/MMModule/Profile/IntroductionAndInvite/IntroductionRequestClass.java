@@ -49,7 +49,7 @@ public class IntroductionRequestClass implements Notification {
 
     @Override
     public String getNotificationTitle() {
-        return "Introduction Request from ";
+        return "Introduction Request ";
     }
 
     @Override
