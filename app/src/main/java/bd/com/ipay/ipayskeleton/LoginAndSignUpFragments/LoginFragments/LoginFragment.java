@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -94,7 +94,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
+        mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
         mButtonLogin = (Button) v.findViewById(R.id.login_button);
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);

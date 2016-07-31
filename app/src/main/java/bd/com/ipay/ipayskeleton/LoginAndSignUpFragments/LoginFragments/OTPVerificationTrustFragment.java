@@ -33,7 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestTrustedD
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseTrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationTrustFragment extends Fragment implements HttpResponseListener {
@@ -72,7 +72,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         mOTPEditText = (IconifiedEditText) v.findViewById(R.id.otp_edittext);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
 
-        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
+        mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));

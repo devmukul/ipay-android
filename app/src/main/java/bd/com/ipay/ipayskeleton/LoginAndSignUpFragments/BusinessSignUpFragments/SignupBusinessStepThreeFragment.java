@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -31,7 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseBusines
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
@@ -89,7 +88,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
 
         mPersonalAddressView = (AddressInputView) v.findViewById(R.id.personal_address);
 
-        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
+        mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
 
         mDatePickerButton.setOnClickListener(new View.OnClickListener() {

@@ -21,7 +21,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonal
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersonalSignup;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupPersonalStepTwoFragment extends Fragment implements HttpResponseListener {
@@ -53,7 +53,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
         mSignupPersonalButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mPersonalAddressView = (AddressInputView) v.findViewById(R.id.personal_address);
 
-        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
+        mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
 
         mSignupPersonalButton.setOnClickListener(new View.OnClickListener() {

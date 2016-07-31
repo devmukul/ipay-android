@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,53 +9,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecuritySettingsFragment extends Fragment implements HttpResponseListener {
 

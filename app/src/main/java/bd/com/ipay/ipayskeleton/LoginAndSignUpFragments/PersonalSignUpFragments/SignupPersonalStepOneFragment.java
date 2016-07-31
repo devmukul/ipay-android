@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeResp
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -129,7 +129,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
             }
         });
-        mDeviceID = DeviceIdFactory.getDeviceId(getActivity());
+        mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override

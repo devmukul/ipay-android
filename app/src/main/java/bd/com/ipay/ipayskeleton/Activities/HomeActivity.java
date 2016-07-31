@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -42,8 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -71,7 +70,7 @@ import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -160,7 +159,7 @@ public class HomeActivity extends BaseActivity
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = ProfileInfoCacheManager.getMobileNumber();
         mAccountType = ProfileInfoCacheManager.getAccountType();
-        mDeviceID = DeviceIdFactory.getDeviceId(HomeActivity.this);
+        mDeviceID = DeviceInfoFactory.getDeviceId(HomeActivity.this);
 
         pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
 
@@ -314,10 +313,10 @@ public class HomeActivity extends BaseActivity
             return;
         }
 
-        String mDeviceID = DeviceIdFactory.getDeviceId(this);
+        String mDeviceID = DeviceInfoFactory.getDeviceId(this);
+        String mDeviceName = DeviceInfoFactory.getDeviceName();
 
         String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
-        String mDeviceName = android.os.Build.MANUFACTURER + "-" + android.os.Build.PRODUCT + " -" + Build.MODEL;
 
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
