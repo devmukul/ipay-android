@@ -279,8 +279,8 @@
     <string name="please_enter_amount">Please enter an amount.</string>
     <string name="please_write_note">Please write a note.</string>
     <string name="please_write_title">Please write a title.</string>
-    <string name="please_enter_minimum_amount">Please enter minimum amount of BDT </string>
-    <string name="please_enter_not_more_than_max_amount">Please enter not more than. of BDT </string>
+    <string name="please_enter_minimum_amount">Please enter minimum amount of </string>
+    <string name="please_enter_not_more_than_max_amount">Please enter not more than. of </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="please_select_relation">Please select a relation</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
