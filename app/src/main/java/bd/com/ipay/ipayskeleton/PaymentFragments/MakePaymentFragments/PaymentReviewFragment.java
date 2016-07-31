@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -112,11 +112,11 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             @Override
             public void onClick(View v) {
 
-                if (Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                if (Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
                     mError_message = InputValidator.isValidAmount(getActivity(), mAmount,
-                            PaymentMakingActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                            PaymentMakingActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                            PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                            PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                     if (mError_message == null) {
                         attemptPaymentWithPinCheck();
@@ -131,8 +131,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         });
 
         // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(PaymentMakingActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
+        if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
+                && !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
             attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
         else
             attemptGetServiceCharge();
@@ -140,7 +140,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     }
 
     private void attemptPaymentWithPinCheck() {
-        if (PaymentMakingActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+        if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
             pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
@@ -204,7 +204,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-        PaymentMakingActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+        PaymentActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
     @Override

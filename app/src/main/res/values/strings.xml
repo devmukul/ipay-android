@@ -151,7 +151,7 @@
     <string name="progress_dialog_text_payment">Payment in progress. Please wait...</string>
     <string name="progress_dialog_text_sending_sms">Sending SMS to your mobile...</string>
     <string name="progress_dialog_validating_promo_code">Validating invitation code...</string>
-    <string name="progress_dialog_processing">Processing...</string>
+    <string name="progress_dialog_processing">Processing TopUp. You would receive money in your mobile shortly.</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information...</string>
     <string name="progress_dialog_cancelling">Cancelling request...</string>
     <string name="progress_dialog_fetching_bank_list">Fetching bank list...</string>
@@ -618,6 +618,15 @@
     <string name="add_a_friend">Add a Friend</string>
     <string name="progress_dialog_adding_friend">Adding friend...</string>
     <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
+    <string name="dialog_requesting_top_up">Sending money to your mobile...</string>
+
+    <string name="contact_link">https://www.ipay.com.bd</string>
+    <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
+    <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
+    <string name="you_cannot_send_money_to_your_number">You can\'t send money to your own mobile number</string>
+    <string name="you_cannot_send_invoice_to_your_number">You can\'t send invoice to your own mobile number</string>
+    <string name="you_cannot_make_payment_to_your_number">You can\'t make payment to your own mobile number</string>
+    <string name="you_cannot_request_money_from_your_number">You can\'t request money from your own mobile number</string>
 
 
     <string-array name="mobile_operators">

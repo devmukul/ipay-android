@@ -13,14 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.MakePaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentMakingActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Pay.PayPropertyConstants;
@@ -103,10 +102,10 @@ public class PayFragment extends Fragment {
                                     public void ifPinAdded() {
                                         Intent intent;
                                         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
-                                            intent = new Intent(getActivity(), PaymentMakingActivity.class);
+                                            intent = new Intent(getActivity(), PaymentActivity.class);
                                             startActivity(intent);
                                         } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
-                                            intent = new Intent(getActivity(), MakePaymentActivity.class);
+                                            intent = new Intent(getActivity(), InvoiceActivity.class);
                                             startActivity(intent);
                                         }
                                     }

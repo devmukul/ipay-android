@@ -6,18 +6,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHistoryFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoicePaymentFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentMakingFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 
-public class PaymentMakingActivity extends BaseActivity {
+public class PaymentActivity extends BaseActivity {
 
     private FloatingActionButton mFabMakingPayment;
     private boolean switchedToPendingList = true;
@@ -26,15 +23,15 @@ public class PaymentMakingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_making);
+        setContentView(R.layout.activity_payment);
         mFabMakingPayment = (FloatingActionButton) findViewById(R.id.fab_payment_making);
 
-        switchToInvoicePaymentFrament();
+        switchToInvoicePaymentFragment();
 
         mFabMakingPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchToPaymentMakingFragment();
+                switchToMakePaymentFragment();
             }
         });
 
@@ -47,7 +44,7 @@ public class PaymentMakingActivity extends BaseActivity {
             if (switchedToPendingList) {
                 super.onBackPressed();
             } else {
-                switchToInvoicePaymentFrament();
+                switchToInvoicePaymentFragment();
             }
             return true;
         } else {
@@ -59,25 +56,25 @@ public class PaymentMakingActivity extends BaseActivity {
         if (switchedToPendingList) {
             super.onBackPressed();
         } else {
-            switchToInvoicePaymentFrament();
+            switchToInvoicePaymentFragment();
         }
     }
 
-    private void switchToPaymentMakingFragment() {
+    private void switchToMakePaymentFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PaymentMakingFragment()).commit();
+                .replace(R.id.fragment_container, new MakePaymentFragment()).commit();
         mFabMakingPayment.setVisibility(View.GONE);
         switchedToPendingList = false;
     }
 
-    private void switchToInvoicePaymentFrament() {
+    private void switchToInvoicePaymentFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new InvoicePaymentFragment()).commit();
         mFabMakingPayment.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
 
-    public void switchToInvoiceHistoryFrament(Bundle bundle) {
+    public void switchToInvoiceHistoryFragment(Bundle bundle) {
         InvoiceHistoryFragment invoiceHistoryFragment = new InvoiceHistoryFragment();
         invoiceHistoryFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, invoiceHistoryFragment).commit();
@@ -87,7 +84,7 @@ public class PaymentMakingActivity extends BaseActivity {
 
     @Override
     public Context setContext() {
-        return PaymentMakingActivity.this;
+        return PaymentActivity.this;
     }
 }
 

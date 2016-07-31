@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
@@ -12,19 +10,16 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.CreateInvoiceFragmentStepOne;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoicesSentFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class MakePaymentActivity extends BaseActivity {
+public class InvoiceActivity extends BaseActivity {
 
     private FloatingActionButton mFabCreateInvoice;
     private boolean switchedToInvoicesList = true;
-    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_make_payment);
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        setContentView(R.layout.activity_invoice);
 
         mFabCreateInvoice = (FloatingActionButton) findViewById(R.id.fab_create_invoice);
 
@@ -75,7 +70,7 @@ public class MakePaymentActivity extends BaseActivity {
 
     @Override
     public Context setContext() {
-        return MakePaymentActivity.this;
+        return InvoiceActivity.this;
     }
 }
 

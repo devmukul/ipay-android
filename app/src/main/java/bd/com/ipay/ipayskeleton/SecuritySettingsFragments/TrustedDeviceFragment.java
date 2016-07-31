@@ -36,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DeviceIdFactory;
+import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TrustedDeviceFragment extends ProgressFragment implements HttpResponseListener {
@@ -267,7 +267,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             }
 
             String myDeviceID = "mobile-android-";
-            myDeviceID = myDeviceID.concat(DeviceIdFactory.getDeviceId(getActivity()));
+            myDeviceID = myDeviceID.concat(DeviceInfoFactory.getDeviceId(getActivity()));
 
             if (myDeviceID.equals(deviceID)) {
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));

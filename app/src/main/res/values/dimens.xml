@@ -18,9 +18,14 @@
     <dimen name="value15">15.0dip</dimen>
     <dimen name="value20">20.0dip</dimen>
     <dimen name="value25">25.0dip</dimen>
+    <dimen name="value28">28.0dip</dimen>
     <dimen name="value30">30.0dip</dimen>
     <dimen name="value40">40.0dip</dimen>
     <dimen name="value48">48.0dip</dimen>
+    <dimen name="value80">80dip</dimen>
+    <dimen name="value140">140dip</dimen>
+    <dimen name="value150">150dip</dimen>
+    <dimen name="value200">200dip</dimen>
     <dimen name="elevation_high">12dp</dimen>
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_small_medium">16dp</dimen>

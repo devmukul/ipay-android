@@ -19,7 +19,7 @@ public class AboutFragment extends Fragment {
 
     private TextView mBuildNumberView;
     private IconifiedTextViewWithButton mContactView;
-    private IconifiedTextViewWithButton mHelpView;
+    private IconifiedTextViewWithButton mTermView;
     private IconifiedTextViewWithButton mPrivacyView;
 
     @Override
@@ -35,7 +35,7 @@ public class AboutFragment extends Fragment {
 
         mBuildNumberView = (TextView) v.findViewById(R.id.textview_build_number);
         mContactView = (IconifiedTextViewWithButton) v.findViewById(R.id.contact);
-        mHelpView = (IconifiedTextViewWithButton) v.findViewById(R.id.terms_of_service);
+        mTermView = (IconifiedTextViewWithButton) v.findViewById(R.id.terms_of_service);
         mPrivacyView = (IconifiedTextViewWithButton) v.findViewById(R.id.privacy);
 
         try {
@@ -51,17 +51,17 @@ public class AboutFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse("https://www.ipay.com.bd"));
+                intent.setData(Uri.parse(getContext().getString(R.string.contact_link)));
                 startActivity(intent);
             }
         });
 
-        mHelpView.setOnClickListener(new View.OnClickListener() {
+        mTermView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse("https://www.ipay.com.bd/legal/tos"));
+                intent.setData(Uri.parse(getContext().getString(R.string.term_link)));
                 startActivity(intent);
             }
         });
@@ -71,7 +71,7 @@ public class AboutFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse("https://www.ipay.com.bd/legal/privacy-policy"));
+                intent.setData(Uri.parse(getContext().getString(R.string.privacy_link)));
                 startActivity(intent);
             }
         });

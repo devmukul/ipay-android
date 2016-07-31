@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -105,6 +106,10 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
         if (receiver.length() == 0) {
             mMobileNumberEditText.setError(getString(R.string.enter_mobile_number));
             focusView = mMobileNumberEditText;
+            cancel = true;
+        } else if (ContactEngine.formatMobileNumberBD(receiver).equals(ProfileInfoCacheManager.getMobileNumber())) {
+            focusView = mMobileNumberEditText;
+            mMobileNumberEditText.setError(getString(R.string.you_cannot_send_invoice_to_your_number));
             cancel = true;
         }
 

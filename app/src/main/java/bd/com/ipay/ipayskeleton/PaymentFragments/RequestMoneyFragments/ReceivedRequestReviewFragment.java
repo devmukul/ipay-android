@@ -62,7 +62,7 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_received_request_review, container, false);
-        getActivity().setTitle(R.string.request_money);
+        getActivity().setTitle(R.string.send_money);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
