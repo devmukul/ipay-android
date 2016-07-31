@@ -30,13 +30,11 @@
 -keep class org.mockito.** { *; }
 
 -keepattributes Signature
+-keepattributes *Annotation*
 
 -dontwarn com.google.**
 -dontwarn org.apache.**
 -dontwarn android.support.**
-
--keepattributes *Annotation*
-
 -dontwarn org.junit.**
 -dontwarn org.mockito.**
 -dontwarn com.makeramen.**
