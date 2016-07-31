@@ -29,6 +29,8 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
         mPinField = (EditText) this.build().getCustomView().findViewById(R.id.enter_pin);
         positiveText(R.string.ok);
         negativeText(R.string.cancel);
+        final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
     }
 
     public void onSubmit(final MaterialDialog.SingleButtonCallback onSubmitListener) {
@@ -53,6 +55,8 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
         onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mPinField.getWindowToken(), 0);
                 dialog.dismiss();
             }
         });

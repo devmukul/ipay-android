@@ -619,6 +619,10 @@
     <string name="progress_dialog_adding_friend">Adding friend...</string>
     <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
 
+    <string name="contact_link">https://www.ipay.com.bd</string>
+    <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
+    <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
+
 
     <string-array name="mobile_operators">
         <item>Grameen Phone</item>

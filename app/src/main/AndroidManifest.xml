@@ -116,7 +116,8 @@
             android:name=".Activities.PaymentActivities.SendMoneyReviewActivity"
             android:label="@string/send_money"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".Activities.PaymentActivities.PaymentReviewActivity"
             android:label="@string/make_payment"
