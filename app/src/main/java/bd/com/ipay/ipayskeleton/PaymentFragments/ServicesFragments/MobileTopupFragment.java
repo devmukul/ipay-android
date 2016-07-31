@@ -82,7 +82,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
         mMobileTopUpInfoTextView = (TextView) v.findViewById(R.id.text_view_mobile_restriction_info);
 
-        setOperatorandPackageAdapter();
+        setOperatorAndPackageAdapter();
 
         int mobileNumberType = pref.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
         if (mobileNumberType == Constants.MOBILE_TYPE_PREPAID) {
@@ -174,7 +174,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         return v;
     }
 
-    private void setOperatorandPackageAdapter() {
+    private void setOperatorAndPackageAdapter() {
 
         int[] mIconList = getOperatorIcons();
 
@@ -233,7 +233,9 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 mAmountEditText.setError(error_message);
                 cancel = true;
             }
-        } else if (!ContactEngine.isValidNumber(mMobileNumberEditText.getText().toString())) {
+        }
+
+        if (!ContactEngine.isValidNumber(mMobileNumberEditText.getText().toString())) {
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             focusView = mMobileNumberEditText;
             cancel = true;
