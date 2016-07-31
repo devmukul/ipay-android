@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -41,8 +42,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private LoginResponse mLoginResponseModel;
 
     private ProfileImageView mProfileImageView;
-    private IconifiedEditText mUserNameEditText;
-    private IconifiedEditText mPasswordEditText;
+    private EditText mUserNameEditText;
+    private EditText mPasswordEditText;
     private Button mButtonLogin;
     private Button mButtonForgetPassword;
     private Button mButtonJoinUs;
@@ -61,8 +62,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         if (pref.contains(Constants.USERID)) {
             mPasswordEditText.setText("");
-            mPasswordEditText.getEditText().requestFocus();
-            mUserNameEditText.getEditText().setEnabled(false);
+            mPasswordEditText.requestFocus();
+            mUserNameEditText.setEnabled(false);
             mInfoView.setVisibility(View.VISIBLE);
             String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
             mUserNameEditText.setText(mobileNumber);
@@ -100,8 +101,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
         mButtonJoinUs = (Button) v.findViewById(R.id.join_us_button);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mUserNameEditText = (IconifiedEditText) v.findViewById(R.id.login_mobile_number);
-        mPasswordEditText = (IconifiedEditText) v.findViewById(R.id.login_password);
+        mUserNameEditText = (EditText) v.findViewById(R.id.login_mobile_number);
+        mPasswordEditText = (EditText) v.findViewById(R.id.login_password);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {

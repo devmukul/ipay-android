@@ -147,7 +147,6 @@
 
                 </LinearLayout>
             </LinearLayout>
-
         </RelativeLayout>
 
         <View style="@style/Divider" />

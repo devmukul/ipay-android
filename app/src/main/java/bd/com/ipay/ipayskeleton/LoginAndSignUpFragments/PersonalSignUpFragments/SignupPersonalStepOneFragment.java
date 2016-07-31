@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,19 +39,19 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private HttpRequestPostAsyncTask mCheckPromoCodeTask = null;
     private CheckPromoCodeResponse mCheckPromoCodeResponse;
 
-    private IconifiedEditText mPasswordView;
-    private IconifiedEditText mConfirmPasswordView;
-    private IconifiedEditText mMobileNumberView;
+    private EditText mPasswordView;
+    private EditText mConfirmPasswordView;
+    private EditText mMobileNumberView;
 
-    private IconifiedEditText mNameView;
+    private EditText mNameView;
     private Button mNextButton;
     private TextView mTermsConditions;
     private TextView mPrivacyPolicy;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
     private CheckBox mAgreementCheckBox;
-    private IconifiedEditText mPromoCodeEditText;
-    private IconifiedEditText mBirthdayEditText;
+    private EditText mPromoCodeEditText;
+    private EditText mBirthdayEditText;
     private ImageView mDatePickerButton;
 
     private String mDeviceID;
@@ -74,18 +75,18 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_validating_promo_code));
 
-        mNameView = (IconifiedEditText) v.findViewById(R.id.user_name);
-        mPasswordView = (IconifiedEditText) v.findViewById(R.id.password);
-        mConfirmPasswordView = (IconifiedEditText) v.findViewById(R.id.confirm_password);
-        mMobileNumberView = (IconifiedEditText) v.findViewById(R.id.mobile_number);
+        mNameView = (EditText) v.findViewById(R.id.user_name);
+        mPasswordView = (EditText) v.findViewById(R.id.password);
+        mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
+        mMobileNumberView = (EditText) v.findViewById(R.id.mobile_number);
         mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
         mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
         mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
-        mPromoCodeEditText = (IconifiedEditText) v.findViewById(R.id.promo_code_edittext);
-        mBirthdayEditText = (IconifiedEditText) v.findViewById(R.id.birthdayEditText);
+        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
+        mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
 
         final DatePickerDialog dialog = new DatePickerDialog(

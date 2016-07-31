@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2295b5</color>
-    <color name="colorPrimaryDark">#27a1c1</color>
-    <color name="colorPrimaryMediumDark">#1ba4c8</color>
-    <color name="colorPrimaryLight">#81D4FA</color>
-    <color name="colorPrimaryLighter">#A1E4FA</color>
-    <color name="colorLightPrimaryAccent">#1da1c3</color>
-    <color name="colorAccent">#0288D1</color>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#26A69A</color>
+    <color name="colorPrimaryMediumDark">#26A69A</color>
+    <color name="colorPrimaryLight">#009688</color>
+    <color name="colorPrimaryLighter">#009688</color>
+    <color name="colorLightPrimaryAccent">#009688</color>
+    <color name="colorAccent">#009681</color>
     <color name="colorAmber">#FFC107</color>
-    <color name="colorDivider">#CCCCCC</color>
+    <color name="colorDivider">#DDDDDD</color>
     <color name="colorHomeDivider">#CC555555</color>
     <color name="colorLightGray">#E5E5E5</color>
     <color name="colorGray">#737373</color>
@@ -21,6 +21,7 @@
     <color name="colorOrange">#fcb22b</color>
     <color name="colorDarkOrange">#f39431</color>
     <color name="colorBalanceBackground">#e3e3e3</color>
+    <color name="colorBackgroundButtonWithOpacity">#59009688</color>
 
     <!-- zxinglib colors -->
     <color name="zxinglib_status_text">#ffffffff</color>
@@ -39,6 +40,6 @@
     <color name="background_red">#F41051</color>
 
     <color name="verified_background">#009688</color>
-    <color name="background_iconified_button_icon">#2ba4c5</color>
-    <color name="background_iconified_button_disabled">#6bC4d5</color>
+    <color name="background_iconified_button_icon">#009688</color>
+    <color name="background_iconified_button_disabled">#009688</color>
 </resources>

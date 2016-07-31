@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/ic_bg_pcode"
     android:fillViewport="true">
 
     <RelativeLayout
@@ -12,12 +13,13 @@
         android:gravity="center">
 
         <LinearLayout
+            android:id="@+id/ipay_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin_card"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
             android:orientation="vertical">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
@@ -30,49 +32,62 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@android:color/white">
 
-                <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                    android:id="@+id/login_mobile_number"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_number"
-                    android:hint="@string/prompt_mobile"
-                    android:inputType="phone"
-                    android:maxLength="14"
-                    custom:borderType="up">
+                    android:theme="@style/CustomTextInputLayout"
+                    style="@style/CustomTextInputLayoutWithMargin"
+                    android:layout_alignParentLeft="true">
 
-                </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+                    <EditText
+                        android:id="@+id/login_mobile_number"
+                        style="@style/CustomEditTextLogInSignUp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/prompt_mobile"
+                        android:inputType="phone"
+                        android:maxLength="14" />
+                </android.support.design.widget.TextInputLayout>
 
                 <ImageView
                     android:id="@+id/login_info"
+                    style="@style/ButtonStyleWithIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:paddingRight="@dimen/activity_horizontal_margin_card"
-                    android:src="@drawable/ic_notverifiedgrey"
-                    android:visibility="gone" />
-
+                    android:src="@drawable/ic_info_outline_black_24dp"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
-            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                android:id="@+id/login_password"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableLeft="@drawable/ic_password"
-                android:hint="@string/prompt_password_new"
-                android:inputType="textPassword"
-                custom:borderType="down">
+            <View style="@style/DividerOnly" />
 
-            </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
-
-            <Button
-                android:id="@+id/login_button"
-                style="@style/PrimaryButton"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:theme="@style/CustomTextInputLayout"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/white"
+                style="@style/CustomTextInputLayoutWithMargin">
+
+                <EditText
+                    android:id="@+id/login_password"
+                    style="@style/CustomEditTextLogInSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_password_new"
+                    android:inputType="textPassword"
+                    custom:borderType="down" />
+
+            </android.support.design.widget.TextInputLayout>
+            <Button
+                android:id="@+id/login_button"
+                style="@style/PrimaryTransparentButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:imeOptions="actionDone"
                 android:text="@string/action_login" />
 
@@ -90,8 +105,9 @@
                     android:gravity="left|center_vertical"
                     android:text="@string/join_us"
                     android:textAllCaps="false"
-                    android:textColor="@color/colorLightGray"
-                    android:textSize="@dimen/text_size_small" />
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_small"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
                 <Button
                     android:id="@+id/forget_password_button"
@@ -102,8 +118,9 @@
                     android:gravity="center_vertical|right"
                     android:text="@string/forgot_password"
                     android:textAllCaps="false"
-                    android:textColor="@color/colorLightGray"
-                    android:textSize="@dimen/text_size_small" />
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_small"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
             </RelativeLayout>
 
         </LinearLayout>

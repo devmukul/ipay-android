@@ -16,6 +16,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonalSignup;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersonalSignup;
@@ -31,7 +32,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
 
     private Button mSignupPersonalButton;
 
-    private AddressInputView mPersonalAddressView;
+    private AddressInputSignUpView mPersonalAddressView;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
@@ -51,7 +52,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_sms));
 
         mSignupPersonalButton = (Button) v.findViewById(R.id.personal_sign_in_button);
-        mPersonalAddressView = (AddressInputView) v.findViewById(R.id.personal_address);
+        mPersonalAddressView = (AddressInputSignUpView) v.findViewById(R.id.personal_address);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
