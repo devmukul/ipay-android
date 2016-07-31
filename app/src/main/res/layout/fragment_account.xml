@@ -13,89 +13,79 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/profile_background">
+            android:background="@drawable/profile_background"
+            android:orientation="vertical">
 
-            <RelativeLayout
-                style="@style/ProfileCardLayoutStyleColorPrimaryLight">
+            <RelativeLayout style="@style/ProfileCardLayoutStyleColorPrimaryLight">
 
                 <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                     android:id="@+id/profile_picture"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="@dimen/value80"
+                    android:layout_height="@dimen/value80"
                     android:layout_gravity="left"
                     android:layout_marginBottom="@dimen/activity_vertical_margin_semi_double"
                     android:layout_marginLeft="@dimen/value30"
                     android:layout_marginTop="@dimen/activity_vertical_margin_semi_double" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/profile_picture"
                     android:layout_centerVertical="true"
-                    android:orientation="vertical"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true">
+                    android:layout_toRightOf="@+id/profile_picture">
 
-                    <RelativeLayout
+                    <TextView
+                        android:id="@+id/textview_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center">
+                        android:layout_marginBottom="@dimen/value5"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
+                        android:layout_marginRight="@dimen/value10"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:maxWidth="@dimen/value140"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_medium" />
 
-                        <TextView
-                            android:id="@+id/textview_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/value5"
-                            android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
-                            android:layout_marginRight="@dimen/value10"
-                            android:layout_centerVertical="true"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/text_size_medium"
-                            android:maxLines="1"
-                            android:ellipsize="end"/>
-
-                        <ImageView
-                            android:id="@+id/textview_verification_status"
-                            android:layout_toRightOf="@+id/textview_name"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/ic_verified_profile"
-                            android:layout_centerVertical="true"
-                            android:visibility="gone"/>
-
-                    </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/textview_verification_status"
+                        android:layout_width="@dimen/value28"
+                        android:layout_height="@dimen/value28"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_toRightOf="@+id/textview_name"
+                        android:src="@drawable/ic_verified_profile"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/textview_mobile_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/textview_name"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/text_size_small_medium" />
-                </LinearLayout>
+                </RelativeLayout>
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/textview_profile_completion_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your profile is 65% complete. Complete profile to get verified."
-                android:textColor="@android:color/white"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/value30"
                 android:layout_marginRight="@dimen/value30"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:text="Your profile is 65% complete. Complete profile to get verified."
+                android:textColor="@android:color/white"
                 android:textSize="14sp"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             style="@style/ProfileCardLayoutStyle"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:background="@drawable/background_rounded_white">
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/background_rounded_white"
+            android:orientation="vertical">
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/basic_info"
