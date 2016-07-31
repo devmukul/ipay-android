@@ -173,6 +173,10 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         TopupRequest mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
                 mMobileNumber, mMobileNumberType, mOperatorCode, mAmount,
                 mCountryCode, mMobileNumberType, Constants.DEFAULT_USER_CLASS, pin);
+
+        mProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
+        mProgressDialog.show();
+
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
@@ -265,6 +269,9 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
 
+        if (isAdded())
+            mProgressDialog.dismiss();
+
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mProgressDialog.dismiss();
             mGetProfileInfoTask = null;
@@ -281,15 +288,17 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                     mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
+                            getActivity().setResult(Activity.RESULT_OK);
+                            getActivity().finish();
+                        }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG).show();
+                            getActivity().setResult(Activity.RESULT_OK);
+                            getActivity().finish();
+                        }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
@@ -300,7 +309,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                         Toast.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG).show();
                 }
 
-                mProgressDialog.dismiss();
                 mTopupTask = null;
 
                 break;
@@ -334,7 +342,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                     Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
                 }
 
-                mProgressDialog.dismiss();
                 mGetProfileInfoTask = null;
 
                 break;
@@ -358,7 +365,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                     }
                 }
 
-                mProgressDialog.dismiss();
                 mSendInviteTask = null;
 
                 break;

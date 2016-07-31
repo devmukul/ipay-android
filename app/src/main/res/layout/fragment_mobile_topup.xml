@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_amount"
-                android:inputType="numberDecimal"
+                android:inputType="number"
                 android:maxLines="1"
                 android:singleLine="true" />
 
@@ -85,7 +85,8 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <EditText
                 android:id="@+id/operator"
@@ -100,7 +101,7 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <View style="@style/Divider" />
+        <View style="@style/Divider" android:visibility="visible" />
 
         <TextView
             android:id="@+id/text_view_mobile_restriction_info"
