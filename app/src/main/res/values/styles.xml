@@ -713,7 +713,18 @@
 
 
     <!-- Transaction History -->
-    <style name="TransactionHistoryFilterCheckboxStyle" />
+    <style name="TransactionHistoryFilterCheckboxStyle">
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:drawableRight">@drawable/round_checkbox_for_filter</item>
+        <item name="android:button">@null</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
     <style name="TransactionHistoryLeftTextViewStyle">
         <item name="android:maxLines">1</item>

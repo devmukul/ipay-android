@@ -87,8 +87,8 @@
     <string name="view">View</string>
     <string name="remove">Remove</string>
     <string name="mark_as_spam">Spam</string>
-    <string name="to_date">To (dd/mm/yyyy)</string>
-    <string name="from_date">From (dd/mm/yyyy)</string>
+    <string name="to_date">To Date</string>
+    <string name="from_date">From Date</string>
     <string name="service_not_available">Service Currently Not Available</string>
     <string name="please_wait">Please wait. Loading... </string>
     <string name="loading">Loading... </string>
