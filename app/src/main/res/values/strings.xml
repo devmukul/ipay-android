@@ -713,4 +713,10 @@
         <item>Take A Picture</item>
         <item>Select From Gallery</item>
     </string-array>
+
+    <string-array name="pending_picker_action">
+        <item>Take A Picture</item>
+        <item>Select From Gallery</item>
+        <item>Preview</item>
+    </string-array>
 </resources>

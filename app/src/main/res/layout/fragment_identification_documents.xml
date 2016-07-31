@@ -22,19 +22,20 @@
                 android:id="@+id/textview_document_upload_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="2dp"
-                android:gravity="center"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:text="@string/you_need_to_upload_identification_documents_to_get_verified"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_size_small" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_documents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:background="@drawable/background_rounded_white"
-                android:clipToPadding="false" />
+                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                android:paddingBottom="@dimen/activity_horizontal_margin" />
         </LinearLayout>
 
     </LinearLayout>

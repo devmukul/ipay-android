@@ -29,6 +29,8 @@ public class DocumentPicker {
     private static final String TEMP_DOCUMENT_NAME = "document.jpg";
 
     private static final String[] NECESSARY_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
+    private static final int OPTION_Camera = 0;
+    private static final int OPTION_EXTERNAL_STORAGE = 1;
 
     public static boolean ifNecessaryPermissionExists(Context context) {
         for (String permission : NECESSARY_PERMISSIONS) {
@@ -87,13 +89,11 @@ public class DocumentPicker {
 
         Set<Intent> intentList = new LinkedHashSet<>();
 
-        if(id==1) {
+        if (id == OPTION_EXTERNAL_STORAGE) {
             Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
             pickIntent.setType("image/*|application/pdf");
             intentList = addIntentsToList(context, intentList, pickIntent);
-        }
-
-        else {
+        } else {
             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             takePhotoIntent.putExtra("return-data", true);
             takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));

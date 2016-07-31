@@ -2,34 +2,30 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
+;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,10 +34,8 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
@@ -107,6 +101,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
     private static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int OPTION_UPLOAD_DOCUMENT = 1;
     private int mSelectedItemId = -1;
     private int mActionId = -1;
     private Uri mSelectedDocumentUri;
@@ -174,7 +169,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mFileName = temp[temp.length - 1];
                         documentPreviewBindViewHolderList.get(mSelectedItemId).setmSelectedfilePath(mFileName);
                         mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
-                        Log.w("Loading document", mSelectedItemId+mSelectedDocumentUri.toString());
+                        Log.w("Loading document", mSelectedItemId + mSelectedDocumentUri.toString());
                         documentPreviewBindViewHolderList.get(mSelectedItemId).setmSelectedDocumentUri(mSelectedDocumentUri);
                         mDocumentListAdapter.notifyDataSetChanged();
                         mSelectedItemId = -1;
@@ -255,7 +250,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mProgressDialog.show();
 
         String selectedOImagePath = documentPreviewBindViewHolderList.get(mID).getmSelectedDocumentUri().getPath();
-        Log.w("Loading document", mID+selectedOImagePath+mDocumentType);
+        Log.w("Loading document", mID + selectedOImagePath + mDocumentType);
 
         mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                 Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
@@ -396,9 +391,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private EditText mDocumentIdEditTextView;
             private final EditText mSelectFile;
             private final Button mUploadButton;
-            // private final Button mPreviewButton;
-            private final View mDivider;
-            private final View mRecyclarDivider;
             private final ImageView mPicker;
 
             private CustomUploadPickerDialog customUploadPickerDialog;
@@ -415,21 +407,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mDocumentIdEditTextView = (EditText) itemView.findViewById(R.id.edit_text_document_id);
                 mSelectFile = (EditText) itemView.findViewById(R.id.select_file);
                 mUploadButton = (Button) itemView.findViewById(R.id.button_upload);
-                //mPreviewButton = (Button) itemView.findViewById(R.id.button_preview);
-                mDivider = itemView.findViewById(R.id.divider);
                 mPicker = (ImageView) itemView.findViewById(R.id.button_select_file);
-                mRecyclarDivider = itemView.findViewById(R.id.divider_recyclar);
 
             }
 
             public void bindView(final int pos) {
                 mDocumentIdEditTextView.setError(null);
-
-                //if last position
-                if (pos == mIdentificationDocumentDetails.length) {
-
-                    mRecyclarDivider.setVisibility(View.GONE);
-                }
+                mPickerList = new ArrayList<>();
 
                 final IdentificationDocumentDetails identificationDocumentDetail = mIdentificationDocumentDetails[pos];
 
@@ -437,11 +421,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 // Unverified, document not yet uploaded
                 if (verificationStatus == null) {
+                    mPickerList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
                     mVerificationStatus.setVisibility(View.GONE);
                     mDocumentIdView.setText(R.string.not_submitted);
                     mUploadButton.setText(getString(R.string.upload));
-                    // mPreviewButton.setVisibility(View.GONE);
-                    mDivider.setVisibility(View.GONE);
                 }
                 // Document uploaded and verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -449,17 +432,15 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mVerificationStatus.setImageResource(R.drawable.ic_verified);
                     mVerificationStatus.setColorFilter(null);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
-                    //mPreviewButton.setVisibility(View.GONE);
-                    mDivider.setVisibility(View.GONE);
                 }
                 // Document uploaded but not verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
+                    mPickerList = Arrays.asList(getResources().getStringArray(R.array.pending_picker_action));
                     mVerificationStatus.setVisibility(View.VISIBLE);
-                    mVerificationStatus.setImageResource(R.drawable.ic_wip);
+                    mVerificationStatus.setImageResource(R.drawable.ic_workinprogress);
                     mVerificationStatus.setColorFilter(Color.GRAY);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
                     mUploadButton.setText(getString(R.string.upload_again));
-                    mDivider.setVisibility(View.VISIBLE);
                 }
                 mDocumentTypeNameView.setText(identificationDocumentDetail.getDocumentTypeName());
 
@@ -469,48 +450,48 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mSelectFile.setText("");
                 }
 
-
                 if (documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
-                   mOptionsLayout.setVisibility(View.VISIBLE);
-                }
-                else
-                mOptionsLayout.setVisibility(View.GONE);
+                    mOptionsLayout.setVisibility(View.VISIBLE);
+                } else
+                    mOptionsLayout.setVisibility(View.GONE);
 
                 mInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
-                            mOptionsLayout.setVisibility(View.GONE);
-                            documentPreviewBindViewHolderList.get(pos).setIsViewOpen(false);
-                        } else {
-                            mOptionsLayout.setVisibility(View.VISIBLE);
-                            documentPreviewBindViewHolderList.get(pos).setIsViewOpen(true);
+                        if (mPickerList.size() > 0) {
+                            if (documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
+                                mOptionsLayout.setVisibility(View.GONE);
+                                documentPreviewBindViewHolderList.get(pos).setIsViewOpen(false);
+                            } else {
+                                mOptionsLayout.setVisibility(View.VISIBLE);
+                                documentPreviewBindViewHolderList.get(pos).setIsViewOpen(true);
+                            }
                         }
 
                     }
                 });
-
-              //  mDocumentIdEditTextView=(EditText) itemView.findViewById(R.id.edit_text_document_id);
                 mDocumentIdEditTextView.setText(documentPreviewBindViewHolderList.get(pos).getmDocumentId());
 
                 mPicker.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mPickerList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
-                        customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_package), mPickerList);
+                        customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
                         customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                             @Override
                             public void onResourceSelected(int mactionId, String name) {
 
                                 mSelectedItemId = pos;
                                 documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
-                                Log.w("Selected Item", pos + "");
-
-                                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                                    selectDocument(mactionId);
-                                } else {
-                                    mActionId = mactionId;
-                                    DocumentPicker.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION);
+                                if (mactionId <= OPTION_UPLOAD_DOCUMENT)
+                                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                                        selectDocument(mactionId);
+                                    } else {
+                                        mActionId = mactionId;
+                                        DocumentPicker.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION);
+                                    }
+                                else {
+                                    getDocumentAccessToken();
+                                    mSelectedIdentificationDocument = identificationDocumentDetail;
                                 }
                             }
                         });
@@ -521,26 +502,15 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        Log.w("Position 2", pos + " " + documentPreviewBindViewHolderList.get(pos).getmDocumentId());
-
-                                if (mDocumentIdEditTextView.getText().toString().isEmpty()) {
-                                    mDocumentIdEditTextView.setError(getString(R.string.please_enter_document_number));
-                                    mDocumentIdEditTextView.requestFocus();
-                                } else if (documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath().isEmpty()) {
-                                    mSelectFile.setText(R.string.please_select_a_file_to_upload);
-                                } else
-                                    uploadDocument(documentPreviewBindViewHolderList.get(pos).getmDocumentId(), identificationDocumentDetail.getDocumentType(), pos);
+                        if (mDocumentIdEditTextView.getText().toString().isEmpty()) {
+                            mDocumentIdEditTextView.setError(getString(R.string.please_enter_document_number));
+                            mDocumentIdEditTextView.requestFocus();
+                        } else if (documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath().isEmpty()) {
+                            mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
+                        } else
+                            uploadDocument(documentPreviewBindViewHolderList.get(pos).getmDocumentId(), identificationDocumentDetail.getDocumentType(), pos);
                     }
                 });
-
-               /* mPreviewButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getDocumentAccessToken();
-                        mSelectedIdentificationDocument = identificationDocumentDetail;
-                    }
-                });*/
             }
         }
 
