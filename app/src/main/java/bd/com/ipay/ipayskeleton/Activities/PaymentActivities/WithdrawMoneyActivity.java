@@ -8,6 +8,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments.WithdrawMoneyFragment;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyActivity extends BaseActivity {
 
@@ -28,7 +29,8 @@ public class WithdrawMoneyActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            Utilities.hideKeyboard(this);
+            onBackPressed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

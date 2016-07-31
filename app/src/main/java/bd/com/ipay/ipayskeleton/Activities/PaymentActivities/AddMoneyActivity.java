@@ -11,6 +11,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.Busi
 import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.AddMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyActivity extends BaseActivity {
 
@@ -32,7 +33,8 @@ public class AddMoneyActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            Utilities.hideKeyboard(this);
+            onBackPressed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

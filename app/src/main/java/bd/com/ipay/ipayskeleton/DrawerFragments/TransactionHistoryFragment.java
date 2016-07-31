@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,10 +80,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private CheckBox mFilterEducation;
     private Button mClearEventFilterButton;
 
-    private EditText mFromDateEditText;
-    private EditText mToDateEditText;
-    private ImageView mFromDatePicker;
-    private ImageView mToDatePicker;
+    private Button mFromDateButton;
+    private Button mToDateButton;
     private Button clearDateFilterButton;
     private Button filterByDateButton;
     private TextView mEmptyListTextView;
@@ -131,7 +128,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         mFilterOpeningBalance = (CheckBox) v.findViewById(R.id.filter_opening_balance);
         mFilterSendMoney = (CheckBox) v.findViewById(R.id.filter_send_money);
-        mFilterRequestMoney = (CheckBox) v.findViewById(R.id.filter_request_money);
         mFilterAddMoney = (CheckBox) v.findViewById(R.id.filter_add_money);
         mFilterWithdrawMoney = (CheckBox) v.findViewById(R.id.filter_withdraw_money);
         mFilterTopUp = (CheckBox) v.findViewById(R.id.filter_top_up);
@@ -141,17 +137,14 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mCheckBoxTypeMap = new HashMap<>();
         mCheckBoxTypeMap.put(mFilterOpeningBalance, Constants.TRANSACTION_HISTORY_OPENING_BALANCE);
         mCheckBoxTypeMap.put(mFilterSendMoney, Constants.TRANSACTION_HISTORY_SEND_MONEY);
-        mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
         mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
         mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
         mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
         mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_MAKE_PAYMENT);
         mCheckBoxTypeMap.put(mFilterEducation, Constants.TRANSACTION_HISTORY_EDUCATION);
 
-        mFromDateEditText = (EditText) v.findViewById(R.id.fromEditText);
-        mToDateEditText = (EditText) v.findViewById(R.id.toEditText);
-        mFromDatePicker = (ImageView) v.findViewById(R.id.fromDatePicker);
-        mToDatePicker = (ImageView) v.findViewById(R.id.toDatePicker);
+        mFromDateButton = (Button) v.findViewById(R.id.fromButton);
+        mToDateButton = (Button) v.findViewById(R.id.toButton);
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
 
@@ -265,16 +258,16 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             }
         });
 
-        mFromDatePicker.setOnClickListener(new View.OnClickListener() {
+        mFromDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Calendar calendar = Calendar.getInstance();
-                if (!mFromDateEditText.getText().toString().equals("")) {
+                if (!mFromDateButton.getText().toString().equals("")) {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     final Date fromDate;
                     try {
-                        fromDate = sdf.parse(mFromDateEditText.getText().toString().trim());
+                        fromDate = sdf.parse(mFromDateButton.getText().toString().trim());
                         calendar.setTime(fromDate);
                         DatePickerDialog dpd = new DatePickerDialog(getActivity(), mFromDateSetListener, calendar.get(Calendar.YEAR)
                                 , calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -292,14 +285,14 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         });
 
 
-        mToDatePicker.setOnClickListener(new View.OnClickListener() {
+        mToDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 final Date fromDate;
                 try {
-                    fromDate = sdf.parse(mFromDateEditText.getText().toString().trim());
+                    fromDate = sdf.parse(mFromDateButton.getText().toString().trim());
 
                     DatePickerDialog dpd = new DatePickerDialog(getActivity(), mToDateSetListener, Constants.STARTING_YEAR
                             , Constants.STARTING_MONTH, Constants.STARTING_DATE);
@@ -367,8 +360,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private void clearDateFilters() {
         fromDate = null;
         toDate = null;
-        mFromDateEditText.setText("");
-        mToDateEditText.setText("");
+        mFromDateButton.setText("");
+        mToDateButton.setText("");
 
         dateFilterLayout.setVisibility(View.GONE);
     }
@@ -389,8 +382,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
                     String fromDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
 
-                    mFromDateEditText.setText(fromDateStr);
-                    mToDateEditText.setText(fromDateStr);
+                    mFromDateButton.setText(fromDateStr);
+                    mToDateButton.setText(fromDateStr);
                 }
             };
 
@@ -412,7 +405,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
                     String toDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
 
-                    mToDateEditText.setText(toDateStr);
+                    mToDateButton.setText(toDateStr);
                 }
             };
 

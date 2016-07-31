@@ -10,6 +10,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyActivity extends BaseActivity {
 
@@ -46,6 +47,7 @@ public class RequestMoneyActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Utilities.hideKeyboard(this);
             onBackPressed();
             return true;
         } else {

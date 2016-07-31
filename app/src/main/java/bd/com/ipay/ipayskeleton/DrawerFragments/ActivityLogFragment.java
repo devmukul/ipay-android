@@ -67,10 +67,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private CheckBox mVerificationCheckBox;
     private Button mClearEventFilterButton;
 
-    private EditText mFromDateEditText;
-    private EditText mToDateEditText;
-    private ImageView mFromDatePicker;
-    private ImageView mToDatePicker;
+    private Button mFromDateButton;
+    private Button mToDateButton;
     private Button clearDateFilterButton;
     private Button filterByDateButton;
 
@@ -145,10 +143,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mVerificationCheckBox = (CheckBox) v.findViewById(R.id.filter_verification_changes);
         mSystemEventCheckBox = (CheckBox) v.findViewById(R.id.filter_system_event);
 
-        mFromDateEditText = (EditText) v.findViewById(R.id.fromEditText);
-        mToDateEditText = (EditText) v.findViewById(R.id.toEditText);
-        mFromDatePicker = (ImageView) v.findViewById(R.id.fromDatePicker);
-        mToDatePicker = (ImageView) v.findViewById(R.id.toDatePicker);
+        mFromDateButton = (Button) v.findViewById(R.id.fromButton);
+        mToDateButton = (Button) v.findViewById(R.id.toButton);
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
 
@@ -203,8 +199,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private void clearDateFilter() {
         fromDate = null;
         toDate = null;
-        mFromDateEditText.setText("");
-        mToDateEditText.setText("");
+        mFromDateButton.setText("");
+        mToDateButton.setText("");
     }
 
     private void clearEventFilter() {
@@ -240,16 +236,16 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             }
         });
 
-        mFromDatePicker.setOnClickListener(new View.OnClickListener() {
+        mFromDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Calendar calendar = Calendar.getInstance();
-                if (!mFromDateEditText.getText().toString().equals("")) {
+                if (!mFromDateButton.getText().toString().equals("")) {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     final Date fromDate;
                     try {
-                        fromDate = sdf.parse(mFromDateEditText.getText().toString().trim());
+                        fromDate = sdf.parse(mFromDateButton.getText().toString().trim());
                         calendar.setTime(fromDate);
                         DatePickerDialog dpd = new DatePickerDialog(getActivity(), mFromDateSetListener, calendar.get(Calendar.YEAR)
                                 , calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -267,14 +263,14 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         });
 
 
-        mToDatePicker.setOnClickListener(new View.OnClickListener() {
+        mToDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 final Date fromDate;
                 try {
-                    fromDate = sdf.parse(mFromDateEditText.getText().toString().trim());
+                    fromDate = sdf.parse(mFromDateButton.getText().toString().trim());
 
                     DatePickerDialog dpd = new DatePickerDialog(getActivity(), mToDateSetListener, Constants.STARTING_YEAR
                             , Constants.STARTING_MONTH, Constants.STARTING_DATE);
@@ -394,8 +390,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                     String fromDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
 
-                    mFromDateEditText.setText(fromDateStr);
-                    mToDateEditText.setText(fromDateStr);
+                    mFromDateButton.setText(fromDateStr);
+                    mToDateButton.setText(fromDateStr);
                 }
             };
 
@@ -418,7 +414,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                     String toDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
 
-                    mToDateEditText.setText(toDateStr);
+                    mToDateButton.setText(toDateStr);
                 }
             };
 
