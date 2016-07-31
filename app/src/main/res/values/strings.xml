@@ -699,4 +699,9 @@
     <string-array name="payable_education_action">
         <item>Remove</item>
     </string-array>
+
+    <string-array name="upload_picker_action">
+        <item>Take A Picture</item>
+        <item>Select From Gallery</item>
+    </string-array>
 </resources>

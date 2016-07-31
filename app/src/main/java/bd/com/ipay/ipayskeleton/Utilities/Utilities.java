@@ -360,8 +360,13 @@ public class Utilities {
     public static String getFilePath(Context context, Uri uri) {
         String[] projection = {MediaStore.Video.Media.DATA};
         Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-        cursor.moveToFirst();
-        return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+        String filePath = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+            cursor.close();
+        }
+
+        return filePath;
     }
 
     public static void setLayoutAnim_slideDown(ViewGroup panel) {

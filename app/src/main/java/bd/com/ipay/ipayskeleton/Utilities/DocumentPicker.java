@@ -83,6 +83,25 @@ public class DocumentPicker {
         return getChooserIntent(intentList, chooserTitle);
     }
 
+    public static Intent getPickImageOrPdfIntentByID(Context context, String chooserTitle, int id) {
+
+        Set<Intent> intentList = new LinkedHashSet<>();
+
+        if(id==1) {
+            Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            pickIntent.setType("image/*|application/pdf");
+            intentList = addIntentsToList(context, intentList, pickIntent);
+        }
+
+        else {
+            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePhotoIntent.putExtra("return-data", true);
+            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
+            intentList = addIntentsToList(context, intentList, takePhotoIntent);
+        }
+        return getChooserIntent(intentList, chooserTitle);
+    }
+
     private static Intent getChooserIntent(Set<Intent> intentList, String chooserTitle) {
         Intent chooserIntent = null;
 
