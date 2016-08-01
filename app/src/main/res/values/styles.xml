@@ -505,10 +505,12 @@
 
     <style name="ContactsSelectorStyle">
         <item name="android:textSize">13sp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:minWidth">0dp</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textAllCaps">false</item>
+        <item name="android:button">@null</item>
+        <item name="android:paddingTop">@dimen/value5</item>
+        <item name="android:paddingBottom">@dimen/value5</item>
+        <item name="android:paddingLeft">@dimen/value15</item>
+        <item name="android:paddingRight">@dimen/value15</item>
     </style>
 
     <style name="AddressViewHeader">
