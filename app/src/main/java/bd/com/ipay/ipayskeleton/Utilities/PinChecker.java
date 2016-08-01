@@ -107,7 +107,8 @@ public class PinChecker implements HttpResponseListener {
                             AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(mContext, new AddPinDialogBuilder.AddPinListener() {
                                 @Override
                                 public void onPinAddSuccess() {
-
+                                    if (mPinCheckerListener != null)
+                                        mPinCheckerListener.ifPinAdded();
                                 }
                             });
                             addPinDialogBuilder.show();
