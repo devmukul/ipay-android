@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.Friend;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class FriendInfo {
     private int accountType;
@@ -10,6 +9,8 @@ public class FriendInfo {
     private String name;
     private String originalName;
     private String profilePictureUrl;
+    private String profilePictureUrlMedium;
+    private String profilePictureUrlHigh;
     private long updateAt;
 
     public FriendInfo(String name, String profilePictureUrl) {
@@ -17,18 +18,23 @@ public class FriendInfo {
         this.profilePictureUrl = profilePictureUrl;
     }
 
-    private FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, String originalName, long updateAt, String profilePictureUrl) {
+    public FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, String originalName,
+                      String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, long updateAt) {
         this.accountType = accountType;
         this.isMember = isMember;
         this.isVerified = isVerified;
         this.name = name;
         this.originalName = originalName;
         this.profilePictureUrl = profilePictureUrl;
+        this.profilePictureUrlMedium = profilePictureUrlMedium;
+        this.profilePictureUrlHigh = profilePictureUrlHigh;
         this.updateAt = updateAt;
     }
 
-    public FriendInfo(int accountType, int isMember, int verificationStatus, String name, String originalName, long updateAt, String profilePictureUrl) {
-        this(accountType, isMember == DBConstants.IPAY_MEMBER, verificationStatus == DBConstants.VERIFIED_USER, name, originalName, updateAt, profilePictureUrl);
+    public FriendInfo(int accountType, int isMember, int verificationStatus, String name, String originalName,
+                      String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, long updateAt) {
+        this(accountType, isMember == DBConstants.IPAY_MEMBER, verificationStatus == DBConstants.VERIFIED_USER,
+                name, originalName, profilePictureUrl, profilePictureUrlMedium, profilePictureUrlHigh, updateAt);
     }
 
     public int getAccountType() {
@@ -56,11 +62,23 @@ public class FriendInfo {
     }
 
     public String getProfilePictureUrl() {
-        // If the profile picture is taken from the server, then append the base url with it
-        if (profilePictureUrl != null && profilePictureUrl.startsWith("/"))
-            return Constants.BASE_URL_FTP_SERVER + profilePictureUrl;
+        return profilePictureUrl;
+    }
+
+    // TODO remove extra checking once medium quality profile picture becomes available in live
+    public String getProfilePictureUrlMedium() {
+        if (profilePictureUrlMedium != null && !profilePictureUrlMedium.isEmpty())
+            return profilePictureUrlMedium;
         else
-            return profilePictureUrl;
+            return getProfilePictureUrl();
+    }
+
+    // TODO remove extra checking once high quality profile picture becomes available in live
+    public String getProfilePictureUrlHigh() {
+        if (profilePictureUrlHigh != null && !profilePictureUrlHigh.isEmpty())
+            return profilePictureUrlHigh;
+        else
+            return getProfilePictureUrlMedium();
     }
 
     public void setAccountType(int accountType) {

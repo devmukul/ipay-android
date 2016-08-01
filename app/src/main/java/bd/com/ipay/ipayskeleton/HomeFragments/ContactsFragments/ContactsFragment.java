@@ -100,6 +100,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private int originalNameIndex;
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
+    private int profilePictureUrlQualityMediumIndex;
+    private int profilePictureUrlQualityHighIndex;
     private int verificationStatusIndex;
     private int accountTypeIndex;
     private int isMemberIndex;
@@ -234,6 +236,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_ORIGINAL_NAME);
                     phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
+                    profilePictureUrlQualityMediumIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM);
+                    profilePictureUrlQualityHighIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
                     accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
                     isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
@@ -629,7 +633,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 final String name = mCursor.getString(nameIndex);
                 final String originalName = mCursor.getString(originalNameIndex);
                 final String phoneNumber = mCursor.getString(phoneNumberIndex);
-                final String profilePictureUrl = mCursor.getString(profilePictureUrlIndex);
+                final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlIndex);
+                final String profilePictureUrlQualityMedium = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityMediumIndex);
+                final String profilePictureUrlQualityHigh = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityHighIndex);
                 final boolean isVerified = mCursor.getInt(verificationStatusIndex) == DBConstants.VERIFIED_USER;
                 final int accountType = mCursor.getInt(accountTypeIndex);
                 final boolean isMember = mCursor.getInt(isMemberIndex) == DBConstants.IPAY_MEMBER;
@@ -668,7 +674,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     mVerificationStatus.setVisibility(View.GONE);
                 }
 
-                mProfilePictureView.setProfilePicture(profilePictureUrl, false);
+                mProfilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -678,7 +684,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             Intent intent = new Intent();
                             intent.putExtra(Constants.NAME, name);
                             intent.putExtra(Constants.MOBILE_NUMBER, phoneNumber);
-                            intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrl);
+                            intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrlQualityHigh);
                             getActivity().setResult(Activity.RESULT_OK, intent);
                             getActivity().finish();
 
@@ -702,7 +708,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                                     }
 
                                     setContactInformationInSheet(name,
-                                            profilePictureUrl, randomProfileBackgroundColor,
+                                            profilePictureUrlQualityHigh, randomProfileBackgroundColor,
                                             isMember, isVerified, accountType);
                                 }
                             }, 100);

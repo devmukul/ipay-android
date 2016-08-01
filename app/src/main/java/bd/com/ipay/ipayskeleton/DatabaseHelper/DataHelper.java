@@ -14,7 +14,7 @@ import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -56,6 +56,9 @@ public class DataHelper {
             values.put(DBConstants.KEY_ORIGINAL_NAME, friendNode.getInfo().getOriginalName());
             values.put(DBConstants.KEY_ACCOUNT_TYPE, friendNode.getInfo().getAccountType());
             values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
+            values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM, friendNode.getInfo().getProfilePictureUrlMedium());
+            values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH, friendNode.getInfo().getProfilePictureUrlHigh());
+            values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
             values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
                     DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
             values.put(DBConstants.KEY_UPDATE_TIME, friendNode.getInfo().getUpdateTime());
@@ -84,6 +87,8 @@ public class DataHelper {
                     values.put(DBConstants.KEY_ORIGINAL_NAME, friendNode.getInfo().getOriginalName());
                     values.put(DBConstants.KEY_ACCOUNT_TYPE, friendNode.getInfo().getAccountType());
                     values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
+                    values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM, friendNode.getInfo().getProfilePictureUrlMedium());
+                    values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH, friendNode.getInfo().getProfilePictureUrlHigh());
                     values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
                             DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
                     values.put(DBConstants.KEY_UPDATE_TIME, friendNode.getInfo().getUpdateTime());
@@ -169,7 +174,9 @@ public class DataHelper {
             cursor = db.rawQuery(queryString, null);
 
             if (cursor != null && cursor.moveToFirst()) {
-                return cursor.getString(cursor.getColumnIndex(DBConstants.KEY_JSON));
+                String pushEvent = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_JSON));
+                cursor.close();
+                return pushEvent;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,6 +195,8 @@ public class DataHelper {
             int originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_ORIGINAL_NAME);
             int mobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
             int profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
+            int profilePictureUrlQualityMediumIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM);
+            int profilePictureUrlQualityHighIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH);
             int verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
             int accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
             int updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
@@ -200,11 +209,13 @@ public class DataHelper {
                 int verificationStatus = cursor.getInt(verificationStatusIndex);
                 int accountType = cursor.getInt(accountTypeIndex);
                 String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
+                String profilePictureUrlQualityMedium = cursor.getString(profilePictureUrlQualityMediumIndex);
+                String profilePictureUrlQualityHigh = cursor.getString(profilePictureUrlQualityHighIndex);
                 long updateTime = cursor.getLong(updateTimeIndex);
                 int isMember = cursor.getInt(isMemberIndex);
 
                 FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, isMember,
-                        verificationStatus, name, originalName, updateTime, profilePictureUrl));
+                        verificationStatus, name, originalName, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, updateTime));
                 friends.add(friend);
             } while (cursor.moveToNext());
         }
