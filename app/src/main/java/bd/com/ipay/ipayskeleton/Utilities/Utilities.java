@@ -455,15 +455,15 @@ public class Utilities {
         }
     }
 
-    public static void showKeyboard(Context context, View v) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+    public static void showKeyboard(Context context) {
+        final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
-    public static void showKeyBoardEditText(Context activityContext, final EditText editText) {
+    public static void showKeyboard(Context context, final EditText editText) {
 
         final InputMethodManager imm = (InputMethodManager)
-                activityContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                context.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (!editText.hasFocus()) {
             editText.requestFocus();

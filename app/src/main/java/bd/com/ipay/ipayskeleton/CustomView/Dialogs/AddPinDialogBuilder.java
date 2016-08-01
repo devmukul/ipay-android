@@ -80,8 +80,8 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
                     focusView = mPasswordField;
                     focusView.requestFocus();
                 } else {
-                    dialog.dismiss();
                     hideKeyboard();
+                    dialog.dismiss();
 
                     attemptSavePin(pin, password);
                 }
@@ -91,10 +91,12 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
         onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-               dialog.dismiss();
                 hideKeyboard();
+                dialog.dismiss();
             }
         });
+
+        Utilities.showKeyboard(context);
 
     }
 

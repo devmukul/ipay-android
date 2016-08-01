@@ -250,6 +250,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".Activities.InviteActivity"
+            android:label="@string/invite"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <!-- Receiver and service -->
 

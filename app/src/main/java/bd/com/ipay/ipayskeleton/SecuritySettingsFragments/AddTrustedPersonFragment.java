@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -66,6 +68,9 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
         mAddButton = (Button) v.findViewById(R.id.button_add_trusted_person);
 
         mProgressDialog = new ProgressDialog(getActivity());
+
+        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);;
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         mRelationshipList = Arrays.asList(getResources().getStringArray(R.array.relationship));
         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), getString(R.string.relationship), mRelationshipList);

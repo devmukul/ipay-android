@@ -10,6 +10,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 /**
  * You should call validatePin() first when the positive button is clicked
@@ -29,16 +30,14 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
         mPinField = (EditText) this.build().getCustomView().findViewById(R.id.enter_pin);
         positiveText(R.string.ok);
         negativeText(R.string.cancel);
-        final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+        Utilities.showKeyboard(context);
     }
 
     public void onSubmit(final MaterialDialog.SingleButtonCallback onSubmitListener) {
         onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mPinField.getWindowToken(), 0);
 
                 if (!getPin().isEmpty()) {
                     onSubmitListener.onClick(dialog, which);
@@ -49,6 +48,8 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
                     View focusView = mPinField;
                     focusView.requestFocus();
                 }
+
+                Utilities.hideKeyboard(context, mPinField);
             }
         });
 

@@ -73,7 +73,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
 
-        Utilities.showKeyBoardEditText(getActivity(), mOTPEditText);
+        Utilities.showKeyboard(getActivity(), mOTPEditText);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         mProgressDialog = new ProgressDialog(getActivity());

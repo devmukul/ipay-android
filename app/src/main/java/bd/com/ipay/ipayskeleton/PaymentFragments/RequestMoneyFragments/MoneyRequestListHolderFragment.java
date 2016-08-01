@@ -97,7 +97,6 @@ public class MoneyRequestListHolderFragment extends Fragment {
             }
         }
 
-
     }
 
 }

@@ -172,8 +172,10 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                         PaymentAcceptRejectOrCancelResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getActivity().onBackPressed();
+                    }
 
                 } else {
                     if (getActivity() != null)

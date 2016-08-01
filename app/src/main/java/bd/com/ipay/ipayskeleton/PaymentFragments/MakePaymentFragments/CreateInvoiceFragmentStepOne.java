@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -28,10 +30,11 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateInvoiceFragmentStepOne extends Fragment {
 
-    private static final int REQUEST_PICK_CONTACT = 100;
+    private final int PICK_CONTACT_REQUEST = 100;
 
     private Button buttonCreateInvoice;
     private ImageView buttonSelectFromContacts;
+    private ImageView buttonShowQRCode;
     private EditText mMobileNumberEditText;
     private EditText mNameEditText;
     private EditText mDescriptionEditText;
@@ -43,7 +46,8 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_create_invoice_step_one, container, false);
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
-        buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
+        buttonShowQRCode = (ImageView) v.findViewById(R.id.button_show_qr_code);
+        buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_sender_from_contacts);
         buttonCreateInvoice = (Button) v.findViewById(R.id.button_request_money);
         mNameEditText = (EditText) v.findViewById(R.id.item_name);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
@@ -51,14 +55,6 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
-
-        buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, REQUEST_PICK_CONTACT);
-            }
-        });
 
         buttonCreateInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +65,27 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
                     }
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                intent.putExtra(Constants.IPAY_MEMBERS_ONLY, true);
+                startActivityForResult(intent, PICK_CONTACT_REQUEST);
+            }
+        });
+
+        buttonShowQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
+                String userID = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE)
+                        .getString(Constants.USERID, "").replaceAll("\\D", "");
+                intent.putExtra(Constants.STRING_TO_ENCODE, userID);
+                intent.putExtra(Constants.ACTIVITY_TITLE, getString(R.string.request_money));
+                startActivity(intent);
             }
         });
 
@@ -103,13 +120,13 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
             cancel = true;
         }
 
-        if (receiver.length() == 0) {
-            mMobileNumberEditText.setError(getString(R.string.enter_mobile_number));
+        if (!ContactEngine.isValidNumber(receiver)) {
             focusView = mMobileNumberEditText;
+            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;
         } else if (ContactEngine.formatMobileNumberBD(receiver).equals(ProfileInfoCacheManager.getMobileNumber())) {
             focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.you_cannot_send_invoice_to_your_number));
+            mMobileNumberEditText.setError(getString(R.string.you_cannot_request_money_from_your_number));
             cancel = true;
         }
 
@@ -144,79 +161,19 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_PICK_CONTACT) {
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_CONTACT_REQUEST) {
 
-            final CharSequence[] numbers = getNameAndPhoneList(data.getData());
-            int size = numbers.length;
-            if (size < 1) {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.no_numbers_found,
-                            Toast.LENGTH_LONG).show();
-            } else if (size == 1) {
-
-                // Format the number
-                String bdNumberStr = numbers[0].toString();
-                bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
-                mMobileNumberEditText.setText(bdNumberStr);
-
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(getString(R.string.pick_a_number));
-                builder.setItems(numbers, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        // Format the number
-                        String bdNumberStr = numbers[which].toString();
-                        bdNumberStr = ContactEngine.formatMobileNumberBD(bdNumberStr);
-                        mMobileNumberEditText.setText(bdNumberStr);
-
-                    }
-                });
-                builder.show();
+            if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                if (mobileNumber != null) {
+                    mMobileNumberEditText.setText(mobileNumber);
+                    mMobileNumberEditText.setError(null);
+                }
             }
-        } else if (resultCode == Activity.RESULT_CANCELED && requestCode == REQUEST_PICK_CONTACT) {
+        } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT_REQUEST) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
                         Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private CharSequence[] getNameAndPhoneList(Uri data) {
-        ArrayList<String> list = new ArrayList<>();
-
-        Cursor cursor = getActivity().getContentResolver().query(data, null, null,
-                null, null);
-        if (cursor.moveToFirst()) {
-            if (cursor
-                    .getString(
-                            cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
-                    .equals("1")) {
-                String contactId = cursor.getString(cursor
-                        .getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cursor
-                        .getString(cursor
-                                .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-                Cursor phones = getActivity().getContentResolver().query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-                                + " = " + contactId, null, null);
-                int numberIndex = phones
-                        .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                while (phones.moveToNext())
-                    list.add(phones.getString(numberIndex));
-
-                phones.close();
-            }
-        }
-        cursor.close();
-
-        CharSequence[] numbers = new CharSequence[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            numbers[i] = list.get(i);
-        }
-        return numbers;
     }
 }
