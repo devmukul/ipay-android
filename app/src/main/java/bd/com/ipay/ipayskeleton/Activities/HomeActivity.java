@@ -430,6 +430,12 @@ public class HomeActivity extends BaseActivity
             startActivity(intent);
             switchedToHomeFragment = false;
 
+        } else if (id == R.id.nav_invite) {
+
+            Intent intent = new Intent(this, InviteActivity.class);
+            startActivity(intent);
+            switchedToHomeFragment = true;
+
         } else if (id == R.id.nav_logout) {
 
             if (Utilities.isConnectionAvailable(HomeActivity.this)) attemptLogout();
