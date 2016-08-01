@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -115,6 +116,11 @@ public class DataHelper {
     }
 
     public Cursor searchFriends(String query, boolean memberOnly, boolean verifiedOnly) {
+        return searchFriends(query, memberOnly, false, verifiedOnly, false, false, null);
+    }
+
+    public Cursor searchFriends(String query, boolean memberOnly, boolean nonMemberOnly,
+                            boolean verifiedOnly, boolean invitedOnly, boolean nonInvitedOnly, List<String> invitees) {
         Cursor cursor = null;
 
         try {
@@ -126,6 +132,17 @@ public class DataHelper {
                 queryString += " AND " + DBConstants.KEY_VERIFICATION_STATUS + " = " + DBConstants.VERIFIED_USER;
             if (memberOnly)
                 queryString += " AND " + DBConstants.KEY_IS_MEMBER + " = " + DBConstants.IPAY_MEMBER;
+            if (nonMemberOnly)
+                queryString += " AND " + DBConstants.KEY_IS_MEMBER + " != " + DBConstants.IPAY_MEMBER;
+            if (invitees != null) {
+                String inviteeListStr = "(" + TextUtils.join(", ", invitees) + ")";
+                if (invitedOnly) {
+                    queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " IN " + inviteeListStr;
+                }
+                if (nonInvitedOnly) {
+                    queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " NOT IN " + inviteeListStr;
+                }
+            }
 
             // If original name exists, then user original name as the sorting parameter.
             // Otherwise use normal name as the sorting parameter.
@@ -134,6 +151,8 @@ public class DataHelper {
                     + " THEN " + DBConstants.KEY_NAME
                     + " ELSE "
                     + DBConstants.KEY_ORIGINAL_NAME + " END COLLATE NOCASE";
+
+            Log.w("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 

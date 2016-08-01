@@ -228,14 +228,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d("Loader", "Started");
 
         return new SQLiteCursorLoader(getActivity()) {
             @Override
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
 
-                Cursor cursor = dataHelper.searchFriends(mQuery, miPayMembersOnly, mShowVerifiedUsersOnly);
+                Cursor cursor = dataHelper.searchFriends(mQuery, miPayMembersOnly, mShowNonInvitedNonMembersOnly,
+                        mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, ContactsHolderFragment.mGetInviteInfoResponse.getInvitees());
 
                 if (cursor != null) {
                     nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
@@ -262,7 +262,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d("Loader", "Finished");
         populateList(data, mShowVerifiedUsersOnly ?
                 getString(R.string.no_verified_contacts) : getString(R.string.no_contacts));
     }
