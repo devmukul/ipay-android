@@ -110,6 +110,7 @@
                 android:gravity="left"
                 android:paddingBottom="@dimen/value10"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_small_medium" />
         </LinearLayout>
@@ -118,7 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/value15"
             android:layout_marginTop="@dimen/value4"
-            android:background="@color/colorLightGray"/>
+            android:background="@color/colorLightGray" />
 
         <include layout="@layout/view_transaction_details_education_payment" />
 
@@ -176,7 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/value15"
             android:layout_marginTop="@dimen/value4"
-            android:background="@color/colorLightGray"/>
+            android:background="@color/colorLightGray" />
 
         <LinearLayout
             android:id="@+id/purpose_layout"

@@ -33,7 +33,7 @@
                     <TextView
                         android:id="@+id/textview_name"
                         style="@style/TextViewUserInfoPrimary"
-                        android:paddingRight="@dimen/activity_horizontal_margin"/>
+                        android:paddingRight="@dimen/activity_horizontal_margin" />
 
                     <TextView
                         android:id="@+id/textview_mobile_number"
@@ -49,7 +49,7 @@
                         <CheckBox
                             android:id="@+id/checkbox_topup_invite"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -85,47 +85,47 @@
 
 
             <LinearLayout
+                android:id="@+id/service_charge_with_net_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/service_charge_with_net_amount"
                 android:orientation="vertical"
                 android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/service_charge_holder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/service_charge_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/service_charge" />
+                    <TextView
+                        style="@style/TextViewInfoLabel"
+                        android:text="@string/service_charge" />
 
-                <TextView
-                    android:id="@+id/textview_service_charge"
-                    style="@style/TextViewInfoColorPrimary" />
+                    <TextView
+                        android:id="@+id/textview_service_charge"
+                        style="@style/TextViewInfoColorPrimary" />
 
-            </LinearLayout>
+                </LinearLayout>
 
-            <View style="@style/Divider" />
+                <View style="@style/Divider" />
 
-            <LinearLayout
-                android:id="@+id/topup_holder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/topup_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/topup_received" />
+                    <TextView
+                        style="@style/TextViewInfoLabel"
+                        android:text="@string/topup_received" />
 
-                <TextView
-                    android:id="@+id/textview_total"
-                    style="@style/TextViewInfoColorPrimary" />
+                    <TextView
+                        android:id="@+id/textview_total"
+                        style="@style/TextViewInfoColorPrimary" />
 
-            </LinearLayout>
+                </LinearLayout>
 
-            <View style="@style/Divider" />
+                <View style="@style/Divider" />
 
             </LinearLayout>
 
@@ -172,6 +172,8 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_small_medium" />
             </LinearLayout>
+
+            <View style="@style/Divider" />
 
         </LinearLayout>
 

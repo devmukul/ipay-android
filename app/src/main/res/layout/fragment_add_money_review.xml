@@ -46,7 +46,7 @@
                         android:id="@+id/textview_bank_name"
                         style="@style/TextViewUserInfoPrimary"
                         android:ellipsize="end"
-                        android:singleLine="true"/>
+                        android:singleLine="true" />
 
                     <TextView
                         android:id="@+id/textview_account_number"
@@ -111,6 +111,9 @@
                     style="@style/TextViewInfoColorPrimary" />
 
             </LinearLayout>
+
+            <View style="@style/Divider" />
+
         </LinearLayout>
 
         <LinearLayout

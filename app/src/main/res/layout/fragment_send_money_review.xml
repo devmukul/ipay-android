@@ -16,8 +16,7 @@
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/profile_picture"
-                style="@style/ReviewImageStyle">
-            </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+                style="@style/ReviewImageStyle"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -28,12 +27,12 @@
                 <TextView
                     android:id="@+id/textview_name"
                     style="@style/TextViewUserInfoPrimary"
-                    android:singleLine="true"
-                    android:ellipsize="end"/>
+                    android:ellipsize="end"
+                    android:singleLine="true" />
 
                 <TextView
                     android:id="@+id/textview_mobile_number"
-                    style="@style/TextViewUserInfoSecondary"/>
+                    style="@style/TextViewUserInfoSecondary" />
 
             </LinearLayout>
         </LinearLayout>
@@ -91,6 +90,8 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <View style="@style/Divider" />
 
         <LinearLayout
             android:id="@+id/layout_description_holder"

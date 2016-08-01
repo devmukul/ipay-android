@@ -287,7 +287,7 @@
             <Button
                 android:id="@+id/button_make_payment"
                 style="@style/HomeImageButtonStyle"
-                android:drawableLeft="@drawable/ic_payment"
+                android:drawableLeft="@drawable/ic_payment2"
                 android:text="@string/make_payment" />
 
 

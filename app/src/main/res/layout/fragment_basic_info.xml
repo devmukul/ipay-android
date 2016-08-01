@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/value15">
+        android:layout_marginTop="@dimen/value15"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textview_mobile_number"
@@ -20,7 +20,7 @@
             android:gravity="center"
             android:text=""
             android:textSize="20sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textview_verification_status"
@@ -34,7 +34,8 @@
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
         <include layout="@layout/layout_progress_container" />
 
         <LinearLayout
@@ -60,8 +61,9 @@
             </LinearLayout>
 
             <View
-                android:layout_below="@+id/icon"
-                style="@style/Divider"/>
+                style="@style/Divider"
+                android:layout_below="@+id/icon" />
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -73,12 +75,12 @@
 
                 <TextView
                     android:id="@+id/textview_dob"
-                    style="@style/TextViewInfoColorPrimary"/>
+                    style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
             <View
                 style="@style/Divider"
-                android:layout_below="@+id/icon"/>
+                android:layout_below="@+id/icon" />
 
             <!-- Spinners -->
             <LinearLayout
@@ -92,12 +94,12 @@
 
                 <TextView
                     android:id="@+id/textview_occupation"
-                    style="@style/TextViewInfoColorPrimary"/>
+                    style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
             <View
                 style="@style/Divider"
-                android:layout_below="@+id/icon"/>
+                android:layout_below="@+id/icon" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -110,12 +112,12 @@
 
                 <TextView
                     android:id="@+id/textview_gender"
-                    style="@style/TextViewInfoColorPrimary"/>
+                    style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
             <View
                 style="@style/Divider"
-                android:layout_below="@+id/icon"/>
+                android:layout_below="@+id/icon" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -124,16 +126,16 @@
 
                 <TextView
                     style="@style/TextViewInfoLabel"
-                    android:text="@string/fathers_name"/>
+                    android:text="@string/fathers_name" />
 
                 <TextView
                     android:id="@+id/textview_fathers_name"
-                    style="@style/TextViewInfoColorPrimary"/>
+                    style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
             <View
                 style="@style/Divider"
-                android:layout_below="@+id/icon"/>
+                android:layout_below="@+id/icon" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -146,12 +148,12 @@
 
                 <TextView
                     android:id="@+id/textview_mothers_name"
-                    style="@style/TextViewInfoColorPrimary"/>
+                    style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
             <View
                 style="@style/Divider"
-                android:layout_below="@+id/icon"/>
+                android:layout_below="@+id/icon" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -164,8 +166,13 @@
 
                 <TextView
                     android:id="@+id/textview_signup"
-                    style="@style/TextViewInfoColorPrimary"/>
+                    style="@style/TextViewInfoColorPrimary" />
+
             </LinearLayout>
+
+            <View
+                style="@style/Divider"
+                android:layout_below="@+id/icon" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

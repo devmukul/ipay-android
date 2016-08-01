@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,9 +35,9 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
-    private IconifiedEditText mMobileNumberEditText;
+    private EditText mMobileNumberEditText;
     private ImageView mSelectMobileNumberFromContactsButton;
-    private IconifiedEditText mDesignationEditText;
+    private EditText mDesignationEditText;
 
     private Button mContinueButton;
     private long mAssociationId;
@@ -57,8 +58,8 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
         if (mAssociationId == 0) getActivity().setTitle(R.string.create_employee);
         else getActivity().setTitle(R.string.edit_employee);
 
-        mMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.mobile_number);
-        mDesignationEditText = (IconifiedEditText) v.findViewById(R.id.designation);
+        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
+        mDesignationEditText = (EditText) v.findViewById(R.id.designation);
 
         mSelectMobileNumberFromContactsButton = (ImageView) v.findViewById(R.id.select_mobile_number_from_contacts);
         mContinueButton = (Button) v.findViewById(R.id.button_continue);
@@ -104,7 +105,7 @@ public class CreateEmployeeInformationFragment extends Fragment implements HttpR
         } else {
             mMobileNumberEditText.setText(getArguments().getString(Constants.MOBILE_NUMBER));
             mDesignationEditText.setText(getArguments().getString(Constants.DESIGNATION));
-            mMobileNumberEditText.getEditText().setEnabled(false);
+            mMobileNumberEditText.setEnabled(false);
         }
     }
 

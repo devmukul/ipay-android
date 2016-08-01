@@ -1,51 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:background="@color/colorPrimary">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-            android:id="@+id/mobile_number"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/mobile_number"
-            android:drawableLeft="@drawable/ic_number"
-            app:borderType="up"
-            android:inputType="phone"/>
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/mobile_number"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/mobile_number"
+                android:inputType="phone" />
+        </android.support.design.widget.TextInputLayout>
 
         <ImageView
             android:id="@+id/select_mobile_number_from_contacts"
-            style="@style/ButtonStyleAccentSmall"
+            style="@style/ButtonStyleWithIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:padding="@dimen/value5"
-            android:src="@drawable/ic_contacts_white_24dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:src="@drawable/ic_book3x" />
 
     </RelativeLayout>
 
-    <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-        android:id="@+id/designation"
+    <View style="@style/Divider" />
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/designation"
-        app:borderType="down"
-        android:drawableLeft="@drawable/ic_promo"/>
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/designation"
+            style="@style/CustomEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/designation" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <View style="@style/Divider" />
 
     <Button
         android:id="@+id/button_continue"
-        style="@style/PrimaryButton"
+        style="@style/PrimaryMediumButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_horizontal_margin"

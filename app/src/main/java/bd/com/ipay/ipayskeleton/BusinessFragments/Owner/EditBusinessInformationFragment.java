@@ -11,6 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -33,10 +35,11 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBusinessInformationFragment extends Fragment implements HttpResponseListener {
 
-    private IconifiedEditText mBusinessNameEditText;
-    private IconifiedEditText mBusinessMobileNumberEditText;
-    private IconifiedEditText mBusinessEmailEditText;
-    private IconifiedEditText mBusinessTypeEditText;
+    private EditText mBusinessNameEditText;
+    private EditText mBusinessMobileNumberEditText;
+    private EditText mBusinessEmailEditText;
+    private EditText mBusinessTypeEditText;
+    private Button mInfoSaveButton;
 
     private String mBusinessName;
     private String mBusinessMobileNumber;
@@ -57,10 +60,11 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         View v = inflater.inflate(R.layout.fragment_edit_business_information, container, false);
         getActivity().setTitle(R.string.edit_business_information);
 
-        mBusinessNameEditText = (IconifiedEditText) v.findViewById(R.id.business_name);
-        mBusinessMobileNumberEditText = (IconifiedEditText) v.findViewById(R.id.business_mobile_number);
-        mBusinessEmailEditText = (IconifiedEditText) v.findViewById(R.id.business_email);
-        mBusinessTypeEditText = (IconifiedEditText) v.findViewById(R.id.business_type);
+        mBusinessNameEditText = (EditText) v.findViewById(R.id.business_name);
+        mBusinessMobileNumberEditText = (EditText) v.findViewById(R.id.business_mobile_number);
+        mBusinessEmailEditText = (EditText) v.findViewById(R.id.business_email);
+        mBusinessTypeEditText = (EditText) v.findViewById(R.id.business_type);
+        mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
 
         mBusinessName = getArguments().getString(Constants.BUSINESS_NAME);
         mBusinessMobileNumber = getArguments().getString(Constants.BUSINESS_MOBILE_NUMBER);
@@ -68,7 +72,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         mBusinessTypeId = getArguments().getInt(Constants.BUSINESS_TYPE);
         mBusinessTypes = getArguments().getParcelableArrayList(Constants.BUSINESS_TYPE_LIST);
 
-        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.business_type),mBusinessTypes, mBusinessTypeId);
+        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.business_type), mBusinessTypes, mBusinessTypeId);
         businessTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -97,6 +101,16 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
 
         mProgressDialog = new ProgressDialog(getActivity());
 
+        mInfoSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (verifyUserInputs()) {
+                    Utilities.hideKeyboard(getActivity());
+                    attemptSaveBusinessInformation();
+                }
+            }
+        });
+
         setHasOptionsMenu(true);
 
         return v;
@@ -105,20 +119,11 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.save, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            if (verifyUserInputs()) {
-                Utilities.hideKeyboard(getActivity());
-                attemptSaveBusinessInformation();
-            }
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void attemptSaveBusinessInformation() {

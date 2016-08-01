@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,7 +34,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmployeeManagementFragment extends ProgressFragment implements HttpResponseListener {
 
-    private Button mAddEmployeeButton;
+    private FloatingActionButton mFabAddNewEmployee;
     private List<Employee> mEmployeeList;
 
     private HttpRequestGetAsyncTask mGetAllEmployeeAsyncTask;
@@ -53,8 +54,8 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         View v = inflater.inflate(R.layout.fragment_employee_management, container, false);
         getActivity().setTitle(R.string.manage_employees);
 
-        mAddEmployeeButton = (Button) v.findViewById(R.id.button_add_employee);
-        mAddEmployeeButton.setOnClickListener(new View.OnClickListener() {
+        mFabAddNewEmployee = (FloatingActionButton) v.findViewById(R.id.fab_add_employee);
+        mFabAddNewEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((BusinessActivity) getActivity()).switchToEmployeeInformationFragment(null);
@@ -74,7 +75,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
     @Override
     public void onPause() {
         super.onPause();
-        Utilities.hideKeyboard(getContext(),getView());
+        Utilities.hideKeyboard(getContext(), getView());
     }
 
     @Override
@@ -95,7 +96,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         mGetAllEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void removeAnEmployee(long associationId){
+    private void removeAnEmployee(long associationId) {
         if (mRemoveAnEmployeeAsyncTask != null)
             return;
 
@@ -224,7 +225,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                         mStatusView.setColorFilter(null);
                         break;
                     case Constants.BUSINESS_STATUS_PENDING:
-                        mStatusView.setImageResource(R.drawable.ic_wip);
+                        mStatusView.setImageResource(R.drawable.ic_workinprogress);
                         mStatusView.setColorFilter(Color.GRAY);
                         break;
                     default:

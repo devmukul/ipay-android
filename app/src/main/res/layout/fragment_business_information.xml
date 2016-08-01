@@ -1,71 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:layout_height="match_parent">
 
     <include layout="@layout/layout_progress_container" />
 
     <LinearLayout
         android:id="@+id/content_container"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_rounded_white"
-        android:layout_margin="@dimen/activity_horizontal_margin">
+        android:layout_marginTop="@dimen/value15"
+        android:orientation="vertical">
 
-        <LinearLayout
-            style="@style/BusinessProfileFieldHolder">
+        <LinearLayout style="@style/LinearLayoutHolder">
 
             <TextView
-                style="@style/BusinessProfileLabel"
-                android:text="@string/business_name"/>
+                style="@style/TextViewInfoLabel"
+                android:text="@string/business_name" />
 
             <TextView
                 android:id="@+id/textview_business_name"
-                style="@style/BusinessProfileTextView"/>
+                style="@style/TextViewInfoColorPrimary" />
 
         </LinearLayout>
 
-        <LinearLayout
-            style="@style/BusinessProfileFieldHolder">
+        <View style="@style/Divider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
 
             <TextView
-                style="@style/BusinessProfileLabel"
-                android:text="@string/mobile_number"/>
+                style="@style/TextViewInfoLabel"
+                android:text="@string/mobile_number" />
 
             <TextView
                 android:id="@+id/textview_business_mobile_number"
-                style="@style/BusinessProfileTextView"/>
+                style="@style/TextViewInfoColorPrimary" />
 
         </LinearLayout>
 
-        <LinearLayout
-            style="@style/BusinessProfileFieldHolder">
+        <View style="@style/Divider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
 
             <TextView
-                style="@style/BusinessProfileLabel"
-                android:text="@string/email"/>
+                style="@style/TextViewInfoLabel"
+                android:text="@string/email" />
 
             <TextView
                 android:id="@+id/textview_business_email"
-                style="@style/BusinessProfileTextView"/>
+                style="@style/TextViewInfoColorPrimary" />
 
         </LinearLayout>
 
-        <LinearLayout
-            style="@style/BusinessProfileFieldHolder">
+        <View style="@style/Divider" />
+
+        <LinearLayout style="@style/LinearLayoutHolder">
 
             <TextView
-                style="@style/BusinessProfileLabel"
-                android:text="@string/business_type"/>
+                style="@style/TextViewInfoLabel"
+                android:text="@string/business_type" />
 
             <TextView
                 android:id="@+id/textview_business_type"
-                style="@style/BusinessProfileTextView"/>
+                style="@style/TextViewInfoColorPrimary" />
 
         </LinearLayout>
 
+        <View style="@style/Divider" />
 
     </LinearLayout>
 </FrameLayout>
