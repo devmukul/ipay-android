@@ -8,12 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,8 +45,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     public static GetInviteInfoResponse mGetInviteInfoResponse;
 
     private BottomSheetLayout mBottomSheetLayout;
-    private Button mAllContactsSelector;
-    private Button miPayContactsSelector;
+    private CheckBox mAllContactsSelector;
+    private CheckBox miPayContactsSelector;
 
     private ContactsFragment miPayAllContactsFragment;
     private ContactsFragment miPayMemberContactsFragment;
@@ -71,8 +70,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         mContactCount = (TextView) v.findViewById(R.id.contact_count);
         mAddContactButton = (FloatingActionButton) v.findViewById(R.id.fab_add_contact);
 
-        mAllContactsSelector = (Button) v.findViewById(R.id.button_contacts_all);
-        miPayContactsSelector = (Button) v.findViewById(R.id.button_contacts_ipay);
+        mAllContactsSelector = (CheckBox) v.findViewById(R.id.checkbox_contacts_all);
+        miPayContactsSelector = (CheckBox) v.findViewById(R.id.checkbox_contacts_ipay);
 
         mAllContactsSelector.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,18 +108,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         super.onActivityCreated(savedInstanceState);
 
         switchToiPayContacts();
-    }
-
-    private void setEnabled(Button button, boolean isEnabled, boolean isLeftButton) {
-        if (isEnabled) {
-            button.setBackgroundResource(isLeftButton ?
-                    R.drawable.background_contact_selector_active_left :
-                    R.drawable.background_contact_selector_active_right);
-            button.setTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
-        } else {
-            button.setBackgroundResource(R.drawable.background_contact_selector_inactive);
-            button.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorTextPrimary));
-        }
     }
 
     private void showAddFriendDialog() {
@@ -219,8 +206,11 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private void switchToAllContacts() {
-        setEnabled(mAllContactsSelector, true, true);
-        setEnabled(miPayContactsSelector, false, true);
+        mAllContactsSelector.setChecked(true);
+        miPayContactsSelector.setChecked(false);
+
+        mAllContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
+        miPayContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
 
         try {
             if (getActivity() != null) {
@@ -241,18 +231,12 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         }
     }
 
-    private void setContactCount(final int contactCount) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mContactCount.setText("Contacts (" + contactCount + ")");
-            }
-        });
-    }
-
     private void switchToiPayContacts() {
-        setEnabled(miPayContactsSelector, true, false);
-        setEnabled(mAllContactsSelector, false, false);
+        mAllContactsSelector.setChecked(false);
+        miPayContactsSelector.setChecked(true);
+
+        mAllContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
+        miPayContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
 
         try {
             if (miPayMemberContactsFragment == null) {
@@ -273,6 +257,15 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setContactCount(final int contactCount) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mContactCount.setText("Contacts (" + contactCount + ")");
+            }
+        });
     }
 
     @Override
