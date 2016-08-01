@@ -39,7 +39,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvoicesSentFragment extends Fragment implements HttpResponseListener {
+public class SentInvoicesFragment extends Fragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 
@@ -62,7 +62,7 @@ public class InvoicesSentFragment extends Fragment implements HttpResponseListen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_invoice_sent, container, false);
+        View v = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
         mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice_sent);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
