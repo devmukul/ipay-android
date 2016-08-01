@@ -91,7 +91,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.InvoiceActivity"
-            android:label="@string/payment"
+            android:label="@string/create_invoice"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -254,7 +254,7 @@
             android:name=".Activities.InviteActivity"
             android:label="@string/invite"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <!-- Receiver and service -->
