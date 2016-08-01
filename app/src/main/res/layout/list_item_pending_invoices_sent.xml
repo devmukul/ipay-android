@@ -39,8 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/request_name"
         android:layout_toRightOf="@+id/profile_picture"
-        android:gravity="left"
-        android:visibility="gone" />
+        android:gravity="left" />
 
     <TextView
         android:id="@+id/description"
@@ -51,7 +50,7 @@
         android:layout_toRightOf="@+id/profile_picture"
         android:layout_toLeftOf="@+id/cancel_request"
         android:gravity="left"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/time"

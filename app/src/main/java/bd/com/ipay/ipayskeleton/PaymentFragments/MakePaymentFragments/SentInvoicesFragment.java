@@ -299,7 +299,7 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
                 }
 
 
-                mAmount.setText(pendingPaymentClasses.get(pos).getAmount().toBigInteger().toString());
+                mAmount.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
                 mDescription.setText(description);
                 mTime.setText(time);
 
