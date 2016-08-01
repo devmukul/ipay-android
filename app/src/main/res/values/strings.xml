@@ -63,7 +63,7 @@
     <string name="please_select_session">Please select a session</string>
     <string name="please_enter_student_id">Please enter Student ID</string>
     <string name="error_loading_data">Error loading data. Please try again.</string>
-    <string name="forgot_password">Forgot your password?</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="join_us">Join Us</string>
     <string name="enter_the_amount_we_sent">Enter the amount we sent to your bank account here.</string>
     <string name="are_you_sure">Are you sure?</string>

@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:padding="@dimen/activity_horizontal_margin">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
-    <Button
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+        android:id="@+id/button_business_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/PrimaryButton"
-        android:text="@string/business_information"
-        android:id="@+id/button_business_information" />
+        android:drawableLeft="@drawable/ic_signup_add1"
+        android:text="@string/business_information" />
 
-    <Button
+    <View style="@style/DividerWithoutMarginPadding" />
+
+    <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+        android:id="@+id/button_manage_employees"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/manage_employees"
-        style="@style/PrimaryButton"
-        android:id="@+id/button_manage_employees" />
+        android:drawableLeft="@drawable/ic_signup_add1"
+        android:text="@string/manage_employees" />
+
+    <View style="@style/DividerWithoutMarginPadding" />
 </LinearLayout>

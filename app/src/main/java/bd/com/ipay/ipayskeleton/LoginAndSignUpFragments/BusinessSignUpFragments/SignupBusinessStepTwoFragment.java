@@ -16,6 +16,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
+import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
@@ -26,14 +27,14 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupBusinessStepTwoFragment extends Fragment {
 
-    private IconifiedEditText mBusinessType;
+    private EditText mBusinessType;
 
     private EditText mBusinessNameView;
     private Button mNextButton;
 
     private ResourceSelectorDialog<BusinessType> businessTypeResourceSelectorDialog;
 
-    private AddressInputView mBusinessAddressView;
+    private AddressInputSignUpView mBusinessAddressView;
 
     private ProgressDialog mProgressDialog;
     private int mSelectedBusinessTypeId = -1;
@@ -51,11 +52,11 @@ public class SignupBusinessStepTwoFragment extends Fragment {
         mProgressDialog = new ProgressDialog(getActivity());
 
         mBusinessNameView = (EditText) v.findViewById(R.id.business_name);
-        mBusinessType = (IconifiedEditText) v.findViewById(R.id.business_type);
+        mBusinessType = (EditText) v.findViewById(R.id.business_type);
 
         mNextButton = (Button) v.findViewById(R.id.business_again_next_button);
 
-        mBusinessAddressView = (AddressInputView) v.findViewById(R.id.business_address);
+        mBusinessAddressView = (AddressInputSignUpView) v.findViewById(R.id.business_address);
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override

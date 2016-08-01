@@ -3,9 +3,7 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/ic_bg_pcode">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,123 +12,150 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin">
 
             <TextView
                 style="@style/TextStylePrimaryMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:text="@string/account_holder_information"
-                android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@android:color/white"/>
+                android:text="@string/account_holder_information"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
 
-            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                android:id="@+id/personal_mobile_number"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/personal_mobile_number"
-                android:drawableLeft="@drawable/ic_signup_number"
-                custom:borderType="up"
-                android:inputType="phone"
-                android:maxLength="14"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:background="@android:color/white"
+                android:orientation="vertical">
 
-            <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-                android:id="@+id/full_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_signup_personal"
-                android:hint="@string/full_name"
-                android:inputType="textPersonName"
-                android:maxLines="1"
-                android:singleLine="true" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
+                <android.support.design.widget.TextInputLayout
+                    style="@style/CustomTextInputLayoutWithMargin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_gender"
-                    android:hint="@string/gender"/>
+                    android:layout_alignParentLeft="true"
+                    android:theme="@style/CustomTextInputLayout">
+
+                    <EditText
+                        android:id="@+id/personal_mobile_number"
+                        style="@style/CustomEditTextLogInSignUp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/personal_mobile_number"
+                        android:inputType="phone"
+                        android:maxLength="14"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <View style="@style/DividerOnly" />
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/CustomTextInputLayoutWithMargin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:theme="@style/CustomTextInputLayout">
+
+                    <EditText
+                        android:id="@+id/full_name"
+                        style="@style/CustomEditTextLogInSignUp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/full_name"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <View style="@style/DividerOnly" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/value5"
+                    android:paddingTop="@dimen/value5">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:gravity="center_vertical"
+                        android:theme="@style/CustomTextInputLayout">
+
+                        <EditText
+                            style="@style/CustomEditTextLogInSignUp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:hint="@string/gender" />
+                    </android.support.design.widget.TextInputLayout>
 
                     <CheckBox
                         android:id="@+id/checkBoxMale"
                         style="@style/CheckBoxStyle"
+                        android:layout_toLeftOf="@+id/checkBoxFemale"
                         android:background="@drawable/background_left_round_checkbox"
                         android:button="@null"
-                        android:text="@string/male"
+                        android:checked="true"
+                        android:text="Male"
                         android:textColor="@android:color/white"
-                        android:layout_toLeftOf="@+id/checkBoxFemale"
-                        android:checked="true"/>
+                        android:textSize="@dimen/value12" />
 
                     <CheckBox
                         android:id="@+id/checkBoxFemale"
                         style="@style/CheckBoxStyle"
-                        android:background="@drawable/background_no_round_checkbox"
-                        android:button="@null"
-                        android:text="@string/female"
-                        android:textColor="@android:color/white"
-                        android:layout_toLeftOf="@+id/checkBoxOther" />
-
-                    <CheckBox
-                        android:id="@+id/checkBoxOther"
-                        style="@style/CheckBoxStyle"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/value5"
                         android:background="@drawable/background_right_round_checkbox"
                         android:button="@null"
-                        android:text="Other"
-                        android:textColor="@android:color/white"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/value5"/>
+                        android:text="@string/female"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/value12" />
                 </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_half_lower_round_white"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:id="@+id/iv_birthday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="@dimen/value10"
-                    android:layout_marginRight="@dimen/value20"
-                    android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_birthdate" />
-
-                <EditText
-                    android:id="@+id/birthdayEditText"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_birthday"
-                    android:background="@null"
-                    android:hint="@string/birthday_date_month_year"
-                    android:inputType="date"
-                    android:maxLines="1"
-                    android:paddingTop="@dimen/value15"
-                    android:singleLine="true"
-                    android:textSize="@dimen/text_size_small_medium" />
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/myDatePickerButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="@dimen/value10"
-                    android:layout_marginRight="@dimen/value10"
-                    android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5"
-                    android:clickable="true"
-                    android:src="@drawable/ic_calendar" />
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/CustomTextInputLayoutWithMargin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:theme="@style/CustomTextInputLayout">
 
-            </RelativeLayout>
+                        <EditText
+                            android:id="@+id/birthdayEditText"
+                            style="@style/CustomEditTextLogInSignUp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:hint="@string/birthday_date_month_year"
+                            android:inputType="date"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_small_medium" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/myDatePickerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="@dimen/value10"
+                        android:layout_marginRight="@dimen/value10"
+                        android:clickable="true"
+                        android:paddingBottom="@dimen/value5"
+                        android:paddingTop="@dimen/value5"
+                        android:src="@drawable/ic_calendar" />
+
+                </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -144,7 +169,7 @@
                     android:id="@+id/checkboxBusinessAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@android:color/white"/>
+                    android:buttonTint="@android:color/white" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -152,18 +177,19 @@
                     android:layout_marginLeft="5dp"
                     android:text="@string/check_if_addresses_are_same"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
-            <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
+            <bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView
                 android:id="@+id/personal_address"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@android:color/white" />
 
             <Button
                 android:id="@+id/business_sign_in_button"
-                style="@style/PrimaryButton"
+                style="@style/PrimaryTransparentButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/login_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,9 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin_card"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin_card"
             android:orientation="vertical">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
@@ -36,11 +35,11 @@
                 android:background="@android:color/white">
 
                 <android.support.design.widget.TextInputLayout
+                    style="@style/CustomTextInputLayoutWithMargin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:theme="@style/CustomTextInputLayout"
-                    style="@style/CustomTextInputLayoutWithMargin"
-                    android:layout_alignParentLeft="true">
+                    android:layout_alignParentLeft="true"
+                    android:theme="@style/CustomTextInputLayout">
 
                     <EditText
                         android:id="@+id/login_mobile_number"
@@ -60,18 +59,18 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_info_outline_black_24dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <View style="@style/DividerOnly" />
 
             <android.support.design.widget.TextInputLayout
+                style="@style/CustomTextInputLayoutWithMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/CustomTextInputLayout"
                 android:layout_alignParentLeft="true"
                 android:background="@android:color/white"
-                style="@style/CustomTextInputLayoutWithMargin">
+                android:theme="@style/CustomTextInputLayout">
 
                 <EditText
                     android:id="@+id/login_password"
@@ -79,10 +78,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password_new"
-                    android:inputType="textPassword"
-                    custom:borderType="down" />
+                    android:inputType="textPassword" />
 
             </android.support.design.widget.TextInputLayout>
+
             <Button
                 android:id="@+id/login_button"
                 style="@style/PrimaryTransparentButton"
@@ -93,7 +92,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <Button
@@ -101,26 +100,36 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:background="?android:attr/selectableItemBackground"
                     android:gravity="left|center_vertical"
+                    android:minHeight="@dimen/value0"
+                    android:minWidth="@dimen/value0"
+                    android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                    android:paddingRight="@dimen/activity_horizontal_margin_card"
                     android:text="@string/join_us"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_small"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+                    android:textSize="@dimen/text_size_small" />
 
                 <Button
                     android:id="@+id/forget_password_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical|right"
+                    android:minHeight="@dimen/value0"
+                    android:minWidth="@dimen/value0"
+                    android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                    android:paddingRight="@dimen/activity_horizontal_margin_card"
                     android:text="@string/forgot_password"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_small"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                    android:textSize="@dimen/text_size_small" />
             </RelativeLayout>
 
         </LinearLayout>

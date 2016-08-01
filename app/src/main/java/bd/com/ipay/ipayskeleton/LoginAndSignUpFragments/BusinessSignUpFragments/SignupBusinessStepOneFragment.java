@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     private EditText mConfirmPasswordView;
     private EditText mBusinessMobileNumberView;
     private Button mNextButton;
+    private ImageView mCrossButton;
+
     private TextView mTermsConditions;
     private TextView mPrivacyPolicy;
     private CheckBox mAgreementCheckBox;
@@ -72,6 +75,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
 
         mNextButton = (Button) v.findViewById(R.id.business_next_button);
+        mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
 
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
@@ -87,6 +91,13 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
                 if (Utilities.isConnectionAvailable(getActivity())) attemptCheckPromoCode();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mCrossButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SignupOrLoginActivity) getActivity()).switchToTourActivity();
             }
         });
 

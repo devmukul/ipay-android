@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestBusinessSignup;
@@ -38,17 +40,16 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponseBusinessSignup mOtpResponseBusinessSignup;
 
-    private IconifiedEditText mBusinessHolderFullNameView;
+    private EditText mBusinessHolderFullNameView;
 
     private CheckBox mAddressCheckbox;
 
     private ImageView mDatePickerButton;
     private Button mSignupBusinessButton;
     private EditText mBirthdayEditText;
-    private IconifiedEditText mPersonalMobileNumberView;
+    private EditText mPersonalMobileNumberView;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
-    private CheckBox mOtherCheckBox;
 
     private Spinner mGenderSpinner;
 
@@ -56,7 +57,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private int mMonth;
     private int mDay;
 
-    private AddressInputView mPersonalAddressView;
+    private AddressInputSignUpView mPersonalAddressView;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
@@ -75,28 +76,33 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-
-        mBusinessHolderFullNameView = (IconifiedEditText) v.findViewById(R.id.full_name);
+        mBusinessHolderFullNameView = (EditText) v.findViewById(R.id.full_name);
 
         mSignupBusinessButton = (Button) v.findViewById(R.id.business_sign_in_button);
-        mPersonalMobileNumberView = (IconifiedEditText) v.findViewById(R.id.personal_mobile_number);
+        mPersonalMobileNumberView = (EditText) v.findViewById(R.id.personal_mobile_number);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
-        mOtherCheckBox = (CheckBox) v.findViewById(R.id.checkBoxOther);
         mAddressCheckbox = (CheckBox) v.findViewById(R.id.checkboxBusinessAddress);
 
-        mPersonalAddressView = (AddressInputView) v.findViewById(R.id.personal_address);
+        mPersonalAddressView = (AddressInputSignUpView) v.findViewById(R.id.personal_address);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
+        final DatePickerDialog dialog = new DatePickerDialog(
+                getActivity(), mDateSetListener, 1990, 0, 1);
+
+        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+            }
+        });
 
         mDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(getActivity(),
-                        mDateSetListener,
-                        1990, 0, 1).show();
+                dialog.show();
             }
         });
 
@@ -120,28 +126,24 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             }
         });
 
-
-        mMaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mFemaleCheckBox.setChecked(false);
-                if (isChecked) mOtherCheckBox.setChecked(false);
+            public void onClick(View view) {
+                mMaleCheckBox.setChecked(true);
+                mFemaleCheckBox.setChecked(false);
+                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                mMaleCheckBox.setTextColor((Color.WHITE));
             }
         });
 
-        mFemaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mFemaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mMaleCheckBox.setChecked(false);
-                if (isChecked) mOtherCheckBox.setChecked(false);
-            }
-        });
+            public void onClick(View view) {
+                mFemaleCheckBox.setChecked(true);
+                mMaleCheckBox.setChecked(false);
+                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                mFemaleCheckBox.setTextColor((Color.WHITE));
 
-        mOtherCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) mMaleCheckBox.setChecked(false);
-                if (isChecked) mFemaleCheckBox.setChecked(false);
             }
         });
 
@@ -172,7 +174,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.please_select_your_birthday, Toast.LENGTH_LONG).show();
 
-        } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumberPersonal )) {
+        } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumberPersonal)) {
             mPersonalMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mPersonalMobileNumberView;
             cancel = true;
@@ -245,7 +247,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mRequestOTPTask = null;
             if (getActivity() != null)

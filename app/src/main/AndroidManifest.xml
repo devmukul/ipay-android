@@ -75,7 +75,8 @@
             android:label="@string/sign_up_with_ipay"
             android:screenOrientation="portrait"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".Activities.PaymentActivities.SendMoneyActivity"
             android:label="@string/send_money"

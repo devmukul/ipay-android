@@ -134,9 +134,17 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         this.finish();
     }
 
+    public void switchToTourActivity() {
+        Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
+    }
+
+
     public void switchToBusinessStepOneFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupBusinessStepOneFragment()).commit();
+                .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).commit();
     }
 
     public void switchToBusinessStepTwoFragment() {

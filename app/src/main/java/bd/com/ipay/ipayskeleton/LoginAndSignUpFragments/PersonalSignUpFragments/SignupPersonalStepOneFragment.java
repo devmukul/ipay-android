@@ -53,6 +53,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private EditText mPromoCodeEditText;
     private EditText mBirthdayEditText;
     private ImageView mDatePickerButton;
+    private ImageView mCrossButton;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
@@ -88,6 +89,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
+        mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
@@ -138,6 +140,13 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 if (Utilities.isConnectionAvailable(getActivity())) attemptCheckPromoCode();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mCrossButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SignupOrLoginActivity) getActivity()).switchToTourActivity();
             }
         });
 
@@ -264,7 +273,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mCheckPromoCodeTask = null;
             if (getActivity() != null)

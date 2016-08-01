@@ -1,285 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/ic_bg_pcode">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/button_cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/activity_horizontal_margin_card"
+                android:src="@drawable/ic_crossw" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <android.support.design.widget.TextInputLayout
+                style="@style/CustomTextInputLayoutWithMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_half_upper_round_white"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:id="@+id/iv_business_mobile_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="@dimen/value10"
-                    android:layout_marginRight="@dimen/value20"
-                    android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_signup_number" />
+                android:layout_alignParentLeft="true"
+                android:theme="@style/CustomTextInputLayout">
 
                 <EditText
                     android:id="@+id/business_mobile_number"
-                    android:layout_toRightOf="@+id/iv_business_mobile_number"
-                    android:background="@null"
+                    style="@style/CustomEditTextLogInSignUp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/value5"
                     android:hint="@string/business_mobile_number"
                     android:inputType="phone"
                     android:maxLength="14"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:paddingTop="@dimen/value15"
                     android:textSize="@dimen/text_size_small_medium">
 
-                    <requestFocus/>
-
+                    <requestFocus />
                 </EditText>
+            </android.support.design.widget.TextInputLayout>
 
-            </RelativeLayout>
+            <View style="@style/DividerOnly" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
-
-            <RelativeLayout
+            <android.support.design.widget.TextInputLayout
+                style="@style/CustomTextInputLayoutWithMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_no_round_white"
-                android:gravity="center_vertical">
+                android:layout_alignParentLeft="true"
+                android:theme="@style/CustomTextInputLayout">
 
-                <ImageView
-                    android:id="@+id/iv_email"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/email"
+                    style="@style/CustomEditTextLogInSignUp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="@dimen/value10"
-                    android:layout_marginRight="@dimen/value20"
-                    android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_email" />
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_small_medium" />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/email"
+            <View style="@style/DividerOnly" />
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/CustomTextInputLayoutWithMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:layout_toRightOf="@+id/iv_email"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:drawablePadding="@dimen/value5"
-                android:paddingTop="@dimen/value15"
-                android:textSize="@dimen/text_size_small_medium"/>
-            </RelativeLayout>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_no_round_white"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:id="@+id/iv_password"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="@dimen/value10"
-                    android:layout_marginRight="@dimen/value20"
-                    android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_signup_pw" />
+                android:layout_alignParentLeft="true"
+                android:theme="@style/CustomTextInputLayout">
 
                 <EditText
                     android:id="@+id/password"
+                    style="@style/CustomEditTextLogInSignUp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_password"
-                    android:background="@null"
                     android:hint="@string/prompt_password"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:paddingTop="@dimen/value15"
-                    android:textSize="@dimen/text_size_small_medium"/>
-            </RelativeLayout>
+                    android:textSize="@dimen/text_size_small_medium" />
+            </android.support.design.widget.TextInputLayout>
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
+            <View style="@style/DividerOnly" />
 
-            <RelativeLayout
+            <android.support.design.widget.TextInputLayout
+                style="@style/CustomTextInputLayoutWithMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_no_round_white"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:id="@+id/iv_confirm_password"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="@dimen/value10"
-                    android:layout_marginRight="@dimen/value20"
-                    android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5"
-                    android:src="@drawable/ic_signup_pwc" />
+                android:layout_alignParentLeft="true"
+                android:theme="@style/CustomTextInputLayout">
 
                 <EditText
                     android:id="@+id/confirm_password"
+                    style="@style/CustomEditTextLogInSignUp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/iv_confirm_password"
-                    android:background="@null"
                     android:hint="@string/confirm_password"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:paddingTop="@dimen/value15"
-                    android:textSize="@dimen/text_size_small_medium"/>
-            </RelativeLayout>
+                    android:textSize="@dimen/text_size_small_medium" />
+            </android.support.design.widget.TextInputLayout>
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
+            <View style="@style/DividerOnly" />
 
-            <RelativeLayout
+            <android.support.design.widget.TextInputLayout
+                style="@style/CustomTextInputLayoutWithMargin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_half_lower_round_white"
-                android:gravity="center_vertical">
-
-            <ImageView
-                android:id="@+id/iv_promo_code"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/value10"
-                android:layout_marginRight="@dimen/value20"
-                android:paddingBottom="@dimen/value5"
-                android:paddingTop="@dimen/value5"
-                android:src="@drawable/ic_signup_invcode" />
+                android:theme="@style/CustomTextInputLayout">
 
-            <EditText
-                android:id="@+id/promo_code_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/iv_promo_code"
-                android:background="@null"
-                android:hint="@string/enter_promo_code"
-                android:inputType="number"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:paddingTop="@dimen/value15"
-                android:textSize="@dimen/text_size_small_medium"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
-
-                <CheckBox
-                    android:id="@+id/checkBoxTermsConditions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:buttonTint="@android:color/white"/>
-
-                <LinearLayout
-                    android:id="@+id/signUpTermsWrapperLayout"
+                <EditText
+                    android:id="@+id/promo_code_edittext"
+                    style="@style/CustomEditTextLogInSignUp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/checkBoxTermsConditions"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:text="@string/oath_sign_up"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <TextView
-                        android:id="@+id/textViewTermsConditions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:background="@drawable/linked_textview_selector"
-                        android:clickable="true"
-                        android:text="@string/terms_condition_url"
-                        android:textColor="@android:color/white"
-                        android:textColorLink="@android:color/white"
-                        android:textSize="@dimen/text_size_small" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/signUpTermsWrapperLayout"
-                    android:layout_toRightOf="@id/checkBoxTermsConditions"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:text="@string/and"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small"/>
-
-                    <TextView
-                        android:id="@+id/textViewPrivacyPolicy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:background="@drawable/linked_textview_selector"
-                        android:clickable="true"
-                        android:text="@string/privacy_policy_url"
-                        android:textColor="@android:color/white"
-                        android:textColorLink="@android:color/white"
-                        android:textSize="@dimen/text_size_small" />
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/business_next_button"
-                style="@style/PrimaryButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:text="@string/next" />
+                    android:hint="@string/enter_promo_code"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_small_medium" />
+            </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+            <CheckBox
+                android:id="@+id/checkBoxTermsConditions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:buttonTint="@android:color/white" />
+
+            <LinearLayout
+                android:id="@+id/signUpTermsWrapperLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/checkBoxTermsConditions"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/oath_sign_up"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_small" />
+
+                <TextView
+                    android:id="@+id/textViewTermsConditions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/linked_textview_selector"
+                    android:clickable="true"
+                    android:text="@string/terms_condition_url"
+                    android:textColor="@android:color/white"
+                    android:textColorLink="@android:color/white"
+                    android:textSize="@dimen/text_size_small" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/signUpTermsWrapperLayout"
+                android:layout_toRightOf="@id/checkBoxTermsConditions"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/and"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_small" />
+
+                <TextView
+                    android:id="@+id/textViewPrivacyPolicy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/linked_textview_selector"
+                    android:clickable="true"
+                    android:text="@string/privacy_policy_url"
+                    android:textColor="@android:color/white"
+                    android:textColorLink="@android:color/white"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/business_next_button"
+            style="@style/PrimaryTransparentButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/next" />
+
+    </LinearLayout>
+</ScrollView>

@@ -8,11 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
 
 public class BusinessFragment extends Fragment {
-    private Button mBusinessInformationButton;
-    private Button mManageEmployeeButton;
+    private IconifiedTextViewWithButton mBusinessInformationButton;
+    private IconifiedTextViewWithButton mManageEmployeeButton;
 
     @Nullable
     @Override
@@ -20,8 +21,8 @@ public class BusinessFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_business, container, false);
         getActivity().setTitle(R.string.manage_business);
 
-        mBusinessInformationButton = (Button) v.findViewById(R.id.button_business_information);
-        mManageEmployeeButton = (Button) v.findViewById(R.id.button_manage_employees);
+        mBusinessInformationButton = (IconifiedTextViewWithButton) v.findViewById(R.id.button_business_information);
+        mManageEmployeeButton = (IconifiedTextViewWithButton) v.findViewById(R.id.button_manage_employees);
 
         mBusinessInformationButton.setOnClickListener(new View.OnClickListener() {
             @Override
