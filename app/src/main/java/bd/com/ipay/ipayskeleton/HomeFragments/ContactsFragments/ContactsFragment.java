@@ -372,16 +372,22 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         mSheetViewNonSubscriber = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_non_member, null);
         Button mInviteButton = (Button) mSheetViewNonSubscriber.findViewById(R.id.button_invite);
-        mInviteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBottomSheetLayout.isSheetShowing()) {
-                    mBottomSheetLayout.dismissSheet();
-                }
 
-                sendInvite(mSelectedNumber);
-            }
-        });
+        if (ContactsHolderFragment.mGetInviteInfoResponse != null &&
+                ContactsHolderFragment.mGetInviteInfoResponse.invitees.contains(mSelectedNumber)) {
+            mInviteButton.setEnabled(false);
+        } else {
+            mInviteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mBottomSheetLayout.isSheetShowing()) {
+                        mBottomSheetLayout.dismissSheet();
+                    }
+
+                    sendInvite(mSelectedNumber);
+                }
+            });
+        }
 
         mSheetViewSubscriber = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_member, null);
@@ -442,18 +448,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void sendInvite(String phoneNumber) {
-        if (ContactsHolderFragment.mGetInviteInfoResponse == null || ContactsHolderFragment.mGetInviteInfoResponse.invitees == null) {
-            Toast.makeText(getActivity(), R.string.failed_sending_invitation,
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-
         int numberOfInvitees = ContactsHolderFragment.mGetInviteInfoResponse.invitees.size();
         if (numberOfInvitees >= ContactsHolderFragment.mGetInviteInfoResponse.totalLimit) {
             Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
-                    Toast.LENGTH_LONG).show();
-        } else if (ContactsHolderFragment.mGetInviteInfoResponse.invitees.contains(phoneNumber)) {
-            Toast.makeText(getActivity(), R.string.invitation_already_sent,
                     Toast.LENGTH_LONG).show();
         } else {
             mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
@@ -490,7 +487,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
                     }
 
-                    ContactsHolderFragment.mGetInviteInfoResponse.invitees.add(mSelectedNumber);
+                    if (ContactsHolderFragment.mGetInviteInfoResponse != null)
+                        ContactsHolderFragment.mGetInviteInfoResponse.invitees.add(mSelectedNumber);
+
+                    getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
                 } else if (getActivity() != null) {
                     Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
