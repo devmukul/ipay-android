@@ -31,15 +31,13 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
         positiveText(R.string.ok);
         negativeText(R.string.cancel);
 
-        Utilities.showKeyBoard(context, mPinField);
+        Utilities.showKeyboard(context);
     }
 
     public void onSubmit(final MaterialDialog.SingleButtonCallback onSubmitListener) {
         onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mPinField.getWindowToken(), 0);
 
                 if (!getPin().isEmpty()) {
                     onSubmitListener.onClick(dialog, which);
@@ -50,6 +48,8 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
                     View focusView = mPinField;
                     focusView.requestFocus();
                 }
+
+                Utilities.hideKeyboard(context, mPinField);
             }
         });
 

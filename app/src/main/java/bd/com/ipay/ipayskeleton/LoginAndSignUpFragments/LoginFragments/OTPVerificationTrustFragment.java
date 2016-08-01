@@ -139,7 +139,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Utilities.showKeyBoard(getActivity(), mOTPEditText.getEditText());
+        Utilities.showKeyboard(getActivity(), mOTPEditText.getEditText());
     }
 
     @Override

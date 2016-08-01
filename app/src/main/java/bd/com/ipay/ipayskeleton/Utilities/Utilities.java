@@ -455,7 +455,12 @@ public class Utilities {
         }
     }
 
-    public static void showKeyBoard(Context context, final EditText editText) {
+    public static void showKeyboard(Context context) {
+        final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    public static void showKeyboard(Context context, final EditText editText) {
 
         final InputMethodManager imm = (InputMethodManager)
                 context.getSystemService(Context.INPUT_METHOD_SERVICE);
