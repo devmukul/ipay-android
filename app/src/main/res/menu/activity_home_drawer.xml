@@ -27,6 +27,10 @@
             android:icon="@drawable/ic_manage_business_white"
             android:title="@string/manage_business" />
         <item
+            android:id="@+id/nav_invite"
+            android:icon="@drawable/ic_invitew"
+            android:title="@string/invite"/>
+        <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_drawer_about"
             android:title="@string/about" />
@@ -34,10 +38,6 @@
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_helpw"
             android:title="@string/help" />
-        <item
-            android:id="@+id/nav_invite"
-            android:icon="@drawable/ic_invitew"
-            android:title="@string/invite"/>
         <item
             android:id="@+id/nav_event"
             android:icon="@drawable/ic_event_black_24dp"

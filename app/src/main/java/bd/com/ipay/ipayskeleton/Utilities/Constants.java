@@ -18,8 +18,6 @@ public class Constants {
     public static final String PASSWORD = "PASSWORD";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
-    public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
-    public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
     public static final String SIGNED_IN = "SIGNED IN";
@@ -38,6 +36,13 @@ public class Constants {
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_DETAILS = "MONEY REQUESTS DETAILS";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
+
+    public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
+    public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
+    public static final String SHOW_INVITED_ONLY = "SHOW_INVITED_ONLY";
+    public static final String SHOW_NON_INVITED_NON_MEMBERS_ONLY = "SHOW_NON_INVITED_NON_MEMBERS_ONLY";
+    public static final String HIDE_STATUSES = "HIDE_STATUSES";
+
 
     public static final String SMS_READER_BROADCAST_RECEIVER_PDUS = "pdus";
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";

@@ -93,8 +93,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private ContactListAdapter mAdapter;
     private Cursor mCursor;
 
+    private boolean mHideStatuses;
     private boolean mShowVerifiedUsersOnly;
     private boolean miPayMembersOnly;
+    private boolean mShowInvitedOnly;
+    private boolean mShowNonInvitedNonMembersOnly;
 
     private int nameIndex;
     private int originalNameIndex;
@@ -142,8 +145,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
         if (getArguments() != null) {
+            mHideStatuses = getArguments().getBoolean(Constants.HIDE_STATUSES, false);
             mShowVerifiedUsersOnly = getArguments().getBoolean(Constants.VERIFIED_USERS_ONLY, false);
             miPayMembersOnly = getArguments().getBoolean(Constants.IPAY_MEMBERS_ONLY, false);
+            mShowInvitedOnly = getArguments().getBoolean(Constants.SHOW_INVITED_ONLY, false);
+            mShowNonInvitedNonMembersOnly = getArguments().getBoolean(Constants.SHOW_NON_INVITED_NON_MEMBERS_ONLY, false);
         }
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
@@ -268,10 +274,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     boolean isDialogFragment() {
         return false;
-    }
-
-    public boolean shouldShowIPayUserIcon() {
-        return true;
     }
 
     @Override
@@ -604,26 +606,28 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final View itemView;
 
-            private final TextView mName1View;
-            private final TextView mName2View;
-            private final ProfileImageView mProfilePictureView;
-            private final TextView mMobileNumberView;
+            private final TextView name1View;
+            private final TextView name2View;
+            private final ProfileImageView profilePictureView;
+            private final TextView mobileNumberView;
             private final ImageView isSubscriber;
-            private final ImageView mVerificationStatus;
+            private final ImageView verificationStatus;
             private final TextView inviteStatusTextView;
+            private final Button inviteButton;
 
             public ViewHolder(View itemView) {
                 super(itemView);
 
                 this.itemView = itemView;
 
-                mName1View = (TextView) itemView.findViewById(R.id.name1);
-                mName2View = (TextView) itemView.findViewById(R.id.name2);
-                mMobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
-                mProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
+                name1View = (TextView) itemView.findViewById(R.id.name1);
+                name2View = (TextView) itemView.findViewById(R.id.name2);
+                mobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
+                profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 isSubscriber = (ImageView) itemView.findViewById(R.id.is_member);
-                mVerificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
+                verificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
                 inviteStatusTextView = (TextView) itemView.findViewById(R.id.invite_status);
+                inviteButton = (Button) itemView.findViewById(R.id.button_invite);
             }
 
             public void bindView(int pos) {
@@ -632,7 +636,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 final String name = mCursor.getString(nameIndex);
                 final String originalName = mCursor.getString(originalNameIndex);
-                final String phoneNumber = mCursor.getString(phoneNumberIndex);
+                final String mobileNumber = mCursor.getString(phoneNumberIndex);
                 final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlIndex);
                 final String profilePictureUrlQualityMedium = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityMediumIndex);
                 final String profilePictureUrlQualityHigh = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityHighIndex);
@@ -640,41 +644,53 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 final int accountType = mCursor.getInt(accountTypeIndex);
                 final boolean isMember = mCursor.getInt(isMemberIndex) == DBConstants.IPAY_MEMBER;
 
-                boolean isInvited = isInvited(phoneNumber);
+                boolean isInvited = isInvited(mobileNumber);
 
                 /**
                  * We need to show original name on the top if exists
                  */
                 if (originalName != null && !originalName.isEmpty()) {
-                    mName1View.setText(originalName);
-                    mName2View.setVisibility(View.VISIBLE);
-                    mName2View.setText(name);
+                    name1View.setText(originalName);
+                    name2View.setVisibility(View.VISIBLE);
+                    name2View.setText(name);
                 } else {
-                    mName1View.setText(name);
-                    mName2View.setVisibility(View.GONE);
+                    name1View.setText(name);
+                    name2View.setVisibility(View.GONE);
                 }
 
-                mMobileNumberView.setText(phoneNumber);
+                mobileNumberView.setText(mobileNumber);
 
-                if (!isDialogFragment() && !isMember && isInvited)
+                if (!mHideStatuses && !isDialogFragment() && !isMember && isInvited)
                     inviteStatusTextView.setVisibility(View.VISIBLE);
                 else
                     inviteStatusTextView.setVisibility(View.GONE);
 
 
-                if (shouldShowIPayUserIcon() && isMember) {
+                if (!mHideStatuses && isMember) {
                     isSubscriber.setVisibility(View.VISIBLE);
                 } else {
                     isSubscriber.setVisibility(View.GONE);
                 }
 
                 if (isVerified) {
-                    mVerificationStatus.setVisibility(View.VISIBLE);
+                    verificationStatus.setVisibility(View.VISIBLE);
                 } else {
-                    mVerificationStatus.setVisibility(View.GONE);
+                    verificationStatus.setVisibility(View.GONE);
                 }
 
-                mProfilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
+                if (mShowNonInvitedNonMembersOnly) {
+                    inviteButton.setVisibility(View.VISIBLE);
+                    inviteButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sendInvite(mobileNumber);
+                        }
+                    });
+                } else {
+                    inviteButton.setVisibility(View.GONE);
+                }
+
+                profilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -683,14 +699,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                             Intent intent = new Intent();
                             intent.putExtra(Constants.NAME, name);
-                            intent.putExtra(Constants.MOBILE_NUMBER, phoneNumber);
+                            intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
                             intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrlQualityHigh);
                             getActivity().setResult(Activity.RESULT_OK, intent);
                             getActivity().finish();
 
                         } else {
                             setSelectedName(name);
-                            setSelectedNumber(phoneNumber);
+                            setSelectedNumber(mobileNumber);
 
                             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
@@ -704,7 +720,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                                     if (isMember) {
                                         showMemberSheet(isVerified);
                                     } else {
-                                        showNonMemberSheet(phoneNumber);
+                                        showNonMemberSheet(mobileNumber);
                                     }
 
                                     setContactInformationInSheet(name,
