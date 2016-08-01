@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,23 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InviteListHolderFragment extends Fragment implements HttpResponseListener {
-
-    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
-    public static GetInviteInfoResponse mGetInviteInfoResponse;
+public class InviteListHolderFragment extends Fragment {
 
     private CheckBox mAllContactsSelector;
     private CheckBox mInvitedContactsSelector;
@@ -35,8 +23,6 @@ public class InviteListHolderFragment extends Fragment implements HttpResponseLi
     private ContactsFragment miPayMemberContactsFragment;
 
     private TextView mContactCount;
-
-    private ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,10 +49,6 @@ public class InviteListHolderFragment extends Fragment implements HttpResponseLi
             }
         });
 
-        mProgressDialog = new ProgressDialog(getActivity());
-
-        getInviteInfo();
-
         return v;
     }
 
@@ -75,14 +57,6 @@ public class InviteListHolderFragment extends Fragment implements HttpResponseLi
         super.onActivityCreated(savedInstanceState);
 
         switchToAllContacts();
-    }
-
-    private void getInviteInfo() {
-        if (mGetInviteInfoTask == null) {
-            mGetInviteInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INVITE_INFO,
-                    Constants.BASE_URL_MM + Constants.URL_GET_INVITE_INFO, getActivity(), this);
-            mGetInviteInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
     }
 
     private void switchToAllContacts() {
@@ -149,35 +123,5 @@ public class InviteListHolderFragment extends Fragment implements HttpResponseLi
                 mContactCount.setText("Contacts (" + contactCount + ")");
             }
         });
-    }
-
-    @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
-        if (isAdded()) {
-            mProgressDialog.dismiss();
-        }
-
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mGetInviteInfoTask = null;
-            if (getContext() != null)
-                Toast.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        Gson gson = new Gson();
-
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_INVITE_INFO)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                try {
-                    InviteListHolderFragment.mGetInviteInfoResponse = gson.fromJson(result.getJsonString(), GetInviteInfoResponse.class);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            mGetInviteInfoTask = null;
-
-        }
     }
 }
