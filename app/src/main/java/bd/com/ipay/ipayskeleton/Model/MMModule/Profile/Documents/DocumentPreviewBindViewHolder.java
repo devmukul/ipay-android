@@ -2,8 +2,6 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents;
 
 import android.net.Uri;
 
-import java.net.URI;
-
 public class DocumentPreviewBindViewHolder {
     private Uri mSelectedDocumentUri=null;
     private String mSelectedfilePath="";

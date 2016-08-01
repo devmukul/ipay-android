@@ -293,7 +293,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
     private int[] getOperatorIcons() {
         //Setting the correct image based on Operator
-        int[] images = {
+        return new int[]{
                 R.drawable.ic_gp,
                 R.drawable.ic_robi,
                 R.drawable.ic_airtel,
@@ -301,7 +301,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 R.drawable.ic_teletalk,
 
         };
-        return images;
 
     }
 
