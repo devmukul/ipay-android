@@ -6,17 +6,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -29,6 +22,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.DrawerFragments.InviteListHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
@@ -39,18 +33,6 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class InviteActivity extends BaseActivity {
-    
-    private ViewPager viewPager;
-
-    private final int INVITE_TAB = 0;
-    private final int INVITED_TAB = 1;
-    private final int TOTAL_PAGE_COUNT = 2;
-
-    private TabLayout.Tab mInviteTab;
-    private TabLayout.Tab mInvitedTab;
-
-    private View mInviteTabView;
-    private View mInvitedTabView;
 
     private FloatingActionButton mSendInviteButton;
 
@@ -80,18 +62,14 @@ public class InviteActivity extends BaseActivity {
             }
         });
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new MoneyRequestListFragmentAdapter(getSupportFragmentManager()));
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        mInviteTab = tabLayout.getTabAt(INVITE_TAB);
-        mInvitedTab = tabLayout.getTabAt(INVITED_TAB);
-
-        setupCustomViewsForTabLayout();
+        switchToInviteListHolderFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void switchToInviteListHolderFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new InviteListHolderFragment()).commit();
     }
 
     @Override
@@ -103,56 +81,6 @@ public class InviteActivity extends BaseActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setupCustomViewsForTabLayout() {
-        mInviteTabView = getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        mInvitedTabView = getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-        setTabViews();
-    }
-
-    private void setTabViews() {
-        setTabIconsWithTexts();
-
-        mInviteTab.setCustomView(mInviteTabView);
-        mInvitedTab.setCustomView(mInvitedTabView);
-    }
-
-    private void setTabIconsWithTexts() {
-
-        ((ImageView) mInviteTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_request_sent);
-        ((ImageView) mInvitedTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_received_request);
-
-        ((TextView) mInviteTabView.findViewById(R.id.tab_text)).setText(getResources().getString(R.string.invite));
-        ((TextView) mInvitedTabView.findViewById(R.id.tab_text)).setText(getResources().getString(R.string.invited));
-    }
-
-    public class MoneyRequestListFragmentAdapter extends FragmentPagerAdapter {
-        public MoneyRequestListFragmentAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public int getCount() {
-            return TOTAL_PAGE_COUNT;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            if (position == 0) {
-                return new Fragment();
-            } else if (position == 1) {
-                return new Fragment();
-            } else {
-                return new Fragment();
-            }
-        }
-
-    }
-
-    @Override
-    protected Context setContext() {
-        return InviteActivity.this;
     }
 
     private void showAddFriendDialog() {
@@ -181,6 +109,8 @@ public class InviteActivity extends BaseActivity {
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invite));
 
                     addFriend(nameView.getText().toString(), mobileNumberView.getText().toString());
+                    Utilities.hideKeyboard(InviteActivity.this, nameView);
+                    Utilities.hideKeyboard(InviteActivity.this, mobileNumberView);
 
                     dialog.dismiss();
                 }
@@ -191,7 +121,8 @@ public class InviteActivity extends BaseActivity {
         dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
+                Utilities.hideKeyboard(InviteActivity.this, nameView);
+                Utilities.hideKeyboard(InviteActivity.this, mobileNumberView);
                 dialog.dismiss();
             }
         });
@@ -252,6 +183,11 @@ public class InviteActivity extends BaseActivity {
                     Constants.BASE_URL_MM + Constants.URL_SEND_INVITE + phoneNumber, null, this, this);
             mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+    }
+
+    @Override
+    protected Context setContext() {
+        return InviteActivity.this;
     }
 
     @Override
