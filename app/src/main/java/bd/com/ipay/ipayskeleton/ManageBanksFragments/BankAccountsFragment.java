@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -400,26 +403,24 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                                 } else if (Constants.ACTION_TYPE_VERIFY.equals(action)) {
                                     if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_PENDING)) {
 
+                                        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                                         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                                                 .title(R.string.enter_the_amount_we_sent)
                                                 .customView(R.layout.dialog_verify_bank_with_amount, true)
                                                 .positiveText(R.string.submit)
                                                 .negativeText(R.string.cancel)
-                                                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                                    @Override
-                                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                        dialog.dismiss();
-                                                    }
-                                                })
                                                 .show();
 
+                                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                                         View view = dialog.getCustomView();
                                         final EditText mAmountEditText = (EditText) view.findViewById(R.id.amount);
+
 
                                         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
                                             @Override
                                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
+                                                imm.hideSoftInputFromWindow(mAmountEditText.getWindowToken(), 0);
                                                 if (mAmountEditText.getText().toString().trim().length() == 0) {
                                                     mAmountEditText.setError(getString(R.string.please_enter_amount));
                                                     mAmountEditText.requestFocus();
@@ -433,6 +434,14 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                                                         Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
                                                     dialog.dismiss();
                                                 }
+                                            }
+                                        });
+
+                                        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                imm.hideSoftInputFromWindow(mAmountEditText.getWindowToken(), 0);
+                                                dialog.dismiss();
                                             }
                                         });
                                     }

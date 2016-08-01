@@ -86,6 +86,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private FloatingActionButton mFabAddNewEmail;
     private ProgressDialog mProgressDialog;
 
+    private TextView mEmptyListTextView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +128,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -397,6 +400,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 mMakePrimaryEmailTask = null;
                 break;
         }
+
+        if (mEmails != null && mEmails.size() == 0)
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        else mEmptyListTextView.setVisibility(View.GONE);
 
     }
 

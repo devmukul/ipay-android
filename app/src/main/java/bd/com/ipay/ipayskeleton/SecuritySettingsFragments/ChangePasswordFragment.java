@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -56,6 +58,10 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         mChangePasswordButton = (Button) v.findViewById(R.id.save_pass);
 
         mProgressDialog = new ProgressDialog(getActivity());
+
+        mEnterCurrentPasswordEditText.requestFocus();
+        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);;
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override

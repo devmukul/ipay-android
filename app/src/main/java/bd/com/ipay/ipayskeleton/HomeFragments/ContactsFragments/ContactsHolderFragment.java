@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -134,6 +136,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
         nameView = (EditText) dialogView.findViewById(R.id.edit_text_name);
         mobileNumberView = (EditText) dialogView.findViewById(R.id.edit_text_mobile_number);
+
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override

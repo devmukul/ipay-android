@@ -38,7 +38,7 @@ public class SecuritySettingsActivity extends BaseActivity {
             else if(switchedToAddTrustedPersonFragment)
                 switchToPasswordRecovery();
             else {
-                finish();
+                onBackPressed();
             }
             return true;
         } else {
