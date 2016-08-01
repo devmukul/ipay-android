@@ -446,7 +446,7 @@ public class HomeActivity extends BaseActivity
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
-            intent.setData(Uri.parse("https://www.ipay.com.bd"));
+            intent.setData(Uri.parse(getString(R.string.help_link)));
             startActivity(intent);
         }
 
