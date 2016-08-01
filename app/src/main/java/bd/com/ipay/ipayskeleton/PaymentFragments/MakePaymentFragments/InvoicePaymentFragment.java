@@ -384,7 +384,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
-        private static final int MONEY_REQUEST_HEADER_VIEW = 5;
 
         private final int ACTION_ACCEPT = 0;
         private final int ACTION_REJECT = 1;
@@ -416,7 +415,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             }
 
             public void bindViewMoneyRequestList(int pos) {
-                final MoneyAndPaymentRequest moneyRequest = moneyRequestList.get(pos - 1);
+                final MoneyAndPaymentRequest moneyRequest = moneyRequestList.get(pos);
 
                 final long id = moneyRequest.getId();
                 final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
@@ -429,14 +428,9 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 final BigDecimal vat = moneyRequest.getVat();
                 final List<ItemList> itemList = moneyRequest.getItemList();
 
-                mDescriptionView.setText(description);
+                mDescriptionView.setText(Utilities.formatTaka(amount));
                 mTimeView.setText(time);
-
-                if (title != null && !title.equals("")) {
-                    mTitleView.setVisibility(View.VISIBLE);
-                    mTitleView.setText(title);
-
-                } else mTitleView.setVisibility(View.GONE);
+                mTitleView.setText(name);
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
@@ -535,10 +529,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
                 return new FooterViewHolder(v);
 
-            } else if (viewType == MONEY_REQUEST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_requests_header, parent, false);
-                return new MoneyRequestHeaderViewHolder(v);
-
             } else {
                 // MONEY_REQUEST_ITEM_VIEW
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
@@ -554,10 +544,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                     MoneyRequestViewHolder vh = (MoneyRequestViewHolder) holder;
                     vh.bindViewMoneyRequestList(position);
 
-                } else if (holder instanceof MoneyRequestHeaderViewHolder) {
-                    MoneyRequestHeaderViewHolder vh = (MoneyRequestHeaderViewHolder) holder;
-                    vh.bindViewHeader();
-
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
                     vh.bindViewFooter();
@@ -572,7 +558,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             if (moneyRequestList == null || moneyRequestList.size() == 0) {
                 return 0;
             } else {
-                return 1 + moneyRequestList.size() + 1; // header, money requests list, footer
+                return moneyRequestList.size() + 1; // money requests list, footer
             }
         }
 
@@ -582,8 +568,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             if (moneyRequestList == null)
                 return super.getItemViewType(position);
 
-            if (position == 0)
-                return MONEY_REQUEST_HEADER_VIEW;
             else if (position == getItemCount() - 1)
                 return FOOTER_VIEW;
             else

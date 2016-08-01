@@ -641,7 +641,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             private final TextView mTitleView;
             private final TextView mNameView;
             private final TextView mTimeView;
-            private final LinearLayout optionsLayout;
             private final ProfileImageView mProfileImageView;
 
             public NotificationViewHolder(final View itemView) {
@@ -651,7 +650,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mNameView = (TextView) itemView.findViewById(R.id.textview_description);
                 mTimeView = (TextView) itemView.findViewById(R.id.textview_time);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                optionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
             }
 
             public void bindView(int pos) {
@@ -682,19 +680,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 } else {
                     mTitleView.setVisibility(View.GONE);
                 }
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (optionsLayout.getVisibility() == View.VISIBLE) {
-                            optionsLayout.setVisibility(View.GONE);
-                        }
-                        else {
-                            optionsLayout.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-                optionsLayout.setVisibility(View.GONE);
 
             }
         }
