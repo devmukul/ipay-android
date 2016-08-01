@@ -13,7 +13,7 @@
 
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-        android:id="@+id/portrait"
+        android:id="@+id/profile_picture"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/portrait"
+        android:layout_toRightOf="@+id/profile_picture"
         android:orientation="vertical">
 
         <TextView
@@ -43,7 +43,6 @@
             android:id="@+id/textview_mobile_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="01782192128"
             android:textColor="@android:color/white" />
     </LinearLayout>
 </RelativeLayout>

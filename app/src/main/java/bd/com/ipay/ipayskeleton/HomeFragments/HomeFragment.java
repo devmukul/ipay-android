@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -264,6 +265,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 getProfileCompletionStatus();
         }
 
+        updateProfileData();
+
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
 
@@ -280,7 +283,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public void onResume() {
         super.onResume();
 
-        updateProfileData();
+        // TODO we should refresh the balance only based on push notification, no need to fetch it
+        // from the server every time someone navigates to the home activity. Once push is implemented
+        // properly, move it to onCreate.
         refreshBalance();
     }
 
@@ -294,7 +299,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
 
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION: {
