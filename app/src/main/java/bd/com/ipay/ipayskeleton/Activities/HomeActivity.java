@@ -49,12 +49,10 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Api.SyncContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessActivity;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
@@ -85,9 +83,6 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
-
-    private HttpRequestGetAsyncTask mGetAllContactsTask;
-    private List<FriendNode> mGetAllContactsResponse;
 
     private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
     private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
@@ -183,17 +178,14 @@ public class HomeActivity extends BaseActivity
 
         mMobileNumberView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
-        mProfileImageView = (ProfileImageView) mNavigationView.getHeaderView(0).findViewById(R.id.portrait);
+        mProfileImageView = (ProfileImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_picture);
         mMobileNumberView.setText(mUserID);
         mNavigationView.setNavigationItemSelectedListener(this);
 
         switchToDashBoard();
 
-        // Load the list of available banks, which will be accessed from multiple activities
-        getAvailableBankList();
-
         // Check if there's anything new from the server
-        checkForUpdateFromPush();
+        getProfileInfo();
 
         // Sync contacts
         new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -220,6 +212,8 @@ public class HomeActivity extends BaseActivity
             Log.w("Token", TokenManager.getToken());
         }
 
+        // The same notification fragment is used when NotificationActivity is launched.
+        // We are initializing it here to load notification badge count.
         mNotificationFragment = new NotificationFragment();
         mNotificationFragment.setOnNotificationUpdateListener(new NotificationFragment.OnNotificationUpdateListener() {
             @Override
@@ -232,9 +226,16 @@ public class HomeActivity extends BaseActivity
         // is called from NotificationFragment.
         mNotificationFragment.getNotificationLists(this);
 
+        // Load the list of available banks, which will be accessed from multiple activities
+        getAvailableBankList();
+
+        // Check if important permissions (e.g. Contacts permission) is given. If not,
+        // request user for permission.
         attemptRequestForPermission();
+
         sendAnalytics();
 
+        // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
     }
@@ -267,7 +268,6 @@ public class HomeActivity extends BaseActivity
     @Override
     public void onResume() {
         super.onResume();
-        getProfileInfo();
     }
 
     @Override
@@ -339,10 +339,7 @@ public class HomeActivity extends BaseActivity
 
                     if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            if (mGetAllContactsResponse != null) {
-                                SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(this, mGetAllContactsResponse);
-                                syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            }
+                            new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
                 }
@@ -528,12 +525,6 @@ public class HomeActivity extends BaseActivity
         getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void checkForUpdateFromPush() {
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
-            getProfileInfo();
-        }
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -541,7 +532,6 @@ public class HomeActivity extends BaseActivity
             mProgressDialog.dismiss();
             mLogoutTask = null;
             mGetProfileInfoTask = null;
-            mGetAllContactsTask = null;
             mAddTrustedDeviceTask = null;
             Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
@@ -633,6 +623,11 @@ public class HomeActivity extends BaseActivity
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
             Log.d("Broadcast home activity", newProfilePicture);
             mProfileImageView.setProfilePicture(newProfilePicture, true);
+
+            // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
+            // we should have received a push from the server and GcmListenerService should have
+            // done this task. But as long as push is unreliable, this call is here to stay.
+            getProfileInfo();
         }
     };
 }
