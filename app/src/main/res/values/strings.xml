@@ -620,7 +620,7 @@
     <string name="invite_a_friend">Invite a Friend</string>
     <string name="progress_dialog_adding_friend">Adding friend...</string>
     <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
-    <string name="dialog_requesting_top_up">Sending money to your mobile...</string>
+    <string name="dialog_requesting_top_up">Preparing for Top Up...</string>
 
     <string name="contact_link">https://www.ipay.com.bd</string>
     <string name="term_link">https://www.ipay.com.bd/legal/tos</string>

@@ -181,6 +181,8 @@ public class InviteActivity extends BaseActivity {
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invite));
 
                     addFriend(nameView.getText().toString(), mobileNumberView.getText().toString());
+                    Utilities.hideKeyboard(InviteActivity.this, nameView);
+                    Utilities.hideKeyboard(InviteActivity.this, mobileNumberView);
 
                     dialog.dismiss();
                 }
@@ -191,7 +193,8 @@ public class InviteActivity extends BaseActivity {
         dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
+                Utilities.hideKeyboard(InviteActivity.this, nameView);
+                Utilities.hideKeyboard(InviteActivity.this, mobileNumberView);
                 dialog.dismiss();
             }
         });
