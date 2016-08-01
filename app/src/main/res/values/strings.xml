@@ -529,6 +529,7 @@
     <string name="select_a_contact">Select a contact</string>
     <string name="progress_dialog_single_invoice">Fetching invoice...</string>
     <string name="failed_add_friend">Add friend failed</string>
+    <string name="failed_invite_friend">Invite friend failed</string>
     <string name="failed_update_friend">Update friend failed</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
@@ -616,6 +617,7 @@
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>
     <string name="add_a_friend">Add a Friend</string>
+    <string name="invite_a_friend">Invite a Friend</string>
     <string name="progress_dialog_adding_friend">Adding friend...</string>
     <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
     <string name="dialog_requesting_top_up">Sending money to your mobile...</string>
