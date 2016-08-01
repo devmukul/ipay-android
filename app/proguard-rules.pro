@@ -28,6 +28,8 @@
 -keep class com.mikepenz.** { *; }
 -keep class junit.** { *; }
 -keep class org.mockito.** { *; }
+-keep class bd.com.ipay.ipayskeleton.Model.** { *; }
+-keepclassmembers class bd.com.ipay.ipayskeleton.Model.** { *; }
 
 -keepattributes Signature
 -keepattributes *Annotation*
@@ -38,5 +40,13 @@
 -dontwarn org.junit.**
 -dontwarn org.mockito.**
 -dontwarn com.makeramen.**
+
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** w(...);
+    public static *** i(...);
+    public static *** e(...);
+}
 
 
