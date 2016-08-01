@@ -144,7 +144,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public void switchToBusinessStepOneFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).commit();
+                .replace(R.id.fragment_container, new SignupBusinessStepOneFragment()).commit();
     }
 
     public void switchToBusinessStepTwoFragment() {
