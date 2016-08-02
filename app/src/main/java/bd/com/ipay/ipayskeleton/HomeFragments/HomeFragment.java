@@ -86,6 +86,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private TextView mRequestMoneyButton;
     private TextView mMobileTopUpButton;
     private TextView mMakePaymentButton;
+    private TextView mCreateInvoiceButton;
     private TextView mPayByQRCodeButton;
 
     private ImageView refreshBalanceButton;
@@ -131,6 +132,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
         mMobileTopUpButton = (Button) v.findViewById(R.id.button_mobile_topup);
         mMakePaymentButton = (Button) v.findViewById(R.id.button_make_payment);
+        mCreateInvoiceButton = (Button) v.findViewById(R.id.button_create_invoice);
         mPayByQRCodeButton = (Button) v.findViewById(R.id.button_pay_by_QR_code);
 
         mProgressBarWithoutAnimation = (ProgressBar) v.findViewById(R.id.circular_progress_bar);
@@ -149,9 +151,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         });
 
         if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
-            mMakePaymentButton.setText(getString(R.string.make_payment));
+            mCreateInvoiceButton.setVisibility(View.GONE);
         else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
-            mMakePaymentButton.setText(getString(R.string.create_invoice));
+            mCreateInvoiceButton.setVisibility(View.VISIBLE);
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,27 +208,31 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-                    PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                        @Override
-                        public void ifPinAdded() {
-                            Intent intent = new Intent(getActivity(), PaymentActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-                    makePaymentPinChecker.execute();
-                } else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
-                    Intent intent = new Intent(getActivity(), InvoiceActivity.class);
-                    startActivity(intent);
-                }
+                PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                makePaymentPinChecker.execute();
             }
         });
+
+        mCreateInvoiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), InvoiceActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         mPayByQRCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[] {Manifest.permission.CAMERA},
+                    requestPermissions(new String[]{Manifest.permission.CAMERA},
                             REQUEST_CODE_PERMISSION);
                 } else initiateScan();
             }
@@ -340,7 +346,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                                 @Override
                                 public void ifPinAdded() {
                                     Intent intent = new Intent(getActivity(), SingleInvoiceActivity.class);
-                                    intent.putExtra(Constants.RESULT,result);
+                                    intent.putExtra(Constants.RESULT, result);
                                     startActivity(intent);
                                 }
                             });
