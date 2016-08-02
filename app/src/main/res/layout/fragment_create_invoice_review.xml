@@ -1,226 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="12dp">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="@dimen/value12">
 
-        <android.support.v7.widget.CardView
-            style="@style/ReviewCardStyle"
+
+        <LinearLayout
+            android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:id="@+id/profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-
-                    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                        android:id="@+id/profile_picture"
-                        style="@style/ReviewImageStyle">
-
-                    </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textview_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/textview_mobile_number"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            style="@style/ReviewCardStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="4dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp">
+                android:orientation="horizontal">
+
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                    android:id="@+id/profile_picture"
+                    style="@style/ReviewImageStyle">
+
+                </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/ReviewItemLabelStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/quantity" />
-
-                    <TextView
-                        android:id="@+id/textview_quantity"
-                        style="@style/ReviewItemStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/elevation_high"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/ReviewItemLabelStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/rate" />
-
-                    <TextView
-                        android:id="@+id/textview_rate"
-                        style="@style/ReviewItemStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/elevation_high"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/ReviewItemLabelStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/AMOUNT" />
-
-                    <TextView
-                        android:id="@+id/textview_amount"
-                        style="@style/ReviewItemStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/elevation_high"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/ReviewItemLabelStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/vat" />
-
-                    <TextView
-                        android:id="@+id/textview_vat"
-                        style="@style/ReviewItemStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/elevation_high"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/ReviewItemLabelStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/TOTAL" />
-
-                    <TextView
-                        android:id="@+id/textview_total"
-                        style="@style/ReviewItemStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/description_holder"
-            style="@style/ReviewCardStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textview_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
+                    android:layout_height="match_parent"
                     android:gravity="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textview_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/value6"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textview_mobile_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/LinearLayoutHolder">
 
                 <TextView
-                    android:id="@+id/textview_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:gravity="center" />
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/quantity" />
+
+                <TextView
+                    android:id="@+id/textview_quantity"
+                    style="@style/TextViewInfoColorPrimary" />
+
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+            <View style="@style/Divider" />
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/rate" />
+
+                <TextView
+                    android:id="@+id/textview_rate"
+                    style="@style/TextViewInfoColorPrimary" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/AMOUNT" />
+
+                <TextView
+                    android:id="@+id/textview_amount"
+                    style="@style/TextViewInfoColorPrimary" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/vat" />
+
+                <TextView
+                    android:id="@+id/textview_vat"
+                    style="@style/TextViewInfoColorPrimary" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/TOTAL" />
+
+                <TextView
+                    android:id="@+id/textview_total"
+                    style="@style/TextViewInfoColorPrimary" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/value12"
+            android:layout_marginTop="@dimen/value10"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textview_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/value2"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:textSize="@dimen/text_size_small_medium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textview_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/value2" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/button_create_invoice"
-            style="@style/ButtonStyleMain"
+            style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/create_invoice" />

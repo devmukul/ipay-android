@@ -77,6 +77,8 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
+        getActivity().setTitle(R.string.invoice_list);
+
         mProgressDialog = new ProgressDialog(getActivity());
         mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice_sent);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -153,7 +155,7 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mPendingInvoicesTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
@@ -173,7 +175,7 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
 
                     mGetPendingPaymentsResponse = gson.fromJson(result.getJsonString(), GetPendingPaymentsResponse.class);
 
-                    if (pendingPaymentClasses == null || clearListAfterLoading ) {
+                    if (pendingPaymentClasses == null || clearListAfterLoading) {
                         clearListAfterLoading = false;
                         pendingPaymentClasses = mGetPendingPaymentsResponse.getRequests();
 
@@ -265,7 +267,6 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
             }
 
 
-
             public void bindView(int pos) {
 
                 final String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
@@ -305,12 +306,11 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
 
-                }  else if (status == Constants.INVOICE_STATUS_DRAFT) {
+                } else if (status == Constants.INVOICE_STATUS_DRAFT) {
                     mSenderNameTextView.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setColorFilter(Color.RED);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
                 }
-
 
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
                 mDescriptionTextView.setText(description);

@@ -675,4 +675,9 @@ public class Constants {
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
     public static final String ACTION_TYPE_EDIT = "Edit";
     public static final String ACTION_TYPE_VIEW = "View";
+
+    public static final String SERVICE_ACTION_CREATE_INVOICE = "Create Invoice";
+    public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";
+    public static final String SERVICE_ACTION_TOP_UP = "Mobile TopUp";
+    public static final String SERVICE_ACTION_EDUCATION_PAYMENT = "Education Payment";
 }

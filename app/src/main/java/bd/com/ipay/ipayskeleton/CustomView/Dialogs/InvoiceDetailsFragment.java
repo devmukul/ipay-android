@@ -50,9 +50,9 @@ public class InvoiceDetailsFragment extends Fragment {
         context = getContext();
 
         this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
-        this.mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));;
-        this.mDescription = bundle.getString(Constants.DESCRIPTION);;
-        this.mTime = bundle.getString(Constants.TIME);;
+        this.mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));
+        this.mDescription = bundle.getString(Constants.DESCRIPTION);
+        this.mTime = bundle.getString(Constants.TIME);
         this.id = bundle.getLong(Constants.MONEY_REQUEST_ID);
         this.status = bundle.getInt(Constants.MONEY_REQUEST_ID);
         this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);

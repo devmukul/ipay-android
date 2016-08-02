@@ -440,6 +440,7 @@
     <string name="mobile_topup_restriction_info">* You can recharge only in your own mobile number</string>
     <string name="total_amount">Total Amount</string>
     <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
+    <string name="invoice_list">Invoice List</string>
     <string name="amount">Amount</string>
     <string name="item">Item</string>
     <string name="fee">Fee</string>

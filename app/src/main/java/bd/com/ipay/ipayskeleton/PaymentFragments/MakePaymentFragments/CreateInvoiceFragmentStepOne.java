@@ -45,6 +45,8 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_create_invoice_step_one, container, false);
+        getActivity().setTitle(R.string.create_invoice);
+
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         buttonShowQRCode = (ImageView) v.findViewById(R.id.button_show_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_sender_from_contacts);
