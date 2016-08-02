@@ -7,6 +7,7 @@ public class Constants {
     public static final String GENDER_MALE = "M";
     public static final String GENDER_FEMALE = "F";
     public static final String USERID = "USERID";
+    public static final String USER_BALANCE = "USER_BALANCE";
     public static final String USER_NAME = "USER_NAME";
     public static final String UUID = "UUID";
     public static final String USERCOUNTRY = "USERCOUNTRY";
@@ -631,8 +632,8 @@ public class Constants {
     public static final String SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT = "WITHDRAW_MAX_AMOUNT_SINGLE";
 
 
-    public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "MAKEPAYMENT_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "MAKEPAYMENT_MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "PAYMENT_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "PAYMENT_MAX_AMOUNT_SINGLE";
 
 
     public static final int INVOICE_STATUS_ACCEPTED = 200;

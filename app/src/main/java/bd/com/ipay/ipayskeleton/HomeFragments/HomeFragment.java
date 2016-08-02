@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -93,6 +94,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private View mProfileCompletionPromptView;
 
+    private SharedPreferences pref;
+
     private static boolean profileCompletionPromptShown = false;
 
     private CircularProgressBar mProgressBar;
@@ -135,6 +138,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
         mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
         mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
+
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -506,6 +511,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     if (balance != null) {
                         if (isAdded())
                             balanceView.setText(balance + " " + getString(R.string.bdt));
+                        pref.edit().putString(Constants.USER_BALANCE, balance).commit();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
