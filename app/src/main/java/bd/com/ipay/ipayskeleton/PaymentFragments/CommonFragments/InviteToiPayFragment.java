@@ -18,6 +18,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.InviteDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
@@ -28,11 +29,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class InviteToiPayFragment extends ProgressFragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
-
-    private HttpRequestPostAsyncTask mSendInviteTask = null;
-    private SendInviteResponse mSendInviteResponse;
-
-    private ProgressDialog mProgressDialog;
 
     private TextView mMobileNumberView;
     private Button mInviteToIpayButton;
@@ -49,7 +45,6 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
 
         mMobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
 
-        mProgressDialog = new ProgressDialog(getActivity());
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mInviteToIpayButton = (Button) v.findViewById(R.id.button_invite_to_ipay);
 
@@ -61,7 +56,13 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
 
             @Override
             public void onClick(View v) {
-                sendInvite(mMobileNumber);
+
+                new InviteDialog(getContext(), mMobileNumber).setFinishCheckerListener(new InviteDialog.FinishCheckerListener() {
+                    @Override
+                    public void ifFinishNeeded() {
+                        getActivity().finish();
+                    }
+                });
             }
         });
 
@@ -90,57 +91,19 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void sendInvite(String phoneNumber) {
-
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
-        mProgressDialog.show();
-
-        mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                Constants.BASE_URL_MM + Constants.URL_SEND_INVITE + phoneNumber, null, getActivity(), this);
-        mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
-            mSendInviteTask = null;
-
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT).show();
 
             return;
         }
-
-
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
-            try {
-                mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
-                        getActivity().finish();
-                    }
-
-                } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            mProgressDialog.dismiss();
-            mSendInviteTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
 
             try {
                 setContentShown(true);
