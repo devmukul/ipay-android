@@ -340,7 +340,7 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
                             mStatus = status;
                             mReceiverName = name;
                             mReceiverMobileNumber = mobileNumber;
-                            mPhotoUri = imageUrl;
+                            mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
                             launchInvoiceDetailsFragment();
                         }
                     }
