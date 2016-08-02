@@ -28,10 +28,8 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.CreateTicketRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.CreateTicketResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.Requester;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class CreateTicketFragment extends ProgressFragment implements HttpResponseListener {
@@ -42,7 +40,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private HttpRequestGetAsyncTask mGetEmailsTask = null;
     private GetEmailResponse mGetEmailResponse;
 
-    private EditText mEmailEditText;
+    private EditText mMessageEditText;
     private EditText mSubjectEditText;
     private Button mCreateTicketButton;
 
@@ -53,8 +51,8 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_create_ticket, container, false);
 
-        mEmailEditText = (EditText) v.findViewById(R.id.email);
         mSubjectEditText = (EditText) v.findViewById(R.id.subject);
+        mMessageEditText = (EditText) v.findViewById(R.id.message);
         mCreateTicketButton = (Button) v.findViewById(R.id.button_create_ticket);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -62,7 +60,8 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         mCreateTicketButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createTicket();
+                if (verifyUserInputs())
+                    createTicket();
             }
         });
 
@@ -123,7 +122,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                         })
                         .show();
             } else {
-                mEmailEditText.setText(primaryEmail);
+                mMessageEditText.setText(primaryEmail);
             }
         }
 
@@ -136,6 +135,30 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         startActivity(intent);
     }
 
+    private boolean verifyUserInputs() {
+        boolean cancel = false;
+        View focusView = null;
+
+        if (mSubjectEditText.getText().toString().isEmpty()) {
+            cancel = true;
+            focusView = mSubjectEditText;
+            mSubjectEditText.setError(getString(R.string.failed_empty_subject));
+        }
+
+        if (mMessageEditText.getText().toString().isEmpty()) {
+            cancel = true;
+            focusView = mMessageEditText;
+            mMessageEditText.setError(getString(R.string.failed_empty_message));
+        }
+
+        if (cancel) {
+            focusView.requestFocus();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     private void createTicket() {
         if (mCreateTicketTask != null) {
             return;
@@ -144,8 +167,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         mProgressDialog.setMessage(getString(R.string.creating_ticket));
         mProgressDialog.show();
 
-        Requester requester = new Requester(ProfileInfoCacheManager.getName(), mEmailEditText.getText().toString());
-        CreateTicketRequest createTicketRequest = new CreateTicketRequest(requester, mSubjectEditText.getText().toString());
+        CreateTicketRequest createTicketRequest = new CreateTicketRequest(mSubjectEditText.getText().toString(), mMessageEditText.getText().toString());
 
         Gson gson = new Gson();
         String json = gson.toJson(createTicketRequest);

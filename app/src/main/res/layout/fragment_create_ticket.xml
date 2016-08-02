@@ -6,27 +6,10 @@
     <include layout="@layout/layout_progress_container" />
 
     <LinearLayout
+        android:id="@+id/content_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/email"
-                style="@style/CustomEditText"
-                android:inputType="textEmailAddress"
-                android:focusable="false">
-            </EditText>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <View style="@style/Divider" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -38,6 +21,22 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/subject"
                 style="@style/CustomEditText"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/message"
+                style="@style/CustomEditText">
+            </EditText>
 
         </android.support.design.widget.TextInputLayout>
 

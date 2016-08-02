@@ -1,19 +1,19 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Ticket;
 
 public class CreateTicketRequest {
-    private Requester ticketCreator;
     private String subject;
+    private String message;
 
-    public CreateTicketRequest(Requester ticketCreator, String subject) {
-        this.ticketCreator = ticketCreator;
+    public CreateTicketRequest(String subject, String message) {
         this.subject = subject;
-    }
-
-    public Requester getTicketCreator() {
-        return ticketCreator;
+        this.message = message;
     }
 
     public String getSubject() {
         return subject;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

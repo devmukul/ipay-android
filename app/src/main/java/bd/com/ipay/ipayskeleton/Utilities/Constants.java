@@ -126,7 +126,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -362,7 +362,7 @@ public class Constants {
 
     // Ticket
     public static final String URL_CREATE_TICKET = "ticket/create";
-    public static final String URL_GET_TICKETS = "ticket";
+    public static final String URL_GET_TICKETS = "ticket/list";
     public static final String URL_GET_TICKET_DETAILS = "ticket/by/";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
