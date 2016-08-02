@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.InvoiceDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.CreateInvoiceFragmentStepOne;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.SentInvoicesFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -38,7 +39,7 @@ public class InvoiceActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -64,6 +65,14 @@ public class InvoiceActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new CreateInvoiceFragmentStepOne()).commit();
+        mFabCreateInvoice.setVisibility(View.GONE);
+        switchedToInvoicesList = false;
+    }
+
+    public void switchToInvoiceDetailsFragment(Bundle bundle) {
+        InvoiceDetailsFragment invoiceDetailsFragment = new InvoiceDetailsFragment();
+        invoiceDetailsFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, invoiceDetailsFragment).commit();
         mFabCreateInvoice.setVisibility(View.GONE);
         switchedToInvoicesList = false;
     }
