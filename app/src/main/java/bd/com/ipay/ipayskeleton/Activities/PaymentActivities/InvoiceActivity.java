@@ -7,9 +7,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.InvoiceDetailsFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.CreateInvoiceFragmentStepOne;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.SentInvoicesFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.InvoiceDetailsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepOne;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentInvoicesFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 public class InvoiceActivity extends BaseActivity {
