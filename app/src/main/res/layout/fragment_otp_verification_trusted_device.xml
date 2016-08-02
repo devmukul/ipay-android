@@ -1,84 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimary"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-            android:layout_marginBottom="@dimen/value15"
-            android:gravity="center"
-            android:textColor="@color/zxinglib_status_text"
-            android:textSize="@dimen/value15"
-            android:text="@string/otp_going_to_send" />
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:text="@string/otp_going_to_send"
+            android:textSize="@dimen/value15" />
 
-        <bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText
-            android:id="@+id/otp_edittext"
+        <View style="@style/Divider" />
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_promo"
-            android:hint="@string/enter_otp"
-            android:inputType="phone"
-            custom:borderType="up|down">
+            android:layout_marginTop="@dimen/value5">
 
-        </bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText>
+            <EditText
+                android:id="@+id/otp_edittext"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_otp"
+                android:inputType="phone">
 
+                <requestFocus />
+            </EditText>
+        </android.support.design.widget.TextInputLayout>
+
+        <View style="@style/Divider" />
 
         <Button
             android:id="@+id/buttonVerifyOTP"
+            style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/PrimaryButton"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:text="@string/verify" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:gravity="center"
-            android:textColor="@color/zxinglib_status_text"
-            android:textSize="@dimen/value15"
-            android:text="@string/verify_otp_for_trust_description" />
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:text="@string/verify_otp_for_trust_description"
+            android:textSize="@dimen/value15" />
 
         <TextView
             android:id="@+id/txt_timer"
             style="@style/TextStylePrimaryMedium"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+            android:layout_margin="@dimen/activity_horizontal_margin_card"
             android:gravity="bottom|center"
-            android:textSize="@dimen/value25"
-            android:textColor="@color/zxinglib_status_text" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/value25" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin_card"
-            android:gravity="center"
-            android:textColor="@color/zxinglib_status_text"
-            android:textSize="@dimen/value15"
-            android:text="@string/resend_otp_description" />
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:text="@string/resend_otp_description"
+            android:textSize="@dimen/value15" />
 
         <Button
             android:id="@+id/buttonResend"
+            style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/PrimaryButton"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/resend"
-            android:enabled="false"/>
+            android:enabled="false"
+            android:text="@string/resend" />
 
     </LinearLayout>
 </ScrollView>
