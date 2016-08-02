@@ -78,7 +78,6 @@ public class InviteListHolderFragment extends Fragment {
                     });
                 }
                 Bundle bundle = new Bundle();
-                bundle.putBoolean(Constants.HIDE_STATUSES, true);
                 bundle.putBoolean(Constants.SHOW_NON_INVITED_NON_MEMBERS_ONLY, true);
                 miPayAllContactsFragment.setArguments(bundle);
                 getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, miPayAllContactsFragment).commit();
@@ -106,7 +105,6 @@ public class InviteListHolderFragment extends Fragment {
                 });
 
                 Bundle bundle = new Bundle();
-                bundle.putBoolean(Constants.HIDE_STATUSES, true);
                 bundle.putBoolean(Constants.SHOW_INVITED_ONLY, true);
                 miPayMemberContactsFragment.setArguments(bundle);
             }

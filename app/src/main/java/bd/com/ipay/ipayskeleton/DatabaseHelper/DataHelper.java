@@ -39,15 +39,6 @@ public class DataHelper {
         instance = null;
     }
 
-    /**
-     * Inserts a friends' information into the database.
-     * If notifyChange is set to true, and if we use
-     * registerContentObserver(cursor, DBConstants.DB_TABLE_FRIENDS_URI)
-     * somewhere in the code where cursor points to the friends table, then the cursor will be
-     * updated. As a rule of thumb, you should set it to true. But if you batch create friends,
-     * then consider setting it to false and calling notifyChange after all friends have been
-     * created.
-     */
     public void createFriend(FriendNode friendNode) {
 
         try {
@@ -135,7 +126,12 @@ public class DataHelper {
             if (nonMemberOnly)
                 queryString += " AND " + DBConstants.KEY_IS_MEMBER + " != " + DBConstants.IPAY_MEMBER;
             if (invitees != null) {
-                String inviteeListStr = "(" + TextUtils.join(", ", invitees) + ")";
+                List<String> quotedInvitees = new ArrayList<>();
+                for (String invitee : invitees) {
+                    quotedInvitees.add("'" + invitee + "'");
+                }
+
+                String inviteeListStr = "(" + TextUtils.join(", ", quotedInvitees) + ")";
                 if (invitedOnly) {
                     queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " IN " + inviteeListStr;
                 }
