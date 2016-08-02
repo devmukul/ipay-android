@@ -30,6 +30,9 @@ public class Constants {
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
     public static final String EVENT_ID = "EVENT_ID";
     public static final String TITLE = "TITLE";
+    public static final String DESCRIPTION = "DESCRIPTION";
+    public static final String TIME = "TIME";
+    public static final String STATUS = "STATUS";
     public static final String TAG = "TAG";
     public static final String INVOICE = "INVOICE";
     public static final String REQUEST = "REQUEST";
@@ -127,7 +130,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
