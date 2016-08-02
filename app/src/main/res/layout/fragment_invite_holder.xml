@@ -55,6 +55,7 @@
                     style="@style/ContactsSelectorStyle"
                     android:background="@drawable/background_right_round_checkbox"/>
             </LinearLayout>
+
         </RelativeLayout>
 
         <FrameLayout
