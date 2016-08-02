@@ -1,9 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_search_contacts"
+    <item
+        android:id="@+id/action_search_contacts"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:orderInCategory="1"
         android:title="@string/action_search"
         app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="always"
-        android:orderInCategory="1" />
+        app:showAsAction="always" />
 </menu>
