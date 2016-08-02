@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -27,8 +28,8 @@ public class TourActivity extends BaseActivity {
     private ViewPager tourPager;
     private TourPagerAdapter mAdapter;
     private ArrayList<Fragment> fragments;
-    private IconifiedButton buttonLogin;
-    private IconifiedButton buttonSignUp;
+    private Button buttonLogin;
+    private Button buttonSignUp;
     private PagerIndicator mPagerIndicator;
 
     private final int[] tourBackgroundLayouts = {R.layout.tour_first_page, R.layout.tour_second_page,
@@ -41,8 +42,8 @@ public class TourActivity extends BaseActivity {
 
         getSupportActionBar().hide();
 
-        buttonLogin = (IconifiedButton) findViewById(R.id.button_sign_in);
-        buttonSignUp = (IconifiedButton) findViewById(R.id.button_join_now);
+        buttonLogin = (Button) findViewById(R.id.button_sign_in);
+        buttonSignUp = (Button) findViewById(R.id.button_join_now);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override

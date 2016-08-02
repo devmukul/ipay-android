@@ -29,25 +29,21 @@
         android:layout_marginTop="@dimen/activity_vertical_margin_card"
         android:orientation="vertical">
 
-        <bd.com.ipay.ipayskeleton.CustomView.IconifiedButton
+        <Button
             android:id="@+id/button_sign_in"
+            style="@style/PrimaryTransparentButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/value5"
-            android:text="@string/log_in"
-            android:drawableLeft="@drawable/ic_login">
+            android:text="@string/log_in" />
 
-        </bd.com.ipay.ipayskeleton.CustomView.IconifiedButton>
-
-        <bd.com.ipay.ipayskeleton.CustomView.IconifiedButton
+        <Button
             android:id="@+id/button_join_now"
+            style="@style/PrimaryTransparentButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_up"
-            android:drawableLeft="@drawable/ic_signup"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_card" />
 
-        </bd.com.ipay.ipayskeleton.CustomView.IconifiedButton>
     </LinearLayout>
 
 </RelativeLayout>

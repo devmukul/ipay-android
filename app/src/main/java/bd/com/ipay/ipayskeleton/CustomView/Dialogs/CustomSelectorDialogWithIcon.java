@@ -89,7 +89,7 @@ public class CustomSelectorDialogWithIcon extends AlertDialog {
             View view = convertView;
 
             if (view == null)
-                view = inflater.inflate(R.layout.item_with_icon, null);
+                view = inflater.inflate(R.layout.list_item_with_icon, null);
 
             ImageView imageView = (ImageView) view.findViewById(R.id.icon_imageView);
             TextView selectorView = (TextView) view.findViewById(R.id.textview_name);

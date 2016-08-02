@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/value10">
+    android:orientation="vertical">
 
     <include layout="@layout/layout_progress_container" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/content_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_introduced_requests"
@@ -18,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/complete_introduction_header"
             android:clipToPadding="false"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical" />
 
         <TextView
             android:id="@+id/empty_list_text"

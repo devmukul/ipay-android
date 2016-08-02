@@ -669,4 +669,6 @@ public class Constants {
     public static final String ACTION_TYPE_REJECT = "Reject";
     public static final String ACTION_TYPE_REMOVE = "Remove";
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
+    public static final String ACTION_TYPE_EDIT = "Edit";
+    public static final String ACTION_TYPE_VIEW = "View";
 }

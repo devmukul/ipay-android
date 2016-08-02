@@ -3,13 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/value5"
-    android:paddingTop="@dimen/value5">
+    android:paddingBottom="@dimen/value6"
+    android:paddingTop="@dimen/value6">
 
     <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
         android:id="@+id/item_services"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_signup_add1"
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/ic_education"
         android:paddingLeft="@dimen/activity_horizontal_margin_card" />
+
 </RelativeLayout>

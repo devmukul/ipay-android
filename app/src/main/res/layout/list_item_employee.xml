@@ -52,78 +52,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="@dimen/activity_horizontal_margin"
+
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:src="@drawable/ic_verified" />
-
     </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/options_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/description_holder"
-        android:layout_marginTop="@dimen/value5"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorDivider" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/value25"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/edit_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:padding="@dimen/value5"
-                android:text="@string/edit"
-                android:textSize="12sp" />
-
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="@color/colorDivider" />
-
-            <Button
-                android:id="@+id/remove_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:padding="@dimen/value5"
-                android:text="@string/remove"
-                android:textSize="12sp" />
-
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="@color/colorDivider" />
-
-            <Button
-                android:id="@+id/view_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:padding="@dimen/value5"
-                android:text="@string/view"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </LinearLayout>
 
     <View
         android:id="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/divider_space"
-        android:layout_below="@+id/options_layout"
-        android:background="@color/colorDivider" />
-
+        style="@style/Divider"
+        android:layout_below="@+id/description_holder" />
 
 </RelativeLayout>

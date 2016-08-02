@@ -723,4 +723,10 @@
         <item>Select From Gallery</item>
         <item>Preview</item>
     </string-array>
+
+    <string-array name="employee_management_action">
+        <item>View</item>
+        <item>Edit</item>
+        <item>Remove</item>
+    </string-array>
 </resources>

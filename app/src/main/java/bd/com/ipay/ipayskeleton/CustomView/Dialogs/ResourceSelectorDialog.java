@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,7 +97,7 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
             View view = convertView;
 
             if (view == null)
-                view = inflater.inflate(R.layout.item_custom_selector, null);
+                view = inflater.inflate(R.layout.list_item_custom_selector, null);
 
             TextView selectorView = (TextView) view.findViewById(R.id.textViewSelectorName);
             selectorView.setText(mSelectorName);

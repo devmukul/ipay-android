@@ -86,7 +86,7 @@ public class CustomSelectorDialog extends AlertDialog {
             View view = convertView;
 
             if (view == null)
-                view = inflater.inflate(R.layout.item_custom_selector, null);
+                view = inflater.inflate(R.layout.list_item_custom_selector, null);
 
             TextView selectorView = (TextView) view.findViewById(R.id.textViewSelectorName);
             selectorView.setText(mSelectorName);

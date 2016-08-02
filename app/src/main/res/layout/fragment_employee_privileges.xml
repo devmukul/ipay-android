@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/activity_vertical_margin_card"
         android:orientation="horizontal">
 
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
@@ -49,12 +48,19 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/divider"
+        style="@style/DividerWithoutMargin"
+        android:layout_below="@+id/profile" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/privilege_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_add_employee_or_save_permissions"
-        android:layout_below="@+id/profile">
+        android:layout_below="@+id/divider"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+        android:layout_marginTop="@dimen/activity_horizontal_margin_card">
 
     </android.support.v7.widget.RecyclerView>
 

@@ -647,7 +647,7 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin_card</item>
     </style>
 
     <style name="PrimaryButton" parent="@android:style/Widget.Holo.Button">
