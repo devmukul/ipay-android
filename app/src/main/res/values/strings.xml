@@ -266,6 +266,7 @@
     <string name="education_payment_description">Write a note</string>
     <string name="description_event">Event description</string>
     <string name="description">Description</string>
+    <string name="description_with_colon">Description: </string>
     <string name="item_description">Item description</string>
     <string name="item_quantity">Item quantity</string>
     <string name="item_name">Item name</string>

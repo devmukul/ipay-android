@@ -578,11 +578,11 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
             Bundle bundle = new Bundle();
             bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+            bundle.putString(Constants.VAT, mVat.toString());
+            bundle.putString(Constants.PHOTO_URI, mPhotoUri);
             bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
             bundle.putString(Constants.NAME, mReceiverName);
             bundle.putInt(Constants.MONEY_REQUEST_SERVICE_ID, Constants.SERVICE_ID_REQUEST_MONEY);
-            bundle.putString(Constants.VAT, mVat.toString());
-            bundle.putString(Constants.PHOTO_URI, mPhotoUri);
             bundle.putString(Constants.AMOUNT, mAmount.toString());
             bundle.putString(Constants.TITLE, mTitle);
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
