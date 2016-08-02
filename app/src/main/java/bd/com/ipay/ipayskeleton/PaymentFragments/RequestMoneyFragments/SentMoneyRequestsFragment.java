@@ -378,7 +378,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             }
         });
 
-        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        alertDialogue.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing
             }
