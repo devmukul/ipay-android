@@ -97,6 +97,22 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         setContentShown(false);
     }
 
+    private void showDeleteEmployeeConfirmationDialog(final Employee employee) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.are_you_sure)
+                .setMessage(getString(R.string.confirmation_remove_employee))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeAnEmployee(employee.getId());
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null);
+
+        dialog.show();
+    }
+
+
     private void getEmployeeList() {
         if (mGetAllEmployeeAsyncTask != null)
             return;
@@ -245,8 +261,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                             @Override
                             public void onResourceSelected(int selectedIndex, String action) {
                                 if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
-                                    removeAnEmployee(employee.getId());
-
+                                    showDeleteEmployeeConfirmationDialog(employee);
                                 } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
