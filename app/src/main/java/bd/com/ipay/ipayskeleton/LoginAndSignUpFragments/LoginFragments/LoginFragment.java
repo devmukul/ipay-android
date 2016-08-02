@@ -97,6 +97,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
+        Utilities.showKeyboard(getContext());
+
         mButtonLogin = (Button) v.findViewById(R.id.login_button);
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
         mButtonJoinUs = (Button) v.findViewById(R.id.join_us_button);

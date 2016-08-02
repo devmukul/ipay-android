@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -56,6 +57,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
     private ArrayList<String> mUserBankList;
     private int selectedBankPosition = 0;
 
+    private SharedPreferences pref;
     private ProgressDialog mProgressDialog;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
@@ -75,6 +77,8 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         mUserBankNameList = new ArrayList<>();
         mUserBankAccountNumberList = new ArrayList<>();
         mUserBankList = new ArrayList<>();
+
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         // It might be possible that we have failed to load the available bank list during
         // application startup. In that case first try to load the available bank list first, and
@@ -164,6 +168,11 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         boolean cancel = false;
         View focusView = null;
 
+        String balance = null;
+        if (pref.contains(Constants.USER_BALANCE)) {
+            balance = pref.getString(Constants.USER_BALANCE, null);
+        }
+
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;
             mAmountEditText.setError(getString(R.string.please_enter_amount));
@@ -172,8 +181,10 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                 && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
+            BigDecimal maxAmount = WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                    WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
 
             if (error_message != null) {
                 focusView = mAmountEditText;

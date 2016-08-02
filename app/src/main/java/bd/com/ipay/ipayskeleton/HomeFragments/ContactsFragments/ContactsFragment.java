@@ -36,6 +36,8 @@ import com.bumptech.glide.request.target.Target;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -93,7 +95,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private ContactListAdapter mAdapter;
     private Cursor mCursor;
 
-    private boolean mHideStatuses;
     private boolean mShowVerifiedUsersOnly;
     private boolean miPayMembersOnly;
     private boolean mShowInvitedOnly;
@@ -145,7 +146,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
         if (getArguments() != null) {
-            mHideStatuses = getArguments().getBoolean(Constants.HIDE_STATUSES, false);
             mShowVerifiedUsersOnly = getArguments().getBoolean(Constants.VERIFIED_USERS_ONLY, false);
             miPayMembersOnly = getArguments().getBoolean(Constants.IPAY_MEMBERS_ONLY, false);
             mShowInvitedOnly = getArguments().getBoolean(Constants.SHOW_INVITED_ONLY, false);
@@ -234,8 +234,21 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
 
+
+                // TODO hack
+                /**
+                 * Caution: It takes some time to load invite response from the server. So if you are
+                 * loading this Fragment from Contacts page, it is very much possible that invitee list
+                 * will be null. This is generally not a problem because invitee list is not used
+                 * in Contacts fragment when doing database query. It is used in the database query
+                 * from invite fragment, but by that time the invitee list should already have loaded.
+                 */
+                List<String> invitees = null;
+                if (ContactsHolderFragment.mGetInviteInfoResponse != null)
+                    invitees = ContactsHolderFragment.mGetInviteInfoResponse.getInvitees();
+
                 Cursor cursor = dataHelper.searchFriends(mQuery, miPayMembersOnly, mShowNonInvitedNonMembersOnly,
-                        mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, ContactsHolderFragment.mGetInviteInfoResponse.getInvitees());
+                        mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, invitees);
 
                 if (cursor != null) {
                     nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
@@ -659,13 +672,13 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 mobileNumberView.setText(mobileNumber);
 
-                if (!mHideStatuses && !isDialogFragment() && !isMember && isInvited)
+                if (!isDialogFragment() && !isMember && !mShowInvitedOnly && isInvited)
                     inviteStatusTextView.setVisibility(View.VISIBLE);
                 else
                     inviteStatusTextView.setVisibility(View.GONE);
 
 
-                if (!mHideStatuses && isMember) {
+                if (isMember) {
                     isSubscriber.setVisibility(View.VISIBLE);
                 } else {
                     isSubscriber.setVisibility(View.GONE);
@@ -682,6 +695,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     inviteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            setSelectedName(name);
+                            setSelectedNumber(mobileNumber);
+
                             sendInvite(mobileNumber);
                         }
                     });

@@ -216,6 +216,11 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         boolean cancel = false;
         View focusView = null;
 
+        String balance = null;
+        if (pref.contains(Constants.USER_BALANCE)) {
+            balance = pref.getString(Constants.USER_BALANCE, null);
+        }
+
         if (mAmountEditText.getText().toString().trim().length() == 0) {
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             focusView = mAmountEditText;
@@ -224,9 +229,11 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
+            BigDecimal maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                    maxAmount);
 
             if (error_message != null) {
                 focusView = mAmountEditText;
