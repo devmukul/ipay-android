@@ -105,7 +105,7 @@ public class InviteActivity extends BaseActivity {
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 if (verifyUserInputs()) {
 
-                    mMobileNumber = mobileNumberView.getText().toString().trim();
+                    mMobileNumber = ContactEngine.formatMobileNumberBD(mobileNumberView.getText().toString());
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invite));
 
                     addFriend(nameView.getText().toString(), mobileNumberView.getText().toString());
@@ -209,11 +209,10 @@ public class InviteActivity extends BaseActivity {
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    sendInvite(ContactEngine.formatMobileNumberBD(mMobileNumber));
+                    sendInvite(mMobileNumber);
                 } else {
                     mProgressDialog.dismiss();
-                    if (this != null)
-                        Toast.makeText(this, R.string.failed_invite_friend, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.failed_invite_friend, Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

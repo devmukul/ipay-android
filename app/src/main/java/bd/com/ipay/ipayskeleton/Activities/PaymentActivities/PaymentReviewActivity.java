@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -47,14 +47,14 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
 
     private void switchToSendInviteFragment() {
 
-        InviteFragment inviteFragment = new InviteFragment();
+        InviteToiPayFragment inviteToiPayFragment = new InviteToiPayFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
-        inviteFragment.setArguments(bundle);
+        inviteToiPayFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, inviteFragment).commit();
+                .replace(R.id.fragment_container, inviteToiPayFragment).commit();
 
     }
 

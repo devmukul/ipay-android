@@ -672,7 +672,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 mobileNumberView.setText(mobileNumber);
 
-                if (!isDialogFragment() && !isMember && !mShowNonInvitedNonMembersOnly && isInvited)
+                if (!isDialogFragment() && !isMember && !mShowInvitedOnly && isInvited)
                     inviteStatusTextView.setVisibility(View.VISIBLE);
                 else
                     inviteStatusTextView.setVisibility(View.GONE);
@@ -695,6 +695,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     inviteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            setSelectedName(name);
+                            setSelectedNumber(mobileNumber);
+
                             sendInvite(mobileNumber);
                         }
                     });

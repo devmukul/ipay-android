@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,7 +25,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class InviteFragment extends ProgressFragment implements HttpResponseListener {
+public class InviteToiPayFragment extends ProgressFragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
@@ -44,12 +42,10 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
 
     private String mMobileNumber;
 
-    private SharedPreferences pref;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_invite, container, false);
+        View v = inflater.inflate(R.layout.fragment_invite_to_ipay, container, false);
 
         mMobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
 
@@ -59,8 +55,6 @@ public class InviteFragment extends ProgressFragment implements HttpResponseList
 
         mInviteContainer = v.findViewById(R.id.invite_container);
         mUnverifiedContainer = v.findViewById(R.id.unverified_container);
-
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mMobileNumberView.setText(mMobileNumber);
         mInviteToIpayButton.setOnClickListener(new View.OnClickListener() {
