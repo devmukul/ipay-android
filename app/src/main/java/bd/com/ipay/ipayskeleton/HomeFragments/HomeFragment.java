@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -82,7 +83,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private View mAddMoneyButton;
     private View mWithdrawMoneyButton;
-    private View mDividerCreateInvoice;
     private TextView mSendMoneyButton;
     private TextView mRequestMoneyButton;
     private TextView mMobileTopUpButton;
@@ -129,7 +129,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mAddMoneyButton = v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = v.findViewById(R.id.button_withdraw_money);
-        mDividerCreateInvoice = v.findViewById(R.id.divider_create_invoice);
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
         mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
         mMobileTopUpButton = (Button) v.findViewById(R.id.button_mobile_topup);
@@ -152,11 +151,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
+       /* if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
             mCreateInvoiceButton.setVisibility(View.GONE);
-            mDividerCreateInvoice.setVisibility(View.GONE);
         } else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
-            mCreateInvoiceButton.setVisibility(View.VISIBLE);
+            mCreateInvoiceButton.setVisibility(View.VISIBLE); */
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override

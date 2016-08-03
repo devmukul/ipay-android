@@ -6,10 +6,10 @@
             android:shape="ring"
             android:thicknessRatio="14.0">
             <gradient
-                android:centerColor="@color/colorDarkOrange"
+                android:centerColor="@color/colorPrimary"
                 android:centerY="0.50"
-                android:endColor="@color/colorDarkOrange"
-                android:startColor="@color/colorDarkOrange"
+                android:endColor="@color/colorPrimary"
+                android:startColor="@color/colorPrimary"
                 android:type="sweep"
                 android:useLevel="false" />
         </shape>

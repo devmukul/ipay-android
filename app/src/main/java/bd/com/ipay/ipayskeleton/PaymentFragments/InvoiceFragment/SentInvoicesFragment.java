@@ -257,7 +257,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView mSenderNameTextView;
             private final TextView mAmountTextView;
-            private final TextView mDescriptionTextView;
             private final TextView mTimeTextView;
             private final ImageView mCancel;
             private final ImageView statusView;
@@ -269,7 +268,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
 
                 mSenderNameTextView = (TextView) itemView.findViewById(R.id.request_name);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
-                mDescriptionTextView = (TextView) itemView.findViewById(R.id.description);
                 mTimeTextView = (TextView) itemView.findViewById(R.id.time);
                 mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
@@ -282,12 +280,14 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
 
                 final String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingPaymentClasses.get(pos).getRequestTime());
+                final String title = pendingPaymentClasses.get(pos).getTitle();
                 final String name = pendingPaymentClasses.get(pos).getReceiverProfile().getUserName();
                 final String mobileNumber = pendingPaymentClasses.get(pos).getReceiverProfile().getUserMobileNumber();
                 final int status = pendingPaymentClasses.get(pos).getStatus();
                 final BigDecimal amount = pendingPaymentClasses.get(pos).getAmount();
                 final BigDecimal vat = pendingPaymentClasses.get(pos).getVat();
                 final BigDecimal total = pendingPaymentClasses.get(pos).getTotal();
+                final String descriptionofRequest = pendingPaymentClasses.get(pos).getDescriptionofRequest();
                 final String description = pendingPaymentClasses.get(pos).getDescription();
                 final long id = pendingPaymentClasses.get(pos).getId();
                 final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
@@ -324,7 +324,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 }
 
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
-                mDescriptionTextView.setText(description);
                 mTimeTextView.setText(time);
 
                 if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING)
@@ -342,12 +341,13 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                     @Override
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
-                            mDescription = description;
                             mTime = time;
                             mId = id;
                             mAmount = amount;
                             mVat = vat;
                             mItemList = Arrays.asList(itemList);
+                            if (title.equals("Invoice") ) mDescription = description;
+                            else mDescription = descriptionofRequest;
                             mStatus = status;
                             mReceiverName = name;
                             mReceiverMobileNumber = mobileNumber;

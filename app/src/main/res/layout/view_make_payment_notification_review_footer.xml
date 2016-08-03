@@ -85,6 +85,25 @@
         </EditText>
     </android.support.design.widget.TextInputLayout>
 
+    <LinearLayout
+        android:id="@+id/layout_description_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/ListHeaderStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:text="@string/description" />
+
+        <TextView
+            android:id="@+id/textview_description"
+            style="@style/TextViewDescription" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/button_make_payment"
         style="@style/PrimaryMediumButton"

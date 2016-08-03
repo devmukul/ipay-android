@@ -34,7 +34,6 @@
 
             <ImageView
                 android:id="@+id/button_scan_qr_code"
-                style="@style/ButtonStyleWithIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

@@ -44,4 +44,7 @@
 
     <color name="colorBackgroundButtonWithOpacity">#59009688</color>
     <color name="colorBackgroundButtonWithOpacityPressed">#1A009688</color>
+
+    <color name="colorBackgroundWithOpacity">#69009688</color>
+    <color name="colorBackgroundWithOpacitySelected">#90009688</color>
 </resources>

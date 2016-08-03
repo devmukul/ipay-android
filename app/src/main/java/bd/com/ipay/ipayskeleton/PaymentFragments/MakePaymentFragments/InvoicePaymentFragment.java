@@ -89,6 +89,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private String mPhotoUri;
     private long mMoneyRequestId;
     private String mTitle;
+    private String mDescription;
     private TextView mEmptyListTextView;
 
 
@@ -421,7 +422,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
                 final String name = moneyRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
-                final String description = moneyRequest.getDescription();
+                final String description = moneyRequest.getDescriptionofRequest();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(moneyRequest.getRequestTime());
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
@@ -452,7 +453,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                                     mTitle = title;
                                     mVat = vat;
                                     mItemList = itemList;
-
+                                    mDescription = description;
                                     launchInvoiceHistoryFragment();
 
                                 } else if (selectedIndex == ACTION_REJECT) {
@@ -585,6 +586,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             bundle.putInt(Constants.MONEY_REQUEST_SERVICE_ID, Constants.SERVICE_ID_REQUEST_MONEY);
             bundle.putString(Constants.AMOUNT, mAmount.toString());
             bundle.putString(Constants.TITLE, mTitle);
+            bundle.putString(Constants.DESCRIPTION, mDescription);
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
 
             ((PaymentActivity) getActivity()).switchToInvoiceHistoryFragment(bundle);
