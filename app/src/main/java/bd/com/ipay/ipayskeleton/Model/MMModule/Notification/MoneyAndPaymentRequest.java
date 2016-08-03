@@ -77,6 +77,10 @@ public class MoneyAndPaymentRequest implements Notification {
             return Constants.NOTIFICATION_TYPE_MAKE_PAYMENT;
     }
 
+    public String getDescriptionofRequest() {
+        return description;
+    }
+
     @Override
     public String getDescription() {
 

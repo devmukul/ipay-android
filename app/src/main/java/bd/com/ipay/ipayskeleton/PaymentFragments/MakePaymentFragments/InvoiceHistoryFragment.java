@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
     private String mPhotoUri;
     private long requestId;
     private String mTitle;
+    private String mDescription;
     private int mServiceID;
     private boolean isPinRequired = true;
 
@@ -78,6 +80,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
         this.mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));
         this.mTitle = bundle.getString(Constants.TITLE);
+        this.mDescription = bundle.getString(Constants.DESCRIPTION);
         this.mServiceID = bundle.getInt(Constants.MONEY_REQUEST_SERVICE_ID);
         this.mItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
 
@@ -211,10 +214,13 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
             private final TextView mMobileNumberView;
             private final TextView mNetAmountView;
             private final TextView mVatView;
+            private final View headerView;
             private View mServiceChargeHolder;
             private final TextView mServiceChargeView;
             private final TextView mTotalView;
             private Button mMakePaymentButton;
+            private LinearLayout mLinearLayoutDescriptionHolder;
+            private TextView mDescriptionView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -228,10 +234,14 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
                 mNetAmountView = (TextView) itemView.findViewById(R.id.textview_net_amount);
                 mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
+                headerView = itemView.findViewById(R.id.header);
                 mServiceChargeHolder = itemView.findViewById(R.id.service_charge_layout);
                 mServiceChargeView = (TextView) itemView.findViewById(R.id.textview_service_charge);
                 mTotalView = (TextView) itemView.findViewById(R.id.textview_total);
                 mMakePaymentButton = (Button) itemView.findViewById(R.id.button_make_payment);
+
+                mLinearLayoutDescriptionHolder = (LinearLayout) itemView.findViewById(R.id.layout_description_holder);
+                mDescriptionView = (TextView) itemView.findViewById(R.id.textview_description);
             }
 
             public void bindViewForListItem(int pos) {
@@ -244,6 +254,11 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
             }
 
             public void bindViewForHeader() {
+
+                if (mItemList == null || mItemList.size() ==0) {
+                    headerView.setVisibility(View.GONE);
+                }
+
                 if (mReceiverName == null || mReceiverName.isEmpty()) {
                     mNameView.setVisibility(View.GONE);
                 } else {
@@ -269,6 +284,12 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
                 mVatView.setText(Utilities.formatTaka(mVat));
                 mTotalView.setText(Utilities.formatTaka(mAmount));
+
+                if (mTitle.equals("Invoice") )  {
+                    mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
+                } else {
+                    mDescriptionView.setText(mDescription);
+                }
 
                 mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
                     @Override

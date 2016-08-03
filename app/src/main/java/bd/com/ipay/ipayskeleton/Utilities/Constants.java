@@ -630,6 +630,7 @@ public class Constants {
     public static final String INVOICE_DESCRIPTION_TAG = "description";
     public static final String INVOICE_QUANTITY_TAG = "quantity";
     public static final String INVOICE_RATE_TAG = "rate";
+    public static final String INVOICE_AMOUNT_TAG = "amount";
     public static final String INVOICE_TITLE_TAG = "title";
     public static final String INTRODUCER = "introducer";
 
@@ -690,7 +691,7 @@ public class Constants {
     public static final String ACTION_TYPE_EDIT = "Edit";
     public static final String ACTION_TYPE_VIEW = "View";
 
-    public static final String SERVICE_ACTION_CREATE_INVOICE = "Create Invoice";
+    public static final String SERVICE_ACTION_REQUEST_PAYMENT = "Request Payment";
     public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";
     public static final String SERVICE_ACTION_TOP_UP = "Mobile TopUp";
     public static final String SERVICE_ACTION_EDUCATION_PAYMENT = "Education Payment";

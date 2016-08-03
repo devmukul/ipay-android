@@ -10,6 +10,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepTwo;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.InvoiceDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepOne;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.RequestPaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentInvoicesFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -28,7 +29,8 @@ public class InvoiceActivity extends BaseActivity {
         mFabCreateInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchToCreateInvoiceStepOneFragment();
+                switchToRequestPaymentFragment();
+                //switchToCreateInvoiceFragment();
             }
         });
 
@@ -49,11 +51,13 @@ public class InvoiceActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+
         Utilities.hideKeyboard(this);
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else
             super.onBackPressed();
+
     }
 
     public void switchToInvoicesSentFragment() {
@@ -93,6 +97,19 @@ public class InvoiceActivity extends BaseActivity {
                 .addToBackStack(null)
                 .commit();
 
+        mFabCreateInvoice.setVisibility(View.GONE);
+    }
+
+    private void switchToRequestPaymentFragment() {
+
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new RequestPaymentFragment())
+                .addToBackStack(null)
+                .commit();
         mFabCreateInvoice.setVisibility(View.GONE);
     }
 

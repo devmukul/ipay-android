@@ -285,12 +285,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                         for (int i = 0; i < mListUserBankClasses.size(); i++) {
                             mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
                             mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
-                            mUserBankList.add(mListUserBankClasses.get(i).getAccountNumber() + "," + mListUserBankClasses.get(i).getBankName());
+                            mUserBankList.add(mListUserBankClasses.get(i).getAccountNumber() + "\n" + mListUserBankClasses.get(i).getBankName());
                         }
                     }
 
                     if (mUserBankNameList.size() == 1) {
-                        mBankAccountNumberEditText.setText(mUserBankAccountNumberList.get(0) + "," + mUserBankNameList.get(0));
+                        mBankAccountNumberEditText.setText(mUserBankNameList.get(0) + "," + mUserBankAccountNumberList.get(0));
                     }
 
                 } catch (Exception e) {

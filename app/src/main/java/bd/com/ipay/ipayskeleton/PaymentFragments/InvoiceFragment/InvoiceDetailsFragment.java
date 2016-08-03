@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -54,7 +55,7 @@ public class InvoiceDetailsFragment extends Fragment {
         this.mDescription = bundle.getString(Constants.DESCRIPTION);
         this.mTime = bundle.getString(Constants.TIME);
         this.id = bundle.getLong(Constants.MONEY_REQUEST_ID);
-        this.status = bundle.getInt(Constants.MONEY_REQUEST_ID);
+        this.status = bundle.getInt(Constants.STATUS);
         this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
         this.mReceiverName = bundle.getString(Constants.NAME);
         this.mPhotoUri = bundle.getString(Constants.PHOTO_URI);
@@ -95,6 +96,8 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             private final TextView mQuantityView;
             private final TextView mAmountView;
 
+            private final View headerView;
+
             private final ProfileImageView mProfileImageView;
             private final TextView mNameView;
             private final TextView mMobileNumberView;
@@ -119,6 +122,8 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 mQuantityView = (TextView) itemView.findViewById(R.id.textview_quantity);
                 mAmountView = (TextView) itemView.findViewById(R.id.textview_amount);
 
+                headerView = itemView.findViewById(R.id.header);
+
                 mNetAmountView = (TextView) itemView.findViewById(R.id.textview_net_amount);
                 mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
                 mTotalView = (TextView) itemView.findViewById(R.id.textview_total);
@@ -136,6 +141,10 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
 
             public void bindViewForHeader() {
+
+                if (mItemList == null || mItemList.length ==0) {
+                    headerView.setVisibility(View.GONE);
+                }
 
                 if (mReceiverName == null || mReceiverName.isEmpty()) {
                     mNameView.setVisibility(View.GONE);
@@ -238,8 +247,9 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @Override
         public int getItemCount() {
-            if (mItemList == null) return 0;
-            if (mItemList.length > 0)
+            if (mItemList == null)
+                return 0;
+            if (mItemList.length >= 0)
                 return 1 + mItemList.length + 1;
             else return 0;
         }
@@ -255,8 +265,10 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     return INVOICE_DETAILS_LIST_FOOTER_VIEW;
 
                 else return INVOICE_DETAILS_LIST_ITEM_VIEW;
+            } else if (mItemList.length == 0) {
+                if (position == 0) return INVOICE_DETAILS_LIST_HEADER_VIEW;
+                else return INVOICE_DETAILS_LIST_FOOTER_VIEW;
             }
-
             return super.getItemViewType(position);
         }
     }
