@@ -565,7 +565,10 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 }
 
                 mTransactionDescriptionView.setText(description);
-                if(receiver != null && !receiver.equals("")) mReceiverView.setText(receiver);
+                if(receiver != null && !receiver.equals("")) {
+                    mReceiverView.setVisibility(View.VISIBLE);
+                    mReceiverView.setText(receiver);
+                }
                 else mReceiverView.setVisibility(View.GONE);
                 netAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);

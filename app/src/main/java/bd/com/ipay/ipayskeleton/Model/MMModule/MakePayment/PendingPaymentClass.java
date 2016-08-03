@@ -70,6 +70,10 @@ public class PendingPaymentClass {
         return status;
     }
 
+    public String getDescriptionofRequest() {
+        return description;
+    }
+
     public String getDescription() {
 
         String customDescription = "";

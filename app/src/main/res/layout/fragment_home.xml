@@ -296,7 +296,7 @@
                 android:id="@+id/button_create_invoice"
                 style="@style/HomeImageButtonStyle"
                 android:drawableLeft="@drawable/ic_payment2"
-                android:text="@string/create_invoice" />
+                android:text="@string/request_payment" />
 
             <View
                 android:id="@+id/divider_create_invoice"

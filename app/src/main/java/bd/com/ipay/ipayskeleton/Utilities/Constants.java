@@ -629,6 +629,7 @@ public class Constants {
     public static final String INVOICE_DESCRIPTION_TAG = "description";
     public static final String INVOICE_QUANTITY_TAG = "quantity";
     public static final String INVOICE_RATE_TAG = "rate";
+    public static final String INVOICE_AMOUNT_TAG = "amount";
     public static final String INVOICE_TITLE_TAG = "title";
     public static final String INTRODUCER = "introducer";
 
