@@ -333,8 +333,9 @@
                 android:id="@+id/button_create_invoice"
                 style="@style/HomeImageButtonStyleHorizontal"
                 android:drawableTop="@drawable/ic_home_rcv"
-                android:text="@string/create_invoice"
-                android:layout_weight="1"/>
+                android:text="@string/request_payment"
+                android:layout_weight="1"
+                android:visibility="gone"/>
 
             </LinearLayout>
 
