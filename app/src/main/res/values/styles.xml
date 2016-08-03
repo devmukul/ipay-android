@@ -33,7 +33,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/background_button_orange</item>
+        <item name="android:background">@color/colorPrimaryLighter</item>
         <item name="android:clickable">true</item>
         <item name="android:orientation">horizontal</item>
     </style>
@@ -90,7 +90,7 @@
 
     <style name="TabStyleDashBoard" parent="Widget.Design.TabLayout">
         <item name="tabSelectedTextColor">@android:color/white</item>
-        <item name="tabBackground">@drawable/tab_color_selector</item>
+        <item name="tabBackground">@drawable/tab_selector_color_dashboard</item>
         <item name="tabGravity">fill</item>
         <item name="tabMode">fixed</item>
         <item name="tabTextAppearance">@style/TextAppearanceForDashBoard</item>

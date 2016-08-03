@@ -7,8 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg3"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/ic_bg_pcode">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/value2"
                             android:fontFamily="sans-serif-thin"
-                            android:textColor="@color/colorTextPrimary"
+                            android:textColor="@android:color/white"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -100,7 +100,7 @@
                         android:layout_below="@+id/name_layout"
                         android:layout_marginBottom="@dimen/value2"
                         android:fontFamily="sans-serif-thin"
-                        android:textColor="@color/colorTextPrimary"
+                        android:textColor="@android:color/white"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -161,7 +161,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@color/colorBalanceBackground"
+            android:background="@color/colorBackgroundButtonWithOpacity"
             android:orientation="vertical"
             android:paddingBottom="@dimen/activity_horizontal_margin_card"
             android:paddingLeft="@dimen/activity_horizontal_margin_double"
@@ -176,7 +176,7 @@
                 android:layout_marginBottom="6dp"
                 android:fontFamily="sans-serif-light"
                 android:text="@string/ipay_balance"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
             <TextView
@@ -186,7 +186,7 @@
                 android:layout_below="@+id/balance_label"
                 android:fontFamily="sans-serif-thin"
                 android:text="@string/loading"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -205,7 +205,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin_card"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -255,10 +254,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@android:color/white">
 
             <Button
                 android:id="@+id/button_send_money"
