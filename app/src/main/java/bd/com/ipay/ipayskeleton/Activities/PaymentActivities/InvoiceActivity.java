@@ -11,6 +11,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.InvoiceDetailsF
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepOne;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentInvoicesFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class InvoiceActivity extends BaseActivity {
 
@@ -48,7 +49,10 @@ public class InvoiceActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (switchedToInvoicesList) super.onBackPressed();
+
+        Utilities.hideKeyboard(this);
+        if (switchedToInvoicesList)
+            super.onBackPressed();
         else {
             switchToInvoicesSentFragment();
         }

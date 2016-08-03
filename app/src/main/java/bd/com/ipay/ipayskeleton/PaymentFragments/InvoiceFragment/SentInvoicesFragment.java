@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
@@ -42,7 +43,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentInvoicesFragment extends Fragment implements HttpResponseListener {
+public class SentInvoicesFragment extends ProgressFragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 
@@ -101,6 +102,12 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (Utilities.isConnectionAvailable(getActivity())) {
@@ -123,6 +130,8 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
         if (mPendingInvoicesTask != null) {
             return;
         }
+
+        setContentShown(false);
 
         GetPendingPaymentsRequest mGetPendingPaymentsRequest = new GetPendingPaymentsRequest(historyPageCount, Constants.SERVICE_ID_REQUEST_INVOICE);
         Gson gson = new Gson();
@@ -154,6 +163,7 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
+
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
@@ -164,6 +174,7 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
             return;
         }
 
+        if (this.isAdded()) setContentShown(true);
 
         Gson gson = new Gson();
 

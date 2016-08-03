@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class IdentificationHolderFragment extends Fragment {
     private ViewPager viewPager;
@@ -41,6 +43,11 @@ public class IdentificationHolderFragment extends Fragment {
         mReceivedRequestTab = tabLayout.getTabAt(RECEIVED_REQUEST_TAB);
         mSentRequestTab = tabLayout.getTabAt(SENT_REQUEST_TAB);
         setupCustomViewsForTabLayout();
+
+        Bundle args = getArguments();
+        if (args != null && args.containsKey(Constants.INTRODUCER)) {
+            mSentRequestTab.select();
+        }
 
         return v;
     }
