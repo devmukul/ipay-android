@@ -99,7 +99,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
             cancel = true;
 
         } else if (passwordValidationMsg.length() > 0) {
-            Toast.makeText(getActivity(), passwordValidationMsg, Toast.LENGTH_LONG).show();
+            mEnterNewPasswordEditText.setError(passwordValidationMsg);
             focusView = mEnterNewPasswordEditText;
             cancel = true;
 
