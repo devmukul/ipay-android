@@ -7,6 +7,7 @@ public class Constants {
     public static final String GENDER_MALE = "M";
     public static final String GENDER_FEMALE = "F";
     public static final String USERID = "USERID";
+    public static final String USER_BALANCE = "USER_BALANCE";
     public static final String USER_NAME = "USER_NAME";
     public static final String UUID = "UUID";
     public static final String USERCOUNTRY = "USERCOUNTRY";
@@ -29,6 +30,9 @@ public class Constants {
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
     public static final String EVENT_ID = "EVENT_ID";
     public static final String TITLE = "TITLE";
+    public static final String DESCRIPTION = "DESCRIPTION";
+    public static final String TIME = "TIME";
+    public static final String STATUS = "STATUS";
     public static final String TAG = "TAG";
     public static final String INVOICE = "INVOICE";
     public static final String REQUEST = "REQUEST";
@@ -625,6 +629,7 @@ public class Constants {
     public static final String INVOICE_QUANTITY_TAG = "quantity";
     public static final String INVOICE_RATE_TAG = "rate";
     public static final String INVOICE_TITLE_TAG = "title";
+    public static final String INTRODUCER = "introducer";
 
     public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = "SENDMONEY_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = "SENDMONEY_MAX_AMOUNT_SINGLE";
@@ -642,8 +647,8 @@ public class Constants {
     public static final String SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT = "WITHDRAW_MAX_AMOUNT_SINGLE";
 
 
-    public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "MAKEPAYMENT_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "MAKEPAYMENT_MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "PAYMENT_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "PAYMENT_MAX_AMOUNT_SINGLE";
 
 
     public static final int INVOICE_STATUS_ACCEPTED = 200;
@@ -680,6 +685,13 @@ public class Constants {
     public static final String ACTION_TYPE_REJECT = "Reject";
     public static final String ACTION_TYPE_REMOVE = "Remove";
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
+    public static final String ACTION_TYPE_EDIT = "Edit";
+    public static final String ACTION_TYPE_VIEW = "View";
+
+    public static final String SERVICE_ACTION_CREATE_INVOICE = "Create Invoice";
+    public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";
+    public static final String SERVICE_ACTION_TOP_UP = "Mobile TopUp";
+    public static final String SERVICE_ACTION_EDUCATION_PAYMENT = "Education Payment";
 
     public static final String TICKET_STATUS_NEW = "new";
     public static final String TICKET_STATUS_OPEN = "open";

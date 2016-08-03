@@ -114,7 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         String json = gson.toJson(mLogoutModel);
 
         // Set the preference
-        pref.edit().putBoolean(Constants.LOGGED_IN, false).commit();
+        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, context);

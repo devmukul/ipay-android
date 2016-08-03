@@ -34,6 +34,7 @@ public class PayFragment extends Fragment {
     private List<ServiceAction> mServiceActionList;
 
     private SharedPreferences pref;
+    private PinChecker pinChecker;
 
     @Nullable
     @Override
@@ -42,11 +43,10 @@ public class PayFragment extends Fragment {
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mServiceActionList = new ArrayList<>();
-        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
-            mServiceActionList.add(new ServiceAction(getString(R.string.make_payment)));
-        } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
             mServiceActionList.add(new ServiceAction(getString(R.string.create_invoice)));
         }
+        mServiceActionList.add(new ServiceAction(getString(R.string.make_payment)));
         mServiceActionList.add(new ServiceAction(getString(R.string.mobile_topup)));
         mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
 
@@ -84,7 +84,7 @@ public class PayFragment extends Fragment {
             View v = convertView;
 
             if (v == null) {
-                ServiceAction serviceAction = getItem(position);
+                final ServiceAction serviceAction = getItem(position);
 
                 v = getActivity().getLayoutInflater().inflate(mResource, null);
 
@@ -95,24 +95,30 @@ public class PayFragment extends Fragment {
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        switch (position) {
-                            case 0:
-                                PinChecker pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                        switch (serviceAction.text) {
+                            case Constants.SERVICE_ACTION_CREATE_INVOICE:
+                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
                                         Intent intent;
-                                        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.PERSONAL_ACCOUNT_TYPE) {
-                                            intent = new Intent(getActivity(), PaymentActivity.class);
-                                            startActivity(intent);
-                                        } else if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
-                                            intent = new Intent(getActivity(), InvoiceActivity.class);
-                                            startActivity(intent);
-                                        }
+                                        intent = new Intent(getActivity(), InvoiceActivity.class);
+                                        startActivity(intent);
                                     }
                                 });
                                 pinChecker.execute();
                                 break;
-                            case 1:
+                            case Constants.SERVICE_ACTION_MAKE_PAYMENT:
+                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                                    @Override
+                                    public void ifPinAdded() {
+                                        Intent intent;
+                                        intent = new Intent(getActivity(), PaymentActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                                pinChecker.execute();
+                                break;
+                            case Constants.SERVICE_ACTION_TOP_UP:
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
@@ -122,7 +128,7 @@ public class PayFragment extends Fragment {
                                 });
                                 pinChecker.execute();
                                 break;
-                            case 2:
+                            case Constants.SERVICE_ACTION_EDUCATION_PAYMENT:
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {

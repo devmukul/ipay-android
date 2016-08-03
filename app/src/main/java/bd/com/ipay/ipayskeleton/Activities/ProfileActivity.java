@@ -16,7 +16,6 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditAddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.IntroducedFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
@@ -110,10 +109,9 @@ public class ProfileActivity extends BaseActivity {
                 fragment = new BasicInfoFragment();
                 break;
             case INTRODUCER:
+                if (bundle == null) bundle = new Bundle();
+                bundle.putString(Constants.INTRODUCER, "introducer");
                 fragment = new IdentificationHolderFragment();
-                break;
-            case INTRODUCED:
-                fragment = new IntroducedFragment();
                 break;
             case ADDRESS:
                 fragment = new AddressFragment();

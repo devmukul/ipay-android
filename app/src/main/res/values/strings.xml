@@ -268,6 +268,7 @@
     <string name="education_payment_description">Write a note</string>
     <string name="description_event">Event description</string>
     <string name="description">Description</string>
+    <string name="description_with_colon">Description: </string>
     <string name="item_description">Item description</string>
     <string name="item_quantity">Item quantity</string>
     <string name="item_name">Item name</string>
@@ -282,7 +283,7 @@
     <string name="please_write_note">Please write a note.</string>
     <string name="please_write_title">Please write a title.</string>
     <string name="please_enter_minimum_amount">Please enter minimum amount of </string>
-    <string name="please_enter_not_more_than_max_amount">Please enter not more than. of </string>
+    <string name="please_enter_not_more_than_max_amount">Please enter not more than </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="please_select_relation">Please select a relation</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
@@ -441,6 +442,7 @@
     <string name="mobile_topup_restriction_info">* You can recharge only in your own mobile number</string>
     <string name="total_amount">Total Amount</string>
     <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
+    <string name="invoice_list">Invoice List</string>
     <string name="amount">Amount</string>
     <string name="item">Item</string>
     <string name="fee">Fee</string>
@@ -594,6 +596,7 @@
     <string name="manage_emails">Manage Emails</string>
     <string name="education_management">Education Management</string>
     <string name="failed_loading_employee_list">Failed to load employee list</string>
+    <string name="confirmation_remove_employee">Remove this employee?</string>
     <string name="loading_accepting_invitation">Accepting invitation...</string>
     <string name="loading_rejecting_invitation">Rejecting invitation...</string>
     <string name="loading_marking_invitation_as_spam">Marking invitation as spam...</string>
@@ -738,5 +741,11 @@
         <item>Take A Picture</item>
         <item>Select From Gallery</item>
         <item>Preview</item>
+    </string-array>
+
+    <string-array name="employee_management_action">
+        <item>View</item>
+        <item>Edit</item>
+        <item>Remove</item>
     </string-array>
 </resources>

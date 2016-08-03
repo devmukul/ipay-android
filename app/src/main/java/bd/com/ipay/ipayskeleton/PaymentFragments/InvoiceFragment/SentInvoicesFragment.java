@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -17,17 +17,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.InvoicesHistoryDialogue;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsResponse;
@@ -39,7 +43,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentInvoicesFragment extends Fragment implements HttpResponseListener {
+public class SentInvoicesFragment extends ProgressFragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 
@@ -56,6 +60,17 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
     private List<PendingPaymentClass> pendingPaymentClasses;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private String mTime;
+    private String mDescription;
+    private int mStatus;
+    private BigDecimal mAmount;
+    private BigDecimal mVat;
+    private long mId;
+    private List<ItemList> mItemList;
+    private String mReceiverName;
+    private String mReceiverMobileNumber;
+    private String mPhotoUri;
+
     private int historyPageCount = 0;
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
@@ -63,6 +78,8 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
+        getActivity().setTitle(R.string.invoice_list);
+
         mProgressDialog = new ProgressDialog(getActivity());
         mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice_sent);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -82,6 +99,12 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
         });
 
         return v;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -107,6 +130,8 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
         if (mPendingInvoicesTask != null) {
             return;
         }
+
+        setContentShown(false);
 
         GetPendingPaymentsRequest mGetPendingPaymentsRequest = new GetPendingPaymentsRequest(historyPageCount, Constants.SERVICE_ID_REQUEST_INVOICE);
         Gson gson = new Gson();
@@ -138,8 +163,9 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
+
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mPendingInvoicesTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
@@ -148,6 +174,7 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
             return;
         }
 
+        if (this.isAdded()) setContentShown(true);
 
         Gson gson = new Gson();
 
@@ -159,7 +186,7 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
 
                     mGetPendingPaymentsResponse = gson.fromJson(result.getJsonString(), GetPendingPaymentsResponse.class);
 
-                    if (pendingPaymentClasses == null || clearListAfterLoading ) {
+                    if (pendingPaymentClasses == null || clearListAfterLoading) {
                         clearListAfterLoading = false;
                         pendingPaymentClasses = mGetPendingPaymentsResponse.getRequests();
 
@@ -228,10 +255,10 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private final TextView mSenderName;
-            private final TextView mAmount;
-            private final TextView mDescription;
-            private final TextView mTime;
+            private final TextView mSenderNameTextView;
+            private final TextView mAmountTextView;
+            private final TextView mDescriptionTextView;
+            private final TextView mTimeTextView;
             private final ImageView mCancel;
             private final ImageView statusView;
             private final TextView loadMoreTextView;
@@ -240,10 +267,10 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                mSenderName = (TextView) itemView.findViewById(R.id.request_name);
-                mAmount = (TextView) itemView.findViewById(R.id.amount);
-                mDescription = (TextView) itemView.findViewById(R.id.description);
-                mTime = (TextView) itemView.findViewById(R.id.time);
+                mSenderNameTextView = (TextView) itemView.findViewById(R.id.request_name);
+                mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
+                mDescriptionTextView = (TextView) itemView.findViewById(R.id.description);
+                mTimeTextView = (TextView) itemView.findViewById(R.id.time);
                 mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
@@ -251,57 +278,54 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
             }
 
 
-
             public void bindView(int pos) {
 
-                String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
+                final String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingPaymentClasses.get(pos).getRequestTime());
-                String name = pendingPaymentClasses.get(pos).getReceiverProfile().getUserName();
-                String mobileNumber = pendingPaymentClasses.get(pos).getReceiverProfile().getUserMobileNumber();
+                final String name = pendingPaymentClasses.get(pos).getReceiverProfile().getUserName();
+                final String mobileNumber = pendingPaymentClasses.get(pos).getReceiverProfile().getUserMobileNumber();
                 final int status = pendingPaymentClasses.get(pos).getStatus();
                 final BigDecimal amount = pendingPaymentClasses.get(pos).getAmount();
                 final BigDecimal vat = pendingPaymentClasses.get(pos).getVat();
                 final BigDecimal total = pendingPaymentClasses.get(pos).getTotal();
                 final String description = pendingPaymentClasses.get(pos).getDescription();
-                final String title = pendingPaymentClasses.get(pos).getTitle();
                 final long id = pendingPaymentClasses.get(pos).getId();
                 final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
 
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
-                mSenderName.setText(name);
+                mSenderNameTextView.setText(name);
 
                 if (status == Constants.INVOICE_STATUS_ACCEPTED) {
-                    mSenderName.setTextColor(Color.GREEN);
+                    mSenderNameTextView.setTextColor(Color.GREEN);
                     statusView.setColorFilter(Color.GREEN);
                     statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
 
                 } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
-                    mSenderName.setTextColor(getResources().getColor(R.color.background_yellow));
+                    mSenderNameTextView.setTextColor(getResources().getColor(R.color.background_yellow));
                     statusView.setColorFilter(getResources().getColor(R.color.background_yellow));
                     statusView.setImageResource(R.drawable.ic_wip);
 
                 } else if (status == Constants.INVOICE_STATUS_REJECTED) {
-                    mSenderName.setTextColor(getResources().getColor(R.color.background_red));
+                    mSenderNameTextView.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setColorFilter(Color.RED);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
 
                 } else if (status == Constants.INVOICE_STATUS_CANCELED) {
-                    mSenderName.setTextColor(Color.GRAY);
+                    mSenderNameTextView.setTextColor(Color.GRAY);
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
 
-                }  else if (status == Constants.INVOICE_STATUS_DRAFT) {
-                    mSenderName.setTextColor(getResources().getColor(R.color.background_red));
+                } else if (status == Constants.INVOICE_STATUS_DRAFT) {
+                    mSenderNameTextView.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setColorFilter(Color.RED);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
                 }
 
-
-                mAmount.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
-                mDescription.setText(description);
-                mTime.setText(time);
+                mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
+                mDescriptionTextView.setText(description);
+                mTimeTextView.setText(time);
 
                 if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING)
                     mCancel.setVisibility(View.VISIBLE);
@@ -318,7 +342,17 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
                     @Override
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
-                           new InvoicesHistoryDialogue(getActivity(), title, description, time, id, amount, vat, itemList, status);
+                            mDescription = description;
+                            mTime = time;
+                            mId = id;
+                            mAmount = amount;
+                            mVat = vat;
+                            mItemList = Arrays.asList(itemList);
+                            mStatus = status;
+                            mReceiverName = name;
+                            mReceiverMobileNumber = mobileNumber;
+                            mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
+                            launchInvoiceDetailsFragment();
                         }
                     }
                 });
@@ -439,5 +473,23 @@ public class SentInvoicesFragment extends Fragment implements HttpResponseListen
         });
 
         alertDialogue.show();
+    }
+
+    private void launchInvoiceDetailsFragment() {
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.DESCRIPTION, mDescription);
+        bundle.putString(Constants.TIME, mTime);
+        bundle.putLong(Constants.MONEY_REQUEST_ID, mId);
+        bundle.putString(Constants.AMOUNT, mAmount.toString());
+        bundle.putString(Constants.VAT, mVat.toString());
+        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        bundle.putInt(Constants.STATUS, mStatus);
+        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
+        bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
+        bundle.putString(Constants.NAME, mReceiverName);
+
+        ((InvoiceActivity) getActivity()).switchToInvoiceDetailsFragment(bundle);
+
     }
 }

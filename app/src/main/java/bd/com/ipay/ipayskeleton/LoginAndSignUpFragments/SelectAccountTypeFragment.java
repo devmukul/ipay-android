@@ -5,15 +5,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.CustomView.IconifiedButton;
 import bd.com.ipay.ipayskeleton.R;
 
 public class SelectAccountTypeFragment extends Fragment {
 
-    private IconifiedButton buttonAccountTypePersonal;
-    private IconifiedButton buttonAccountTypeBusiness;
+    private Button buttonAccountTypePersonal;
+    private Button buttonAccountTypeBusiness;
 
     @Override
     public void onResume() {
@@ -26,8 +26,8 @@ public class SelectAccountTypeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_select_account_type, container, false);
 
-        buttonAccountTypePersonal = (IconifiedButton) v.findViewById(R.id.button_account_type_personal);
-        buttonAccountTypeBusiness = (IconifiedButton) v.findViewById(R.id.button_account_type_business);
+        buttonAccountTypePersonal = (Button) v.findViewById(R.id.button_account_type_personal);
+        buttonAccountTypeBusiness = (Button) v.findViewById(R.id.button_account_type_business);
 
         buttonAccountTypePersonal.setOnClickListener(new View.OnClickListener() {
             @Override

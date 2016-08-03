@@ -1,8 +1,12 @@
 package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,20 +14,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Employee;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetAllEmployeesResponse;
@@ -86,6 +96,22 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
         setContentShown(false);
     }
+
+    private void showDeleteEmployeeConfirmationDialog(final Employee employee) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.are_you_sure)
+                .setMessage(getString(R.string.confirmation_remove_employee))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeAnEmployee(employee.getId());
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null);
+
+        dialog.show();
+    }
+
 
     private void getEmployeeList() {
         if (mGetAllEmployeeAsyncTask != null)
@@ -178,11 +204,10 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             private final TextView mMobileNumberView;
             private final TextView mDesignationView;
             private final ImageView mStatusView;
-            private final View mOptionsLayout;
-            private final Button mViewButton;
-            private final Button mRemoveButton;
-            private final Button mEditButton;
             private final View divider;
+
+            private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mEmployee_manage_ActionList;
 
             public EmployeeViewHolder(View itemView) {
                 super(itemView);
@@ -192,20 +217,13 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
                 mDesignationView = (TextView) itemView.findViewById(R.id.textview_designation);
                 mStatusView = (ImageView) itemView.findViewById(R.id.verification_status);
-
                 divider = itemView.findViewById(R.id.divider);
-                mOptionsLayout = itemView.findViewById(R.id.options_layout);
-                mViewButton = (Button) itemView.findViewById(R.id.view_button);
-                mRemoveButton = (Button) itemView.findViewById(R.id.remove_button);
-                mEditButton = (Button) itemView.findViewById(R.id.edit_button);
             }
 
             public void bindView(final int pos) {
-
-                mOptionsLayout.setVisibility(View.GONE);
                 if (pos == mEmployeeList.size() - 1) divider.setVisibility(View.GONE);
                 final Employee employee = mEmployeeList.get(pos);
-
+                mEmployee_manage_ActionList = Arrays.asList(getResources().getStringArray(R.array.employee_management_action));
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictureUrl(),
                         false);
@@ -221,7 +239,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
                 switch (employee.getStatus()) {
                     case Constants.BUSINESS_INVITATION_ACCEPTED:
-                        mStatusView.setImageResource(R.drawable.ic_verified3x);
+                        mStatusView.setImageResource(R.drawable.ic_verified);
                         mStatusView.setColorFilter(null);
                         break;
                     case Constants.BUSINESS_STATUS_PENDING:
@@ -229,7 +247,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                         mStatusView.setColorFilter(Color.GRAY);
                         break;
                     default:
-                        mStatusView.setImageResource(R.drawable.ic_notverified3x);
+                        mStatusView.setImageResource(R.drawable.ic_notverifiedgrey);
                         mStatusView.setColorFilter(null);
                         break;
                 }
@@ -237,40 +255,29 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mOptionsLayout.getVisibility() == View.VISIBLE)
-                            mOptionsLayout.setVisibility(View.GONE);
-                        else
-                            mOptionsLayout.setVisibility(View.VISIBLE);
+
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), employee.getName(), mEmployee_manage_ActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int selectedIndex, String action) {
+                                if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
+                                    showDeleteEmployeeConfirmationDialog(employee);
+                                } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
+                                    ((BusinessActivity) getActivity()).switchToEmployeeInformationDetailsFragment(bundle);
+                                } else if (Constants.ACTION_TYPE_EDIT.equals(action)) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
+                                    bundle.putString(Constants.MOBILE_NUMBER, employee.getMobileNumber());
+                                    bundle.putString(Constants.DESIGNATION, employee.getDesignation());
+                                    ((BusinessActivity) getActivity()).switchToEditEmployeeInformationFragment(bundle);
+                                }
+                            }
+                        });
+                        mCustomSelectorDialog.show();
                     }
                 });
-
-                mViewButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
-                        ((BusinessActivity) getActivity()).switchToEmployeeInformationDetailsFragment(bundle);
-                    }
-                });
-
-                mRemoveButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        removeAnEmployee(employee.getId());
-                    }
-                });
-
-                mEditButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
-                        bundle.putString(Constants.MOBILE_NUMBER, employee.getMobileNumber());
-                        bundle.putString(Constants.DESIGNATION, employee.getDesignation());
-                        ((BusinessActivity) getActivity()).switchToEditEmployeeInformationFragment(bundle);
-                    }
-                });
-
             }
         }
 

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -38,7 +38,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
     private BigDecimal mRate;
     private BigDecimal mAmount;
     private BigDecimal mVat;
-    private BigDecimal mTotal;
+    private BigDecimal mTotal = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,118 +71,60 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
         mRateEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (s.toString().length() > 0) {
-                    try {
-                        mRate = new BigDecimal(s.toString().replace(".", "").replace(',', '.'));
-                    } catch (Exception e) {
-                        mRate = new BigDecimal(0);
-                    }
-                    if (mRate != null) {
-                        mAmount = mQuantity.multiply(mRate);
-                        mTotal = mAmount;
-                    }
-                    if (mVat != null) {
-                        mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
-                    }
-                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
-                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length() > 0) {
-                    try {
-                        mRate = new BigDecimal(s.toString().replace(".", "").replace(',', '.'));
-                    } catch (Exception e) {
-                        mRate = new BigDecimal(0);
-                    }
-                    if (mRate != null) {
-                        mAmount = mQuantity.multiply(mRate);
-                        mTotal = mAmount;
-                    }
-                    if (mVat != null) {
-                        mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
-                    }
-                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
+                    mRate = new BigDecimal(s.toString());
+                } else
+                    mRate = BigDecimal.ZERO;
+
+                if (mRate != null) {
+                    mAmount = mQuantity.multiply(mRate);
+                    mTotal = mAmount;
                 }
+                if (mVat != null) {
+                    mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
+                }
+                if (mTotal != null)
+                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length() > 0) {
-                    try {
-                        mRate = new BigDecimal(s.toString().replace(".", "").replace(',', '.'));
-                    } catch (Exception e) {
-                        mRate = new BigDecimal(0);
-                    }
-                    if (mRate != null) {
-                        mAmount = mQuantity.multiply(mRate);
-                        mTotal = mAmount;
-                    }
-                    if (mVat != null) {
-                        mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
-                    }
-                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
-                }
+
             }
         });
 
         mVatEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (s.toString().length() > 0) {
-                    try {
-                        mVat = new BigDecimal(s.toString().replace(".", "").replace(',', '.'));
-                    } catch (Exception e) {
-                        mVat = new BigDecimal(0);
-                    }
-                    if (mRate != null) {
-                        mAmount = mQuantity.multiply(mRate);
-                        mTotal = mAmount;
-                    }
-                    if (mVat != null) {
-                        mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
-                    }
-                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
-                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length() > 0) {
-                    try {
-                        mVat = new BigDecimal(s.toString().replace(".", "").replace(',', '.'));
-                    } catch (Exception e) {
-                        mVat = new BigDecimal(0);
-                    }
-                    if (mRate != null) {
-                        mAmount = mQuantity.multiply(mRate);
-                        mTotal = mAmount;
-                    }
-                    if (mVat != null) {
-                        mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
-                    }
-                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
+                    mVat = new BigDecimal(s.toString());
+                } else
+                    mVat = BigDecimal.ZERO;
+
+                if (mRate != null) {
+                    mAmount = mQuantity.multiply(mRate);
+                    mTotal = mAmount;
                 }
+                if (mVat != null) {
+                    if (mTotal != null)
+                        mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
+                }
+                if (mTotal != null)
+                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length() > 0) {
-                    try {
-                        mVat = new BigDecimal(s.toString().replace(".", "").replace(',', '.'));
-                    } catch (Exception e) {
-                        mVat = new BigDecimal(0);
-                    }
-                    if (mRate != null) {
-                        mAmount = mQuantity.multiply(mRate);
-                        mTotal = mAmount;
-                    }
-                    if (mVat != null) {
-                        mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
-                    }
-                    mTotalTextView.setText(Utilities.formatTaka(mTotal));
-                }
             }
         });
 
@@ -233,7 +175,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
 
         if (vat != null) intent.putExtra(Constants.VAT, vat);
         else intent.putExtra(Constants.VAT, "0");
-        intent.putExtra(Constants.TOTAL, mTotal+"");
+        intent.putExtra(Constants.TOTAL, mTotal + "");
 
         startActivityForResult(intent, REQUEST_CREATE_INVOICE_REVIEW);
     }

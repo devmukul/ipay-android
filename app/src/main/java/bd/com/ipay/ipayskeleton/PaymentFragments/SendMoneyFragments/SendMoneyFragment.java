@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
 
+    private SharedPreferences pref;
+
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
@@ -65,6 +68,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
+
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
@@ -171,6 +176,11 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
+        String balance = null;
+        if (pref.contains(Constants.USER_BALANCE)) {
+            balance = pref.getString(Constants.USER_BALANCE, null);
+        }
+
         // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;
@@ -181,8 +191,10 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
+            BigDecimal maxAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                    SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
 
             if (error_message != null) {
                 focusView = mAmountEditText;

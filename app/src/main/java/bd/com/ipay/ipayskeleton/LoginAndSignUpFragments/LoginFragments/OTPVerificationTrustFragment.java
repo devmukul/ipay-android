@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     private OTPResponseTrustedDevice mOTPResponseTrustedDevice;
 
     private Button mActivateButton;
-    private IconifiedEditText mOTPEditText;
+    private EditText mOTPEditText;
     private TextView mTimerTextView;
     private Button mResendOTPButton;
 
@@ -69,7 +70,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
-        mOTPEditText = (IconifiedEditText) v.findViewById(R.id.otp_edittext);
+        mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
@@ -139,7 +140,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Utilities.showKeyboard(getActivity(), mOTPEditText.getEditText());
+        Utilities.showKeyboard(getActivity(), mOTPEditText);
     }
 
     @Override

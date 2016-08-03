@@ -63,7 +63,7 @@ public class TokenManager {
     }
 
     public static long getiPayTokenTimeInMs() {
-        return iPayTokenTimeInMs;
+        return iPayTokenTimeInMs - 15000;
     }
 
     public static void setiPayTokenTimeInMs(long iPayTokenTimeInMs) {

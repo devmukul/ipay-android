@@ -123,7 +123,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_identification_documents, container, false);
-        getActivity().setTitle(R.string.identification_documents);
+        getActivity().setTitle(R.string.profile_documents);
 
         mProgressDialog = new ProgressDialog(getActivity());
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
@@ -380,6 +380,18 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         startActivityForResult(imagePickerIntent, ACTION_UPLOAD_DOCUMENT);
     }
 
+    private void setOtherOptionLayoutClosed(int id) {
+        for (int i = 0; i < documentPreviewBindViewHolderList.size(); i++) {
+            if (id != i) {
+                if (documentPreviewBindViewHolderList.get(i).isViewOpen()) {
+                    documentPreviewBindViewHolderList.get(i).setIsViewOpen(false);
+                }
+            }
+
+        }
+        mDocumentListAdapter.notifyDataSetChanged();
+    }
+
     public class DocumentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -413,6 +425,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
             public void bindView(final int pos) {
                 mDocumentIdEditTextView.setError(null);
+                mSelectFile.setError(null);
                 mPickerList = new ArrayList<>();
 
                 final IdentificationDocumentDetails identificationDocumentDetail = mIdentificationDocumentDetails[pos];
@@ -444,6 +457,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 }
                 mDocumentTypeNameView.setText(identificationDocumentDetail.getDocumentTypeName());
 
+                mDocumentIdEditTextView.setText(documentPreviewBindViewHolderList.get(pos).getmDocumentId());
+
                 if (documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath() != null) {
                     mSelectFile.setText(documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath());
                 } else {
@@ -465,12 +480,14 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             } else {
                                 mOptionsLayout.setVisibility(View.VISIBLE);
                                 documentPreviewBindViewHolderList.get(pos).setIsViewOpen(true);
+                                documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
+                                documentPreviewBindViewHolderList.get(pos).setmSelectedfilePath(mSelectFile.getText().toString());
+                                setOtherOptionLayoutClosed(pos);
                             }
                         }
 
                     }
                 });
-                mDocumentIdEditTextView.setText(documentPreviewBindViewHolderList.get(pos).getmDocumentId());
 
                 mPicker.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -482,6 +499,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                                 mSelectedItemId = pos;
                                 documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
+                                documentPreviewBindViewHolderList.get(pos).setmSelectedfilePath(mSelectFile.getText().toString());
                                 if (mactionId <= OPTION_UPLOAD_DOCUMENT)
                                     if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
                                         selectDocument(mactionId);

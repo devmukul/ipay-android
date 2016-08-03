@@ -7,8 +7,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/colorBackground">
+        android:background="@color/colorBackground"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/contact_header"
@@ -20,40 +20,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:background="@android:color/transparent"
-                android:textSize="16sp"
-                android:textColor="@color/colorTextPrimary"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:layout_centerVertical="true"/>
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:id="@+id/contacts_selector"
-                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
                 android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/background_contact_selector_background"
+                android:orientation="horizontal"
                 android:visibility="visible">
 
                 <CheckBox
                     android:id="@+id/checkbox_contacts_all"
+                    style="@style/ContactsSelectorStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/all_contacts"
-                    style="@style/ContactsSelectorStyle"
-                    android:background="@drawable/background_left_round_checkbox"/>
+                    android:background="@drawable/background_left_round_checkbox"
+                    android:text="@string/all_contacts" />
 
                 <CheckBox
                     android:id="@+id/checkbox_contacts_ipay"
+                    style="@style/ContactsSelectorStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ipay_contacts"
-                    style="@style/ContactsSelectorStyle"
-                    android:background="@drawable/background_right_round_checkbox"/>
+                    android:background="@drawable/background_right_round_checkbox"
+                    android:text="@string/ipay_contacts" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -71,7 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:src="@drawable/ic_ipaymember"
             app:backgroundTint="@android:color/white"
             app:borderWidth="0dp"

@@ -1,8 +1,10 @@
-package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
+package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,70 +12,68 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-
 import java.math.BigDecimal;
+import java.util.List;
 
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvoicesHistoryDialogue extends MaterialDialog.Builder {
+public class InvoiceDetailsFragment extends Fragment {
 
     private RecyclerView mReviewRecyclerView;
     private InvoiceReviewAdapter invoiceReviewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private final ItemList[] mItemList;
-    private final BigDecimal mAmount;
+    private ItemList[] mItemList;
+    private BigDecimal mAmount;
     private BigDecimal mNetAmount;
-    private final BigDecimal mVat;
+    private BigDecimal mVat;
 
-    private final String mDescription;
-    private final String mTime;
-    private final long id;
-    private final int status;
-    private final Context context;
-    private final String mTitle;
+    private String mDescription;
+    private String mTime;
+    private long id;
+    private int status;
+    private String mReceiverName;
+    private String mReceiverMobileNumber;
+    private String mPhotoUri;
+    private Context context;
 
-    public InvoicesHistoryDialogue(Context context,String title, String description, String time, long id, BigDecimal amount, BigDecimal vat, ItemList[] itemList, int status) {
-        super(context);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_make_payment_notification_review, container, false);
+        getActivity().setTitle(R.string.invoice_details);
 
-        this.mVat = vat;
-        this.mAmount = amount;
-        this.mItemList = itemList;
-        this.mTitle = title;
-        this.mDescription = description;
-        this.mTime = time;
-        this.id = id;
-        this.status = status;
-        this.context = context;
+        Bundle bundle = getArguments();
+        context = getContext();
 
-        initializeView();
-    }
+        this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
+        this.mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));
+        this.mDescription = bundle.getString(Constants.DESCRIPTION);
+        this.mTime = bundle.getString(Constants.TIME);
+        this.id = bundle.getLong(Constants.MONEY_REQUEST_ID);
+        this.status = bundle.getInt(Constants.MONEY_REQUEST_ID);
+        this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
+        this.mReceiverName = bundle.getString(Constants.NAME);
+        this.mPhotoUri = bundle.getString(Constants.PHOTO_URI);
 
-    private void initializeView() {
+        List<ItemList> temporaryItemList;
+        temporaryItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
+        this.mItemList = temporaryItemList.toArray(new ItemList[temporaryItemList.size()]);
 
-        MaterialDialog dialog = new MaterialDialog.Builder(this.getContext())
-                .title(R.string.invoice_details)
-                .customView(R.layout.fragment_make_payment_notification_review, true)
-                .negativeText(R.string.ok)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-
-        View v = dialog.getCustomView();
         mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
         invoiceReviewAdapter = new InvoiceReviewAdapter();
         mLayoutManager = new LinearLayoutManager(this.getContext());
         mReviewRecyclerView.setLayoutManager(mLayoutManager);
         mReviewRecyclerView.setAdapter(invoiceReviewAdapter);
+        return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
 private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -87,7 +87,6 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            final TextView titleTextView;
             final TextView descriptionTextView;
             final TextView timeTextView;
             final TextView invoiceIDTextView;
@@ -96,6 +95,9 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             private final TextView mQuantityView;
             private final TextView mAmountView;
 
+            private final ProfileImageView mProfileImageView;
+            private final TextView mNameView;
+            private final TextView mMobileNumberView;
 
             private final TextView mNetAmountView;
             private final TextView mVatView;
@@ -105,7 +107,10 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                titleTextView = (TextView) itemView.findViewById(R.id.title);
+                mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
+                mNameView = (TextView) itemView.findViewById(R.id.textview_name);
+                mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
+
                 descriptionTextView = (TextView) itemView.findViewById(R.id.description);
                 timeTextView = (TextView) itemView.findViewById(R.id.time);
                 invoiceIDTextView = (TextView) itemView.findViewById(R.id.invoice_id);
@@ -131,10 +136,19 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
 
             public void bindViewForHeader() {
-                titleTextView.setText(mTitle);
+
+                if (mReceiverName == null || mReceiverName.isEmpty()) {
+                    mNameView.setVisibility(View.GONE);
+                } else {
+                    mNameView.setText(mReceiverName);
+                }
+
+                mMobileNumberView.setText(mReceiverMobileNumber);
+                mProfileImageView.setProfilePicture(mPhotoUri, false);
+
                 descriptionTextView.setText(mDescription);
                 timeTextView.setText(mTime);
-                invoiceIDTextView.setText(context.getString(R.string.invoice_id) + " " + String.valueOf(id));
+                invoiceIDTextView.setText(String.valueOf(id));
             }
 
             public void bindViewForFooter() {
@@ -188,11 +202,11 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             View v;
             if (viewType == INVOICE_DETAILS_LIST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_sent_invoice_details_header, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_invoice_details_header, parent, false);
                 return new ListHeaderViewHolder(v);
 
             } else if (viewType == INVOICE_DETAILS_LIST_FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog_sent_invoice_details_footer, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_invoice_details_footer, parent, false);
                 return new ListFooterViewHolder(v);
 
             } else {

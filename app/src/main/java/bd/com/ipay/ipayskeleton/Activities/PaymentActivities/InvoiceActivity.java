@@ -7,9 +7,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.CreateInvoiceFragmentStepOne;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.SentInvoicesFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.InvoiceDetailsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepOne;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentInvoicesFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class InvoiceActivity extends BaseActivity {
 
@@ -38,7 +40,7 @@ public class InvoiceActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -47,7 +49,10 @@ public class InvoiceActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (switchedToInvoicesList) super.onBackPressed();
+
+        Utilities.hideKeyboard(this);
+        if (switchedToInvoicesList)
+            super.onBackPressed();
         else {
             switchToInvoicesSentFragment();
         }
@@ -64,6 +69,14 @@ public class InvoiceActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new CreateInvoiceFragmentStepOne()).commit();
+        mFabCreateInvoice.setVisibility(View.GONE);
+        switchedToInvoicesList = false;
+    }
+
+    public void switchToInvoiceDetailsFragment(Bundle bundle) {
+        InvoiceDetailsFragment invoiceDetailsFragment = new InvoiceDetailsFragment();
+        invoiceDetailsFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, invoiceDetailsFragment).commit();
         mFabCreateInvoice.setVisibility(View.GONE);
         switchedToInvoicesList = false;
     }
