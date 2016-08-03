@@ -264,6 +264,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 
+                    getProfileCompletionStatus();
                     PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
 
                     Intent intent = new Intent(Constants.PROFILE_PICTURE_UPDATE_BROADCAST);
@@ -285,6 +286,10 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                    Intent intent = new Intent(Constants.PROFILE_COMPLETION_UPDATE_BROADCAST);
+                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+
                     if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
                         mProfileCompletionStatusView.setText("Your profile is " +
                                 mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
