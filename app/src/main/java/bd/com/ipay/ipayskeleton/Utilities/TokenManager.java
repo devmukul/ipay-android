@@ -32,7 +32,7 @@ public class TokenManager {
     }
 
     private static CountDownTimer tokenTimer;
-    private static long iPayTokenTimeInMs = 45000;  // By default this is one minute
+    private static long iPayTokenTimeInMs = 60000;  // By default this is one minute
 
     public static boolean isTokenExists() {
         return token != null && !token.isEmpty();
@@ -63,7 +63,7 @@ public class TokenManager {
     }
 
     public static long getiPayTokenTimeInMs() {
-        return iPayTokenTimeInMs;
+        return iPayTokenTimeInMs - 15000;
     }
 
     public static void setiPayTokenTimeInMs(long iPayTokenTimeInMs) {
