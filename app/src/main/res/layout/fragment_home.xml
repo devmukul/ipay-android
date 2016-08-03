@@ -7,8 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/ic_bg_pcode">
+        android:background="@drawable/ic_bg_pcode"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                             android:layout_height="20dp"
                             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                             android:layout_toRightOf="@+id/textview_name"
-                            android:src="@drawable/ic_verified_profile_black"
+                            android:src="@drawable/ic_verified_profile"
                             android:visibility="gone" />
 
                     </LinearLayout>
@@ -199,7 +199,8 @@
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:padding="8dp"
-                android:src="@drawable/ic_refresh" />
+                android:src="@drawable/ic_refresh"
+                android:backgroundTint="@android:color/white"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -255,58 +256,89 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:background="@android:color/white">
+            android:background="@android:color/white"
+            android:gravity=""
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/button_send_money"
-                style="@style/HomeImageButtonStyle"
-                android:drawableLeft="@drawable/ic_send"
-                android:text="@string/send_money" />
 
-            <View style="@style/HomeDividerStyle" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
 
-            <Button
-                android:id="@+id/button_request_money"
-                style="@style/HomeImageButtonStyle"
-                android:drawableLeft="@drawable/ic_rcv"
-                android:text="@string/request_money" />
+                <Button
+                    android:id="@+id/button_send_money"
+                    style="@style/HomeImageButtonStyleHorizontal"
+                    android:drawableTop="@drawable/ic_home_send"
+                    android:text="@string/send_money"
+                    android:layout_weight="1"/>
 
-            <View style="@style/HomeDividerStyle" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorDivider" />
+
+                <Button
+                    android:id="@+id/button_request_money"
+                    style="@style/HomeImageButtonStyleHorizontal"
+                    android:drawableTop="@drawable/ic_home_requestmoney"
+                    android:text="@string/request_money"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <View style="@style/HomeDividerStyleColorGrey" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
 
             <Button
                 android:id="@+id/button_mobile_topup"
-                style="@style/HomeImageButtonStyle"
-                android:drawableLeft="@drawable/ic_topup"
-                android:text="@string/mobile_topup" />
-
-            <View style="@style/HomeDividerStyle" />
+                style="@style/HomeImageButtonStyleHorizontal"
+                android:drawableTop="@drawable/ic_home_topup"
+                android:text="@string/mobile_topup"
+                android:layout_weight="1"/>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorDivider" />
 
             <Button
                 android:id="@+id/button_make_payment"
-                style="@style/HomeImageButtonStyle"
-                android:drawableLeft="@drawable/ic_payment2"
-                android:text="@string/make_payment" />
+                style="@style/HomeImageButtonStyleHorizontal"
+                android:drawableTop="@drawable/ic_home_payment"
+                android:text="@string/make_payment"
+                android:layout_weight="1"/>
 
-            <View style="@style/HomeDividerStyle" />
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/button_create_invoice"
-                style="@style/HomeImageButtonStyle"
-                android:drawableLeft="@drawable/ic_payment2"
-                android:text="@string/create_invoice" />
+            <View style="@style/HomeDividerStyleColorGrey" />
 
-            <View
-                android:id="@+id/divider_create_invoice"
-                style="@style/HomeDividerStyle" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
 
             <Button
                 android:id="@+id/button_pay_by_QR_code"
-                style="@style/HomeImageButtonStyle"
-                android:drawableLeft="@drawable/ic_qrc"
-                android:text="@string/pay_by_QR_code" />
+                style="@style/HomeImageButtonStyleHorizontal"
+                android:drawableTop="@drawable/ic_home_qrc"
+                android:text="@string/pay_by_QR_code"
+                android:layout_weight="1"/>
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorDivider" />
+
+            <Button
+                android:id="@+id/button_create_invoice"
+                style="@style/HomeImageButtonStyleHorizontal"
+                android:drawableTop="@drawable/ic_home_rcv"
+                android:text="@string/create_invoice"
+                android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <View style="@style/HomeDividerStyleColorGrey" />
         </LinearLayout>
 
     </LinearLayout>

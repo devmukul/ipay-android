@@ -51,6 +51,23 @@
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin_semi_double</item>
     </style>
 
+    <style name="HomeImageButtonStyleHorizontal" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:background">@drawable/background_home_image_button</item>
+        <item name="android:drawablePadding">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin_semi_double</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin_semi_double</item>
+        <item name="android:paddingTop">@dimen/activity_horizontal_margin_double</item>
+        <item name="android:paddingBottom">@dimen/activity_horizontal_margin_double</item>
+    </style>
+
     <style name="HomeDividerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
@@ -59,6 +76,11 @@
         <item name="android:layout_marginRight">40dp</item>
     </style>
 
+    <style name="HomeDividerStyleColorGrey">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/colorDivider</item>
+    </style>
 
     <style name="HomeBalanceButtonStyle">
         <item name="android:textAllCaps">false</item>
