@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="right">
+
+    <TextView
+        android:id="@+id/comment"
+        android:textColor="@android:color/white"
+        android:text="Message from me sfsdf sdfsdkfdsfn slfnf lsdnflsd nfsdl'kfnsd'n sd'fns'jfds' o"
+        android:background="@drawable/background_ticket_comment_right"
+        android:gravity="right"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_double"
+        style="@style/TicketCommentStyle"/>
+
+</LinearLayout>

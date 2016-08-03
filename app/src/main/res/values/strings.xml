@@ -650,6 +650,8 @@
     <string name="message">Message</string>
     <string name="failed_empty_subject">Subject cannot be empty</string>
     <string name="failed_empty_message">Message cannot be empty</string>
+    <string name="failed_loading_ticket_details">Failed to load ticket details</string>
+    <string name="created_at">Created At</string>
 
 
     <string-array name="mobile_operators">

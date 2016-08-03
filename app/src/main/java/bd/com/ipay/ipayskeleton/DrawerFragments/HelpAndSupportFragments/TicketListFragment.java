@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -90,8 +91,8 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTicketsTask = null;
             if (getActivity() != null) {
-                getActivity().onBackPressed();
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
             return;
         }
@@ -116,6 +117,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                         }
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_loading_tickets, Toast.LENGTH_LONG).show();
                         getActivity().onBackPressed();
@@ -133,7 +135,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         private static final int ITEM_TYPE_TICKET = 1;
         private static final int ITEM_TYPE_FOOTER = 2;
 
-        public class TicketViewHolder extends RecyclerView.ViewHolder {
+        private class TicketViewHolder extends RecyclerView.ViewHolder {
 
             private TextView subjectView;
             private TextView descriptionView;
@@ -150,7 +152,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             }
 
             public void bindView(int pos) {
-                Ticket ticket = mTickets.get(pos);
+                final Ticket ticket = mTickets.get(pos);
 
                 subjectView.setText(ticket.getSubject());
                 descriptionView.setText(ticket.getDescription());
@@ -170,6 +172,13 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                     case Constants.TICKET_STATUS_SOLVED:
                         statusView.setTextColor(getResources().getColor(R.color.colorGray));
                 }
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((HelpAndSupportActivity) getActivity()).switchToTicketDetailsFragment(ticket.getId());
+                    }
+                });
             }
         }
 

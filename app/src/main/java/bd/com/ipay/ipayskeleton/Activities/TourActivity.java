@@ -18,9 +18,8 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-import bd.com.ipay.ipayskeleton.CustomView.IconifiedButton;
-import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.CustomView.PagerIndicator;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class TourActivity extends BaseActivity {

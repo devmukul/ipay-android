@@ -11,6 +11,7 @@ import bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments.CreateTi
 import bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments.TicketDetailsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments.TicketListFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class HelpAndSupportActivity extends BaseActivity {
 
@@ -56,8 +57,12 @@ public class HelpAndSupportActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TicketListFragment()).commit();
     }
 
-    private void switchToTicketDetailsFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TicketDetailsFragment()).addToBackStack(null).commit();
+    public void switchToTicketDetailsFragment(long ticketId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(Constants.TICKET_ID, ticketId);
+        TicketDetailsFragment fragment = new TicketDetailsFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
     }
 
     @Override
