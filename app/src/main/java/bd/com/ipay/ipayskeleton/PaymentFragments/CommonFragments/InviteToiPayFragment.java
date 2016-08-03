@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -57,6 +58,7 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
                 new InviteDialog(getContext(), mMobileNumber).setFinishCheckerListener(new InviteDialog.FinishCheckerListener() {
                     @Override
                     public void ifFinishNeeded() {
+                        getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     }
                 });
