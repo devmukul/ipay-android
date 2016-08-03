@@ -52,6 +52,7 @@ public class Constants {
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";
     public static final String PROFILE_PICTURE_UPDATE_BROADCAST = "PROFILE_PICTURE_UPDATE_BROADCAST";
     public static final String TRANSACTION_HISTORY_UPDATE_BROADCAST = "TRANSACTION_HISTORY_UPDATE_BROADCAST";
+    public static final String PROFILE_COMPLETION_UPDATE_BROADCAST = "PROFILE_COMPLETION_UPDATE_BROADCAST";
 
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
@@ -130,7 +131,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
