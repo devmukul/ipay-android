@@ -163,21 +163,21 @@ public class ProfileActivity extends BaseActivity {
     }
 
     public void switchToBasicInfoFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStackImmediate();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BasicInfoFragment()).addToBackStack(null).commit();
     }
 
     public void switchToProfileCompletionFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStackImmediate();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileCompletionFragment()).addToBackStack(null).commit();
     }
 
     public void switchToEditBasicInfoFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
             getSupportFragmentManager().popBackStackImmediate();
 
         EditBasicInfoFragment editBasicInfoFragment = new EditBasicInfoFragment();
@@ -186,14 +186,14 @@ public class ProfileActivity extends BaseActivity {
     }
 
     public void switchToAddressFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStackImmediate();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddressFragment()).addToBackStack(null).commit();
     }
 
     public void switchToEditAddressFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
             getSupportFragmentManager().popBackStackImmediate();
 
         EditAddressFragment editAddressFragment = new EditAddressFragment();
