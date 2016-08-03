@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepTwo;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.InvoiceDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepOne;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentInvoicesFragment;
@@ -28,7 +29,7 @@ public class InvoiceActivity extends BaseActivity {
         mFabCreateInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchToCreateInvoiceFragment();
+                switchToCreateInvoiceStepOneFragment();
             }
         });
 
@@ -54,7 +55,7 @@ public class InvoiceActivity extends BaseActivity {
         if (switchedToInvoicesList)
             super.onBackPressed();
         else {
-            switchToInvoicesSentFragment();
+            getSupportFragmentManager().popBackStack();
         }
     }
 
@@ -65,10 +66,20 @@ public class InvoiceActivity extends BaseActivity {
         switchedToInvoicesList = true;
     }
 
-    private void switchToCreateInvoiceFragment() {
+    private void switchToCreateInvoiceStepOneFragment() {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new CreateInvoiceFragmentStepOne()).commit();
+        mFabCreateInvoice.setVisibility(View.GONE);
+        switchedToInvoicesList = false;
+    }
+
+    public void switchToCreateInvoiceStepTwoFragment(Bundle bundle) {
+
+        CreateInvoiceFragmentStepTwo frag = new CreateInvoiceFragmentStepTwo();
+        frag.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, frag).commit();
         mFabCreateInvoice.setVisibility(View.GONE);
         switchedToInvoicesList = false;
     }
