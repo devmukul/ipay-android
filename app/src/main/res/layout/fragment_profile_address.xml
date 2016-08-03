@@ -47,6 +47,7 @@
                 <ImageButton
                     android:id="@+id/button_edit_present_address"
                     style="@style/EditIconButton"
+                    android:padding="@dimen/activity_vertical_margin_card"
                     android:src="@drawable/ic_editgrey" />
             </LinearLayout>
 
@@ -87,6 +88,7 @@
                     <ImageButton
                         android:id="@+id/button_edit_permanent_address"
                         style="@style/EditIconButton"
+                        android:padding="@dimen/activity_vertical_margin_card"
                         android:src="@drawable/ic_editgrey" />
                 </LinearLayout>
             </LinearLayout>
@@ -128,6 +130,7 @@
                     <ImageButton
                         android:id="@+id/button_edit_office_address"
                         style="@style/EditIconButton"
+                        android:padding="@dimen/activity_vertical_margin_card"
                         android:src="@drawable/ic_editgrey" />
                 </LinearLayout>
             </LinearLayout>
