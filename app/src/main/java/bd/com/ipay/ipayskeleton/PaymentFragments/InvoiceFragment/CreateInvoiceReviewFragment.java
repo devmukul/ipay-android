@@ -80,10 +80,11 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
         mQuantity = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.INVOICE_QUANTITY_TAG));
         mRate = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.INVOICE_RATE_TAG));
+        mTotal = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.TOTAL));
         if (getActivity().getIntent().getStringExtra(Constants.VAT).equals(""))
             mVat = new BigDecimal(0);
         else mVat = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.VAT));
-        mTotal = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.TOTAL));
+
 
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
@@ -112,9 +113,10 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         }
 
         mAmount = mQuantity.multiply(mRate);
+        mVat = mAmount.multiply(mVat.divide(new BigDecimal(100)));
         mNameView.setText(mReceiverName);
         mMobileNumberView.setText(mReceiverMobileNumber);
-        mQuantityView.setText(Utilities.formatTaka(mQuantity));
+        mQuantityView.setText(mQuantity.toString());
         mRateView.setText(Utilities.formatTaka(mRate));
         mAmountView.setText(Utilities.formatTaka(mAmount));
         mVatView.setText(Utilities.formatTaka(mVat));
