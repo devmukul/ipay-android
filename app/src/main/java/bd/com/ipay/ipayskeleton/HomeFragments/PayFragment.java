@@ -44,7 +44,7 @@ public class PayFragment extends Fragment {
 
         mServiceActionList = new ArrayList<>();
         if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
-            mServiceActionList.add(new ServiceAction(getString(R.string.create_invoice)));
+            mServiceActionList.add(new ServiceAction(getString(R.string.request_payment)));
         }
         mServiceActionList.add(new ServiceAction(getString(R.string.make_payment)));
         mServiceActionList.add(new ServiceAction(getString(R.string.mobile_topup)));
@@ -96,7 +96,7 @@ public class PayFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         switch (serviceAction.text) {
-                            case Constants.SERVICE_ACTION_CREATE_INVOICE:
+                            case Constants.SERVICE_ACTION_REQUEST_PAYMENT:
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {

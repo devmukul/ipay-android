@@ -152,11 +152,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
+       /* if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
             mCreateInvoiceButton.setVisibility(View.GONE);
             mDividerCreateInvoice.setVisibility(View.GONE);
         } else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
-            mCreateInvoiceButton.setVisibility(View.VISIBLE);
+            mCreateInvoiceButton.setVisibility(View.VISIBLE); */
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override

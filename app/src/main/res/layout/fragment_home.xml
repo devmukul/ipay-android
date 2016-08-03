@@ -296,11 +296,13 @@
                 android:id="@+id/button_create_invoice"
                 style="@style/HomeImageButtonStyle"
                 android:drawableLeft="@drawable/ic_payment2"
-                android:text="@string/request_payment" />
+                android:text="@string/request_payment"
+                android:visibility="gone"/>
 
             <View
                 android:id="@+id/divider_create_invoice"
-                style="@style/HomeDividerStyle" />
+                style="@style/HomeDividerStyle"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/button_pay_by_QR_code"
