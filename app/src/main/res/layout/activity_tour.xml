@@ -31,14 +31,14 @@
 
         <Button
             android:id="@+id/button_sign_in"
-            style="@style/PrimaryTransparentButton"
+            style="@style/PrimaryTransparentButtonCardMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/log_in" />
 
         <Button
             android:id="@+id/button_join_now"
-            style="@style/PrimaryTransparentButton"
+            style="@style/PrimaryTransparentButtonCardMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_up"

@@ -38,14 +38,14 @@
 
         <Button
             android:id="@+id/button_account_type_personal"
-            style="@style/PrimaryTransparentButton"
+            style="@style/PrimaryTransparentButtonCardMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/account_type_personal" />
 
         <Button
             android:id="@+id/button_account_type_business"
-            style="@style/PrimaryTransparentButton"
+            style="@style/PrimaryTransparentButtonCardMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/account_type_business" />
