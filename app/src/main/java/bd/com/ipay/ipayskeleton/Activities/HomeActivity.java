@@ -435,11 +435,10 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_help) {
 
-            Intent intent = new Intent(HomeActivity.this, HelpAndSupportActivity.class);
+            Intent intent = new Intent(this, HelpAndSupportActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
-            startActivity(intent);
         } else if (id == R.id.nav_about) {
 
             Intent intent = new Intent(HomeActivity.this, AboutActivity.class);

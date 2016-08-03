@@ -125,8 +125,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                     commentEditText.setError(getString(R.string.comment_cannot_be_empty));
                 } else {
                     addComment(comment);
-                    dialog.dismiss();
                     Utilities.hideKeyboard(getActivity(), commentEditText);
+                    dialog.dismiss();
                 }
             }
         });
@@ -134,8 +134,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                dialog.dismiss();
                 Utilities.hideKeyboard(getActivity(), commentEditText);
+                dialog.dismiss();
             }
         });
 
