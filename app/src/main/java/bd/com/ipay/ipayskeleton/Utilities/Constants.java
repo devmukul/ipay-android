@@ -151,7 +151,7 @@ public class Constants {
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
-            BASE_URL_ADMIN = "http://192.168.1.128:8085/api/v1/";
+            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
@@ -680,4 +680,9 @@ public class Constants {
     public static final String ACTION_TYPE_REJECT = "Reject";
     public static final String ACTION_TYPE_REMOVE = "Remove";
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
+
+    public static final String TICKET_STATUS_NEW = "new";
+    public static final String TICKET_STATUS_OPEN = "open";
+    public static final String TICKET_STATUS_PENDING = "pending";
+    public static final String TICKET_STATUS_SOLVED = "solved";
 }

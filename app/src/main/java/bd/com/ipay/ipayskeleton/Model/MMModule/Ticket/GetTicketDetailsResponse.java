@@ -1,10 +1,9 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Ticket;
 
-public class GetTicketsResponse {
-
+public class GetTicketDetailsResponse {
     private int statusCode;
     private String message;
-    private TicketResponse response;
+    private TicketDetailsResponse response;
 
     public int getStatusCode() {
         return statusCode;
@@ -14,7 +13,7 @@ public class GetTicketsResponse {
         return message;
     }
 
-    public TicketResponse getResponse() {
+    public TicketDetailsResponse getResponse() {
         return response;
     }
 }

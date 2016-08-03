@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.CreateTicketResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateTicketFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -60,8 +61,10 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         mCreateTicketButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (verifyUserInputs())
+                if (verifyUserInputs()) {
+                    Utilities.hideKeyboard(getActivity());
                     createTicket();
+                }
             }
         });
 
@@ -122,7 +125,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                         })
                         .show();
             } else {
-                mMessageEditText.setText(primaryEmail);
+
             }
         }
 
@@ -191,6 +194,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
+        if (getActivity() != null)
+            mProgressDialog.dismiss();
+
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mCreateTicketTask = null;

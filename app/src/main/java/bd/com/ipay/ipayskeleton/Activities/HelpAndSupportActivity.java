@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments.CreateTicketFragment;
@@ -30,13 +31,28 @@ public class HelpAndSupportActivity extends BaseActivity {
         });
 
         switchToTicketListFragment();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void switchToCreateTicketFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateTicketFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateTicketFragment()).addToBackStack(null).commit();
     }
 
     private void switchToTicketListFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStackImmediate();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TicketListFragment()).commit();
     }
 

@@ -9,11 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -80,6 +82,10 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
+        if (getActivity() != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTicketsTask = null;
@@ -98,7 +104,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                     mGetTicketsResponse = gson.fromJson(result.getJsonString(), GetTicketsResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mTickets = mGetTicketsResponse.getTickets();
+                        mTickets = mGetTicketsResponse.getResponse().getTickets();
                         mTicketListAdapter.notifyDataSetChanged();
 
                         if (isAdded())
@@ -122,29 +128,76 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         }
     }
 
-    private class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.TicketViewHolder> {
+    private class TicketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private static final int ITEM_TYPE_TICKET = 1;
+        private static final int ITEM_TYPE_FOOTER = 2;
 
         public class TicketViewHolder extends RecyclerView.ViewHolder {
 
+            private TextView subjectView;
+            private TextView descriptionView;
+            private TextView timeView;
+            private TextView statusView;
+
             public TicketViewHolder(View itemView) {
                 super(itemView);
+
+                subjectView = (TextView) itemView.findViewById(R.id.textview_subject);
+                descriptionView = (TextView) itemView.findViewById(R.id.textview_description);
+                timeView = (TextView) itemView.findViewById(R.id.textview_time);
+                statusView = (TextView) itemView.findViewById(R.id.textview_status);
+            }
+
+            public void bindView(int pos) {
+                Ticket ticket = mTickets.get(pos);
+
+                subjectView.setText(ticket.getSubject());
+                descriptionView.setText(ticket.getDescription());
+                timeView.setText(new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(ticket.getCreatedAt()));
+                statusView.setText(ticket.getStatus().toUpperCase());
+
+                switch (ticket.getStatus()) {
+                    case Constants.TICKET_STATUS_NEW:
+                        statusView.setTextColor(getResources().getColor(R.color.bottle_green));
+                        break;
+                    case Constants.TICKET_STATUS_OPEN:
+                        statusView.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+                        break;
+                    case Constants.TICKET_STATUS_PENDING:
+                        statusView.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+                        break;
+                    case Constants.TICKET_STATUS_SOLVED:
+                        statusView.setTextColor(getResources().getColor(R.color.colorGray));
+                }
             }
         }
 
         @Override
-        public TicketViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_ticket, parent, false);
             return new TicketViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(TicketViewHolder holder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof TicketViewHolder) {
+                TicketViewHolder vh = (TicketViewHolder) holder;
+                vh.bindView(position);
+            }
+        }
 
+        @Override
+        public int getItemViewType(int position) {
+            return ITEM_TYPE_TICKET;
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            if (mTickets != null)
+                return mTickets.size();
+            else
+                return 0;
         }
     }
 }
