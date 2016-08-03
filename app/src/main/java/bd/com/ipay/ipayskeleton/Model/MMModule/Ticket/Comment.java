@@ -3,7 +3,12 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Ticket;
 public class Comment {
     private String body;
     private String authorId;
-    private long createdAt;
+    private Long createdAt;
+
+    public Comment(String body, String authorId) {
+        this.body = body;
+        this.authorId = authorId;
+    }
 
     public String getBody() {
         return body;

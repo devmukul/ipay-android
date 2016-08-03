@@ -159,7 +159,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
 //            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/";
-            BASE_URL_ADMIN = "http://192.168.1.128:8085/api/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
@@ -372,6 +372,7 @@ public class Constants {
     public static final String URL_CREATE_TICKET = "ticket/create";
     public static final String URL_GET_TICKETS = "ticket/list";
     public static final String URL_GET_TICKET_DETAILS = "ticket/by/id";
+    public static final String URL_ADD_COMMENT = "ticket/add/comment";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -476,6 +477,7 @@ public class Constants {
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
     public static final String COMMAND_GET_TICKETS = "COMMAND_GET_TICKETS";
     public static final String COMMAND_GET_TICKET_DETAILS = "COMMAND_GET_TICKET_DETAILS";
+    public static final String COMMAND_ADD_COMMENT = "COMMAND_ADD_COMMENT";
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";

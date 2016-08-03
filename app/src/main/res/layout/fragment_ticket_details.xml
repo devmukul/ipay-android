@@ -1,52 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin">
 
     <include layout="@layout/layout_progress_container" />
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/content_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/subject"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
-
-        <TextView
-            android:id="@+id/textview_subject"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/subject"
-            android:paddingTop="@dimen/value4"
-            android:textSize="16sp"/>
-
-        <View style="@style/DividerWithoutMargin" />
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_comments"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:clipToPadding="false" />
+                android:layout_height="wrap_content"
+                android:text="@string/subject"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+            <TextView
+                android:id="@+id/textview_subject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/subject"
+                android:paddingTop="@dimen/value4"
+                android:textSize="16sp"/>
 
-    </LinearLayout>
+            <View style="@style/DividerWithoutMargin" />
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/activity_vertical_margin">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:clipToPadding="false" />
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_new_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_addw"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="normal"
+            app:elevation="4dp"
+            app:borderWidth="0dp"/>
+
+    </FrameLayout>
 
 </RelativeLayout>

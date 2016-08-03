@@ -653,6 +653,12 @@
     <string name="failed_empty_message">Message cannot be empty</string>
     <string name="failed_loading_ticket_details">Failed to load ticket details</string>
     <string name="created_at">Created At</string>
+    <string name="progress_dialog_submitting_comment">Submitting comment...</string>
+    <string name="comment_successfully_added">Comment successfully added</string>
+    <string name="failed_adding_comment">Failed to add comment</string>
+    <string name="comment">Comment</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="comment_cannot_be_empty">Comment cannot be empty</string>
 
 
     <string-array name="mobile_operators">
