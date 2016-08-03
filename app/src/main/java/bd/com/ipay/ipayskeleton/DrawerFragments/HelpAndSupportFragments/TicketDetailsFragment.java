@@ -30,12 +30,14 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.AddCommentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.AddCommentResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.Comment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.GetTicketDetailsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.GetTicketDetailsResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -265,12 +267,15 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         private static final int VIEW_TYPE_FROM_SUPPORT = 2;
 
         private class CommentViewHolder extends RecyclerView.ViewHolder {
+
+            private ProfileImageView profilePictureView;
             private TextView commentView;
             private TextView timeView;
 
             public CommentViewHolder(View itemView) {
                 super(itemView);
 
+                profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 commentView = (TextView) itemView.findViewById(R.id.textview_comment);
                 timeView = (TextView) itemView.findViewById(R.id.textview_time);
             }
@@ -278,6 +283,11 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             public void bindView(int pos) {
                 final Comment comment = mComments.get(pos);
 
+                if (comment.getAuthorId().equals(requesterId)) {
+                    profilePictureView.setProfilePicture(ProfileInfoCacheManager.getProfileImageUrl(), false);
+                } else {
+                    profilePictureView.setProfilePicture(R.drawable.logo_ipay);
+                }
                 commentView.setText(comment.getBody());
                 timeView.setText(new SimpleDateFormat("dd/MM/yy, h:mm a").format(comment.getCreatedAt()));
             }
