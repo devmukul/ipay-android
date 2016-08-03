@@ -177,6 +177,7 @@
     <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
     <string name="activate">Activate</string>
     <string name="verify">Verify</string>
+    <string name="verify_email">Verify Email</string>
     <string name="resend_otp_description">If you have not received the SMS, please press Resend Code after the time elapses</string>
     <string name="verify_otp_for_trust_description">You are seeing this because you are logging in from this device for the first time or you have reached the maximum number of trusted devices that can be added</string>
     <string name="resend">Resend Code</string>
@@ -200,6 +201,7 @@
     <string name="sending_for_verification_with_amount">Bank verification in progress...</string>
     <string name="verifying_user">Verifying user...</string>
     <string name="add">Add</string>
+    <string name="add_email">Add Email</string>
     <string name="cancel">Cancel</string>
     <string name="request_money">Request Money</string>
     <string name="requesting_money">Money request processing...</string>
@@ -634,6 +636,20 @@
     <string name="you_cannot_send_invoice_to_your_number">You can\'t send invoice to your own mobile number</string>
     <string name="you_cannot_make_payment_to_your_number">You can\'t make payment to your own mobile number</string>
     <string name="you_cannot_request_money_from_your_number">You can\'t request money from your own mobile number</string>
+    <string name="help_and_support">Help and Support</string>
+    <string name="create_ticket">Create Ticket</string>
+    <string name="select_email">Select Email</string>
+    <string name="subject">Subject</string>
+    <string name="ticket_created">Ticket Created</string>
+    <string name="creating_ticket">Creating ticket...</string>
+    <string name="no_email_added">No Email Added</string>
+    <string name="dialog_add_new_email">You need to set up your primary email to use the support system. Add an email now?</string>
+    <string name="dialog_verify_email">You need to set up your primary email to use the support system. Verify your email now?</string>
+    <string name="no_primary_email">No Primary Email</string>
+    <string name="failed_loading_tickets">Failed to load tickets</string>
+    <string name="message">Message</string>
+    <string name="failed_empty_subject">Subject cannot be empty</string>
+    <string name="failed_empty_message">Message cannot be empty</string>
 
 
     <string-array name="mobile_operators">

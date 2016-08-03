@@ -144,6 +144,7 @@ public class Constants {
     public static final String BASE_URL_SM;
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_FRIEND;
+    public static final String BASE_URL_ADMIN;
     public static final String BASE_URL_FTP_SERVER;
     private static final String SERVER_NAME;
 
@@ -155,6 +156,7 @@ public class Constants {
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
+            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
@@ -355,9 +357,6 @@ public class Constants {
     public static final String URL_GET_BUSINESS_LIST = "business/list";
     public static final String URL_CONFIRM_BUSINESS_INVITATION = "business/user/confirm";
 
-    // Event
-    public static final String URL_GET_ALL_PARTICIPANTS_LIST = "banktransaction/cashout";  // TODO: change
-
     // Education
     public static final String URL_GET_ALL_INSTITUTIONS_LIST = "allinstitutes";
     public static final String URL_GET_ALL_SESSIONS_LIST = "session/allsessions";
@@ -365,6 +364,11 @@ public class Constants {
     public static final String URL_GET_STUDENT_INFO_BY_STUDENT_ID = "studentdetailsbyrollno";
     public static final String URL_GET_ENABLED_PAYABLE_ITEMS = "enabledpayableitem";
     public static final String URL_MAKE_PAYMENT_EDUCATION = "createinvoice";
+
+    // Ticket
+    public static final String URL_CREATE_TICKET = "ticket/create";
+    public static final String URL_GET_TICKETS = "ticket/list";
+    public static final String URL_GET_TICKET_DETAILS = "ticket/by/";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -451,6 +455,8 @@ public class Constants {
     public static final String COMMAND_UPDATE_FRIENDS = "COMMAND_UPDATE_FRIENDS";
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
+
+    // Event
     public static final String COMMAND_GET_MY_EVENTS = "COMMAND_GET_MY_EVENTS";
     public static final String COMMAND_GET_MY_TICKETS = "COMMAND_GET_MY_TICKETS";
     public static final String COMMAND_GET_EVENT_PARTICIPANTS_IN_LIST = "COMMAND_GET_EVENT_PARTICIPANTS_IN_LIST";
@@ -462,6 +468,11 @@ public class Constants {
     public static final String COMMAND_CREATE_EVENT = "COMMAND_CREATE_EVENT";
     public static final String COMMAND_GET_EVENT_TYPE = "COMMAND_GET_EVENT_TYPE";
     public static final String COMMAND_GET_EVENT_VISIBILITY_TYPE = "COMMAND_GET_EVENT_VISIBILITY_TYPE";
+
+    // Ticket
+    public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
+    public static final String COMMAND_GET_TICKETS = "COMMAND_GET_TICKETS";
+    public static final String COMMAND_GET_TICKET_DETAILS = "COMMAND_GET_TICKET_DETAILS";
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";
@@ -682,4 +693,9 @@ public class Constants {
     public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";
     public static final String SERVICE_ACTION_TOP_UP = "Mobile TopUp";
     public static final String SERVICE_ACTION_EDUCATION_PAYMENT = "Education Payment";
+
+    public static final String TICKET_STATUS_NEW = "new";
+    public static final String TICKET_STATUS_OPEN = "open";
+    public static final String TICKET_STATUS_PENDING = "pending";
+    public static final String TICKET_STATUS_SOLVED = "solved";
 }

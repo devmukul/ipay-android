@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -395,6 +394,10 @@ public class HomeActivity extends BaseActivity
 
             switchToDashBoard();
 
+        } else if (id == R.id.nav_account) {
+
+            launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
+
         } else if (id == R.id.nav_bank_account) {
 
             Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
@@ -411,12 +414,6 @@ public class HomeActivity extends BaseActivity
 
             Intent intent = new Intent(this, BusinessActivity.class);
             startActivity(intent);
-
-        } else if (id == R.id.nav_about) {
-
-            Intent intent = new Intent(HomeActivity.this, AboutActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_event) {
 
@@ -436,24 +433,28 @@ public class HomeActivity extends BaseActivity
             startActivity(intent);
             switchedToHomeFragment = true;
 
+        } else if (id == R.id.nav_help) {
+
+            Intent intent = new Intent(HomeActivity.this, HelpAndSupportActivity.class);
+            startActivity(intent);
+            switchedToHomeFragment = false;
+
+            startActivity(intent);
+        } else if (id == R.id.nav_about) {
+
+            Intent intent = new Intent(HomeActivity.this, AboutActivity.class);
+            startActivity(intent);
+            switchedToHomeFragment = false;
+
         } else if (id == R.id.nav_logout) {
 
-            if (Utilities.isConnectionAvailable(HomeActivity.this)) attemptLogout();
+            if (Utilities.isConnectionAvailable(HomeActivity.this))
+                attemptLogout();
             else {
                 finish();
                 Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
                 startActivity(intent);
             }
-        } else if (id == R.id.nav_account) {
-
-            launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
-
-        } else if (id == R.id.nav_help) {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.addCategory(Intent.CATEGORY_BROWSABLE);
-            intent.setData(Uri.parse(getString(R.string.help_link)));
-            startActivity(intent);
         }
 
     }

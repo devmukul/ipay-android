@@ -13,4 +13,13 @@ public class GetEmailResponse {
     public List<Email> getEmailAdressList() {
         return emailAdressList;
     }
+
+    public String getVerifiedEmail() {
+        for (Email email : emailAdressList) {
+            if (email.isPrimary())
+                return email.getEmailAddress();
+        }
+
+        return null;
+    }
 }
