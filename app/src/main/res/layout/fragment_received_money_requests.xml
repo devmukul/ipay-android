@@ -6,7 +6,7 @@
     android:paddingTop="@dimen/value10">
 
     <include layout="@layout/layout_progress_container" />
-    
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/content_container"
         android:layout_width="match_parent"
@@ -21,7 +21,9 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_notification"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/value48" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <TextView

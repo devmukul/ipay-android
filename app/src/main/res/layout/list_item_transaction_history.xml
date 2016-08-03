@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white">
+    android:layout_height="wrap_content">
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"
@@ -28,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin_card"
-        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_toLeftOf="@+id/status"
         android:layout_toRightOf="@+id/profile_picture"
         android:orientation="vertical">
@@ -41,16 +40,16 @@
                 android:id="@+id/activity_description"
                 style="@style/TransactionHistoryLeftTextViewStyle"
                 android:layout_toLeftOf="@+id/net_amount"
-                android:textSize="13sp"
                 android:fontFamily="sans-serif-light"
-                android:textStyle="bold"  />
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/net_amount"
                 style="@style/TransactionHistoryRightTextViewStyle"
-                android:textSize="13sp"
                 android:fontFamily="sans-serif-light"
-                android:textStyle="bold"/>
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
@@ -72,9 +71,9 @@
             android:layout_marginBottom="2dp">
 
             <TextView
-                android:text="@string/balance"
                 style="@style/TransactionHistoryLeftTextViewStyle"
-                android:layout_toLeftOf="@+id/amount"/>
+                android:layout_toLeftOf="@+id/amount"
+                android:text="@string/balance" />
 
             <TextView
                 android:id="@+id/amount"
@@ -91,7 +90,7 @@
                 style="@style/TransactionHistoryLeftTextViewStyle"
                 android:layout_toLeftOf="@+id/status_description"
                 android:textColor="@color/colorBlackTransparent"
-                android:textSize="11sp"/>
+                android:textSize="11sp" />
 
             <TextView
                 android:id="@+id/status_description"
@@ -102,10 +101,8 @@
 
     <View
         android:id="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/divider_space"
-        android:layout_below="@+id/description_layout"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@color/colorDivider" />
+        style="@style/Divider"
+
+        android:layout_below="@+id/description_layout" />
 
 </RelativeLayout>

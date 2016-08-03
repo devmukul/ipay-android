@@ -298,7 +298,9 @@
                 android:drawableLeft="@drawable/ic_payment2"
                 android:text="@string/create_invoice" />
 
-            <View style="@style/HomeDividerStyle" />
+            <View
+                android:id="@+id/divider_create_invoice"
+                style="@style/HomeDividerStyle" />
 
             <Button
                 android:id="@+id/button_pay_by_QR_code"
