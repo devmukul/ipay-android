@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_ticket_comment_left"
+    android:layout_marginRight="@dimen/activity_horizontal_margin_double"
+    android:layout_marginTop="@dimen/activity_vertical_margin_card"
     android:gravity="left">
 
     <TextView
-        android:id="@+id/comment"
+        android:id="@+id/textview_comment"
         android:textColor="@color/colorTextPrimary"
         android:text="Message from me sfsdf sdfsdkfdsfn slfnf lsdnflsd nfsdl'kfnsd'n sd'fns'jfds' o"
-        android:background="@drawable/background_ticket_comment_left"
         android:gravity="left"
-        android:layout_marginRight="@dimen/activity_horizontal_margin_double"
-        style="@style/TicketCommentStyle"/>
+        style="@style/TicketCommentBodyStyle"/>
+
+    <TextView
+        android:id="@+id/textview_time"
+        style="@style/TicketCommentTimeStyle"
+        android:gravity="left"
+        android:text="12/4/3 12:04am"
+        android:textColor="@color/colorTextPrimary"/>
 
 </LinearLayout>

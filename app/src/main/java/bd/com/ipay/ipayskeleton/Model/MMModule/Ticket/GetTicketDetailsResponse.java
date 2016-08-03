@@ -16,4 +16,13 @@ public class GetTicketDetailsResponse {
     public TicketDetailsResponse getResponse() {
         return response;
     }
+
+    @Override
+    public String toString() {
+        return "GetTicketDetailsResponse{" +
+                "statusCode=" + statusCode +
+                ", message='" + message + '\'' +
+                ", response=" + response +
+                '}';
+    }
 }

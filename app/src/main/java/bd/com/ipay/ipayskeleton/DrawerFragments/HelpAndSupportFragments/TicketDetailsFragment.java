@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.Comment;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.GetTicketDetailsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.GetTicketDetailsResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -38,7 +43,10 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private List<Comment> mComments;
+    private String requesterId;
     private CommentListAdapter mCommentListAdapter;
+
+    private TextView mSubjectView;
 
     @Nullable
     @Override
@@ -46,6 +54,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         View v = inflater.inflate(R.layout.fragment_ticket_details, container, false);
 
         ticketId = getArguments().getLong(Constants.TICKET_ID);
+
+        mSubjectView = (TextView) v.findViewById(R.id.textview_subject);
 
         mCommentListAdapter = new CommentListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -79,7 +89,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             return;
 
         mGetTicketDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKET_DETAILS,
-                Constants.BASE_URL_ADMIN + Constants.URL_GET_TICKET_DETAILS + ticketId, getActivity(), this);
+                new GetTicketDetailsRequestBuilder().generateUri(ticketId).toString(), getActivity(), this);
         mGetTicketDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -95,7 +105,12 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             return;
         }
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+
+        if (getActivity() != null)
+            mSwipeRefreshLayout.setRefreshing(false);
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_TICKET_DETAILS:
@@ -106,6 +121,13 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                         if (isAdded())
                             setContentShown(true);
 
+                        Log.w("Details", mGetTicketDetailsResponse.toString());
+
+                        mComments = mGetTicketDetailsResponse.getResponse().getComments().getComments();
+                        requesterId = mGetTicketDetailsResponse.getResponse().getTicket().getRequesterId();
+
+                        mSubjectView.setText(mGetTicketDetailsResponse.getResponse().getTicket().getSubject());
+                        mCommentListAdapter.notifyDataSetChanged();
                     } else {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.failed_loading_ticket_details, Toast.LENGTH_LONG).show();
@@ -132,17 +154,20 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
         private class CommentViewHolder extends RecyclerView.ViewHolder {
             private TextView commentView;
+            private TextView timeView;
 
             public CommentViewHolder(View itemView) {
                 super(itemView);
 
-                commentView = (TextView) itemView.findViewById(R.id.comment);
+                commentView = (TextView) itemView.findViewById(R.id.textview_comment);
+                timeView = (TextView) itemView.findViewById(R.id.textview_time);
             }
 
             public void bindView(int pos) {
                 final Comment comment = mComments.get(pos);
 
-                commentView.setText("Lorem Ipsum");
+                commentView.setText(comment.getBody());
+                timeView.setText(new SimpleDateFormat("dd/MM/yy, h:mm a").format(comment.getCreatedAt()));
             }
         }
 
@@ -167,7 +192,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
         @Override
         public int getItemViewType(int position) {
-            if (position % 2 == 0)
+            if (mComments.get(position).getAuthorId().equals(requesterId))
                 return VIEW_TYPE_FROM_ME;
             else
                 return VIEW_TYPE_FROM_SUPPORT;

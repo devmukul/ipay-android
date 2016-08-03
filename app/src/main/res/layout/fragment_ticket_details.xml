@@ -22,7 +22,7 @@
             android:textSize="16sp"/>
 
         <TextView
-            android:id="@+id/subject"
+            android:id="@+id/textview_subject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/subject"
@@ -34,7 +34,8 @@
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_comments"

@@ -158,8 +158,8 @@ public class Constants {
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
-            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/";
-//            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
+//            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.128:8085/api/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
@@ -371,7 +371,7 @@ public class Constants {
     // Ticket
     public static final String URL_CREATE_TICKET = "ticket/create";
     public static final String URL_GET_TICKETS = "ticket/list";
-    public static final String URL_GET_TICKET_DETAILS = "ticket/by/";
+    public static final String URL_GET_TICKET_DETAILS = "ticket/by/id";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;

@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -37,6 +40,8 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private FloatingActionButton mNewTicketButton;
+
     private List<Ticket> mTickets;
     private TicketListAdapter mTicketListAdapter;
 
@@ -44,6 +49,15 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ticket_list, container, false);
+
+        mNewTicketButton = (FloatingActionButton) v.findViewById(R.id.fab_new_ticket);
+
+        mNewTicketButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HelpAndSupportActivity) getActivity()).switchToCreateTicketFragment();
+            }
+        });
 
         mTicketListAdapter = new TicketListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -97,7 +111,12 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             return;
         }
 
-        Gson gson = new Gson();
+        /**
+         * Admin module sends names like created_at instead of createdAt. Ugh!
+         */
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_TICKETS:
