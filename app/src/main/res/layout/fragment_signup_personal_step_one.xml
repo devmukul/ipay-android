@@ -45,7 +45,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/full_name"
                     android:inputType="textPersonName"
-                    android:maxLines="1" />
+                    android:maxLines="1" >
+                    <requestFocus/>
+                </EditText>
             </android.support.design.widget.TextInputLayout>
 
             <View style="@style/DividerOnly" />

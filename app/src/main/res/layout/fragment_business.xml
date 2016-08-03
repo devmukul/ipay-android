@@ -9,17 +9,21 @@
         android:id="@+id/button_business_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_signup_add1"
+        android:drawableLeft="@drawable/ic_bizinfo"
+        android:paddingBottom="@dimen/value4"
+        android:paddingTop="@dimen/value4"
         android:text="@string/business_information" />
 
-    <View style="@style/DividerWithoutMarginPadding" />
+    <View style="@style/DividerWithoutMargin" />
 
     <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
         android:id="@+id/button_manage_employees"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_signup_add1"
+        android:drawableLeft="@drawable/ic_manageemployees"
+        android:paddingBottom="@dimen/value4"
+        android:paddingTop="@dimen/value4"
         android:text="@string/manage_employees" />
 
-    <View style="@style/DividerWithoutMarginPadding" />
+    <View style="@style/DividerWithoutMargin" />
 </LinearLayout>

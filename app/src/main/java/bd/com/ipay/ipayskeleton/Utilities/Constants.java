@@ -99,6 +99,7 @@ public class Constants {
 
     public static final String ADDRESS = "ADDRESS";
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
+    public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";
 
     public static final String AMOUNT = "amount";
     public static final String BANK_NAME = "bank_name";

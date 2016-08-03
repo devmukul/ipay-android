@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -137,7 +138,6 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
-
         return v;
     }
 
@@ -153,7 +153,6 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
             focusView = mRateEditText;
             cancel = true;
         }
-
         if (cancel) {
             focusView.requestFocus();
             return false;
@@ -183,8 +182,9 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (getActivity() != null)
+        if (requestCode == REQUEST_CREATE_INVOICE_REVIEW && resultCode == Activity.RESULT_OK) {
             ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
+        }
     }
 }
 

@@ -156,6 +156,8 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         permanentAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_PERMANENT);
         if (mPermanentAddress != null)
             permanentAddressBundle.putSerializable(Constants.ADDRESS, mPermanentAddress);
+        if (mPresentAddress != null)
+            permanentAddressBundle.putSerializable(Constants.PRESENT_ADDRESS, mPresentAddress);
 
         final Bundle officeAddressBundle = new Bundle();
         officeAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_OFFICE);

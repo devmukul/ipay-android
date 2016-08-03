@@ -11,6 +11,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -32,9 +34,14 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
     private SetUserAddressResponse mSetUserAddressResponse;
 
     private AddressClass mAddress;
+    private AddressClass mPresentAddress;
     private String mAddressType;
 
     private AddressInputView mAddressInputView;
+
+    private View mSameasPresentAddressCheckboxHolder;
+    private CheckBox mSameasPresentAddressCheckbox;
+
     private Button mSaveButton;
     private ProgressDialog mProgressDialog;
 
@@ -61,13 +68,31 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
 
         mProgressDialog = new ProgressDialog(getActivity());
         mAddressInputView = (AddressInputView) v.findViewById(R.id.input_address);
+        mSameasPresentAddressCheckboxHolder = v.findViewById(R.id.holder_same_as_present_address);
+        mSameasPresentAddressCheckbox = (CheckBox) v.findViewById(R.id.checkbox_same_as_present_address);
         mSaveButton = (Button) v.findViewById(R.id.button_save);
 
         mAddress = (AddressClass) getArguments().getSerializable(Constants.ADDRESS);
         mAddressType = getArguments().getString(Constants.ADDRESS_TYPE);
 
+        if (mAddressType.equals(Constants.ADDRESS_TYPE_PERMANENT)) {
+            mSameasPresentAddressCheckboxHolder.setVisibility(View.VISIBLE);
+            mPresentAddress = (AddressClass) getArguments().getSerializable(Constants.PRESENT_ADDRESS);
+        }
+
         if (mAddress != null)
             mAddressInputView.setInformation(mAddress);
+
+        mSameasPresentAddressCheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mSameasPresentAddressCheckbox.isChecked()) {
+                    if (mPresentAddress != null)
+                        mAddressInputView.setInformation(mPresentAddress);
+                }
+
+            }
+        });
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +123,7 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mSetUserAddressTask = null;
             Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();

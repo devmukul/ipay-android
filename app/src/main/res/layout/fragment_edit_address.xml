@@ -6,23 +6,42 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="?android:attr/actionBarSize"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
-        android:paddingTop="@dimen/value15"
-        android:layout_marginBottom="?android:attr/actionBarSize">
-        
+        android:paddingTop="@dimen/value15">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/holder_same_as_present_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <CheckBox
+                android:id="@+id/checkbox_same_as_present_address"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:layout_gravity="center_vertical"
+                android:text="@string/same_as_present_address" />
+
+            <View
+                android:id="@+id/divider"
+                style="@style/Divider"
+                android:layout_below="@+id/checkbox_same_as_present_address" />
+
+        </RelativeLayout>
+
         <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
             android:id="@+id/input_address"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        
+            android:layout_height="wrap_content" />
+
         <Button
             android:id="@+id/button_save"
             style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/save"/>
+            android:text="@string/save" />
 
     </LinearLayout>
 

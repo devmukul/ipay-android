@@ -18,8 +18,8 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/CustomTextInputLayout"
-                android:layout_alignParentLeft="true">
+                android:layout_alignParentLeft="true"
+                android:theme="@style/CustomTextInputLayout">
 
                 <EditText
                     android:id="@+id/mobile_number"
@@ -34,7 +34,6 @@
 
             <ImageView
                 android:id="@+id/button_scan_qr_code"
-                style="@style/ButtonStyleWithIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -57,8 +56,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/CustomTextInputLayout"
-            android:layout_alignParentLeft="true">
+            android:layout_alignParentLeft="true"
+            android:theme="@style/CustomTextInputLayout">
 
             <EditText
                 android:id="@+id/amount"
@@ -76,8 +75,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/CustomTextInputLayout"
-            android:layout_alignParentLeft="true">
+            android:layout_alignParentLeft="true"
+            android:theme="@style/CustomTextInputLayout">
 
             <EditText
                 android:id="@+id/description"

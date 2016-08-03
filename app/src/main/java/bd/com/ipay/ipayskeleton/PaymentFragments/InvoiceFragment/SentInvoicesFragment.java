@@ -80,6 +80,8 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         View v = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
         getActivity().setTitle(R.string.invoice_list);
 
+        ((InvoiceActivity)getActivity()).mFabCreateInvoice.setVisibility(View.VISIBLE);
+
         mProgressDialog = new ProgressDialog(getActivity());
         mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice_sent);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
