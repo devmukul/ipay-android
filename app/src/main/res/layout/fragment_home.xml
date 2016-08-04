@@ -267,7 +267,7 @@
                         android:id="@+id/button_send_money"
                         style="@style/HomeImageButtonStyleHorizontal"
                         android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_home_send"
+                        android:drawableTop="@drawable/background_icon_send_money"
                         android:text="@string/send_money" />
 
                     <View
@@ -279,7 +279,7 @@
                         android:id="@+id/button_request_money"
                         style="@style/HomeImageButtonStyleHorizontal"
                         android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_home_rcv"
+                        android:drawableTop="@drawable/background_icon_request_money"
                         android:text="@string/request_money" />
                 </LinearLayout>
 
@@ -294,7 +294,7 @@
                         android:id="@+id/button_make_payment"
                         style="@style/HomeImageButtonStyleHorizontal"
                         android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_home_payment"
+                        android:drawableTop="@drawable/background_icon_make_payment"
                         android:text="@string/make_payment" />
 
                     <View
@@ -306,7 +306,7 @@
                         android:id="@+id/button_pay_by_QR_code"
                         style="@style/HomeImageButtonStyleHorizontal"
                         android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_home_qrc"
+                        android:drawableTop="@drawable/background_pay_by_qr_code"
                         android:text="@string/pay_by_QR_code" />
 
                 </LinearLayout>
