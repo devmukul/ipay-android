@@ -4,8 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -66,18 +64,6 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-    }
 
     @Nullable
     @Override
@@ -145,6 +131,11 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         } else {
             mPresentAddressHolder.setVisibility(View.VISIBLE);
             mPresentAddressView.setText(mPresentAddress.toString(mThanaList, mDistrictList));
+        }
+
+        if (ProfileInfoCacheManager.isAccountVerified()) {
+            mPermanentAddressEditButton.setVisibility(View.GONE);
+            mOfficeAddressEditButton.setVisibility(View.GONE);
         }
 
         final Bundle presentAddressBundle = new Bundle();
