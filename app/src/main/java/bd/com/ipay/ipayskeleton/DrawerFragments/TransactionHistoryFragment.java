@@ -253,6 +253,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         filterByDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearEventFilters();
                 dateFilterLayout.setVisibility(View.GONE);
                 refreshTransactionHistory();
             }
@@ -431,15 +432,13 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     }
 
     private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
-        if (transactionHistoryClasses != null) {
-            if (clearListAfterLoading || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-                userTransactionHistoryClasses = transactionHistoryClasses;
-                clearListAfterLoading = false;
-            } else {
-                List<TransactionHistoryClass> tempTransactionHistoryClasses;
-                tempTransactionHistoryClasses = transactionHistoryClasses;
-                userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
-            }
+        if (clearListAfterLoading || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
+            userTransactionHistoryClasses = transactionHistoryClasses;
+            clearListAfterLoading = false;
+        } else {
+            List<TransactionHistoryClass> tempTransactionHistoryClasses;
+            tempTransactionHistoryClasses = transactionHistoryClasses;
+            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
         }
 
         this.hasNext = hasNext;
