@@ -77,8 +77,7 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
-                String userID = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE)
-                        .getString(Constants.USERID, "").replaceAll("\\D", "");
+                String userID = ProfileInfoCacheManager.getMobileNumber().replaceAll("\\D", "");
                 intent.putExtra(Constants.STRING_TO_ENCODE, userID);
                 intent.putExtra(Constants.ACTIVITY_TITLE, getString(R.string.request_money));
                 startActivity(intent);

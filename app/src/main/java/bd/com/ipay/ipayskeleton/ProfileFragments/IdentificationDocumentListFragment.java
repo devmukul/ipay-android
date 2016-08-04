@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -76,8 +75,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private IdentificationDocumentDetails[] mIdentificationDocumentDetails;
 
-    private SharedPreferences pref;
-
     private String[] DOCUMENT_TYPES;
 
     private String mFileName;
@@ -135,7 +132,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         getActivity().setTitle(R.string.profile_documents);
 
         mProgressDialog = new ProgressDialog(getActivity());
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mDocumentUploadInfoView = (TextView) v.findViewById(R.id.textview_document_upload_info);
         mDocumentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_documents);
@@ -369,9 +365,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
 
         if (mIdentificationDocuments.size() < DOCUMENT_TYPES.length) {
-            String accountVerificationStatus = pref.getString(
-                    Constants.VERIFICATION_STATUS, Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED);
-            if (accountVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+            if (ProfileInfoCacheManager.isAccountVerified()) {
                 mDocumentUploadInfoView.setText(R.string.upload_identification_documents_to_confirm_identity);
             } else {
                 mDocumentUploadInfoView.setText(R.string.you_need_to_upload_identification_documents_to_get_verified);
