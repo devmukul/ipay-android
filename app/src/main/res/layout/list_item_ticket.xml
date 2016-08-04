@@ -44,7 +44,7 @@
         <TextView
             android:text="Time"
             android:id="@+id/textview_time"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

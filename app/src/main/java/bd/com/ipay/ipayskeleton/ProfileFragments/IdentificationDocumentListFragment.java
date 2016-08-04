@@ -14,8 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -49,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.IdentificationD
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -79,13 +78,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private SharedPreferences pref;
 
-    private static final String[] DOCUMENT_TYPES = {
-            Constants.DOCUMENT_TYPE_NATIONAL_ID,
-            Constants.DOCUMENT_TYPE_PASSPORT,
-            Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-            Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-            Constants.DOCUMENT_TYPE_TIN
-    };
+    private String[] DOCUMENT_TYPES;
 
     private String mFileName;
 
@@ -94,7 +87,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.passport,
             R.string.driving_license,
             R.string.birth_certificate,
-            R.string.tin
+            R.string.tin,
+            R.string.business_tin,
+            R.string.trade_license,
+            R.string.vat_registration_certificate
+
     };
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
@@ -106,16 +103,30 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private ArrayList<DocumentPreviewBindViewHolder> documentPreviewBindViewHolderList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
+        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
+            // Before making any change, make sure DOCUMENT_TYPES matches with DOCUMENT_TYPE_NAMES
+            DOCUMENT_TYPES = new String[] {
+                    Constants.DOCUMENT_TYPE_NATIONAL_ID,
+                    Constants.DOCUMENT_TYPE_PASSPORT,
+                    Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                    Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                    Constants.DOCUMENT_TYPE_TIN
+            };
+        } else {
+            DOCUMENT_TYPES = new String[] {
+                    Constants.DOCUMENT_TYPE_NATIONAL_ID,
+                    Constants.DOCUMENT_TYPE_PASSPORT,
+                    Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                    Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                    Constants.DOCUMENT_TYPE_TIN,
+                    Constants.DOCUMENT_TYPE_BUSINESS_TIN,
+                    Constants.DOCUMENT_TYPE_TRADE_LICENSE,
+                    Constants.DOCUMENT_TYPE_VAT_REG_CERT
+            };
+        }
     }
 
     @Override
@@ -167,7 +178,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mFileName = temp[temp.length - 1];
                         documentPreviewBindViewHolderList.get(mSelectedItemId).setmSelectedfilePath(mFileName);
                         mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
-                        Log.w("Loading document", mSelectedItemId + mSelectedDocumentUri.toString());
+                        Log.w("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
                         documentPreviewBindViewHolderList.get(mSelectedItemId).setmSelectedDocumentUri(mSelectedDocumentUri);
                         mDocumentListAdapter.notifyDataSetChanged();
                         mSelectedItemId = -1;
@@ -248,7 +259,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mProgressDialog.show();
 
         String selectedOImagePath = documentPreviewBindViewHolderList.get(mID).getmSelectedDocumentUri().getPath();
-        Log.w("Loading document", mID + selectedOImagePath + mDocumentType);
+        Log.w("Loading document", mID + " " + selectedOImagePath + " " + mDocumentType);
 
         mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                 Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),

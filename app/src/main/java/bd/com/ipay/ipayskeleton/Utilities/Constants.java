@@ -608,6 +608,9 @@ public class Constants {
     public static final String DOCUMENT_TYPE_DRIVING_LICENSE = "driving_license";
     public static final String DOCUMENT_TYPE_BIRTH_CERTIFICATE = "birth_certificate";
     public static final String DOCUMENT_TYPE_TIN = "tin";
+    public static final String DOCUMENT_TYPE_BUSINESS_TIN = "business_tin";
+    public static final String DOCUMENT_TYPE_TRADE_LICENSE = "trade_license";
+    public static final String DOCUMENT_TYPE_VAT_REG_CERT = "vat_reg_certificate";
 
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";
