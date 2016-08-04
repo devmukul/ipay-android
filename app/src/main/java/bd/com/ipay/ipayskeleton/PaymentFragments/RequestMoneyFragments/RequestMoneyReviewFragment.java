@@ -191,7 +191,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
     @Override
     public int getServiceID() {
-        return Constants.SERVICE_ID_SEND_MONEY;
+        return Constants.SERVICE_ID_REQUEST_MONEY;
     }
 
     @Override
