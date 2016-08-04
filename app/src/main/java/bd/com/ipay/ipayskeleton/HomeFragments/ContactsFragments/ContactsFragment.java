@@ -83,8 +83,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private String mSelectedName;
     private String mSelectedNumber;
 
-    private View mSheetViewNonSubscriber;
-    private View mSheetViewSubscriber;
+    private View mSheetViewNonIpayMember;
+    private View mSheetViewIpayMember;
     private View selectedBottomSheetView;
 
     private HttpRequestPostAsyncTask mSendInviteTask = null;
@@ -390,9 +390,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void setUpBottomSheet() {
-        mSheetViewNonSubscriber = getActivity().getLayoutInflater()
+        mSheetViewNonIpayMember = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_non_member, null);
-        Button mInviteButton = (Button) mSheetViewNonSubscriber.findViewById(R.id.button_invite);
+        Button mInviteButton = (Button) mSheetViewNonIpayMember.findViewById(R.id.button_invite);
 
         if (ContactsHolderFragment.mGetInviteInfoResponse != null &&
                 ContactsHolderFragment.mGetInviteInfoResponse.invitees.contains(mSelectedNumber)) {
@@ -410,10 +410,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             });
         }
 
-        mSheetViewSubscriber = getActivity().getLayoutInflater()
+        mSheetViewIpayMember = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_member, null);
 
-        Button mSendMoneyButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_send_money);
+        Button mSendMoneyButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_send_money);
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -427,7 +427,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
-        Button mRequestMoneyButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_request_money);
+        Button mRequestMoneyButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_request_money);
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -442,7 +442,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
-        Button mAskForRecommendationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_introduction);
+        Button mAskForRecommendationButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_ask_for_introduction);
         mAskForRecommendationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -555,9 +555,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         if (mBottomSheetLayout == null)
             return;
 
-        selectedBottomSheetView = mSheetViewSubscriber;
+        selectedBottomSheetView = mSheetViewIpayMember;
 
-        Button askForConfirmationButton = (Button) mSheetViewSubscriber.findViewById(R.id.button_ask_for_introduction);
+        Button askForConfirmationButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_ask_for_introduction);
         if (!isVerified) {
             if (askForConfirmationButton != null)
                 askForConfirmationButton.setVisibility(View.GONE);
@@ -567,7 +567,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 askForConfirmationButton.setVisibility(View.VISIBLE);
         }
 
-        mBottomSheetLayout.showWithSheetView(mSheetViewSubscriber);
+        mBottomSheetLayout.showWithSheetView(mSheetViewIpayMember);
         mBottomSheetLayout.expandSheet();
     }
 
@@ -575,15 +575,15 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         if (mBottomSheetLayout == null)
             return;
 
-        selectedBottomSheetView = mSheetViewNonSubscriber;
+        selectedBottomSheetView = mSheetViewNonIpayMember;
 
-        Button inviteButton = (Button) mSheetViewNonSubscriber.findViewById(R.id.button_invite);
+        Button inviteButton = (Button) mSheetViewNonIpayMember.findViewById(R.id.button_invite);
         if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(mobileNumber))
             inviteButton.setEnabled(false);
         else
             inviteButton.setEnabled(true);
 
-        mBottomSheetLayout.showWithSheetView(mSheetViewNonSubscriber);
+        mBottomSheetLayout.showWithSheetView(mSheetViewNonIpayMember);
         mBottomSheetLayout.expandSheet();
     }
 
