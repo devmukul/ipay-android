@@ -120,12 +120,19 @@ public class DataHelper {
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_FRIENDS
                     + " WHERE (" + DBConstants.KEY_NAME + " LIKE '%" + query + "%'"
                     + " OR " + DBConstants.KEY_MOBILE_NUMBER + " LIKE '%" + query + "%')";
+
+            // Get Verified Users
             if (verifiedOnly)
                 queryString += " AND " + DBConstants.KEY_VERIFICATION_STATUS + " = " + DBConstants.VERIFIED_USER;
+
+            // Get iPay Users
             if (memberOnly)
                 queryString += " AND " + DBConstants.KEY_IS_MEMBER + " = " + DBConstants.IPAY_MEMBER;
+
+            // Get Non-iPay Users
             if (nonMemberOnly)
                 queryString += " AND " + DBConstants.KEY_IS_MEMBER + " != " + DBConstants.IPAY_MEMBER;
+
             if (invitees != null) {
                 List<String> quotedInvitees = new ArrayList<>();
                 for (String invitee : invitees) {
@@ -133,10 +140,14 @@ public class DataHelper {
                 }
 
                 String inviteeListStr = "(" + TextUtils.join(", ", quotedInvitees) + ")";
+
                 if (invitedOnly) {
+                    // Get invited users
                     queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " IN " + inviteeListStr;
                 }
+                
                 if (nonInvitedOnly) {
+                    // Get invited users
                     queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " NOT IN " + inviteeListStr;
                 }
             }

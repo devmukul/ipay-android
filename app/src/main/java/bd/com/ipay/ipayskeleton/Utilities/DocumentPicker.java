@@ -146,7 +146,6 @@ public class DocumentPicker {
             e.printStackTrace();
             return null;
         }
-
     }
 
     public static Uri getDocumentFromResult(Context context, int resultCode, Intent returnedIntent) {
@@ -189,7 +188,6 @@ public class DocumentPicker {
         }
         return selectedImage;
     }
-
 
     private static File getTempFile(Context context) {
         File documentFile = new File(context.getExternalCacheDir(), TEMP_DOCUMENT_NAME);

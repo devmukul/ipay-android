@@ -140,7 +140,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
                             dialog.dismiss();
                         }
-
                     }
                 });
 
