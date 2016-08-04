@@ -425,6 +425,7 @@
     <string name="birth_certificate">Birth Certificate</string>
     <string name="tin">TIN</string>
     <string name="transaction_successful">Successful</string>
+    <string name="not_applicable">N/A</string>
     <string name="upload_again">Upload again</string>
     <string name="personal_mobile_number">Personal Mobile Number</string>
     <string name="no_numbers_found">No numbers found</string>
@@ -651,6 +652,14 @@
     <string name="message">Message</string>
     <string name="failed_empty_subject">Subject cannot be empty</string>
     <string name="failed_empty_message">Message cannot be empty</string>
+    <string name="failed_loading_ticket_details">Failed to load ticket details</string>
+    <string name="created_at">Created At</string>
+    <string name="progress_dialog_submitting_comment">Submitting comment...</string>
+    <string name="comment_successfully_added">Comment successfully added</string>
+    <string name="failed_adding_comment">Failed to add comment</string>
+    <string name="comment">Comment</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="comment_cannot_be_empty">Comment cannot be empty</string>
 
 
     <string-array name="mobile_operators">

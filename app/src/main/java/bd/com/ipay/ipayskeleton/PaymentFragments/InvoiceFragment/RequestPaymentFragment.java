@@ -243,7 +243,7 @@ public class RequestPaymentFragment extends Fragment {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
                         Toast.LENGTH_SHORT).show();
-        } else if (getActivity() != null)
+        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CREATE_INVOICE_REVIEW)
             ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
     }
 }

@@ -26,6 +26,7 @@ public class Constants {
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
     public static final String DEVICE_ID = "DEVICE_ID";
+    public static final String TICKET_ID = "TICKET_ID";
     public static final String STRING_TO_ENCODE = "STRING_TO_ENCODE";
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
     public static final String EVENT_ID = "EVENT_ID";
@@ -157,7 +158,8 @@ public class Constants {
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
-            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/";
+//            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
@@ -167,6 +169,7 @@ public class Constants {
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "test";
 
         } else if (SERVER_TYPE == 3) {
@@ -176,6 +179,7 @@ public class Constants {
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "stage";
 
         } else if (SERVER_TYPE == 4) {
@@ -185,6 +189,7 @@ public class Constants {
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/education/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "live";
 
         } else {
@@ -194,6 +199,7 @@ public class Constants {
             BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "local";
         }
     }
@@ -369,7 +375,8 @@ public class Constants {
     // Ticket
     public static final String URL_CREATE_TICKET = "ticket/create";
     public static final String URL_GET_TICKETS = "ticket/list";
-    public static final String URL_GET_TICKET_DETAILS = "ticket/by/";
+    public static final String URL_GET_TICKET_DETAILS = "ticket/by/id";
+    public static final String URL_ADD_COMMENT = "ticket/add/comment";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -474,6 +481,7 @@ public class Constants {
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
     public static final String COMMAND_GET_TICKETS = "COMMAND_GET_TICKETS";
     public static final String COMMAND_GET_TICKET_DETAILS = "COMMAND_GET_TICKET_DETAILS";
+    public static final String COMMAND_ADD_COMMENT = "COMMAND_ADD_COMMENT";
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";

@@ -2,7 +2,7 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Ticket;
 
 public class Ticket {
     private long id;
-    private long requesterId;
+    private String requesterId;
     private String url;
     private long createdAt;
     private long updatedAt;
@@ -14,7 +14,7 @@ public class Ticket {
         return id;
     }
 
-    public long getRequesterId() {
+    public String getRequesterId() {
         return requesterId;
     }
 
@@ -40,5 +40,19 @@ public class Ticket {
 
     public String getStatus() {
         return status;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", requesterId='" + requesterId + '\'' +
+                ", url='" + url + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", subject='" + subject + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

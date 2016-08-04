@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,22 +111,19 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (Utilities.isConnectionAvailable(getActivity())) {
+        if (pendingPaymentClasses == null) {
+            setContentShown(false);
             getInvoicesPendingRequests();
+        } else {
+            setContentShown(true);
         }
     }
 
     private void refreshInvoicesPendingList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
-
             historyPageCount = 0;
             clearListAfterLoading = true;
             getInvoicesPendingRequests();
@@ -139,8 +136,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         if (mPendingInvoicesTask != null) {
             return;
         }
-
-        setContentShown(false);
 
         GetPendingPaymentsRequest mGetPendingPaymentsRequest = new GetPendingPaymentsRequest(historyPageCount, Constants.SERVICE_ID_REQUEST_INVOICE);
         Gson gson = new Gson();

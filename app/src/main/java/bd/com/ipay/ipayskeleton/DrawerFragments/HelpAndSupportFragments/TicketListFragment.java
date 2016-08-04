@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -36,6 +40,8 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private FloatingActionButton mNewTicketButton;
+
     private List<Ticket> mTickets;
     private TicketListAdapter mTicketListAdapter;
 
@@ -43,6 +49,15 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ticket_list, container, false);
+
+        mNewTicketButton = (FloatingActionButton) v.findViewById(R.id.fab_new_ticket);
+
+        mNewTicketButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((HelpAndSupportActivity) getActivity()).switchToCreateTicketFragment();
+            }
+        });
 
         mTicketListAdapter = new TicketListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -90,13 +105,18 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTicketsTask = null;
             if (getActivity() != null) {
-                getActivity().onBackPressed();
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
             return;
         }
 
-        Gson gson = new Gson();
+        /**
+         * Admin module sends names like created_at instead of createdAt. Ugh!
+         */
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_TICKETS:
@@ -116,6 +136,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                         }
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_loading_tickets, Toast.LENGTH_LONG).show();
                         getActivity().onBackPressed();
@@ -133,7 +154,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         private static final int ITEM_TYPE_TICKET = 1;
         private static final int ITEM_TYPE_FOOTER = 2;
 
-        public class TicketViewHolder extends RecyclerView.ViewHolder {
+        private class TicketViewHolder extends RecyclerView.ViewHolder {
 
             private TextView subjectView;
             private TextView descriptionView;
@@ -150,7 +171,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             }
 
             public void bindView(int pos) {
-                Ticket ticket = mTickets.get(pos);
+                final Ticket ticket = mTickets.get(pos);
 
                 subjectView.setText(ticket.getSubject());
                 descriptionView.setText(ticket.getDescription());
@@ -170,6 +191,13 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                     case Constants.TICKET_STATUS_SOLVED:
                         statusView.setTextColor(getResources().getColor(R.color.colorGray));
                 }
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((HelpAndSupportActivity) getActivity()).switchToTicketDetailsFragment(ticket.getId());
+                    }
+                });
             }
         }
 

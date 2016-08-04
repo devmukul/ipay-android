@@ -8,22 +8,35 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BasicInfoFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentListFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.DocumentUploadFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.EditAddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.EditAddressFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentListFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
-import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.*;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.ADDRESS;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.ADD_BANK;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.INTRODUCER;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PARENT;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PHOTOID;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_INFO;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_PICTURE;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TRUSTED_NETWORK;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFIED_EMAIL;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFY_BANK;
 
 public class ProfileActivity extends BaseActivity {
 
