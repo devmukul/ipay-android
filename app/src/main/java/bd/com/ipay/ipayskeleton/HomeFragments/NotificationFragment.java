@@ -115,6 +115,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private long mMoneyRequestId;
     private String mTitle;
     private String mDescription;
+    private String mDescriptionofRequest;
     private int mServiceID;
 
     private boolean mSwitchToEmployeeFragment;
@@ -702,6 +703,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final String name = moneyAndPaymentRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyAndPaymentRequest.originatorProfile.getUserMobileNumber();
                 final String description = moneyAndPaymentRequest.getDescription();
+                final String descriptionofRequest = moneyAndPaymentRequest.getDescriptionofRequest();
                 final String title = moneyAndPaymentRequest.getTitle();
                 final long id = moneyAndPaymentRequest.getId();
                 final BigDecimal amount = moneyAndPaymentRequest.getAmount();
@@ -729,6 +731,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                     mPhotoUri = imageUrl;
                                     mTitle = title;
                                     mDescription = description;
+                                    mDescriptionofRequest = descriptionofRequest;
                                     mServiceID = serviceID;
                                     mVat = vat;
                                     mItemList = itemList;
@@ -973,6 +976,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putString(Constants.PHOTO_URI, mPhotoUri);
         bundle.putString(Constants.AMOUNT, mAmount.toString());
         bundle.putString(Constants.TITLE, mTitle);
+        bundle.putString(Constants.DESCRIPTION, mDescriptionofRequest);
         bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG,new ArrayList<>(mItemList));
         bundle.putString(Constants.TAG, Constants.INVOICE);
 
