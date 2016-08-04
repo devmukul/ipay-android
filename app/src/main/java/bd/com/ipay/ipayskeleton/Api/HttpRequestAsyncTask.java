@@ -79,6 +79,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                         CountDownTimer tokenTimer = TokenManager.getTokenTimer();
 
                         if (tokenTimer != null) {
+                            Log.w("Token Timer", "Starting... " + TokenManager.getiPayTokenTimeInMs());
                             tokenTimer.cancel();
                             tokenTimer.start();
                         }

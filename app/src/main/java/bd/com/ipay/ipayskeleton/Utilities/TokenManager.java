@@ -16,6 +16,10 @@ public class TokenManager {
     private static String token = "";
     private static String refreshToken = "";
 
+    private static CountDownTimer tokenTimer;
+    private static long iPayTokenTimeInMs = 60000;  // By default this is one minute
+    private static final long GRACE_PERIOD = 15000;
+
     public static String getOperatingOnAccountId() {
         return operatingOnAccountId;
     }
@@ -31,10 +35,6 @@ public class TokenManager {
     public static void deactivateEmployerAccount() {
         operatingOnAccountId = null;
     }
-
-    private static CountDownTimer tokenTimer;
-    private static long iPayTokenTimeInMs = 60000;  // By default this is one minute
-    private static final long GRACE_PERIOD = 15000;
 
     public static boolean isTokenExists() {
         return token != null && !token.isEmpty();
@@ -61,6 +61,8 @@ public class TokenManager {
     }
 
     public static void setTokenTimer(CountDownTimer tokenTimer) {
+        if (getTokenTimer() != null)
+            getTokenTimer().cancel();
         TokenManager.tokenTimer = tokenTimer;
     }
 
