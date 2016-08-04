@@ -109,12 +109,12 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public void switchToOTPVerificationBusinessFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OTPVerificationBusinessFragment()).commit();
+                .replace(R.id.fragment_container, new OTPVerificationBusinessFragment()).addToBackStack(null).commit();
     }
 
     public void switchToOTPVerificationTrustedFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OTPVerificationTrustFragment()).commit();
+                .replace(R.id.fragment_container, new OTPVerificationTrustFragment()).addToBackStack(null).commit();
     }
 
     public void switchToAccountSelectionFragment() {
