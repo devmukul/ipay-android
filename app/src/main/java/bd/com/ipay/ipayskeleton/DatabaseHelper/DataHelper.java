@@ -118,7 +118,8 @@ public class DataHelper {
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_FRIENDS
-                    + " WHERE " + DBConstants.KEY_NAME + " LIKE '%" + query + "%'";
+                    + " WHERE (" + DBConstants.KEY_NAME + " LIKE '%" + query + "%'"
+                    + " OR " + DBConstants.KEY_MOBILE_NUMBER + " LIKE '%" + query + "%')";
             if (verifiedOnly)
                 queryString += " AND " + DBConstants.KEY_VERIFICATION_STATUS + " = " + DBConstants.VERIFIED_USER;
             if (memberOnly)

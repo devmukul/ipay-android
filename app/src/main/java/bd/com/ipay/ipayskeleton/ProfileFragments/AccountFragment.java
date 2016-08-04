@@ -99,17 +99,19 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         setProfileInformation();
 
-        mProfilePictureView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                    Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getContext(), getString(R.string.select_an_image));
-                    startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
-                } else {
-                    DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
+        if (!ProfileInfoCacheManager.isAccountVerified()) {
+            mProfilePictureView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                        Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getContext(), getString(R.string.select_an_image));
+                        startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
+                    } else {
+                        DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         mBasicInfo.setOnClickListener(new View.OnClickListener() {
             @Override
