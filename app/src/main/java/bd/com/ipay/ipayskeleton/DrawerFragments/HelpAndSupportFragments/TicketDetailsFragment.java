@@ -211,7 +211,9 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
                         String ticketStatus = mGetTicketDetailsResponse.getResponse().getTicket().getStatus();
 
-                        if (ticketStatus.equals(Constants.TICKET_STATUS_NEW) || ticketStatus.equals(Constants.TICKET_STATUS_SOLVED)) {
+                        if (ticketStatus.equals(Constants.TICKET_STATUS_NEW)
+                                || ticketStatus.equals(Constants.TICKET_STATUS_SOLVED)
+                                || ticketStatus.equals(Constants.TICKET_STATUS_CLOSED)) {
                             mSubmitCommentButton.setVisibility(View.GONE);
                         }
 

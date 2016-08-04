@@ -262,6 +262,7 @@ public class HomeActivity extends BaseActivity
     @Override
     public void onResume() {
         super.onResume();
+        Utilities.hideKeyboard(this);
     }
 
     @Override
@@ -547,6 +548,10 @@ public class HomeActivity extends BaseActivity
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                        if (TokenManager.getTokenTimer() != null)
+                            TokenManager.getTokenTimer().cancel();
+
                         finish();
                         Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
                         startActivity(intent);
