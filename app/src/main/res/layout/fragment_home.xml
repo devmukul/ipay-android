@@ -281,7 +281,7 @@
                         android:id="@+id/button_request_money"
                         style="@style/HomeImageButtonStyleHorizontal"
                         android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_home_requestmoney"
+                        android:drawableTop="@drawable/ic_home_rcv"
                         android:text="@string/request_money" />
                 </LinearLayout>
 
