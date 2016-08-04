@@ -102,10 +102,6 @@ public class InvoiceActivity extends BaseActivity {
 
     private void switchToRequestPaymentFragment() {
 
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new RequestPaymentFragment())
                 .addToBackStack(null)

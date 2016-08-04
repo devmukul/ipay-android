@@ -169,6 +169,7 @@ public class Constants {
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "test";
 
         } else if (SERVER_TYPE == 3) {
@@ -178,6 +179,7 @@ public class Constants {
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "stage";
 
         } else if (SERVER_TYPE == 4) {
@@ -187,6 +189,7 @@ public class Constants {
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/education/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "live";
 
         } else {
@@ -196,6 +199,7 @@ public class Constants {
             BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
+            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "local";
         }
     }
