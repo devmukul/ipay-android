@@ -63,6 +63,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
+        getActivity().setTitle(R.string.make_payment);
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
