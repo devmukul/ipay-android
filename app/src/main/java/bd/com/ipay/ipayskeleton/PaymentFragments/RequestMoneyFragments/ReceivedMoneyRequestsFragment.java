@@ -169,16 +169,17 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
+        if (this.isAdded()) setContentShown(true);
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mRejectRequestTask = null;
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
-            if (getActivity() != null)
+            if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+            }
             return;
         }
-
 
         Gson gson = new Gson();
 
@@ -212,7 +213,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                         Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
                 }
 
-                if (this.isAdded()) setContentShown(true);
                 mGetAllNotificationsTask = null;
                 mSwipeRefreshLayout.setRefreshing(false);
 
