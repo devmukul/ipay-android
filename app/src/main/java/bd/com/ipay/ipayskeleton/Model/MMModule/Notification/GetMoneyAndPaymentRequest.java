@@ -13,7 +13,7 @@ public class GetMoneyAndPaymentRequest {
     }
 
     public GetMoneyAndPaymentRequest(int page,int serviceID) {
-        this.page = 0;
+        this.page = page;
         this.serviceID = serviceID;
     }
 }

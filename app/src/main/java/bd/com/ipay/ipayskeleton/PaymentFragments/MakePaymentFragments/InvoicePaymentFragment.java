@@ -109,7 +109,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         mInvoiceRecyclerView.setLayoutManager(mLayoutManager);
         mInvoiceRecyclerView.setAdapter(mInvoiceListAdapter);
 
-        // Refresh balance each time home_activity page appears
+        // Refresh each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
             getMakePaymentRequests();
         }

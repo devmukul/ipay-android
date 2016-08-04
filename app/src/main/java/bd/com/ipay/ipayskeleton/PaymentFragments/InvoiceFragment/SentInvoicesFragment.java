@@ -79,6 +79,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
     private int historyPageCount = 0;
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
+    private TextView mEmptyListTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
 
         ((InvoiceActivity) getActivity()).mFabCreateInvoice.setVisibility(View.VISIBLE);
 
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mProgressDialog = new ProgressDialog(getActivity());
         mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice_sent);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -246,6 +248,9 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
             mProgressDialog.dismiss();
             mCancelPaymentRequestTask = null;
         }
+        if (pendingPaymentClasses != null && pendingPaymentClasses.size() == 0)
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        else mEmptyListTextView.setVisibility(View.GONE);
 
     }
 
