@@ -59,7 +59,6 @@
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/divider_space"
-                android:layout_below="@+id/icon"
                 android:background="@color/colorDivider" />
 
             <LinearLayout
@@ -80,7 +79,6 @@
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/divider_space"
-                android:layout_below="@+id/icon"
                 android:background="@color/colorDivider" />
 
             <LinearLayout
@@ -102,7 +100,6 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="@dimen/divider_space"
-            android:layout_below="@+id/icon"
             android:background="@color/colorDivider" />
 
         <LinearLayout
@@ -114,7 +111,7 @@
             <TextView
                 style="@style/ListHeaderStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
                 android:text="@string/note" />

@@ -27,7 +27,7 @@
 
                 <LinearLayout
                     android:id="@+id/present_address_holder"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="left"
@@ -68,7 +68,7 @@
 
                     <LinearLayout
                         android:id="@+id/permanent_address_holder"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="left"
@@ -111,7 +111,7 @@
 
                     <LinearLayout
                         android:id="@+id/office_address_holder"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
