@@ -925,7 +925,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
             View v;
 
-            if (viewType == Constants.NOTIFICATION_TYPE_INTROUDCTION_REQUEST) {
+            if (viewType == Constants.NOTIFICATION_TYPE_INTRODUCTION_REQUEST) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests, parent, false);
                 return new IntroductionRequestViewHolder(v);
 

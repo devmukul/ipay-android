@@ -183,13 +183,16 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                         statusView.setTextColor(getResources().getColor(R.color.bottle_green));
                         break;
                     case Constants.TICKET_STATUS_OPEN:
+                    case Constants.TICKET_STATUS_ON_HOLD:
                         statusView.setTextColor(getResources().getColor(android.R.color.holo_green_light));
                         break;
                     case Constants.TICKET_STATUS_PENDING:
                         statusView.setTextColor(getResources().getColor(android.R.color.holo_red_light));
                         break;
                     case Constants.TICKET_STATUS_SOLVED:
+                    case Constants.TICKET_STATUS_CLOSED:
                         statusView.setTextColor(getResources().getColor(R.color.colorGray));
+                        break;
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {

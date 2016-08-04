@@ -18,7 +18,6 @@ public class TokenManager {
 
     private static CountDownTimer tokenTimer;
     private static long iPayTokenTimeInMs = 60000;  // By default this is one minute
-    private static final long GRACE_PERIOD = 15000;
 
     public static String getOperatingOnAccountId() {
         return operatingOnAccountId;
@@ -67,7 +66,7 @@ public class TokenManager {
     }
 
     public static long getiPayTokenTimeInMs() {
-        return iPayTokenTimeInMs - GRACE_PERIOD;
+        return iPayTokenTimeInMs;
     }
 
     public static void setiPayTokenTimeInMs(long iPayTokenTimeInMs) {
