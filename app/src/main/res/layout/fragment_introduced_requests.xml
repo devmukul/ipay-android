@@ -17,7 +17,6 @@
             android:id="@+id/list_introduced_requests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/complete_introduction_header"
             android:clipToPadding="false"
             android:scrollbars="vertical" />
 
