@@ -421,8 +421,7 @@ public class Utilities {
     }
 
     public static boolean isValueAvailable(BigDecimal amount) {
-        if (amount.compareTo(BigDecimal.ZERO) < 0) return false;
-        else return true;
+        return amount.compareTo(BigDecimal.ZERO) >= 0;
     }
 
     public static String formatTakaWithComma(double amount) {
@@ -481,9 +480,7 @@ public class Utilities {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
 
-        if (resultCode == ConnectionResult.SUCCESS)
-            return true;
-        else return false;
+        return resultCode == ConnectionResult.SUCCESS;
     }
 
     public static String getExtension(String filePath) {

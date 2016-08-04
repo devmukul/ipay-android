@@ -109,10 +109,7 @@ public class TourActivity extends BaseActivity {
 
         boolean isLast = false;
         for (int i = 0; i < tourBackgroundLayouts.length; i++) {
-            if (i < tourBackgroundLayouts.length - 1)
-                isLast = false;
-            else
-                isLast = true;
+            isLast = i >= tourBackgroundLayouts.length - 1;
             fragments.add(TourFragment.getInstance(tourBackgroundLayouts[i],
                     isLast));
         }

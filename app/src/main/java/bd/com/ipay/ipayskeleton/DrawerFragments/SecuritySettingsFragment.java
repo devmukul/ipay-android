@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -42,12 +40,6 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,18 +107,6 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         return v;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-    }
-
     private void logOutFromAllDevices() {
         if (mLogoutTask != null) {
             return;
@@ -191,6 +171,5 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
         }
     }
-
 
 }

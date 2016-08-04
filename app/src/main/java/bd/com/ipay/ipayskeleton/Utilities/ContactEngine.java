@@ -1002,13 +1002,10 @@ public class ContactEngine {
         if (number == null)
             return false;
 
-        number = number.replaceAll("[^\\d]", "");;
+        number = number.replaceAll("[^\\d]", "");
         if (number.length() == 11 && number.startsWith("0"))
             return true;
-        else if (number.length() == 13 && number.startsWith("880"))
-            return true;
-        else
-            return false;
+        else return number.length() == 13 && number.startsWith("880");
     }
 
 
