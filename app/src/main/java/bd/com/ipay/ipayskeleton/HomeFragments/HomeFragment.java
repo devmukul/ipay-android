@@ -521,7 +521,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     if (balance != null) {
                         if (isAdded())
                             balanceView.setText(balance + " " + getString(R.string.bdt));
-                        pref.edit().putString(Constants.USER_BALANCE, balance).commit();
+                        pref.edit().putString(Constants.USER_BALANCE, balance).apply();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
