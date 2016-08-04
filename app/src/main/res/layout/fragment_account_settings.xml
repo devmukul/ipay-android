@@ -64,6 +64,11 @@
             android:drawableLeft="@drawable/ic_logout23x"
             android:text="@string/logout_from_all_device" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_space"
+            android:background="@color/colorDivider" />
+
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

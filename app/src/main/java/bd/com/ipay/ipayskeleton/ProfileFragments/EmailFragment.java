@@ -433,9 +433,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
                 final Email email = mEmails.get(pos);
 
-                if (pos == mEmails.size() - 1)
-                    divider1.setVisibility(View.GONE);
-
                 final String verificationStatus = email.getVerificationStatus();
 
                 switch (verificationStatus) {
