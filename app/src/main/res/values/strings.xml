@@ -425,6 +425,7 @@
     <string name="birth_certificate">Birth Certificate</string>
     <string name="tin">TIN</string>
     <string name="transaction_successful">Successful</string>
+    <string name="not_applicable">N/A</string>
     <string name="upload_again">Upload again</string>
     <string name="personal_mobile_number">Personal Mobile Number</string>
     <string name="no_numbers_found">No numbers found</string>
