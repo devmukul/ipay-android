@@ -291,11 +291,11 @@
                     android:background="@android:color/white">
 
                     <Button
-                        android:id="@+id/button_mobile_topup"
+                        android:id="@+id/button_make_payment"
                         style="@style/HomeImageButtonStyleHorizontal"
                         android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_home_topup"
-                        android:text="@string/mobile_topup" />
+                        android:drawableTop="@drawable/ic_home_payment"
+                        android:text="@string/make_payment" />
 
                     <View
                         android:layout_width="1dp"
@@ -320,11 +320,11 @@
                     android:visibility="gone">
 
                     <Button
-                        android:id="@+id/button_make_payment"
+                        android:id="@+id/button_mobile_topup"
                         style="@style/HomeImageButtonStyleHorizontal"
                         android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_home_payment"
-                        android:text="@string/make_payment"
+                        android:drawableTop="@drawable/ic_home_topup"
+                        android:text="@string/mobile_topup"
                         android:visibility="gone" />
 
                     <View
