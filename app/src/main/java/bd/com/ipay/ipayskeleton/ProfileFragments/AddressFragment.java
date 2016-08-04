@@ -118,17 +118,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     }
 
     private void loadAddresses() {
-        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-            mPermanentAddressviewHolder.setVisibility(View.VISIBLE);
-            mOfficeAddressviewHolder.setVisibility(View.GONE);
-
-            if (mPermanentAddress == null) {
-                mPermanentAddressView.setVisibility(View.GONE);
-            } else {
-                mPermanentAddressHolder.setVisibility(View.VISIBLE);
-                mPermanentAddressView.setText(mPermanentAddress.toString(mThanaList, mDistrictList));
-            }
-        } else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
             mPermanentAddressviewHolder.setVisibility(View.GONE);
             mOfficeAddressviewHolder.setVisibility(View.VISIBLE);
 
@@ -137,6 +127,16 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
             } else {
                 mOfficeAddressHolder.setVisibility(View.VISIBLE);
                 mOfficeAddressView.setText(mOfficeAddress.toString(mThanaList, mDistrictList));
+            }
+        } else {
+            mPermanentAddressviewHolder.setVisibility(View.VISIBLE);
+            mOfficeAddressviewHolder.setVisibility(View.GONE);
+
+            if (mPermanentAddress == null) {
+                mPermanentAddressView.setVisibility(View.GONE);
+            } else {
+                mPermanentAddressHolder.setVisibility(View.VISIBLE);
+                mPermanentAddressView.setText(mPermanentAddress.toString(mThanaList, mDistrictList));
             }
         }
 

@@ -29,6 +29,14 @@ public class ProfileInfoCacheManager {
         return pref.getString(Constants.PROFILE_PICTURE, "");
     }
 
+    public static boolean isAccountVerified() {
+        return getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED);
+    }
+
+    public static boolean isBusinessAccount() {
+        return getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE;
+    }
+
     public static String getVerificationStatus() {
         return pref.getString(Constants.VERIFICATION_STATUS, "");
     }

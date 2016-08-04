@@ -272,7 +272,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
+            if (!ProfileInfoCacheManager.isBusinessAccount())
                 getProfileCompletionStatus();
         }
 
@@ -377,7 +377,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
 
-        if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
+        if (ProfileInfoCacheManager.isAccountVerified())
             mVerificationStatusView.setVisibility(View.VISIBLE);
         else
             mVerificationStatusView.setVisibility(View.GONE);

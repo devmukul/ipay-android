@@ -81,7 +81,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        if (!ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
+        if (!ProfileInfoCacheManager.isAccountVerified())
             inflater.inflate(R.menu.edit, menu);
     }
 

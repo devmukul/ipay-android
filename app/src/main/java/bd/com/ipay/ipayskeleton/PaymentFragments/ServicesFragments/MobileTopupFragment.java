@@ -125,13 +125,12 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             }
         });
 
-        String verificationStatus = ProfileInfoCacheManager.getVerificationStatus();
         String userMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
         mMobileNumberEditText.setText(userMobileNumber);
         setOperator(userMobileNumber);
 
-        if (!verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+        if (!ProfileInfoCacheManager.isAccountVerified()) {
             mMobileNumberEditText.setEnabled(false);
             mMobileNumberEditText.setFocusable(false);
 

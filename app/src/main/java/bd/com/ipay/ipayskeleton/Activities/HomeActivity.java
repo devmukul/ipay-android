@@ -91,7 +91,6 @@ public class HomeActivity extends BaseActivity
     private ProfileImageView mProfileImageView;
     private SharedPreferences pref;
     private String mUserID;
-    private int mAccountType;
     private String mDeviceID;
 
     private ProgressDialog mProgressDialog;
@@ -152,16 +151,11 @@ public class HomeActivity extends BaseActivity
 
         pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = ProfileInfoCacheManager.getMobileNumber();
-        mAccountType = ProfileInfoCacheManager.getAccountType();
         mDeviceID = DeviceInfoFactory.getDeviceId(HomeActivity.this);
 
         pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
 
-        if (mAccountType == Constants.PERSONAL_ACCOUNT_TYPE) {
-            setDrawerMenuVisibility(R.id.nav_manage_business, false);
-        } else {
-            setDrawerMenuVisibility(R.id.nav_manage_business, true);
-        }
+        setDrawerMenuVisibility(R.id.nav_manage_business, ProfileInfoCacheManager.isBusinessAccount());
 
         // Initialize token timer
         CountDownTimer tokenTimer = new CountDownTimer(TokenManager.getiPayTokenTimeInMs(), 1000) {

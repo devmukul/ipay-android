@@ -106,16 +106,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-            // Before making any change, make sure DOCUMENT_TYPES matches with DOCUMENT_TYPE_NAMES
-            DOCUMENT_TYPES = new String[] {
-                    Constants.DOCUMENT_TYPE_NATIONAL_ID,
-                    Constants.DOCUMENT_TYPE_PASSPORT,
-                    Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-                    Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-                    Constants.DOCUMENT_TYPE_TIN
-            };
-        } else {
+        // Before making any change, make sure DOCUMENT_TYPES matches with DOCUMENT_TYPE_NAMES
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
             DOCUMENT_TYPES = new String[] {
                     Constants.DOCUMENT_TYPE_NATIONAL_ID,
                     Constants.DOCUMENT_TYPE_PASSPORT,
@@ -125,6 +117,14 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     Constants.DOCUMENT_TYPE_BUSINESS_TIN,
                     Constants.DOCUMENT_TYPE_TRADE_LICENSE,
                     Constants.DOCUMENT_TYPE_VAT_REG_CERT
+            };
+        } else {
+            DOCUMENT_TYPES = new String[] {
+                    Constants.DOCUMENT_TYPE_NATIONAL_ID,
+                    Constants.DOCUMENT_TYPE_PASSPORT,
+                    Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                    Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                    Constants.DOCUMENT_TYPE_TIN
             };
         }
     }
@@ -448,7 +448,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mDocumentIdView.setText(R.string.not_submitted);
                     mUploadButton.setText(getString(R.string.upload));
                 }
-                // Document uploaded and verified
+                // Document uploaded and verified OR account itself is verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                     mVerificationStatus.setVisibility(View.VISIBLE);
                     mVerificationStatus.setImageResource(R.drawable.ic_verified);

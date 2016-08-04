@@ -45,7 +45,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private String mName = "";
     private String mMobileNumber = "";
     private String mProfilePicture = "";
-    private String mVerificationStatus = null;
 
     private String mSelectedImagePath = "";
 
@@ -86,10 +85,10 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mDocuments = (IconifiedTextViewWithButton) v.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
 
-        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
-            mProfileCompleteness.setVisibility(View.VISIBLE);
-        else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
+        if (ProfileInfoCacheManager.isBusinessAccount())
             mProfileCompleteness.setVisibility(View.GONE);
+        else
+            mProfileCompleteness.setVisibility(View.VISIBLE);
 
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -97,7 +96,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mName = ProfileInfoCacheManager.getName();
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
-        mVerificationStatus = ProfileInfoCacheManager.getVerificationStatus();
 
         setProfileInformation();
 
@@ -156,10 +154,10 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         });
 
 
-        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-            getProfileCompletionStatus();
-        } else {
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
             mProfileCompletionStatusView.setVisibility(View.GONE);
+        } else {
+            getProfileCompletionStatus();
         }
 
         return v;
@@ -230,12 +228,10 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                 mProfilePicture, false);
 
-        if (mVerificationStatus != null) {
-            if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-                mVerificationStatusView.setVisibility(View.VISIBLE);
-            } else {
-                mVerificationStatusView.setVisibility(View.GONE);
-            }
+        if (ProfileInfoCacheManager.isAccountVerified()) {
+            mVerificationStatusView.setVisibility(View.VISIBLE);
+        } else {
+            mVerificationStatusView.setVisibility(View.GONE);
         }
     }
 
