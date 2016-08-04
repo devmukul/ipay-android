@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -22,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -51,10 +49,15 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.Ask
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
 
 /**
+ * CAUTION: This fragment is used in contacts tab, invite page, and in contact picker.
+ * Make sure to test it thoroughly after making any changes.
+ *
+ *
  * Pass (Constants.VERIFIED_USERS_ONLY, true) in the argument bundle to show only the
  * verified iPay users and (Constants.IPAY_MEMBERS_ONLY, true) to show member users only.
  */
@@ -723,8 +726,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             setSelectedName(name);
                             setSelectedNumber(mobileNumber);
 
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
+                            Utilities.hideKeyboard(getActivity());
 
                             // Add a delay to hide keyboard and then open up the bottom sheet
                             final Handler handler = new Handler();

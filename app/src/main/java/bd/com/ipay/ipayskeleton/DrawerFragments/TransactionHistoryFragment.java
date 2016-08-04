@@ -559,7 +559,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     statusDescriptionView.setText(getString(R.string.in_progress));
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.colorAmber));
                 } else {
-                    if ( serviceId != Constants.TRANSACTION_HISTORY_TOP_UP || serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
+                    if ( serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                         mAmountTextView.setText(getString(R.string.not_applicable));
                     }
                     statusDescriptionView.setText(getString(R.string.transaction_failed));

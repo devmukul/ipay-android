@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class BusinessInformationFragment extends ProgressFragment implements HttpResponseListener {
@@ -70,7 +71,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.edit, menu);
+        if (!ProfileInfoCacheManager.isAccountVerified())
+            inflater.inflate(R.menu.edit, menu);
     }
 
     @Override

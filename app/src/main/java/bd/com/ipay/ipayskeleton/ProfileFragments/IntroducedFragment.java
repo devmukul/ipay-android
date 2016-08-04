@@ -53,14 +53,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     private ProgressDialog mProgressDialog;
     private RecyclerView mRecyclerView;
     private TextView mEmptyListTextView;
-    private IntroducdAdapter mIntroduceAdapter;
+    private IntroducedAdapter mIntroduceAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,7 +71,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             getRecommendationRequestsList();
         }
 
-        mIntroduceAdapter = new IntroducdAdapter();
+        mIntroduceAdapter = new IntroducedAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mIntroduceAdapter);
@@ -249,7 +243,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     }
 
 
-    private class IntroducdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class IntroducedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int RECOMMENDATION_ITEM_VIEW = 1;
         private static final int INTRODUCED_LIST_ITEM_VIEW = 2;
@@ -259,7 +253,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
         private final int ACTION_REJECT = 1;
         private final int ACTION_SPAM = 2;
 
-        public IntroducdAdapter() {
+        public IntroducedAdapter() {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

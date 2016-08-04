@@ -51,8 +51,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-;
-
 public class IdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
@@ -442,7 +440,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mDocumentIdView.setText(R.string.not_submitted);
                     mUploadButton.setText(getString(R.string.upload));
                 }
-                // Document uploaded and verified OR account itself is verified
+                // Document uploaded and verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                     mVerificationStatus.setVisibility(View.VISIBLE);
                     mVerificationStatus.setImageResource(R.drawable.ic_verified);
@@ -470,14 +468,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 if (documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
                     mOptionsLayout.setVisibility(View.VISIBLE);
-                } else
+                } else {
                     mOptionsLayout.setVisibility(View.GONE);
+                }
 
                 mInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mPickerList.size() > 0) {
-                            if (documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
+                            // When account is verified, we wouldn't allow the user to upload new document
+                            if (ProfileInfoCacheManager.isAccountVerified() || documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
                                 mOptionsLayout.setVisibility(View.GONE);
                                 documentPreviewBindViewHolderList.get(pos).setIsViewOpen(false);
                             } else {

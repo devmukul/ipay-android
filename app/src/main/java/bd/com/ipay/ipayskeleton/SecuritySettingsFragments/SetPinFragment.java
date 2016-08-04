@@ -1,11 +1,10 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,20 +31,11 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
     private SetPinResponse mSetPinResponse;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
 
     private EditText mEnterPINEditText;
     private EditText mConfirmPINEditText;
     private EditText mEnterPasswordEditText;
     private Button mSetPINButton;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +47,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
         mSetPINButton = (Button) v.findViewById(R.id.save_pin);
 
         mEnterPasswordEditText.requestFocus();
-        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);;
+        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -165,6 +155,5 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
 
         }
     }
-
 
 }

@@ -69,7 +69,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);;
+        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         mRelationshipList = Arrays.asList(getResources().getStringArray(R.array.relationship));

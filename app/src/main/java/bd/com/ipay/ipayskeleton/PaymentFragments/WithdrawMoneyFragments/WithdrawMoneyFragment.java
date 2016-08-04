@@ -296,12 +296,12 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                         for (int i = 0; i < mListUserBankClasses.size(); i++) {
                             mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
                             mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
-                            mUserBankList.add(mListUserBankClasses.get(i).getBankName() + "\n" + mListUserBankClasses.get(i).getAccountNumber());
+                            mUserBankList.add(mListUserBankClasses.get(i).getBankName() + "\n" + "A/c No: " + mListUserBankClasses.get(i).getAccountNumber());
                         }
                     }
 
                     if (mUserBankNameList.size() == 1) {
-                        mBankAccountNumberEditText.setText(mUserBankAccountNumberList.get(0) + "," + mUserBankNameList.get(0));
+                        mBankAccountNumberEditText.setText(mUserBankNameList.get(0) + " (A/c No: " + mUserBankAccountNumberList.get(0) + ")");
                     }
 
                 } catch (Exception e) {

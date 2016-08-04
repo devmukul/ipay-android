@@ -141,17 +141,17 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
+        if (this.isAdded()) setContentShown(true);
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
 					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mPendingRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
-            if (getActivity() != null)
+            if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+            }
             return;
         }
-
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_PENDING_REQUESTS_ME)) {
@@ -184,8 +184,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                     Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
             }
 
-
-            if (this.isAdded()) setContentShown(true);
             mSwipeRefreshLayout.setRefreshing(false);
             mPendingRequestTask = null;
 

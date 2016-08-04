@@ -263,7 +263,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
                 try {
                     mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
 
@@ -285,12 +284,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                         for (int i = 0; i < mListUserBankClasses.size(); i++) {
                             mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
                             mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
-                            mUserBankList.add(mListUserBankClasses.get(i).getAccountNumber() + "\n" + mListUserBankClasses.get(i).getBankName());
+                            mUserBankList.add(mListUserBankClasses.get(i).getBankName() + "\n" + "A/c No: " + mListUserBankClasses.get(i).getAccountNumber());
                         }
                     }
 
                     if (mUserBankNameList.size() == 1) {
-                        mBankAccountNumberEditText.setText(mUserBankNameList.get(0) + "," + mUserBankAccountNumberList.get(0));
+                        mBankAccountNumberEditText.setText(mUserBankNameList.get(0) + " (A/c No: " + mUserBankAccountNumberList.get(0) + ")");
                     }
 
                 } catch (Exception e) {
