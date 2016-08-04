@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -13,10 +14,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
@@ -31,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsResponse;
@@ -79,7 +85,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         View v = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
         getActivity().setTitle(R.string.invoice_list);
 
-        ((InvoiceActivity)getActivity()).mFabCreateInvoice.setVisibility(View.VISIBLE);
+        ((InvoiceActivity) getActivity()).mFabCreateInvoice.setVisibility(View.VISIBLE);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice_sent);
@@ -254,10 +260,12 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
             private final TextView mSenderNameTextView;
             private final TextView mAmountTextView;
             private final TextView mTimeTextView;
-            private final ImageView mCancel;
             private final ImageView statusView;
             private final TextView loadMoreTextView;
             private final ProfileImageView mProfileImageView;
+
+            private CustomSelectorDialog mCustomSelectorDialog;
+            private List<String> mSentInvoiceActionList;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -265,7 +273,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mSenderNameTextView = (TextView) itemView.findViewById(R.id.request_name);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 mTimeTextView = (TextView) itemView.findViewById(R.id.time);
-                mCancel = (ImageView) itemView.findViewById(R.id.cancel_request);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 statusView = (ImageView) itemView.findViewById(R.id.status);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
@@ -288,33 +295,30 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 final long id = pendingPaymentClasses.get(pos).getId();
                 final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
 
+                mSentInvoiceActionList = new ArrayList<String>();
+                mSentInvoiceActionList.add(getString(R.string.view));
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                 mSenderNameTextView.setText(name);
 
                 if (status == Constants.INVOICE_STATUS_ACCEPTED) {
-                    mSenderNameTextView.setTextColor(Color.GREEN);
                     statusView.setColorFilter(Color.GREEN);
                     statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
 
                 } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
-                    mSenderNameTextView.setTextColor(getResources().getColor(R.color.background_yellow));
                     statusView.setColorFilter(getResources().getColor(R.color.background_yellow));
                     statusView.setImageResource(R.drawable.ic_wip);
 
                 } else if (status == Constants.INVOICE_STATUS_REJECTED) {
-                    mSenderNameTextView.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setColorFilter(Color.RED);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
 
                 } else if (status == Constants.INVOICE_STATUS_CANCELED) {
-                    mSenderNameTextView.setTextColor(Color.GRAY);
                     statusView.setColorFilter(Color.GRAY);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
 
                 } else if (status == Constants.INVOICE_STATUS_DRAFT) {
-                    mSenderNameTextView.setTextColor(getResources().getColor(R.color.background_red));
                     statusView.setColorFilter(Color.RED);
                     statusView.setImageResource(R.drawable.ic_error_black_24dp);
                 }
@@ -323,33 +327,38 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mTimeTextView.setText(time);
 
                 if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING)
-                    mCancel.setVisibility(View.VISIBLE);
-                else mCancel.setVisibility(View.INVISIBLE);
-
-                mCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
-                    }
-                });
+                    mSentInvoiceActionList.add(getString(R.string.remove));
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!mSwipeRefreshLayout.isRefreshing()) {
-                            mTime = time;
-                            mId = id;
-                            mAmount = amount;
-                            mVat = vat;
-                            mItemList = Arrays.asList(itemList);
-                            if (title.equals("Invoice") ) mDescription = description;
-                            else mDescription = descriptionofRequest;
-                            mStatus = status;
-                            mReceiverName = name;
-                            mReceiverMobileNumber = mobileNumber;
-                            mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
-                            launchInvoiceDetailsFragment();
-                        }
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mSentInvoiceActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int selectedIndex, String action) {
+                                if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
+                                    showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
+
+                                } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
+                                    if (!mSwipeRefreshLayout.isRefreshing()) {
+                                        mTime = time;
+                                        mId = id;
+                                        mAmount = amount;
+                                        mVat = vat;
+                                        mItemList = Arrays.asList(itemList);
+                                        if (title.equals("Invoice")) mDescription = description;
+                                        else mDescription = descriptionofRequest;
+                                        mStatus = status;
+                                        mReceiverName = name;
+                                        mReceiverMobileNumber = mobileNumber;
+                                        mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
+                                        launchInvoiceDetailsFragment();
+                                    }
+                                }
+                            }
+                        });
+                        mCustomSelectorDialog.show();
+
                     }
                 });
             }

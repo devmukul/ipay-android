@@ -90,6 +90,9 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
 
+        mNameView.requestFocus();
+        Utilities.showKeyboard(getActivity());
+
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
 
