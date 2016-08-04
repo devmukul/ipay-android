@@ -305,23 +305,23 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
 
                 if (status == Constants.INVOICE_STATUS_ACCEPTED) {
                     statusView.setColorFilter(Color.GREEN);
-                    statusView.setImageResource(R.drawable.ic_check_circle_black_24dp);
+                    statusView.setImageResource(R.drawable.ic_invoice_ok);
 
                 } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
                     statusView.setColorFilter(getResources().getColor(R.color.background_yellow));
-                    statusView.setImageResource(R.drawable.ic_wip);
+                    statusView.setImageResource(R.drawable.ic_invoice_pending);
 
                 } else if (status == Constants.INVOICE_STATUS_REJECTED) {
                     statusView.setColorFilter(Color.RED);
-                    statusView.setImageResource(R.drawable.ic_error_black_24dp);
+                    statusView.setImageResource(R.drawable.ic_invoice_notok);
 
                 } else if (status == Constants.INVOICE_STATUS_CANCELED) {
                     statusView.setColorFilter(Color.GRAY);
-                    statusView.setImageResource(R.drawable.ic_error_black_24dp);
+                    statusView.setImageResource(R.drawable.ic_invoice_notok);
 
                 } else if (status == Constants.INVOICE_STATUS_DRAFT) {
                     statusView.setColorFilter(Color.RED);
-                    statusView.setImageResource(R.drawable.ic_error_black_24dp);
+                    statusView.setImageResource(R.drawable.ic_invoice_pending);
                 }
 
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));

@@ -202,7 +202,7 @@
                     android:backgroundTint="@android:color/white"
                     android:clickable="true"
                     android:padding="8dp"
-                    android:src="@drawable/ic_refresh" />
+                    android:src="@drawable/ic_home_refresh" />
             </RelativeLayout>
 
             <LinearLayout
