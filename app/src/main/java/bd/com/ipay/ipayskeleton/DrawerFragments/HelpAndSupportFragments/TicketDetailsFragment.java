@@ -52,7 +52,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private long ticketId;
 
     private RecyclerView mCommentListRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private List<Comment> mComments;
@@ -76,6 +76,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
         mCommentListAdapter = new CommentListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setStackFromEnd(true);
         mCommentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_comments);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
@@ -163,11 +164,9 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         mProgressDialog.setMessage(getString(R.string.progress_dialog_submitting_comment));
         mProgressDialog.show();
 
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create();
+        Gson gson = new Gson();
 
-        AddCommentRequest addCommentRequest = AddCommentRequest.createFromTicket(mGetTicketDetailsResponse.getResponse().getTicket(), comment);
+        AddCommentRequest addCommentRequest = new AddCommentRequest(mGetTicketDetailsResponse.getResponse().getTicket().getId(), comment);
         String json = gson.toJson(addCommentRequest);
 
         mNewCommentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_COMMENT, Constants.BASE_URL_ADMIN + Constants.URL_ADD_COMMENT,

@@ -167,6 +167,7 @@ public class HomeActivity extends BaseActivity
                 refreshToken();
             }
         }.start();
+        Log.w("Token Timer Home", TokenManager.getiPayTokenTimeInMs() + "");
         TokenManager.setTokenTimer(tokenTimer);
 
         mMobileNumberView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
