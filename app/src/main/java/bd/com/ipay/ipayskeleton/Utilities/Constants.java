@@ -692,7 +692,7 @@ public class Constants {
     public static final int NOTIFICATION_TYPE_REQUEST_MONEY = 1;
     public static final int NOTIFICATION_TYPE_MAKE_PAYMENT = 2;
     public static final int NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE = 3;
-    public static final int NOTIFICATION_TYPE_INTROUDCTION_REQUEST = 4;
+    public static final int NOTIFICATION_TYPE_INTRODUCTION_REQUEST = 4;
 
     public static final String ACTION_TYPE_VERIFY = "Verify";
     public static final String ACTION_TYPE_ACCEPT = "Accept";
@@ -710,5 +710,7 @@ public class Constants {
     public static final String TICKET_STATUS_NEW = "new";
     public static final String TICKET_STATUS_OPEN = "open";
     public static final String TICKET_STATUS_PENDING = "pending";
+    public static final String TICKET_STATUS_ON_HOLD = "hold";
     public static final String TICKET_STATUS_SOLVED = "solved";
+    public static final String TICKET_STATUS_CLOSED = "closed";
 }

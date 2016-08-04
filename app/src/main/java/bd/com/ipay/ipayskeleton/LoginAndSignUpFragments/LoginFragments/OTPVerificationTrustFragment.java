@@ -225,13 +225,13 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 String message = mLoginResponseModel.getMessage();
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    pref.edit().putBoolean(Constants.LOGGED_IN, true).commit();
-                    pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
+                    pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
+                    pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
 
                     if (mLoginResponseModel.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).commit();
+                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).apply();
                     else
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).commit();
+                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).apply();
 
                     if (getActivity() != null)
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();

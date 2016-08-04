@@ -243,13 +243,13 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).commit();
-                    pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPasswordBusiness).commit();
-                    pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mNameBusiness).commit();
-                    pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder).commit();
-                    pref.edit().putString(Constants.GENDER, "M").commit();
-                    pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE).commit();
-                    pref.edit().putBoolean(Constants.LOGGED_IN, true).commit();
+                    pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).apply();
+                    pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPasswordBusiness).apply();
+                    pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mNameBusiness).apply();
+                    pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder).apply();
+                    pref.edit().putString(Constants.GENDER, "M").apply();
+                    pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE).apply();
+                    pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
 
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();

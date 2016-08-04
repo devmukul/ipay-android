@@ -243,14 +243,14 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).commit();
-                        pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPassword).commit();
-                        pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mName).commit();
-                        pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthday).commit();
-                        pref.edit().putString(Constants.GENDER, SignupOrLoginActivity.mGender).commit();
-                        pref.edit().putString(Constants.USERCOUNTRY, "Bangladesh").commit();   // TODO
-                        pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE).commit();
-                        pref.edit().putBoolean(Constants.LOGGED_IN, true).commit();
+                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).apply();
+                        pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPassword).apply();
+                        pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mName).apply();
+                        pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthday).apply();
+                        pref.edit().putString(Constants.GENDER, SignupOrLoginActivity.mGender).apply();
+                        pref.edit().putString(Constants.USERCOUNTRY, "Bangladesh").apply();   // TODO
+                        pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE).apply();
+                        pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
 
                         // Request a login immediately after sign up
                         if (Utilities.isConnectionAvailable(getActivity()))

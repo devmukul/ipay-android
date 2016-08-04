@@ -69,6 +69,6 @@ public class IntroductionRequestClass implements Notification {
 
     @Override
     public int getNotificationType() {
-        return Constants.NOTIFICATION_TYPE_INTROUDCTION_REQUEST;
+        return Constants.NOTIFICATION_TYPE_INTRODUCTION_REQUEST;
     }
 }

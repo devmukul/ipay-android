@@ -45,7 +45,7 @@
             style="@style/TransactionHistoryRightTextViewStyle"
             android:textSize="14dp"
             android:layout_alignParentTop="true"/>
-        </RelativeLayout>>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/textview_description"
