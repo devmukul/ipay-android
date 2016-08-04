@@ -875,7 +875,7 @@
     </style>
 
     <style name="TicketCommentBodyStyle" parent="@android:style/Widget.TextView">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin_card</item>
@@ -884,8 +884,9 @@
     </style>
 
     <style name="TicketCommentTimeStyle" parent="@android:style/Widget.TextView">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/value2</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin_card</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin_card</item>
         <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>

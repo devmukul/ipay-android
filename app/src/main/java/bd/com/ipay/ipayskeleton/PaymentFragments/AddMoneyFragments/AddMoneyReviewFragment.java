@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,8 +42,6 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     private AddMoneyResponse mAddMoneyResponse;
 
     private ProgressDialog mProgressDialog;
-
-    private SharedPreferences pref;
 
     private double mAmount;
     private String mDescription;
@@ -89,8 +86,6 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         mBankIcon = (RoundedImageView) v.findViewById(R.id.portrait);
 
         mProgressDialog = new ProgressDialog(getActivity());
-
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mBankIcon.setImageDrawable(bankIcon);
         mBankNameView.setText(mBankName);

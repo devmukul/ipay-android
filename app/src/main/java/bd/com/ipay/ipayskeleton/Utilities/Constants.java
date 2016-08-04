@@ -133,7 +133,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -158,8 +158,8 @@ public class Constants {
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
-//            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/";
-            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
+            BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/";
+//            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
@@ -608,6 +608,9 @@ public class Constants {
     public static final String DOCUMENT_TYPE_DRIVING_LICENSE = "driving_license";
     public static final String DOCUMENT_TYPE_BIRTH_CERTIFICATE = "birth_certificate";
     public static final String DOCUMENT_TYPE_TIN = "tin";
+    public static final String DOCUMENT_TYPE_BUSINESS_TIN = "business_tin";
+    public static final String DOCUMENT_TYPE_TRADE_LICENSE = "trade_license";
+    public static final String DOCUMENT_TYPE_VAT_REG_CERT = "vat_reg_certificate";
 
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";

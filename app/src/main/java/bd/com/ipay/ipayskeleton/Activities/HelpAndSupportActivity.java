@@ -62,6 +62,6 @@ public class HelpAndSupportActivity extends BaseActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStack();
         else
-            super.onBackPressed();
+            finish();
     }
 }

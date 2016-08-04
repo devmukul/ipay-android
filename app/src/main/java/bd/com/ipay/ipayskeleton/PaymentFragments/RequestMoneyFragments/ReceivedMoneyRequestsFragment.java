@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,7 +34,6 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.RequestMoneyReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
@@ -140,29 +137,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void attemptGetServiceCharge() {
-
-        if (mServiceChargeTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.loading));
-        mProgressDialog.show();
-
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
-
-        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
-        int accountClass = Constants.DEFAULT_USER_CLASS;
-
-        GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(Constants.SERVICE_ID_SEND_MONEY, accountType, accountClass);
-        Gson gson = new Gson();
-        String json = gson.toJson(mServiceChargeRequest);
-        mServiceChargeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SERVICE_CHARGE,
-                Constants.BASE_URL_SM + Constants.URL_SERVICE_CHARGE, json, getActivity());
-        mServiceChargeTask.mHttpResponseListener = this;
-        mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     private void rejectRequestMoney(long id) {
         if (mRejectRequestTask != null) {
             return;
@@ -242,39 +216,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 mGetAllNotificationsTask = null;
                 mSwipeRefreshLayout.setRefreshing(false);
 
-                break;
-            case Constants.COMMAND_GET_SERVICE_CHARGE:
-                mProgressDialog.dismiss();
-                try {
-                    mGetServiceChargeResponse = gson.fromJson(result.getJsonString(), GetServiceChargeResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (mGetServiceChargeResponse != null) {
-                            mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
-
-                            if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                            } else {
-                                showReviewDialog();
-                            }
-
-                        } else {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    } else {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                }
-
-
-                mServiceChargeTask = null;
                 break;
             case Constants.COMMAND_REJECT_REQUESTS_MONEY:
 

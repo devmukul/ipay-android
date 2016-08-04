@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,8 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -49,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.IdentificationD
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -77,15 +75,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private IdentificationDocumentDetails[] mIdentificationDocumentDetails;
 
-    private SharedPreferences pref;
-
-    private static final String[] DOCUMENT_TYPES = {
-            Constants.DOCUMENT_TYPE_NATIONAL_ID,
-            Constants.DOCUMENT_TYPE_PASSPORT,
-            Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-            Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-            Constants.DOCUMENT_TYPE_TIN
-    };
+    private String[] DOCUMENT_TYPES;
 
     private String mFileName;
 
@@ -94,7 +84,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.passport,
             R.string.driving_license,
             R.string.birth_certificate,
-            R.string.tin
+            R.string.tin,
+            R.string.business_tin,
+            R.string.trade_license,
+            R.string.vat_registration_certificate
+
     };
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
@@ -106,16 +100,30 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private ArrayList<DocumentPreviewBindViewHolder> documentPreviewBindViewHolderList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
+        // Before making any change, make sure DOCUMENT_TYPES matches with DOCUMENT_TYPE_NAMES
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            DOCUMENT_TYPES = new String[] {
+                    Constants.DOCUMENT_TYPE_NATIONAL_ID,
+                    Constants.DOCUMENT_TYPE_PASSPORT,
+                    Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                    Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                    Constants.DOCUMENT_TYPE_TIN,
+                    Constants.DOCUMENT_TYPE_BUSINESS_TIN,
+                    Constants.DOCUMENT_TYPE_TRADE_LICENSE,
+                    Constants.DOCUMENT_TYPE_VAT_REG_CERT
+            };
+        } else {
+            DOCUMENT_TYPES = new String[] {
+                    Constants.DOCUMENT_TYPE_NATIONAL_ID,
+                    Constants.DOCUMENT_TYPE_PASSPORT,
+                    Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                    Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                    Constants.DOCUMENT_TYPE_TIN
+            };
+        }
     }
 
     @Override
@@ -124,7 +132,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         getActivity().setTitle(R.string.profile_documents);
 
         mProgressDialog = new ProgressDialog(getActivity());
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mDocumentUploadInfoView = (TextView) v.findViewById(R.id.textview_document_upload_info);
         mDocumentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_documents);
@@ -167,7 +174,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mFileName = temp[temp.length - 1];
                         documentPreviewBindViewHolderList.get(mSelectedItemId).setmSelectedfilePath(mFileName);
                         mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
-                        Log.w("Loading document", mSelectedItemId + mSelectedDocumentUri.toString());
+                        Log.w("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
                         documentPreviewBindViewHolderList.get(mSelectedItemId).setmSelectedDocumentUri(mSelectedDocumentUri);
                         mDocumentListAdapter.notifyDataSetChanged();
                         mSelectedItemId = -1;
@@ -248,7 +255,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mProgressDialog.show();
 
         String selectedOImagePath = documentPreviewBindViewHolderList.get(mID).getmSelectedDocumentUri().getPath();
-        Log.w("Loading document", mID + selectedOImagePath + mDocumentType);
+        Log.w("Loading document", mID + " " + selectedOImagePath + " " + mDocumentType);
 
         mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                 Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
@@ -358,9 +365,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
 
         if (mIdentificationDocuments.size() < DOCUMENT_TYPES.length) {
-            String accountVerificationStatus = pref.getString(
-                    Constants.VERIFICATION_STATUS, Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED);
-            if (accountVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+            if (ProfileInfoCacheManager.isAccountVerified()) {
                 mDocumentUploadInfoView.setText(R.string.upload_identification_documents_to_confirm_identity);
             } else {
                 mDocumentUploadInfoView.setText(R.string.you_need_to_upload_identification_documents_to_get_verified);
@@ -437,7 +442,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mDocumentIdView.setText(R.string.not_submitted);
                     mUploadButton.setText(getString(R.string.upload));
                 }
-                // Document uploaded and verified
+                // Document uploaded and verified OR account itself is verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                     mVerificationStatus.setVisibility(View.VISIBLE);
                     mVerificationStatus.setImageResource(R.drawable.ic_verified);

@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Pay.PayPropertyConstants;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 
@@ -33,17 +32,15 @@ public class PayFragment extends Fragment {
 
     private List<ServiceAction> mServiceActionList;
 
-    private SharedPreferences pref;
     private PinChecker pinChecker;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_services, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mServiceActionList = new ArrayList<>();
-        if (pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE) {
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
             mServiceActionList.add(new ServiceAction(getString(R.string.request_payment)));
         }
         mServiceActionList.add(new ServiceAction(getString(R.string.make_payment)));

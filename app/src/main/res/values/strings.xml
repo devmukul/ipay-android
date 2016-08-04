@@ -424,6 +424,9 @@
     <string name="driving_license">Driving License</string>
     <string name="birth_certificate">Birth Certificate</string>
     <string name="tin">TIN</string>
+    <string name="business_tin">Business TIN</string>
+    <string name="trade_license">Trade License</string>
+    <string name="vat_registration_certificate">VAT Registration Certificate</string>
     <string name="transaction_successful">Successful</string>
     <string name="not_applicable">N/A</string>
     <string name="upload_again">Upload again</string>
