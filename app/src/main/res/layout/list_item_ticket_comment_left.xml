@@ -25,7 +25,6 @@
         <TextView
             android:id="@+id/textview_comment"
             android:textColor="@android:color/white"
-            android:text="Message from me sfsdf sdfsdkfdsfn slfnf lsdnflsd nfsdl'kfnsd'n sd'fns'jfds' o"
             android:gravity="left"
             style="@style/TicketCommentBodyStyle"/>
 
@@ -33,7 +32,6 @@
             android:id="@+id/textview_time"
             style="@style/TicketCommentTimeStyle"
             android:gravity="left"
-            android:text="12/4/3 12:04am"
             android:textColor="@android:color/white"/>
     </LinearLayout>
 

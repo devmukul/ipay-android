@@ -42,7 +42,6 @@
                 android:id="@+id/textview_current_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textview_email"
                 android:layout_marginTop="@dimen/value2"
                 android:textSize="@dimen/text_size_small"
                 android:textStyle="bold" />

@@ -27,7 +27,6 @@
             android:layout_height="match_parent"
             android:singleLine="true"
             android:textSize="@dimen/text_size_small_medium"
-            android:text="HTC"
             android:fontFamily="sans-serif"
             android:textColor="@color/colorTextPrimary"/>
 
@@ -37,7 +36,6 @@
             android:layout_height="match_parent"
             android:singleLine="true"
             android:textSize="@dimen/text_size_extra_small"
-            android:text="HTC"
             android:fontFamily="sans-serif" />
 
     </LinearLayout>

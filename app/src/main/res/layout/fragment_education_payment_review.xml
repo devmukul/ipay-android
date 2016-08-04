@@ -118,7 +118,7 @@
             <TextView
                 style="@style/ListHeaderStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
                 android:text="@string/additional_info" />
@@ -127,7 +127,6 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:theme="@style/CustomTextInputLayout">
 
                 <EditText
@@ -145,8 +144,7 @@
                 android:id="@+id/write_a_note_layout"
                 style="@style/CustomTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/description"

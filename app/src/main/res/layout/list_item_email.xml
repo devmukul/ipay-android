@@ -21,8 +21,6 @@
                 style="@style/TextStyleSecondaryMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/bank_account_verify_status"
                 android:gravity="left"
                 android:singleLine="true" />
 
@@ -30,7 +28,6 @@
                 android:id="@+id/textview_is_primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textview_email"
                 android:text="@string/primary_email"
                 android:textStyle="bold"
                 android:visibility="gone" />

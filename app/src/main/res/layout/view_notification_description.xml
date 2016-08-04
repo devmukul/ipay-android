@@ -43,21 +43,19 @@
         <TextView
             android:id="@+id/textview_amount"
             style="@style/TransactionHistoryRightTextViewStyle"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:layout_alignParentTop="true"/>
         </RelativeLayout>
 
         <TextView
             android:id="@+id/textview_description"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/sender_name"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/textview_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/sender_mobile_number"/>
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 </RelativeLayout>

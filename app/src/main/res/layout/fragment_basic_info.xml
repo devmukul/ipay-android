@@ -16,7 +16,6 @@
             android:id="@+id/textview_mobile_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textview_name"
             android:gravity="center"
             android:text=""
             android:textSize="20sp"
@@ -26,8 +25,6 @@
             android:id="@+id/textview_verification_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textview_mobile_number"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="Verified"
@@ -56,13 +53,11 @@
 
                 <TextView
                     android:id="@+id/textview_name"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:layout_below="@+id/textview_mothers_name" />
+                    style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
             <View
-                style="@style/Divider"
-                android:layout_below="@+id/icon" />
+                style="@style/Divider" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -79,8 +74,7 @@
             </LinearLayout>
 
             <View
-                style="@style/Divider"
-                android:layout_below="@+id/icon" />
+                style="@style/Divider"/>
 
             <!-- Spinners -->
             <LinearLayout
@@ -98,8 +92,7 @@
             </LinearLayout>
 
             <View
-                style="@style/Divider"
-                android:layout_below="@+id/icon" />
+                style="@style/Divider" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -116,8 +109,7 @@
             </LinearLayout>
 
             <View
-                style="@style/Divider"
-                android:layout_below="@+id/icon" />
+                style="@style/Divider" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -134,8 +126,7 @@
             </LinearLayout>
 
             <View
-                style="@style/Divider"
-                android:layout_below="@+id/icon" />
+                style="@style/Divider" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -152,8 +143,7 @@
             </LinearLayout>
 
             <View
-                style="@style/Divider"
-                android:layout_below="@+id/icon" />
+                style="@style/Divider" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -171,8 +161,7 @@
             </LinearLayout>
 
             <View
-                style="@style/Divider"
-                android:layout_below="@+id/icon" />
+                style="@style/Divider" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

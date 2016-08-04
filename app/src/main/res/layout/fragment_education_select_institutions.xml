@@ -16,8 +16,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/institution"
@@ -38,8 +37,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/student_id"
@@ -56,8 +54,7 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/sessions"

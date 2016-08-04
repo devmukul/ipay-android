@@ -25,7 +25,6 @@
                 android:id="@+id/profile_picture"
                 android:layout_width="@dimen/login_profile_image_size"
                 android:layout_height="@dimen/login_profile_image_size"
-                android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/value30" />
 
@@ -68,7 +67,6 @@
                 style="@style/CustomTextInputLayoutWithMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:background="@android:color/white"
                 android:theme="@style/CustomTextInputLayout">
 
@@ -87,7 +85,6 @@
                 style="@style/PrimaryTransparentButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
                 android:text="@string/action_login" />
 
             <RelativeLayout

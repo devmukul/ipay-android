@@ -38,8 +38,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/from_date"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="date"
                     android:background="@android:color/white"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -56,8 +54,6 @@
                     android:layout_weight="1"
                     android:background="@android:color/white"
                     android:hint="@string/to_date"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="date"
                     android:maxLines="1"
                     android:singleLine="true"/>
             </LinearLayout>
