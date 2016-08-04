@@ -80,6 +80,9 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
+        mBusinessMobileNumberView.requestFocus();
+        Utilities.showKeyboard(getActivity());
+
         // Enable hyperlinked
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
@@ -182,7 +185,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mCheckPromoCodeTask = null;
             if (getActivity() != null)
