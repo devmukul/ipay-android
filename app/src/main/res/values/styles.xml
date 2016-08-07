@@ -534,9 +534,8 @@
     </style>
 
     <style name="AddressViewHeader">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/text_size_small_medium_value18</item>
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:layout_marginBottom">8dp</item>
     </style>
 
     <style name="ReviewCardStyle">

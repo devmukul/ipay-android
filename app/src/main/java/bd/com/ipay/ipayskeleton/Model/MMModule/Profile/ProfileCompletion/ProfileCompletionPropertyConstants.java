@@ -48,7 +48,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(ADDRESS, "Add Present and Permanent Addresses");
         PROPERTY_NAME_TO_TITLE_MAP.put(PROFILE_PICTURE, "Add a Profile Picture");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a verified email");
-        PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Photo Identification");
+        PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_BANK, "Add Bank Account");
         PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parents' Details");
