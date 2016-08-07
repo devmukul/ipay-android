@@ -534,8 +534,8 @@
     <string name="edit_address">Edit Address</string>
     <string name="you_need_to_have">You need to have at least&#160;</string>
     <string name="introducers_to_complete_the_account_verification_process">&#160;introducers to complete the account verification process.</string>
-    <string name="introduced_list_header">You have introduced</string>
-    <string name="introducer_list_header">Your introducer</string>
+    <string name="introduced_list_header">I have introduced</string>
+    <string name="introducer_list_header">Introduced by</string>
     <string name="sent_requests_header">You have sent requests to</string>
     <string name="select_a_contact">Select a contact</string>
     <string name="progress_dialog_single_invoice">Fetching invoice...</string>

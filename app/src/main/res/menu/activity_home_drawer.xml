@@ -30,7 +30,7 @@
             android:id="@+id/nav_invite"
             android:icon="@drawable/ic_invitew"
             android:visible="true"
-            android:title="@string/invite"/>
+            android:title="@string/invite_a_friend"/>
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_helpw"

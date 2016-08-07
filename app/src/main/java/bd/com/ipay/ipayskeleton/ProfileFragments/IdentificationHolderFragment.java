@@ -69,15 +69,15 @@ public class IdentificationHolderFragment extends Fragment {
         ((ImageView) mReceivedRequestTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_received_request);
         ((ImageView) mSentRequestTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_send_request);
 
-        ((TextView) mReceivedRequestTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.received_request));
-        ((TextView) mSentRequestTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.sent_request));
+        ((TextView) mReceivedRequestTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.introduced_list_header));
+        ((TextView) mSentRequestTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.introducer_list_header));
     }
 
 
     public class IdentificationFragmentAdapter extends FragmentPagerAdapter {
         private final String[] tabTitles = new String[]{
-                getString(R.string.received_request),
-                getString(R.string.sent_request),
+                getString(R.string.introduced_list_header),
+                getString(R.string.introducer_list_header),
         };
 
         public IdentificationFragmentAdapter(FragmentManager fm) {
