@@ -27,7 +27,6 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/verify_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -42,7 +41,6 @@
                 android:background="@color/colorDivider" />
 
             <Button
-                android:id="@+id/reject_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -57,7 +55,6 @@
                 android:background="@color/colorDivider" />
 
             <Button
-                android:id="@+id/mark_as_spam_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -27,7 +27,6 @@
                 android:textSize="16sp" />
 
             <LinearLayout
-                android:id="@+id/contacts_selector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

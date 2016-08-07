@@ -27,7 +27,6 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button_accept"
                 style="@style/RowButton"
                 android:text="@string/accept" />
 
@@ -37,7 +36,6 @@
                 android:background="@color/colorDivider" />
 
             <Button
-                android:id="@+id/button_reject"
                 style="@style/RowButton"
                 android:text="@string/reject" />
 
@@ -47,7 +45,6 @@
                 android:background="@color/colorDivider" />
 
             <Button
-                android:id="@+id/button_mark_spam"
                 style="@style/RowButton"
                 android:text="@string/mark_as_spam" />
 

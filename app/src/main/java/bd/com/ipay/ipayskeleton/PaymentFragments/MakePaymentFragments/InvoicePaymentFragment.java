@@ -397,7 +397,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             private final TextView mTitleView;
             private final TextView mTimeView;
             private final TextView loadMoreTextView;
-            private final TextView headerView;
             private final ProfileImageView mProfileImageView;
 
             private CustomSelectorDialog mCustomSelectorDialog;
@@ -412,7 +411,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                headerView = (TextView) itemView.findViewById(R.id.money_request_header);
             }
 
             public void bindViewMoneyRequestList(int pos) {
@@ -476,10 +474,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 });
             }
 
-            public void bindViewHeader() {
-                headerView.setText(R.string.invoice_requests_header);
-            }
-
             public void bindViewFooter() {
                 if (hasNext)
                     loadMoreTextView.setText(R.string.load_more);
@@ -506,12 +500,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                     loadMoreTextView.setText(R.string.load_more);
                 else
                     loadMoreTextView.setText(R.string.no_more_results);
-            }
-        }
-
-        private class MoneyRequestHeaderViewHolder extends ViewHolder {
-            public MoneyRequestHeaderViewHolder(View itemView) {
-                super(itemView);
             }
         }
 

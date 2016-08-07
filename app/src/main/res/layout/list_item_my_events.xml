@@ -52,7 +52,6 @@
         android:layout_toRightOf="@+id/profile_picture" />
 
     <ImageView
-        android:id="@+id/cancel_request"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
