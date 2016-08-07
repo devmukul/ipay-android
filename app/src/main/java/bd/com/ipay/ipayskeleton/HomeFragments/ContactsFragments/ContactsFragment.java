@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -56,8 +57,8 @@ import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_
 /**
  * CAUTION: This fragment is used in contacts tab, invite page, and in contact picker.
  * Make sure to test it thoroughly after making any changes.
- *
- *
+ * <p/>
+ * <p/>
  * Pass (Constants.VERIFIED_USERS_ONLY, true) in the argument bundle to show only the
  * verified iPay users and (Constants.IPAY_MEMBERS_ONLY, true) to show member users only.
  */
@@ -405,7 +406,19 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         mBottomSheetLayout.dismissSheet();
                     }
 
-                    sendInvite(mSelectedNumber);
+                    new android.app.AlertDialog.Builder(getActivity())
+                            .setTitle(R.string.are_you_sure)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    sendInvite(mSelectedNumber);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Do nothing
+                                }
+                            })
+                            .show();
                 }
             });
         }
@@ -612,7 +625,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         public boolean isInvited(String phoneNumber) {
             if (ContactsHolderFragment.mGetInviteInfoResponse == null ||
-                    ContactsHolderFragment.mGetInviteInfoResponse.getInvitees() == null) return false;
+                    ContactsHolderFragment.mGetInviteInfoResponse.getInvitees() == null)
+                return false;
             else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
                 return true;
             return false;
