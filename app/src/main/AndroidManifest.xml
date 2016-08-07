@@ -265,7 +265,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.HelpAndSupportActivity"
-            android:label="@string/help_and_support"
+            android:label="@string/help"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
