@@ -37,8 +37,8 @@ public class AddPayAbleFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_education_add_payable, container, false);
         getActivity().setTitle(R.string.add_new_payment_item);
-        mPayablesList = new ArrayList<PayableItem>();
-        payableItemsMap = new HashMap<Integer, PayableItem>();
+        mPayablesList = new ArrayList<>();
+        payableItemsMap = new HashMap<>();
 
         if (getArguments() != null) {
             mPayablesList = getArguments().getParcelableArrayList(EducationPaymentActivity.ARGS_ENABLED_PAYABLE_ITEMS);

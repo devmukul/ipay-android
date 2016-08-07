@@ -54,7 +54,7 @@ public class PayEducationFeesFragment extends ProgressFragment implements HttpRe
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_education_pay, container, false);
         getActivity().setTitle(R.string.pay_education_fee);
-        mEnabledPayableItemList = new ArrayList<PayableItem>();
+        mEnabledPayableItemList = new ArrayList<>();
 
         mEmptyTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mAddedItemsTextView = (TextView) v.findViewById(R.id.items_added_text);

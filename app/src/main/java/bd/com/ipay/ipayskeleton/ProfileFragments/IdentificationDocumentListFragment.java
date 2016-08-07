@@ -132,8 +132,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mDocumentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_documents);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
-        documentPreviewBindViewHolderList = new ArrayList<DocumentPreviewBindViewHolder>(DOCUMENT_TYPES.length);
-        for (int i = 0; i < DOCUMENT_TYPES.length; i++)
+        documentPreviewBindViewHolderList = new ArrayList<>(DOCUMENT_TYPES.length);
+        for (String DOCUMENT_TYPE : DOCUMENT_TYPES)
             documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
         return v;
     }
@@ -272,78 +272,82 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST)) {
-            try {
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    processGetDocumentListResponse(result.getJsonString());
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        processGetDocumentListResponse(result.getJsonString());
 
-                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
 
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
-                } else {
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
-            }
 
-            mGetIdentificationDocumentsTask = null;
-            mUploadIdentifierDocumentAsyncTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_DOCUMENT_ACCESS_TOKEN)) {
-            try {
-                String resourceToken = result.getResourceToken();
-                String documentUrl = DocumentPreviewRequestBuilder.generateUri(resourceToken,
-                        mSelectedIdentificationDocument.getDocumentUrl(),
-                        mSelectedIdentificationDocument.getDocumentId(),
-                        mSelectedIdentificationDocument.getDocumentType());
+                mGetIdentificationDocumentsTask = null;
+                mUploadIdentifierDocumentAsyncTask = null;
+                break;
+            case Constants.COMMAND_GET_DOCUMENT_ACCESS_TOKEN:
+                try {
+                    String resourceToken = result.getResourceToken();
+                    String documentUrl = DocumentPreviewRequestBuilder.generateUri(resourceToken,
+                            mSelectedIdentificationDocument.getDocumentUrl(),
+                            mSelectedIdentificationDocument.getDocumentId(),
+                            mSelectedIdentificationDocument.getDocumentType());
 
-                if (Constants.DEBUG)
-                    Log.w("Loading document", documentUrl);
+                    if (Constants.DEBUG)
+                        Log.w("Loading document", documentUrl);
 
-                Intent intent = new Intent(getActivity(), DocumentPreviewActivity.class);
-                intent.putExtra(Constants.FILE_EXTENSION, Utilities.getExtension(mSelectedIdentificationDocument.getDocumentUrl()));
-                intent.putExtra(Constants.DOCUMENT_URL, documentUrl);
-                intent.putExtra(Constants.DOCUMENT_TYPE_NAME, mSelectedIdentificationDocument.getDocumentTypeName());
-                startActivity(intent);
+                    Intent intent = new Intent(getActivity(), DocumentPreviewActivity.class);
+                    intent.putExtra(Constants.FILE_EXTENSION, Utilities.getExtension(mSelectedIdentificationDocument.getDocumentUrl()));
+                    intent.putExtra(Constants.DOCUMENT_URL, documentUrl);
+                    intent.putExtra(Constants.DOCUMENT_TYPE_NAME, mSelectedIdentificationDocument.getDocumentTypeName());
+                    startActivity(intent);
 
-                mProgressDialog.dismiss();
-                mGetDocumentAccessTokenTask = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_document_preview_loading, Toast.LENGTH_SHORT).show();
-            }
-        } else if (result.getApiCommand().equals(Constants.COMMAND_UPLOAD_DOCUMENT)) {
-            try {
-                mUploadDocumentResponse = gson.fromJson(result.getJsonString(), UploadDocumentResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null) {
-                        // If push is delayed, we would not see the updated document list when we back
-                        // to the document list fragment. Setting the update flag to true to force load
-                        // the list.
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
-
-                        Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
-                    }
-
-                } else {
+                    mProgressDialog.dismiss();
+                    mGetDocumentAccessTokenTask = null;
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_document_preview_loading, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+                break;
+            case Constants.COMMAND_UPLOAD_DOCUMENT:
+                try {
+                    mUploadDocumentResponse = gson.fromJson(result.getJsonString(), UploadDocumentResponse.class);
 
-            mUploadIdentifierDocumentAsyncTask = null;
-            mProgressDialog.dismiss();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null) {
+                            // If push is delayed, we would not see the updated document list when we back
+                            // to the document list fragment. Setting the update flag to true to force load
+                            // the list.
+                            PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
+
+                            Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
+                        }
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                mUploadIdentifierDocumentAsyncTask = null;
+                mProgressDialog.dismiss();
+                break;
         }
 
         mProgressDialog.dismiss();

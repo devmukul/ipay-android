@@ -162,11 +162,11 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
         mProgressDialog.show();
 
         ArrayList<InvoiceItemList> invoiceItemList = new ArrayList<InvoiceItemList>();
-        InvoiceItemList tempInvoiceItemList = new InvoiceItemList(mDescription, mItemName, Integer.valueOf(mQuantity.intValue()),
-                Integer.valueOf(mRate.intValue()), Integer.valueOf(mTotal.intValue()));
+        InvoiceItemList tempInvoiceItemList = new InvoiceItemList(mDescription, mItemName, mQuantity.intValue(),
+                mRate.intValue(), mTotal.intValue());
         invoiceItemList.add(tempInvoiceItemList);
 
-        SaveInvoiceRequest mSaveInvoiceRequest = new SaveInvoiceRequest("", mReceiverMobileNumber, "", Integer.valueOf(mVat.intValue()), invoiceItemList);
+        SaveInvoiceRequest mSaveInvoiceRequest = new SaveInvoiceRequest("", mReceiverMobileNumber, "", mVat.intValue(), invoiceItemList);
         Gson gson = new Gson();
         String json = gson.toJson(mSaveInvoiceRequest);
         mSaveInvoiceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SAVE_INVOICE,

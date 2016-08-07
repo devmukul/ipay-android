@@ -302,7 +302,7 @@ public class Utilities {
                     setFontSize(child, fontSize);
                 }
             } else if (view instanceof TextView) {
-                method.invoke(view, Float.valueOf(fontSize));
+                method.invoke(view, fontSize);
             }
         } catch (Exception e) {
             e.printStackTrace();

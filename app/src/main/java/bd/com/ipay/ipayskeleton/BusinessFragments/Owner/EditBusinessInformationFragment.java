@@ -23,7 +23,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.CustomView.IconifiedEditText;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.SetBusinessInformationRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.SetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;

@@ -121,7 +121,6 @@
     <string name="please_select_a_district">Please select a district</string>
     <string name="please_select_a_branch">Please select a branch</string>
     <string name="please_enter_an_account_number">Please provide your Account Number and try again</string>
-    <string name="invoice_requests_header">Received Invoices</string>
     <string name="business_information">Business Information</string>
     <string name="account_holder_information">Information of Account Holder</string>
     <string name="yes">Yes</string>

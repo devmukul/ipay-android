@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -296,7 +295,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 final long id = pendingPaymentClasses.get(pos).getId();
                 final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
 
-                mSentInvoiceActionList = new ArrayList<String>();
+                mSentInvoiceActionList = new ArrayList<>();
                 mSentInvoiceActionList.add(getString(R.string.view));
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);

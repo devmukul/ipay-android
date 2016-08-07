@@ -127,7 +127,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
 
     private void setInstitutionsAdapter() {
 
-        List<Institution> mInstitutionsList = new ArrayList<Institution>();
+        List<Institution> mInstitutionsList = new ArrayList<>();
 
         for (Institution institution : mInstitutions) {
             mInstitutionsList.add(institution);
@@ -156,7 +156,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
 
     private void setSessionsAdapter() {
 
-        List<SemesterOrSession> mSessionsList = new ArrayList<SemesterOrSession>();
+        List<SemesterOrSession> mSessionsList = new ArrayList<>();
 
         for (SemesterOrSession session : mSemesterOrSessions) {
             mSessionsList.add(session);
@@ -238,91 +238,95 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         Gson gson = new Gson();
         if (this.isAdded()) setContentShown(true);
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_INSTITUTION_LIST)) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_INSTITUTION_LIST:
 
-            try {
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    try {
-                        mInstitutions = gson.fromJson(result.getJsonString(), Institution[].class);
-                        setInstitutionsAdapter();
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        try {
+                            mInstitutions = gson.fromJson(result.getJsonString(), Institution[].class);
+                            setInstitutionsAdapter();
 
-                    } catch (Exception e) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                            getActivity().finish();
+                        } catch (Exception e) {
+                            if (getActivity() != null) {
+                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                                getActivity().finish();
+                            }
+                            e.printStackTrace();
                         }
-                        e.printStackTrace();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.get_all_institution_failed, Toast.LENGTH_SHORT).show();
                     }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.get_all_institution_failed, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.get_all_institution_failed, Toast.LENGTH_SHORT).show();
-            }
 
-            mGetAllInstitutionsTask = null;
+                mGetAllInstitutionsTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_SESSION_LIST)) {
+                break;
+            case Constants.COMMAND_GET_SESSION_LIST:
 
-            try {
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    try {
-                        mSemesterOrSessions = gson.fromJson(result.getJsonString(), SemesterOrSession[].class);
-                        setSessionsAdapter();
-                    } catch (Exception e) {
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        try {
+                            mSemesterOrSessions = gson.fromJson(result.getJsonString(), SemesterOrSession[].class);
+                            setSessionsAdapter();
+                        } catch (Exception e) {
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), R.string.get_sessions_failed, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.get_sessions_failed, Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
                     }
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.get_sessions_failed, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.get_sessions_failed, Toast.LENGTH_SHORT).show();
-            }
 
-            mGetSessionsByInstitutionTask = null;
+                mGetSessionsByInstitutionTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID)) {
+                break;
+            case Constants.COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID:
 
-            try {
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    try {
-                        mStudent = gson.fromJson(result.getJsonString(), Student.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString(EducationPaymentActivity.STUDENT_NAME, mStudent.getParticipantName());
-                        bundle.putString(EducationPaymentActivity.STUDENT_MOBILE_NUMBER, mStudent.getParticipantMobileNumber());
-                        bundle.putString(EducationPaymentActivity.STUDENT_DEPARTMENT, mStudent.getDepartment().getDepartmentName());
-                        EducationPaymentActivity.selectedStudent = mStudent;
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        try {
+                            mStudent = gson.fromJson(result.getJsonString(), Student.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(EducationPaymentActivity.STUDENT_NAME, mStudent.getParticipantName());
+                            bundle.putString(EducationPaymentActivity.STUDENT_MOBILE_NUMBER, mStudent.getParticipantMobileNumber());
+                            bundle.putString(EducationPaymentActivity.STUDENT_DEPARTMENT, mStudent.getDepartment().getDepartmentName());
+                            EducationPaymentActivity.selectedStudent = mStudent;
 
-                        ((EducationPaymentActivity) getActivity()).switchToStudentInfoFragment(bundle);
-                    } catch (Exception e) {
+                            ((EducationPaymentActivity) getActivity()).switchToStudentInfoFragment(bundle);
+                        } catch (Exception e) {
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), R.string.get_student_failed, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.get_student_not_found, Toast.LENGTH_SHORT).show();
+
+                    } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.get_student_failed, Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
                     }
-
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.get_student_not_found, Toast.LENGTH_SHORT).show();
-
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.get_student_failed, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.get_student_failed, Toast.LENGTH_SHORT).show();
-            }
 
-            mGetStudentInfoByStudentIDTask = null;
+                mGetStudentInfoByStudentIDTask = null;
+                break;
         }
     }
 

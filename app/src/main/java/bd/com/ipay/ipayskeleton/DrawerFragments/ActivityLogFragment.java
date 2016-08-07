@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

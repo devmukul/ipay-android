@@ -250,7 +250,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
         mEducationInvoice.setInstitute(EducationPaymentActivity.selectedInstitution);
         mEducationInvoice.setTotalFee(mNetPayableAmount);
 
-        ArrayList<InvoicePayableAccountRelation> mInvoicePayableAccountRelations = new ArrayList<InvoicePayableAccountRelation>();
+        ArrayList<InvoicePayableAccountRelation> mInvoicePayableAccountRelations = new ArrayList<>();
         for (PayableItem payableItem : EducationPaymentActivity.mMyPayableItems) {
             InvoicePayableAccountRelation mInvoicePayableAccountRelation = new InvoicePayableAccountRelation();
             mInvoicePayableAccountRelation.setFee(payableItem.getInstituteFee().doubleValue());

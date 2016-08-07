@@ -45,7 +45,7 @@ public class EducationPaymentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_education);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mMyPayableItems = new ArrayList<PayableItem>();
+        mMyPayableItems = new ArrayList<>();
 
         switchToSelectInstituteFragment();
     }
