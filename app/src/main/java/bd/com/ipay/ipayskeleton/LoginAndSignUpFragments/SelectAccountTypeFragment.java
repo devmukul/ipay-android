@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SelectAccountTypeFragment extends Fragment {
 
@@ -19,6 +20,7 @@ public class SelectAccountTypeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_select_account_type_page);
+        Utilities.hideKeyboard(getActivity());
     }
 
     @Override

@@ -68,6 +68,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
+    private ProgressBar mProgressbar;
+
     private String mMobileNumber;
 
     private LinearLayout eventFilterLayout;
@@ -110,7 +112,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,@Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_transaction_history, container, false);
         getActivity().setTitle(R.string.transaction_history);
 
@@ -153,6 +155,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mToDateButton = (Button) v.findViewById(R.id.toButton);
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
+
+        mProgressbar = (ProgressBar) v.findViewById(R.id.progress_bar_transaction_history);
 
         setActionsForEventTypeFilter();
         setActionsForDateFilter();
@@ -209,7 +213,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.activity_transaction_history, menu);
         menuInflater.inflate(R.menu.clear_filter, menu);
-        this.menu=menu;
+        this.menu = menu;
         menu.findItem(R.id.action_clear_filter).setVisible(false);
 
     }
@@ -239,6 +243,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 Utilities.setLayoutAnim_slideDown(eventFilterLayout);
                 return true;
             case R.id.action_clear_filter:
+                mProgressbar.setVisibility(View.VISIBLE);
                 clearDateFilters();
                 clearEventFilters();
                 refreshTransactionHistory();
@@ -473,6 +478,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mTransactionHistoryTask = null;
+            if (mProgressbar.getVisibility() == View.VISIBLE) {
+                mProgressbar.setVisibility(View.GONE);
+            }
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
@@ -504,6 +512,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
             if (this.isAdded()) setContentShown(true);
+            if (mProgressbar.getVisibility() == View.VISIBLE) {
+                mProgressbar.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -576,7 +587,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     statusDescriptionView.setText(getString(R.string.in_progress));
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.colorAmber));
                 } else {
-                    if ( serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                    if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                         mAmountTextView.setText(getString(R.string.not_applicable));
                     }
                     statusDescriptionView.setText(getString(R.string.transaction_failed));
@@ -584,11 +595,10 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 }
 
                 mTransactionDescriptionView.setText(description);
-                if(receiver != null && !receiver.equals("")) {
+                if (receiver != null && !receiver.equals("")) {
                     mReceiverView.setVisibility(View.VISIBLE);
                     mReceiverView.setText(receiver);
-                }
-                else mReceiverView.setVisibility(View.GONE);
+                } else mReceiverView.setVisibility(View.GONE);
                 netAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
@@ -610,7 +620,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     otherImageView.setImageResource(R.drawable.ic_top);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_EDUCATION ) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_EDUCATION) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     otherImageView.setImageResource(R.drawable.ic_education);
