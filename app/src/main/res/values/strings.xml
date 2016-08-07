@@ -351,6 +351,8 @@
     <string name="introducers">Introducers</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
+    <string name="transaction_cancelled">Cancelled</string>
+    <string name="transaction_rejected">Rejected</string>
     <string name="draft">Saved but not send</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_event">Filter by event</string>
@@ -413,6 +415,7 @@
     <string name="filter_education">Education</string>
 
     <string name="basic_info">Basic Information</string>
+    <string name="owner_info">Owner Information</string>
     <string name="student_info">Student Information</string>
     <string name="pay_education_fee">Pay education fees</string>
     <string name="add_new_payment_item">Add new payment item</string>

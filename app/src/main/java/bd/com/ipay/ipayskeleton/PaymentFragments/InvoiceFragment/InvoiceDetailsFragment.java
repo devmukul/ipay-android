@@ -173,10 +173,10 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     mStatusView.setTextColor(context.getResources().getColor(R.color.background_yellow));
 
                 } else if (status == Constants.INVOICE_STATUS_REJECTED) {
-                    mStatusView.setText(context.getString(R.string.transaction_failed));
+                    mStatusView.setText(context.getString(R.string.transaction_rejected));
                     mStatusView.setTextColor(context.getResources().getColor(R.color.background_red));
                 } else if (status == Constants.INVOICE_STATUS_CANCELED) {
-                    mStatusView.setText(context.getString(R.string.transaction_failed));
+                    mStatusView.setText(context.getString(R.string.transaction_cancelled));
                     mStatusView.setTextColor(Color.GRAY);
                 }
                 else if (status == Constants.INVOICE_STATUS_DRAFT) {
