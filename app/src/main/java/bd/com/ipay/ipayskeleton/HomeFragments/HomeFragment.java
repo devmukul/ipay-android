@@ -520,7 +520,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     String balance = mRefreshBalanceResponse.getBalance() + "";
                     if (balance != null) {
                         if (isAdded())
-                            balanceView.setText(Utilities.formatTakaWithComma(Double.parseDouble(balance)));
+                            balanceView.setText(Utilities.takaWithComma(Double.parseDouble(balance)) + " " + getString(R.string.bdt));
                         pref.edit().putString(Constants.USER_BALANCE, balance).apply();
                     }
                 } catch (Exception e) {
