@@ -431,6 +431,13 @@ public class Utilities {
         return String.format("\u09F3%s", numberFormat.format(amount));
     }
 
+    public static String takaWithComma(double amount) {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
+        return  numberFormat.format(amount);
+    }
+
     public static String formatTaka(BigDecimal amount) {
         return String.format("\u09F3%.2f", amount);
     }

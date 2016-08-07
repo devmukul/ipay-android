@@ -19,10 +19,10 @@
             android:shape="ring"
             android:thickness="3.5dp">
             <gradient
-                android:centerColor="@color/colorPrimary"
+                android:centerColor="@color/colorDarkOrange"
                 android:centerY="0.50"
-                android:endColor="@color/colorPrimary"
-                android:startColor="@color/colorPrimary"
+                android:endColor="@color/colorDarkOrange"
+                android:startColor="@color/colorDarkOrange"
                 android:type="sweep"
                 android:useLevel="false" />
         </shape>
