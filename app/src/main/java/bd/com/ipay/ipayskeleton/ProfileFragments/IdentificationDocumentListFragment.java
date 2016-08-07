@@ -82,7 +82,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.passport,
             R.string.driving_license,
             R.string.birth_certificate,
-            R.string.tin,
             R.string.business_tin,
             R.string.trade_license,
             R.string.vat_registration_certificate
@@ -108,7 +107,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     Constants.DOCUMENT_TYPE_PASSPORT,
                     Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
                     Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-                    Constants.DOCUMENT_TYPE_TIN,
                     Constants.DOCUMENT_TYPE_BUSINESS_TIN,
                     Constants.DOCUMENT_TYPE_TRADE_LICENSE,
                     Constants.DOCUMENT_TYPE_VAT_REG_CERT
@@ -119,7 +117,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     Constants.DOCUMENT_TYPE_PASSPORT,
                     Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
                     Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-                    Constants.DOCUMENT_TYPE_TIN
             };
         }
     }

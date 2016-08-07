@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -48,6 +49,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;
 
+    private ProgressDialog mProgressDialog;
+
     private String[] activityLogTypes;
     private RecyclerView mActivityLogRecyclerView;
     private ActivityLogAdapter mActivityLogAdapter;
@@ -78,6 +81,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
 
+    private Menu menu;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +94,9 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         super.onCreateOptionsMenu(menu, inflater);
         MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.activity_history, menu);
+        menuInflater.inflate(R.menu.clear_filter, menu);
+        this.menu = menu;
+        menu.findItem(R.id.action_clear_filter).setVisible(false);
     }
 
     @Override
@@ -105,6 +113,14 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     dateFilterLayout.setVisibility(View.GONE);
                 eventFilterLayout.setVisibility(View.VISIBLE);
                 Utilities.setLayoutAnim_slideDown(eventFilterLayout);
+                return true;
+            case R.id.action_clear_filter:
+                clearDateFilter();
+                clearEventFilter();
+                historyPageCount = 0;
+                if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                getUserActivities();
+                menu.findItem(R.id.action_clear_filter).setVisible(false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -138,6 +154,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mToDateButton = (Button) v.findViewById(R.id.toButton);
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
+
+        mProgressDialog = new ProgressDialog(getActivity());
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -219,6 +237,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         filterByDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                menu.findItem(R.id.action_clear_filter).setVisible(true);
                 dateFilterLayout.setVisibility(View.GONE);
                 clearEventFilter();
                 historyPageCount = 0;
@@ -277,10 +296,10 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     }
 
     private void setActionsForEventTypeFilter() {
-
         mClearEventFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                menu.findItem(R.id.action_clear_filter).setVisible(true);
                 clearDateFilter();
                 clearEventFilter();
 
@@ -294,6 +313,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mChangeProfileCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                menu.findItem(R.id.action_clear_filter).setVisible(true);
                 if (mChangeProfileCheckBox.isChecked()) {
                     type = Constants.ACTIVITY_TYPE_CHANGE_PROFILE;
                     mVerificationCheckBox.setChecked(false);
@@ -312,6 +332,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mSecurityChangeCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                menu.findItem(R.id.action_clear_filter).setVisible(true);
                 if (mSecurityChangeCheckBox.isChecked()) {
                     type = Constants.ACTIVITY_TYPE_CHANGE_SECURITY;
                     mVerificationCheckBox.setChecked(false);
@@ -330,6 +351,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mVerificationCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                menu.findItem(R.id.action_clear_filter).setVisible(true);
                 if (mVerificationCheckBox.isChecked()) {
                     type = Constants.ACTIVITY_TYPE_VERIFICATION;
                     mChangeProfileCheckBox.setChecked(false);
@@ -348,6 +370,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mSystemEventCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                menu.findItem(R.id.action_clear_filter).setVisible(true);
                 if (mSystemEventCheckBox.isChecked()) {
                     type = Constants.ACTIVITY_TYPE_SYSTEM_EVENT;
                     mChangeProfileCheckBox.setChecked(false);
@@ -414,6 +437,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             return;
         }
 
+        mProgressDialog.show();
         String url = GetActivityRequestBuilder.generateUri(type,
                 fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
         mUserActivityTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,
@@ -429,6 +453,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUserActivityTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
+            mProgressDialog.dismiss();
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
@@ -468,6 +493,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
             mSwipeRefreshLayout.setRefreshing(false);
             mUserActivityTask = null;
+            mProgressDialog.dismiss();
         }
 
         if (userActivityResponsesList != null && userActivityResponsesList.size() == 0)

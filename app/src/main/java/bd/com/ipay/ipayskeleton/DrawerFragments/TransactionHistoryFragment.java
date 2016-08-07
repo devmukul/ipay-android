@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -65,6 +66,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
+    private ProgressDialog mProgressDialog;
+
     private String mMobileNumber;
 
     private LinearLayout eventFilterLayout;
@@ -95,6 +98,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private boolean clearListAfterLoading;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
+
+    private Menu menu;
 
 
     @Override
@@ -147,6 +152,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mToDateButton = (Button) v.findViewById(R.id.toButton);
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
+
+        mProgressDialog = new ProgressDialog(getActivity());
 
         setActionsForEventTypeFilter();
         setActionsForDateFilter();
@@ -202,6 +209,10 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         super.onCreateOptionsMenu(menu, inflater);
         MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.activity_transaction_history, menu);
+        menuInflater.inflate(R.menu.clear_filter, menu);
+        this.menu=menu;
+        menu.findItem(R.id.action_clear_filter).setVisible(false);
+
     }
 
     @Override
@@ -228,6 +239,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 eventFilterLayout.setVisibility(View.VISIBLE);
                 Utilities.setLayoutAnim_slideDown(eventFilterLayout);
                 return true;
+            case R.id.action_clear_filter:
+                clearDateFilters();
+                clearEventFilters();
+                refreshTransactionHistory();
+                menu.findItem(R.id.action_clear_filter).setVisible(false);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -240,7 +257,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     }
 
     private void setActionsForDateFilter() {
-
         clearDateFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -253,6 +269,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         filterByDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                menu.findItem(R.id.action_clear_filter).setVisible(true);
                 clearEventFilters();
                 dateFilterLayout.setVisibility(View.GONE);
                 refreshTransactionHistory();
@@ -326,6 +343,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             eventFilter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    menu.findItem(R.id.action_clear_filter).setVisible(true);
+
                     clearDateFilters();
                     if (eventFilter.isChecked()) {
                         type = mCheckBoxTypeMap.get(eventFilter);
@@ -414,7 +433,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         if (mTransactionHistoryTask != null) {
             return;
         }
-
+        mProgressDialog.show();
         TransactionHistoryRequest mTransactionHistoryRequest;
         if (fromDate != null && toDate != null) {
             mTransactionHistoryRequest = new TransactionHistoryRequest(
@@ -456,6 +475,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mTransactionHistoryTask = null;
+            mProgressDialog.dismiss();
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
@@ -486,6 +506,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
+            mProgressDialog.dismiss();
             if (this.isAdded()) setContentShown(true);
         }
     }

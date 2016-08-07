@@ -265,7 +265,7 @@
     <string name="event_select_participants_type">Select participants</string>
     <string name="event_location">Event location</string>
     <string name="enter_vat">VAT in BDT(%)</string>
-    <string name="enter_amount">Enter an amount in BDT</string>
+    <string name="enter_amount">Amount in BDT</string>
     <string name="send_money_description">Write a note</string>
     <string name="education_payment_description">Write a note</string>
     <string name="description_event">Event description</string>
@@ -618,8 +618,8 @@
     <string name="manage_employer">Manage Employer</string>
     <string name="failed_fetching_employer_list">Failed to fetch employer list</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
-    <string name="add_money_info">Enter details to add money to your iPay account </string>
-    <string name="withdraw_money_info">Enter details to withdraw money from your iPay account </string>
+    <string name="add_money_info">It make three to five business day to complete the operation </string>
+    <string name="withdraw_money_info">It make three to five business day to complete the operation </string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
