@@ -272,8 +272,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            if (!ProfileInfoCacheManager.isBusinessAccount())
-                getProfileCompletionStatus();
+            getProfileCompletionStatus();
         }
 
         updateProfileData();

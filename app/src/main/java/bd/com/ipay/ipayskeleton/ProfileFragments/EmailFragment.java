@@ -423,6 +423,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             public EmailViewHolder(final View itemView) {
                 super(itemView);
 
+                if (mEmails != null && mEmails.size() == 0)
+                    mEmptyListTextView.setVisibility(View.VISIBLE);
+                else mEmptyListTextView.setVisibility(View.GONE);
+
                 mEmailView = (TextView) itemView.findViewById(R.id.textview_email);
                 mIsPrimaryView = (TextView) itemView.findViewById(R.id.textview_is_primary);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.email_verification_status);

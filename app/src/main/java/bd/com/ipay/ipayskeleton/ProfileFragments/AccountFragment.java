@@ -85,11 +85,11 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mDocuments = (IconifiedTextViewWithButton) v.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
 
-        if (ProfileInfoCacheManager.isBusinessAccount())
-            mProfileCompleteness.setVisibility(View.GONE);
-        else
-            mProfileCompleteness.setVisibility(View.VISIBLE);
-
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            mBasicInfo.setText(getString(R.string.owner_info));
+        } else {
+            mBasicInfo.setText(getString(R.string.basic_info));
+        }
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -155,12 +155,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-
-        if (ProfileInfoCacheManager.isBusinessAccount()) {
-            mProfileCompletionStatusView.setVisibility(View.GONE);
-        } else {
-            getProfileCompletionStatus();
-        }
+        getProfileCompletionStatus();
 
         return v;
     }
