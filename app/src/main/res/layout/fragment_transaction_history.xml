@@ -12,15 +12,6 @@
 
         <include layout="@layout/layout_progress_container" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar_transaction_history"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:indeterminate="true"
-            android:progressTint="@color/colorPrimary"
-            android:visibility="gone" />
-
         <LinearLayout
             android:id="@+id/date_filter_layout"
             android:layout_width="match_parent"

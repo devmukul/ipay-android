@@ -103,7 +103,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             @Override
             public void onClick(View v) {
 
-                mOperatorSelectorDialog.show();
             }
         });
 

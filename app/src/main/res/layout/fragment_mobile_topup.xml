@@ -73,12 +73,12 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:focusable="false"
                 android:hint="@string/select_a_package"
                 android:inputType="numberDecimal"
                 android:maxLines="1"
-                android:singleLine="true"
-                android:clickable="false"/>
+                android:singleLine="true" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -94,6 +94,7 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:editable="false"
                 android:focusable="false"
                 android:hint="@string/select_an_operator"
                 android:inputType="numberDecimal"
@@ -102,7 +103,9 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <View style="@style/Divider" android:visibility="visible" />
+        <View
+            style="@style/Divider"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/button_recharge"

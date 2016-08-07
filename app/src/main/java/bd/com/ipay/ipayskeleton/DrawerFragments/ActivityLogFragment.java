@@ -49,7 +49,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;
 
-    private ProgressBar mProgressbar;
+    private View mProgressbarView;
+
     private String[] activityLogTypes;
     private RecyclerView mActivityLogRecyclerView;
     private ActivityLogAdapter mActivityLogAdapter;
@@ -114,7 +115,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 Utilities.setLayoutAnim_slideDown(eventFilterLayout);
                 return true;
             case R.id.action_clear_filter:
-                mProgressbar.setVisibility(View.VISIBLE);
+                mProgressbarView.setVisibility(View.VISIBLE);
                 clearDateFilter();
                 clearEventFilter();
                 historyPageCount = 0;
@@ -155,7 +156,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
 
-        mProgressbar = (ProgressBar) v.findViewById(R.id.progress_bar_activity_log);
+        mProgressbarView = v.findViewById(R.id.progress_container);
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -453,8 +454,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUserActivityTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
-            if(mProgressbar.getVisibility()==View.VISIBLE) {
-                mProgressbar.setVisibility(View.GONE);
+            if (mProgressbarView.getVisibility() == View.VISIBLE) {
+                mProgressbarView.setVisibility(View.GONE);
             }
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
@@ -495,8 +496,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
             mSwipeRefreshLayout.setRefreshing(false);
             mUserActivityTask = null;
-            if(mProgressbar.getVisibility()==View.VISIBLE) {
-                mProgressbar.setVisibility(View.GONE);
+            if (mProgressbarView.getVisibility() == View.VISIBLE) {
+                mProgressbarView.setVisibility(View.GONE);
             }
         }
 
