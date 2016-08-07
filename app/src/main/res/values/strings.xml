@@ -607,6 +607,7 @@
     <string name="you_cannot_send_money_to_your_number">You can\'t send money to your own mobile number</string>
     <string name="you_cannot_make_payment_to_your_number">You can\'t make payment to your own mobile number</string>
     <string name="you_cannot_request_money_from_your_number">You can\'t request money from your own mobile number</string>
+    <string name="help">Help</string>
     <string name="help_and_support">Help and Support</string>
     <string name="create_ticket">Create Ticket</string>
     <string name="subject">Subject</string>

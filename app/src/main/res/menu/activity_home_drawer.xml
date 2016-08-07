@@ -34,7 +34,7 @@
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_helpw"
-            android:title="@string/help_and_support" />
+            android:title="@string/help" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_drawer_about"

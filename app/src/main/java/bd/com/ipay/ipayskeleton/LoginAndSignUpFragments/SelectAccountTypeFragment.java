@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ public class SelectAccountTypeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_select_account_type_page);
-        Utilities.hideKeyboard(getActivity());
+        Utilities.hideKeyboard(getContext(), getView());
     }
 
     @Override
@@ -28,7 +29,7 @@ public class SelectAccountTypeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_select_account_type, container, false);
 
-        Utilities.hideKeyboard(getActivity());
+        Utilities.hideKeyboard(getContext(), getView());
 
         buttonAccountTypePersonal = (Button) v.findViewById(R.id.button_account_type_personal);
         buttonAccountTypeBusiness = (Button) v.findViewById(R.id.button_account_type_business);
