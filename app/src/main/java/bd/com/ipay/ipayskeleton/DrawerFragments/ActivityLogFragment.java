@@ -49,8 +49,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;
 
-    private ProgressDialog mProgressDialog;
-
     private String[] activityLogTypes;
     private RecyclerView mActivityLogRecyclerView;
     private ActivityLogAdapter mActivityLogAdapter;
@@ -154,8 +152,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mToDateButton = (Button) v.findViewById(R.id.toButton);
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
-
-        mProgressDialog = new ProgressDialog(getActivity());
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -437,7 +433,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             return;
         }
 
-        mProgressDialog.show();
         String url = GetActivityRequestBuilder.generateUri(type,
                 fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
         mUserActivityTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ACTIVITIES,
@@ -453,7 +448,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUserActivityTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
-            mProgressDialog.dismiss();
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
@@ -493,7 +487,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
             mSwipeRefreshLayout.setRefreshing(false);
             mUserActivityTask = null;
-            mProgressDialog.dismiss();
         }
 
         if (userActivityResponsesList != null && userActivityResponsesList.size() == 0)

@@ -12,6 +12,7 @@
 
         <include layout="@layout/layout_progress_container" />
 
+
         <LinearLayout
             android:id="@+id/date_filter_layout"
             android:layout_width="match_parent"
