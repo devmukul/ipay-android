@@ -8,7 +8,7 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 50
+        versionCode 50  // Half century at August 4, 2016 (Last office of Rafi Kamal at iPay)
         versionName "0.30.4"
         multiDexEnabled true
     }
