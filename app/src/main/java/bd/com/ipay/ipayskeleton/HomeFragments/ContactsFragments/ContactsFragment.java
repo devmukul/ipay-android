@@ -715,7 +715,19 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             setSelectedName(name);
                             setSelectedNumber(mobileNumber);
 
-                            sendInvite(mobileNumber);
+                            new android.app.AlertDialog.Builder(getActivity())
+                                    .setTitle(R.string.are_you_sure)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            sendInvite(mobileNumber);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Do nothing
+                                        }
+                                    })
+                                    .show();
                         }
                     });
                 } else {
