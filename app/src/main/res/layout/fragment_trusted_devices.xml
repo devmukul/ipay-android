@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@color/colorLightGray"
-            android:dividerHeight="@dimen/divider_space" />
+            android:dividerHeight="@dimen/divider_space"
+            android:paddingRight="@dimen/activity_horizontal_margin_card"/>
     </LinearLayout>
 
 </LinearLayout>

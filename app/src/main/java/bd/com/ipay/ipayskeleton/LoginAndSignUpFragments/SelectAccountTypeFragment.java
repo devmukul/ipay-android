@@ -28,6 +28,8 @@ public class SelectAccountTypeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_select_account_type, container, false);
 
+        Utilities.hideKeyboard(getActivity());
+
         buttonAccountTypePersonal = (Button) v.findViewById(R.id.button_account_type_personal);
         buttonAccountTypeBusiness = (Button) v.findViewById(R.id.button_account_type_business);
 

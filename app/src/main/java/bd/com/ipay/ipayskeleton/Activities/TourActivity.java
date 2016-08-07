@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import bd.com.ipay.ipayskeleton.CustomView.PagerIndicator;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TourActivity extends BaseActivity {
 
