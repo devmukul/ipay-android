@@ -159,7 +159,7 @@ public class HomeActivity extends BaseActivity
         setDrawerMenuVisibility(R.id.nav_manage_business, ProfileInfoCacheManager.isBusinessAccount());
 
         // Initialize token timer
-        CountDownTimer tokenTimer = new CountDownTimer(TokenManager.getiPayTokenTimeInMs(), 1000) {
+        CountDownTimer tokenTimer = new CountDownTimer(TokenManager.getiPayTokenTimeInMs() - 10000, 1000) {
 
             public void onTick(long millisUntilFinished) {
             }

@@ -147,6 +147,7 @@ public class TransactionDetailsFragment extends Fragment {
             statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
         } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
             statusTextView.setText(getString(R.string.in_progress));
+            statusTextView.setTextColor(getResources().getColor(R.color.colorAmber));
         } else {
             if ( serviceId != Constants.TRANSACTION_HISTORY_TOP_UP || serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
                 balanceTextView.setText(getString(R.string.not_applicable));
