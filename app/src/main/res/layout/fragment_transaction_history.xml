@@ -12,15 +12,23 @@
 
         <include layout="@layout/layout_progress_container" />
 
+        <ProgressBar
+            android:id="@+id/progress_bar_transaction_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:indeterminate="true"
+            android:progressTint="@color/colorPrimary"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/date_filter_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@android:color/white"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@android:color/white"
+            android:orientation="vertical"
             android:visibility="gone">
 
             <View
@@ -38,8 +46,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/from_date"
                     android:background="@android:color/white"
+                    android:hint="@string/from_date"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -56,7 +64,7 @@
                     android:background="@android:color/white"
                     android:hint="@string/to_date"
                     android:maxLines="1"
-                    android:singleLine="true"/>
+                    android:singleLine="true" />
             </LinearLayout>
 
 
@@ -69,9 +77,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
                 android:orientation="vertical"
-                android:visibility="visible"
-                android:layout_margin="@dimen/activity_horizontal_margin">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,14 +90,14 @@
                         android:id="@+id/button_clear_filter_date"
                         android:layout_width="0dp"
 
-                        android:background="@drawable/background_primary_button"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="@dimen/value5"
                         android:layout_marginRight="@dimen/value5"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_primary_button"
+                        android:padding="@dimen/value5"
                         android:text="@string/clear_filter"
                         android:textAllCaps="false"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white" />
 
                     <View
                         android:layout_width="1px"
@@ -100,13 +108,13 @@
                         android:id="@+id/button_filter_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/background_primary_button"
-                        android:layout_weight="1"
-                        android:padding="@dimen/value5"
                         android:layout_marginLeft="@dimen/value5"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_primary_button"
+                        android:padding="@dimen/value5"
                         android:text="@string/filter"
                         android:textAllCaps="false"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -120,10 +128,10 @@
             android:id="@+id/event_filters_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@android:color/white"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@android:color/white"
+            android:orientation="vertical"
             android:visibility="gone">
 
 
