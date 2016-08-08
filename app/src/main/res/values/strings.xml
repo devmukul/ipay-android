@@ -713,13 +713,13 @@
     </string-array>
 
     <string-array name="upload_picker_action">
-        <item>Take A Picture</item>
-        <item>Select From Gallery</item>
+        <item>Take a Picture</item>
+        <item>Select from Gallery</item>
     </string-array>
 
     <string-array name="pending_picker_action">
-        <item>Take A Picture</item>
-        <item>Select From Gallery</item>
+        <item>Take a Picture</item>
+        <item>Select from Gallery</item>
         <item>View Uploaded Document</item>
     </string-array>
 

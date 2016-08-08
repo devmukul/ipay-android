@@ -528,12 +528,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
                         customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int mActionId, String name) {
+                            public void onResourceSelected(int mActionId, String action) {
 
                                 mSelectedItemId = pos;
                                 documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
                                 documentPreviewBindViewHolderList.get(pos).setmSelectedfilePath(mSelectFile.getText().toString());
-                                if (mActionId <= OPTION_UPLOAD_DOCUMENT)
+                                if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
                                     if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
                                         selectDocument(mActionId);
                                     } else {

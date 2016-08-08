@@ -704,6 +704,9 @@ public class Constants {
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
     public static final String ACTION_TYPE_EDIT = "Edit";
     public static final String ACTION_TYPE_VIEW = "View";
+    public static final String ACTION_TYPE_TAKE_PICTURE= "Take a Picture";
+    public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from Gallery";
+    public static final String ACTION_TYPE_VIEW_UPLOADED_DOCUMENT = "View Uploaded Document";
 
     public static final String SERVICE_ACTION_REQUEST_PAYMENT = "Request Payment";
     public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";
