@@ -78,6 +78,7 @@
     <string name="accept">Accept</string>
     <string name="remove_this_account_query">Remove this account from your bank list?</string>
     <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
+    <string name="cancel_payment_request_confirm">Are you sure you want to cancel your request for payment?</string>
     <string name="account_type_personal">Personal Account</string>
     <string name="create_invoice">Create Invoice</string>
     <string name="request_payment">Request Payment</string>
