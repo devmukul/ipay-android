@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.PrivilegeConstants
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class EmployeeInformationDetailsFragment extends Fragment implements HttpResponseListener {
+public class SetEmployeeRolesFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mEmployeeDetailsAsyncTask;
     private GetEmployeeDetailsResponse mGetEmployeeDetailsResponse;
@@ -67,7 +67,6 @@ public class EmployeeInformationDetailsFragment extends Fragment implements Http
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mPrivilegeListView.setLayoutManager(layoutManager);
-
 
         return v;
     }

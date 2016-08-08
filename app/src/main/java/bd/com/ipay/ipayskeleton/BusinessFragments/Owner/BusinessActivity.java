@@ -76,7 +76,7 @@ public class BusinessActivity extends BaseActivity {
 
     // Business -> Employee Management -> Employee Information
     public void switchToEmployeeInformationFragment(Bundle bundle) {
-        Fragment employeeInformationFragment = new CreateEmployeeInformationFragment();
+        Fragment employeeInformationFragment = new CreateEmployeeFragment();
         if (bundle != null)
             employeeInformationFragment.setArguments(bundle);
 
@@ -97,7 +97,7 @@ public class BusinessActivity extends BaseActivity {
 
     // Business -> Employee Management -> Employee Information details
     public void switchToEmployeeInformationDetailsFragment(Bundle bundle) {
-        Fragment employeeInformationDetailsFragment = new EmployeeInformationDetailsFragment();
+        Fragment employeeInformationDetailsFragment = new SetEmployeeRolesFragment();
         if (bundle != null)
             employeeInformationDetailsFragment.setArguments(bundle);
 
@@ -108,7 +108,7 @@ public class BusinessActivity extends BaseActivity {
 
     // Business -> Employee Management -> Employee Information edit
     public void switchToEditEmployeeInformationFragment(Bundle bundle) {
-        Fragment editEmployeeInformationFragment = new CreateEmployeeInformationFragment();
+        Fragment editEmployeeInformationFragment = new CreateEmployeeFragment();
         if (bundle != null)
             editEmployeeInformationFragment.setArguments(bundle);
 

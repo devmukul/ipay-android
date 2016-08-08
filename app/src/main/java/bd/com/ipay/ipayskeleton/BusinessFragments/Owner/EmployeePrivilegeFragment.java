@@ -39,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 /**
  * Contained in {@link BusinessActivity}
- * Previous Fragment: {@link CreateEmployeeInformationFragment}
+ * Previous Fragment: {@link CreateEmployeeFragment}
  */
 public class EmployeePrivilegeFragment extends Fragment implements HttpResponseListener {
 
