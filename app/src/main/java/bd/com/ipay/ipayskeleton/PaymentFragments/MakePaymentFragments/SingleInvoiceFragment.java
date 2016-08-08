@@ -66,9 +66,14 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
         mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
 
         String result = getArguments().getString(Constants.RESULT);
-        if (TextUtils.isDigitsOnly(result))
-            getSingleInvoice(Integer.parseInt(result));
-        else {
+        try {
+            if (TextUtils.isDigitsOnly(result))
+                getSingleInvoice(Integer.parseInt(result));
+            else {
+                Toast.makeText(getActivity(), R.string.not_a_valid_invoice_id, Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            }
+        } catch (NumberFormatException e) {
             Toast.makeText(getActivity(), R.string.not_a_valid_invoice_id, Toast.LENGTH_LONG).show();
             getActivity().finish();
         }
