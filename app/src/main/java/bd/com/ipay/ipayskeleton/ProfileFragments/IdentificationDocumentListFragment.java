@@ -489,7 +489,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     public void onClick(View v) {
                         if (mPickerList.size() > 0) {
                             // When account is verified, we wouldn't allow the user to upload new document
-                            if (documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
+                            if (ProfileInfoCacheManager.isAccountVerified() || documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
                                 mOptionsLayout.setVisibility(View.GONE);
                                 documentPreviewBindViewHolderList.get(pos).setIsViewOpen(false);
                             } else {
@@ -510,16 +510,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
                         customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int mactionId, String name) {
+                            public void onResourceSelected(int mActionId, String name) {
 
                                 mSelectedItemId = pos;
                                 documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
                                 documentPreviewBindViewHolderList.get(pos).setmSelectedfilePath(mSelectFile.getText().toString());
-                                if (mactionId <= OPTION_UPLOAD_DOCUMENT)
+                                if (mActionId <= OPTION_UPLOAD_DOCUMENT)
                                     if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                                        selectDocument(mactionId);
+                                        selectDocument(mActionId);
                                     } else {
-                                        mActionId = mactionId;
+                                        mActionId = mActionId;
                                         DocumentPicker.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION);
                                     }
                                 else {
