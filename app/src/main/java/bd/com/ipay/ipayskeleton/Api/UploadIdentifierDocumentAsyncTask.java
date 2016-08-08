@@ -32,7 +32,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
     private final String API_COMMAND;
     private final String documentIdNumber;
     private final String documentType;
-    private int uploadtype;
+    private int uploadType;
 
     public HttpResponseListener mHttpResponseListener;
 
@@ -49,13 +49,13 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
     }
 
     public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
-                                             String documentIdNumber, String documentType, int uploadtype) {
+                                             String documentIdNumber, String documentType, int uploadType) {
         this.mContext = mContext;
         this.imagePath = imagePath;
         this.API_COMMAND = API_COMMAND;
         this.documentIdNumber = documentIdNumber;
         this.documentType = documentType;
-        this.uploadtype = uploadtype;
+        this.uploadType = uploadType;
     }
 
     @Override
@@ -102,11 +102,10 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
             HttpClient client = new DefaultHttpClient();
             File file = new File(selectedImagePath);
             HttpPost post = null;
-            if (uploadtype == OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT)
+            if (uploadType == OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT)
                 post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_DOCUMENTS);
 
-            else if (uploadtype == OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT) {
-                Log.w("document",""+uploadtype);
+            else if (uploadType == OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT) {
                 post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_BUSINESS_DOCUMENTS);
             }
 

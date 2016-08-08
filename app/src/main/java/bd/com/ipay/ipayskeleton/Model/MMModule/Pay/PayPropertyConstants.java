@@ -19,6 +19,6 @@ public class PayPropertyConstants {
         PAY_PROPERTY_NAME_TO_ICON_MAP.put(EDUCATION, R.drawable.ic_education);
         PAY_PROPERTY_NAME_TO_ICON_MAP.put(REQUEST_PAYMENT, R.drawable.ic_make_payment);
         PAY_PROPERTY_NAME_TO_ICON_MAP.put(REQUEST_PAYMENT, R.drawable.ic_make_payment);
-        PAY_PROPERTY_NAME_TO_ICON_MAP.put(PAY_BY_QR_CODE, R.drawable.ic_qrc3x);
+        PAY_PROPERTY_NAME_TO_ICON_MAP.put(PAY_BY_QR_CODE, R.drawable .ic_make_payment_qr);
     }
 }

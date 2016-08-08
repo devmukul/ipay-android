@@ -257,14 +257,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         Log.w("Loading document", mID + " " + selectedOImagePath + " " + mDocumentType);
 
         if (mID <= COUNT_UPLOAD_PERSONAL_DOCUMENT) {
-            Log.w("personal document", mID + " " + selectedOImagePath + " " + mDocumentType);
             mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                     Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
                     mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
-        }
-
-        else if (mID > COUNT_UPLOAD_PERSONAL_DOCUMENT &&  mID <= COUNT_UPLOAD_OTHER_DOCUMENT) {
-            Log.w("businessdocument", mID + " " + selectedOImagePath + " " + mDocumentType);
+        } else if (mID > COUNT_UPLOAD_PERSONAL_DOCUMENT && mID <= COUNT_UPLOAD_OTHER_DOCUMENT) {
             mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                     Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
                     mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
