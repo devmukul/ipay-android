@@ -32,8 +32,12 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
     private final String API_COMMAND;
     private final String documentIdNumber;
     private final String documentType;
+    private int uploadtype;
 
     public HttpResponseListener mHttpResponseListener;
+
+    private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
+    private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
 
     public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
                                              String documentIdNumber, String documentType) {
@@ -42,6 +46,16 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
         this.API_COMMAND = API_COMMAND;
         this.documentIdNumber = documentIdNumber;
         this.documentType = documentType;
+    }
+
+    public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
+                                             String documentIdNumber, String documentType, int uploadtype) {
+        this.mContext = mContext;
+        this.imagePath = imagePath;
+        this.API_COMMAND = API_COMMAND;
+        this.documentIdNumber = documentIdNumber;
+        this.documentType = documentType;
+        this.uploadtype = uploadtype;
     }
 
     @Override
@@ -87,7 +101,14 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
         try {
             HttpClient client = new DefaultHttpClient();
             File file = new File(selectedImagePath);
-            HttpPost post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_DOCUMENTS);
+            HttpPost post = null;
+            if (uploadtype == OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT)
+                post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_DOCUMENTS);
+
+            else if (uploadtype == OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT) {
+                Log.w("document",""+uploadtype);
+                post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_BUSINESS_DOCUMENTS);
+            }
 
             if (TokenManager.isTokenExists())
                 post.setHeader(Constants.TOKEN, TokenManager.getToken());
