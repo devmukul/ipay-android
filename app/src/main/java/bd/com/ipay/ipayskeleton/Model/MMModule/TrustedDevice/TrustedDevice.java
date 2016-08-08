@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TrustedDevice {
     private long id;
@@ -50,10 +49,7 @@ public class TrustedDevice {
     }
 
     public String getCreatedTimeString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, H:MM a");
-        Date date = new Date();
-        date.setTime(createdTime);
-        return dateFormat.format(date);
+        return Utilities.getDateFormat(createdTime);
     }
 
 }

@@ -21,7 +21,6 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -282,7 +281,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
 
                 final String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(pendingPaymentClasses.get(pos).getRequestTime());
+                final String time = Utilities.getDateFormat(pendingPaymentClasses.get(pos).getRequestTime());
                 final String title = pendingPaymentClasses.get(pos).getTitle();
                 final String name = pendingPaymentClasses.get(pos).getReceiverProfile().getUserName();
                 final String mobileNumber = pendingPaymentClasses.get(pos).getReceiverProfile().getUserMobileNumber();

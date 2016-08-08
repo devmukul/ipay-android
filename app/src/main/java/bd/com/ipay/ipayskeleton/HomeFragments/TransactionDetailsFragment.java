@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.R;
@@ -65,7 +63,7 @@ public class TransactionDetailsFragment extends Fragment {
 
         String mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         descriptionTextView.setText(transactionHistory.getDescription(mMobileNumber));
-        timeTextView.setText(new SimpleDateFormat("dd/MM/yy, h:mm a").format(transactionHistory.getResponseTime()));
+        timeTextView.setText(Utilities.getDateFormat(transactionHistory.getResponseTime()));
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());

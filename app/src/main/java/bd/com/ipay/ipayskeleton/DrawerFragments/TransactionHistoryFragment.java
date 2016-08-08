@@ -26,7 +26,6 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -558,7 +557,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final String detailDescription = transactionHistory.getDescription(mMobileNumber);
                 final String description = transactionHistory.getShortDescription(mMobileNumber);
                 final String receiver = transactionHistory.getReceiver();
-                final String responseTime = new SimpleDateFormat("dd/MM/yy, h:mm a").format(transactionHistory.getResponseTime());
+                final String responseTime = Utilities.getDateFormat(transactionHistory.getResponseTime());
                 final double amountWithoutProcessing = transactionHistory.getAmount();
                 final double fee = transactionHistory.getFee();
                 final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());

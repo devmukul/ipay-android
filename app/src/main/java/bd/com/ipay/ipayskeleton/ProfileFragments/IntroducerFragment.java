@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
@@ -332,7 +331,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 final String introducerName = mIntroducerList.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
                 final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
-                final String time = new SimpleDateFormat("EEE, MMM d, ''yy").format(mIntroducerList.get(pos).getIntroducedDate());
+                final String time = Utilities.getDateFormat(mIntroducerList.get(pos).getIntroducedDate());
                 String imageUrl = mIntroducerList.get(pos).getProfilePictureUrl();
                 mIntroducerProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mIntroducerName.setText(introducerName);

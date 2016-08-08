@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.EventActivity;
@@ -208,7 +207,7 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
                 if (pos == listOfParticipants.size() - 1) divider.setVisibility(View.GONE);
 
                 final long id = listOfParticipants.get(pos).getId();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(listOfParticipants.get(pos).getRequestTime());
+                String time = Utilities.getDateFormat(listOfParticipants.get(pos).getRequestTime());
                 String name = listOfParticipants.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfParticipants.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);
