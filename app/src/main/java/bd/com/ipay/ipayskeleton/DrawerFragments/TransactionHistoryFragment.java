@@ -554,23 +554,13 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
                 final TransactionHistoryClass transactionHistory = userTransactionHistoryClasses.get(pos);
 
-                final String detailDescription = transactionHistory.getDescription(mMobileNumber);
                 final String description = transactionHistory.getShortDescription(mMobileNumber);
                 final String receiver = transactionHistory.getReceiver();
                 final String responseTime = Utilities.getDateFormat(transactionHistory.getResponseTime());
-                final double amountWithoutProcessing = transactionHistory.getAmount();
-                final double fee = transactionHistory.getFee();
                 final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
-                final double netAmount = transactionHistory.getNetAmount();
-                final String transactionID = transactionHistory.getTransactionID();
-                final String purpose = transactionHistory.getPurpose();
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final double balance = transactionHistory.getBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
-                final String name = transactionHistory.getAdditionalInfo().getUserName();
-                final String mobileNumber = transactionHistory.getAdditionalInfo().getUserMobileNumber();
-                final String bankName = transactionHistory.getAdditionalInfo().getBankName();
-                final String bankAccountNumber = transactionHistory.getAdditionalInfo().getBankAccountNumber();
                 final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
                 final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();

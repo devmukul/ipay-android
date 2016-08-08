@@ -258,7 +258,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
 
         if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
-            String message = "";
+            String message;
             try {
                 mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
                 message = mOtpResponseBusinessSignup.getMessage();

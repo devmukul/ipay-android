@@ -434,7 +434,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                                 + "complete.\n"
                                 + incompletePropertyDetails.getPropertyTitle()
                                 + " to improve your profile";
-                        String completeButtonMessage = incompletePropertyDetails.getActionName();
 
                         mProfileCompletionMessageView.setText(profileCompletionMessage);
 

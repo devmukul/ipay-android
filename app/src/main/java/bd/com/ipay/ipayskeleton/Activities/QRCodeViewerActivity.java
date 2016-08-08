@@ -61,8 +61,6 @@ public class QRCodeViewerActivity extends BaseActivity {
     private void setQrCode(String stringToEncode) {
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
         Display display = manager.getDefaultDisplay();
-        Point point = new Point();
-        // display.getSize(point);
         int width = display.getWidth();
         int height = display.getHeight();
         int smallerDimension = width < height ? width : height;

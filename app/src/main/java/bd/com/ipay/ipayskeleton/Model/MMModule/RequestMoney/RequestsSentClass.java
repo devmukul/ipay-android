@@ -33,7 +33,6 @@ public class RequestsSentClass {
     }
 
     public String getTitle() {
-        String customTitle = "";
 
         if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return title;
         else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return "Money requested";

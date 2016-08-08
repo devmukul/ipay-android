@@ -117,7 +117,7 @@ public class RequestMoneyReviewActivity extends BaseActivity implements HttpResp
                 mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
-                    String profilePicture = null;
+                    String profilePicture;
                     Log.d("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
                     profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
 

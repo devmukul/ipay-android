@@ -238,8 +238,6 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             if (view == null)
                 view = inflater.inflate(R.layout.list_item_trusted_device, null);
 
-
-            RelativeLayout layout_item_view = (RelativeLayout) view.findViewById(R.id.layout_list_item_trusted_device);
             ImageView deviceImageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
             TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
             TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);

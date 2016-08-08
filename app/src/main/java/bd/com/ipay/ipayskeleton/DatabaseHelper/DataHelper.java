@@ -195,7 +195,7 @@ public class DataHelper {
     }
 
     public String getPushEvent(String tag) {
-        Cursor cursor = null;
+        Cursor cursor;
 
         try {
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();

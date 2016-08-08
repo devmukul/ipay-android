@@ -110,7 +110,7 @@ public class TourActivity extends BaseActivity {
     private void initFragments() {
         fragments = new ArrayList<>();
 
-        boolean isLast = false;
+        boolean isLast;
         for (int i = 0; i < tourBackgroundLayouts.length; i++) {
             isLast = i >= tourBackgroundLayouts.length - 1;
             fragments.add(TourFragment.getInstance(tourBackgroundLayouts[i],
