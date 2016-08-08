@@ -41,6 +41,7 @@
     <color name="background_iconified_button_disabled">#009688</color>
 
     <color name="colorBackgroundButtonWithOpacity">#59009688</color>
+    <color name="colorBlackButtonWithOpacity">#15000000</color>
     <color name="colorBackgroundButtonWithOpacityPressed">#1A009688</color>
 
     <color name="colorBackgroundWithOpacitySelected">#90009688</color>
