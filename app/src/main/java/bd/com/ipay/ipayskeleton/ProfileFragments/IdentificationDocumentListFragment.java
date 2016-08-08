@@ -3,6 +3,8 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -82,6 +84,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.passport,
             R.string.driving_license,
             R.string.birth_certificate,
+            R.string.tin,
             R.string.business_tin,
             R.string.trade_license,
             R.string.vat_registration_certificate
@@ -93,8 +96,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private static final int OPTION_UPLOAD_DOCUMENT = 1;
     private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
     private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
-    private static final int COUNT_UPLOAD_PERSONAL_DOCUMENT = 3;
-    private static final int COUNT_UPLOAD_OTHER_DOCUMENT = 6;
+    private static final int COUNT_UPLOAD_PERSONAL_DOCUMENT = 4;
+    private static final int COUNT_UPLOAD_OTHER_DOCUMENT = 7;
     private int mSelectedItemId = -1;
     private int mActionId = -1;
     private Uri mSelectedDocumentUri;
@@ -111,6 +114,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     Constants.DOCUMENT_TYPE_PASSPORT,
                     Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
                     Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                    Constants.DOCUMENT_TYPE_TIN,
                     Constants.DOCUMENT_TYPE_BUSINESS_TIN,
                     Constants.DOCUMENT_TYPE_TRADE_LICENSE,
                     Constants.DOCUMENT_TYPE_VAT_REG_CERT
@@ -121,6 +125,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     Constants.DOCUMENT_TYPE_PASSPORT,
                     Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
                     Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                    Constants.DOCUMENT_TYPE_TIN,
             };
         }
     }
@@ -212,6 +217,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     documentId = identificationDocument.getDocumentIdNumber();
                     verificationStatus = identificationDocument.getDocumentVerificationStatus();
                     documentUrl = identificationDocument.getDocumentUrl();
+                    documentPreviewBindViewHolderList.get(i).setmDocumentId(documentId);
                 }
             }
 
@@ -420,6 +426,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
             private CustomUploadPickerDialog customUploadPickerDialog;
             private List<String> mPickerList;
+            private File mFile;
+            private Bitmap mBitmap;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -454,10 +462,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 }
                 // Document uploaded and verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                    mPickerList = Arrays.asList(getResources().getStringArray(R.array.verified_picker_action));
                     mVerificationStatus.setVisibility(View.VISIBLE);
                     mVerificationStatus.setImageResource(R.drawable.ic_verified);
                     mVerificationStatus.setColorFilter(null);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
+                    mUploadButton.setVisibility(View.GONE);
                 }
                 // Document uploaded but not verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
@@ -471,6 +481,14 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mDocumentTypeNameView.setText(identificationDocumentDetail.getDocumentTypeName());
 
                 mDocumentIdEditTextView.setText(documentPreviewBindViewHolderList.get(pos).getmDocumentId());
+
+                if (documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri() != null) {
+                    mFile = new File(documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri().getPath());
+                    if (mFile.exists()) {
+                        mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
+                        mPicker.setImageBitmap(mBitmap);
+                    }
+                }
 
                 if (documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath() != null) {
                     mSelectFile.setText(documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath());
@@ -489,7 +507,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     public void onClick(View v) {
                         if (mPickerList.size() > 0) {
                             // When account is verified, we wouldn't allow the user to upload new document
-                            if (ProfileInfoCacheManager.isAccountVerified() || documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
+                            if (documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
                                 mOptionsLayout.setVisibility(View.GONE);
                                 documentPreviewBindViewHolderList.get(pos).setIsViewOpen(false);
                             } else {

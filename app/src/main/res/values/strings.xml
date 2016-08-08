@@ -411,6 +411,7 @@
     <string name="upload_small">Upload</string>
     <string name="driving_license">Driving License</string>
     <string name="birth_certificate">Birth Certificate</string>
+    <string name="tin">TIN</string>
     <string name="business_tin">Business TIN</string>
     <string name="trade_license">Trade License</string>
     <string name="vat_registration_certificate">VAT Registration Certificate</string>
@@ -719,7 +720,11 @@
     <string-array name="pending_picker_action">
         <item>Take A Picture</item>
         <item>Select From Gallery</item>
-        <item>Preview</item>
+        <item>View Uploaded Document</item>
+    </string-array>
+
+    <string-array name="verified_picker_action">
+        <item>View Uploaded Document</item>
     </string-array>
 
     <string-array name="employee_management_action">
