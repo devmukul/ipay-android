@@ -27,7 +27,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
-public class CreateEmployeeInformationFragment extends Fragment implements HttpResponseListener {
+public class CreateEmployeeFragment extends Fragment implements HttpResponseListener {
 
     private final int PICK_CONTACT_REQUEST = 100;
 
