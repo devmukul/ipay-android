@@ -18,7 +18,7 @@ public class CommonDrawableList {
             R.drawable.background_portrait_circle_azure
     };
 
-    public static final int getProfilePictureBackgroundBasedOnName(String name) {
+    public static int getProfilePictureBackgroundBasedOnName(String name) {
         int hash = 0;
 
         for (char c : name.toCharArray()) {
