@@ -222,7 +222,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/value5"
-                android:text="+880" />
+                android:text="@string/phone_init" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"

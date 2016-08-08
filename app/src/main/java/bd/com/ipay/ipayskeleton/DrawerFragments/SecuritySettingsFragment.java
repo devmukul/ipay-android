@@ -132,7 +132,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
     public void setTitle()
     {
-        getActivity().setTitle(R.string.security_settings);
+        getActivity().setTitle(R.string.security);
     }
 
     @Override

@@ -241,7 +241,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.DrawerActivities.SecuritySettingsActivity"
-            android:label="@string/security_settings"
+            android:label="@string/security"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />

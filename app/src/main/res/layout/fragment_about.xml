@@ -38,7 +38,7 @@
                     android:layout_below="@+id/iPay_logo"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="@dimen/value5"
-                    android:text="iPay Systems Ltd."
+                    android:text="@string/iPay_system"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_size_medium" />
 
@@ -109,13 +109,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/value5"
-                android:text="Copyright 2016 @ iPay Systems Ltd. " />
+                android:text="@string/iPay_copyright" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/value5"
-                android:text="All rights reserved. " />
+                android:text="@string/all_rights_reserved" />
 
         </LinearLayout>
 

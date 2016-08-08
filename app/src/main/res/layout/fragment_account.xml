@@ -73,7 +73,6 @@
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/value30"
                 android:layout_marginRight="@dimen/value30"
-                android:text="Your profile is 65% complete. Complete profile to get verified."
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:visibility="invisible" />

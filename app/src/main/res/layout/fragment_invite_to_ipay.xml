@@ -16,7 +16,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="The user doesn't have an iPay account"
+                android:text="@string/no_iPay_account"
                 android:id="@+id/textView"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_gravity="center_horizontal" />
@@ -25,7 +25,6 @@
                 android:id="@+id/textview_mobile_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="+880199393939"
                 android:gravity="center"
                 android:paddingTop="24dp"
                 android:paddingBottom="24dp"

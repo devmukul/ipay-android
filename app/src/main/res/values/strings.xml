@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">iPay</string>
+    <string name="iPay_system">iPay Systems Ltd.</string>
+    <string name="iPay_copyright">iCopyright 2016 @ iPay Systems Ltd.</string>
+    <string name="all_rights_reserved">All rights reserved. </string>
+    <string name="bangladesh">Bangladesh</string>
+    <string name="phone_init">+880</string>
+    <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
+    <string name="enter_OTP_sent_to_your_mobile">Enter OTP sent to your mobile</string>
     <string name="gcm_sender_id">799721005986</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -311,7 +318,7 @@
     <string name="about">About</string>
     <string name="session_text">Session: </string>
     <string name="notification">Notification</string>
-    <string name="security_settings">Security Settings</string>
+    <string name="security">Security</string>
     <string name="select_a_district">Select District</string>
     <string name="select_a_thana">Select Thana</string>
     <string name="select_an_occupation">Select Occupation</string>
@@ -469,8 +476,7 @@
     <string name="progress_dialog_make_primary_email">Making this email primary...</string>
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
-    <string name="link_banks">Link Banks</string>
-    <string name="manage_banks">Manage Banks</string>
+    <string name="link_bank">Link Bank</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
     <string name="add_a_trusted_person">Add a trusted person</string>
@@ -595,7 +601,7 @@
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>
     <string name="add_a_friend">Add a Friend</string>
-    <string name="invite_a_friend">Invite a Friend</string>
+    <string name="invite_a_friend">Invite a friend</string>
     <string name="progress_dialog_adding_friend">Adding friend...</string>
     <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
     <string name="dialog_requesting_top_up">Preparing for Top Up...</string>

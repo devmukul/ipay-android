@@ -110,6 +110,6 @@
             android:hint="@string/country"
             android:inputType="textPostalAddress"
             android:maxLines="1"
-            android:text="Bangladesh" />
+            android:text="@string/bangladesh" />
     </android.support.design.widget.TextInputLayout>
 </LinearLayout>
