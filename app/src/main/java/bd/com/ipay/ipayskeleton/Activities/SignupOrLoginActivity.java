@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 
@@ -62,6 +63,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new LoginFragment()).commit();
         } else {
+            Utilities.hideKeyboard(this);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
         }
@@ -75,6 +77,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             if (targetFragment.equals(Constants.SIGN_IN)) {
                 switchToLoginFragment();
             } else if (targetFragment.equals(Constants.SIGN_UP)) {
+                Utilities.hideKeyboard(this);
                 switchToAccountSelectionFragment();
             }
         }
@@ -135,12 +138,12 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     }
 
     public void switchToTourActivity() {
+        Utilities.hideKeyboard(this);
         Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         this.finish();
     }
-
 
     public void switchToBusinessStepOneFragment() {
         getSupportFragmentManager().beginTransaction()

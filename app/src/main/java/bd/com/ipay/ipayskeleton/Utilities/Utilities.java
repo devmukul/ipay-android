@@ -18,6 +18,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
@@ -460,6 +461,13 @@ public class Utilities {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
+
+    public static void setKeyboardHide(Activity activity) {
+        activity.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
+    }
+
 
     public static void showKeyboard(Context context) {
         final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);

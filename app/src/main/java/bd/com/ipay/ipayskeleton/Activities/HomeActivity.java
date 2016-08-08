@@ -100,7 +100,6 @@ public class HomeActivity extends BaseActivity
     private Menu mOptionsMenu;
 
     private int mBadgeCount = 0;
-    private int NAV_ID_HOME = 0;
 
     private static boolean switchedToHomeFragment = true;
 
