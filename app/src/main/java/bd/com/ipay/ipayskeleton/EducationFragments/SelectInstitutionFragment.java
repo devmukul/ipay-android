@@ -196,6 +196,10 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
             return;
         }
 
+        // Reset the session selection spinner
+        mSelectedSessionId = -1;
+        sessionSelection.setText("");
+
         GetSessionRequestBuilder mGetSessionRequestBuilder = new GetSessionRequestBuilder(instituteID);
         String mUrl = mGetSessionRequestBuilder.getGeneratedUrl();
 
