@@ -413,9 +413,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     public class DocumentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private static final int HEADER_VIEW = 1;
-        private static final int DOCUMENT_LIST_ITEM_VIEW = 2;
-
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView mDocumentTypeNameView;
             private final TextView mDocumentIdView;
@@ -429,6 +426,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
             private CustomUploadPickerDialog customUploadPickerDialog;
             private List<String> mPickerList;
+            private File mFile;
+            private Bitmap mBitmap;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -484,10 +483,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mDocumentIdEditTextView.setText(documentPreviewBindViewHolderList.get(pos).getmDocumentId());
 
                 if (documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri() != null) {
-                    File imgFile = new File(documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri().getPath());
-                    if (imgFile.exists()) {
-                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        mPicker.setImageBitmap(myBitmap);
+                    mFile = new File(documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri().getPath());
+                    if (mFile.exists()) {
+                        mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
+                        mPicker.setImageBitmap(mBitmap);
                     }
                 }
 
