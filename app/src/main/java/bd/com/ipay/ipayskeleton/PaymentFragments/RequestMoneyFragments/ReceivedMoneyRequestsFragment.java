@@ -21,7 +21,6 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -286,7 +285,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 final String name = moneyRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
                 final String description = moneyRequest.getDescription();
-                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(moneyRequest.getRequestTime());
+                final String time = Utilities.getDateFormat(moneyRequest.getRequestTime());
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
 

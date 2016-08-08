@@ -49,6 +49,7 @@ import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -489,6 +490,10 @@ public class Utilities {
                 imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
             }
         });
+    }
+
+    public static String getDateFormat(long time) {
+        return new SimpleDateFormat("MMM d, yyyy, h:mm a").format(time);
     }
 
     public static boolean checkPlayServices(Context context) {

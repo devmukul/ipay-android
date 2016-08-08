@@ -543,6 +543,7 @@
     <string name="make_payments_for_your_purchases">Make Payments for your purchases.</string>
     <string name="business_name">Name</string>
     <string name="business_type">Business Type</string>
+    <string name="not_a_business_user">This person is not a business user. You can only make payment to a business user</string>
     <string name="failed_loading_business_type">Loading failed</string>
     <string name="failed_loading_business_information">Failed loading business information</string>
     <string name="manage_business">Manage Business</string>

@@ -101,6 +101,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     private boolean mShowVerifiedUsersOnly;
     private boolean miPayMembersOnly;
+    private boolean mBusinessMemberOnly;
     private boolean mShowInvitedOnly;
     private boolean mShowNonInvitedNonMembersOnly;
 
@@ -152,6 +153,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         if (getArguments() != null) {
             mShowVerifiedUsersOnly = getArguments().getBoolean(Constants.VERIFIED_USERS_ONLY, false);
             miPayMembersOnly = getArguments().getBoolean(Constants.IPAY_MEMBERS_ONLY, false);
+            mBusinessMemberOnly = getArguments().getBoolean(Constants.BUSINESS_ACCOUNTS_ONLY, false);
             mShowInvitedOnly = getArguments().getBoolean(Constants.SHOW_INVITED_ONLY, false);
             mShowNonInvitedNonMembersOnly = getArguments().getBoolean(Constants.SHOW_NON_INVITED_NON_MEMBERS_ONLY, false);
         }
@@ -251,7 +253,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 if (ContactsHolderFragment.mGetInviteInfoResponse != null)
                     invitees = ContactsHolderFragment.mGetInviteInfoResponse.getInvitees();
 
-                Cursor cursor = dataHelper.searchFriends(mQuery, miPayMembersOnly, mShowNonInvitedNonMembersOnly,
+                Cursor cursor = dataHelper.searchFriends(mQuery, miPayMembersOnly, mBusinessMemberOnly, mShowNonInvitedNonMembersOnly,
                         mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, invitees);
 
                 if (cursor != null) {

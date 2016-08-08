@@ -18,7 +18,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
@@ -175,7 +174,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
                 subjectView.setText(ticket.getSubject());
                 descriptionView.setText(ticket.getDescription());
-                timeView.setText(new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(ticket.getCreatedAt()));
+                timeView.setText(Utilities.getDateFormat(ticket.getCreatedAt()));
                 statusView.setText(ticket.getStatus().toUpperCase());
 
                 switch (ticket.getStatus()) {

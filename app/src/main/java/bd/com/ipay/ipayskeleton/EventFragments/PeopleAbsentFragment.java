@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.EventActivity;
@@ -208,7 +207,7 @@ public class PeopleAbsentFragment extends ProgressFragment implements HttpRespon
                 if (pos == listOfAbsents.size() - 1) divider.setVisibility(View.GONE);
 
                 final long id = listOfAbsents.get(pos).getId();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(listOfAbsents.get(pos).getRequestTime());
+                String time = Utilities.getDateFormat(listOfAbsents.get(pos).getRequestTime());
                 String name = listOfAbsents.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfAbsents.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);

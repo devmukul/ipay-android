@@ -16,7 +16,7 @@
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/profile_picture"
-                style="@style/ReviewImageStyle"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+                style="@style/ReviewImageStyle"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

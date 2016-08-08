@@ -44,6 +44,7 @@ public class Constants {
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
+    public static final String BUSINESS_ACCOUNTS_ONLY = "BUSINESS_ACCOUNTS_ONLY";
     public static final String SHOW_INVITED_ONLY = "SHOW_INVITED_ONLY";
     public static final String SHOW_NON_INVITED_NON_MEMBERS_ONLY = "SHOW_NON_INVITED_NON_MEMBERS_ONLY";
     public static final String HIDE_STATUSES = "HIDE_STATUSES";

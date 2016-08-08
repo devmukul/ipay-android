@@ -23,7 +23,6 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -668,7 +667,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
 
                 mNameView.setText(notification.getName());
-                mTimeView.setText(new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(notification.getTime()));
+                mTimeView.setText(Utilities.getDateFormat(notification.getTime()));
 
                 if (notification.getNotificationTitle() != null && !notification.getNotificationTitle().equals("")) {
                     mTitleView.setVisibility(View.VISIBLE);

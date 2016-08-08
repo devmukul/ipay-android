@@ -23,7 +23,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -290,7 +289,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                     profilePictureView.setProfilePicture(R.drawable.logo_ipay);
                 }
                 commentView.setText(comment.getBody());
-                timeView.setText(new SimpleDateFormat("dd/MM/yy, h:mm a").format(comment.getCreatedAt()));
+                timeView.setText(Utilities.getDateFormat(comment.getCreatedAt()));
             }
         }
 

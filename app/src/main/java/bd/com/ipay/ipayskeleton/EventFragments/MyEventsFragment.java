@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.EventActivity;
@@ -202,7 +201,7 @@ public class MyEventsFragment extends ProgressFragment implements HttpResponseLi
                 if (pos == listOfMyEvents.size() - 1) divider.setVisibility(View.GONE);
 
                 final long id = listOfMyEvents.get(pos).getId();
-                String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(listOfMyEvents.get(pos).getRequestTime());
+                String time = Utilities.getDateFormat(listOfMyEvents.get(pos).getRequestTime());
                 String name = listOfMyEvents.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfMyEvents.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);

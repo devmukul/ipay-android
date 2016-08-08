@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -293,7 +292,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 final String senderName = mRecommendationRequestList.get(pos).getName();
                 final String senderMobileNumber = mRecommendationRequestList.get(pos).getSenderMobileNumber();
                 final String recommendationStatus = mRecommendationRequestList.get(pos).getStatus();
-                final String time = new SimpleDateFormat("EEE, MMM d, ''yy, h:mm a").format(mRecommendationRequestList.get(pos).getDate());
+                final String time = Utilities.getDateFormat(mRecommendationRequestList.get(pos).getDate());
 
                 mSenderName.setText(senderName);
                 mSenderMobileNumber.setText(senderMobileNumber);

@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -516,7 +515,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             private final RoundedImageView mPortrait;
             private final TextView mTransactionDescription;
             private final TextView mTime;
-            private final TextView loadMoreTextView;
 
             public ActivityLogViewHolder(final View itemView) {
                 super(itemView);
@@ -524,7 +522,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
-                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
             public void bindView(int pos) {
