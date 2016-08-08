@@ -53,8 +53,7 @@
             android:layout_marginTop="@dimen/value6"
             android:clickable="true"
             android:padding="@dimen/value5"
-            android:src="@drawable/ic_error_black_24dp"
-            android:tint="@color/background_red" />
+            android:src="@drawable/ic_error_black_24dp" />
     </RelativeLayout>
 
     <View

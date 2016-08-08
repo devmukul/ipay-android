@@ -301,7 +301,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mSenderNameTextView.setText(name);
 
                 if (status == Constants.INVOICE_STATUS_ACCEPTED) {
-                    statusView.setColorFilter(Color.GREEN);
                     statusView.setImageResource(R.drawable.ic_invoice_ok);
 
                 } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
