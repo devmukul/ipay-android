@@ -119,7 +119,7 @@ public class Constants {
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
 
-    /**p
+    /**
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */

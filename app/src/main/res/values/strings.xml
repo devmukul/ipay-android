@@ -69,7 +69,7 @@
     <string name="please_select_institution">Please select an institution</string>
     <string name="please_select_payment_item">Please select a fee</string>
     <string name="please_select_session">Please select a session</string>
-    <string name="please_enter_student_id">Please enter Student ID</string>ro
+    <string name="please_enter_student_id">Please enter Student ID</string>
     <string name="error_loading_data">Error loading data. Please try again.</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="join_us">Join Us</string>
