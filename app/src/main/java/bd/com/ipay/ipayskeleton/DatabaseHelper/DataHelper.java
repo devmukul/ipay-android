@@ -103,14 +103,14 @@ public class DataHelper {
     }
 
     public Cursor searchFriends(String query) {
-        return searchFriends(query, false, false);
+        return searchFriends(query, false, false, false);
     }
 
-    public Cursor searchFriends(String query, boolean memberOnly, boolean verifiedOnly) {
-        return searchFriends(query, memberOnly, false, verifiedOnly, false, false, null);
+    public Cursor searchFriends(String query, boolean memberOnly,boolean businessMemberOnly, boolean verifiedOnly) {
+        return searchFriends(query, memberOnly, businessMemberOnly, false, verifiedOnly, false, false, null);
     }
 
-    public Cursor searchFriends(String query, boolean memberOnly, boolean nonMemberOnly,
+    public Cursor searchFriends(String query, boolean memberOnly, boolean businessMemberOnly, boolean nonMemberOnly,
                             boolean verifiedOnly, boolean invitedOnly, boolean nonInvitedOnly, List<String> invitees) {
         Cursor cursor = null;
 
@@ -128,6 +128,10 @@ public class DataHelper {
             // Get iPay Users
             if (memberOnly)
                 queryString += " AND " + DBConstants.KEY_IS_MEMBER + " = " + DBConstants.IPAY_MEMBER;
+
+            // Get iPay Users
+            if (businessMemberOnly)
+                queryString += " AND " + DBConstants.KEY_IS_MEMBER + " = " + DBConstants.IPAY_MEMBER + " AND " + DBConstants.KEY_ACCOUNT_TYPE + " = " + DBConstants.BUSINESS_USER;
 
             // Get Non-iPay Users
             if (nonMemberOnly)
@@ -213,8 +217,8 @@ public class DataHelper {
     }
 
 
-    private List<FriendNode> getFriendList(String query, boolean memberOnly, boolean verifiedOnly) {
-        Cursor cursor = searchFriends(query, memberOnly, verifiedOnly);
+    private List<FriendNode> getFriendList(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
+        Cursor cursor = searchFriends(query, memberOnly, businessMemberOnly, verifiedOnly);
         List<FriendNode> friends = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
@@ -251,7 +255,7 @@ public class DataHelper {
     }
 
     public List<FriendNode> getFriendList() {
-        return getFriendList("", false, false);
+        return getFriendList("", false, false, false);
     }
 
 }

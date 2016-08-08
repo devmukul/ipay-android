@@ -58,7 +58,7 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
 
     }
 
-    private void switchToRequestReviewFragment(String name, String profilePictureUrl) {
+    private void switchToPaymentReviewFragment(String name, String profilePictureUrl) {
         PaymentReviewFragment paymentReviewFragment = new PaymentReviewFragment();
 
         Bundle bundle = new Bundle();
@@ -116,12 +116,19 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
+                    int accountType = mGetUserInfoResponse.getAccountType();
+
+                    if (accountType != Constants.BUSINESS_ACCOUNT_TYPE) {
+                        Toast.makeText(this, R.string.not_a_business_user, Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+
                     String profilePicture = null;
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
                         profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
                     }
 
-                    switchToRequestReviewFragment(name, profilePicture);
+                    switchToPaymentReviewFragment(name, profilePicture);
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     switchToSendInviteFragment();
                 } else {

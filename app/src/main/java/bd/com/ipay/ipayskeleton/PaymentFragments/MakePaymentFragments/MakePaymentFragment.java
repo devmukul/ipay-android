@@ -81,7 +81,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
-                intent.putExtra(Constants.IPAY_MEMBERS_ONLY, true);
+                intent.putExtra(Constants.BUSINESS_ACCOUNTS_ONLY, true);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });

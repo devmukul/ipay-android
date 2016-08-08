@@ -19,6 +19,7 @@ public class FriendPickerDialogActivity extends FragmentActivity {
 
     private boolean mShowVerifiedUsersOnly;
     private boolean miPayMembersOnly;
+    private boolean mBusinessMembersOnly;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,12 +29,14 @@ public class FriendPickerDialogActivity extends FragmentActivity {
 
         mShowVerifiedUsersOnly = getIntent().getBooleanExtra(Constants.VERIFIED_USERS_ONLY, false);
         miPayMembersOnly = getIntent().getBooleanExtra(Constants.IPAY_MEMBERS_ONLY, false);
+        mBusinessMembersOnly = getIntent().getBooleanExtra(Constants.BUSINESS_ACCOUNTS_ONLY, false);
 
         FriendPickerFragment fragment = new FriendPickerFragment();
 
         Bundle bundle = new Bundle();
         bundle.putBoolean(Constants.VERIFIED_USERS_ONLY, mShowVerifiedUsersOnly);
         bundle.putBoolean(Constants.IPAY_MEMBERS_ONLY, miPayMembersOnly);
+        bundle.putBoolean(Constants.BUSINESS_ACCOUNTS_ONLY, mBusinessMembersOnly);
         fragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()
