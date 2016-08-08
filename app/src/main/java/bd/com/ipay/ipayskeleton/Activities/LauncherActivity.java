@@ -14,7 +14,7 @@ public class LauncherActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent i = null;
+        Intent i;
 
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
         firstLaunch = pref.getBoolean(Constants.FIRST_LAUNCH, true);

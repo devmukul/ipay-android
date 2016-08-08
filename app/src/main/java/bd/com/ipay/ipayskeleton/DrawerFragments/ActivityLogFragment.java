@@ -526,7 +526,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
             public void bindView(int pos) {
 
-                String type = activityLogTypes[userActivityResponsesList.get(pos).getType()];
                 String description = userActivityResponsesList.get(pos).getDescription();
 
                 String time = DateUtils.getRelativeTimeSpanString(userActivityResponsesList.get(pos).getTime()).toString();

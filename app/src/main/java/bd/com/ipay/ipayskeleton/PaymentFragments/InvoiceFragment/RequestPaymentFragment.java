@@ -152,7 +152,7 @@ public class RequestPaymentFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
                 String userID = ProfileInfoCacheManager.getMobileNumber().replaceAll("\\D", "");
                 intent.putExtra(Constants.STRING_TO_ENCODE, userID);
-                intent.putExtra(Constants.ACTIVITY_TITLE, getString(R.string.request_money));
+                intent.putExtra(Constants.ACTIVITY_TITLE, getString(R.string.request_payment));
                 startActivity(intent);
             }
         });

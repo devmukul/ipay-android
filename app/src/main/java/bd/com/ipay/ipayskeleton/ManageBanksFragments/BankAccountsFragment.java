@@ -338,7 +338,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
 
                 final long bankAccountID = mListUserBankClasses.get(pos).getBankAccountId();
-                final int bankStatus = mListUserBankClasses.get(pos).getAccountStatus();
                 final String bankName = mListUserBankClasses.get(pos).getBankName();
                 final String branchName = mListUserBankClasses.get(pos).getBranchName();
                 final String verificationStatus = mListUserBankClasses.get(pos).getVerificationStatus();

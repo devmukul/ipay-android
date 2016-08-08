@@ -230,6 +230,7 @@ public class Constants {
     // Documents Rest
     public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
     public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
+    public static final String URL_UPLOAD_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
 
     // Event Controller
@@ -708,6 +709,7 @@ public class Constants {
     public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";
     public static final String SERVICE_ACTION_TOP_UP = "Mobile TopUp";
     public static final String SERVICE_ACTION_EDUCATION_PAYMENT = "Education Payment";
+    public static final String SERVICE_ACTION_PAY_BY_QR_CODE = "Pay by QR Code";
 
     public static final String TICKET_STATUS_NEW = "new";
     public static final String TICKET_STATUS_OPEN = "open";

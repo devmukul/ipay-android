@@ -39,7 +39,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
     @Override
     protected HttpResponseObject doInBackground(Void... params) {
 
-        HttpResponseObject mHttpResponseObject = null;
+        HttpResponseObject mHttpResponseObject;
 
         if (Utilities.isConnectionAvailable(mContext))
             mHttpResponseObject = uploadImage(imagePath);

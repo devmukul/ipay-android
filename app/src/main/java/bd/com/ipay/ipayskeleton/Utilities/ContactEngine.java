@@ -375,7 +375,6 @@ public class ContactEngine {
 
             while (cursor.moveToNext()) {
                 PhoneName pn = new PhoneName();
-                int n = cursor.getInt(idIndex);
                 pn.id = cursor.getInt(idIndex);
                 pn.name = cursor.getString(nameIndex);
                 // Log.d("Name",pn.name);
@@ -842,7 +841,7 @@ public class ContactEngine {
     }
 
     public static Cursor getContactCursorFromLookUpList(Context context, Set<String> lookUps, String[] projection, String selection, String order) {
-        Cursor cursor = null;
+        Cursor cursor;
         if (context == null || lookUps == null)
             return null;
 
@@ -878,7 +877,7 @@ public class ContactEngine {
     }
 
     public static Cursor getZiptOutCursorFromLookUpList(Context context, Set<String> lookUps, String[] projection, String selection, String order) {
-        Cursor cursor = null;
+        Cursor cursor;
         if (context == null || lookUps == null)
             return null;
 
@@ -952,7 +951,6 @@ public class ContactEngine {
             int numberIndex = phoneContactsCursor.getColumnIndex(Phone.NUMBER);
 
             do {
-                long contactId = phoneContactsCursor.getLong(contactIdIndex);
                 String name = phoneContactsCursor.getString(nameIndex);
                 String phoneNumber = phoneContactsCursor.getString(numberIndex);
                 String photoUrl = phoneContactsCursor.getString(photoUrlIndex);

@@ -393,12 +393,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                     SentRequestListItemViewHolder vh = (SentRequestListItemViewHolder) holder;
                     vh.bindViewForSentRequestList(position);
 
-                } else if (holder instanceof SentRequestListHeaderViewHolder) {
-                    SentRequestListHeaderViewHolder vh = (SentRequestListHeaderViewHolder) holder;
-
-                } else if (holder instanceof IntroducerListHeaderViewHolder) {
-                    IntroducerListHeaderViewHolder vh = (IntroducerListHeaderViewHolder) holder;
-
                 } else if (holder instanceof IntroducerListItemViewHolder) {
                     IntroducerListItemViewHolder vh = (IntroducerListItemViewHolder) holder;
                     vh.bindViewForIntroducerList(position);

@@ -128,7 +128,7 @@ public class PagerIndicator extends RecyclerView {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            ViewHolder vh = null;
+            ViewHolder vh;
             View v = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.pager_indicator_item, parent, false);
             vh = new ViewHolder(v);

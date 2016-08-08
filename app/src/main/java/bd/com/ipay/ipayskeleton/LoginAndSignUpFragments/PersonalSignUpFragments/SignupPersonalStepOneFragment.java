@@ -288,7 +288,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
         if (result.getApiCommand().equals(Constants.COMMAND_CHECK_PROMO_CODE)) {
 
-            String message = "";
+            String message;
             try {
                 mCheckPromoCodeResponse = gson.fromJson(result.getJsonString(), CheckPromoCodeResponse.class);
                 message = mCheckPromoCodeResponse.getMessage();

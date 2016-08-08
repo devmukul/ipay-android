@@ -668,7 +668,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 final String name = mCursor.getString(nameIndex);
                 final String originalName = mCursor.getString(originalNameIndex);
                 final String mobileNumber = mCursor.getString(phoneNumberIndex);
-                final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlIndex);
                 final String profilePictureUrlQualityMedium = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityMediumIndex);
                 final String profilePictureUrlQualityHigh = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityHighIndex);
                 final boolean isVerified = mCursor.getInt(verificationStatusIndex) == DBConstants.VERIFIED_USER;

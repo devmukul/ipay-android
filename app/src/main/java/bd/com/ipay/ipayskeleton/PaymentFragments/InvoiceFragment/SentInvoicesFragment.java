@@ -288,7 +288,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 final int status = pendingPaymentClasses.get(pos).getStatus();
                 final BigDecimal amount = pendingPaymentClasses.get(pos).getAmount();
                 final BigDecimal vat = pendingPaymentClasses.get(pos).getVat();
-                final BigDecimal total = pendingPaymentClasses.get(pos).getTotal();
                 final String descriptionofRequest = pendingPaymentClasses.get(pos).getDescriptionofRequest();
                 final String description = pendingPaymentClasses.get(pos).getDescription();
                 final long id = pendingPaymentClasses.get(pos).getId();
@@ -302,7 +301,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mSenderNameTextView.setText(name);
 
                 if (status == Constants.INVOICE_STATUS_ACCEPTED) {
-                    statusView.setColorFilter(Color.GREEN);
                     statusView.setImageResource(R.drawable.ic_invoice_ok);
 
                 } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
@@ -325,7 +323,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
                 mTimeTextView.setText(time);
 
-                if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING)
+                if (status == Constants.INVOICE_STATUS_PROCESSING || status == Constants.INVOICE_STATUS_DRAFT)
                     mSentInvoiceActionList.add(getString(R.string.remove));
 
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -336,7 +334,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                             @Override
                             public void onResourceSelected(int selectedIndex, String action) {
                                 if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
-                                    showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
+                                    showAlertDialogue(getString(R.string.cancel_payment_request_confirm), ACTION_CANCEL_REQUEST, id);
 
                                 } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
                                     if (!mSwipeRefreshLayout.isRefreshing()) {

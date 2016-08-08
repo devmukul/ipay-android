@@ -129,7 +129,7 @@ public class DataHelper {
             if (memberOnly)
                 queryString += " AND " + DBConstants.KEY_IS_MEMBER + " = " + DBConstants.IPAY_MEMBER;
 
-            // Get iPay Users
+            // Get iPay Business Users
             if (businessMemberOnly)
                 queryString += " AND " + DBConstants.KEY_IS_MEMBER + " = " + DBConstants.IPAY_MEMBER + " AND " + DBConstants.KEY_ACCOUNT_TYPE + " = " + DBConstants.BUSINESS_USER;
 
@@ -195,7 +195,7 @@ public class DataHelper {
     }
 
     public String getPushEvent(String tag) {
-        Cursor cursor = null;
+        Cursor cursor;
 
         try {
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();

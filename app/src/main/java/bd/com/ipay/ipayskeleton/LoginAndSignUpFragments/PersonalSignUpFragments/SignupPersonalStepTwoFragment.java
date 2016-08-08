@@ -119,7 +119,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
 
         if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
-            String message = "";
+            String message;
             try {
                 mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
                 message = mOtpResponsePersonalSignup.getMessage();

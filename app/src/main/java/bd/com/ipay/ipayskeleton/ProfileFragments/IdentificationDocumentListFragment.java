@@ -91,6 +91,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private static final int OPTION_UPLOAD_DOCUMENT = 1;
+    private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
+    private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
+    private static final int COUNT_UPLOAD_PERSONAL_DOCUMENT = 3;
+    private static final int COUNT_UPLOAD_OTHER_DOCUMENT = 6;
     private int mSelectedItemId = -1;
     private int mActionId = -1;
     private Uri mSelectedDocumentUri;
@@ -102,7 +106,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         // Before making any change, make sure DOCUMENT_TYPES matches with DOCUMENT_TYPE_NAMES
         if (ProfileInfoCacheManager.isBusinessAccount()) {
-            DOCUMENT_TYPES = new String[] {
+            DOCUMENT_TYPES = new String[]{
                     Constants.DOCUMENT_TYPE_NATIONAL_ID,
                     Constants.DOCUMENT_TYPE_PASSPORT,
                     Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
@@ -112,7 +116,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     Constants.DOCUMENT_TYPE_VAT_REG_CERT
             };
         } else {
-            DOCUMENT_TYPES = new String[] {
+            DOCUMENT_TYPES = new String[]{
                     Constants.DOCUMENT_TYPE_NATIONAL_ID,
                     Constants.DOCUMENT_TYPE_PASSPORT,
                     Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
@@ -252,9 +256,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         String selectedOImagePath = documentPreviewBindViewHolderList.get(mID).getmSelectedDocumentUri().getPath();
         Log.w("Loading document", mID + " " + selectedOImagePath + " " + mDocumentType);
 
-        mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                mDocumentID, mDocumentType);
+        if (mID <= COUNT_UPLOAD_PERSONAL_DOCUMENT) {
+            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                    mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
+        } else if (mID > COUNT_UPLOAD_PERSONAL_DOCUMENT && mID <= COUNT_UPLOAD_OTHER_DOCUMENT) {
+            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                    mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
+        }
+
         mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
         mUploadIdentifierDocumentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -499,16 +510,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
                         customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                             @Override
-                            public void onResourceSelected(int mactionId, String name) {
+                            public void onResourceSelected(int mActionId, String name) {
 
                                 mSelectedItemId = pos;
                                 documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
                                 documentPreviewBindViewHolderList.get(pos).setmSelectedfilePath(mSelectFile.getText().toString());
-                                if (mactionId <= OPTION_UPLOAD_DOCUMENT)
+                                if (mActionId <= OPTION_UPLOAD_DOCUMENT)
                                     if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                                        selectDocument(mactionId);
+                                        selectDocument(mActionId);
                                     } else {
-                                        mActionId = mactionId;
+                                        mActionId = mActionId;
                                         DocumentPicker.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION);
                                     }
                                 else {

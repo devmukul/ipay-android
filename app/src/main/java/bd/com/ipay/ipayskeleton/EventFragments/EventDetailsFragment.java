@@ -154,8 +154,6 @@ public class EventDetailsFragment extends ProgressFragment implements HttpRespon
         RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest("", 0, "", "");
 
         Gson gson = new Gson();
-        String json = gson.toJson(mRequestMoneyRequest);
-        //mGetEventDetailsTask = new HttpRequestGetAsyncTask();
         mGetEventDetailsTask.mHttpResponseListener = this;
         mGetEventDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -169,8 +167,6 @@ public class EventDetailsFragment extends ProgressFragment implements HttpRespon
         RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest("", 0, "", "");
 
         Gson gson = new Gson();
-        String json = gson.toJson(mRequestMoneyRequest);
-        //mGetEventDetailsTask = new HttpRequestGetAsyncTask();
         mVerifyTicketTask.mHttpResponseListener = this;
         mVerifyTicketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

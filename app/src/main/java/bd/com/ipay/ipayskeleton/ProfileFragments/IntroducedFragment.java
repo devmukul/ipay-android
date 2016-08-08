@@ -287,7 +287,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
             public void bindViewRecommendationList(int pos) {
 
-                final String imageUrl = mRecommendationRequestList.get(pos).getProfilePictureUrl();
                 final long requestID = mRecommendationRequestList.get(pos).getId();
                 final String senderName = mRecommendationRequestList.get(pos).getName();
                 final String senderMobileNumber = mRecommendationRequestList.get(pos).getSenderMobileNumber();
@@ -420,10 +419,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                     IntroducedListItemViewHolder vh = (IntroducedListItemViewHolder) holder;
                     vh.bindViewForIntroducedList(position);
 
-                } else if (holder instanceof IntroducedListHeaderViewHolder) {
-                    IntroducedListHeaderViewHolder vh = (IntroducedListHeaderViewHolder) holder;
-
-                }else if (holder instanceof RecommendationRequestViewHolder) {
+                } else if (holder instanceof RecommendationRequestViewHolder) {
                     RecommendationRequestViewHolder vh = (RecommendationRequestViewHolder) holder;
                     vh.bindViewRecommendationList(position);
 

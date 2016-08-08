@@ -1,16 +1,26 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +28,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Pay.PayPropertyConstants;
@@ -27,6 +38,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 
 public class PayFragment extends Fragment {
+    private static final int REQUEST_CODE_PERMISSION = 1001;
+
     private ListView mServiceActionListView;
     private WalletActionListAdapter mServiceActionListAdapter;
 
@@ -44,6 +57,7 @@ public class PayFragment extends Fragment {
             mServiceActionList.add(new ServiceAction(getString(R.string.request_payment)));
         }
         mServiceActionList.add(new ServiceAction(getString(R.string.make_payment)));
+        mServiceActionList.add(new ServiceAction(getString(R.string.pay_by_QR_code)));
         mServiceActionList.add(new ServiceAction(getString(R.string.mobile_topup)));
         mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
 
@@ -59,6 +73,58 @@ public class PayFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initiateScan();
+                } else {
+                    Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    private void initiateScan() {
+        IntentIntegrator.forSupportFragment(this).initiateScan();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
+            IntentResult scanResult = IntentIntegrator.parseActivityResult(
+                    requestCode, resultCode, data);
+            if (scanResult == null) {
+                return;
+            }
+            final String result = scanResult.getContents();
+            if (result != null) {
+                Handler mHandler = new Handler();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            PinChecker singleInvoicePinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                                @Override
+                                public void ifPinAdded() {
+                                    Intent intent = new Intent(getActivity(), SingleInvoiceActivity.class);
+                                    intent.putExtra(Constants.RESULT, result);
+                                    startActivity(intent);
+                                }
+                            });
+                            singleInvoicePinChecker.execute();
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -134,6 +200,12 @@ public class PayFragment extends Fragment {
                                     }
                                 });
                                 pinChecker.execute();
+                                break;
+                            case Constants.SERVICE_ACTION_PAY_BY_QR_CODE:
+                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{Manifest.permission.CAMERA},
+                                            REQUEST_CODE_PERMISSION);
+                                } else initiateScan();
                                 break;
                         }
                     }
