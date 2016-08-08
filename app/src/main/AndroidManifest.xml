@@ -271,7 +271,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <!-- Receiver and service -->
-        
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
