@@ -324,7 +324,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
                 mTimeTextView.setText(time);
 
-                if (status == Constants.HTTP_RESPONSE_STATUS_PROCESSING)
+                if (status == Constants.INVOICE_STATUS_PROCESSING || status == Constants.INVOICE_STATUS_DRAFT)
                     mSentInvoiceActionList.add(getString(R.string.remove));
 
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -335,7 +335,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                             @Override
                             public void onResourceSelected(int selectedIndex, String action) {
                                 if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
-                                    showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
+                                    showAlertDialogue(getString(R.string.cancel_payment_request_confirm), ACTION_CANCEL_REQUEST, id);
 
                                 } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
                                     if (!mSwipeRefreshLayout.isRefreshing()) {
