@@ -93,13 +93,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
     private static final int REQUEST_CODE_PERMISSION = 1001;
-    private static final int OPTION_UPLOAD_DOCUMENT = 1;
     private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
     private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
     private static final int COUNT_UPLOAD_PERSONAL_DOCUMENT = 4;
     private static final int COUNT_UPLOAD_OTHER_DOCUMENT = 7;
     private int mSelectedItemId = -1;
-    private int mActionId = -1;
+    private int mPickerActionId = -1;
     private Uri mSelectedDocumentUri;
     private ArrayList<DocumentPreviewBindViewHolder> documentPreviewBindViewHolderList;
 
@@ -197,7 +196,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                    selectDocument(mActionId);
+                    selectDocument(mPickerActionId);
                 } else {
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
                 }
@@ -537,7 +536,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                                     if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
                                         selectDocument(mActionId);
                                     } else {
-                                        mActionId = mActionId;
+                                        mPickerActionId = mActionId;
                                         DocumentPicker.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION);
                                     }
                                 else {
