@@ -232,6 +232,9 @@ public class HomeActivity extends BaseActivity
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
+                new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
     }
 
     @Override
@@ -268,8 +271,17 @@ public class HomeActivity extends BaseActivity
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mProfileInfoUpdateBroadcastReceiver);
         super.onDestroy();
     }
+
+    private void updateProfileData() {
+        mNameView.setText(ProfileInfoCacheManager.getName());
+        mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
+        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                ProfileInfoCacheManager.getProfileImageUrl(), false);
+    }
+
 
     private void attemptRequestForPermission() {
         String[] requiredPermissions = {Manifest.permission.READ_CONTACTS};
@@ -634,6 +646,13 @@ public class HomeActivity extends BaseActivity
             // we should have received a push from the server and GcmListenerService should have
             // done this task. But as long as push is unreliable, this call is here to stay.
             getProfileInfo();
+        }
+    };
+
+    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateProfileData();
         }
     };
 }
