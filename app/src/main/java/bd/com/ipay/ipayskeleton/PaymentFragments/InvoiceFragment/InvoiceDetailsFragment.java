@@ -135,7 +135,7 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 pos = pos - 1;
 
                 mItemNameView.setText(mItemList[pos].getItem());
-                mQuantityView.setText(Utilities.formatTaka(mItemList[pos].getQuantity()));
+                mQuantityView.setText(mItemList[pos].getQuantity().toString());
                 mAmountView.setText(Utilities.formatTaka(mItemList[pos].getAmount()));
             }
 
