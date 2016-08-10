@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_address_line_1"
         style="@style/CustomTextInputLayoutWithMargin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -14,16 +15,15 @@
             style="@style/CustomEditTextLogInSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/address_line_1"
             android:inputType="textPostalAddress"
             android:maxLines="1"
-            android:singleLine="true">
-        </EditText>
+            android:singleLine="true"></EditText>
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/DividerOnly" />
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_address_line_2"
         style="@style/CustomTextInputLayoutWithMargin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -33,7 +33,6 @@
             style="@style/CustomEditTextLogInSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/prompt_business_addr_line2"
             android:inputType="textPostalAddress"
             android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>

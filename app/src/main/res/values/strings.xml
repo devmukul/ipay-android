@@ -14,7 +14,7 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_password_new">Enter your password</string>
     <string name="action_sign_in">Register</string>
-    <string name="action_next_and_verify">Next and Verify</string>
+    <string name="action_next_and_verify"><![CDATA[Next & Verify]]></string>
     <string name="action_login">Login</string>
     <string name="prompt_business_name">Business Name</string>
     <string name="prompt_business_addr_line2">Address Line 2 (Optional)</string>
@@ -240,7 +240,7 @@
     <string name="account_number">Account Number</string>
     <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
-    <string name="oath_sign_up">I agree to the </string>
+    <string name="oath_sign_up"><![CDATA[By selecting Next & Verify I agree to the]]> </string>
     <string name="check_if_addresses_are_same">Check if address of account holder is same as business address.</string>
     <string name="ipay_balance">iPay Balance</string>
     <string name="balance">Balance</string>
@@ -310,6 +310,7 @@
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="wallet">Wallet</string>
     <string name="next">Next</string>
+    <string name="continue_sign_up">Continue</string>
     <string name="bank_list">Bank List</string>
     <string name="bank_branch">Select Branch</string>
     <string name="logout">Log out</string>
@@ -470,6 +471,9 @@
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
     <string name="office_address">Office Address</string>
+    <string name="address_line_2">Address Line 2 (Optional)</string>
+    <string name="business_address_line_1">Business Address Line 1</string>
+    <string name="business_address_line_2">Business Address Line 2 (Optional)</string>
     <string name="progress_dialog_saving_address">Saving address...</string>
     <string name="add_an_email">Add an Email</string>
     <string name="progress_dialog_add_email">Adding email...</string>

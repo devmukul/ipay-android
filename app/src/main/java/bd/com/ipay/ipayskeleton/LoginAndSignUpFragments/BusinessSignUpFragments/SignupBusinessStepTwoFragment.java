@@ -56,6 +56,9 @@ public class SignupBusinessStepTwoFragment extends Fragment {
 
         mBusinessAddressView = (AddressInputSignUpView) v.findViewById(R.id.business_address);
 
+        mBusinessAddressView.setHintAddressInput(getString(R.string.business_address_line_1),
+                getString(R.string.business_address_line_2));
+
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +136,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
 
 
     private void setTypeAdapter(List<BusinessType> businessTypeList) {
-        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(),getString(R.string.business_type), businessTypeList, mSelectedBusinessTypeId);
+        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.business_type), businessTypeList, mSelectedBusinessTypeId);
         businessTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

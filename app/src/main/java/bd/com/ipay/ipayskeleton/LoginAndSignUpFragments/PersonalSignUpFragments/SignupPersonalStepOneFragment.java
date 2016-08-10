@@ -44,11 +44,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
     private EditText mNameView;
     private Button mNextButton;
-    private TextView mTermsConditions;
-    private TextView mPrivacyPolicy;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
-    private CheckBox mAgreementCheckBox;
     private EditText mPromoCodeEditText;
     private EditText mBirthdayEditText;
     private ImageView mDatePickerButton;
@@ -65,6 +62,10 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_signup_personal_page);
+        if (mMaleCheckBox.isChecked())
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        if (mFemaleCheckBox.isChecked())
+            mFemaleCheckBox.setTextColor((Color.WHITE));
     }
 
     @Override
@@ -82,9 +83,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
-        mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
-        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
-        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
         mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
@@ -109,9 +107,10 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             }
         });
 
-        // Enable hyperlinked
-        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
-        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+        if (mMaleCheckBox.isChecked())
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        if (mFemaleCheckBox.isChecked())
+            mFemaleCheckBox.setTextColor((Color.WHITE));
 
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,15 +244,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
         if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
             Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
-            cancel=true;
-        }
-
-        if (!cancel) {
-            if (!mAgreementCheckBox.isChecked()) {
-                cancel = true;
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
-            }
+            cancel = true;
         }
 
         if (cancel) {

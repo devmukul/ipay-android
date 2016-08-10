@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.design.widget.TextInputLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
@@ -45,6 +46,8 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
 
     private Context context;
 
+    private TextInputLayout mAddressLine1FieldInputLayout;
+    private TextInputLayout mAddressLine2FieldInputLayout;
     private EditText mAddressLine1Field;
     private EditText mAddressLine2Field;
     private EditText mThanaSelection;
@@ -75,6 +78,8 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
 
         View v = inflate(context, R.layout.view_input_address_view_signup, null);
 
+        mAddressLine1FieldInputLayout = (TextInputLayout) v.findViewById(R.id.text_input_address_line_1);
+        mAddressLine2FieldInputLayout = (TextInputLayout) v.findViewById(R.id.text_input_address_line_2);
         mAddressLine1Field = (EditText) v.findViewById(R.id.address_line_1);
         mAddressLine2Field = (EditText) v.findViewById(R.id.address_line_2);
         mThanaSelection = (EditText) v.findViewById(R.id.thana);
@@ -107,8 +112,13 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
         mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public void setHintAddressInput(String addressLine1, String addressLine2) {
+        mAddressLine1FieldInputLayout.setHint(addressLine1);
+        mAddressLine2FieldInputLayout.setHint(addressLine2);
+    }
+
     private void setThanaAdapter(List<Thana> thanaList) {
-        thanaSelectorDialog = new ResourceSelectorDialog<>(context,context.getString(R.string.select_a_thana),thanaList, mSelectedThanaId);
+        thanaSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_thana), thanaList, mSelectedThanaId);
         thanaSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -127,7 +137,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
     }
 
     private void setDistrictAdapter(List<District> districtList) {
-        districtSelectorDialog = new ResourceSelectorDialog<>(context,context.getString(R.string.select_a_district), districtList, mSelectedDistrictId);
+        districtSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_district), districtList, mSelectedDistrictId);
         districtSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

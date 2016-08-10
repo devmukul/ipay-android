@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -31,6 +33,9 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
 
     private Button mSignupPersonalButton;
 
+    private TextView mTermsConditions;
+    private TextView mPrivacyPolicy;
+
     private AddressInputSignUpView mPersonalAddressView;
 
     private String mDeviceID;
@@ -51,10 +56,18 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_sms));
 
         mSignupPersonalButton = (Button) v.findViewById(R.id.personal_sign_in_button);
+        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
+        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
         mPersonalAddressView = (AddressInputSignUpView) v.findViewById(R.id.personal_address);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
+        mPersonalAddressView.setHintAddressInput(getString(R.string.address_line_1),
+                getString(R.string.address_line_2));
+
+        // Enable hyperlinked
+        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
+        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         mSignupPersonalButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +119,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mRequestOTPTask = null;
             if (getActivity() != null)
