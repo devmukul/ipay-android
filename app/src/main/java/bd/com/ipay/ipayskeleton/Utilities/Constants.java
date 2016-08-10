@@ -112,7 +112,7 @@ public class Constants {
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
 
-    public static final String EMPLOYEE_PRIVILEGE = "EMPLOYEE_PRIVILEGE";
+//    public static final String EMPLOYEE_PRIVILEGE = "EMPLOYEE_PRIVILEGE";
 
     public static final int STARTING_DATE = 01;
     public static final int STARTING_MONTH = 01;
@@ -516,6 +516,7 @@ public class Constants {
     public static final String COMMAND_GET_EMPLOYEE_LIST = "COMMAND_GET_EMPLOYEE_LIST";
     public static final String COMMAND_REMOVE_AN_EMPLOYEE = "COMMAND_REMOVE_AN_EMPLOYEE";
     public static final String COMMAND_GET_EMPLOYEE_DETAILS = "COMMAND_GET_EMPLOYEE_DETAILS";
+    public static final String COMMAND_GET_ALL_ROLES = "COMMAND_GET_ALL_ROLES";
 
     // Business Information (Employee)
     public static final String COMMAND_GET_BUSINESS_LIST = "COMMAND_GET_BUSINESS_LIST";

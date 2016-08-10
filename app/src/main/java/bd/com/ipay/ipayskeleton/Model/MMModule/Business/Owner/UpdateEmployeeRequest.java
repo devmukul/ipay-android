@@ -1,15 +1,13 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner;
 
-import java.util.List;
-
 public class UpdateEmployeeRequest {
-    private final String designation;
-    private final long id;
-    private final List<Privilege> privilegeList;
+    private String designation;
+    private long id;
+    private int roleId;
 
-    public UpdateEmployeeRequest(String designation, long id, List<Privilege> privilegeList) {
+    public UpdateEmployeeRequest(String designation, long id, int roleId) {
         this.designation = designation;
         this.id = id;
-        this.privilegeList = privilegeList;
+        this.roleId = roleId;
     }
 }

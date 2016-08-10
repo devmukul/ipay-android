@@ -1,13 +1,11 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner;
 
-import java.util.List;
-
 public class EmployeeDetails {
     private String designation;
     private long id;
     private String mobileNumber;
     private String name;
-    private List<Privilege> privilegeList;
+    private int roleId;
     private String profilePictureUrl;
     private String status;
 
@@ -28,15 +26,15 @@ public class EmployeeDetails {
         return name;
     }
 
-    public List<Privilege> getPrivilegeList() {
-        return privilegeList;
-    }
-
     public String getProfilePictureUrl() {
         return profilePictureUrl;
     }
 
     public String getStatus() {
         return status;
+    }
+
+    public int getRoleId() {
+        return roleId;
     }
 }

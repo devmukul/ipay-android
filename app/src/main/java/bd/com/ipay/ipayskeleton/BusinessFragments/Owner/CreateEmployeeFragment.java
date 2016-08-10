@@ -152,7 +152,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void launchPermissionPage(String mobileNumber, String name, String profilePicture, String designation) {
+    private void launchPrevilegePage(String mobileNumber, String name, String profilePicture, String designation) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
         bundle.putString(Constants.DESIGNATION, designation);
@@ -202,7 +202,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
                     String mobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumberEditText.getText().toString());
                     String designation = mDesignationEditText.getText().toString();
-                    launchPermissionPage(mobileNumber, name, profilePicture, designation);
+                    launchPrevilegePage(mobileNumber, name, profilePicture, designation);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     Toast.makeText(getActivity(), R.string.user_has_no_ipay_account, Toast.LENGTH_LONG).show();
