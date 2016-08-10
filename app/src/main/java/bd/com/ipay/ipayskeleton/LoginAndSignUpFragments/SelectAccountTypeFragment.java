@@ -21,7 +21,6 @@ public class SelectAccountTypeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_select_account_type_page);
-        Utilities.setKeyboardHide(getActivity());
     }
 
     @Override

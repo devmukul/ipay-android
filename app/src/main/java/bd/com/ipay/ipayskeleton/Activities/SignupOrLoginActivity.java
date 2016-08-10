@@ -60,11 +60,11 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
         if (pref.contains(Constants.USERID)) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new LoginFragment()).commit();
+                    .add(R.id.fragment_container, new LoginFragment()).commit();
         } else {
             Utilities.hideKeyboard(this);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
+                    .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
         }
 
         if (getIntent().hasExtra(Constants.MESSAGE)) {
@@ -76,7 +76,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             if (targetFragment.equals(Constants.SIGN_IN)) {
                 switchToLoginFragment();
             } else if (targetFragment.equals(Constants.SIGN_UP)) {
-                Utilities.hideKeyboard(this);
                 switchToAccountSelectionFragment();
             }
         }
@@ -100,13 +99,19 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     }
 
     public void switchToSignupPersonalStepOneFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupPersonalStepOneFragment()).commit();
+                .replace(R.id.fragment_container, new SignupPersonalStepOneFragment()).addToBackStack(null).commit();
     }
 
     public void switchToSignupPersonalStepTwoFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupPersonalStepTwoFragment()).commit();
+                .replace(R.id.fragment_container, new SignupPersonalStepTwoFragment()).addToBackStack(null).commit();
     }
 
     public void switchToOTPVerificationBusinessFragment() {
@@ -145,18 +150,27 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     }
 
     public void switchToBusinessStepOneFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupBusinessStepOneFragment()).commit();
+                .replace(R.id.fragment_container, new SignupBusinessStepOneFragment()).addToBackStack(null).commit();
     }
 
     public void switchToBusinessStepTwoFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupBusinessStepTwoFragment()).commit();
+                .replace(R.id.fragment_container, new SignupBusinessStepTwoFragment()).addToBackStack(null).commit();
     }
 
     public void switchToBusinessStepThreeFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 3) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).commit();
+                .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).addToBackStack(null).commit();
     }
 
     @Override

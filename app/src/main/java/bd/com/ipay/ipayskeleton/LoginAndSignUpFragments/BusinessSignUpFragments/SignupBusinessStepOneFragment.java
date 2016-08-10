@@ -44,9 +44,6 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     private Button mNextButton;
     private ImageView mCrossButton;
 
-    private TextView mTermsConditions;
-    private TextView mPrivacyPolicy;
-    private CheckBox mAgreementCheckBox;
     private EditText mPromoCodeEditText;
 
     private String mDeviceID;
@@ -70,9 +67,6 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
         mBusinessEmailView = (EditText) v.findViewById(R.id.email);
         mBusinessMobileNumberView = (EditText) v.findViewById(R.id.business_mobile_number);
         mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
-        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
-        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
-        mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
 
         mNextButton = (Button) v.findViewById(R.id.business_next_button);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
@@ -82,11 +76,6 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
 
         mBusinessMobileNumberView.requestFocus();
         Utilities.showKeyboard(getActivity());
-
-        // Enable hyperlinked
-        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
-        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
-
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,22 +132,16 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             focusView = mBusinessMobileNumberView;
             cancel = true;
 
-        } else if (!InputValidator.isValidEmail(SignupOrLoginActivity.mEmailBusiness)) {
+        } /*else if (!InputValidator.isValidEmail(SignupOrLoginActivity.mEmailBusiness)) {
             mBusinessEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mBusinessEmailView;
             cancel = true;
 
-        } else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
+        }*/ else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
             mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
             focusView = mPromoCodeEditText;
             cancel = true;
-        } else if (!mAgreementCheckBox.isChecked()) {
-            cancel = true;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
-
         }
-
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.

@@ -47,7 +47,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     private Button mActivateButton;
     private EditText mOTPEditText;
     private TextView mTimerTextView;
-    private Button mResendOTPButton;
+    private TextView mResendOTPButton;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
@@ -68,7 +68,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         View v = inflater.inflate(R.layout.fragment_otp_verification_trusted_device, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
-        mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
+        mResendOTPButton = (TextView) v.findViewById(R.id.buttonResend);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
 

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -48,7 +50,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private EditText mPersonalMobileNumberView;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
-
+    private TextView mTermsConditions;
+    private TextView mPrivacyPolicy;
     private Spinner mGenderSpinner;
 
     private int mYear;
@@ -82,9 +85,13 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mAddressCheckbox = (CheckBox) v.findViewById(R.id.checkboxBusinessAddress);
+        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
+        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
 
         mPersonalAddressView = (AddressInputSignUpView) v.findViewById(R.id.personal_address);
 
+        mPersonalAddressView.setHintAddressInput(getString(R.string.address_line_1),
+                getString(R.string.address_line_2));
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
         final DatePickerDialog dialog = new DatePickerDialog(
@@ -103,6 +110,10 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 dialog.show();
             }
         });
+
+        // Enable hyperlinked
+        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
+        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         mSignupBusinessButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,6 +200,10 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
 
         } else if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
+        }
+        if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
+            Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
+            cancel=true;
         }
 
 

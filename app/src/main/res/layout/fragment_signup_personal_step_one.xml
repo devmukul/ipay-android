@@ -16,10 +16,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/button_cross"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal"
+                android:text="@string/mandatory_field"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_small" />
+
+            <ImageView
+                android:id="@+id/button_cross"
+                android:layout_width="@dimen/value30"
+                android:layout_height="@dimen/value30"
                 android:layout_alignParentRight="true"
                 android:padding="@dimen/activity_horizontal_margin_card"
                 android:src="@drawable/ic_crossw" />
@@ -44,8 +54,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/full_name"
                     android:inputType="textPersonName"
-                    android:maxLines="1" >
-                    <requestFocus/>
+                    android:maxLines="1">
+
+                    <requestFocus />
                 </EditText>
             </android.support.design.widget.TextInputLayout>
 
@@ -188,9 +199,8 @@
                     android:layout_toLeftOf="@+id/checkBoxFemale"
                     android:background="@drawable/background_left_round_checkbox"
                     android:button="@null"
-                    android:checked="true"
                     android:text="@string/male"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/value12" />
 
                 <CheckBox
@@ -210,7 +220,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin">
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:visibility="gone">
 
             <CheckBox
                 android:id="@+id/checkBoxTermsConditions"
@@ -285,7 +296,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:text="@string/next"
+            android:text="@string/continue_sign_up"
             android:textSize="@dimen/text_size_medium" />
 
     </LinearLayout>

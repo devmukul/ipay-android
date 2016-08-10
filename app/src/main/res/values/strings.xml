@@ -14,9 +14,10 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_password_new">Enter your password</string>
     <string name="action_sign_in">Register</string>
+    <string name="action_next_and_verify"><![CDATA[Next & Verify]]></string>
     <string name="action_login">Login</string>
     <string name="prompt_business_name">Business Name</string>
-    <string name="prompt_business_addr_line2">Address Line 2</string>
+    <string name="prompt_business_addr_line2">Address Line 2 (Optional)</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="type_of_business">Type of Business</string>
     <string name="error_invalid_QR_code">This QR code is invalid</string>
@@ -177,9 +178,11 @@
     <string name="change_pass_failed">Failed to change password</string>
     <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
     <string name="activate">Activate</string>
+    <string name="done">Done</string>
     <string name="verify">Verify</string>
     <string name="verify_email">Verify Email</string>
-    <string name="resend_otp_description">If you have not received the SMS, please press Resend Code after the time elapses</string>
+    <string name="resend_otp_description1">If you have not received the SMS, please press</string>
+    <string name="resend_otp_description2">after the time elapses</string>
     <string name="verify_otp_for_trust_description">You are seeing this because you are logging in from this device for the first time or you have reached the maximum number of trusted devices that can be added</string>
     <string name="resend">Resend Code</string>
     <string name="send_money">Send Money</string>
@@ -238,7 +241,7 @@
     <string name="account_number">Account Number</string>
     <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
-    <string name="oath_sign_up">I agree to the </string>
+    <string name="oath_sign_up"><![CDATA[By selecting Next & Verify I agree to the]]> </string>
     <string name="check_if_addresses_are_same">Check if address of account holder is same as business address.</string>
     <string name="ipay_balance">iPay Balance</string>
     <string name="balance">Balance</string>
@@ -248,6 +251,7 @@
     <string name="terms_condition_url"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
     <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
+    <string name="please_select_a_gender">Please select a gender</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="try_again_later">Could not connect to iPay. Please try again later.</string>
     <string name="enter_rate">Enter rate per item in BDT</string>
@@ -307,6 +311,7 @@
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="wallet">Wallet</string>
     <string name="next">Next</string>
+    <string name="continue_sign_up">Continue</string>
     <string name="bank_list">Bank List</string>
     <string name="bank_branch">Select Branch</string>
     <string name="logout">Log out</string>
@@ -378,6 +383,7 @@
     <string name="failed_available_bank_list_loading">Failed to load bank lists. Please try again later</string>
     <string name="invite_to_ipay">Invite to iPay</string>
     <string name="and">and</string>
+    <string name="mandatory_field">*All fields are mandatory</string>
     <string name="invite_now">Invite Now</string>
     <string name="ask_for_introduction">Ask for Introduction</string>
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
@@ -466,6 +472,9 @@
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
     <string name="office_address">Office Address</string>
+    <string name="address_line_2">Address Line 2 (Optional)</string>
+    <string name="business_address_line_1">Business Address Line 1</string>
+    <string name="business_address_line_2">Business Address Line 2 (Optional)</string>
     <string name="progress_dialog_saving_address">Saving address...</string>
     <string name="add_an_email">Add an Email</string>
     <string name="progress_dialog_add_email">Adding email...</string>
