@@ -65,15 +65,15 @@ public class ProfileImageView extends FrameLayout {
 
             if (forceLoad) {
                 glide
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE);
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE);
             }
 
             glide
-                .error(R.drawable.ic_profile)
-                .crossFade()
-                .transform(new CircleTransform(context))
-                .into(mProfilePictureView);
+                    .error(R.drawable.ic_profile)
+                    .crossFade()
+                    .transform(new CircleTransform(context))
+                    .into(mProfilePictureView);
         } catch (Exception e) {
             e.printStackTrace();
         }

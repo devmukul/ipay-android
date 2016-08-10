@@ -6,7 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
 
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -68,7 +68,7 @@ public class ManageBanksActivity extends BaseActivity {
 
     private void switchToAddNewBankFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new AddBankFragment()).commit();
+                .replace(R.id.fragment_container, new LinkBankFragment()).commit();
         mFabAddNewBank.setVisibility(View.GONE);
         switchedToAddBankFragment = true;
     }

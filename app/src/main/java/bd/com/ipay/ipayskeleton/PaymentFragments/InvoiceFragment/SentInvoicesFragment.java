@@ -477,7 +477,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         alertDialogue.show();
     }
 
-    private void launchInvoiceDetailsFragment() {
+    private void   launchInvoiceDetailsFragment() {
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.DESCRIPTION, mDescription);

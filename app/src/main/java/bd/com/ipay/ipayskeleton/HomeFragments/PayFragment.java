@@ -59,9 +59,7 @@ public class PayFragment extends Fragment {
         mServiceActionList.add(new ServiceAction(getString(R.string.make_payment)));
         mServiceActionList.add(new ServiceAction(getString(R.string.pay_by_QR_code)));
         mServiceActionList.add(new ServiceAction(getString(R.string.mobile_topup)));
-        if ( !ProfileInfoCacheManager.isBusinessAccount()) {
-            mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
-        }
+        mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
 
         mServiceActionListView = (ListView) v.findViewById(R.id.list_services);
         mServiceActionListAdapter = new WalletActionListAdapter(getActivity(), R.layout.list_item_services, mServiceActionList);

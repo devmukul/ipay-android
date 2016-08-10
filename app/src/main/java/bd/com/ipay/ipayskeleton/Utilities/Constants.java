@@ -547,7 +547,7 @@ public class Constants {
     public static final int ACTIVITY_TYPE_MONEY_IN = 1;
     public static final int ACTIVITY_TYPE_MONEY_OUT = 2;
     public static final int ACTIVITY_TYPE_VERIFICATION = 3;
-    public static final int ACTIVITY_TYPE_SYSTEM_EVENT = 4;
+    public static final int ACTIVITY_TYPE_SYSTEM_SERVICE = 4;
     public static final int ACTIVITY_TYPE_CHANGE_SECURITY = 5;
 
     public static final String EMAIL_VERIFICATION_STATUS_VERIFIED = "VERIFIED";

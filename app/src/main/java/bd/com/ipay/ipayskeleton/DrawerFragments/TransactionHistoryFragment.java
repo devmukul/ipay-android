@@ -69,7 +69,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     private String mMobileNumber;
 
-    private LinearLayout eventFilterLayout;
+    private LinearLayout serviceFilterLayout;
     private LinearLayout dateFilterLayout;
 
     private CheckBox mFilterOpeningBalance;
@@ -80,7 +80,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private CheckBox mFilterTopUp;
     private CheckBox mFilterPayment;
     private CheckBox mFilterEducation;
-    private Button mClearEventFilterButton;
+    private Button mClearServiceFilterButton;
 
     private Button mFromDateButton;
     private Button mToDateButton;
@@ -127,9 +127,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
         mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
 
-        eventFilterLayout = (LinearLayout) v.findViewById(R.id.event_filters_layout);
+        serviceFilterLayout = (LinearLayout) v.findViewById(R.id.service_filters_layout);
         dateFilterLayout = (LinearLayout) v.findViewById(R.id.date_filter_layout);
-        mClearEventFilterButton = (Button) v.findViewById(R.id.button_clear_filter_event);
+        mClearServiceFilterButton = (Button) v.findViewById(R.id.button_clear_filter_service);
 
         mFilterOpeningBalance = (CheckBox) v.findViewById(R.id.filter_opening_balance);
         mFilterSendMoney = (CheckBox) v.findViewById(R.id.filter_send_money);
@@ -155,7 +155,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         mProgressbarView = v.findViewById(R.id.progress_container);
 
-        setActionsForEventTypeFilter();
+        setActionsForServiceTypeFilter();
         setActionsForDateFilter();
 
         // Handle back press action when action mode is on.
@@ -167,8 +167,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     if (dateFilterLayout.getVisibility() == View.VISIBLE)
                         dateFilterLayout.setVisibility(View.GONE);
-                    else if (eventFilterLayout.getVisibility() == View.VISIBLE)
-                        eventFilterLayout.setVisibility(View.GONE);
+                    else if (serviceFilterLayout.getVisibility() == View.VISIBLE)
+                        serviceFilterLayout.setVisibility(View.GONE);
                     else return false;
                 }
                 return true;
@@ -228,21 +228,19 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter_by_date:
-                if (eventFilterLayout.getVisibility() == View.VISIBLE)
-                    eventFilterLayout.setVisibility(View.GONE);
+                if (serviceFilterLayout.getVisibility() == View.VISIBLE)
+                    serviceFilterLayout.setVisibility(View.GONE);
                 dateFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(dateFilterLayout);
                 return true;
-            case R.id.action_filter_by_event:
+            case R.id.action_filter_by_service:
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
-                eventFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(eventFilterLayout);
+                serviceFilterLayout.setVisibility(View.VISIBLE);
                 return true;
             case R.id.action_clear_filter:
                 mProgressbarView.setVisibility(View.VISIBLE);
                 clearDateFilters();
-                clearEventFilters();
+                clearServiceFilters();
                 refreshTransactionHistory();
                 menu.findItem(R.id.action_clear_filter).setVisible(false);
                 return true;
@@ -262,7 +260,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             @Override
             public void onClick(View v) {
                 clearDateFilters();
-                clearEventFilters();
+                clearServiceFilters();
                 refreshTransactionHistory();
             }
         });
@@ -271,7 +269,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             @Override
             public void onClick(View v) {
                 menu.findItem(R.id.action_clear_filter).setVisible(true);
-                clearEventFilters();
+                clearServiceFilters();
                 dateFilterLayout.setVisibility(View.GONE);
                 refreshTransactionHistory();
             }
@@ -326,13 +324,13 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     }
 
-    private void setActionsForEventTypeFilter() {
+    private void setActionsForServiceTypeFilter() {
 
-        mClearEventFilterButton.setOnClickListener(new View.OnClickListener() {
+        mClearServiceFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clearDateFilters();
-                clearEventFilters();
+                clearServiceFilters();
                 refreshTransactionHistory();
             }
         });
@@ -340,15 +338,15 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         /**
          * Add OnClickListener for all checkboxes
          */
-        for (final CheckBox eventFilter : mCheckBoxTypeMap.keySet()) {
-            eventFilter.setOnClickListener(new View.OnClickListener() {
+        for (final CheckBox serviceFilter : mCheckBoxTypeMap.keySet()) {
+            serviceFilter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     menu.findItem(R.id.action_clear_filter).setVisible(true);
 
                     clearDateFilters();
-                    if (eventFilter.isChecked()) {
-                        type = mCheckBoxTypeMap.get(eventFilter);
+                    if (serviceFilter.isChecked()) {
+                        type = mCheckBoxTypeMap.get(serviceFilter);
                     } else {
                         type = null;
                     }
@@ -356,26 +354,26 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     /**
                      * Un-check all checkboxes other than this one
                      */
-                    for (final CheckBox otherEventFilter : mCheckBoxTypeMap.keySet()) {
-                        if (otherEventFilter != eventFilter) {
-                            otherEventFilter.setChecked(false);
+                    for (final CheckBox otherServiceFilter : mCheckBoxTypeMap.keySet()) {
+                        if (otherServiceFilter != serviceFilter) {
+                            otherServiceFilter.setChecked(false);
                         }
                     }
 
                     refreshTransactionHistory();
-                    eventFilterLayout.setVisibility(View.GONE);
+                    serviceFilterLayout.setVisibility(View.GONE);
                 }
             });
         }
     }
 
-    private void clearEventFilters() {
+    private void clearServiceFilters() {
         type = null;
-        for (CheckBox eventFilter : mCheckBoxTypeMap.keySet()) {
-            eventFilter.setChecked(false);
+        for (CheckBox serviceFilter : mCheckBoxTypeMap.keySet()) {
+            serviceFilter.setChecked(false);
         }
 
-        eventFilterLayout.setVisibility(View.GONE);
+        serviceFilterLayout.setVisibility(View.GONE);
     }
 
     private void clearDateFilters() {

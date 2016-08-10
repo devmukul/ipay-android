@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -120,7 +122,12 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SignupOrLoginActivity) getActivity()).switchToForgetPasswordFragment();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse(getContext().getString(R.string.forget_password_link)));
+                startActivity(intent);
+                //((SignupOrLoginActivity) getActivity()).switchToForgetPasswordFragment();
             }
         });
 
@@ -148,9 +155,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         });
 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
+
             Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
-                    ProfileInfoCacheManager.getProfileImageUrl(), true);
+                    ProfileInfoCacheManager.getProfileImageUrl(), false);
         } else {
             mProfileImageView.setProfilePicture(R.drawable.ic_profile);
         }

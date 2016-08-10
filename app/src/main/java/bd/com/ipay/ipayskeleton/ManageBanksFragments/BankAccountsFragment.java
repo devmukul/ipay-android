@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -99,7 +100,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 }
             }
         });
-
         return v;
     }
 
@@ -203,6 +203,20 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             tempBankClasses = mBankListResponse.getBanks();
             mListUserBankClasses.clear();
             mListUserBankClasses.addAll(tempBankClasses);
+        }
+
+        BankListValidator bankListValidator = new BankListValidator(mBankListResponse.getBanks());
+        if (bankListValidator.isBankAdded() && !bankListValidator.isVerifiedBankAdded()) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage(R.string.bank_verification_help)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .show();
+
+
         }
 
         if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
