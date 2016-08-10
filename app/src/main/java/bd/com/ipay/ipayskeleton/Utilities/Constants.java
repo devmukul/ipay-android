@@ -134,14 +134,14 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 2;
+    public static final int SERVER_TYPE = 1;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
@@ -547,7 +547,7 @@ public class Constants {
     public static final int ACTIVITY_TYPE_MONEY_IN = 1;
     public static final int ACTIVITY_TYPE_MONEY_OUT = 2;
     public static final int ACTIVITY_TYPE_VERIFICATION = 3;
-    public static final int ACTIVITY_TYPE_SYSTEM_EVENT = 4;
+    public static final int ACTIVITY_TYPE_SYSTEM_SERVICE = 4;
     public static final int ACTIVITY_TYPE_CHANGE_SECURITY = 5;
 
     public static final String EMAIL_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
