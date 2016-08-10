@@ -7,10 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:gravity="center"
         android:orientation="vertical"
         android:paddingTop="@dimen/activity_horizontal_margin">
 
@@ -19,7 +17,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/activity_vertical_margin"
-            android:gravity="center"
             android:text="@string/otp_going_to_send" />
 
         <android.support.design.widget.TextInputLayout
@@ -63,21 +60,47 @@
             android:gravity="bottom|center"
             android:textColor="@color/colorPrimary" />
 
-        <TextView
-            android:layout_width="fill_parent"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_vertical_margin_card"
-            android:gravity="center"
-            android:text="@string/resend_otp_description" />
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/activity_horizontal_margin">
 
-        <Button
-            android:id="@+id/buttonResend"
-            style="@style/PrimaryMediumButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:enabled="false"
-            android:text="@string/resend" />
+            <LinearLayout
+                android:id="@+id/signUpTermsWrapperLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible">
 
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/resend_otp_description1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/signUpTermsWrapperLayout">
+
+                <TextView
+                    android:id="@+id/buttonResend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/value4"
+                    android:background="@drawable/linked_textview_color_primary"
+                    android:clickable="true"
+                    android:text="@string/resend"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorLink="@color/colorPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/resend_otp_description2" />
+            </LinearLayout>
+
+        </RelativeLayout>
     </LinearLayout>
 </ScrollView>

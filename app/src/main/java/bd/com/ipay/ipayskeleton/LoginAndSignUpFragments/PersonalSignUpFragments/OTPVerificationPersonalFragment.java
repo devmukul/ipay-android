@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,7 +52,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     private LoginResponse mLoginResponseModel;
 
     private Button mActivateButton;
-    private Button mResendOTPButton;
+    private TextView mResendOTPButton;
     private EditText mOTPEditText;
     private TextView mTimerTextView;
 
@@ -69,7 +72,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_otp_verification, container, false);
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
-        mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
+        mResendOTPButton = (TextView) v.findViewById(R.id.buttonResend);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
 
