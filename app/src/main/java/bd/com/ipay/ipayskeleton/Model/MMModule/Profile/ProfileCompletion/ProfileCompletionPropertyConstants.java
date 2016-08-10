@@ -8,7 +8,6 @@ public class ProfileCompletionPropertyConstants {
 
     public static final String PROFILE_COMPLETENESS = "PROFILE_COMPLETENESS";
 
-    public static final String VERIFY_BANK = "VERIFY_BANK";
     public static final String ADD_PIN = "ADD_PIN";
     public static final String TRUSTED_NETWORK = "TRUSTED_NETWORK";
     public static final String TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE = "TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE";
@@ -19,7 +18,7 @@ public class ProfileCompletionPropertyConstants {
     public static final String VERIFIED_EMAIL = "VERIFIED_EMAIL";
     public static final String PHOTOID = "PHOTO_ID";
     public static final String VERIFICATION_DOCUMENT = "VERIFICATION_DOCUMENT";
-    public static final String ADD_BANK = "ADD_BANK";
+    public static final String LINK_AND_VERIFY_BANK = "LINK_AND_VERIFY_BANK";
     public static final String PARENT = "PARENT";
     public static final String PROFILE_INFO = "PROFILEINFO";
 
@@ -46,7 +45,6 @@ public class ProfileCompletionPropertyConstants {
     public static final HashMap<String, String> PROPERTY_NAME_TO_ACTION_NAME_MAP = new HashMap<>();
 
     static {
-        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFY_BANK, "Verify Bank Account");
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_PIN, "Set up PIN");
         PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK, "Setup trusted network");
         PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add people eligible for password recovery");
@@ -60,12 +58,11 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a verified email");
         PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
-        PROPERTY_NAME_TO_TITLE_MAP.put(ADD_BANK, "Add Bank Account");
+        PROPERTY_NAME_TO_TITLE_MAP.put(LINK_AND_VERIFY_BANK, "Link and Verify Bank Account");
         PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parents' Details");
     }
 
     static {
-        PROPERTY_NAME_TO_ICON_MAP.put(VERIFY_BANK, R.drawable.ic_bankverified);
 //        PROPERTY_NAME_TO_ICON_MAP.put(ADD_PIN, "Set up PIN");
 //        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK, "Setup Trusted Network");
 //        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add People Eligible for Password Recovery");
@@ -79,7 +76,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_ICON_MAP.put(PHOTOID, R.drawable.ic_photoid);
         PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_photoid);
         PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_DOCUMENTS, R.drawable.ic_photoid);
-        PROPERTY_NAME_TO_ICON_MAP.put(ADD_BANK, R.drawable.ic_bankteal);
+        PROPERTY_NAME_TO_ICON_MAP.put(LINK_AND_VERIFY_BANK, R.drawable.ic_bankteal);
         PROPERTY_NAME_TO_ICON_MAP.put(PARENT, R.drawable.ic_parent);
     }
 

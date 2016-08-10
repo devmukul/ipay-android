@@ -84,7 +84,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_Link_bank, container, false);
+        View v = inflater.inflate(R.layout.fragment_link_bank, container, false);
         getActivity().setTitle(R.string.link_bank);
         getActivity().setTitleColor(Color.WHITE);
 
