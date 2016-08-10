@@ -70,6 +70,7 @@ public class ProfileImageView extends FrameLayout {
             }
 
             glide
+                    .placeholder(R.drawable.ic_profile)
                     .error(R.drawable.ic_profile)
                     .crossFade()
                     .transform(new CircleTransform(context))
