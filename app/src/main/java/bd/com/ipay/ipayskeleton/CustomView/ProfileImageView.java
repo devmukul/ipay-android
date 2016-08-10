@@ -78,26 +78,4 @@ public class ProfileImageView extends FrameLayout {
             e.printStackTrace();
         }
     }
-
-    public void setProfilePictureWithPlaceholder(String photoUri, boolean forceLoad) {
-        try {
-            final DrawableTypeRequest<String> glide = Glide.with(context).load(photoUri);
-
-            if (forceLoad) {
-                glide
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE);
-            }
-
-            glide
-                    .placeholder(R.drawable.ic_profile)
-                    .error(R.drawable.ic_profile)
-                    .crossFade()
-                    .transform(new CircleTransform(context))
-                    .into(mProfilePictureView);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }

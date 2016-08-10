@@ -152,7 +152,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
 
             Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
-            mProfileImageView.setProfilePictureWithPlaceholder(Constants.BASE_URL_FTP_SERVER +
+            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                     ProfileInfoCacheManager.getProfileImageUrl(), true);
         } else {
             mProfileImageView.setProfilePicture(R.drawable.ic_profile);
