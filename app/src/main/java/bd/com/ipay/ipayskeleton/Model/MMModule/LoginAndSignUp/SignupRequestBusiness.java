@@ -14,7 +14,6 @@ public class SignupRequestBusiness {
     private final String otp;
     private final String businessName;
     private final long businessType;
-    private final String businessEmail;
     private final String personalEmail;
     private final String personalMobileNumber;
     private final AddressClass personalAddress;
@@ -37,7 +36,6 @@ public class SignupRequestBusiness {
         this.otp = otp;
         this.businessName = businessName;
         this.businessType = businessType;
-        this.businessEmail = businessEmail;
         this.personalEmail = personalEmail;
         this.personalMobileNumber = personalMobileNumber;
         this.personalAddress = personalAddress;

@@ -60,11 +60,11 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
         if (pref.contains(Constants.USERID)) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new LoginFragment()).commit();
+                    .add(R.id.fragment_container, new LoginFragment()).commit();
         } else {
             Utilities.hideKeyboard(this);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
+                    .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
         }
 
         if (getIntent().hasExtra(Constants.MESSAGE)) {
@@ -121,7 +121,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public void switchToAccountSelectionFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
+                .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
     }
 
     public void switchToForgetPasswordFragment() {

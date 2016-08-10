@@ -56,9 +56,6 @@ public class TourActivity extends BaseActivity {
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-                );
                 Intent intent = new Intent(TourActivity.this, SignupOrLoginActivity.class);
                 intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_UP);
                 startActivity(intent);

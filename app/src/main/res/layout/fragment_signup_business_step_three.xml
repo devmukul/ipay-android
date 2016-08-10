@@ -39,13 +39,12 @@
                     android:theme="@style/CustomTextInputLayout">
 
                     <EditText
-                        android:id="@+id/personal_mobile_number"
+                        android:id="@+id/full_name"
                         style="@style/CustomEditTextLogInSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/personal_mobile_number"
-                        android:inputType="phone"
-                        android:maxLength="14"
+                        android:hint="@string/full_name"
+                        android:inputType="textPersonName"
                         android:maxLines="1"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
@@ -59,17 +58,19 @@
                     android:theme="@style/CustomTextInputLayout">
 
                     <EditText
-                        android:id="@+id/full_name"
+                        android:id="@+id/personal_mobile_number"
                         style="@style/CustomEditTextLogInSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/full_name"
-                        android:inputType="textPersonName"
+                        android:hint="@string/personal_mobile_number"
+                        android:inputType="phone"
+                        android:maxLength="14"
                         android:maxLines="1"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
                 <View style="@style/DividerOnly" />
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -98,9 +99,8 @@
                         android:layout_toLeftOf="@+id/checkBoxFemale"
                         android:background="@drawable/background_left_round_checkbox"
                         android:button="@null"
-                        android:checked="true"
                         android:text="@string/male"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/value12" />
 
                     <CheckBox
@@ -192,7 +192,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:text="@string/action_sign_in" />
+                android:text="@string/action_next_and_verify" />
 
         </LinearLayout>
     </ScrollView>

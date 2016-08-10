@@ -91,7 +91,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
 
         mNameView.requestFocus();
-        Utilities.showKeyboard(getActivity());
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
@@ -242,6 +241,11 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
             cancel = true;
+        }
+
+        if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
+            Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
+            cancel=true;
         }
 
         if (!cancel) {

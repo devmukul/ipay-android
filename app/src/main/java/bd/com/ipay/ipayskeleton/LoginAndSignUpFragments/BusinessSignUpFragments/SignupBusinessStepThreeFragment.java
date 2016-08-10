@@ -190,6 +190,10 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         } else if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
         }
+        if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
+            Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
+            cancel=true;
+        }
 
 
         if (cancel) {

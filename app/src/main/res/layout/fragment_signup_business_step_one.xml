@@ -16,10 +16,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/button_cross"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal"
+                android:text="@string/mandatory_field"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_small" />
+
+            <ImageView
+                android:id="@+id/button_cross"
+                android:layout_width="@dimen/value30"
+                android:layout_height="@dimen/value30"
                 android:layout_alignParentRight="true"
                 android:padding="@dimen/activity_horizontal_margin_card"
                 android:src="@drawable/ic_crossw" />
@@ -59,7 +69,8 @@
                 style="@style/CustomTextInputLayoutWithMargin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/CustomTextInputLayout">
+                android:theme="@style/CustomTextInputLayout"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/email"
@@ -73,7 +84,9 @@
                     android:textSize="@dimen/text_size_small_medium" />
             </android.support.design.widget.TextInputLayout>
 
-            <View style="@style/DividerOnly" />
+            <View
+                style="@style/DividerOnly"
+                android:visibility="gone" />
 
             <android.support.design.widget.TextInputLayout
                 style="@style/CustomTextInputLayoutWithMargin"

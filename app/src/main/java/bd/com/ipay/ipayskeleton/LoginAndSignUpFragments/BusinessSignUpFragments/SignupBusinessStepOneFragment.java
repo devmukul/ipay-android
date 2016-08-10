@@ -143,12 +143,12 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             focusView = mBusinessMobileNumberView;
             cancel = true;
 
-        } else if (!InputValidator.isValidEmail(SignupOrLoginActivity.mEmailBusiness)) {
+        } /*else if (!InputValidator.isValidEmail(SignupOrLoginActivity.mEmailBusiness)) {
             mBusinessEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mBusinessEmailView;
             cancel = true;
 
-        } else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
+        }*/ else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
             mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
             focusView = mPromoCodeEditText;
             cancel = true;
