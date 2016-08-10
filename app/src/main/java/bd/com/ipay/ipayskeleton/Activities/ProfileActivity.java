@@ -6,7 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
+import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessInformationFragment;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
@@ -23,7 +24,10 @@ import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.ADDRESS;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_INFO;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PERSONAL_ADDRESS;
+import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.ADD_BANK;
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.INTRODUCER;
@@ -106,7 +110,7 @@ public class ProfileActivity extends BaseActivity {
                 fragment = new BankAccountsFragment();
                 break;
             case ADD_BANK:
-                fragment = new AddBankFragment();
+                fragment = new LinkBankFragment();
                 break;
             case TRUSTED_NETWORK:
             case TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE:
@@ -114,6 +118,9 @@ public class ProfileActivity extends BaseActivity {
                 break;
             case BASIC_PROFILE:
                 fragment = new BasicInfoFragment();
+                break;
+            case BUSINESS_INFO:
+                fragment = new BusinessInformationFragment();
                 break;
             case PROFILE_PICTURE:
                 fragment = new AccountFragment();
@@ -126,12 +133,14 @@ public class ProfileActivity extends BaseActivity {
                 bundle.putString(Constants.INTRODUCER, "introducer");
                 fragment = new IdentificationHolderFragment();
                 break;
-            case ADDRESS:
+            case PERSONAL_ADDRESS:
+            case BUSINESS_ADDRESS:
                 fragment = new AddressFragment();
                 break;
             case VERIFIED_EMAIL:
                 fragment = new EmailFragment();
                 break;
+            case BUSINESS_DOCUMENTS:
             case VERIFICATION_DOCUMENT:
             case PHOTOID:
                 fragment = new IdentificationDocumentListFragment();

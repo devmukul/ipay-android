@@ -41,7 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddBankFragment extends Fragment implements HttpResponseListener {
+public class LinkBankFragment extends Fragment implements HttpResponseListener {
 
     private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
 
@@ -84,8 +84,8 @@ public class AddBankFragment extends Fragment implements HttpResponseListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_add_bank, container, false);
-        getActivity().setTitle(R.string.add_a_bank);
+        View v = inflater.inflate(R.layout.fragment_Link_bank, container, false);
+        getActivity().setTitle(R.string.link_bank);
         getActivity().setTitleColor(Color.WHITE);
 
         Bundle args = getArguments();

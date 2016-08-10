@@ -191,7 +191,6 @@
     <string name="continue_forget_password">Continue</string>
     <string name="payment">Payment</string>
     <string name="password_recovery">Password Recovery</string>
-    <string name="add_a_bank">Add Bank</string>
     <string name="transaction_details">Transaction Details</string>
     <string name="invoice">Invoice</string>
     <string name="invoice_details">Invoice Details</string>

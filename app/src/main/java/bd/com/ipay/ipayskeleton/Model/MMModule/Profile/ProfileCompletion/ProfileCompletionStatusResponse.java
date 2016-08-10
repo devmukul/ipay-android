@@ -3,6 +3,8 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.*;
 
 public class ProfileCompletionStatusResponse {
@@ -109,7 +111,32 @@ public class ProfileCompletionStatusResponse {
                 if (propertyDetails.getPropertyTitle() != null)
                     basicInfoCompletionDetails.add(propertyDetails);
 
-            } else if (mCompletionStatus.getTag() == TAG_POSITION_ADDRESS) {
+            } else if (mCompletionStatus.getTag() == TAG_POSITION_BUSINESS_ADDRESS) {
+
+                addressItemCount++;
+                addressCompletionSum = addressCompletionSum + propertyCompletionPercentage;
+
+                if (propertyDetails.getPropertyTitle() != null)
+                    addressCompletionDetails.add(propertyDetails);
+
+            } else if (mCompletionStatus.getTag() == TAG_POSITION_BUSINESS_DOCUMENTS) {
+                identificationItemCount++;
+                identificationCompletionSum = identificationCompletionSum + propertyCompletionPercentage;
+
+                if (propertyDetails.getPropertyTitle() != null)
+                    identificationCompletionDetails.add(propertyDetails);
+
+
+            } else if (mCompletionStatus.getTag() == TAG_POSITION_BUSINESS_INFO) {
+
+                basicInfoItemCount++;
+                basicInfoCompletionSum = basicInfoCompletionSum + propertyCompletionPercentage;
+
+                if (propertyDetails.getPropertyTitle() != null)
+                    basicInfoCompletionDetails.add(propertyDetails);
+
+
+            } else if (mCompletionStatus.getTag() == TAG_POSITION_PERSONAL_ADDRESS  ) {
 
                 addressItemCount++;
                 addressCompletionSum = addressCompletionSum + propertyCompletionPercentage;
@@ -132,7 +159,7 @@ public class ProfileCompletionStatusResponse {
 
                 if (propertyDetails.getPropertyTitle() != null)
                     linkBankCompletionDetails.add(propertyDetails);
-            } else {
+            }  else {
                 if (propertyDetails.getPropertyTitle() != null)
                     otherCompletionDetails.add(propertyDetails);
             }
@@ -161,6 +188,7 @@ public class ProfileCompletionStatusResponse {
         }
 
         public String getPropertyTitle() {
+            if (propertyName.equals(PERSONAL_ADDRESS) && ProfileInfoCacheManager.isBusinessAccount()) return "Add Present Address";
             return PROPERTY_NAME_TO_TITLE_MAP.get(propertyName);
         }
 
