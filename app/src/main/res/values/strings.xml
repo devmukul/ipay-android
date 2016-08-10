@@ -289,7 +289,7 @@
     <string name="zero_value">0.00 BDT</string>
     <string name="end_date">End date (dd/mm/yyyy)</string>
     <string name="sign_up_with_ipay">sign up with iPay</string>
-    <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
+    <string name="birthday_dd_mm_yy">Date of Birth</string>
     <string name="birthday_date_month_year">date/month/year</string>
     <string name="please_enter_document_number">Please enter the document number</string>
     <string name="send_money_failed_due_to_server_down">Money sending failed. No response from server. Please try again later.</string>
@@ -741,5 +741,15 @@
         <item>View</item>
         <item>Edit</item>
         <item>Remove</item>
+    </string-array>
+
+    <string-array name="day_of_week">
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
     </string-array>
 </resources>

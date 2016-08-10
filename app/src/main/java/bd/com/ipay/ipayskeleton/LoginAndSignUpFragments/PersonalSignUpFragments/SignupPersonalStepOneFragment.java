@@ -20,6 +20,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -48,10 +53,11 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private CheckBox mFemaleCheckBox;
     private EditText mPromoCodeEditText;
     private EditText mBirthdayEditText;
-    private ImageView mDatePickerButton;
     private ImageView mCrossButton;
 
+    private String[] mWeekArray;
     private String mDeviceID;
+    private String mDOB;
     private ProgressDialog mProgressDialog;
 
     private int mYear;
@@ -85,7 +91,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
-        mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
 
         mNameView.requestFocus();
@@ -94,13 +99,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 getActivity(), mDateSetListener, 1990, 0, 1);
 
         mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
-
-        mDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.show();
@@ -157,21 +155,27 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
+                    String birthDate, birthMonth, birthYear;
+                    int dayofweek;
+
                     mYear = year;
                     mMonth = monthOfYear + 1;
                     mDay = dayOfMonth;
+                    mWeekArray = getResources().getStringArray(R.array.day_of_week);
 
-                    String birthDate, birthMonth, birthYear;
                     if (mDay < 10) birthDate = "0" + mDay;
                     else birthDate = mDay + "";
                     if (mMonth < 10) birthMonth = "0" + mMonth;
                     else birthMonth = mMonth + "";
                     birthYear = mYear + "";
 
-//                    SignupOrLoginActivity.mBirthday = birthDate + birthMonth + birthYear;
-//                    String[] months = getActivity().getResources().getStringArray(R.array.months);
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(new Date(mYear, mMonth - 1, mDay));
+                    dayofweek = c.get(Calendar.DAY_OF_WEEK);
+
+                    mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
                     mBirthdayEditText.setError(null);
-                    mBirthdayEditText.setText(birthDate + "/" + birthMonth + "/" + birthYear);
+                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDOB);
                 }
             };
 
@@ -185,7 +189,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mName = mNameView.getText().toString().trim();
-        SignupOrLoginActivity.mBirthday = mBirthdayEditText.getText().toString().trim();
+        SignupOrLoginActivity.mBirthday = mDOB;
 
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mPassword = mPasswordView.getText().toString().trim();
@@ -232,11 +236,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         }
 
         if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
-            mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
-            cancel = true;
-        }
-
-        if (mBirthdayEditText.getText().toString().trim().length() == 0) {
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
             cancel = true;

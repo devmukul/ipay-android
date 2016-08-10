@@ -134,24 +134,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:focusable="false"
-                            android:hint="@string/birthday_date_month_year"
+                            android:hint="@string/birthday_dd_mm_yy"
                             android:inputType="date"
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textSize="@dimen/text_size_small_medium" />
                     </android.support.design.widget.TextInputLayout>
 
-                    <ImageView
-                        android:id="@+id/myDatePickerButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="@dimen/value10"
-                        android:layout_marginRight="@dimen/value10"
-                        android:clickable="true"
-                        android:paddingBottom="@dimen/value5"
-                        android:paddingTop="@dimen/value5"
-                        android:src="@drawable/ic_calendar" />
 
                 </RelativeLayout>
             </LinearLayout>

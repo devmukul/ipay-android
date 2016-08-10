@@ -22,6 +22,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -44,7 +47,6 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
 
     private CheckBox mAddressCheckbox;
 
-    private ImageView mDatePickerButton;
     private Button mSignupBusinessButton;
     private EditText mBirthdayEditText;
     private EditText mPersonalMobileNumberView;
@@ -54,6 +56,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private TextView mPrivacyPolicy;
     private Spinner mGenderSpinner;
 
+    private String[] mWeekArray;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -61,6 +64,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private AddressInputSignUpView mPersonalAddressView;
 
     private String mDeviceID;
+    private String mDOB;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -73,7 +77,6 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_signup_business_step_three, container, false);
-        mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -98,13 +101,6 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 getActivity(), mDateSetListener, 1990, 0, 1);
 
         mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
-
-        mDatePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.show();
@@ -170,7 +166,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         SignupOrLoginActivity.mMobileNumberPersonal = ContactEngine.formatMobileNumberBD(
                 mPersonalMobileNumberView.getText().toString().trim());
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
-        SignupOrLoginActivity.mBirthdayBusinessHolder = mBirthdayEditText.getText().toString().trim();
+        SignupOrLoginActivity.mBirthdayBusinessHolder = mDOB;
         SignupOrLoginActivity.mNameBusiness = name;
         if (mMaleCheckBox.isChecked()) SignupOrLoginActivity.mGender = Constants.GENDER_MALE;
         else SignupOrLoginActivity.mGender = Constants.GENDER_FEMALE;
@@ -178,11 +174,13 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         boolean cancel = false;
         View focusView = null;
 
-        if (SignupOrLoginActivity.mBirthdayBusinessHolder == null || SignupOrLoginActivity.mBirthdayBusinessHolder.length() == 0) {
-            cancel = true;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.please_select_your_birthday, Toast.LENGTH_LONG).show();
+        mBirthdayEditText.setError(null);
+        mBusinessHolderFullNameView.setError(null);
 
+        if (SignupOrLoginActivity.mBirthdayBusinessHolder == null || SignupOrLoginActivity.mBirthdayBusinessHolder.length() == 0) {
+            mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
+            focusView = mBirthdayEditText;
+            cancel = true;
         } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumberPersonal)) {
             mPersonalMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mPersonalMobileNumberView;
@@ -193,7 +191,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             focusView = mBusinessHolderFullNameView;
             cancel = true;
 
-        } else if (mBirthdayEditText.getText().toString().trim().length() == 0) {
+        } else if (mDOB == null) {
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
             cancel = true;
@@ -203,7 +201,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         }
         if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
             Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
-            cancel=true;
+            cancel = true;
         }
 
 
@@ -240,19 +238,27 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
+                    String birthDate, birthMonth, birthYear;
+                    int dayofweek;
+
                     mYear = year;
                     mMonth = monthOfYear + 1;
                     mDay = dayOfMonth;
+                    mWeekArray = getResources().getStringArray(R.array.day_of_week);
 
-                    String birthDate, birthMonth, birthYear;
                     if (mDay < 10) birthDate = "0" + mDay;
                     else birthDate = mDay + "";
                     if (mMonth < 10) birthMonth = "0" + mMonth;
                     else birthMonth = mMonth + "";
                     birthYear = mYear + "";
 
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(new Date(mYear, mMonth - 1, mDay));
+                    dayofweek = c.get(Calendar.DAY_OF_WEEK);
+
+                    mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
                     mBirthdayEditText.setError(null);
-                    mBirthdayEditText.setText(birthDate + "/" + birthMonth + "/" + birthYear);
+                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDOB);
                 }
             };
 

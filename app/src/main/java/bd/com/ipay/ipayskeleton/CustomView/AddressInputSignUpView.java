@@ -230,8 +230,9 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
     public boolean verifyUserInputs() {
         boolean cancel = false;
         View focusedView = null;
+        mAddressLine1Field.setError(null);
 
-        if (mAddressLine1Field.getText().toString().isEmpty()) {
+        if (mAddressLine1Field.getText().toString().trim().length() == 0) {
             mAddressLine1Field.setError(context.getString(R.string.invalid_address_line_1));
             focusedView = mAddressLine1Field;
             cancel = true;

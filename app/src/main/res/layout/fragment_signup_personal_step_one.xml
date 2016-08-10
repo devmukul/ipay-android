@@ -156,18 +156,6 @@
                         android:inputType="number" />
                 </android.support.design.widget.TextInputLayout>
 
-                <ImageView
-                    android:id="@+id/myDatePickerButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-                    android:clickable="true"
-                    android:src="@drawable/ic_calendar" />
-
             </RelativeLayout>
 
             <View style="@style/DividerOnly" />
