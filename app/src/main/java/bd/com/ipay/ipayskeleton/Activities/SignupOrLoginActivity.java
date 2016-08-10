@@ -76,7 +76,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             if (targetFragment.equals(Constants.SIGN_IN)) {
                 switchToLoginFragment();
             } else if (targetFragment.equals(Constants.SIGN_UP)) {
-                Utilities.hideKeyboard(this);
                 switchToAccountSelectionFragment();
             }
         }
@@ -127,7 +126,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public void switchToAccountSelectionFragment() {
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
+                .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
     }
 
     public void switchToForgetPasswordFragment() {
