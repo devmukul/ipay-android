@@ -117,6 +117,7 @@
     <string name="confirm_query">Are you sure?</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
+    <string name="parent_info_save_failed">Failed to save parent information.</string>
     <string name="profile_info_get_failed">Failed to fetch profile information.</string>
     <string name="account_type_business">Business Account</string>
     <string name="all_contacts">All</string>
@@ -358,6 +359,7 @@
     <string name="clear_filter">Clear Filter</string>
     <string name="select_a_bank">Select Bank</string>
     <string name="saving_profile_information">Saving profile information</string>
+    <string name="saving_parent_information">Saving parent information</string>
     <string name="title_login_page">Login</string>
     <string name="login_info">You can only use one account per device. If you want to use another account from this device, please reinstall the app.</string>
     <string name="title_signup_personal_page">Sign up with iPay</string>
@@ -475,6 +477,8 @@
     <string name="date_of_birth">Date of Birth</string>
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
+    <string name="fathers_mobile">Father\'s Mobile No.</string>
+    <string name="mothers_mobile">Mother\'s Mobile No.</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
     <string name="office_address">Office Address</string>
@@ -526,6 +530,7 @@
     <string name="profile_completeness">Profile Completeness</string>
     <string name="business_contact">Business Contact</string>
     <string name="edit_basic_info">Edit Basic Info</string>
+    <string name="edit_parent_info">Edit Parent Info</string>
     <string name="edit_address">Edit Address</string>
     <string name="you_need_to_have">You need to have at least&#160;</string>
     <string name="introducers_to_complete_the_account_verification_process">&#160;introducers to complete the account verification process.</string>
@@ -562,6 +567,7 @@
     <string name="business_name">Name</string>
     <string name="office_info">Office Information</string>
     <string name="contact_info">Contact Information</string>
+    <string name="parent_info">Parents Information</string>
     <string name="business_type">Business Type</string>
     <string name="not_a_business_user">This person is not a business user. You can only make payment to a business user</string>
     <string name="failed_loading_business_type">Loading failed</string>

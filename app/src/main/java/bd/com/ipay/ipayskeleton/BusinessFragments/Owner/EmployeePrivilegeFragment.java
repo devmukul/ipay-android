@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.UpdateEmployeeRequ
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.UpdateEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmployeePrivilegeFragment extends Fragment implements HttpResponseListener {
 

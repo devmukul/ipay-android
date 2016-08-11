@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class EditAddressFragment extends Fragment implements HttpResponseListener {
@@ -138,7 +139,14 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
                 mSetUserAddressResponse = gson.fromJson(result.getJsonString(), SetUserAddressResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    ((ProfileActivity) getActivity()).switchToAddressFragment();
+                    if (ProfileInfoCacheManager.isBusinessAccount()) {
+                        if (getArguments().getString(Constants.EDIT_ADDRESS_SOURCE).equals("BUSINESS_PRESENT"))
+                            ((ProfileActivity) getActivity()).switchToBusinessContactFragment();
+                        else if (getArguments().getString(Constants.EDIT_ADDRESS_SOURCE).equals("BUSINESS_OFFICE"))
+                            ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
+                    } else {
+                        ((ProfileActivity) getActivity()).switchToAddressFragment();
+                    }
 
                 } else {
                     if (getActivity() != null)

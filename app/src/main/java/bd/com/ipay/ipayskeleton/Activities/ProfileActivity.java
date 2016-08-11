@@ -34,6 +34,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditAddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditBasicInfoFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.EditParentInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentListFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
@@ -317,6 +318,15 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
         EditBasicInfoFragment editBasicInfoFragment = new EditBasicInfoFragment();
         editBasicInfoFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, editBasicInfoFragment).addToBackStack(null).commit();
+    }
+
+    public void switchToEditParentInfoFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        EditParentInfoFragment editParentInfoFragment = new EditParentInfoFragment();
+        editParentInfoFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, editParentInfoFragment).addToBackStack(null).commit();
     }
 
     public void switchToAddressFragment() {

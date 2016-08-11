@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
@@ -38,6 +40,11 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
 
+
+    private HttpRequestGetAsyncTask mGetParentInfoTask = null;
+    private GetParentInfoResponse mGetParentInfoResponse;
+
+
     private HttpRequestGetAsyncTask mGetOccupationTask = null;
     private GetOccupationResponse mGetOccupationResponse;
 
@@ -48,7 +55,9 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private TextView mVerificationStatusView;
 
     private TextView mFathersNameView;
+    private TextView mFathersMobileView;
     private TextView mMothersNameView;
+    private TextView mMothersMobileView;
 
     private TextView mDateOfBirthView;
     private TextView mOccupationView;
@@ -65,34 +74,21 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private String mFathersName = "";
     private String mMothersName = "";
+    private String mFathersMobile = "";
+    private String mMothersMobile = "";
 
     private int mOccupation = 0;
     private String mGender = "";
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
 
+    private ImageButton mContactEditButton;
+    private ImageButton mParentInfoEditButton;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        if (!ProfileInfoCacheManager.isAccountVerified())
-            inflater.inflate(R.menu.edit, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_edit) {
-            launchEditFragment();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -108,7 +104,9 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
+        mFathersMobileView = (TextView) v.findViewById(R.id.textview_fathers_mobile);
         mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
+        mMothersMobileView = (TextView) v.findViewById(R.id.textview_mothers_mobile);
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
         mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
         mGenderView = (TextView) v.findViewById(R.id.textview_gender);
@@ -117,6 +115,22 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mGender = pref.getString(Constants.GENDER, "");
         mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
         mProgressDialog = new ProgressDialog(getActivity());
+        mContactEditButton = (ImageButton) v.findViewById(R.id.button_edit_contact_information);
+        mParentInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_parent_information);
+
+        mContactEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchEditFragment();
+            }
+        });
+
+        mParentInfoEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchEditParentInfoFragment();
+            }
+        });
 
         return v;
     }
@@ -154,6 +168,17 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         bundle.putInt(Constants.OCCUPATION, mOccupation);
 
         ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
+    }
+
+
+    private void launchEditParentInfoFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.FATHERS_NAME, mFathersName);
+        bundle.putString(Constants.MOTHERS_NAME, mMothersName);
+        bundle.putString(Constants.FATHERS_MOBILE, mFathersMobile);
+        bundle.putString(Constants.MOTHERS_MOBILE, mMothersMobile);
+
+        ((ProfileActivity) getActivity()).switchToEditParentInfoFragment(bundle);
     }
 
     private void setProfileInformation() {
@@ -244,7 +269,38 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             }
 
             mGetProfileInfoTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
+        }   if (result.getApiCommand().equals(Constants.COMMAND_GET_PARENT_INFO_REQUEST)) {
+
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mGetParentInfoResponse = gson.fromJson(result.getJsonString(), GetParentInfoResponse.class);
+
+                    if (mGetParentInfoResponse.getFatherName() != null)
+                        mFathersName = mGetParentInfoResponse.getFatherName();
+                    if (mGetParentInfoResponse.getFatherMobileNumber() != null)
+                        mFathersMobile = mGetParentInfoResponse.getFatherMobileNumber();
+
+                    if (mGetParentInfoResponse.getMotherName() != null)
+                        mMothersName = mGetParentInfoResponse.getMotherName();
+                    if (mGetParentInfoResponse.getMotherMobileNumber() != null)
+                        mMothersMobile = mGetParentInfoResponse.getMotherMobileNumber();
+
+                    setParentInfo();
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+            }
+
+            mGetParentInfoTask = null;
+        }
+
+        else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
 
             try {
                 mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
@@ -265,6 +321,14 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             mGetOccupationTask = null;
         }
     }
+
+    private void setParentInfo() {
+        mFathersNameView.setText(mFathersName);
+        mMothersNameView.setText(mMothersName);
+        mFathersMobileView.setText(mFathersMobile);
+        mMothersMobileView.setText(mMothersMobile);
+    }
+
 
     private void processProfileInfoResponse(String json) {
         Gson gson = new Gson();

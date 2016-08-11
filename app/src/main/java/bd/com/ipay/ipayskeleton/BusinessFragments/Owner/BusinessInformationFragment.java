@@ -89,7 +89,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mOfficeAddressHolder = v.findViewById(R.id.office_address_holder);
 
-        if ( ProfileInfoCacheManager.isAccountVerified()) {
+        if (ProfileInfoCacheManager.isAccountVerified()) {
             mOfficeAddressEditButton.setVisibility(View.GONE);
             mOfficeInfoEditButton.setVisibility(View.GONE);
         } else {
@@ -124,6 +124,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         final Bundle officeAddressBundle = new Bundle();
         officeAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_OFFICE);
+        officeAddressBundle.putString(Constants.EDIT_ADDRESS_SOURCE, "BUSINESS_OFFICE");
         if (mOfficeAddress != null)
             officeAddressBundle.putSerializable(Constants.ADDRESS, mOfficeAddress);
 
