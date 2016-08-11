@@ -26,10 +26,10 @@
                     android:id="@+id/profile_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/value20"
+                    android:paddingBottom="@dimen/value10"
                     android:paddingLeft="@dimen/activity_horizontal_margin_double"
                     android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/value20">
+                    android:paddingTop="@dimen/value10">
 
                     <RelativeLayout
                         android:id="@+id/profile_picture_holder"
