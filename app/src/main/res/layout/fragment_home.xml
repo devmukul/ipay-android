@@ -309,7 +309,7 @@
                         android:id="@+id/button_mobile_topup"
                         style="@style/HomeImageButtonStyleHorizontal"
                         android:layout_weight="1"
-                        android:drawableTop="@drawable/ic_home_topup"
+                        android:drawableTop="@drawable/background_icon_topup"
                         android:text="@string/mobile_topup" />
 
                     <View

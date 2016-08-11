@@ -185,6 +185,7 @@
     <string name="done">Done</string>
     <string name="verify">Verify</string>
     <string name="verify_email">Verify Email</string>
+    <string name="resend_otp_description">If you have not received the SMS, please press Resend Code after the time elapses.</string>
     <string name="resend_otp_description1">If you have not received the SMS, please press</string>
     <string name="resend_otp_description2">after the time elapses</string>
     <string name="verify_otp_for_trust_description">You are seeing this because you are logging in from this device for the first time or you have reached the maximum number of trusted devices that can be added</string>
@@ -246,6 +247,7 @@
     <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
     <string name="oath_sign_up"><![CDATA[By selecting Next & Verify I agree to the]]> </string>
+    <string name="already_have_an_account">"Already have an account?"</string>
     <string name="check_if_addresses_are_same">Check if address of account holder is same as business address.</string>
     <string name="ipay_balance">iPay Balance</string>
     <string name="balance">Balance</string>
@@ -293,7 +295,7 @@
     <string name="zero_value">0.00 BDT</string>
     <string name="end_date">End date (dd/mm/yyyy)</string>
     <string name="sign_up_with_ipay">sign up with iPay</string>
-    <string name="birthday_dd_mm_yy">Birthday (dd/mm/yyyy)</string>
+    <string name="birthday_dd_mm_yy">Date of Birth</string>
     <string name="birthday_date_month_year">date/month/year</string>
     <string name="please_enter_document_number">Please enter the document number</string>
     <string name="send_money_failed_due_to_server_down">Money sending failed. No response from server. Please try again later.</string>
@@ -750,5 +752,15 @@
         <item>View</item>
         <item>Edit</item>
         <item>Remove</item>
+    </string-array>
+
+    <string-array name="day_of_week">
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
     </string-array>
 </resources>

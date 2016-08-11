@@ -42,6 +42,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     private EditText mConfirmPasswordView;
     private EditText mBusinessMobileNumberView;
     private Button mNextButton;
+    private Button mLoginButton;
     private ImageView mCrossButton;
 
     private EditText mPromoCodeEditText;
@@ -70,12 +71,11 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
 
         mNextButton = (Button) v.findViewById(R.id.business_next_button);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
-
+        mLoginButton = (Button) v.findViewById(R.id.button_log_in);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
         mBusinessMobileNumberView.requestFocus();
-        Utilities.showKeyboard(getActivity());
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +92,14 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
                 ((SignupOrLoginActivity) getActivity()).switchToTourActivity();
             }
         });
+
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
+            }
+        });
+
 
         return v;
     }

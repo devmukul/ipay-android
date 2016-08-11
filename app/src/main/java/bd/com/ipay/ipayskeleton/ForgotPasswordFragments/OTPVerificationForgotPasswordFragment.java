@@ -48,7 +48,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
     private ForgetPassOTPConfirmationResponse mForgetPassOTPConfirmationResponse;
 
     private Button mActivateButton;
-    private TextView mResendOTPButton;
+    private Button mResendOTPButton;
     private EditText mOTPEditText;
     private EditText mNewPasswordEditText;
     private TextView mOtpSentInfo;
@@ -74,7 +74,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
         View v = inflater.inflate(R.layout.fragment_otp_verification_forget_password, container, false);
         mOtpSentInfo = (TextView) v.findViewById(R.id.otp_sent_info);
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
-        mResendOTPButton = (TextView) v.findViewById(R.id.buttonResend);
+        mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
         mNewPasswordEditText = (EditText) v.findViewById(R.id.new_pass_edittext);
@@ -222,7 +222,7 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mOTPConfirmationTask = null;
             if (getActivity() != null)

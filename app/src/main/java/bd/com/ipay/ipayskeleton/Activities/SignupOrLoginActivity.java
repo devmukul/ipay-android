@@ -88,7 +88,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         }
     }
 
-    private void switchToLoginFragment() {
+    public void switchToLoginFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new LoginFragment()).commit();
     }

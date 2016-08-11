@@ -49,7 +49,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
     private LoginResponse mLoginResponseModel;
 
     private Button mActivateButton;
-    private Button mResendOTPButton;
+    private TextView mResendOTPButton;
     private EditText mOTPEditText;
     private TextView mTimerTextView;
 
@@ -69,7 +69,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_otp_verification, container, false);
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
-        mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
+        mResendOTPButton = (TextView) v.findViewById(R.id.buttonResend);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
 
@@ -221,7 +221,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mSignUpTask = null;
             mRequestOTPTask = null;
