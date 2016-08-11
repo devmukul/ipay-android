@@ -1,28 +1,50 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvoiceDetailsFragment extends Fragment {
+public class InvoiceDetailsFragment extends Fragment implements HttpResponseListener {
 
+    private final int ACTION_CANCEL_REQUEST = 0;
+
+    private HttpRequestPostAsyncTask mCancelPaymentRequestTask = null;
+    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
+
+    private ProgressDialog mProgressDialog;
     private RecyclerView mReviewRecyclerView;
     private InvoiceReviewAdapter invoiceReviewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -63,6 +85,7 @@ public class InvoiceDetailsFragment extends Fragment {
         temporaryItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
         this.mItemList = temporaryItemList.toArray(new ItemList[temporaryItemList.size()]);
 
+        mProgressDialog = new ProgressDialog(getActivity());
         mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
         invoiceReviewAdapter = new InvoiceReviewAdapter();
         mLayoutManager = new LinearLayoutManager(this.getContext());
@@ -76,7 +99,66 @@ public class InvoiceDetailsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private void cancelRequest(Long id) {
+        if (mCancelPaymentRequestTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
+        mProgressDialog.show();
+
+        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
+                new RequestMoneyAcceptRejectOrCancelRequest(id, null);
+        Gson gson = new Gson();
+        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        mCancelPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
+        mCancelPaymentRequestTask.mHttpResponseListener = this;
+        mCancelPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void httpResponseReceiver(HttpResponseObject result) {
+
+
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mProgressDialog.dismiss();
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+            return;
+        }
+        Gson gson = new Gson();
+
+        if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_PAYMENT_REQUEST)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            PaymentAcceptRejectOrCancelResponse.class);
+                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
+                    ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mCancelPaymentRequestTask = null;
+        }
+    }
+
+    private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int INVOICE_DETAILS_LIST_ITEM_VIEW = 1;
         private static final int INVOICE_DETAILS_LIST_HEADER_VIEW = 2;
@@ -105,6 +187,7 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             private final TextView mVatView;
             private final TextView mTotalView;
             private final TextView mStatusView;
+            private final Button mRejectButton;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -127,6 +210,7 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
                 mTotalView = (TextView) itemView.findViewById(R.id.textview_total);
                 mStatusView = (TextView) itemView.findViewById(R.id.status);
+                mRejectButton = (Button) itemView.findViewById(R.id.button_reject);
 
             }
 
@@ -141,7 +225,7 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             public void bindViewForHeader() {
 
-                if (mItemList == null || mItemList.length ==0) {
+                if (mItemList == null || mItemList.length == 0) {
                     headerView.setVisibility(View.GONE);
                 }
 
@@ -178,11 +262,20 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 } else if (status == Constants.INVOICE_STATUS_CANCELED) {
                     mStatusView.setText(context.getString(R.string.transaction_cancelled));
                     mStatusView.setTextColor(Color.GRAY);
-                }
-                else if (status == Constants.INVOICE_STATUS_DRAFT) {
+                } else if (status == Constants.INVOICE_STATUS_DRAFT) {
                     mStatusView.setText(context.getString(R.string.draft));
                     mStatusView.setTextColor(Color.GRAY);
                 }
+
+                if (status == Constants.INVOICE_STATUS_PROCESSING || status == Constants.INVOICE_STATUS_DRAFT)
+                    mRejectButton.setVisibility(View.VISIBLE);
+
+                mRejectButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAlertDialogue(getString(R.string.cancel_payment_request_confirm), ACTION_CANCEL_REQUEST, id);
+                    }
+                });
             }
 
         }
@@ -270,6 +363,31 @@ private class InvoiceReviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
             return super.getItemViewType(position);
         }
+
+
+        private void showAlertDialogue(String msg, final int action, final long id) {
+            AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+            alertDialogue.setTitle(R.string.confirm_query);
+            alertDialogue.setMessage(msg);
+
+            alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+
+                    if (action == ACTION_CANCEL_REQUEST)
+                        cancelRequest(id);
+
+                }
+            });
+
+            alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Do nothing
+                }
+            });
+
+            alertDialogue.show();
+        }
+
     }
 }
 

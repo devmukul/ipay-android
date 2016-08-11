@@ -1,13 +1,11 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,27 +28,19 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentInvoicesFragment extends ProgressFragment implements HttpResponseListener {
 
-    private final int ACTION_CANCEL_REQUEST = 0;
-
     private HttpRequestPostAsyncTask mPendingInvoicesTask = null;
     private GetPendingPaymentsResponse mGetPendingPaymentsResponse;
-
-    private HttpRequestPostAsyncTask mCancelPaymentRequestTask = null;
-    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mPendingListRecyclerView;
@@ -140,24 +130,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         mPendingInvoicesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void cancelRequest(Long id) {
-        if (mCancelPaymentRequestTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
-        mProgressDialog.show();
-
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id, null);
-        Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mCancelPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
-        mCancelPaymentRequestTask.mHttpResponseListener = this;
-        mCancelPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
@@ -211,37 +183,8 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
 
             mSwipeRefreshLayout.setRefreshing(false);
             mPendingInvoicesTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_PAYMENT_REQUEST)) {
-
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                try {
-                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                            PaymentAcceptRejectOrCancelResponse.class);
-                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
-                    // Refresh the pending list
-                    if (pendingPaymentClasses != null)
-                        pendingPaymentClasses.clear();
-                    pendingPaymentClasses = null;
-                    historyPageCount = 0;
-                    getInvoicesPendingRequests();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
-                }
-
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mCancelPaymentRequestTask = null;
         }
+
         if (pendingPaymentClasses != null && pendingPaymentClasses.size() == 0)
             mEmptyListTextView.setVisibility(View.VISIBLE);
         else mEmptyListTextView.setVisibility(View.GONE);
@@ -262,9 +205,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
             private final ImageView statusView;
             private final TextView loadMoreTextView;
             private final ProfileImageView mProfileImageView;
-
-            private CustomSelectorDialog mCustomSelectorDialog;
-            private List<String> mSentInvoiceActionList;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -293,9 +233,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 final long id = pendingPaymentClasses.get(pos).getId();
                 final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
 
-                mSentInvoiceActionList = new ArrayList<>();
-                mSentInvoiceActionList.add(getString(R.string.view));
-
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                 mSenderNameTextView.setText(name);
@@ -323,39 +260,23 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
                 mTimeTextView.setText(time);
 
-                if (status == Constants.INVOICE_STATUS_PROCESSING || status == Constants.INVOICE_STATUS_DRAFT)
-                    mSentInvoiceActionList.add(getString(R.string.remove));
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mSentInvoiceActionList);
-                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                            @Override
-                            public void onResourceSelected(int selectedIndex, String action) {
-                                if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
-                                    showAlertDialogue(getString(R.string.cancel_payment_request_confirm), ACTION_CANCEL_REQUEST, id);
-
-                                } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
-                                    if (!mSwipeRefreshLayout.isRefreshing()) {
-                                        mTime = time;
-                                        mId = id;
-                                        mAmount = amount;
-                                        mVat = vat;
-                                        mItemList = Arrays.asList(itemList);
-                                        if (title.equals("Invoice")) mDescription = description;
-                                        else mDescription = descriptionofRequest;
-                                        mStatus = status;
-                                        mReceiverName = name;
-                                        mReceiverMobileNumber = mobileNumber;
-                                        mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
-                                        launchInvoiceDetailsFragment();
-                                    }
-                                }
-                            }
-                        });
-                        mCustomSelectorDialog.show();
-
+                        if (!mSwipeRefreshLayout.isRefreshing()) {
+                            mTime = time;
+                            mId = id;
+                            mAmount = amount;
+                            mVat = vat;
+                            mItemList = Arrays.asList(itemList);
+                            if (title.equals("Invoice")) mDescription = description;
+                            else mDescription = descriptionofRequest;
+                            mStatus = status;
+                            mReceiverName = name;
+                            mReceiverMobileNumber = mobileNumber;
+                            mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
+                            launchInvoiceDetailsFragment();
+                        }
                     }
                 });
             }
@@ -454,30 +375,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-    private void showAlertDialogue(String msg, final int action, final long id) {
-        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
-        alertDialogue.setTitle(R.string.confirm_query);
-        alertDialogue.setMessage(msg);
-
-        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-                if (action == ACTION_CANCEL_REQUEST)
-                    cancelRequest(id);
-
-            }
-        });
-
-        alertDialogue.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-            }
-        });
-
-        alertDialogue.show();
-    }
-
-    private void   launchInvoiceDetailsFragment() {
+    private void launchInvoiceDetailsFragment() {
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.DESCRIPTION, mDescription);
