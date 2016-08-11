@@ -83,7 +83,7 @@
                 style="@style/PrimaryTransparentButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/action_login" />
+                android:text="@string/log_in" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
