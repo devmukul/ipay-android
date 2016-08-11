@@ -134,7 +134,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -557,6 +557,9 @@ public class Constants {
 
     public static final int EVENT_STATUS_ACTIVE = 1;
     public static final int EVENT_STATUS_INACTIVE = 2;
+
+    public static final String LINK_BANK = "LINK_BANK";
+    public static final String VERIFY_BANK = "VERIFY_BANK";
 
     public static final String INTRODUCTION_REQUEST_STATUS_PENDING = "PENDING";
     public static final String INTRODUCTION_REQUEST_STATUS_REJECTED = "REJECTED";

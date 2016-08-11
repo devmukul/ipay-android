@@ -103,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_email"
-                android:text="@string/email" />
+                android:text="@string/email_address" />
 
             <View
                 android:layout_width="wrap_content"
@@ -116,6 +116,19 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_signup_add1"
                 android:text="@string/address" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+
+            <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+                android:id="@+id/documents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_doc"
+                android:text="@string/profile_documents" />
 
             <View
                 android:layout_width="wrap_content"
@@ -135,16 +148,18 @@
                 android:background="@color/colorDivider" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
-                android:id="@+id/documents"
+                android:id="@+id/manage_employees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_doc"
-                android:text="@string/profile_documents" />
+                android:drawableLeft="@drawable/ic_completeness"
+                android:text="@string/manage_people"
+                android:visibility="gone" />
 
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/divider_space"
                 android:background="@color/colorDivider" />
+
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/profile_completion"

@@ -54,6 +54,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private IconifiedTextViewWithButton mIntroducer;
     private IconifiedTextViewWithButton mAddress;
     private IconifiedTextViewWithButton mProfileCompleteness;
+    private IconifiedTextViewWithButton mManageEmployee;
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
     private SetProfilePictureResponse mSetProfilePictureResponse;
 
@@ -84,11 +85,15 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mIntroducer = (IconifiedTextViewWithButton) v.findViewById(R.id.introducer);
         mDocuments = (IconifiedTextViewWithButton) v.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
+        mManageEmployee = (IconifiedTextViewWithButton) v.findViewById(R.id.manage_employees);
+
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
-            mBasicInfo.setText(getString(R.string.owner_info));
+            mManageEmployee.setVisibility(View.VISIBLE);
+            mAddress.setVisibility(View.GONE);
         } else {
-            mBasicInfo.setText(getString(R.string.basic_info));
+            mManageEmployee.setVisibility(View.GONE);
+            mAddress.setVisibility(View.VISIBLE);
         }
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -116,7 +121,8 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mBasicInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
+                if (ProfileInfoCacheManager.isBusinessAccount()) ((ProfileActivity) getActivity()).switchToBusinessBasicInfoHolderFragment();
+                else ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
             }
         });
 
@@ -152,6 +158,13 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             @Override
             public void onClick(View view) {
                 ((ProfileActivity) getActivity()).switchToProfileCompletionFragment();
+            }
+        });
+
+        mManageEmployee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
             }
         });
 

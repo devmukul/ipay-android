@@ -520,7 +520,7 @@
 
     <style name="AddressViewHeader">
         <item name="android:textSize">@dimen/text_size_small_medium_value18</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">#323232</item>
     </style>
 
     <style name="RowButton" parent="@style/Widget.AppCompat.Button.Borderless">
