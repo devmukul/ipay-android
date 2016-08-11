@@ -266,30 +266,31 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             String myDeviceID = "mobile-android-";
             myDeviceID = myDeviceID.concat(DeviceInfoFactory.getDeviceId(getActivity()));
 
-            if (myDeviceID.equals(deviceID)) {
-                deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
-            }
-
             deviceNameView.setText(trustedDevice.getDeviceName());
             grantTimeView.setText(trustedDevice.getCreatedTimeString());
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mTrustedDeviceActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_action));
-                    mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), trustedDevice.getDeviceName(), mTrustedDeviceActionList);
-                    mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                        @Override
-                        public void onResourceSelected(int selectedIndex, String mName) {
-                            if (selectedIndex == ACTION_REMOVE) {
-                                showTrustedDeviceRemoveConfirmationDialog(
-                                        trustedDevice.getId(), trustedDevice.getDeviceName());
-                            }
-                        }
-                    });
-                    mCustomSelectorDialog.show();
 
-                }
-            });
+            if (myDeviceID.equals(deviceID)) {
+                deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
+            } else {
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mTrustedDeviceActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_action));
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), trustedDevice.getDeviceName(), mTrustedDeviceActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int selectedIndex, String mName) {
+                                if (selectedIndex == ACTION_REMOVE) {
+                                    showTrustedDeviceRemoveConfirmationDialog(
+                                            trustedDevice.getId(), trustedDevice.getDeviceName());
+                                }
+                            }
+                        });
+                        mCustomSelectorDialog.show();
+
+                    }
+                });
+            }
 
             return view;
         }
