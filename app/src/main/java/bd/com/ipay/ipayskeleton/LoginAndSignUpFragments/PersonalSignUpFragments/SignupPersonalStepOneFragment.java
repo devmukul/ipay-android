@@ -55,7 +55,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private EditText mBirthdayEditText;
     private EditText mGenderEditText;
     private ImageView mCrossButton;
-
+    private Button mLoginButton;
     private String[] mWeekArray;
     private String mDeviceID;
     private String mDOB;
@@ -94,6 +94,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mGenderEditText = (EditText) v.findViewById(R.id.genderEditText);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
+        mLoginButton = (Button) v.findViewById(R.id.button_log_in);
 
         mNameView.requestFocus();
 
@@ -149,6 +150,13 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             @Override
             public void onClick(View v) {
                 ((SignupOrLoginActivity) getActivity()).switchToTourActivity();
+            }
+        });
+
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
             }
         });
 

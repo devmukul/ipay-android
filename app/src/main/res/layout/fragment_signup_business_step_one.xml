@@ -230,5 +230,38 @@
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:text="@string/continue_sign_up" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/activity_horizontal_margin_card">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/value2"
+                android:layout_marginLeft="5dp"
+                android:text="@string/already_have_an_account"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/button_log_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="left|center_vertical"
+                android:minHeight="@dimen/value0"
+                android:minWidth="@dimen/value0"
+                android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingRight="@dimen/activity_horizontal_margin_card"
+                android:paddingTop="@dimen/activity_horizontal_margin_card"
+                android:text="@string/log_in"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_small" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -61,6 +61,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
 
+        Utilities.showKeyboard(getActivity());
+
         if (pref.contains(Constants.USERID)) {
             mPasswordEditText.setText("");
             mPasswordEditText.requestFocus();

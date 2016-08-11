@@ -244,6 +244,7 @@
     <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
     <string name="oath_sign_up"><![CDATA[By selecting Next & Verify I agree to the]]> </string>
+    <string name="already_have_an_account">"Already have an account?"</string>
     <string name="check_if_addresses_are_same">Check if address of account holder is same as business address.</string>
     <string name="ipay_balance">iPay Balance</string>
     <string name="balance">Balance</string>
