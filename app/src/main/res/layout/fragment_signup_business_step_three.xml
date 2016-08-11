@@ -74,6 +74,33 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/CustomTextInputLayoutWithMargin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:theme="@style/CustomTextInputLayout">
+
+                        <EditText
+                            android:id="@+id/birthdayEditText"
+                            style="@style/CustomEditTextLogInSignUp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:hint="@string/birthday_dd_mm_yy"
+                            android:inputType="date"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_small_medium" />
+                    </android.support.design.widget.TextInputLayout>
+                </RelativeLayout>
+
+                <View style="@style/DividerOnly" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/value5"
                     android:paddingTop="@dimen/value5">
@@ -120,32 +147,6 @@
 
                 <View style="@style/DividerOnly" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <android.support.design.widget.TextInputLayout
-                        style="@style/CustomTextInputLayoutWithMargin"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:theme="@style/CustomTextInputLayout">
-
-                        <EditText
-                            android:id="@+id/birthdayEditText"
-                            style="@style/CustomEditTextLogInSignUp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:focusable="false"
-                            android:hint="@string/birthday_dd_mm_yy"
-                            android:inputType="date"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textSize="@dimen/text_size_small_medium" />
-                    </android.support.design.widget.TextInputLayout>
-
-
-                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
