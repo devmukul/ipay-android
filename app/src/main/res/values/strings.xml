@@ -30,6 +30,7 @@
     <string name="confirm_new_pass">Confirm new password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="email">Email</string>
+    <string name="email_address">Email Address</string>
     <string name="full_name">Full Name</string>
     <string name="address">Address</string>
     <string name="address_line_1">Address Line 1</string>
@@ -133,6 +134,8 @@
     <string name="please_select_a_branch">Please select a branch</string>
     <string name="please_enter_an_account_number">Please provide your Account Number and try again</string>
     <string name="business_information">Business Information</string>
+    <string name="organization_information">Organization Information</string>
+    <string name="organization_address">Organization address</string>
     <string name="account_holder_information">Information of Account Holder</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -521,6 +524,7 @@
     <string name="not_a_valid_invoice_id">Please scan a valid invoice Id</string>
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
     <string name="profile_completeness">Profile Completeness</string>
+    <string name="business_contact">Business Contact</string>
     <string name="edit_basic_info">Edit Basic Info</string>
     <string name="edit_address">Edit Address</string>
     <string name="you_need_to_have">You need to have at least&#160;</string>
@@ -556,6 +560,8 @@
     <string name="request_money_from_your_friends_when_you_are_in_need">Request Money from your friends when you are in need.</string>
     <string name="make_payments_for_your_purchases">Make Payments for your purchases.</string>
     <string name="business_name">Name</string>
+    <string name="office_info">Office Information</string>
+    <string name="contact_info">Contact Information</string>
     <string name="business_type">Business Type</string>
     <string name="not_a_business_user">This person is not a business user. You can only make payment to a business user</string>
     <string name="failed_loading_business_type">Loading failed</string>
@@ -572,7 +578,7 @@
     <string name="user_has_no_ipay_account">Sorry, this user has no iPay account</string>
     <string name="preparing">Preparing</string>
     <string name="see_other_activity">See Other Activity</string>
-    <string name="manage_employees">Manage Employees</string>
+    <string name="manage_people">Manage People</string>
     <string name="received_request">Received Requests</string>
     <string name="sent_request">Sent Requests</string>
     <string name="manage_bank_accounts">Manage Bank Accounts</string>
@@ -595,7 +601,7 @@
     <string name="loading_rejecting_invitation">Rejecting invitation...</string>
     <string name="loading_marking_invitation_as_spam">Marking invitation as spam...</string>
     <string name="failed_confirming_business_invitation">Failed to confirm business invitation</string>
-    <string name="edit_business_information">Edit Business Information</string>
+    <string name="edit_office_information">Edit Office Information</string>
     <string name="get_balance">Get Balance</string>
     <string name="get_transactions">Get Transactions</string>
     <string name="friend_read">Friend Read</string>

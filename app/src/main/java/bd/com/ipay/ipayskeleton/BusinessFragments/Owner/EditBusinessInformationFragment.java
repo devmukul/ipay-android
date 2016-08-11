@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -57,7 +58,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_business_information, container, false);
-        getActivity().setTitle(R.string.edit_business_information);
+        getActivity().setTitle(R.string.edit_office_information);
 
         mBusinessNameEditText = (EditText) v.findViewById(R.id.business_name);
         mBusinessMobileNumberEditText = (EditText) v.findViewById(R.id.business_mobile_number);
@@ -194,7 +195,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetBusinessInformationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((BusinessActivity) getActivity()).switchToBusinessInformationFragment();
+                        ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
                     }
                 } else {
                     if (getActivity() != null)

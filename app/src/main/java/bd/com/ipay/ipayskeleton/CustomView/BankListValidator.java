@@ -56,7 +56,7 @@ public class BankListValidator {
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                     activity.onBackPressed();
                     Intent intent = new Intent(activity, ProfileActivity.class);
-                    intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.LINK_AND_VERIFY_BANK);
+                    intent.putExtra(Constants.TARGET_FRAGMENT, Constants.LINK_BANK);
                     activity.startActivity(intent);
                 }
             })
@@ -82,7 +82,7 @@ public class BankListValidator {
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         activity.onBackPressed();
                         Intent intent = new Intent(activity, ProfileActivity.class);
-                        intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.LINK_AND_VERIFY_BANK);
+                        intent.putExtra(Constants.TARGET_FRAGMENT, Constants.VERIFY_BANK);
                         activity.startActivity(intent);
                     }
                 })

@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -55,13 +56,13 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_employee_management, container, false);
-        getActivity().setTitle(R.string.manage_employees);
+        getActivity().setTitle(R.string.manage_people);
 
         mFabAddNewEmployee = (FloatingActionButton) v.findViewById(R.id.fab_add_employee);
         mFabAddNewEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((BusinessActivity) getActivity()).switchToEmployeeInformationFragment(null);
+                ((ProfileActivity) getActivity()).switchToEmployeeInformationFragment(null);
             }
         });
 
@@ -258,13 +259,13 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                                 } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
-                                    ((BusinessActivity) getActivity()).switchToEmployeeInformationDetailsFragment(bundle);
+                                    ((ProfileActivity) getActivity()).switchToEmployeeInformationDetailsFragment(bundle);
                                 } else if (Constants.ACTION_TYPE_EDIT.equals(action)) {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
                                     bundle.putString(Constants.MOBILE_NUMBER, employee.getMobileNumber());
                                     bundle.putString(Constants.DESIGNATION, employee.getDesignation());
-                                    ((BusinessActivity) getActivity()).switchToEditEmployeeInformationFragment(bundle);
+                                    ((ProfileActivity) getActivity()).switchToEditEmployeeInformationFragment(bundle);
                                 }
                             }
                         });

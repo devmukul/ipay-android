@@ -23,10 +23,6 @@
             android:icon="@drawable/ic_log"
             android:title="@string/activity_log" />
         <item
-            android:id="@+id/nav_manage_business"
-            android:icon="@drawable/ic_manage_business_white"
-            android:title="@string/manage_business" />
-        <item
             android:id="@+id/nav_invite"
             android:icon="@drawable/ic_invitew"
             android:visible="true"

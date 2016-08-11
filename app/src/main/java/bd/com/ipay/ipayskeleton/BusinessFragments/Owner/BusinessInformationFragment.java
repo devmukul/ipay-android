@@ -4,11 +4,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,12 +16,21 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -34,6 +41,28 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private TextView mBusinessMobileNumberView;
     private TextView mBusinessEmailView;
     private TextView mBusinessTypeView;
+
+    private HttpRequestGetAsyncTask mGetUserAddressTask = null;
+    private GetUserAddressResponse mGetUserAddressResponse = null;
+
+    private HttpRequestGetAsyncTask mGetThanaListAsyncTask = null;
+    private GetThanaResponse mGetThanaResponse;
+
+    private HttpRequestGetAsyncTask mGetDistrictListAsyncTask = null;
+    private GetDistrictResponse mGetDistrictResponse;
+
+    private AddressClass mOfficeAddress;
+
+    private TextView mOfficeAddressView;
+
+    private View mOfficeAddressHolder;
+
+    private ImageButton mOfficeAddressEditButton;
+    private ImageButton mOfficeInfoEditButton;
+
+    private List<Thana> mThanaList;
+    private List<District> mDistrictList;
+
 
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
@@ -53,6 +82,23 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mBusinessEmailView = (TextView) v.findViewById(R.id.textview_business_email);
         mBusinessTypeView = (TextView) v.findViewById(R.id.textview_business_type);
 
+        mOfficeAddressView = (TextView) v.findViewById(R.id.textview_office_address);
+
+        mOfficeAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_address);
+        mOfficeInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_information);
+
+        mOfficeAddressHolder = v.findViewById(R.id.office_address_holder);
+
+        if ( ProfileInfoCacheManager.isAccountVerified()) {
+            mOfficeAddressEditButton.setVisibility(View.GONE);
+            mOfficeInfoEditButton.setVisibility(View.GONE);
+        } else {
+            mOfficeAddressEditButton.setVisibility(View.VISIBLE);
+            mOfficeInfoEditButton.setVisibility(View.VISIBLE);
+        }
+
+        getDistrictList();
+
         setHasOptionsMenu(true);
 
         return v;
@@ -67,22 +113,56 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         getBusinessInformation();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    private void loadAddresses() {
 
-        if (!ProfileInfoCacheManager.isAccountVerified())
-            inflater.inflate(R.menu.edit, menu);
+        if (mOfficeAddress == null) {
+            mOfficeAddressView.setVisibility(View.GONE);
+        } else {
+            mOfficeAddressHolder.setVisibility(View.VISIBLE);
+            mOfficeAddressView.setText(mOfficeAddress.toString(mThanaList, mDistrictList));
+        }
+
+        final Bundle officeAddressBundle = new Bundle();
+        officeAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_OFFICE);
+        if (mOfficeAddress != null)
+            officeAddressBundle.putSerializable(Constants.ADDRESS, mOfficeAddress);
+
+        mOfficeAddressEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ProfileActivity) getActivity()).switchToEditAddressFragment(officeAddressBundle);
+            }
+        });
+
+        mOfficeInfoEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchEditBusinessInformationFragment();
+            }
+        });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_edit) {
-            launchEditBusinessInformationFragment();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+
+    private void getThanaList() {
+        mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
+                new ThanaRequestBuilder().getGeneratedUri(), getActivity(), this);
+        mGetThanaListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getDistrictList() {
+        mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
+                new DistrictRequestBuilder().getGeneratedUri(), getActivity(), this);
+        mGetDistrictListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getUserAddress() {
+        if (mGetUserAddressTask != null) {
+            return;
         }
+
+        mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, getActivity(), this);
+        mGetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void launchEditBusinessInformationFragment() {
@@ -99,7 +179,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         bundle.putInt(Constants.BUSINESS_TYPE, mGetBusinessInformationResponse.getBusinessType());
         bundle.putParcelableArrayList(Constants.BUSINESS_TYPE_LIST, new ArrayList<>(mBusinessTypes));
 
-        ((BusinessActivity) getActivity()).switchToEditBusinessInformationFragment(bundle);
+        ((ProfileActivity) getActivity()).switchToEditBusinessInformationFragment(bundle);
     }
 
     private void getBusinessInformation() {
@@ -145,10 +225,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetBusinessInformationAsyncTask = null;
+            mGetUserAddressTask = null;
+            mGetDistrictListAsyncTask = null;
+            mGetThanaListAsyncTask = null;
 
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-                ((BusinessActivity) getActivity()).switchToBusinessFragment();
+                ((ProfileActivity) getActivity()).switchToBusinessBasicInfoHolderFragment();
+                ;
             }
 
             return;
@@ -156,26 +240,101 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_INFORMATION)) {
-            try {
-                mGetBusinessInformationResponse = gson.fromJson(result.getJsonString(), GetBusinessInformationResponse.class);
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_BUSINESS_INFORMATION:
+                try {
+                    mGetBusinessInformationResponse = gson.fromJson(result.getJsonString(), GetBusinessInformationResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    processBusinessInformationResponse();
-                } else {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        processBusinessInformationResponse();
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
 
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                mGetBusinessInformationAsyncTask = null;
+                break;
+
+            case Constants.COMMAND_GET_USER_ADDRESS_REQUEST:
+                try {
+                    mGetUserAddressResponse = gson.fromJson(result.getJsonString(), GetUserAddressResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mOfficeAddress = mGetUserAddressResponse.getOfficeAddress();
+
+                        loadAddresses();
+                        setContentShown(true);
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                            getActivity().onBackPressed();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                        getActivity().onBackPressed();
+                    }
                 }
-            }
 
-            mGetBusinessInformationAsyncTask = null;
+                mGetUserAddressTask = null;
+
+                break;
+            case Constants.COMMAND_GET_THANA_LIST:
+                try {
+                    mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mThanaList = mGetThanaResponse.getThanas();
+                        getUserAddress();
+
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                            getActivity().onBackPressed();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                        getActivity().onBackPressed();
+                    }
+                }
+
+                mGetThanaListAsyncTask = null;
+                break;
+            case Constants.COMMAND_GET_DISTRICT_LIST:
+                try {
+                    mGetDistrictResponse = gson.fromJson(result.getJsonString(), GetDistrictResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mDistrictList = mGetDistrictResponse.getDistricts();
+                        getThanaList();
+
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                            getActivity().onBackPressed();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                        getActivity().onBackPressed();
+                    }
+                }
+
+                mGetDistrictListAsyncTask = null;
+                break;
         }
     }
 }

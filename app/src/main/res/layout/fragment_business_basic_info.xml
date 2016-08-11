@@ -14,16 +14,21 @@
         android:paddingTop="@dimen/value4"
         android:text="@string/business_information" />
 
-    <View style="@style/DividerWithoutMargin" />
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/divider_space"
+        android:background="@color/colorDivider" />
+
 
     <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
-        android:id="@+id/button_manage_employees"
+        android:id="@+id/business_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_manageemployees"
+        android:drawableLeft="@drawable/ic_bizinfo"
         android:paddingBottom="@dimen/value4"
         android:paddingTop="@dimen/value4"
-        android:text="@string/manage_employees" />
+        android:text="@string/business_contact" />
 
-    <View style="@style/DividerWithoutMargin" />
+
 </LinearLayout>
+

@@ -222,12 +222,6 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".Activities.DocumentPreviewActivity" />
         <activity
-            android:name=".BusinessFragments.Owner.BusinessActivity"
-            android:label="@string/manage_business"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
             android:name=".Activities.DrawerActivities.AboutActivity"
             android:label="@string/about"
             android:screenOrientation="portrait"

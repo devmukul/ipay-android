@@ -7,33 +7,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
 
-public class BusinessFragment extends Fragment {
+public class BusinessBasicInfoFragment extends Fragment {
     private IconifiedTextViewWithButton mBusinessInformationButton;
-    private IconifiedTextViewWithButton mManageEmployeeButton;
+    private IconifiedTextViewWithButton mBusinessContact;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_business, container, false);
-        getActivity().setTitle(R.string.manage_business);
+        View v = inflater.inflate(R.layout.fragment_business_basic_info, container, false);
+        getActivity().setTitle(R.string.basic_info);
 
         mBusinessInformationButton = (IconifiedTextViewWithButton) v.findViewById(R.id.button_business_information);
-        mManageEmployeeButton = (IconifiedTextViewWithButton) v.findViewById(R.id.button_manage_employees);
+        mBusinessContact = (IconifiedTextViewWithButton) v.findViewById(R.id.business_contact);
 
         mBusinessInformationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((BusinessActivity) getActivity()).switchToBusinessInformationFragment();
+                ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
             }
         });
 
-        mManageEmployeeButton.setOnClickListener(new View.OnClickListener() {
+        mBusinessContact.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ((BusinessActivity) getActivity()).switchToEmployeeManagementFragment();
+            public void onClick(View view) {
+                ((ProfileActivity) getActivity()).switchToBusinessContactFragment();
             }
         });
 

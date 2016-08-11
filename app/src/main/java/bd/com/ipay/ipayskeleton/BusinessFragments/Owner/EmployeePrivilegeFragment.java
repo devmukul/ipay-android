@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
@@ -40,10 +41,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.UpdateEmployeeResp
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-/**
- * Contained in {@link BusinessActivity}
- * Previous Fragment: {@link CreateEmployeeFragment}
- */
 public class EmployeePrivilegeFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mCreateEmployeeAsyncTask;
@@ -138,7 +135,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
     }
 
     private void setRolesAdapter() {
-        roleSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_an_institution), BusinessActivity.mAllRoleList, mSelectedRoleId);
+        roleSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_role), ProfileActivity.mAllRoleList, mSelectedRoleId);
         roleSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -146,7 +143,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                 roleSelection.setText(name);
                 mSelectedRoleId = id;
                 mSelectedRoleName = name;
-                mPrivilegeList = Arrays.asList(BusinessActivity.mRolePrivilegeMap.get(id));
+                mPrivilegeList = Arrays.asList(ProfileActivity.mRolePrivilegeMap.get(id));
             }
         });
 
@@ -227,7 +224,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            ((BusinessActivity) getActivity()).switchToEmployeeManagementFragment();
+                            ((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
                         }
                     } else {
                         if (getActivity() != null) {
@@ -247,7 +244,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            ((BusinessActivity) getActivity()).switchToEmployeeManagementFragment();
+                            ((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
                         }
                     } else {
                         if (getActivity() != null) {
@@ -281,7 +278,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                             mSelectedRoleId = mEmployeeDetails.getRoleId();
 
                             // Get the name of the Role
-                            for (Role role : BusinessActivity.mAllRoleList) {
+                            for (Role role : ProfileActivity.mAllRoleList) {
                                 if (role.getId() == mSelectedRoleId) {
                                     mSelectedRoleName = role.getName();
                                     break;
@@ -291,7 +288,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                             // Set the role selector
                             roleSelection.setText(mSelectedRoleName);
 
-                            mPrivilegeList = Arrays.asList(BusinessActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
+                            mPrivilegeList = Arrays.asList(ProfileActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
                             mEmployeePrivilegeAdapter.notifyDataSetChanged();
 
                         }

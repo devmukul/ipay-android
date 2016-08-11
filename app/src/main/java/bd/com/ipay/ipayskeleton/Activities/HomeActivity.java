@@ -48,7 +48,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessActivity;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
@@ -154,8 +153,6 @@ public class HomeActivity extends BaseActivity
         mDeviceID = DeviceInfoFactory.getDeviceId(HomeActivity.this);
 
         pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
-
-        setDrawerMenuVisibility(R.id.nav_manage_business, ProfileInfoCacheManager.isBusinessAccount());
 
         // Initialize token timer
         CountDownTimer tokenTimer = new CountDownTimer(TokenManager.getiPayTokenTimeInMs() - 10000, 1000) {
@@ -373,9 +370,6 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    private void setDrawerMenuVisibility(int id, boolean visible) {
-        mNavigationView.getMenu().findItem(id).setVisible(visible);
-    }
 
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
@@ -417,11 +411,6 @@ public class HomeActivity extends BaseActivity
             Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
-
-        } else if (id == R.id.nav_manage_business) {
-
-            Intent intent = new Intent(this, BusinessActivity.class);
-            startActivity(intent);
 
         } else if (id == R.id.nav_event) {
 
