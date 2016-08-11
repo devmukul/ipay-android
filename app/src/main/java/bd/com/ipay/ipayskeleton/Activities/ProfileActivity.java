@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -162,7 +163,8 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
                     fragment = new TrustedNetworkFragment();
                     break;
                 case BASIC_PROFILE:
-                    fragment = new BasicInfoFragment();
+                    if (ProfileInfoCacheManager.isBusinessAccount()) fragment = new BusinessContactFragment();
+                    else fragment = new BasicInfoFragment();
                     break;
                 case BUSINESS_INFO:
                     fragment = new BusinessInformationFragment();
@@ -179,8 +181,11 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
                     fragment = new IdentificationHolderFragment();
                     break;
                 case PERSONAL_ADDRESS:
+                    if (ProfileInfoCacheManager.isBusinessAccount()) fragment = new BusinessContactFragment();
+                    else fragment = new AddressFragment();
+                    break;
                 case BUSINESS_ADDRESS:
-                    fragment = new AddressFragment();
+                    fragment = new BusinessInformationFragment();
                     break;
                 case VERIFIED_EMAIL:
                     fragment = new EmailFragment();
