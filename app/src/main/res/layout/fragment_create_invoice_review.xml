@@ -124,35 +124,44 @@
                     style="@style/TextViewInfoColorPrimary" />
 
             </LinearLayout>
-
-            <View style="@style/Divider" />
-
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/value4"
+            android:background="@color/colorDividerGapGray" />
+
         <LinearLayout
+            android:id="@+id/layout_description_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/value12"
-            android:layout_marginTop="@dimen/value10"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textview_title"
+                style="@style/ListHeaderStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/value2"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:textSize="@dimen/text_size_small_medium"
-                android:textStyle="bold" />
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:text="@string/title" />
+
+            <TextView
+                android:id="@+id/textview_title"
+                style="@style/TextViewDescription" />
+
+            <TextView
+                style="@style/ListHeaderStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:text="@string/note" />
 
             <TextView
                 android:id="@+id/textview_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/value2" />
+                style="@style/TextViewDescription" />
+
         </LinearLayout>
 
         <Button

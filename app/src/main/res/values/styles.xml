@@ -236,11 +236,15 @@
     <style name="TextViewDescription" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">@dimen/value20</item>
-        <item name="android:layout_marginLeft">@dimen/value15</item>
-        <item name="android:layout_marginRight">@dimen/value15</item>
-        <item name="android:layout_marginTop">@dimen/value20</item>
-        <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:layout_marginBottom">@dimen/value10</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:paddingTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingBottom">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:background">@drawable/background_transparent_with_border_gray</item>
     </style>
 
     <style name="CheckBoxStyle" parent="@android:style/Widget.Button">
@@ -266,17 +270,14 @@
     <!-- Document Upload -->
 
     <style name="ListHeaderStyle">
-        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin_semi_double</item>
-        <item name="android:layout_marginBottom">@dimen/value5</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:paddingLeft">@dimen/value10</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin_card</item>
-        <item name="android:paddingTop">@dimen/value5</item>
-        <item name="android:paddingBottom">@dimen/value5</item>
+        <item name="android:paddingTop">@dimen/value10</item>
+        <item name="android:paddingBottom">@dimen/value10</item>
         <item name="android:gravity">left</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
     </style>
+
 
     <style name="ListHeaderStyleWithTopMargin">
         <item name="android:layout_marginTop">@dimen/activity_vertical_margin_card</item>
@@ -477,7 +478,7 @@
     <style name="ReviewImageStyle">
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin_double</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginTop">@dimen/value18</item>
         <item name="android:layout_marginBottom">24dp</item>
         <item name="android:layout_width">74dp</item>
         <item name="android:layout_height">74dp</item>

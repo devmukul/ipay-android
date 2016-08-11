@@ -214,6 +214,7 @@
     <string name="request_money">Request Money</string>
     <string name="requesting_money">Money request processing...</string>
     <string name="add_money">Add Money</string>
+    <string name="title">Title</string>
     <string name="note">Note</string>
     <string name="additional_info">Additional Information</string>
     <string name="withdraw_money">Withdraw Money</string>

@@ -117,9 +117,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/value15"
+            android:layout_height="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/value4"
-            android:background="@color/colorLightGray" />
+            android:background="@color/colorDividerGapGray" />
 
         <include layout="@layout/view_transaction_details_education_payment" />
 
@@ -175,9 +175,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/value15"
+            android:layout_height="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/value4"
-            android:background="@color/colorLightGray" />
+            android:background="@color/colorDividerGapGray" />
 
         <LinearLayout
             android:id="@+id/purpose_layout"

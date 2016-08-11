@@ -18,10 +18,10 @@
     <View style="@style/Divider" />
 
     <LinearLayout
+        android:id="@+id/service_charge_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/service_charge_layout">
+        android:orientation="vertical">
 
         <LinearLayout style="@style/LinearLayoutHolder">
 
@@ -64,7 +64,6 @@
 
     </LinearLayout>
 
-    <View style="@style/Divider" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -84,6 +83,12 @@
             <requestFocus />
         </EditText>
     </android.support.design.widget.TextInputLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/value4"
+        android:background="@color/colorDividerGapGray" />
 
     <LinearLayout
         android:id="@+id/layout_description_holder"
