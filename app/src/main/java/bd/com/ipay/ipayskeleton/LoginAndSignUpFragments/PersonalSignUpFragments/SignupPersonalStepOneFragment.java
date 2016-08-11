@@ -246,7 +246,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
             cancel = true;
-            
+
         } else if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
             //mGenderEditText.setError(getString(R.string.please_select_a_gender));
             Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
