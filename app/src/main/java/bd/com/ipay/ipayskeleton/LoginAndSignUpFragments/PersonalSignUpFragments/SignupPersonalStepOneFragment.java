@@ -56,7 +56,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private EditText mGenderEditText;
     private ImageView mCrossButton;
     private Button mLoginButton;
-    private String[] mWeekArray;
     private String mDeviceID;
     private String mDOB;
     private ProgressDialog mProgressDialog;
@@ -167,6 +166,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
+                    String[] mWeekArray, mMonthArray;
                     String birthDate, birthMonth, birthYear;
                     int dayofweek;
 
@@ -174,6 +174,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                     mMonth = monthOfYear + 1;
                     mDay = dayOfMonth;
                     mWeekArray = getResources().getStringArray(R.array.day_of_week);
+                    mMonthArray = getResources().getStringArray(R.array.month_name);
 
                     if (mDay < 10) birthDate = "0" + mDay;
                     else birthDate = mDay + "";
@@ -187,7 +188,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
                     mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
                     mBirthdayEditText.setError(null);
-                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDOB);
+                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + mMonthArray[mMonth - 1] + " , " + mYear);
                 }
             };
 

@@ -55,9 +55,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private CheckBox mFemaleCheckBox;
     private TextView mTermsConditions;
     private TextView mPrivacyPolicy;
-    private Spinner mGenderSpinner;
 
-    private String[] mWeekArray;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -242,6 +240,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
+                    String[] mWeekArray, mMonthArray;
                     String birthDate, birthMonth, birthYear;
                     int dayofweek;
 
@@ -249,6 +248,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                     mMonth = monthOfYear + 1;
                     mDay = dayOfMonth;
                     mWeekArray = getResources().getStringArray(R.array.day_of_week);
+                    mMonthArray = getResources().getStringArray(R.array.month_name);
 
                     if (mDay < 10) birthDate = "0" + mDay;
                     else birthDate = mDay + "";
@@ -262,7 +262,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
 
                     mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
                     mBirthdayEditText.setError(null);
-                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDOB);
+                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + mMonthArray[mMonth - 1] + " , " + mYear);
                 }
             };
 

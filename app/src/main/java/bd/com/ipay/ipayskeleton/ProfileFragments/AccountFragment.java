@@ -41,7 +41,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private TextView mMobileNumberView;
     private TextView mProfileCompletionStatusView;
     private ImageView mVerificationStatusView;
-
+    private View mDividerMAnageEmployee;
     private String mName = "";
     private String mMobileNumber = "";
     private String mProfilePicture = "";
@@ -78,6 +78,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mProfileCompletionStatusView = (TextView) v.findViewById(R.id.textview_profile_completion_status);
         mVerificationStatusView = (ImageView) v.findViewById(R.id.textview_verification_status);
+        mDividerMAnageEmployee = v.findViewById(R.id.divider_manage_employee);
 
         mBasicInfo = (IconifiedTextViewWithButton) v.findViewById(R.id.basic_info);
         mEmail = (IconifiedTextViewWithButton) v.findViewById(R.id.email);
@@ -90,9 +91,11 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             mManageEmployee.setVisibility(View.VISIBLE);
+            mDividerMAnageEmployee.setVisibility(View.VISIBLE);
             mAddress.setVisibility(View.GONE);
         } else {
             mManageEmployee.setVisibility(View.GONE);
+            mDividerMAnageEmployee.setVisibility(View.GONE);
             mAddress.setVisibility(View.VISIBLE);
         }
 
@@ -121,7 +124,8 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mBasicInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ProfileInfoCacheManager.isBusinessAccount()) ((ProfileActivity) getActivity()).switchToBusinessBasicInfoHolderFragment();
+                if (ProfileInfoCacheManager.isBusinessAccount())
+                    ((ProfileActivity) getActivity()).switchToBusinessBasicInfoHolderFragment();
                 else ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
             }
         });
