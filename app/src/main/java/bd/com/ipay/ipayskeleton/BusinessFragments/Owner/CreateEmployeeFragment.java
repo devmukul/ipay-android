@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResp
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateEmployeeFragment extends Fragment implements HttpResponseListener {
 
@@ -81,6 +82,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
                 if (verifyUserInputs()) {
                     String mobileNumber = ContactEngine.formatMobileNumberBD(
                             mMobileNumberEditText.getText().toString().trim());
+                    Utilities.hideKeyboard(getActivity());
                     getProfileInfo(mobileNumber);
                 }
             }
