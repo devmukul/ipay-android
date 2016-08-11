@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -25,12 +26,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.EmployeeDetails;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetEmployeeDetailsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Privilege;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.PrivilegeConstants;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class SetEmployeeRolesFragment extends Fragment implements HttpResponseListener {
+public class EmployeeDetailsFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mEmployeeDetailsAsyncTask;
     private GetEmployeeDetailsResponse mGetEmployeeDetailsResponse;
@@ -38,7 +38,7 @@ public class SetEmployeeRolesFragment extends Fragment implements HttpResponseLi
     private EmployeeDetails mEmployeeDetails;
     private EmployeeDetailsAdapter mEmployeeDetailsAdapter;
 
-    private List<Privilege> mPrivilegeList;
+    private List<String> mPrivilegeList;
     private long mAssociationId;
 
     private ProfileImageView mProfilePictureView;
@@ -56,7 +56,8 @@ public class SetEmployeeRolesFragment extends Fragment implements HttpResponseLi
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mAssociationId = getArguments().getLong(Constants.ASSOCIATION_ID);
+        if (getArguments() != null)
+            mAssociationId = getArguments().getLong(Constants.ASSOCIATION_ID);
         getEmployeeDetails(mAssociationId);
 
         mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
@@ -71,15 +72,15 @@ public class SetEmployeeRolesFragment extends Fragment implements HttpResponseLi
         return v;
     }
 
-    private void getEmployeeDetails(long assotiationId){
-        if(mEmployeeDetailsAsyncTask != null){
+    private void getEmployeeDetails(long assotiationId) {
+        if (mEmployeeDetailsAsyncTask != null) {
             return;
         }
 
         mProgressDialog.setMessage(getString(R.string.preparing));
         mProgressDialog.show();
         mEmployeeDetailsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMPLOYEE_DETAILS,
-                 Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_DETAILS + assotiationId, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_DETAILS + assotiationId, getActivity());
         mEmployeeDetailsAsyncTask.mHttpResponseListener = this;
         mEmployeeDetailsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -110,10 +111,11 @@ public class SetEmployeeRolesFragment extends Fragment implements HttpResponseLi
                         mNameView.setText(mEmployeeDetails.getName());
                         mMobileNumberView.setText(mEmployeeDetails.getMobileNumber());
 
-                        if (!mEmployeeDetails.getDesignation().equals("")) mDesignationView.setText(mEmployeeDetails.getDesignation());
+                        if (!mEmployeeDetails.getDesignation().equals(""))
+                            mDesignationView.setText(mEmployeeDetails.getDesignation());
                         else mDesignationView.setVisibility(View.GONE);
 
-                        mPrivilegeList = mEmployeeDetails.getPrivilegeList();
+                        mPrivilegeList = Arrays.asList(BusinessActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
                         mEmployeeDetailsAdapter = new EmployeeDetailsAdapter();
 
                         mPrivilegeListView.setAdapter(mEmployeeDetailsAdapter);
@@ -144,12 +146,7 @@ public class SetEmployeeRolesFragment extends Fragment implements HttpResponseLi
             }
 
             public void bindView(final int pos) {
-                Privilege privilege = mPrivilegeList.get(pos);
-                mPrivilegeCheckBox.setText(PrivilegeConstants.PRIVILEGE_NAME_MAP.get(privilege.getName()));
-                mPrivilegeCheckBox.setChecked(privilege.hasAuthority());
-
-                mPrivilegeCheckBox.setEnabled(false);
-                mPrivilegeCheckBox.setTextColor(Color.BLACK);
+                mPrivilegeCheckBox.setText(PrivilegeConstants.PRIVILEGE_NAME_MAP.get(mPrivilegeList.get(pos)));
             }
         }
 

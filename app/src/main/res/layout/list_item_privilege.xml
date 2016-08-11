@@ -4,9 +4,11 @@
     android:layout_height="wrap_content">
 
     <CheckBox
-        style="@style/TransactionHistoryFilterCheckboxStyle"
         android:id="@+id/checkbox_privilege"
-        android:layout_gravity="center_vertical"/>
+        style="@style/TransactionHistoryFilterCheckboxStyle"
+        android:layout_gravity="center_vertical"
+        android:checked="true"
+        android:enabled="false" />
 
     <View
         android:id="@+id/divider"

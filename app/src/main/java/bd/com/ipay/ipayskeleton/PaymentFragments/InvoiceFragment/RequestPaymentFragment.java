@@ -35,7 +35,6 @@ public class RequestPaymentFragment extends Fragment {
 
     private Button buttonCreateInvoice;
     private ImageView buttonSelectFromContacts;
-    private ImageView buttonShowQRCode;
     private EditText mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
@@ -54,7 +53,6 @@ public class RequestPaymentFragment extends Fragment {
         getActivity().setTitle(R.string.request_payment);
 
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
-        buttonShowQRCode = (ImageView) v.findViewById(R.id.button_show_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_sender_from_contacts);
         buttonCreateInvoice = (Button) v.findViewById(R.id.button_request_money);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
@@ -143,17 +141,6 @@ public class RequestPaymentFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
                 intent.putExtra(Constants.IPAY_MEMBERS_ONLY, true);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
-            }
-        });
-
-        buttonShowQRCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
-                String userID = ProfileInfoCacheManager.getMobileNumber().replaceAll("\\D", "");
-                intent.putExtra(Constants.STRING_TO_ENCODE, userID);
-                intent.putExtra(Constants.ACTIVITY_TITLE, getString(R.string.request_payment));
-                startActivity(intent);
             }
         });
 

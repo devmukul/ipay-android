@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/activity_horizontal_margin">
@@ -51,17 +52,28 @@
     <View
         android:id="@+id/divider"
         style="@style/DividerWithoutMargin"
-        android:layout_below="@+id/profile"/>
+        android:layout_below="@+id/profile" />
+
+    <TextView
+        android:id="@+id/privileges_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:text="@string/privileges"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/privilege_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
-        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin_card">
+        android:layout_below="@+id/privileges_header"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+        android:layout_marginTop="@dimen/activity_horizontal_margin_card">
 
     </android.support.v7.widget.RecyclerView>
-
 
 </RelativeLayout>

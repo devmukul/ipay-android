@@ -120,6 +120,7 @@
     <string name="account_type_business">Business Account</string>
     <string name="all_contacts">All</string>
     <string name="select_an_institution">Select Institution</string>
+    <string name="select_role">Select a role</string>
     <string name="select_a_fee_item">Select a fee item</string>
     <string name="select_session">Select Session</string>
     <string name="save">Save</string>
@@ -564,7 +565,7 @@
     <string name="business_information_saving_failed">Business information saving failed</string>
     <string name="designation">Designation</string>
     <string name="create_employee">Create Employee</string>
-    <string name="edit_employee">Edit Employee</string>
+    <string name="edit_employee">Save Changes</string>
     <string name="please_enter_designation">Please enter designation of the employee</string>
     <string name="user_has_no_ipay_account">Sorry, this user has no iPay account</string>
     <string name="preparing">Preparing</string>
@@ -574,7 +575,7 @@
     <string name="sent_request">Sent Requests</string>
     <string name="manage_bank_accounts">Manage Bank Accounts</string>
     <string name="create_new_employee">Creating new employee...</string>
-    <string name="edit_employee_details">Editing employee details...</string>
+    <string name="edit_employee_details">Saving changes...</string>
     <string name="new_employee_creation_failed">Failed to create new employee</string>
     <string name="edit_employee_details_failed">Failed to edit employee details</string>
     <string name="see_bank_accounts">See Bank Accounts</string>
@@ -599,10 +600,12 @@
     <string name="friend_write">Friend Write</string>
     <string name="switch_account">Switch Account</string>
     <string name="show_privileges">Show Privileges</string>
+    <string name="privileges">Privileges</string>
     <string name="resign">Resign</string>
     <string name="manage_employer">Manage Employer</string>
     <string name="failed_fetching_employer_list">Failed to fetch employer list</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
+    <string name="fetching_all_roles_failed">Failed to fetch roles</string>
     <string name="add_money_info">It make three to five business day to complete the operation </string>
     <string name="withdraw_money_info">It make three to five business day to complete the operation </string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>

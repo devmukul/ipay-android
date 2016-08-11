@@ -42,7 +42,6 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
     private Student mStudent;
 
     private ResourceSelectorDialog institutionsSelectorDialog;
-
     private ResourceSelectorDialog sessionsSelectorDialog;
     private int mSelectedSessionId = -1;
     private String mSelectedSessionName = "";
