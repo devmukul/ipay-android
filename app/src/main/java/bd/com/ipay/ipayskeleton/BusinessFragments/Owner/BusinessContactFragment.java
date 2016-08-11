@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.GetUserAddressResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
@@ -47,6 +48,9 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
 
+    private HttpRequestGetAsyncTask mGetParentInfoTask = null;
+    private GetParentInfoResponse mGetParentInfoResponse;
+
     private HttpRequestGetAsyncTask mGetOccupationTask = null;
     private GetOccupationResponse mGetOccupationResponse;
 
@@ -57,7 +61,9 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
     private TextView mVerificationStatusView;
 
     private TextView mFathersNameView;
+    private TextView mFathersMobileView;
     private TextView mMothersNameView;
+    private TextView mMothersMobileView;
 
     private TextView mDateOfBirthView;
     private TextView mOccupationView;
@@ -74,6 +80,8 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
 
     private String mFathersName = "";
     private String mMothersName = "";
+    private String mFathersMobile = "";
+    private String mMothersMobile = "";
 
     private int mOccupation = 0;
     private String mGender = "";
@@ -90,17 +98,14 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
     private GetDistrictResponse mGetDistrictResponse;
 
     private AddressClass mPresentAddress;
-    private AddressClass mPermanentAddress;
 
     private TextView mPresentAddressView;
-    private TextView mPermanentAddressView;
 
     private View mPresentAddressHolder;
-    private View mPermanentAddressHolder;
 
     private ImageButton mPresentAddressEditButton;
-    private ImageButton mPermanentAddressEditButton;
     private ImageButton mContactEditButton;
+    private ImageButton mParentInfoEditButton;
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
@@ -123,7 +128,9 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
+        mFathersMobileView = (TextView) v.findViewById(R.id.textview_fathers_mobile);
         mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
+        mMothersMobileView = (TextView) v.findViewById(R.id.textview_mothers_mobile);
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
         mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
         mGenderView = (TextView) v.findViewById(R.id.textview_gender);
@@ -134,21 +141,17 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
         mProgressDialog = new ProgressDialog(getActivity());
 
         mPresentAddressView = (TextView) v.findViewById(R.id.textview_present_address);
-        mPermanentAddressView = (TextView) v.findViewById(R.id.textview_permanent_address);
 
-        mPresentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_present_address);
-        mPermanentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_permanent_address);
+        mPresentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_present_address);;
         mContactEditButton = (ImageButton) v.findViewById(R.id.button_edit_contact_information);
+        mParentInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_parent_information);
 
         mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
-        mPermanentAddressHolder = v.findViewById(R.id.permanent_address_holder);
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
             mContactEditButton.setVisibility(View.GONE);
-            mPermanentAddressEditButton.setVisibility(View.GONE);
         } else {
             mContactEditButton.setVisibility(View.VISIBLE);
-            mPermanentAddressEditButton.setVisibility(View.VISIBLE);
         }
 
         getDistrictList();
@@ -173,18 +176,13 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
             else {
                 processProfileInfoResponse(json);
             }
+
+            getParentInfo();
         }
 
     }
 
     private void loadAddresses() {
-
-        if (mPermanentAddress == null) {
-                mPermanentAddressView.setVisibility(View.GONE);
-            } else {
-                mPermanentAddressHolder.setVisibility(View.VISIBLE);
-                mPermanentAddressView.setText(mPermanentAddress.toString(mThanaList, mDistrictList));
-        }
 
         if (mPresentAddress == null) {
             mPresentAddressView.setVisibility(View.GONE);
@@ -195,15 +193,10 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
 
         final Bundle presentAddressBundle = new Bundle();
         presentAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_PRESENT);
-        if (mPresentAddress != null)
+        presentAddressBundle.putString(Constants.EDIT_ADDRESS_SOURCE, "BUSINESS_PRESENT");
+        if (mPresentAddress != null) {
             presentAddressBundle.putSerializable(Constants.ADDRESS, mPresentAddress);
-
-        final Bundle permanentAddressBundle = new Bundle();
-        permanentAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_PERMANENT);
-        if (mPermanentAddress != null)
-            permanentAddressBundle.putSerializable(Constants.ADDRESS, mPermanentAddress);
-        if (mPresentAddress != null)
-            permanentAddressBundle.putSerializable(Constants.PRESENT_ADDRESS, mPresentAddress);
+        }
 
         mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,17 +205,17 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
             }
         });
 
-        mPermanentAddressEditButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
-            }
-        });
-
         mContactEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchEditFragment();
+            }
+        });
+
+        mParentInfoEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchEditParentInfoFragment();
             }
         });
     }
@@ -265,6 +258,23 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
         ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
     }
 
+    private void launchEditParentInfoFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.FATHERS_NAME, mFathersName);
+        bundle.putString(Constants.MOTHERS_NAME, mMothersName);
+        bundle.putString(Constants.FATHERS_MOBILE, mFathersMobile);
+        bundle.putString(Constants.MOTHERS_MOBILE, mMothersMobile);
+
+        ((ProfileActivity) getActivity()).switchToEditParentInfoFragment(bundle);
+    }
+
+    private void setParentInfo() {
+        mFathersNameView.setText(mFathersName);
+        mMothersNameView.setText(mMothersName);
+        mFathersMobileView.setText(mFathersMobile);
+        mMothersMobileView.setText(mMothersMobile);
+    }
+
     private void setProfileInformation() {
 
         mMobileNumberView.setText(mMobileNumber);
@@ -273,8 +283,6 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
         mGenderView.setText(mGender);
         mDateOfBirthView.setText(mDateOfBirth);
 
-        mFathersNameView.setText(mFathersName);
-        mMothersNameView.setText(mMothersName);
         mSignUpTimeView.setText(mSignUpTime);
 
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
@@ -300,6 +308,15 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getParentInfo() {
+        if (mGetParentInfoTask != null) {
+            return;
+        }
+        mGetParentInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PARENT_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PARENT_INFO_REQUEST, getActivity(), this);
+        mGetParentInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void getOccupationList() {
         if (mGetOccupationTask != null) {
             return;
@@ -319,6 +336,7 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetProfileInfoTask = null;
+            mGetParentInfoTask = null;
             mGetOccupationTask = null;
             mGetUserAddressTask = null;
             mGetDistrictListAsyncTask = null;
@@ -376,13 +394,42 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
 
                 mGetProfileInfoTask = null;
                 break;
+            case Constants.COMMAND_GET_PARENT_INFO_REQUEST:
+
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mGetParentInfoResponse = gson.fromJson(result.getJsonString(), GetParentInfoResponse.class);
+
+                        if (mGetParentInfoResponse.getFatherName() != null)
+                            mFathersName = mGetParentInfoResponse.getFatherName();
+                        if (mGetParentInfoResponse.getFatherMobileNumber() != null)
+                            mFathersMobile = mGetParentInfoResponse.getFatherMobileNumber();
+
+                        if (mGetParentInfoResponse.getMotherName() != null)
+                            mMothersName = mGetParentInfoResponse.getMotherName();
+                        if (mGetParentInfoResponse.getMotherMobileNumber() != null)
+                            mMothersMobile = mGetParentInfoResponse.getMotherMobileNumber();
+
+                        setParentInfo();
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                }
+
+                mGetParentInfoTask = null;
+                break;
 
             case Constants.COMMAND_GET_USER_ADDRESS_REQUEST:
                 try {
                     mGetUserAddressResponse = gson.fromJson(result.getJsonString(), GetUserAddressResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mPresentAddress = mGetUserAddressResponse.getPresentAddress();
-                        mPermanentAddress = mGetUserAddressResponse.getPermanentAddress();
 
                         loadAddresses();
                         setContentShown(true);

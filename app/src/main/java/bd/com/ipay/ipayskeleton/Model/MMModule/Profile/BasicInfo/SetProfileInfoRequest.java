@@ -6,15 +6,11 @@ public class SetProfileInfoRequest {
     private final String gender;
     private final String dob;
     private final int occupation;
-    private final String father;
-    private final String mother;
 
-    public SetProfileInfoRequest(String name, String gender, String dob, int occupation, String father, String mother) {
+    public SetProfileInfoRequest(String name, String gender, String dob, int occupation) {
         this.name = name;
         this.gender = gender;
         this.dob = dob;
         this.occupation = occupation;
-        this.father = father;
-        this.mother = mother;
     }
 }

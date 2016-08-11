@@ -132,10 +132,76 @@
 
                 <TextView
                     style="@style/TextViewInfoLabel"
+                    android:text="@string/member_since" />
+
+                <TextView
+                    android:id="@+id/textview_signup"
+                    style="@style/TextViewInfoColorPrimary" />
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_horizontal_margin">
+
+                <LinearLayout
+                    android:id="@+id/parent_info_holder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/AddressViewHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/parent_info" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/button_edit_parent_information"
+                    style="@style/EditIconButton"
+                    android:padding="@dimen/activity_vertical_margin_card"
+                    android:src="@drawable/ic_editgrey" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
                     android:text="@string/fathers_name" />
 
                 <TextView
                     android:id="@+id/textview_fathers_name"
+                    style="@style/TextViewInfoColorPrimary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/fathers_mobile" />
+
+                <TextView
+                    android:id="@+id/textview_fathers_mobile"
                     style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
@@ -160,14 +226,13 @@
 
                 <TextView
                     style="@style/TextViewInfoLabel"
-                    android:text="@string/member_since" />
+                    android:text="@string/mothers_mobile" />
 
                 <TextView
-                    android:id="@+id/textview_signup"
-                    style="@style/TextViewInfoColorPrimary" />
-
+                    android:id="@+id/textview_mothers_mobile"
+                    style="@style/TextViewInfoColorPrimary"
+                    android:paddingBottom="@dimen/activity_horizontal_margin"/>
             </LinearLayout>
-
 
             <View
                 android:layout_width="wrap_content"
@@ -178,10 +243,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_horizontal_margin_card"
-                android:paddingBottom="@dimen/activity_horizontal_margin_card">
+                android:padding="@dimen/activity_horizontal_margin">
 
                 <LinearLayout
                     android:id="@+id/present_address_holder"
@@ -209,53 +271,6 @@
                     android:src="@drawable/ic_editgrey" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/permanent_address_view_holder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/activity_horizontal_margin_card"
-                    android:paddingBottom="@dimen/activity_horizontal_margin_card">
-
-                    <LinearLayout
-                        android:id="@+id/permanent_address_holder"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="left"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/AddressViewHeader"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/permanent_address" />
-
-                        <TextView
-                            android:id="@+id/textview_permanent_address"
-                            style="@style/ProfileAddressTextStyle" />
-                    </LinearLayout>
-
-                    <ImageButton
-                        android:id="@+id/button_edit_permanent_address"
-                        style="@style/EditIconButton"
-                        android:padding="@dimen/activity_vertical_margin_card"
-                        android:src="@drawable/ic_editgrey" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

@@ -49,8 +49,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
 
     private EditText mNameEditText;
-    private EditText mFathersNameEditText;
-    private EditText mMothersNameEditText;
     private EditText mDateOfBirthEditText;
     private EditText mOccupationEditText;
     private CheckBox mFemaleCheckBox;
@@ -62,9 +60,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
     private String mName = "";
     private String mDateOfBirth = "";
-
-    private String mFathersName = "";
-    private String mMothersName = "";
 
     private int mOccupation = -1;
     private String mGender = "";
@@ -86,15 +81,11 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         Bundle bundle = getArguments();
 
         mName = bundle.getString(Constants.NAME);
-        mFathersName = bundle.getString(Constants.FATHERS_NAME);
-        mMothersName = bundle.getString(Constants.MOTHERS_NAME);
         mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
         mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
         mNameEditText = (EditText) v.findViewById(R.id.name);
-        mFathersNameEditText = (EditText) v.findViewById(R.id.fathers_name);
-        mMothersNameEditText = (EditText) v.findViewById(R.id.mothers_name);
         mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mOccupationEditText = (EditText) v.findViewById(R.id.occupationEditText);
         mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
@@ -163,9 +154,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mName = mNameEditText.getText().toString().trim();
         mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
 
-        mFathersName = mFathersNameEditText.getText().toString().trim();
-        mMothersName = mMothersNameEditText.getText().toString().trim();
-
         if (mMaleCheckBox.isChecked())
             mGender = GenderList.genderNameToCodeMap.get(
                     getString(R.string.male));
@@ -216,7 +204,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         Gson gson = new Gson();
 
         SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, mDateOfBirth,
-                mOccupation, mFathersName, mMothersName);
+                mOccupation);
 
         String profileInfoJson = gson.toJson(setProfileInfoRequest);
         mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
@@ -227,9 +215,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private void setProfileInformation() {
 
         mNameEditText.setText(mName);
-
-        mFathersNameEditText.setText(mFathersName);
-        mMothersNameEditText.setText(mMothersName);
 
         mDateOfBirthEditText.setText(mDateOfBirth);
 

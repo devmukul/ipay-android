@@ -156,9 +156,11 @@
                 android:visibility="gone" />
 
             <View
+                android:id="@+id/divider_manage_employee"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
+                android:background="@color/colorDivider"
+                android:visibility="gone"/>
 
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
