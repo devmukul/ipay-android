@@ -150,6 +150,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             }
         }
 
+        getParentInfo();
     }
 
     private void launchEditFragment() {
@@ -157,8 +158,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
         bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
         bundle.putString(Constants.NAME, mName);
-        bundle.putString(Constants.FATHERS_NAME, mFathersName);
-        bundle.putString(Constants.MOTHERS_NAME, mMothersName);
         bundle.putString(Constants.DATE_OF_BIRTH, mDateOfBirth);
         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
@@ -186,8 +185,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mGenderView.setText(mGender);
         mDateOfBirthView.setText(mDateOfBirth);
 
-        mFathersNameView.setText(mFathersName);
-        mMothersNameView.setText(mMothersName);
         mSignUpTimeView.setText(mSignUpTime);
 
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
@@ -214,6 +211,15 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
                 Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getParentInfo() {
+        if (mGetParentInfoTask != null) {
+            return;
+        }
+        mGetParentInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PARENT_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PARENT_INFO_REQUEST, getActivity(), this);
+        mGetParentInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getOccupationList() {
@@ -335,11 +341,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             mName = mGetProfileInfoResponse.getName();
         if (mGetProfileInfoResponse.getMobileNumber() != null)
             mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
-
-        if (mGetProfileInfoResponse.getFather() != null)
-            mFathersName = mGetProfileInfoResponse.getFather();
-        if (mGetProfileInfoResponse.getMother() != null)
-            mMothersName = mGetProfileInfoResponse.getMother();
 
         if (mGetProfileInfoResponse.getDateOfBirth() != null)
             mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
