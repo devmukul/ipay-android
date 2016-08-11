@@ -151,7 +151,7 @@
                 android:id="@+id/manage_employees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_completeness"
+                android:drawableLeft="@drawable/ic_managepeople"
                 android:text="@string/manage_people"
                 android:visibility="gone" />
 
