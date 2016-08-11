@@ -142,7 +142,7 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
 
         mPresentAddressView = (TextView) v.findViewById(R.id.textview_present_address);
 
-        mPresentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_present_address);;
+        mPresentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_present_address);
         mContactEditButton = (ImageButton) v.findViewById(R.id.button_edit_contact_information);
         mParentInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_parent_information);
 
