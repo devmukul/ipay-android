@@ -528,6 +528,7 @@
     <string name="failed_fetching_single_invoice">Failed to fetch invoice</string>
     <string name="not_a_valid_invoice_id">Please scan a valid invoice Id</string>
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
+    <string name="can_not_change_picture">Verified user can not change profile picture</string>
     <string name="profile_completeness">Profile Completeness</string>
     <string name="business_contact">Business Contact</string>
     <string name="edit_basic_info">Edit Basic Info</string>
