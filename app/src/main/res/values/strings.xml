@@ -182,6 +182,7 @@
     <string name="done">Done</string>
     <string name="verify">Verify</string>
     <string name="verify_email">Verify Email</string>
+    <string name="resend_otp_description">If you have not received the SMS, please press Resend Code after the time elapses.</string>
     <string name="resend_otp_description1">If you have not received the SMS, please press</string>
     <string name="resend_otp_description2">after the time elapses</string>
     <string name="verify_otp_for_trust_description">You are seeing this because you are logging in from this device for the first time or you have reached the maximum number of trusted devices that can be added</string>

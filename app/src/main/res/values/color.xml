@@ -11,6 +11,7 @@
     <color name="colorDivider">#DDDDDD</color>
     <color name="colorLightGray">#E5E5E5</color>
     <color name="colorGray">#737373</color>
+    <color name="colorMediumGray">#C5C7C8</color>
     <color name="colorTransparentLightGray">#EEE5E5E5</color>
     <color name="colorBackground">#F1F2F3</color>
     <color name="colorTextPrimary">#6D6D6D</color>
