@@ -98,10 +98,14 @@ public class Constants {
 
     public static final String FATHERS_NAME = "FATHERS_NAME";
     public static final String MOTHERS_NAME = "MOTHERS_NAME";
+    public static final String FATHERS_MOBILE = "FATHERS_MOBILE";
+    public static final String MOTHERS_MOBILE = "MOTHERS_MOBILE";
 
     public static final String ADDRESS = "ADDRESS";
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
     public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";
+
+    public static final String EDIT_ADDRESS_SOURCE = "ADDRESS_SOURCE";
 
     public static final String AMOUNT = "amount";
     public static final String BANK_NAME = "bank_name";
@@ -179,7 +183,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/education/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
-            BASE_URL_FRIEND = "http://10.10.40.14:1337/friend/v1/";
+            BASE_URL_FRIEND = "http://10.10.40.14:1337/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "stage";
 
@@ -327,6 +331,8 @@ public class Constants {
 
     // User Rest
     public static final String URL_GET_USER_INFO = "user/userinfo";
+    public static final String URL_GET_PARENT_INFO_REQUEST = "user/parent";
+    public static final String URL_SET_PARENT_INFO_REQUEST = "user/parent";
     public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
 
@@ -441,6 +447,7 @@ public class Constants {
     public static final String COMMAND_SET_PIN = "COMMAND_SET_PIN";
     public static final String COMMAND_CHANGE_PASSWORD = "COMMAND_CHANGE_PASSWORD";
     public static final String COMMAND_GET_PROFILE_INFO_REQUEST = "COMMAND_GET_PROFILE_INFO_REQUEST";
+    public static final String COMMAND_GET_PARENT_INFO_REQUEST = "COMMAND_GET_PARENT_INFO_REQUEST";
     public static final String COMMAND_GET_OCCUPATIONS_REQUEST = "COMMAND_GET_OCCUPATIONS_REQUEST";
     public static final String COMMAND_GET_USER_ADDRESS_REQUEST = "COMMAND_GET_USER_ADDRESS_REQUEST";
     public static final String COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST = "COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST";
@@ -448,6 +455,7 @@ public class Constants {
     public static final String COMMAND_GET_INTRODUCED_LIST = "COMMAND_GET_INTRODUCED_LIST";
     public static final String COMMAND_GET_SENT_REQUEST_LIST = "COMMAND_GET_SENT_REQUEST_LIST";
     public static final String COMMAND_SET_PROFILE_INFO_REQUEST = "COMMAND_SET_PROFILE_INFO_REQUEST";
+    public static final String COMMAND_SET_PARENT_INFO_REQUEST = "COMMAND_SET_PARENT_INFO_REQUEST";
     public static final String COMMAND_SET_USER_ADDRESS_REQUEST = "COMMAND_SET_USER_ADDRESS_REQUEST";
     public static final String COMMAND_GET_BANK_LIST = "COMMAND_GET_BANK_LIST";
     public static final String COMMAND_GET_RECOMMENDATION_REQUESTS = "COMMAND_GET_RECOMMENDATION_REQUESTS";
