@@ -53,6 +53,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private CheckBox mFemaleCheckBox;
     private EditText mPromoCodeEditText;
     private EditText mBirthdayEditText;
+    private EditText mGenderEditText;
     private ImageView mCrossButton;
 
     private String[] mWeekArray;
@@ -91,6 +92,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
+        mGenderEditText = (EditText) v.findViewById(R.id.genderEditText);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
 
         mNameView.requestFocus();
@@ -113,6 +115,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mGenderEditText.setError(null);
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
                 mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
@@ -123,6 +126,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mFemaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mGenderEditText.setError(null);
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
                 mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
@@ -185,6 +189,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         }
 
         // Reset errors.
+        mNameView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
@@ -242,7 +247,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         }
 
         if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
-            Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
+            mGenderEditText.setError(getString(R.string.please_select_a_gender));
             cancel = true;
         }
 

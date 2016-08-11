@@ -50,6 +50,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private Button mSignupBusinessButton;
     private EditText mBirthdayEditText;
     private EditText mPersonalMobileNumberView;
+    private EditText mGenderEditText;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
     private TextView mTermsConditions;
@@ -85,6 +86,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mSignupBusinessButton = (Button) v.findViewById(R.id.business_sign_in_button);
         mPersonalMobileNumberView = (EditText) v.findViewById(R.id.personal_mobile_number);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
+        mGenderEditText = (EditText) v.findViewById(R.id.genderEditText);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mAddressCheckbox = (CheckBox) v.findViewById(R.id.checkboxBusinessAddress);
@@ -134,6 +136,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mGenderEditText.setError(null);
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
                 mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
@@ -144,6 +147,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mFemaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mGenderEditText.setError(null);
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
                 mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
@@ -200,7 +204,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             cancel = true;
         }
         if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
-            Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
+            mGenderEditText.setError(getString(R.string.please_select_a_gender));
             cancel = true;
         }
 
