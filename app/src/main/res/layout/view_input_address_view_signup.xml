@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPostalAddress"
             android:maxLines="1"
-            android:singleLine="true"></EditText>
+            android:singleLine="true"/>
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/DividerOnly" />

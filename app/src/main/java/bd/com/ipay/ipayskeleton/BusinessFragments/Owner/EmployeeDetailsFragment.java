@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -17,8 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

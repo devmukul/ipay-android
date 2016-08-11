@@ -112,9 +112,14 @@
 
             </LinearLayout>
 
-            <View style="@style/Divider" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/value4"
+            android:background="@color/colorDividerGapGray" />
 
         <LinearLayout
             android:id="@+id/layout_description_holder"
@@ -128,8 +133,7 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
-                android:text="@string/note"
-                android:textColor="@android:color/white" />
+                android:text="@string/note" />
 
             <TextView
                 android:id="@+id/textview_description"

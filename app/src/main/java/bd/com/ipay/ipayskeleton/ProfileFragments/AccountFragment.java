@@ -119,6 +119,13 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     }
                 }
             });
+        } else {
+            mProfilePictureView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), R.string.can_not_change_picture, Toast.LENGTH_LONG).show();
+                }
+            });
         }
 
         mBasicInfo.setOnClickListener(new View.OnClickListener() {

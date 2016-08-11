@@ -233,7 +233,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 ((ProfileActivity) getActivity()).switchToBusinessBasicInfoHolderFragment();
-                ;
             }
 
             return;

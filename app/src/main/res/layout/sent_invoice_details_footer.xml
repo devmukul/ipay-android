@@ -78,4 +78,11 @@ android:orientation="vertical">
     </EditText>
 </android.support.design.widget.TextInputLayout>
 
+    <Button
+        android:id="@+id/button_reject"
+        style="@style/PrimaryMediumButtonReject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:visibility="gone"/>
 </LinearLayout>

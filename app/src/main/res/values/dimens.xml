@@ -18,6 +18,7 @@
     <dimen name="value10">10.0dip</dimen>
     <dimen name="value12">12.0dip</dimen>
     <dimen name="value15">15.0dip</dimen>
+    <dimen name="value18">18.0dip</dimen>
     <dimen name="value20">20.0dip</dimen>
     <dimen name="value25">25.0dip</dimen>
     <dimen name="value28">28.0dip</dimen>
