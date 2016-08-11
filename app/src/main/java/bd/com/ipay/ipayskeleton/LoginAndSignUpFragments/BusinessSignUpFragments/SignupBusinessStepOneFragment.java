@@ -122,7 +122,13 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
 
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPasswordBusiness);
-        if (passwordValidationMsg.length() > 0) {
+
+        if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumberBusiness)) {
+            mBusinessMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
+            focusView = mBusinessMobileNumberView;
+            cancel = true;
+
+        } else if (passwordValidationMsg.length() > 0) {
             mPasswordView.setError(passwordValidationMsg);
             focusView = mPasswordView;
             cancel = true;
@@ -132,17 +138,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             focusView = mConfirmPasswordView;
             cancel = true;
 
-        } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumberBusiness)) {
-            mBusinessMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
-            focusView = mBusinessMobileNumberView;
-            cancel = true;
-
-        } /*else if (!InputValidator.isValidEmail(SignupOrLoginActivity.mEmailBusiness)) {
-            mBusinessEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mBusinessEmailView;
-            cancel = true;
-
-        }*/ else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
+        } else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
             mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
             focusView = mPromoCodeEditText;
             cancel = true;
@@ -152,7 +148,6 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             // form field with an error.
             if (focusView != null) focusView.requestFocus();
         } else {
-
 
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.

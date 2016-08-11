@@ -195,6 +195,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
         // Reset errors.
         mNameView.setError(null);
+        mMobileNumberView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
@@ -207,52 +208,48 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 mMobileNumberView.getText().toString().trim());
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
+        // Check for a valid password, if the user entered one.
+        String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPassword);
+
         if (mMaleCheckBox.isChecked()) SignupOrLoginActivity.mGender = Constants.GENDER_MALE;
         else SignupOrLoginActivity.mGender = Constants.GENDER_FEMALE;
 
         boolean cancel = false;
         View focusView = null;
 
-        if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumber)) {
-            mMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
-            focusView = mMobileNumberView;
-            cancel = true;
-        }
-
-        // Check for a valid password, if the user entered one.
-        String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPassword);
-        if (passwordValidationMsg.length() > 0) {
-            mPasswordView.setError(passwordValidationMsg);
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        if (!mConfirmPasswordView.getText().toString().trim().equals(SignupOrLoginActivity.mPassword) && mConfirmPasswordView.getVisibility() == View.VISIBLE) {
-            mConfirmPasswordView.setError(getString(R.string.confirm_password_not_matched));
-            focusView = mConfirmPasswordView;
-            cancel = true;
-        }
-
-        if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
-            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
-            focusView = mPromoCodeEditText;
-            cancel = true;
-        }
-
         if (mNameView.getText().toString().trim().length() == 0) {
             mNameView.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameView;
             cancel = true;
-        }
 
-        if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
+        } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumber)) {
+            mMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
+            focusView = mMobileNumberView;
+            cancel = true;
+
+        } else if (passwordValidationMsg.length() > 0) {
+            mPasswordView.setError(passwordValidationMsg);
+            focusView = mPasswordView;
+            cancel = true;
+
+        } else if (!mConfirmPasswordView.getText().toString().trim().equals(SignupOrLoginActivity.mPassword) && mConfirmPasswordView.getVisibility() == View.VISIBLE) {
+            mConfirmPasswordView.setError(getString(R.string.confirm_password_not_matched));
+            focusView = mConfirmPasswordView;
+            cancel = true;
+
+        } else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
+            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
+            focusView = mPromoCodeEditText;
+            cancel = true;
+
+        } else if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
             cancel = true;
-        }
-
-        if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
-            mGenderEditText.setError(getString(R.string.please_select_a_gender));
+            
+        } else if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
+            //mGenderEditText.setError(getString(R.string.please_select_a_gender));
+            Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
             cancel = true;
         }
 

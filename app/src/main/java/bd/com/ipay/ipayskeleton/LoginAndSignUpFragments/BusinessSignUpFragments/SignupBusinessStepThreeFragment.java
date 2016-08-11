@@ -177,18 +177,19 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mBirthdayEditText.setError(null);
         mBusinessHolderFullNameView.setError(null);
 
-        if (SignupOrLoginActivity.mBirthdayBusinessHolder == null || SignupOrLoginActivity.mBirthdayBusinessHolder.length() == 0) {
-            mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
-            focusView = mBirthdayEditText;
+        if (mBusinessHolderFullNameView.getText().toString().trim().length() == 0) {
+            mBusinessHolderFullNameView.setError(getString(R.string.error_invalid_name));
+            focusView = mBusinessHolderFullNameView;
             cancel = true;
+
         } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumberPersonal)) {
             mPersonalMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mPersonalMobileNumberView;
             cancel = true;
 
-        } else if (mBusinessHolderFullNameView.getText().toString().trim().length() == 0) {
-            mBusinessHolderFullNameView.setError(getString(R.string.error_invalid_name));
-            focusView = mBusinessHolderFullNameView;
+        } else if (SignupOrLoginActivity.mBirthdayBusinessHolder == null || SignupOrLoginActivity.mBirthdayBusinessHolder.length() == 0) {
+            mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
+            focusView = mBirthdayEditText;
             cancel = true;
 
         } else if (mDOB == null) {
@@ -196,12 +197,13 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             focusView = mBirthdayEditText;
             cancel = true;
 
+        } else if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
+            Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
+            cancel = true;
+
         } else if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
-        }
-        if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
-            mGenderEditText.setError(getString(R.string.please_select_a_gender));
-            cancel = true;
+
         }
 
 
