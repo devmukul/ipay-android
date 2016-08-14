@@ -160,12 +160,10 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
 
             try {
 
-                HomeActivity.mGetRefreshTokenResponse = gson.fromJson(result.getJsonString(), GetRefreshTokenResponse.class);
-
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     // Do nothing
                 } else {
-                    Toast.makeText(context, HomeActivity.mGetRefreshTokenResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.please_log_in_again, Toast.LENGTH_LONG).show();
                     finish();
                     Intent intent = new Intent(context, SignupOrLoginActivity.class);
                     startActivity(intent);
