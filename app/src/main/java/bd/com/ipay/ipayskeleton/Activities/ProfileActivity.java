@@ -366,6 +366,13 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IdentificationDocumentListFragment()).addToBackStack(null).commit();
     }
 
+    public void switchToIdentificationBusinessDocumentListFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IdentificationDocumentListFragment()).addToBackStack(null).commit();
+    }
+
     public void switchToIntroducerFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
