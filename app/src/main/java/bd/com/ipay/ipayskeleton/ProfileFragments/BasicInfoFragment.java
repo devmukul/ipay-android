@@ -115,6 +115,10 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mContactEditButton = (ImageButton) v.findViewById(R.id.button_edit_contact_information);
         mParentInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_parent_information);
 
+        if (ProfileInfoCacheManager.isAccountVerified())
+            mContactEditButton.setVisibility(View.GONE);
+        else mContactEditButton.setVisibility(View.VISIBLE);
+
         mContactEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
