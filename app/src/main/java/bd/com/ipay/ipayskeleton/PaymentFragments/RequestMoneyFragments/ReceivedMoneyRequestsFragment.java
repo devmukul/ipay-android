@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,29 +14,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.ReceivedRequestReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.RequestMoneyReviewDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -199,9 +191,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
-        private final int ACTION_ACCEPT = 0;
-        private final int ACTION_REJECT = 1;
-
         private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
 
         public class MoneyRequestViewHolder extends RecyclerView.ViewHolder {
@@ -210,8 +199,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             private final TextView mTimeView;
             private final ProfileImageView mProfileImageView;
 
-            private CustomSelectorDialog mCustomSelectorDialog;
-            private List<String> mReceivedRequestActionList;
 
             public MoneyRequestViewHolder(final View itemView) {
                 super(itemView);
@@ -256,7 +243,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                         mDescription = description;
 
                         launchReviewPage();
-
                     }
                 });
 
@@ -346,7 +332,8 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
         private void launchReviewPage() {
 
-            Intent intent = new Intent(getActivity(), ReceivedRequestReviewActivity.class);
+            Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
             intent.putExtra(Constants.AMOUNT, mAmount);
             intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
             intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);

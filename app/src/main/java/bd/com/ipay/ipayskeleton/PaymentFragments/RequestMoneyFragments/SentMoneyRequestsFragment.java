@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,9 +19,11 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -34,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRe
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
@@ -57,6 +61,15 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     private int pageCount = 0;
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
+
+    // These variables hold the information needed to populate the review dialog
+    private BigDecimal mAmount;
+    private String mReceiverName;
+    private String mReceiverMobileNumber;
+    private String mPhotoUri;
+    private long mMoneyRequestId;
+    private String mTitle;
+    private String mDescription;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,6 +106,8 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     public void onResume() {
         super.onResume();
         if (Utilities.isConnectionAvailable(getActivity())) {
+            pageCount = 0;
+            clearListAfterLoading = true;
             getPendingRequests();
         }
     }
@@ -142,7 +157,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
         if (this.isAdded()) setContentShown(true);
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mPendingRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
@@ -217,7 +232,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             mCancelRequestTask = null;
         }
 
-        if (pendingMoneyRequestClasses != null && pendingMoneyRequestClasses.size() == 0 ) {
+        if (pendingMoneyRequestClasses != null && pendingMoneyRequestClasses.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
@@ -227,10 +242,13 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
+        private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
+
+
         public class MoneyRequestViewHolder extends RecyclerView.ViewHolder {
             private final TextView mSenderNumber;
             private final TextView mTime;
-            private final TextView mDescription;
+            private final TextView mDescriptionView;
             private final ProfileImageView mProfileImageView;
             private final View divider;
 
@@ -244,7 +262,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
                 mSenderNumber = (TextView) itemView.findViewById(R.id.request_number);
                 mTime = (TextView) itemView.findViewById(R.id.time);
-                mDescription = (TextView) itemView.findViewById(R.id.description);
+                mDescriptionView = (TextView) itemView.findViewById(R.id.description);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 divider = itemView.findViewById(R.id.divider);
             }
@@ -256,25 +274,31 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
                 String time = Utilities.getDateFormat(pendingMoneyRequestClasses.get(pos).getRequestTime());
                 final String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
-                String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
+                final String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
+                final String mobileNumber = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();
+                final String title = pendingMoneyRequestClasses.get(pos).getTitle();
+                final String description = pendingMoneyRequestClasses.get(pos).getDescription();
+                final BigDecimal amount = pendingMoneyRequestClasses.get(pos).getAmount();
+
                 mTime.setText(time);
                 mSenderNumber.setText(name);
-                mDescription.setText(Utilities.formatTaka(pendingMoneyRequestClasses.get(pos).getAmount()));
+                mDescriptionView.setText(Utilities.formatTaka(pendingMoneyRequestClasses.get(pos).getAmount()));
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mMyRequestActionList = Arrays.asList(getResources().getStringArray(R.array.my_request_action));
-                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mMyRequestActionList);
-                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                            @Override
-                            public void onResourceSelected(int selectedIndex,String action) {
-                                if (selectedIndex == ACTION_CANCEL) {
-                                    showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
-                                }
-                            }
-                        });
-                        mCustomSelectorDialog.show();
+
+                        mMoneyRequestId = id;
+                        mAmount = amount;
+                        mReceiverName = name;
+                        mReceiverMobileNumber = mobileNumber;
+                        mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
+                        mTitle = title;
+                        mDescription = description;
+
+                        launchReviewPage();
+
+                        //showAlertDialogue(getString(R.string.cancel_money_request_confirm), ACTION_CANCEL_REQUEST, id);
                     }
                 });
 
@@ -330,7 +354,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
             try {
-                if (holder instanceof  MoneyRequestViewHolder) {
+                if (holder instanceof MoneyRequestViewHolder) {
                     MoneyRequestViewHolder vh = (MoneyRequestViewHolder) holder;
                     vh.bindView(position);
                 } else if (holder instanceof FooterViewHolder) {
@@ -357,6 +381,21 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 return FOOTER_VIEW;
             else
                 return MONEY_REQUEST_ITEM_VIEW;
+        }
+
+        private void launchReviewPage() {
+
+            Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+            intent.putExtra(Constants.AMOUNT, mAmount);
+            intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+            intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
+            intent.putExtra(Constants.INVOICE_TITLE_TAG, mTitle);
+            intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+            intent.putExtra(Constants.NAME, mReceiverName);
+            intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
+
+            startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
         }
     }
 

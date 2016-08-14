@@ -845,6 +845,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private void launchReceivedRequestFragment() {
         Bundle bundle = new Bundle();
+        bundle.putInt(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
         bundle.putSerializable(Constants.AMOUNT, mAmount);
         bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
         bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionofRequest);

@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.ReceivedRequestReviewFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 
-public class ReceivedRequestReviewActivity extends BaseActivity {
+public class SentReceivedRequestReviewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +23,10 @@ public class ReceivedRequestReviewActivity extends BaseActivity {
 
     private void switchToReceivedRequestReviewFragment() {
 
-        ReceivedRequestReviewFragment receivedRequestReviewFragment = new ReceivedRequestReviewFragment();
+        SentReceivedRequestReviewFragment sentReceivedRequestReviewFragment = new SentReceivedRequestReviewFragment();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, receivedRequestReviewFragment).commit();
+                .replace(R.id.fragment_container, sentReceivedRequestReviewFragment).commit();
 
     }
 
@@ -42,7 +42,7 @@ public class ReceivedRequestReviewActivity extends BaseActivity {
 
     @Override
     public Context setContext() {
-        return ReceivedRequestReviewActivity.this;
+        return SentReceivedRequestReviewActivity.this;
     }
 
 

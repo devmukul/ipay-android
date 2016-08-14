@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHistoryFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.ReceivedRequestReviewFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -53,7 +53,7 @@ public class NotificationActivity extends BaseActivity {
 
     private void switchToReceivedRequestReviewFragment() {
 
-        ReceivedRequestReviewFragment receivedRequestReviewFragment = new ReceivedRequestReviewFragment();
+        SentReceivedRequestReviewFragment receivedRequestReviewFragment = new SentReceivedRequestReviewFragment();
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, receivedRequestReviewFragment).commit();
