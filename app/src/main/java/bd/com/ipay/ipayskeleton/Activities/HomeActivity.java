@@ -77,7 +77,6 @@ public class HomeActivity extends BaseActivity
     private LogoutResponse mLogOutResponse;
 
     public static HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
-    public static GetRefreshTokenResponse mGetRefreshTokenResponse;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
@@ -155,7 +154,7 @@ public class HomeActivity extends BaseActivity
         pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
 
         // Initialize token timer
-        CountDownTimer tokenTimer = new CountDownTimer(TokenManager.getiPayTokenTimeInMs() - 10000, 1000) {
+        CountDownTimer tokenTimer = new CountDownTimer( TokenManager.getiPayTokenTimeInMs() - 10000, 1000) {
 
             public void onTick(long millisUntilFinished) {
             }
@@ -530,12 +529,12 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mLogoutTask = null;
             mGetProfileInfoTask = null;
             mAddTrustedDeviceTask = null;
+            mRefreshTokenAsyncTask = null;
             Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
@@ -616,6 +615,30 @@ public class HomeActivity extends BaseActivity
                 mAddTrustedDeviceTask = null;
 
                 break;
+
+           case Constants.COMMAND_REFRESH_TOKEN:
+                try {
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        // Do nothing
+                    } else {
+                        Toast.makeText(this, R.string.please_log_in_again, Toast.LENGTH_LONG).show();
+                        finish();
+                        Intent intent = new Intent(this, SignupOrLoginActivity.class);
+                        startActivity(intent);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, R.string.please_login_again, Toast.LENGTH_LONG).show();
+                    finish();
+                    Intent intent = new Intent(this, SignupOrLoginActivity.class);
+                    startActivity(intent);
+                }
+
+                HomeActivity.mRefreshTokenAsyncTask = null;
+
+            break;
         }
     }
 
