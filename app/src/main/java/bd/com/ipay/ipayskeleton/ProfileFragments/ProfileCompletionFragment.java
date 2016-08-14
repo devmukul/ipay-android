@@ -69,7 +69,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 + "% complete");
         mProfileCompletionStatusProgressBar.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
 
-        setContentShown(true);
+        if (this.isAdded()) setContentShown(true);
     }
 
     private void getProfileCompletionStatus() {

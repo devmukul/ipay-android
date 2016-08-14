@@ -109,15 +109,31 @@
             style="@style/TextViewDescription" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button_make_payment"
-        style="@style/PrimaryMediumButton"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/value20"
-        android:layout_marginLeft="@dimen/value12"
-        android:layout_marginRight="@dimen/value12"
-        android:layout_marginTop="@dimen/value20"
-        android:text="@string/make_payment" />
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin">
 
+        <Button
+            android:id="@+id/button_reject"
+            style="@style/PrimaryMediumButtonRejectNoMargin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/value2"
+            android:layout_weight="1"
+            android:text="@string/reject" />
+
+        <Button
+            android:id="@+id/button_accept"
+            style="@style/ButtonStyleMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/value2"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:text="@string/accept" />
+    </LinearLayout>
 </LinearLayout>

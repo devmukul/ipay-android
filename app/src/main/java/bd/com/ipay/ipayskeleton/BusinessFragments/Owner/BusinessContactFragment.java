@@ -509,11 +509,6 @@ public class BusinessContactFragment extends ProgressFragment implements HttpRes
         if (mGetProfileInfoResponse.getMobileNumber() != null)
             mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
 
-        if (mGetProfileInfoResponse.getFather() != null)
-            mFathersName = mGetProfileInfoResponse.getFather();
-        if (mGetProfileInfoResponse.getMother() != null)
-            mMothersName = mGetProfileInfoResponse.getMother();
-
         if (mGetProfileInfoResponse.getDateOfBirth() != null)
             mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
 

@@ -13,8 +13,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/profile_background"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@drawable/profile_background">
 
             <RelativeLayout style="@style/ProfileCardLayoutStyleColorPrimaryLight">
 
@@ -44,12 +44,12 @@
                         android:maxLines="2"
                         android:maxWidth="@dimen/value140"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_small_medium" />
 
                     <ImageView
                         android:id="@+id/textview_verification_status"
-                        android:layout_width="@dimen/value28"
-                        android:layout_height="@dimen/value28"
+                        android:layout_width="@dimen/value20"
+                        android:layout_height="@dimen/value20"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_toRightOf="@+id/textview_name"
                         android:src="@drawable/ic_verified_profile"
@@ -62,7 +62,7 @@
                         android:layout_below="@+id/textview_name"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small_medium" />
+                        android:textSize="@dimen/text_size_small" />
                 </RelativeLayout>
             </RelativeLayout>
 

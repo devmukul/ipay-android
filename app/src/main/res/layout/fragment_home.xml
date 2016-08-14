@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-            android:background="@drawable/profile_background"
+            android:background="@drawable/home_background"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -26,10 +26,10 @@
                     android:id="@+id/profile_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/value10"
+                    android:paddingBottom="@dimen/value20"
                     android:paddingLeft="@dimen/activity_horizontal_margin_double"
                     android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/value10">
+                    android:paddingTop="@dimen/value20">
 
                     <RelativeLayout
                         android:id="@+id/profile_picture_holder"
@@ -52,8 +52,8 @@
 
                         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                             android:id="@+id/profile_picture"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="@dimen/value50"
+                            android:layout_height="@dimen/value50"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true">
 
@@ -83,13 +83,13 @@
                                 android:layout_marginBottom="@dimen/value2"
                                 android:fontFamily="sans-serif-thin"
                                 android:textColor="@android:color/white"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_small_medium"
                                 android:textStyle="bold" />
 
                             <ImageView
                                 android:id="@+id/verification_status"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
+                                android:layout_width="@dimen/value20"
+                                android:layout_height="@dimen/value20"
                                 android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                                 android:src="@drawable/ic_verified_profile"
                                 android:visibility="gone" />
@@ -104,7 +104,7 @@
                             android:layout_marginBottom="@dimen/value2"
                             android:fontFamily="sans-serif-thin"
                             android:textColor="@android:color/white"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/text_size_small"
                             android:textStyle="bold" />
 
                     </RelativeLayout>
@@ -143,7 +143,7 @@
                         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
                         android:layout_toRightOf="@+id/profile_completion_percentage"
                         android:gravity="center"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_small" />
 
                     <ImageButton
                         android:id="@+id/button_close"
@@ -152,7 +152,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:background="@android:color/transparent"
-                        android:padding="8dp"
+                        android:padding="@dimen/activity_vertical_margin_card"
                         android:src="@drawable/ic_close_black_24dp"
                         android:tint="@color/colorPrimary" />
 
@@ -178,7 +178,7 @@
                     android:fontFamily="sans-serif-light"
                     android:text="@string/ipay_balance"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_size_small_medium_value18" />
 
                 <TextView
                     android:id="@+id/balance"
@@ -188,7 +188,7 @@
                     android:fontFamily="sans-serif-thin"
                     android:text="@string/loading"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_size_medium"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -200,7 +200,7 @@
                     android:background="@android:color/transparent"
                     android:backgroundTint="@android:color/white"
                     android:clickable="true"
-                    android:padding="8dp"
+                    android:padding="@dimen/activity_horizontal_margin_card"
                     android:src="@drawable/ic_home_refresh" />
             </RelativeLayout>
 
