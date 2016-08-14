@@ -79,9 +79,11 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
 
         setContentView(R.layout.activity_profile);
 
-        mAllRoleList = new ArrayList<>();
-        mRolePrivilegeMap = new HashMap<>();
-        getAllRoles();
+        if(ProfileInfoCacheManager.isBusinessAccount()) {
+            mAllRoleList = new ArrayList<>();
+            mRolePrivilegeMap = new HashMap<>();
+            getAllRoles();
+        }
 
         String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
 
@@ -400,12 +402,12 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
                         switchToProfileFragment();
 
                     } else {
-                        finish();
+                        //finish();
                         Toast.makeText(ProfileActivity.this, mGetRolesResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    finish();
+                    //finish();
                     Toast.makeText(ProfileActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
 
