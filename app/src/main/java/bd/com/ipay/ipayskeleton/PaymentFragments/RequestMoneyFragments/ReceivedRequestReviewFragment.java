@@ -34,6 +34,8 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
+    private HttpRequestPostAsyncTask mRejectRequestTask = null;
+
     private ProgressDialog mProgressDialog;
 
     private BigDecimal mAmount;
@@ -53,7 +55,8 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mNetReceivedView;
-    private Button mReceiveRequestMoneyButton;
+    private Button mRejectButton;
+    private Button mAcceptButton;
     private boolean isPinRequired = true;
 
     @Override
@@ -79,7 +82,9 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
-        mReceiveRequestMoneyButton = (Button) v.findViewById(R.id.button_send_money);
+
+        mAcceptButton = (Button) v.findViewById(R.id.button_accept);
+        mRejectButton = (Button) v.findViewById(R.id.button_reject);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -111,10 +116,27 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
-        mReceiveRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
+        mAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attempAcceptRequestWithPinCheck();
+            }
+        });
+
+        mRejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                rejectDialog.content(R.string.confirm_request_rejection);
+                rejectDialog.positiveText(R.string.yes);
+                rejectDialog.negativeText(R.string.no);
+                rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        rejectRequestMoney(mRequestID);
+                    }
+                });
+                rejectDialog.show();
             }
         });
 
@@ -139,6 +161,24 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
             acceptRequestMoney(mRequestID, null);
         }
 
+    }
+
+    private void rejectRequestMoney(long id) {
+        if (mRejectRequestTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
+        mProgressDialog.show();
+
+        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
+                new RequestMoneyAcceptRejectOrCancelRequest(id);
+        Gson gson = new Gson();
+        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+        mRejectRequestTask.mHttpResponseListener = this;
+        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void acceptRequestMoney(long id, String pin) {
@@ -166,6 +206,7 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mAcceptRequestTask = null;
+            mRejectRequestTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -181,8 +222,10 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
                         RequestMoneyAcceptRejectOrCancelResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getActivity().onBackPressed();
+                    }
 
                 } else {
                     if (getActivity() != null)
@@ -197,7 +240,33 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
             mProgressDialog.dismiss();
             mAcceptRequestTask = null;
 
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+
+        try {
+            mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                    RequestMoneyAcceptRejectOrCancelResponse.class);
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    getActivity().onBackPressed();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
         }
+
+        mProgressDialog.dismiss();
+        mRejectRequestTask = null;
+
+    }
     }
 
     @Override
