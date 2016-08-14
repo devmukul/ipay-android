@@ -705,12 +705,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     @Override
                     public void onClick(View v) {
 
-                        mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
+                        /*mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
                             public void onResourceSelected(int selectedIndex,String action) {
-                                if (selectedIndex == ACTION_VERIFY) {
+                                if (selectedIndex == ACTION_VERIFY) { */
                                     mMoneyRequestId = id;
                                     mAmount = amount;
                                     mReceiverName = name;
@@ -729,7 +729,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                         launchInvoiceHistoryFragment();
                                     }
 
-                                } else if (selectedIndex == ACTION_REJECT) {
+                             /*   } else if (selectedIndex == ACTION_REJECT) {
                                     MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
                                     rejectDialog.content(R.string.are_you_sure);
                                     rejectDialog.positiveText(R.string.yes);
@@ -747,7 +747,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                 }
                             }
                         });
-                        mCustomSelectorDialog.show();
+                        mCustomSelectorDialog.show(); */
                     }
                 });
 

@@ -226,7 +226,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        ((PaymentActivity) getActivity()).switchToInvoicePaymentFragment();
+                        getActivity().onBackPressed();
                     }
 
                 } else {
