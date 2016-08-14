@@ -147,9 +147,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     public void onResume() {
         super.onResume();
-        refreshBusinessInvitationList();
-        refreshIntroductionRequestList();
-        refreshMoneyAndPaymentRequestList();
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            refreshBusinessInvitationList();
+            refreshIntroductionRequestList();
+            refreshMoneyAndPaymentRequestList();
+        }
     }
 
     @Override

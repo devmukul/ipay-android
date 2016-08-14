@@ -125,7 +125,9 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
     public void onResume() {
         super.onResume();
-        refreshNotificationList();
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            refreshNotificationList();
+        }
     }
 
     @Override

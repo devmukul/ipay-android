@@ -104,7 +104,9 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
     public void onResume() {
         super.onResume();
-        refreshMoneyRequestList();
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            refreshMoneyRequestList();
+        }
     }
 
     @Override
