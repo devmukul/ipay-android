@@ -122,6 +122,12 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         return v;
     }
 
+
+    public void onResume() {
+        super.onResume();
+        refreshNotificationList();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -145,6 +145,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         return v;
     }
 
+    public void onResume() {
+        super.onResume();
+        refreshBusinessInvitationList();
+        refreshIntroductionRequestList();
+        refreshMoneyAndPaymentRequestList();
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

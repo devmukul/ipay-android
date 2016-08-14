@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -61,7 +60,6 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
     private long requestId;
     private String mTitle;
     private String mDescription;
-    private int mServiceID;
     private boolean isPinRequired = true;
 
     private ProgressDialog mProgressDialog;
@@ -88,7 +86,6 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         this.mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));
         this.mTitle = bundle.getString(Constants.TITLE);
         this.mDescription = bundle.getString(Constants.DESCRIPTION);
-        this.mServiceID = bundle.getInt(Constants.MONEY_REQUEST_SERVICE_ID);
         this.mItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
 
         mReviewRecyclerView.setAdapter(paymentReviewAdapter);
