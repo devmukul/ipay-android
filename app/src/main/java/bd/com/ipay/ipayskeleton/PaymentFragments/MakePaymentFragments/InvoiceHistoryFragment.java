@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -30,6 +31,8 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -39,6 +42,10 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
     private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
+
+    private HttpRequestPostAsyncTask mRejectRequestTask = null;
+    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
+
     private LinearLayoutManager mLayoutManager;
     private RecyclerView mReviewRecyclerView;
     private PaymentReviewAdapter paymentReviewAdapter;
@@ -131,6 +138,23 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void rejectRequestMoney(long id) {
+        if (mRejectRequestTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
+        mProgressDialog.show();
+        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
+                new RequestMoneyAcceptRejectOrCancelRequest(id);
+        Gson gson = new Gson();
+        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
+        mRejectRequestTask.mHttpResponseListener = this;
+        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     protected int getServiceID() {
         return Constants.SERVICE_ID_MAKE_PAYMENT;
@@ -161,6 +185,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mAcceptPaymentTask = null;
+            mRejectRequestTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
             return;
@@ -192,6 +217,31 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
             mProgressDialog.dismiss();
             mAcceptPaymentTask = null;
 
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+
+            try {
+                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                        RequestMoneyAcceptRejectOrCancelResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        ((PaymentActivity) getActivity()).switchToInvoicePaymentFragment();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mRejectRequestTask = null;
+
         }
     }
 
@@ -218,7 +268,8 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
             private View mServiceChargeHolder;
             private final TextView mServiceChargeView;
             private final TextView mTotalView;
-            private Button mMakePaymentButton;
+            private Button mAcceptButton;
+            private Button mRejectButton;
             private LinearLayout mLinearLayoutDescriptionHolder;
             private TextView mDescriptionView;
 
@@ -238,7 +289,8 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mServiceChargeHolder = itemView.findViewById(R.id.service_charge_layout);
                 mServiceChargeView = (TextView) itemView.findViewById(R.id.textview_service_charge);
                 mTotalView = (TextView) itemView.findViewById(R.id.textview_total);
-                mMakePaymentButton = (Button) itemView.findViewById(R.id.button_make_payment);
+                mAcceptButton = (Button) itemView.findViewById(R.id.button_accept);
+                mRejectButton = (Button) itemView.findViewById(R.id.button_reject);
 
                 mLinearLayoutDescriptionHolder = (LinearLayout) itemView.findViewById(R.id.layout_description_holder);
                 mDescriptionView = (TextView) itemView.findViewById(R.id.textview_description);
@@ -255,7 +307,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
             public void bindViewForHeader() {
 
-                if (mItemList == null || mItemList.size() ==0) {
+                if (mItemList == null || mItemList.size() == 0) {
                     headerView.setVisibility(View.GONE);
                 }
 
@@ -285,16 +337,33 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mVatView.setText(Utilities.formatTaka(mVat));
                 mTotalView.setText(Utilities.formatTaka(mAmount));
 
-                if (mTitle.equals("Invoice") )  {
+                if (mTitle.equals("Invoice")) {
                     mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
                 } else {
                     mDescriptionView.setText(mDescription);
                 }
 
-                mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
+                mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         attempAccepttPaymentRequestWithPinCheck();
+                    }
+                });
+
+                mRejectButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                        rejectDialog.content(R.string.confirm_request_rejection);
+                        rejectDialog.positiveText(R.string.yes);
+                        rejectDialog.negativeText(R.string.no);
+                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                rejectRequestMoney(requestId);
+                            }
+                        });
+                        rejectDialog.show();
                     }
                 });
             }

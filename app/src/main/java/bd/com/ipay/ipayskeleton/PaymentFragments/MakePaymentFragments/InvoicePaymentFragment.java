@@ -63,9 +63,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private HttpRequestGetAsyncTask mGetSingleInvoiceTask = null;
     private MoneyAndPaymentRequest mGetSingleInvoiceResponse;
 
-    private HttpRequestPostAsyncTask mRejectRequestTask = null;
-    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
-
     private RecyclerView mInvoiceRecyclerView;
     private InvoiceListAdapter mInvoiceListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -236,36 +233,17 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         mGetSingleInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void rejectRequestMoney(long id) {
-        if (mRejectRequestTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
-        mRejectRequestTask.mHttpResponseListener = this;
-        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mRejectRequestTask = null;
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
             return;
         }
-
 
         Gson gson = new Gson();
 
@@ -302,32 +280,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 if (this.isAdded()) setContentShown(true);
                 mGetAllNotificationsTask = null;
                 mSwipeRefreshLayout.setRefreshing(false);
-
-                break;
-            case Constants.COMMAND_REJECT_REQUESTS_MONEY:
-
-                try {
-                    mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                            RequestMoneyAcceptRejectOrCancelResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            refreshNotificationList();
-                        }
-
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                }
-
-                mProgressDialog.dismiss();
-                mRejectRequestTask = null;
 
                 break;
             case Constants.COMMAND_GET_SINGLE_INVOICE:
@@ -385,9 +337,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
-        private final int ACTION_ACCEPT = 0;
-        private final int ACTION_REJECT = 1;
-
         public InvoiceListAdapter() {
         }
 
@@ -397,9 +346,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             private final TextView mTimeView;
             private final TextView loadMoreTextView;
             private final ProfileImageView mProfileImageView;
-
-            private CustomSelectorDialog mCustomSelectorDialog;
-            private List<String> mInvoiceActionList;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -435,40 +381,16 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
-                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
-                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                            @Override
-                            public void onResourceSelected(int selectedIndex, String action) {
-                                if (selectedIndex == ACTION_ACCEPT) {
-                                    mMoneyRequestId = id;
-                                    mAmount = amount;
-                                    mReceiverName = name;
-                                    mReceiverMobileNumber = mobileNumber;
-                                    mPhotoUri = imageUrl;
-                                    mTitle = title;
-                                    mVat = vat;
-                                    mItemList = itemList;
-                                    mDescription = description;
-                                    launchInvoiceHistoryFragment();
-
-                                } else if (selectedIndex == ACTION_REJECT) {
-                                    MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                                    rejectDialog.content(R.string.confirm_request_rejection);
-                                    rejectDialog.positiveText(R.string.yes);
-                                    rejectDialog.negativeText(R.string.no);
-                                    rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            rejectRequestMoney(id);
-                                        }
-                                    });
-                                    rejectDialog.show();
-                                }
-                            }
-                        });
-                        mCustomSelectorDialog.show();
+                        mMoneyRequestId = id;
+                        mAmount = amount;
+                        mReceiverName = name;
+                        mReceiverMobileNumber = mobileNumber;
+                        mPhotoUri = imageUrl;
+                        mTitle = title;
+                        mVat = vat;
+                        mItemList = itemList;
+                        mDescription = description;
+                        launchInvoiceHistoryFragment();
                     }
                 });
             }

@@ -69,7 +69,7 @@ public class PaymentActivity extends BaseActivity {
         switchedToPendingList = false;
     }
 
-    private void switchToInvoicePaymentFragment() {
+    public void switchToInvoicePaymentFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new InvoicePaymentFragment()).commit();
         mFabMakingPayment.setVisibility(View.VISIBLE);
