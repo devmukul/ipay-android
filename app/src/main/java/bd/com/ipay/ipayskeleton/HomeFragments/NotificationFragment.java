@@ -649,18 +649,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             }
 
             public void bindView(int pos) {
-                if (mNotifications.size() == 1) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-
-                } else if (pos == 0) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_upper_round_white));
-
-                } else if (pos == mNotifications.size() - 1) {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_half_lower_round_white));
-
-                } else {
-                    itemView.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.background_no_round_white));
-                }
 
                 Notification notification = mNotifications.get(pos);
 
@@ -988,7 +976,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.AMOUNT, mAmount);
         bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
-        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
+        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionofRequest);
         bundle.putString(Constants.INVOICE_TITLE_TAG, mTitle);
         bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
         bundle.putString(Constants.NAME, mReceiverName);
