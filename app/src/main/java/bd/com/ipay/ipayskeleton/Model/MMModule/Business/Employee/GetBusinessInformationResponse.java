@@ -1,11 +1,18 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
+
 public class GetBusinessInformationResponse {
 
     private String businessName;
     private int businessType;
     private String email;
     private String mobileNumber;
+
+    private final List<UserProfilePictureClass> profilePictures = new ArrayList<>();
 
     public String getBusinessName() {
         return businessName;
@@ -21,5 +28,9 @@ public class GetBusinessInformationResponse {
 
     public String getMobileNumber() {
         return mobileNumber;
+    }
+
+    public List<UserProfilePictureClass> getProfilePictures() {
+        return profilePictures;
     }
 }

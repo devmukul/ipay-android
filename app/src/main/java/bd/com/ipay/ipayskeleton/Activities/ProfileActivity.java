@@ -406,7 +406,7 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
                         for (Role mRole : mAllRoleList)
                             mRolePrivilegeMap.put(mRole.getId(), mRole.getPrivileges());
 
-                        switchToProfileFragment();
+                        //switchToProfileFragment();
 
                     } else {
                         //finish();
