@@ -44,7 +44,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private ProgressDialog mProgressDialog;
 
     private int mRequestType;
-
     private BigDecimal mAmount;
     private String mReceiverName;
     private String mReceiverMobileNumber;
@@ -286,81 +285,85 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         Gson gson = new Gson();
 
 
-        if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
-            try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                        RequestMoneyAcceptRejectOrCancelResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mAcceptRequestTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
-
-            try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                        RequestMoneyAcceptRejectOrCancelResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mRejectRequestTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_REQUESTS_MONEY)) {
-
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_ACCEPT_REQUESTS_MONEY:
                 try {
                     mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
                             RequestMoneyAcceptRejectOrCancelResponse.class);
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            getActivity().onBackPressed();
+                        }
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                }
+
+                mProgressDialog.dismiss();
+                mAcceptRequestTask = null;
+
+                break;
+            case Constants.COMMAND_REJECT_REQUESTS_MONEY:
+
+                try {
+                    mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            RequestMoneyAcceptRejectOrCancelResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            getActivity().onBackPressed();
+                        }
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+                }
+
+                mProgressDialog.dismiss();
+                mRejectRequestTask = null;
+
+                break;
+            case Constants.COMMAND_CANCEL_REQUESTS_MONEY:
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    try {
+                        mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                                RequestMoneyAcceptRejectOrCancelResponse.class);
+                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            getActivity().onBackPressed();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
                 }
 
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mCancelRequestTask = null;
+                mProgressDialog.dismiss();
+                mCancelRequestTask = null;
+                break;
         }
 
     }
