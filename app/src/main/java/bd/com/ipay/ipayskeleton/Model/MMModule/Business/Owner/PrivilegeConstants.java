@@ -31,6 +31,18 @@ public class PrivilegeConstants {
     private static final String EDUCATION_MANAGE = "EducationManage";
     private static final String FRIEND_READ = "FRIEND_READ";
     private static final String FRIEND_WRITE = "FRIEND_WRITE";
+    private static final String SEE_OWNER_INFO = "SEE_OWNER_INFO";
+    private static final String MANAGE_OWNER_INFO = "MANAGE_OWNER_INFO";
+    private static final String SEE_DOCS = "SEE_DOCS";
+    private static final String SEE_BUSINESS_DOCS = "SEE_BUSINESS_DOCS";
+    private static final String UPLOAD_DOCS = "UPLOAD_DOCS";
+    private static final String UPLOAD_BUSINESS_DOCS = "UPLOAD_BUSINESS_DOCS";
+    private static final String SEE_INTRODUCERS = "SEE_INTRODUCERS";
+    private static final String MANAGE_INTRODUCERS = "MANAGE_INTRODUCERS";
+    private static final String SEE_INVITATIONS = "SEE_INVITATIONS";
+    private static final String MANAGE_INVITATIONS = "MANAGE_INVITATIONS";
+    private static final String MANAGE_ADDRESS = "MANAGE_ADDRESS";
+    private static final String SEE_PROFILE_COMPLETION = "SEE_PROFILE_COMPLETION";
 
     public static final List<Privilege> ALL_PRIVILEGES = new ArrayList<>();
 
@@ -58,6 +70,18 @@ public class PrivilegeConstants {
         ALL_PRIVILEGES.add(new Privilege(EDUCATION_MANAGE));
         ALL_PRIVILEGES.add(new Privilege(FRIEND_READ));
         ALL_PRIVILEGES.add(new Privilege(FRIEND_WRITE));
+        ALL_PRIVILEGES.add(new Privilege(SEE_OWNER_INFO));
+        ALL_PRIVILEGES.add(new Privilege(MANAGE_OWNER_INFO));
+        ALL_PRIVILEGES.add(new Privilege(SEE_DOCS));
+        ALL_PRIVILEGES.add(new Privilege(SEE_BUSINESS_DOCS));
+        ALL_PRIVILEGES.add(new Privilege(UPLOAD_DOCS));
+        ALL_PRIVILEGES.add(new Privilege(UPLOAD_BUSINESS_DOCS));
+        ALL_PRIVILEGES.add(new Privilege(SEE_INTRODUCERS));
+        ALL_PRIVILEGES.add(new Privilege(MANAGE_INTRODUCERS));
+        ALL_PRIVILEGES.add(new Privilege(SEE_INVITATIONS));
+        ALL_PRIVILEGES.add(new Privilege(MANAGE_INVITATIONS));
+        ALL_PRIVILEGES.add(new Privilege(MANAGE_ADDRESS));
+        ALL_PRIVILEGES.add(new Privilege(SEE_PROFILE_COMPLETION));
     }
 
     /**
@@ -89,5 +113,17 @@ public class PrivilegeConstants {
         PRIVILEGE_NAME_MAP.put(EDUCATION_MANAGE, R.string.education_management);
         PRIVILEGE_NAME_MAP.put(FRIEND_READ, R.string.friend_read);
         PRIVILEGE_NAME_MAP.put(FRIEND_WRITE, R.string.friend_write);
+        PRIVILEGE_NAME_MAP.put(SEE_OWNER_INFO, R.string.see_owner_info);
+        PRIVILEGE_NAME_MAP.put(MANAGE_OWNER_INFO, R.string.manage_owner_info);
+        PRIVILEGE_NAME_MAP.put(SEE_DOCS, R.string.see_docs);
+        PRIVILEGE_NAME_MAP.put(SEE_BUSINESS_DOCS, R.string.see_business_docs);
+        PRIVILEGE_NAME_MAP.put(UPLOAD_DOCS, R.string.upload_docs);
+        PRIVILEGE_NAME_MAP.put(UPLOAD_BUSINESS_DOCS, R.string.upload_business_docs);
+        PRIVILEGE_NAME_MAP.put(SEE_INTRODUCERS, R.string.see_introducers);
+        PRIVILEGE_NAME_MAP.put(MANAGE_INTRODUCERS, R.string.manage_introducers);
+        PRIVILEGE_NAME_MAP.put(SEE_INVITATIONS, R.string.see_invitations);
+        PRIVILEGE_NAME_MAP.put(MANAGE_INVITATIONS, R.string.manage_invitations);
+        PRIVILEGE_NAME_MAP.put(MANAGE_ADDRESS, R.string.manage_address);
+        PRIVILEGE_NAME_MAP.put(SEE_PROFILE_COMPLETION, R.string.see_profile_completion);
     }
 }
