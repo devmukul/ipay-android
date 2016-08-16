@@ -185,7 +185,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.ReceivedRequestReviewActivity"
+            android:name=".Activities.PaymentActivities.SentReceivedRequestReviewActivity"
             android:label="@string/send_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"

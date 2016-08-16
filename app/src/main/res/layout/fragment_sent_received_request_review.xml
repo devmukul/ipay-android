@@ -137,12 +137,45 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button_send_money"
-            style="@style/PrimaryMediumButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/send_money" />
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_horizontal_margin">
+
+
+            <Button
+                android:id="@+id/button_cancel"
+                style="@style/PrimaryMediumButtonReject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button_reject"
+                style="@style/PrimaryMediumButtonRejectNoMargin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/value2"
+                android:layout_weight="1"
+                android:text="@string/reject"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button_accept"
+                style="@style/ButtonStyleMedium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/value2"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/accept"
+                android:visibility="gone" />
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,8 +36,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.RequestMoneyReviewDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.Business;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.ConfirmBusinessInvitationRequest;
@@ -47,7 +44,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.GetBusinessList
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
@@ -57,8 +53,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.BusinessListReq
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroductionRequestClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -78,11 +72,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private HttpRequestGetAsyncTask mGetIntroductionRequestTask = null;
     private GetIntroductionRequestsResponse mIntroductionRequestsResponse;
-    
-    private HttpRequestPostAsyncTask mRejectRequestTask = null;
-    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
-    
-    private HttpRequestPostAsyncTask mRejectPaymentTask = null;
+
     private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
 
     private HttpRequestGetAsyncTask mGetBusinessInvitationTask = null;
@@ -153,6 +143,15 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         });
 
         return v;
+    }
+
+    public void onResume() {
+        super.onResume();
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            refreshBusinessInvitationList();
+            refreshIntroductionRequestList();
+            refreshMoneyAndPaymentRequestList();
+        }
     }
 
     @Override
@@ -238,17 +237,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void showReviewDialog() {
-        RequestMoneyReviewDialog dialog = new RequestMoneyReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, mServiceID, new ReviewDialogFinishListener() {
-            @Override
-            public void onReviewFinish() {
-                refreshMoneyAndPaymentRequestList();
-            }
-        });
-        dialog.show();
-    }
-
     private void refreshMoneyAndPaymentRequestList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
             mMoneyAndPaymentRequests = null;
@@ -283,43 +271,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity());
         mRecommendActionTask.mHttpResponseListener = this;
         mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void rejectRequestMoney(long id) {
-        if (mRejectRequestTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
-        mRejectRequestTask.mHttpResponseListener = this;
-        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void rejectPaymentRequest(long id) {
-
-        if (mRejectPaymentTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-
-        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
-                new PaymentAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
-        mRejectPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
-        mRejectPaymentTask.mHttpResponseListener = this;
-        mRejectPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void acceptBusinessInvitation(long id) {
@@ -359,8 +310,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
 					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mRejectRequestTask = null;
-            mRejectPaymentTask = null;
             mGetMoneyAndPaymentRequestTask = null;
             mServiceChargeTask = null;
             mConfirmBusinessInvitationTask = null;
@@ -520,58 +469,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mProgressDialog.dismiss();
                 mConfirmBusinessInvitationTask = null;
                 break;
-            case Constants.COMMAND_REJECT_REQUESTS_MONEY:
-
-                try {
-                    mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                            RequestMoneyAcceptRejectOrCancelResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            refreshMoneyAndPaymentRequestList();
-                        }
-
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                }
-
-                mProgressDialog.dismiss();
-                mRejectRequestTask = null;
-
-                break;
-            case Constants.COMMAND_REJECT_PAYMENT_REQUEST:
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    try {
-                        mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                                PaymentAcceptRejectOrCancelResponse.class);
-                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            refreshMoneyAndPaymentRequestList();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                }
-
-                mProgressDialog.dismiss();
-                mRejectPaymentTask = null;
-                break;
         }
     }
 
@@ -705,12 +602,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     @Override
                     public void onClick(View v) {
 
-                        mInvoiceActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
-                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mInvoiceActionList);
-                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                            @Override
-                            public void onResourceSelected(int selectedIndex,String action) {
-                                if (selectedIndex == ACTION_VERIFY) {
                                     mMoneyRequestId = id;
                                     mAmount = amount;
                                     mReceiverName = name;
@@ -728,26 +619,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                     else {
                                         launchInvoiceHistoryFragment();
                                     }
-
-                                } else if (selectedIndex == ACTION_REJECT) {
-                                    MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                                    rejectDialog.content(R.string.are_you_sure);
-                                    rejectDialog.positiveText(R.string.yes);
-                                    rejectDialog.negativeText(R.string.no);
-                                    rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                                                rejectRequestMoney(id);
-                                            else
-                                                rejectPaymentRequest(id);
-                                        }
-                                    });
-                                    rejectDialog.show();
-                                }
-                            }
-                        });
-                        mCustomSelectorDialog.show();
                     }
                 });
 
@@ -974,6 +845,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private void launchReceivedRequestFragment() {
         Bundle bundle = new Bundle();
+        bundle.putInt(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
         bundle.putSerializable(Constants.AMOUNT, mAmount);
         bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
         bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionofRequest);

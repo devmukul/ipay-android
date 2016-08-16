@@ -58,6 +58,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
     private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
 
+    private HttpRequestGetAsyncTask mGetIdentificationBusinessDocumentsTask = null;
+    private GetIdentificationDocumentResponse mIdentificationBusinessDocumentResponse = null;
+
     private UploadIdentifierDocumentAsyncTask mUploadIdentifierDocumentAsyncTask;
     private UploadDocumentResponse mUploadDocumentResponse;
 
@@ -71,11 +74,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private List<IdentificationDocument> mIdentificationDocuments = new ArrayList<>();
     private IdentificationDocumentDetails mSelectedIdentificationDocument;
 
+    private List<IdentificationDocument> mIdentificationBusinessDocuments = new ArrayList<>();
+
     private ProgressDialog mProgressDialog;
 
     private IdentificationDocumentDetails[] mIdentificationDocumentDetails;
 
-    private String[] DOCUMENT_TYPES;
+    private String[] DOCUMENT_TYPES, BUSINESS_DOCUMENT_TYPES;
 
     private String mFileName;
 
@@ -85,6 +90,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.driving_license,
             R.string.birth_certificate,
             R.string.tin,
+            R.string.business_tin,
+            R.string.trade_license,
+            R.string.vat_registration_certificate
+
+    };
+
+    private static final int[] BUSINESS_DOCUMENT_TYPE_NAMES = {
             R.string.business_tin,
             R.string.trade_license,
             R.string.vat_registration_certificate
@@ -107,26 +119,18 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         super.onCreate(savedInstanceState);
 
         // Before making any change, make sure DOCUMENT_TYPES matches with DOCUMENT_TYPE_NAMES
-        if (ProfileInfoCacheManager.isBusinessAccount()) {
-            DOCUMENT_TYPES = new String[]{
-                    Constants.DOCUMENT_TYPE_NATIONAL_ID,
-                    Constants.DOCUMENT_TYPE_PASSPORT,
-                    Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-                    Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-                    Constants.DOCUMENT_TYPE_TIN,
-                    Constants.DOCUMENT_TYPE_BUSINESS_TIN,
-                    Constants.DOCUMENT_TYPE_TRADE_LICENSE,
-                    Constants.DOCUMENT_TYPE_VAT_REG_CERT
-            };
-        } else {
-            DOCUMENT_TYPES = new String[]{
-                    Constants.DOCUMENT_TYPE_NATIONAL_ID,
-                    Constants.DOCUMENT_TYPE_PASSPORT,
-                    Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-                    Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-                    Constants.DOCUMENT_TYPE_TIN,
-            };
-        }
+        DOCUMENT_TYPES = new String[]{
+                Constants.DOCUMENT_TYPE_NATIONAL_ID,
+                Constants.DOCUMENT_TYPE_PASSPORT,
+                Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                Constants.DOCUMENT_TYPE_TIN,
+        };
+        BUSINESS_DOCUMENT_TYPES = new String[]{
+                Constants.DOCUMENT_TYPE_BUSINESS_TIN,
+                Constants.DOCUMENT_TYPE_TRADE_LICENSE,
+                Constants.DOCUMENT_TYPE_VAT_REG_CERT
+        };
     }
 
     @Override
@@ -140,9 +144,21 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mDocumentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_documents);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
-        documentPreviewBindViewHolderList = new ArrayList<>(DOCUMENT_TYPES.length);
-        for (String DOCUMENT_TYPE : DOCUMENT_TYPES)
-            documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            documentPreviewBindViewHolderList = new ArrayList<>(COUNT_UPLOAD_OTHER_DOCUMENT + 1);
+
+            for (String DOCUMENT_TYPE : DOCUMENT_TYPES)
+                documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
+
+            for (String DOCUMENT_TYPE : BUSINESS_DOCUMENT_TYPES)
+                documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
+        } else {
+            documentPreviewBindViewHolderList = new ArrayList<>(COUNT_UPLOAD_PERSONAL_DOCUMENT + 1);
+
+            for (String DOCUMENT_TYPE : DOCUMENT_TYPES)
+                documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
+        }
         return v;
     }
 
@@ -150,16 +166,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE))
+        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE)) {
             getIdentificationDocuments();
-        else {
+        } else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
 
-            if (json == null)
+            if (json == null) {
                 getIdentificationDocuments();
-            else {
-                processGetDocumentListResponse(json);
+            } else {
+                getIdentificationDocuments();
             }
         }
 
@@ -205,7 +221,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private void loadDocumentInfo() {
 
-        mIdentificationDocumentDetails = new IdentificationDocumentDetails[DOCUMENT_TYPES.length];
+        int mCount = 0;
+        mIdentificationDocumentDetails = new IdentificationDocumentDetails[documentPreviewBindViewHolderList.size()];
+
         for (int i = 0; i < DOCUMENT_TYPES.length; i++) {
             String documentId = "";
             String verificationStatus = null;
@@ -222,6 +240,28 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
             mIdentificationDocumentDetails[i] = new IdentificationDocumentDetails(DOCUMENT_TYPES[i],
                     getString(DOCUMENT_TYPE_NAMES[i]), documentId, verificationStatus, documentUrl);
+
+            mCount++;
+        }
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            for (int i = 0; i < BUSINESS_DOCUMENT_TYPES.length; i++) {
+                String documentId = "";
+                String verificationStatus = null;
+                String documentUrl = null;
+
+                for (IdentificationDocument identificationDocument : mIdentificationBusinessDocuments) {
+                    if (identificationDocument.getDocumentType().equals(BUSINESS_DOCUMENT_TYPES[i])) {
+                        documentId = identificationDocument.getDocumentIdNumber();
+                        verificationStatus = identificationDocument.getDocumentVerificationStatus();
+                        documentUrl = identificationDocument.getDocumentUrl();
+                        documentPreviewBindViewHolderList.get(i + mCount).setmDocumentId(documentId);
+                    }
+                }
+
+                mIdentificationDocumentDetails[i + mCount] = new IdentificationDocumentDetails(BUSINESS_DOCUMENT_TYPES[i],
+                        getString(BUSINESS_DOCUMENT_TYPE_NAMES[i]), documentId, verificationStatus, documentUrl);
+            }
         }
     }
 
@@ -235,6 +275,17 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
                 Constants.BASE_URL_MM + Constants.URL_GET_DOCUMENTS, getActivity(), this);
         mGetIdentificationDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getIdentificationBusinessDocuments() {
+        if (mGetIdentificationBusinessDocumentsTask != null) {
+            return;
+        }
+        setContentShown(false);
+
+        mGetIdentificationBusinessDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_DOCUMENTS, getActivity(), this);
+        mGetIdentificationBusinessDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getDocumentAccessToken() {
@@ -281,6 +332,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mGetIdentificationDocumentsTask = null;
+            mGetIdentificationBusinessDocumentsTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -309,6 +361,29 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 }
 
                 mGetIdentificationDocumentsTask = null;
+                mUploadIdentifierDocumentAsyncTask = null;
+                break;
+
+            case Constants.COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        processGetBusinessDocumentListResponse(result.getJsonString());
+
+                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
+                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
+                }
+
+                mGetIdentificationBusinessDocumentsTask = null;
                 mUploadIdentifierDocumentAsyncTask = null;
                 break;
             case Constants.COMMAND_GET_DOCUMENT_ACCESS_TOKEN:
@@ -374,20 +449,28 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mIdentificationDocumentResponse = gson.fromJson(json, GetIdentificationDocumentResponse.class);
 
         mIdentificationDocuments = mIdentificationDocumentResponse.getDocuments();
+
+        if (ProfileInfoCacheManager.isBusinessAccount())
+            getIdentificationBusinessDocuments();
+        else {
+            loadDocumentInfo();
+            mDocumentListAdapter = new DocumentListAdapter();
+            mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
+            setContentShown(true);
+        }
+
+
+    }
+
+    private void processGetBusinessDocumentListResponse(String json) {
+        Gson gson = new Gson();
+        mIdentificationBusinessDocumentResponse = gson.fromJson(json, GetIdentificationDocumentResponse.class);
+
+        mIdentificationBusinessDocuments = mIdentificationBusinessDocumentResponse.getDocuments();
         loadDocumentInfo();
 
         mDocumentListAdapter = new DocumentListAdapter();
         mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
-
-        if (mIdentificationDocuments.size() < DOCUMENT_TYPES.length) {
-            if (ProfileInfoCacheManager.isAccountVerified()) {
-                mDocumentUploadInfoView.setText(R.string.upload_identification_documents_to_confirm_identity);
-            } else {
-                mDocumentUploadInfoView.setText(R.string.you_need_to_upload_identification_documents_to_get_verified);
-            }
-        } else {
-            mDocumentUploadInfoView.setVisibility(View.GONE);
-        }
 
         setContentShown(true);
 
@@ -458,6 +541,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mVerificationStatus.setVisibility(View.GONE);
                     mDocumentIdView.setText(R.string.not_submitted);
                     mUploadButton.setText(getString(R.string.upload));
+                    mUploadButton.setVisibility(View.VISIBLE);
                 }
                 // Document uploaded and verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -475,6 +559,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mVerificationStatus.setImageResource(R.drawable.ic_workinprogress);
                     mVerificationStatus.setColorFilter(Color.GRAY);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
+                    mUploadButton.setVisibility(View.VISIBLE);
                     mUploadButton.setText(getString(R.string.upload_again));
                 }
                 mDocumentTypeNameView.setText(identificationDocumentDetail.getDocumentTypeName());

@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,29 +14,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.ReceivedRequestReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.RequestMoneyReviewDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -48,11 +40,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
-
-    private HttpRequestPostAsyncTask mServiceChargeTask = null;
-    private GetServiceChargeResponse mGetServiceChargeResponse;
-
-    private HttpRequestPostAsyncTask mRejectRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
     private RecyclerView mNotificationsRecyclerView;
@@ -69,7 +56,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
     // These variables hold the information needed to populate the review dialog
     private BigDecimal mAmount;
-    private BigDecimal mServiceCharge;
     private String mReceiverName;
     private String mReceiverMobileNumber;
     private String mPhotoUri;
@@ -107,6 +93,14 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         return v;
     }
 
+
+    public void onResume() {
+        super.onResume();
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            refreshMoneyRequestList();
+        }
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -136,42 +130,12 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void rejectRequestMoney(long id) {
-        if (mRejectRequestTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
-        mProgressDialog.show();
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
-        Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
-        mRejectRequestTask.mHttpResponseListener = this;
-        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void showReviewDialog() {
-        RequestMoneyReviewDialog dialog = new RequestMoneyReviewDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                mReceiverName, mPhotoUri, mAmount, mServiceCharge, mTitle, mDescription, Constants.SERVICE_ID_REQUEST_MONEY,
-                new ReviewDialogFinishListener() {
-                    @Override
-                    public void onReviewFinish() {
-                        refreshMoneyRequestList();
-                    }
-                });
-        dialog.show();
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (this.isAdded()) setContentShown(true);
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mRejectRequestTask = null;
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
@@ -216,32 +180,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 mSwipeRefreshLayout.setRefreshing(false);
 
                 break;
-            case Constants.COMMAND_REJECT_REQUESTS_MONEY:
-
-                try {
-                    mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                            RequestMoneyAcceptRejectOrCancelResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            refreshMoneyRequestList();
-                        }
-
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-                }
-
-                mProgressDialog.dismiss();
-                mRejectRequestTask = null;
-
-                break;
         }
         if (moneyRequestList != null && moneyRequestList.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
@@ -253,9 +191,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
-        private final int ACTION_ACCEPT = 0;
-        private final int ACTION_REJECT = 1;
-
         private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
 
         public class MoneyRequestViewHolder extends RecyclerView.ViewHolder {
@@ -264,8 +199,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             private final TextView mTimeView;
             private final ProfileImageView mProfileImageView;
 
-            private CustomSelectorDialog mCustomSelectorDialog;
-            private List<String> mReceivedRequestActionList;
 
             public MoneyRequestViewHolder(final View itemView) {
                 super(itemView);
@@ -300,39 +233,16 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.invoice_action));
-                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), name, mReceivedRequestActionList);
-                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                            @Override
-                            public void onResourceSelected(int selectedIndex, String action) {
-                                if (selectedIndex == ACTION_ACCEPT) {
-                                    mMoneyRequestId = id;
-                                    mAmount = amount;
-                                    mReceiverName = name;
-                                    mReceiverMobileNumber = mobileNumber;
-                                    mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
-                                    mTitle = title;
-                                    mDescription = description;
 
-                                   // attemptGetServiceCharge();
-                                    launchReviewPage();
+                        mMoneyRequestId = id;
+                        mAmount = amount;
+                        mReceiverName = name;
+                        mReceiverMobileNumber = mobileNumber;
+                        mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
+                        mTitle = title;
+                        mDescription = description;
 
-                                } else if (selectedIndex == ACTION_REJECT) {
-                                    MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                                    rejectDialog.content(R.string.confirm_request_rejection);
-                                    rejectDialog.positiveText(R.string.yes);
-                                    rejectDialog.negativeText(R.string.no);
-                                    rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            rejectRequestMoney(id);
-                                        }
-                                    });
-                                    rejectDialog.show();
-                                }
-                            }
-                        });
-                        mCustomSelectorDialog.show();
+                        launchReviewPage();
                     }
                 });
 
@@ -422,7 +332,8 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
         private void launchReviewPage() {
 
-            Intent intent = new Intent(getActivity(), ReceivedRequestReviewActivity.class);
+            Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
             intent.putExtra(Constants.AMOUNT, mAmount);
             intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
             intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);

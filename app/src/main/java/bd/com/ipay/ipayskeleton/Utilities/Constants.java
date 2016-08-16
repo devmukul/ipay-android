@@ -107,6 +107,7 @@ public class Constants {
 
     public static final String EDIT_ADDRESS_SOURCE = "ADDRESS_SOURCE";
 
+    public static final String REQUEST_TYPE = "request_type";
     public static final String AMOUNT = "amount";
     public static final String BANK_NAME = "bank_name";
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
@@ -138,7 +139,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = true;
+    public static final boolean AUTO_LOGIN = false;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -233,6 +234,7 @@ public class Constants {
 
     // Documents Rest
     public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
+    public static final String URL_GET_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
@@ -451,6 +453,7 @@ public class Constants {
     public static final String COMMAND_GET_OCCUPATIONS_REQUEST = "COMMAND_GET_OCCUPATIONS_REQUEST";
     public static final String COMMAND_GET_USER_ADDRESS_REQUEST = "COMMAND_GET_USER_ADDRESS_REQUEST";
     public static final String COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST = "COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST";
+    public static final String COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST = "COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST";
     public static final String COMMAND_GET_INTRODUCER_LIST = "COMMAND_GET_INTRODUCER_LIST";
     public static final String COMMAND_GET_INTRODUCED_LIST = "COMMAND_GET_INTRODUCED_LIST";
     public static final String COMMAND_GET_SENT_REQUEST_LIST = "COMMAND_GET_SENT_REQUEST_LIST";
@@ -732,4 +735,8 @@ public class Constants {
     public static final String TICKET_STATUS_ON_HOLD = "hold";
     public static final String TICKET_STATUS_SOLVED = "solved";
     public static final String TICKET_STATUS_CLOSED = "closed";
+
+    public static final int REQUEST_TYPE_RECEIVED_REQUEST= 1;
+    public static final int REQUEST_TYPE_SENT_REQUEST = 2;
+
 }

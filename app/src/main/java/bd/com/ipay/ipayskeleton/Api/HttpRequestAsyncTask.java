@@ -140,7 +140,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 String message = mContext.getString(R.string.please_log_in_again);
 
-                try {
+               try {
                     Gson gson = new Gson();
                     message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
                 } catch (Exception e) {

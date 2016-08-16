@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -51,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
@@ -77,13 +79,15 @@ public class HomeActivity extends BaseActivity
     private LogoutResponse mLogOutResponse;
 
     public static HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
-    public static GetRefreshTokenResponse mGetRefreshTokenResponse;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
     private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
     private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
+
+    private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
+    private GetBusinessInformationResponse mGetBusinessInformationResponse;
 
     private TextView mMobileNumberView;
     private TextView mNameView;
@@ -155,7 +159,7 @@ public class HomeActivity extends BaseActivity
         pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
 
         // Initialize token timer
-        CountDownTimer tokenTimer = new CountDownTimer(TokenManager.getiPayTokenTimeInMs() - 10000, 1000) {
+        CountDownTimer tokenTimer = new CountDownTimer( TokenManager.getiPayTokenTimeInMs() - 10000, 1000) {
 
             public void onTick(long millisUntilFinished) {
             }
@@ -523,6 +527,15 @@ public class HomeActivity extends BaseActivity
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getBusinessInformation() {
+        if (mGetBusinessInformationAsyncTask != null)
+            return;
+
+        mGetBusinessInformationAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_INFORMATION,
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_INFORMATION, HomeActivity.this, this);
+        mGetBusinessInformationAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void getAvailableBankList() {
         GetAvailableBankAsyncTask getAvailableBanksTask = new GetAvailableBankAsyncTask(this);
         getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -530,12 +543,13 @@ public class HomeActivity extends BaseActivity
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mLogoutTask = null;
             mGetProfileInfoTask = null;
             mAddTrustedDeviceTask = null;
+            mGetBusinessInformationAsyncTask = null;
+            mRefreshTokenAsyncTask = null;
             Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
@@ -574,6 +588,11 @@ public class HomeActivity extends BaseActivity
                 try {
                     mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                        if (mGetUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
+                            getBusinessInformation();
+                        } else {
+
                         mNameView.setText(mGetUserInfoResponse.getName());
 
                         String imageUrl = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
@@ -583,6 +602,7 @@ public class HomeActivity extends BaseActivity
 
                         PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                        }
 
 
                     } else {
@@ -595,6 +615,32 @@ public class HomeActivity extends BaseActivity
 
                 mGetProfileInfoTask = null;
 
+                break;
+            case Constants.COMMAND_GET_BUSINESS_INFORMATION:
+                try {
+                    mGetBusinessInformationResponse = gson.fromJson(result.getJsonString(), GetBusinessInformationResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mNameView.setText(mGetBusinessInformationResponse.getBusinessName());
+
+                        String imageUrl = Utilities.getImage(mGetBusinessInformationResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
+
+                        //saving user info in shared preference
+                        ProfileInfoCacheManager.updateCache(mGetBusinessInformationResponse.getBusinessName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
+
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                    } else {
+                        Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                        Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+
+                }
+
+                mGetBusinessInformationAsyncTask = null;
                 break;
             case Constants.COMMAND_ADD_TRUSTED_DEVICE:
 
@@ -616,6 +662,30 @@ public class HomeActivity extends BaseActivity
                 mAddTrustedDeviceTask = null;
 
                 break;
+
+           case Constants.COMMAND_REFRESH_TOKEN:
+                try {
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        // Do nothing
+                    } else {
+                        Toast.makeText(this, R.string.please_log_in_again, Toast.LENGTH_LONG).show();
+                        finish();
+                        Intent intent = new Intent(this, SignupOrLoginActivity.class);
+                        startActivity(intent);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, R.string.please_login_again, Toast.LENGTH_LONG).show();
+                    finish();
+                    Intent intent = new Intent(this, SignupOrLoginActivity.class);
+                    startActivity(intent);
+                }
+
+                HomeActivity.mRefreshTokenAsyncTask = null;
+
+            break;
         }
     }
 

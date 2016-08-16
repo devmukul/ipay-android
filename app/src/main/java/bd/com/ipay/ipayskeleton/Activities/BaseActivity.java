@@ -18,7 +18,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.GetRefreshTokenResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -129,11 +128,11 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mLogoutTask = null;
-            HomeActivity.mRefreshTokenAsyncTask = null;
             return;
         }
 
         Gson gson = new Gson();
+
 
         if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
 
@@ -155,31 +154,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             }
 
             mLogoutTask = null;
-
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_TOKEN)) {
-
-            try {
-
-                HomeActivity.mGetRefreshTokenResponse = gson.fromJson(result.getJsonString(), GetRefreshTokenResponse.class);
-
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    // Do nothing
-                } else {
-                    Toast.makeText(context, HomeActivity.mGetRefreshTokenResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    finish();
-                    Intent intent = new Intent(context, SignupOrLoginActivity.class);
-                    startActivity(intent);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(context, R.string.please_login_again, Toast.LENGTH_LONG).show();
-                finish();
-                Intent intent = new Intent(context, SignupOrLoginActivity.class);
-                startActivity(intent);
-            }
-
-            HomeActivity.mRefreshTokenAsyncTask = null;
 
         }
     }

@@ -1,9 +1,11 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +31,19 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
+
+    private HttpRequestPostAsyncTask mCancelRequestTask = null;
+
+    private HttpRequestPostAsyncTask mRejectRequestTask = null;
+
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
     private ProgressDialog mProgressDialog;
+
+    private int mRequestType;
 
     private BigDecimal mAmount;
     private String mReceiverName;
@@ -53,13 +62,21 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mNetReceivedView;
-    private Button mReceiveRequestMoneyButton;
+    private Button mRejectButton;
+    private Button mAcceptButton;
+    private Button mCancelButton;
     private boolean isPinRequired = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_received_request_review, container, false);
-        getActivity().setTitle(R.string.send_money);
+        View v = inflater.inflate(R.layout.fragment_sent_received_request_review, container, false);
+
+        mRequestType = getActivity().getIntent().getIntExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
+
+        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST)
+            getActivity().setTitle(R.string.send_money);
+        else
+            getActivity().setTitle(R.string.request_money);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
@@ -79,7 +96,10 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
-        mReceiveRequestMoneyButton = (Button) v.findViewById(R.id.button_send_money);
+
+        mAcceptButton = (Button) v.findViewById(R.id.button_accept);
+        mRejectButton = (Button) v.findViewById(R.id.button_reject);
+        mCancelButton = (Button) v.findViewById(R.id.button_cancel);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -109,12 +129,46 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
             }
         }
 
+        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
+            mAcceptButton.setVisibility(View.VISIBLE);
+            mRejectButton.setVisibility(View.VISIBLE);
+            mCancelButton.setVisibility(View.GONE);
+        } else {
+            mAcceptButton.setVisibility(View.GONE);
+            mRejectButton.setVisibility(View.GONE);
+            mCancelButton.setVisibility(View.VISIBLE);
+        }
+
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
-        mReceiveRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
+        mAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attempAcceptRequestWithPinCheck();
+            }
+        });
+
+        mRejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                rejectDialog.content(R.string.confirm_request_rejection);
+                rejectDialog.positiveText(R.string.yes);
+                rejectDialog.negativeText(R.string.no);
+                rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        rejectRequestMoney(mRequestID);
+                    }
+                });
+                rejectDialog.show();
+            }
+        });
+
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlertDialogue(getString(R.string.cancel_money_request_confirm), mRequestID);
             }
         });
 
@@ -139,6 +193,62 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
             acceptRequestMoney(mRequestID, null);
         }
 
+    }
+
+    private void showAlertDialogue(String msg, final long id) {
+        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+        alertDialogue.setTitle(R.string.confirm_query);
+        alertDialogue.setMessage(msg);
+
+        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                cancelRequest(id);
+            }
+        });
+
+        alertDialogue.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+
+        alertDialogue.show();
+    }
+
+    private void cancelRequest(Long id) {
+        if (mCancelRequestTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
+        mProgressDialog.show();
+        // No PIN needed for now to place a request from me
+        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
+                new RequestMoneyAcceptRejectOrCancelRequest(id, null);
+        Gson gson = new Gson();
+        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        mCancelRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_REQUESTS_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
+        mCancelRequestTask.mHttpResponseListener = this;
+        mCancelRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void rejectRequestMoney(long id) {
+        if (mRejectRequestTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
+        mProgressDialog.show();
+
+        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
+                new RequestMoneyAcceptRejectOrCancelRequest(id);
+        Gson gson = new Gson();
+        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
+        mRejectRequestTask.mHttpResponseListener = this;
+        mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void acceptRequestMoney(long id, String pin) {
@@ -166,6 +276,7 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mAcceptRequestTask = null;
+            mRejectRequestTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -181,8 +292,10 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
                         RequestMoneyAcceptRejectOrCancelResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getActivity().onBackPressed();
+                    }
 
                 } else {
                     if (getActivity() != null)
@@ -197,7 +310,59 @@ public class ReceivedRequestReviewFragment extends ReviewFragment implements Htt
             mProgressDialog.dismiss();
             mAcceptRequestTask = null;
 
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+
+            try {
+                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                        RequestMoneyAcceptRejectOrCancelResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getActivity().onBackPressed();
+                    }
+
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mRejectRequestTask = null;
+
+        } else if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_REQUESTS_MONEY)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            RequestMoneyAcceptRejectOrCancelResponse.class);
+                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getActivity().onBackPressed();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mCancelRequestTask = null;
         }
+
     }
 
     @Override
