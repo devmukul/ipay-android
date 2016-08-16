@@ -34,7 +34,6 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -48,10 +47,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     private HttpRequestPostAsyncTask mTopupTask = null;
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
-    private HttpRequestPostAsyncTask mSendInviteTask = null;
-    private SendInviteResponse mSendInviteResponse;
     private GetUserInfoResponse mGetUserInfoResponse;
-    private TopupResponse mTopupResponse;
 
     private ProgressDialog mProgressDialog;
 
@@ -255,16 +251,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void sendInvite(String phoneNumber) {
-
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
-        mProgressDialog.show();
-
-        mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                Constants.BASE_URL_MM + Constants.URL_SEND_INVITE + phoneNumber, null, getActivity(), this);
-        mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
@@ -285,7 +271,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             case Constants.COMMAND_TOPUP_REQUEST:
 
                 try {
-                    mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                         if (getActivity() != null) {
@@ -343,29 +328,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                 }
 
                 mGetProfileInfoTask = null;
-
-                break;
-            case Constants.COMMAND_SEND_INVITE:
-                try {
-                    mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.invitation_sent, Toast.LENGTH_LONG).show();
-                        }
-
-                    } else if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                mSendInviteTask = null;
 
                 break;
         }
