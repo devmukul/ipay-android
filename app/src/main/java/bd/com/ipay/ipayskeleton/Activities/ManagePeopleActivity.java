@@ -122,7 +122,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
         Fragment employeeManagementFragment = new EmployeeManagementFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, employeeManagementFragment).addToBackStack(null).commit();
+                .replace(R.id.fragment_container, employeeManagementFragment).commit();
     }
 
 
