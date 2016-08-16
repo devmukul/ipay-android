@@ -39,24 +39,6 @@
                         android:id="@+id/textview_mobile_number"
                         style="@style/TextViewUserInfoSecondary" />
 
-                    <LinearLayout
-                        android:id="@+id/layout_checkbox_invitation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:visibility="gone">
-
-                        <CheckBox
-                            android:id="@+id/checkbox_topup_invite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/invite_this_person_to_ipay" />
-
-                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
