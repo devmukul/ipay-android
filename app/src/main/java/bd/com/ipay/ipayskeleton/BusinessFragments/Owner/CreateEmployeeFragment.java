@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -163,7 +163,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         bundle.putString(Constants.PROFILE_PICTURE, profilePicture);
         bundle.putLong(Constants.ASSOCIATION_ID, mAssociationId);
 
-        ((ProfileActivity) getActivity()).switchToEmployeePrivilegeFragment(bundle);
+        ((ManagePeopleActivity) getActivity()).switchToEmployeePrivilegeFragment(bundle);
     }
 
     @Override

@@ -62,13 +62,7 @@ import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT;
 import static bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFIED_EMAIL;
 
-public class ProfileActivity extends BaseActivity implements HttpResponseListener {
-
-    private HttpRequestGetAsyncTask mGetRolesAsyncTask;
-    private GetRolesResponse mGetRolesResponse;
-
-    public static ArrayList<Role> mAllRoleList;
-    public static HashMap<Integer, String[]> mRolePrivilegeMap;
+public class ProfileActivity extends BaseActivity {
 
 
     private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
@@ -78,12 +72,6 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_profile);
-
-        if(ProfileInfoCacheManager.isBusinessAccount()) {
-            mAllRoleList = new ArrayList<>();
-            mRolePrivilegeMap = new HashMap<>();
-            getAllRoles();
-        }
 
         String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
 
@@ -133,17 +121,6 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
 
         return args;
     }
-
-    private void getAllRoles() {
-        if (mGetRolesAsyncTask != null) {
-            return;
-        }
-
-        mGetRolesAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ALL_ROLES,
-                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES, ProfileActivity.this, this);
-        mGetRolesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
 
     public void switchToFragment(String targetFragment, Bundle bundle, boolean addToBackStack) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -245,53 +222,6 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BusinessBasicInfoFragment()).addToBackStack(null).commit();
     }
 
-    public void switchToEmployeeManagementFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-
-        Fragment employeeManagementFragment = new EmployeeManagementFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, employeeManagementFragment).addToBackStack(null).commit();
-    }
-
-    public void switchToEmployeeInformationFragment(Bundle bundle) {
-        Fragment employeeInformationFragment = new CreateEmployeeFragment();
-        if (bundle != null)
-            employeeInformationFragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, employeeInformationFragment).addToBackStack(null).commit();
-    }
-
-    public void switchToEmployeeInformationDetailsFragment(Bundle bundle) {
-        Fragment employeeInformationDetailsFragment = new EmployeeDetailsFragment();
-        if (bundle != null)
-            employeeInformationDetailsFragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, employeeInformationDetailsFragment).addToBackStack(null).commit();
-    }
-
-
-    public void switchToEditEmployeeInformationFragment(Bundle bundle) {
-        Fragment editEmployeeInformationFragment = new CreateEmployeeFragment();
-        if (bundle != null)
-            editEmployeeInformationFragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, editEmployeeInformationFragment).addToBackStack(null).commit();
-    }
-
-    public void switchToEmployeePrivilegeFragment(Bundle bundle) {
-        Fragment employeePrivilegeFragment = new EmployeePrivilegeFragment();
-        if (bundle != null)
-            employeePrivilegeFragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, employeePrivilegeFragment).addToBackStack(null).commit();
-    }
-
     public void switchToBusinessInfoFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 3)
             getSupportFragmentManager().popBackStackImmediate();
@@ -383,43 +313,5 @@ public class ProfileActivity extends BaseActivity implements HttpResponseListene
     @Override
     public Context setContext() {
         return ProfileActivity.this;
-    }
-
-    public void httpResponseReceiver(HttpResponseObject result) {
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-            mGetRolesAsyncTask = null;
-            Toast.makeText(ProfileActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        Gson gson = new Gson();
-        switch (result.getApiCommand()) {
-            case Constants.COMMAND_GET_ALL_ROLES:
-                try {
-                    mGetRolesResponse = gson.fromJson(result.getJsonString(), GetRolesResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                        mAllRoleList = (ArrayList<Role>) mGetRolesResponse.getRoles();
-
-                        // Create a hash map for roleId - Privileges
-                        for (Role mRole : mAllRoleList)
-                            mRolePrivilegeMap.put(mRole.getId(), mRole.getPrivileges());
-
-                        //switchToProfileFragment();
-
-                    } else {
-                        //finish();
-                        Toast.makeText(ProfileActivity.this, mGetRolesResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    //finish();
-                    Toast.makeText(ProfileActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
-                }
-
-            default:
-                break;
-        }
     }
 }

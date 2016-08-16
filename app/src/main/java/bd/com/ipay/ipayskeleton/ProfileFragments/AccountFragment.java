@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -175,7 +176,9 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mManageEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
+                //((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
+                Intent intent = new Intent(getActivity(), ManagePeopleActivity.class);
+                startActivity(intent);
             }
         });
 
