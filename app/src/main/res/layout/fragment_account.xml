@@ -90,7 +90,7 @@
                 android:id="@+id/basic_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_email"
+                android:drawableLeft="@drawable/ic_1"
                 android:text="@string/basic_info" />
 
             <View
