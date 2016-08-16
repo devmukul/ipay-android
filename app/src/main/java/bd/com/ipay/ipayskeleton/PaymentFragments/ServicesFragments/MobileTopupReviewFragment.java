@@ -35,7 +35,6 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -67,12 +66,8 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private TextView mOperatorView;
     private ProfileImageView mProfileImageView;
     private ImageView mOperatorImageView;
-    private LinearLayout mInvitationLayout;
-    private CheckBox mInvitationCheckBox;
     private Button mTopupButton;
 
-    private View mServiceChargeHolder;
-    private View mTopUpHolder;
     private View mServiceCharge;
     private List<String> mArraypackages;
     private List<String> mArrayoperators;
@@ -97,11 +92,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         mPackageView = (TextView) v.findViewById(R.id.textview_package);
         mOperatorView = (TextView) v.findViewById(R.id.textview_operator);
         mOperatorImageView = (ImageView) v.findViewById(R.id.imageView_operator);
-        mInvitationLayout = (LinearLayout) v.findViewById(R.id.layout_checkbox_invitation);
-        mInvitationCheckBox = (CheckBox) v.findViewById(R.id.checkbox_topup_invite);
         mTopupButton = (Button) v.findViewById(R.id.button_topup);
-        mServiceChargeHolder = v.findViewById(R.id.service_charge_holder);
-        mTopUpHolder = v.findViewById(R.id.topup_holder);
         mServiceCharge = v.findViewById(R.id.service_charge_with_net_amount);
         mProgressDialog = new ProgressDialog(getActivity());
         mMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
