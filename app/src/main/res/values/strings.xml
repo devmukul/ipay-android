@@ -570,6 +570,7 @@
     <string name="business_name">Name</string>
     <string name="office_info">Office Information</string>
     <string name="contact_info">Contact Information</string>
+    <string name="personal_info">Personal Information</string>
     <string name="parent_info">Parents Information</string>
     <string name="business_type">Business Type</string>
     <string name="not_a_business_user">This person is not a business user. You can only make payment to a business user</string>
