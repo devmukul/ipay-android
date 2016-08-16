@@ -11,6 +11,7 @@ public class FriendInfo {
     private String profilePictureUrl;
     private String profilePictureUrlMedium;
     private String profilePictureUrlHigh;
+    private String relationship;
     private long updateAt;
 
     public FriendInfo(String name, String profilePictureUrl) {
@@ -19,7 +20,7 @@ public class FriendInfo {
     }
 
     public FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, String originalName,
-                      String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, long updateAt) {
+                      String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, String relationship, long updateAt) {
         this.accountType = accountType;
         this.isMember = isMember;
         this.isVerified = isVerified;
@@ -28,13 +29,14 @@ public class FriendInfo {
         this.profilePictureUrl = profilePictureUrl;
         this.profilePictureUrlMedium = profilePictureUrlMedium;
         this.profilePictureUrlHigh = profilePictureUrlHigh;
+        this.relationship = relationship;
         this.updateAt = updateAt;
     }
 
     public FriendInfo(int accountType, int isMember, int verificationStatus, String name, String originalName,
-                      String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, long updateAt) {
+                      String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, String relationship, long updateAt) {
         this(accountType, isMember == DBConstants.IPAY_MEMBER, verificationStatus == DBConstants.VERIFIED_USER,
-                name, originalName, profilePictureUrl, profilePictureUrlMedium, profilePictureUrlHigh, updateAt);
+                name, originalName, profilePictureUrl, profilePictureUrlMedium, profilePictureUrlHigh, relationship, updateAt);
     }
 
     public int getAccountType() {
@@ -79,6 +81,10 @@ public class FriendInfo {
             return profilePictureUrlHigh;
         else
             return getProfilePictureUrlMedium();
+    }
+
+    public String getRelationship() {
+        return relationship;
     }
 
     public void setAccountType(int accountType) {
