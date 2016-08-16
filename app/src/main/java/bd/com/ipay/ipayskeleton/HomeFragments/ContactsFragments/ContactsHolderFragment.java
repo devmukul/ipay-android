@@ -23,6 +23,7 @@ import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
@@ -30,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendResponse;
 import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
@@ -55,12 +57,18 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private FloatingActionButton mAddContactButton;
 
     private HttpRequestPostAsyncTask mAddFriendAsyncTask;
-    private AddFriendResponse mAddFriendResponse;
 
     private EditText nameView;
     private EditText mobileNumberView;
 
     private ProgressDialog mProgressDialog;
+
+    private EditText mEditTextRelationship;
+    private CustomSelectorDialog mCustomSelectorDialog;
+    private List<String> mRelationshipList;
+
+    private String mRelationship;
+    private int mSelectedRelationId = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -123,9 +131,29 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
         nameView = (EditText) dialogView.findViewById(R.id.edit_text_name);
         mobileNumberView = (EditText) dialogView.findViewById(R.id.edit_text_mobile_number);
+        mEditTextRelationship = (EditText) dialogView.findViewById(R.id.edit_text_relationship);
 
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+        mRelationshipList = Arrays.asList(getResources().getStringArray(R.array.relationship));
+        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), getString(R.string.relationship), mRelationshipList);
+
+        mEditTextRelationship.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomSelectorDialog.show();
+            }
+        });
+
+        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int selectedIndex, String mRelation) {
+                mEditTextRelationship.setText(mRelation);
+                mSelectedRelationId = selectedIndex;
+                mRelationship = mRelation;
+            }
+        });
 
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -133,7 +161,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                         if (verifyUserInputs()) {
                             mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
 
-                            addFriend(nameView.getText().toString(), mobileNumberView.getText().toString());
+                            addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(),mRelationship.toUpperCase());
 
                             Utilities.hideKeyboard(getActivity(), nameView);
                             Utilities.hideKeyboard(getActivity(), mobileNumberView);
@@ -175,16 +203,21 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             error = true;
         }
 
+        if (mSelectedRelationId < 0) {
+            mEditTextRelationship.setError(getString(R.string.please_select_relation));
+            error = true;
+        }
+
         return !error;
     }
 
-    private void addFriend(String name, String phoneNumber) {
+    private void addFriend(String name, String phoneNumber, String relationship) {
         if (mAddFriendAsyncTask != null) {
             return;
         }
 
         List<InfoAddFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name));
+        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
 
         AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
         Gson gson = new Gson();
@@ -297,7 +330,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_FRIENDS)) {
             try {
-                mAddFriendResponse = gson.fromJson(result.getJsonString(), AddFriendResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                     if (getActivity() != null) {

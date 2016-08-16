@@ -13,6 +13,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
@@ -41,6 +42,13 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
     private HttpRequestPostAsyncTask mAddFriendAsyncTask;
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
+
+    private EditText mEditTextRelationship;
+    private CustomSelectorDialog mCustomSelectorDialog;
+    private List<String> mRelationshipList;
+
+    private String mRelationship;
+    private int mSelectedRelationId = -1;
 
     private FinishCheckerListener mFinishCheckerListener;
 
@@ -71,7 +79,28 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         mobileNumberView = (EditText) dialogView.findViewById(R.id.edit_text_mobile_number);
         mobileNumberView.setText(mMobileNumber);
 
+        mEditTextRelationship = (EditText) dialogView.findViewById(R.id.edit_text_relationship);
+
         Utilities.showKeyboard(context);
+
+        mRelationshipList = Arrays.asList(context.getResources().getStringArray(R.array.relationship));
+        mCustomSelectorDialog = new CustomSelectorDialog(context, context.getResources().getString(R.string.relationship), mRelationshipList);
+
+        mEditTextRelationship.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomSelectorDialog.show();
+            }
+        });
+
+        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int selectedIndex, String mRelation) {
+                mEditTextRelationship.setText(mRelation);
+                mSelectedRelationId = selectedIndex;
+                mRelationship = mRelation;
+            }
+        });
 
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
@@ -81,7 +110,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                     mMobileNumber = ContactEngine.formatMobileNumberBD(mobileNumberView.getText().toString());
                     mProgressDialog.setMessage(context.getResources().getString(R.string.progress_dialog_sending_invite));
 
-                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString());
+                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
                     Utilities.hideKeyboard(context, nameView);
                     Utilities.hideKeyboard(context, mobileNumberView);
 
@@ -123,18 +152,24 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             error = true;
         }
 
+        if (mSelectedRelationId < 0) {
+            mEditTextRelationship.setError(context.getResources().getString(R.string.please_select_relation));
+            error = true;
+        }
+
+
         return !error;
     }
 
 
 
-    private void addFriend(String name, String phoneNumber) {
+    private void addFriend(String name, String phoneNumber, String relationship) {
         if (mAddFriendAsyncTask != null) {
             return;
         }
 
         List<InfoAddFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name));
+        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
 
         AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
         Gson gson = new Gson();

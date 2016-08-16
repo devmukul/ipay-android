@@ -111,6 +111,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private int profilePictureUrlIndex;
     private int profilePictureUrlQualityMediumIndex;
     private int profilePictureUrlQualityHighIndex;
+    private int relationshipIndex;
     private int verificationStatusIndex;
     private int accountTypeIndex;
     private int isMemberIndex;
@@ -263,6 +264,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
                     profilePictureUrlQualityMediumIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM);
                     profilePictureUrlQualityHighIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH);
+                    relationshipIndex = cursor.getColumnIndex(DBConstants.KEY_RELATIONSHIP);
                     verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
                     accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
                     isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
@@ -671,6 +673,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 final String profilePictureUrlQualityMedium = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityMediumIndex);
                 final String profilePictureUrlQualityHigh = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityHighIndex);
                 final boolean isVerified = mCursor.getInt(verificationStatusIndex) == DBConstants.VERIFIED_USER;
+                final String relationship = mCursor.getString(relationshipIndex);
                 final int accountType = mCursor.getInt(accountTypeIndex);
                 final boolean isMember = mCursor.getInt(isMemberIndex) == DBConstants.IPAY_MEMBER;
 
