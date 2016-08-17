@@ -91,7 +91,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.SingleInvoiceActivity"
-            android:label="@string/invoice_details"
+            android:label="@string/payment_details"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />

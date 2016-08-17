@@ -203,7 +203,7 @@
     <string name="password_recovery">Password Recovery</string>
     <string name="transaction_details">Transaction Details</string>
     <string name="invoice">Invoice</string>
-    <string name="invoice_details">Invoice Details</string>
+    <string name="payment_details">Payment Details</string>
     <string name="adding_bank">Bank is being added...</string>
     <string name="removing_bank">Bank is being removed...</string>
     <string name="sending_for_verification">Sending for verification...</string>
