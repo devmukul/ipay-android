@@ -73,6 +73,7 @@
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/value30"
                 android:layout_marginRight="@dimen/value30"
+                android:text="@string/profile_completion_text"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:visibility="invisible" />

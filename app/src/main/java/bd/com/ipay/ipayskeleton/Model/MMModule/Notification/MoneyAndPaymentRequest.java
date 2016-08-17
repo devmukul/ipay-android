@@ -48,7 +48,7 @@ public class MoneyAndPaymentRequest implements Notification {
     }
 
     public String getNotificationTitle() {
-        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Invoice received";
+        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Payment Request Received";
         else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return "Money Request Received";
         else return title;
     }

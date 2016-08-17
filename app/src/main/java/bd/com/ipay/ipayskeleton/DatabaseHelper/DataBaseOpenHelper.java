@@ -32,6 +32,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_PROFILE_PICTURE + " text, " +
                 DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM + " text, " +
                 DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH + " text, " +
+                DBConstants.KEY_RELATIONSHIP + " text, " +
                 DBConstants.KEY_VERIFICATION_STATUS + " integer default 0, " +
                 DBConstants.KEY_UPDATE_TIME + " long, " +
                 DBConstants.KEY_IS_MEMBER + " integer default 0)");
@@ -46,7 +47,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion <= 7) {
+        if (oldVersion <= 8) {
             db.execSQL("drop table if exists " + DBConstants.DB_TABLE_FRIENDS);
             createFriendsTable(db);
         }

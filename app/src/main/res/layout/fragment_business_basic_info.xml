@@ -27,7 +27,7 @@
         android:drawableLeft="@drawable/ic_bizinfo"
         android:paddingBottom="@dimen/value4"
         android:paddingTop="@dimen/value4"
-        android:text="@string/business_contact" />
+        android:text="@string/contact_person" />
 
 
 </LinearLayout>

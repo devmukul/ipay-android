@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
@@ -134,7 +134,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
     }
 
     private void setRolesAdapter() {
-        roleSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_role), ProfileActivity.mAllRoleList, mSelectedRoleId);
+        roleSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_role), ManagePeopleActivity.mAllRoleList, mSelectedRoleId);
         roleSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -142,7 +142,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                 roleSelection.setText(name);
                 mSelectedRoleId = id;
                 mSelectedRoleName = name;
-                mPrivilegeList = Arrays.asList(ProfileActivity.mRolePrivilegeMap.get(id));
+                mPrivilegeList = Arrays.asList(ManagePeopleActivity.mRolePrivilegeMap.get(id));
             }
         });
 
@@ -223,7 +223,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            ((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
+                            ((ManagePeopleActivity) getActivity()).switchToEmployeeManagementFragment();
                         }
                     } else {
                         if (getActivity() != null) {
@@ -243,7 +243,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            ((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
+                            ((ManagePeopleActivity) getActivity()).switchToEmployeeManagementFragment();
                         }
                     } else {
                         if (getActivity() != null) {
@@ -277,7 +277,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                             mSelectedRoleId = mEmployeeDetails.getRoleId();
 
                             // Get the name of the Role
-                            for (Role role : ProfileActivity.mAllRoleList) {
+                            for (Role role : ManagePeopleActivity.mAllRoleList) {
                                 if (role.getId() == mSelectedRoleId) {
                                     mSelectedRoleName = role.getName();
                                     break;
@@ -287,7 +287,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                             // Set the role selector
                             roleSelection.setText(mSelectedRoleName);
 
-                            mPrivilegeList = Arrays.asList(ProfileActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
+                            mPrivilegeList = Arrays.asList(ManagePeopleActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
                             mEmployeePrivilegeAdapter.notifyDataSetChanged();
 
                         }

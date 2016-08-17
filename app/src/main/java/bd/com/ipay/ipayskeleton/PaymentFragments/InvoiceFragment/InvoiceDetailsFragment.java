@@ -64,7 +64,7 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_make_payment_notification_review, container, false);
-        getActivity().setTitle(R.string.invoice_details);
+        getActivity().setTitle(R.string.payment_details);
 
         Bundle bundle = getArguments();
         context = getContext();

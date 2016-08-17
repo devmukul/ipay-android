@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -39,32 +39,6 @@ public class DataHelper {
         instance = null;
     }
 
-    public void createFriend(FriendNode friendNode) {
-
-        try {
-            ContentValues values = new ContentValues();
-            values.put(DBConstants.KEY_MOBILE_NUMBER, friendNode.getPhoneNumber());
-            values.put(DBConstants.KEY_NAME, friendNode.getInfo().getName());
-            values.put(DBConstants.KEY_ORIGINAL_NAME, friendNode.getInfo().getOriginalName());
-            values.put(DBConstants.KEY_ACCOUNT_TYPE, friendNode.getInfo().getAccountType());
-            values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
-            values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM, friendNode.getInfo().getProfilePictureUrlMedium());
-            values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH, friendNode.getInfo().getProfilePictureUrlHigh());
-            values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
-            values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
-                    DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
-            values.put(DBConstants.KEY_UPDATE_TIME, friendNode.getInfo().getUpdateTime());
-            values.put(DBConstants.KEY_IS_MEMBER, friendNode.getInfo().isMember() ?
-                    DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
-
-            SQLiteDatabase db = dOpenHelper.getWritableDatabase();
-            db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void createFriends(List<FriendNode> friendNodes) {
         if (friendNodes != null && !friendNodes.isEmpty()) {
 
@@ -81,6 +55,7 @@ public class DataHelper {
                     values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
                     values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM, friendNode.getInfo().getProfilePictureUrlMedium());
                     values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH, friendNode.getInfo().getProfilePictureUrlHigh());
+                    values.put(DBConstants.KEY_RELATIONSHIP, friendNode.getInfo().getRelationship());
                     values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
                             DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
                     values.put(DBConstants.KEY_UPDATE_TIME, friendNode.getInfo().getUpdateTime());
@@ -229,6 +204,7 @@ public class DataHelper {
             int profilePictureUrlQualityMediumIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM);
             int profilePictureUrlQualityHighIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH);
             int verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
+            int relationshipIndex = cursor.getColumnIndex(DBConstants.KEY_RELATIONSHIP);
             int accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
             int updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
             int isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
@@ -242,11 +218,12 @@ public class DataHelper {
                 String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
                 String profilePictureUrlQualityMedium = cursor.getString(profilePictureUrlQualityMediumIndex);
                 String profilePictureUrlQualityHigh = cursor.getString(profilePictureUrlQualityHighIndex);
+                String relationship = cursor.getString(relationshipIndex);
                 long updateTime = cursor.getLong(updateTimeIndex);
                 int isMember = cursor.getInt(isMemberIndex);
 
                 FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, isMember,
-                        verificationStatus, name, originalName, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, updateTime));
+                        verificationStatus, name, originalName, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, relationship, updateTime));
                 friends.add(friend);
             } while (cursor.moveToNext());
         }

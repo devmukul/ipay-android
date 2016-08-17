@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -62,7 +62,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         mFabAddNewEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToEmployeeInformationFragment(null);
+                ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationFragment(null);
             }
         });
 
@@ -259,13 +259,13 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                                 } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
-                                    ((ProfileActivity) getActivity()).switchToEmployeeInformationDetailsFragment(bundle);
+                                    ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationDetailsFragment(bundle);
                                 } else if (Constants.ACTION_TYPE_EDIT.equals(action)) {
                                     Bundle bundle = new Bundle();
                                     bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
                                     bundle.putString(Constants.MOBILE_NUMBER, employee.getMobileNumber());
                                     bundle.putString(Constants.DESIGNATION, employee.getDesignation());
-                                    ((ProfileActivity) getActivity()).switchToEditEmployeeInformationFragment(bundle);
+                                    ((ManagePeopleActivity) getActivity()).switchToEditEmployeeInformationFragment(bundle);
                                 }
                             }
                         });

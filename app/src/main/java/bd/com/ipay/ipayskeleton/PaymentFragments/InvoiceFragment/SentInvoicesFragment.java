@@ -68,7 +68,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
-        getActivity().setTitle(R.string.invoice_list);
+        getActivity().setTitle(R.string.request_payment);
 
         ((InvoiceActivity) getActivity()).mFabCreateInvoice.setVisibility(View.VISIBLE);
 

@@ -19,7 +19,7 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
     private EducationPaymentDetails educationPayment;
 
     public TransactionHistoryAdditionalInfo(String userName, String userMobileNumber, String userProfilePic,
-                String bankAccountNumber, String bankAccountName, String bankName, String branchName) {
+                String bankAccountNumber, String bankAccountName, String bankName, String branchName, String bankCode) {
         this.userName = userName;
         this.userMobileNumber = userMobileNumber;
         this.userProfilePic = userProfilePic;

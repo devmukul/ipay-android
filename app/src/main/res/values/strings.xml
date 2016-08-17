@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">iPay</string>
     <string name="iPay_system">iPay Systems Ltd.</string>
     <string name="iPay_copyright">Copyright 2016 @ iPay Systems Ltd.</string>
@@ -203,7 +203,7 @@
     <string name="password_recovery">Password Recovery</string>
     <string name="transaction_details">Transaction Details</string>
     <string name="invoice">Invoice</string>
-    <string name="invoice_details">Invoice Details</string>
+    <string name="payment_details">Payment Details</string>
     <string name="adding_bank">Bank is being added...</string>
     <string name="removing_bank">Bank is being removed...</string>
     <string name="sending_for_verification">Sending for verification...</string>
@@ -299,7 +299,6 @@
     <string name="end_date">End date (dd/mm/yyyy)</string>
     <string name="sign_up_with_ipay">Sign Up with iPay</string>
     <string name="birthday_dd_mm_yy">Date of Birth</string>
-    <string name="birthday_date_month_year">date/month/year</string>
     <string name="please_enter_document_number">Please enter the document number</string>
     <string name="send_money_failed_due_to_server_down">Money sending failed. No response from server. Please try again later.</string>
     <string name="payment_failed_due_to_server_down">Payment failed. No response from server. Please try again later.</string>
@@ -341,7 +340,6 @@
     <string name="select_an_operator">Select Operator</string>
     <string name="recharge_to">Recharge to</string>
     <string name="opening_balance_to">Opening balance to</string>
-    <string name="edit">Edit</string>
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
     <string name="purpose">Purpose</string>
     <string name="filter_profile_change">Profile Changes</string>
@@ -415,7 +413,6 @@
     <string name="filter_education">Education</string>
 
     <string name="basic_info">Basic Information</string>
-    <string name="owner_info">Owner Information</string>
     <string name="student_info">Student Information</string>
     <string name="pay_education_fee">Pay education fees</string>
     <string name="add_new_payment_item">Add new payment item</string>
@@ -462,7 +459,7 @@
     <string name="topup_received">Topup Received</string>
     <string name="topup_package">Package</string>
     <string name="operator">Operator</string>
-    <string name="invite_this_person_to_ipay">Invite this person to iPay</string>
+    <string name="invite_this_person_to_ipay" tools:keep="@string/invite_this_person_to_ipay">Invite this person to iPay</string>
     <string name="your_number">Your Number</string>
     <string name="recharge_now">Top Up</string>
     <string name="enter_pin">Enter PIN</string>
@@ -531,6 +528,7 @@
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
     <string name="can_not_change_picture">Verified user can not change profile picture</string>
     <string name="profile_completeness">Profile Completeness</string>
+    <string name="profile_completion_text">Yout profile is 0% complete. Complete profile to get verified</string>
     <string name="business_contact">Business Contact</string>
     <string name="edit_basic_info">Edit Basic Info</string>
     <string name="edit_parent_info">Edit Parent Info</string>
@@ -576,7 +574,6 @@
     <string name="not_a_business_user">This person is not a business user. You can only make payment to a business user</string>
     <string name="failed_loading_business_type">Loading failed</string>
     <string name="failed_loading_business_information">Failed loading business information</string>
-    <string name="manage_business">Manage Business</string>
     <string name="invite">Invite</string>
     <string name="please_wait_until_information_loading">Please wait until all information are loaded</string>
     <string name="saving_business_information">Saving business information...</string>
@@ -713,21 +710,12 @@
         <item>Friend</item>
     </string-array>
 
-    <string-array name="invoice_action">
-        <item>Accept</item>
-        <item>Reject</item>
-    </string-array>
-
     <string-array name="introduce_action">
         <item>Verify</item>
         <item>Reject</item>
         <item>Spam</item>
     </string-array>
 
-
-    <string-array name="my_request_action">
-        <item>Cancel</item>
-    </string-array>
 
     <string-array name="trusted_device_action">
         <item>Remove</item>

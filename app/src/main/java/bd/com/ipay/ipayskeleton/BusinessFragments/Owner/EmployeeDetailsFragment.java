@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -115,7 +115,7 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
                             mDesignationView.setText(mEmployeeDetails.getDesignation());
                         else mDesignationView.setVisibility(View.GONE);
 
-                        mPrivilegeList = Arrays.asList(ProfileActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
+                        mPrivilegeList = Arrays.asList(ManagePeopleActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
                         mEmployeeDetailsAdapter = new EmployeeDetailsAdapter();
 
                         mPrivilegeListView.setAdapter(mEmployeeDetailsAdapter);
