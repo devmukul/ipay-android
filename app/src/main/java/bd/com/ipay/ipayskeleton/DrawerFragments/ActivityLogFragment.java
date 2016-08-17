@@ -630,7 +630,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             if (userActivityResponsesList == null || userActivityResponsesList.isEmpty())
                 return 0;
             else
-                return userActivityResponsesList.size() + 1;
+                return userActivityResponsesList.size() + 1 ;
         }
 
         @Override
