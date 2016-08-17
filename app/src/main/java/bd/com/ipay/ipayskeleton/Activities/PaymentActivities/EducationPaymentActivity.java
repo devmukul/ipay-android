@@ -12,10 +12,10 @@ import bd.com.ipay.ipayskeleton.EducationFragments.PayEducationFeesFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.ReviewEducationFeePaymentFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.SelectInstitutionFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.ShowStudentInfoFragment;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.EventParticipant;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.Institution;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.SemesterOrSession;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.Student;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -31,7 +31,7 @@ public class EducationPaymentActivity extends BaseActivity {
     public static String sessionName = "";
     public static Institution selectedInstitution = new Institution();
     public static SemesterOrSession selectedSession = new SemesterOrSession();
-    public static Student selectedStudent = new Student();
+    public static EventParticipant selectedStudent = new EventParticipant();
 
     public static ArrayList<PayableItem> mMyPayableItems;
     public static final String ARGS_ENABLED_PAYABLE_ITEMS = "ARGS_ENABLED_PAYABLE_ITEMS";

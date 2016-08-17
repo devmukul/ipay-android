@@ -70,6 +70,8 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
+    private static AlertDialog mAlertDialog;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -192,6 +194,22 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         mRemoveBankAccountTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void showDialog() {
+
+        if (mAlertDialog != null && mAlertDialog.isShowing()) return;
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext())
+                .setMessage(R.string.bank_verification_help)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        mAlertDialog = alertDialog.create();
+        mAlertDialog.show();
+    }
+
     private void processGetBankListResponse(String json) {
         Gson gson = new Gson();
         mBankListResponse = gson.fromJson(json, GetBankListResponse.class);
@@ -206,17 +224,8 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         }
 
         BankListValidator bankListValidator = new BankListValidator(mBankListResponse.getBanks());
-        if (bankListValidator.isBankAdded() && !bankListValidator.isVerifiedBankAdded()) {
-            new AlertDialog.Builder(getContext())
-                    .setMessage(R.string.bank_verification_help)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
-                    .show();
-
-
+        if (bankListValidator.isBankAdded() && !bankListValidator.isVerifiedBankAdded() ) {
+          showDialog();
         }
 
         if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)

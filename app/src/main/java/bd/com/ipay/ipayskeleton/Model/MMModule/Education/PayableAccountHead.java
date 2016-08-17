@@ -4,12 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class PayableAccountHead implements Parcelable {
-    private Integer payableAccountHeadId;
+    private Integer id;
     private String description;
     private String name;
 
-    public Integer getPayableAccountHeadId() {
-        return payableAccountHeadId;
+    public Integer getId() {
+        return id;
     }
 
     public String getDescription() {
@@ -28,7 +28,7 @@ public class PayableAccountHead implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.payableAccountHeadId);
+        dest.writeValue(this.id);
         dest.writeString(this.description);
         dest.writeString(this.name);
     }
@@ -37,7 +37,7 @@ public class PayableAccountHead implements Parcelable {
     }
 
     protected PayableAccountHead(Parcel in) {
-        this.payableAccountHeadId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.description = in.readString();
         this.name = in.readString();
     }

@@ -3,12 +3,14 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Education;
 public class MakeEducationPaymentRequest {
     private String description;
     private String pin;
-    private EducationInvoice educationalInvoice;
+    private EducationInvoice educationalInvoiceDBDTO;
+    private InvoicePayableAccountRelation[] invoicePayableAccountRelationDBDTOList;
 
-    public MakeEducationPaymentRequest(String description, String pin, EducationInvoice educationalInvoice) {
+    public MakeEducationPaymentRequest(String description, String pin, EducationInvoice educationalInvoiceDBDTO, InvoicePayableAccountRelation[] invoicePayableAccountRelationDBDTOList) {
         this.description = description;
         this.pin = pin;
-        this.educationalInvoice = educationalInvoice;
+        this.educationalInvoiceDBDTO = educationalInvoiceDBDTO;
+        this.invoicePayableAccountRelationDBDTOList = invoicePayableAccountRelationDBDTOList;
     }
 
     public String getDescription() {
@@ -27,11 +29,19 @@ public class MakeEducationPaymentRequest {
         this.pin = pin;
     }
 
-    public EducationInvoice getEducationalInvoice() {
-        return educationalInvoice;
+    public EducationInvoice getEducationalInvoiceDBDTO() {
+        return educationalInvoiceDBDTO;
     }
 
-    public void setEducationalInvoice(EducationInvoice educationalInvoice) {
-        this.educationalInvoice = educationalInvoice;
+    public void setEducationalInvoiceDBDTO(EducationInvoice educationalInvoiceDBDTO) {
+        this.educationalInvoiceDBDTO = educationalInvoiceDBDTO;
+    }
+
+    public InvoicePayableAccountRelation[] getInvoicePayableAccountRelationDBDTOList() {
+        return invoicePayableAccountRelationDBDTOList;
+    }
+
+    public void setInvoicePayableAccountRelationDBDTOList(InvoicePayableAccountRelation[] invoicePayableAccountRelationDBDTOList) {
+        this.invoicePayableAccountRelationDBDTOList = invoicePayableAccountRelationDBDTOList;
     }
 }

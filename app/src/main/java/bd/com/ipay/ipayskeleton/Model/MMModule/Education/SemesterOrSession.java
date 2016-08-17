@@ -4,41 +4,42 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Resource;
 
 public class SemesterOrSession implements Resource{
 
-    private int sessionId;
+    private int id;
     private String description;
     private String sessionName;
-    private Institution institute;
+    private int instituteId;
 
+    @Override
     public int getId() {
-        return sessionId;
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public String getName() {
-        return sessionName;
-    }
-
-    public Institution getInstitute() {
-        return institute;
-    }
-
-    public void setSessionId(int sessionId) {
-        this.sessionId = sessionId;
-    }
-
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getName() {
+        return sessionName;
     }
 
     public void setSessionName(String sessionName) {
         this.sessionName = sessionName;
     }
 
-    public void setInstitute(Institution institute) {
-        this.institute = institute;
+    public int getInstituteId() {
+        return instituteId;
+    }
+
+    public void setInstituteId(int instituteId) {
+        this.instituteId = instituteId;
     }
 }
 

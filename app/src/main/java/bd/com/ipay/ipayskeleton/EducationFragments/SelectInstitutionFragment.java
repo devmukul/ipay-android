@@ -22,11 +22,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Education.EventParticipant;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.GetSessionRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.GetStudentInfoByStudentIDRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.Institution;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.SemesterOrSession;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.Student;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -39,7 +39,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
 
     private Institution[] mInstitutions;
     private SemesterOrSession[] mSemesterOrSessions;
-    private Student mStudent;
+    private EventParticipant mStudent;
 
     private ResourceSelectorDialog institutionsSelectorDialog;
     private ResourceSelectorDialog sessionsSelectorDialog;
@@ -300,11 +300,11 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         try {
-                            mStudent = gson.fromJson(result.getJsonString(), Student.class);
+                            mStudent = gson.fromJson(result.getJsonString(), EventParticipant.class);
                             Bundle bundle = new Bundle();
                             bundle.putString(EducationPaymentActivity.STUDENT_NAME, mStudent.getParticipantName());
                             bundle.putString(EducationPaymentActivity.STUDENT_MOBILE_NUMBER, mStudent.getParticipantMobileNumber());
-                            bundle.putString(EducationPaymentActivity.STUDENT_DEPARTMENT, mStudent.getDepartment().getDepartmentName());
+                            bundle.putString(EducationPaymentActivity.STUDENT_DEPARTMENT, mStudent.getDepartmentName());
                             EducationPaymentActivity.selectedStudent = mStudent;
 
                             ((EducationPaymentActivity) getActivity()).switchToStudentInfoFragment(bundle);

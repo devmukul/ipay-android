@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.EducationFragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +19,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentAct
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 
 public class AddPayAbleFragment extends Fragment {
 
@@ -48,6 +51,9 @@ public class AddPayAbleFragment extends Fragment {
         paymentItemDescription = (EditText) v.findViewById(R.id.description);
         paymentAmount = (EditText) v.findViewById(R.id.amount);
         addPaymentItemButton = (Button) v.findViewById(R.id.button_add);
+
+        // Set filter on amount to avoid more than two digits after decimal point
+        paymentAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         if (mPayablesList.size() > 0) setPaymentItemsAdapter();
         else {
@@ -90,6 +96,9 @@ public class AddPayAbleFragment extends Fragment {
                 if (amount != null) {
                     paymentAmount.setText(amount + "");
                     paymentAmount.setEnabled(false);
+                } else {
+                    paymentAmount.setText("");
+                    paymentAmount.setEnabled(true);
                 }
 
                 if (description != null)
@@ -123,7 +132,7 @@ public class AddPayAbleFragment extends Fragment {
 
     private void attemptAddMyPaymentItems() {
         PayableItem mPayableItem = payableItemsMap.get(mSelectedPaymentItemID);
-        mPayableItem.setInstituteFee(new BigDecimal(Double.parseDouble(paymentAmount.getText().toString().trim())));
+        mPayableItem.setInstituteFee(new BigDecimal(Double.parseDouble(paymentAmount.getText().toString().trim())).setScale(2, RoundingMode.HALF_UP));
 
         boolean addedAlready = false;
         for (PayableItem loopPayableItem : EducationPaymentActivity.mMyPayableItems) {

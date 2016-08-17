@@ -139,7 +139,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = true;
+    public static final boolean AUTO_LOGIN = false;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -161,7 +161,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
-            BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/education/";
+            BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support";
@@ -172,7 +172,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
-            BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/education/";
+            BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support";
@@ -182,7 +182,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
-            BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/education/";
+            BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support";
@@ -192,7 +192,7 @@ public class Constants {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
-            BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/education/";
+            BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support";
@@ -202,7 +202,7 @@ public class Constants {
 
             BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
-            BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/education/";
+            BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
@@ -376,12 +376,11 @@ public class Constants {
     public static final String URL_CONFIRM_BUSINESS_INVITATION = "business/user/confirm";
 
     // Education
-    public static final String URL_GET_ALL_INSTITUTIONS_LIST = "allinstitutes";
-    public static final String URL_GET_ALL_SESSIONS_LIST = "session/allsessions";
-    public static final String URL_GET_ENABLED_PAYABLES_LIST = "enabledpayableitem";
-    public static final String URL_GET_STUDENT_INFO_BY_STUDENT_ID = "studentdetailsbyrollno";
-    public static final String URL_GET_ENABLED_PAYABLE_ITEMS = "enabledpayableitem";
-    public static final String URL_MAKE_PAYMENT_EDUCATION = "createinvoice";
+    public static final String URL_GET_ALL_INSTITUTIONS_LIST = "institute/all";
+    public static final String URL_GET_ALL_SESSIONS_LIST = "session";
+    public static final String URL_GET_ENABLED_PAYABLES_LIST = "payableitem";
+    public static final String URL_GET_STUDENT_INFO_BY_STUDENT_ID = "students";
+    public static final String URL_MAKE_PAYMENT_EDUCATION = "receipt";
 
     // Ticket
     public static final String URL_CREATE_TICKET = "ticket/create";
