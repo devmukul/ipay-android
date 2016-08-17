@@ -27,7 +27,6 @@
         android:paddingTop="@dimen/value4"
         android:text="@string/contact_person" />
 
-
     <View style="@style/Divider" />
 
 </LinearLayout>
