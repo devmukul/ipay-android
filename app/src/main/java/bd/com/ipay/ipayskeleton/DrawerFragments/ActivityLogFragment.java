@@ -543,10 +543,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     mPortrait.setImageResource(R.drawable.ic_activity_cash_out);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_VERIFICATION) {
                     mPortrait.setImageResource(R.drawable.ic_verified_log);
-                } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_SERVICE) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_verified_log)
-                            .into(mPortrait);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_IN)) {
                         mPortrait.setImageResource(R.drawable.ic_signin);
@@ -554,9 +550,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                         mPortrait.setImageResource(R.drawable.ic_signout);
                     }
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_security)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_security);
                 }
             }
         }
