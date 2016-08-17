@@ -202,11 +202,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             error = true;
         }
 
-        if (mSelectedRelationId < 0) {
-            mEditTextRelationship.setError(getString(R.string.please_select_relation));
-            error = true;
-        }
-
         return !error;
     }
 

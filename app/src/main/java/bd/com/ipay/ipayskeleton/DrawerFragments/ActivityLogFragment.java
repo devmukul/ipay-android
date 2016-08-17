@@ -59,14 +59,14 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
-    private LinearLayout serviceFilterLayout;
+    private LinearLayout eventFilterLayout;
     private LinearLayout dateFilterLayout;
 
     private CheckBox mChangeProfileCheckBox;
-    private CheckBox mEventCheckBox;
+    private CheckBox mSystemEventCheckBox;
     private CheckBox mSecurityChangeCheckBox;
     private CheckBox mVerificationCheckBox;
-    private Button mClearServiceFilterButton;
+    private Button mClearEventFilterButton;
 
     private Button mFromDateButton;
     private Button mToDateButton;
@@ -103,19 +103,21 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_filter_by_date:
-                if (serviceFilterLayout.getVisibility() == View.VISIBLE)
-                    serviceFilterLayout.setVisibility(View.GONE);
+                if (eventFilterLayout.getVisibility() == View.VISIBLE)
+                    eventFilterLayout.setVisibility(View.GONE);
                 dateFilterLayout.setVisibility(View.VISIBLE);
+                Utilities.setLayoutAnim_slideDown(dateFilterLayout);
                 return true;
-            case R.id.action_filter_by_service:
+            case R.id.action_filter_by_event:
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
-                serviceFilterLayout.setVisibility(View.VISIBLE);
+                eventFilterLayout.setVisibility(View.VISIBLE);
+                Utilities.setLayoutAnim_slideDown(eventFilterLayout);
                 return true;
             case R.id.action_clear_filter:
                 mProgressbarView.setVisibility(View.VISIBLE);
                 clearDateFilter();
-                clearServiceFilter();
+                clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -141,13 +143,13 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mActivityLogRecyclerView.setLayoutManager(mLayoutManager);
         mActivityLogRecyclerView.setAdapter(mActivityLogAdapter);
 
-        serviceFilterLayout = (LinearLayout) v.findViewById(R.id.service_filters_layout);
+        eventFilterLayout = (LinearLayout) v.findViewById(R.id.event_filters_layout);
         dateFilterLayout = (LinearLayout) v.findViewById(R.id.date_filter_layout);
-        mClearServiceFilterButton = (Button) v.findViewById(R.id.button_clear_filter_service);
+        mClearEventFilterButton = (Button) v.findViewById(R.id.button_clear_filter_event);
         mChangeProfileCheckBox = (CheckBox) v.findViewById(R.id.filter_profile_changes);
         mSecurityChangeCheckBox = (CheckBox) v.findViewById(R.id.filter_security_changes);
         mVerificationCheckBox = (CheckBox) v.findViewById(R.id.filter_verification_changes);
-        mEventCheckBox = (CheckBox) v.findViewById(R.id.filter_system_event);
+        mSystemEventCheckBox = (CheckBox) v.findViewById(R.id.filter_system_event);
 
         mFromDateButton = (Button) v.findViewById(R.id.fromButton);
         mToDateButton = (Button) v.findViewById(R.id.toButton);
@@ -170,7 +172,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             getUserActivities();
         }
 
-        setActionsForServiceTypeFilter();
+        setActionsForEventTypeFilter();
         setActionsForDateFilter();
 
         // Handle back press action when action mode is on.
@@ -182,8 +184,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     if (dateFilterLayout.getVisibility() == View.VISIBLE)
                         dateFilterLayout.setVisibility(View.GONE);
-                    else if (serviceFilterLayout.getVisibility() == View.VISIBLE)
-                        serviceFilterLayout.setVisibility(View.GONE);
+                    else if (eventFilterLayout.getVisibility() == View.VISIBLE)
+                        eventFilterLayout.setVisibility(View.GONE);
                     else return false;
                 }
                 return true;
@@ -210,12 +212,12 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mToDateButton.setText("");
     }
 
-    private void clearServiceFilter() {
+    private void clearEventFilter() {
         type = null;
         mChangeProfileCheckBox.setChecked(false);
         mVerificationCheckBox.setChecked(false);
         mSecurityChangeCheckBox.setChecked(false);
-        mEventCheckBox.setChecked(false);
+        mSystemEventCheckBox.setChecked(false);
     }
 
     private void setActionsForDateFilter() {
@@ -225,7 +227,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             public void onClick(View v) {
                 dateFilterLayout.setVisibility(View.GONE);
                 clearDateFilter();
-                clearServiceFilter();
+                clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -237,7 +239,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             public void onClick(View v) {
                 menu.findItem(R.id.action_clear_filter).setVisible(true);
                 dateFilterLayout.setVisibility(View.GONE);
-                clearServiceFilter();
+                clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
@@ -293,20 +295,20 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
     }
 
-    private void setActionsForServiceTypeFilter() {
+    private void setActionsForEventTypeFilter() {
 
 
-        mClearServiceFilterButton.setOnClickListener(new View.OnClickListener() {
+        mClearEventFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 menu.findItem(R.id.action_clear_filter).setVisible(true);
                 clearDateFilter();
-                clearServiceFilter();
+                clearEventFilter();
 
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
-                serviceFilterLayout.setVisibility(View.GONE);
+                eventFilterLayout.setVisibility(View.GONE);
             }
         });
 
@@ -318,14 +320,14 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     type = Constants.ACTIVITY_TYPE_CHANGE_PROFILE;
                     mVerificationCheckBox.setChecked(false);
                     mSecurityChangeCheckBox.setChecked(false);
-                    mEventCheckBox.setChecked(false);
+                    mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
-                serviceFilterLayout.setVisibility(View.GONE);
+                eventFilterLayout.setVisibility(View.GONE);
             }
         });
 
@@ -337,14 +339,14 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     type = Constants.ACTIVITY_TYPE_CHANGE_SECURITY;
                     mVerificationCheckBox.setChecked(false);
                     mChangeProfileCheckBox.setChecked(false);
-                    mEventCheckBox.setChecked(false);
+                    mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
-                serviceFilterLayout.setVisibility(View.GONE);
+                eventFilterLayout.setVisibility(View.GONE);
             }
         });
 
@@ -356,23 +358,23 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     type = Constants.ACTIVITY_TYPE_VERIFICATION;
                     mChangeProfileCheckBox.setChecked(false);
                     mSecurityChangeCheckBox.setChecked(false);
-                    mEventCheckBox.setChecked(false);
+                    mSystemEventCheckBox.setChecked(false);
                 } else type = null;
 
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
-                serviceFilterLayout.setVisibility(View.GONE);
+                eventFilterLayout.setVisibility(View.GONE);
             }
         });
 
-        mEventCheckBox.setOnClickListener(new View.OnClickListener() {
+        mSystemEventCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 menu.findItem(R.id.action_clear_filter).setVisible(true);
-                if (mEventCheckBox.isChecked()) {
-                    type = Constants.ACTIVITY_TYPE_SYSTEM_SERVICE;
+                if (mSystemEventCheckBox.isChecked()) {
+                    type = Constants.ACTIVITY_TYPE_SYSTEM_EVENT;
                     mChangeProfileCheckBox.setChecked(false);
                     mSecurityChangeCheckBox.setChecked(false);
                     mChangeProfileCheckBox.setChecked(false);
@@ -382,7 +384,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
                 getUserActivities();
-                serviceFilterLayout.setVisibility(View.GONE);
+                eventFilterLayout.setVisibility(View.GONE);
             }
         });
 
@@ -542,6 +544,10 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_VERIFICATION) {
                     mPortrait.setImageResource(R.drawable.ic_verified_log);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_SERVICE) {
+                    Glide.with(getActivity())
+                            .load(R.drawable.ic_verified_log)
+                            .into(mPortrait);
+                } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_IN)) {
                         mPortrait.setImageResource(R.drawable.ic_signin);
                     } else if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_OUT)) {
