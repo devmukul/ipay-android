@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -510,7 +511,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
 
         public class ActivityLogViewHolder extends RecyclerView.ViewHolder {
-            private final RoundedImageView mPortrait;
+            private final ImageView mPortrait;
             private final TextView mTransactionDescription;
             private final TextView mTime;
 
@@ -519,7 +520,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
                 mTime = (TextView) itemView.findViewById(R.id.time);
-                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mPortrait = (ImageView) itemView.findViewById(R.id.portrait);
             }
 
             public void bindView(int pos) {
@@ -532,30 +533,19 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                 // Set icon for activity type
                 if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_PROFILE) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_change)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_change);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_IN) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_cash_in)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_activity_cash_in);
+
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_OUT) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_cash_out)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_activity_cash_out);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_VERIFICATION) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_verified_log)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_verified_log);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_SERVICE) {
                     if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_IN)) {
-                        Glide.with(getActivity())
-                                .load(R.drawable.ic_signin)
-                                .into(mPortrait);
+                        mPortrait.setImageResource(R.drawable.ic_signin);
                     } else if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_OUT)) {
-                        Glide.with(getActivity())
-                                .load(R.drawable.ic_signout)
-                                .into(mPortrait);
+                        mPortrait.setImageResource(R.drawable.ic_signout);
                     }
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
                     Glide.with(getActivity())
