@@ -181,6 +181,7 @@ public class TransactionHistoryClass implements Parcelable {
             switch (serviceID) {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                     return "Top up failed and returned " + Utilities.formatTaka(getNetAmount());
+                    return "Mobile Top up failed and " + "returned " + Utilities.formatTaka(getNetAmount());
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
                     return "Withdraw money failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
