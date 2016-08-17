@@ -7,7 +7,7 @@
         android:title="@string/filter_by_date"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_filter_by_service"
+        android:id="@+id/action_filter_by_event"
         android:icon="@drawable/ic_event_black_24dp"
         android:title="@string/filter_by_service"
         app:showAsAction="never" />
