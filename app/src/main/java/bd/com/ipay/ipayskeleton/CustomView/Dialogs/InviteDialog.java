@@ -152,12 +152,6 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             error = true;
         }
 
-        if (mSelectedRelationId < 0) {
-            mEditTextRelationship.setError(context.getResources().getString(R.string.please_select_relation));
-            error = true;
-        }
-
-
         return !error;
     }
 
