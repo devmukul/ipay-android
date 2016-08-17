@@ -2,7 +2,7 @@
     <string name="app_name">iPay</string>
     <string name="iPay_system">iPay Systems Ltd.</string>
     <string name="iPay_copyright">Copyright 2016 @ iPay Systems Ltd.</string>
-    <string name="all_rights_reserved">All rights reserved. </string>
+    <string name="all_rights_reserved">All Rights Reserved. </string>
     <string name="bangladesh">Bangladesh</string>
     <string name="phone_init">+880</string>
     <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
@@ -346,7 +346,7 @@
     <string name="filter_system_event">System Events</string>
     <string name="filter">Filter</string>
     <string name="ticket_verified">Ticket Verified</string>
-    <string name="introducers">Introducers</string>
+    <string name="introducers">Introducer</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
     <string name="transaction_cancelled">Cancelled</string>
