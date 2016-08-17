@@ -4,17 +4,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class EventParticipant implements Parcelable {
-    private Integer eventParticipantsId;
+    private Integer id;
     private String participantMobileNumber;
     private String participantName;
     private String participantRollNo;
     private String participantStatus;
-    private Department department;
+    private Integer departmentId;
+    private Integer instituteId;
+    private String departmentName;
     private Integer isDeleted;
-
-    public Integer getEventParticipantsId() {
-        return eventParticipantsId;
-    }
 
     public String getParticipantMobileNumber() {
         return participantMobileNumber;
@@ -32,14 +30,29 @@ public class EventParticipant implements Parcelable {
         return participantStatus;
     }
 
-    public Department getDepartment() {
-        return department;
-    }
-
     public Integer getIsDeleted() {
         return isDeleted;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getDepartmentId() {
+        return departmentId;
+    }
+
+    public Integer getInstituteId() {
+        return instituteId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public static Creator<EventParticipant> getCREATOR() {
+        return CREATOR;
+    }
 
     @Override
     public int describeContents() {
@@ -48,12 +61,14 @@ public class EventParticipant implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(this.eventParticipantsId);
+        dest.writeValue(this.id);
         dest.writeString(this.participantMobileNumber);
         dest.writeString(this.participantName);
         dest.writeString(this.participantRollNo);
         dest.writeString(this.participantStatus);
-        dest.writeParcelable(this.department, flags);
+        dest.writeValue(this.departmentId);
+        dest.writeValue(this.instituteId);
+        dest.writeString(this.departmentName);
         dest.writeValue(this.isDeleted);
     }
 
@@ -61,12 +76,14 @@ public class EventParticipant implements Parcelable {
     }
 
     protected EventParticipant(Parcel in) {
-        this.eventParticipantsId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.participantMobileNumber = in.readString();
         this.participantName = in.readString();
         this.participantRollNo = in.readString();
         this.participantStatus = in.readString();
-        this.department = in.readParcelable(Department.class.getClassLoader());
+        this.departmentId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.instituteId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.departmentName = in.readString();
         this.isDeleted = (Integer) in.readValue(Integer.class.getClassLoader());
     }
 

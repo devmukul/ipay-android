@@ -7,7 +7,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Resource;
 
 public class Institution implements Resource, Parcelable {
 
-    private int instituteId;
+    private int id;
     private String address;
     private String contact;
     private String email;
@@ -15,12 +15,12 @@ public class Institution implements Resource, Parcelable {
     private int ipayAccountId;
     private int vat;
     private String responsibleContactPersonName;
-    private int responsibleContactPersonMobileNumber;
+    private String responsibleContactPersonMobileNumber;
     private String responsibleContactPersonAddress;
     private String responsibleContactPersonEmail;
 
     public int getId() {
-        return instituteId;
+        return id;
     }
 
     public String getAddress() {
@@ -51,8 +51,12 @@ public class Institution implements Resource, Parcelable {
         return responsibleContactPersonName;
     }
 
-    public int getResponsibleContactPersonMobileNumber() {
+    public String getResponsibleContactPersonMobileNumber() {
         return responsibleContactPersonMobileNumber;
+    }
+
+    public static Creator<Institution> getCREATOR() {
+        return CREATOR;
     }
 
     public String getResponsibleContactPersonAddress() {
@@ -71,7 +75,7 @@ public class Institution implements Resource, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.instituteId);
+        dest.writeInt(this.id);
         dest.writeString(this.address);
         dest.writeString(this.contact);
         dest.writeString(this.email);
@@ -79,7 +83,7 @@ public class Institution implements Resource, Parcelable {
         dest.writeInt(this.ipayAccountId);
         dest.writeInt(this.vat);
         dest.writeString(this.responsibleContactPersonName);
-        dest.writeInt(this.responsibleContactPersonMobileNumber);
+        dest.writeString(this.responsibleContactPersonMobileNumber);
         dest.writeString(this.responsibleContactPersonAddress);
         dest.writeString(this.responsibleContactPersonEmail);
     }
@@ -88,7 +92,7 @@ public class Institution implements Resource, Parcelable {
     }
 
     protected Institution(Parcel in) {
-        this.instituteId = in.readInt();
+        this.id = in.readInt();
         this.address = in.readString();
         this.contact = in.readString();
         this.email = in.readString();
@@ -96,7 +100,7 @@ public class Institution implements Resource, Parcelable {
         this.ipayAccountId = in.readInt();
         this.vat = in.readInt();
         this.responsibleContactPersonName = in.readString();
-        this.responsibleContactPersonMobileNumber = in.readInt();
+        this.responsibleContactPersonMobileNumber = in.readString();
         this.responsibleContactPersonAddress = in.readString();
         this.responsibleContactPersonEmail = in.readString();
     }

@@ -226,11 +226,12 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
         mProgressDialog.show();
-        EducationInvoice mEducationInvoice = prepareForPayment();
+        EducationInvoice mEducationInvoice = prepareEducationInvoice();
+        InvoicePayableAccountRelation[] mInvoicePayableAccountRelations = prepareInvoicePayableAccountRelationArray();
         String mDescription = mWriteANoteEditText.getText().toString().trim();
         if (mDescription.length() == 0) mDescription = null;
 
-        MakeEducationPaymentRequest makeEducationPaymentRequest = new MakeEducationPaymentRequest(mDescription, pin, mEducationInvoice);
+        MakeEducationPaymentRequest makeEducationPaymentRequest = new MakeEducationPaymentRequest(mDescription, pin, mEducationInvoice, mInvoicePayableAccountRelations);
         Gson gson = new Gson();
         String json = gson.toJson(makeEducationPaymentRequest);
         mEducationPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_MAKE_PAYMENT_EDUCATION,
@@ -239,29 +240,33 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
         mEducationPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private EducationInvoice prepareForPayment() {
+    private EducationInvoice prepareEducationInvoice() {
         EducationInvoice mEducationInvoice = new EducationInvoice();
         mEducationInvoice.setUpdateTime(null);
         mEducationInvoice.setCreationTime(null);
-        mEducationInvoice.setSession(EducationPaymentActivity.selectedSession);
-        mEducationInvoice.setEventParticipant(EducationPaymentActivity.selectedStudent);
+        mEducationInvoice.setSessionId(EducationPaymentActivity.selectedSession.getId());
+        mEducationInvoice.setDepartmentId(EducationPaymentActivity.selectedStudent.getDepartmentId());
+        mEducationInvoice.setEventParticipantId(EducationPaymentActivity.selectedStudent.getId());
         mEducationInvoice.setDiscount(mDiscount);
         mEducationInvoice.setVat(mVat);
-        mEducationInvoice.setInstitute(EducationPaymentActivity.selectedInstitution);
+        mEducationInvoice.setInstituteId(EducationPaymentActivity.selectedInstitution.getId());
         mEducationInvoice.setTotalFee(mNetPayableAmount);
+
+        return mEducationInvoice;
+    }
+
+    private InvoicePayableAccountRelation[] prepareInvoicePayableAccountRelationArray() {
 
         ArrayList<InvoicePayableAccountRelation> mInvoicePayableAccountRelations = new ArrayList<>();
         for (PayableItem payableItem : EducationPaymentActivity.mMyPayableItems) {
             InvoicePayableAccountRelation mInvoicePayableAccountRelation = new InvoicePayableAccountRelation();
             mInvoicePayableAccountRelation.setFee(payableItem.getInstituteFee().doubleValue());
-            mInvoicePayableAccountRelation.setPayableAccountHead(payableItem.getPayableAccountHead());
+            mInvoicePayableAccountRelation.setPayableAccountHeadId(payableItem.getPayableAccountHead().getId());
             mInvoicePayableAccountRelations.add(mInvoicePayableAccountRelation);
         }
 
         InvoicePayableAccountRelation[] mInvoicePayableAccountRelationArray = new InvoicePayableAccountRelation[mInvoicePayableAccountRelations.size()];
-        mEducationInvoice.setInvoicePayableAccountRelations(mInvoicePayableAccountRelations.toArray(mInvoicePayableAccountRelationArray));
-
-        return mEducationInvoice;
+        return mInvoicePayableAccountRelations.toArray(mInvoicePayableAccountRelationArray);
     }
 
     private void showErrorDialog() {

@@ -31,7 +31,7 @@ public class PayableItem implements Resource, Parcelable {
 
     @Override
     public int getId() {
-        return payableAccountHead.getPayableAccountHeadId();
+        return payableAccountHead.getId();
     }
 
     @Override
