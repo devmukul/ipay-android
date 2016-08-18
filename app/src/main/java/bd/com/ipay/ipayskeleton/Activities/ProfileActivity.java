@@ -137,8 +137,6 @@ public class ProfileActivity extends BaseActivity {
                     fragment = new BasicInfoFragment();
                     break;
                 case INTRODUCER:
-                    if (bundle == null) bundle = new Bundle();
-                    bundle.putString(Constants.INTRODUCER, "introducer");
                     fragment = new IdentificationHolderFragment();
                     break;
                 case PERSONAL_ADDRESS:

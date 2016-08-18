@@ -18,8 +18,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class IdentificationHolderFragment extends Fragment {
     private ViewPager viewPager;
-    private final int RECEIVED_REQUEST_TAB = 0;
-    private final int SENT_REQUEST_TAB = 1;
+    private final int RECEIVED_REQUEST_TAB = 1;
+    private final int SENT_REQUEST_TAB = 0;
 
     private TabLayout.Tab mReceivedRequestTab;
     private TabLayout.Tab mSentRequestTab;
@@ -43,41 +43,37 @@ public class IdentificationHolderFragment extends Fragment {
         mSentRequestTab = tabLayout.getTabAt(SENT_REQUEST_TAB);
         setupCustomViewsForTabLayout();
 
-        Bundle args = getArguments();
-        if (args != null && args.containsKey(Constants.INTRODUCER)) {
-            mSentRequestTab.select();
-        }
-
         return v;
     }
 
     private void setupCustomViewsForTabLayout() {
-        mReceivedRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+
         mSentRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
+        mReceivedRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         setTabViews();
     }
 
     private void setTabViews() {
         setTabIconsWithTexts();
 
-        mReceivedRequestTab.setCustomView(mReceivedRequestTabView);
         mSentRequestTab.setCustomView(mSentRequestTabView);
+        mReceivedRequestTab.setCustomView(mReceivedRequestTabView);
     }
 
     private void setTabIconsWithTexts() {
 
-        ((ImageView) mReceivedRequestTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_received_request);
         ((ImageView) mSentRequestTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_send_request);
+        ((ImageView) mReceivedRequestTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_received_request);
 
-        ((TextView) mReceivedRequestTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.introduced_list_header));
         ((TextView) mSentRequestTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.introducer_list_header));
+        ((TextView) mReceivedRequestTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.introduced_list_header));
     }
 
 
     public class IdentificationFragmentAdapter extends FragmentPagerAdapter {
         private final String[] tabTitles = new String[]{
-                getString(R.string.introduced_list_header),
                 getString(R.string.introducer_list_header),
+                getString(R.string.introduced_list_header),
         };
 
         public IdentificationFragmentAdapter(FragmentManager fm) {
@@ -92,9 +88,9 @@ public class IdentificationHolderFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new IntroducedFragment();
-            } else if (position == 1) {
                 return new IntroducerFragment();
+            } else if (position == 1) {
+                return new IntroducedFragment();
             } else {
                 return new Fragment();
             }
