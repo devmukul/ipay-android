@@ -61,7 +61,8 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/LinearLayoutHolderVertical"
+            <LinearLayout
+                style="@style/LinearLayoutHolderVertical"
                 android:layout_marginBottom="@dimen/activity_vertical_margin_card">
 
                 <TextView
@@ -71,7 +72,6 @@
                 <TextView
                     android:id="@+id/textview_business_type"
                     style="@style/TextViewInfoLeftAlign" />
-
 
                 <TextView
                     android:id="@+id/textview_signup"
@@ -176,7 +176,7 @@
                     <TextView
                         android:id="@+id/textview_present_address"
                         style="@style/ProfileAddressTextStyle"
-                        android:layout_marginTop="@dimen/value5"/>
+                        android:layout_marginTop="@dimen/value5" />
                 </LinearLayout>
 
                 <ImageButton
