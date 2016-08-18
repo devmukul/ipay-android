@@ -278,6 +278,8 @@
     <string name="event_location">Event location</string>
     <string name="enter_vat">VAT in BDT(%)</string>
     <string name="enter_amount">Amount in BDT</string>
+    <string name="reference_number_optional">Reference Number (Optional)</string>
+    <string name="reference_number">Reference Number</string>
     <string name="send_money_description">Write a note</string>
     <string name="education_payment_description">Write a note</string>
     <string name="description_event">Event description</string>
