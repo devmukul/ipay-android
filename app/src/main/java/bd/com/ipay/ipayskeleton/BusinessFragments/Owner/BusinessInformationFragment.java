@@ -73,6 +73,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private TextView mBusinessNameView;
     private TextView mBusinessMobileNumberView;
     private TextView mBusinessTypeView;
+    private TextView mBusinessEmailView;
 
     private TextView mNameView;
     private TextView mMobileNumberView;
@@ -118,6 +119,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mBusinessNameView = (TextView) v.findViewById(R.id.textview_business_name);
         mBusinessMobileNumberView = (TextView) v.findViewById(R.id.textview_business_mobile_number);
         mBusinessTypeView = (TextView) v.findViewById(R.id.textview_business_type);
+        mBusinessEmailView = (TextView) v.findViewById(R.id.textview_business_email);
+
         mOfficeInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_information);
 
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -136,7 +139,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
 
-        if ( ! ProfileInfoCacheManager.isAccountVerified()) {
+        if (ProfileInfoCacheManager.isAccountVerified()) {
             mOfficeInfoEditButton.setVisibility(View.GONE);
             mContactEditButton.setVisibility(View.GONE);
         } else {
@@ -315,6 +318,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mBusinessNameView.setText(mGetBusinessInformationResponse.getBusinessName());
         mBusinessMobileNumberView.setText(getString(R.string.phone_number)+": "+mGetBusinessInformationResponse.getMobileNumber());
         mBusinessTypeView.setText(R.string.loading);
+        mBusinessEmailView.setText(mGetBusinessInformationResponse.getEmail());
 
         setContentShown(true);
 

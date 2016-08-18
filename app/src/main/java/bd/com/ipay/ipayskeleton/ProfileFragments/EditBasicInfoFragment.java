@@ -54,7 +54,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private EditText mOccupationEditText;
     private CheckBox mFemaleCheckBox;
     private CheckBox mMaleCheckBox;
-    private ImageView mDatePickerButton;
     private Button mInfoSaveButton;
 
     private ProgressDialog mProgressDialog;
@@ -90,7 +89,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mNameEditText = (EditText) v.findViewById(R.id.name);
         mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mOccupationEditText = (EditText) v.findViewById(R.id.occupationEditText);
-        mDatePickerButton = (ImageView) v.findViewById(R.id.myDatePickerButton);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
 
@@ -136,7 +134,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
-        mDatePickerButton.setOnClickListener(new View.OnClickListener() {
+        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.show();

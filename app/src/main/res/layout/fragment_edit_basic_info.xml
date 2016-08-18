@@ -56,19 +56,11 @@
                         android:imeOptions="actionUnspecified"
                         android:inputType="date"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:focusable="false"/>
 
                 </android.support.design.widget.TextInputLayout>
 
-                <ImageView
-                    android:id="@+id/myDatePickerButton"
-                    style="@style/ButtonStyleWithIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:clickable="true"
-                    android:padding="@dimen/value5"
-                    android:src="@drawable/ic_calendar" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -140,6 +132,7 @@
                 style="@style/PrimaryMediumButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin_semi_double"
                 android:text="@string/save" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

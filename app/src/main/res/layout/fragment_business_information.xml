@@ -83,8 +83,7 @@
 
                 <TextView
                     android:id="@+id/textview_business_email"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:visibility="gone" />
+                    style="@style/TextViewInfoLeftAlign" />
 
             </LinearLayout>
 
