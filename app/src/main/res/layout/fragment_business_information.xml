@@ -66,24 +66,20 @@
 
                 <TextView
                     android:id="@+id/textview_business_name"
-                    style="@style/TextViewInfoLeftAlign"
-                    android:text="Grameen phone" />
+                    style="@style/TextViewInfoLeftAlign" />
 
                 <TextView
                     android:id="@+id/textview_business_type"
-                    style="@style/TextViewInfoLeftAlign"
-                    android:text="Telicom" />
+                    style="@style/TextViewInfoLeftAlign" />
 
 
                 <TextView
                     android:id="@+id/textview_signup"
-                    style="@style/TextViewInfoLeftAlign"
-                    android:text="Inception Date :" />
+                    style="@style/TextViewInfoLeftAlign" />
 
                 <TextView
                     android:id="@+id/textview_business_mobile_number"
-                    style="@style/TextViewInfoLeftAlign"
-                    android:text="Mobile Number :" />
+                    style="@style/TextViewInfoLeftAlign" />
 
                 <TextView
                     android:id="@+id/textview_business_email"
@@ -142,8 +138,7 @@
 
                 <TextView
                     android:id="@+id/textview_name"
-                    style="@style/TextViewInfoLeftAlign"
-                    android:text="MD. Raisul Islam" />
+                    style="@style/TextViewInfoLeftAlign" />
 
                 <TextView
                     style="@style/AddressViewHeader"
@@ -156,8 +151,7 @@
 
                 <TextView
                     android:id="@+id/textview_mobile_number"
-                    style="@style/TextViewInfoLeftAlign"
-                    android:text="0176123456" />
+                    style="@style/TextViewInfoLeftAlign" />
             </LinearLayout>
 
             <LinearLayout
