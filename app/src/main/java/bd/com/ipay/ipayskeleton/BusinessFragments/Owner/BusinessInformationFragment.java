@@ -136,13 +136,13 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
 
-        /*if (ProfileInfoCacheManager.isAccountVerified()) {
+        if (ProfileInfoCacheManager.isAccountVerified()) {
             mOfficeInfoEditButton.setVisibility(View.GONE);
             mContactEditButton.setVisibility(View.GONE);
         } else {
             mOfficeInfoEditButton.setVisibility(View.VISIBLE);
             mContactEditButton.setVisibility(View.VISIBLE);
-        }*/
+        }
 
         mOfficeInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override

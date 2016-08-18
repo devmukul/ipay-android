@@ -182,7 +182,7 @@
                     <TextView
                         android:id="@+id/textview_present_address"
                         style="@style/ProfileAddressTextStyle"
-                        android:layout_marginTop="@dimen/activity_vertical_margin_card"/>
+                        android:layout_marginTop="@dimen/value5"/>
                 </LinearLayout>
 
                 <ImageButton
