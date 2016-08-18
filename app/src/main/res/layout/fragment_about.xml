@@ -94,7 +94,6 @@
                     android:paddingTop="@dimen/value4"
                     android:text="@string/privacy_policy" />
 
-
             </LinearLayout>
 
         </LinearLayout>
