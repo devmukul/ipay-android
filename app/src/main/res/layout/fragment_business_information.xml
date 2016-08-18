@@ -61,7 +61,8 @@
 
             </LinearLayout>
 
-            <LinearLayout style="@style/LinearLayoutHolderVertical">
+            <LinearLayout style="@style/LinearLayoutHolderVertical"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_card">
 
                 <TextView
                     android:id="@+id/textview_business_name"
