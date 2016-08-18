@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -77,7 +78,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
 
-        getActivity().setTitle(getString(R.string.edit_basic_info));
+        if (ProfileInfoCacheManager.isBusinessAccount()) getActivity().setTitle(getString(R.string.edit_contact_info));
+        else getActivity().setTitle(getString(R.string.edit_basic_info));
         Bundle bundle = getArguments();
 
         mName = bundle.getString(Constants.NAME);
