@@ -72,7 +72,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_ICON_MAP.put(PHOTOID, R.drawable.ic_photoid);
         PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_doc);
         PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_DOCUMENTS, R.drawable.ic_photoid);
-        PROPERTY_NAME_TO_ICON_MAP.put(LINK_AND_VERIFY_BANK, R.drawable.ic_bankteal);
+        PROPERTY_NAME_TO_ICON_MAP.put(LINK_AND_VERIFY_BANK, R.drawable.ic_bank);
         PROPERTY_NAME_TO_ICON_MAP.put(PARENT, R.drawable.ic_parent);
     }
 
