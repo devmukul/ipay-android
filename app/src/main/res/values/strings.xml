@@ -78,8 +78,10 @@
     <string name="enter_the_amount_we_sent">Enter the amount we sent to your bank account here.</string>
     <string name="bank_verification_help">We sent some money in your bank account.\nPlease click Verify by selecting the bank and then enter the amount we sent in your bank account to complete the verification process.</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="are_you_sure_to_invite">Are you sure you know this person and want to invite him/her to iPay?</string>
+    <string name="are_you_sure_to_remove_employee">Are you sure you want to remove this employee?</string>
     <string name="accept">Accept</string>
-    <string name="remove_this_account_query">Remove this account from your bank list?</string>
+    <string name="are_you_sure_to_remove_bank_account">Are you sure you want to remove this account from your bank list?</string>
     <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
     <string name="cancel_payment_request_confirm">Are you sure you want to cancel your request for payment?</string>
     <string name="account_type_personal">Personal Account</string>
@@ -603,7 +605,6 @@
     <string name="manage_emails">Manage Emails</string>
     <string name="education_management">Education Management</string>
     <string name="failed_loading_employee_list">Failed to load employee list</string>
-    <string name="confirmation_remove_employee">Remove this employee?</string>
     <string name="loading_accepting_invitation">Accepting invitation...</string>
     <string name="loading_rejecting_invitation">Rejecting invitation...</string>
     <string name="loading_marking_invitation_as_spam">Marking invitation as spam...</string>

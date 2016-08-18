@@ -411,7 +411,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     }
 
                     new android.app.AlertDialog.Builder(getActivity())
-                            .setTitle(R.string.are_you_sure)
+                            .setMessage(R.string.are_you_sure_to_invite)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     sendInvite(mSelectedNumber);
@@ -720,7 +720,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             setSelectedNumber(mobileNumber);
 
                             new android.app.AlertDialog.Builder(getActivity())
-                                    .setTitle(R.string.are_you_sure)
+                                    .setMessage(R.string.are_you_sure_to_invite)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             sendInvite(mobileNumber);
