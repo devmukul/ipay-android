@@ -188,7 +188,8 @@ public class ProfileCompletionStatusResponse {
         }
 
         public String getPropertyTitle() {
-            if (propertyName.equals(PERSONAL_ADDRESS) && ProfileInfoCacheManager.isBusinessAccount()) return "Add Present Address";
+            if (propertyName.equals(PERSONAL_ADDRESS) && ProfileInfoCacheManager.isBusinessAccount()) return "Add Business Contact's Address";
+            else if (propertyName.equals(BASIC_PROFILE) && ProfileInfoCacheManager.isBusinessAccount()) return "Complete Business Contact Information";
             return PROPERTY_NAME_TO_TITLE_MAP.get(propertyName);
         }
 
