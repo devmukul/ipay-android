@@ -125,7 +125,6 @@
 
             <View style="@style/Divider" />
 
-
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/documents"
                 android:layout_width="match_parent"
@@ -165,7 +164,6 @@
                 android:id="@+id/divider_manage_employee"
                 style="@style/Divider"
                 android:visibility="gone" />
-
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/profile_completion"
