@@ -536,6 +536,7 @@
     <string name="profile_completion_text">Yout profile is 0% complete. Complete profile to get verified</string>
     <string name="business_contact">Business Contact</string>
     <string name="edit_basic_info">Edit Basic Info</string>
+    <string name="edit_contact_info">Edit Contact Info</string>
     <string name="edit_parent_info">Edit Parent Info</string>
     <string name="edit_address">Edit Address</string>
     <string name="you_need_to_have">You need to have at least&#160;</string>
@@ -612,7 +613,7 @@
     <string name="loading_rejecting_invitation">Rejecting invitation...</string>
     <string name="loading_marking_invitation_as_spam">Marking invitation as spam...</string>
     <string name="failed_confirming_business_invitation">Failed to confirm business invitation</string>
-    <string name="edit_office_information">Edit Office Information</string>
+    <string name="edit_business_information">Edit Business Information</string>
     <string name="get_balance">Get Balance</string>
     <string name="get_transactions">Get Transactions</string>
     <string name="friend_read">See frieds</string>

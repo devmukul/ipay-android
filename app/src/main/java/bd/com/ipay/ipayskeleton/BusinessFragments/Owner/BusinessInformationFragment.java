@@ -136,7 +136,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
 
-        if (ProfileInfoCacheManager.isAccountVerified()) {
+        if ( ! ProfileInfoCacheManager.isAccountVerified()) {
             mOfficeInfoEditButton.setVisibility(View.GONE);
             mContactEditButton.setVisibility(View.GONE);
         } else {
@@ -148,6 +148,13 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             public void onClick(View v) {
                 launchEditBusinessInformationFragment();
+            }
+        });
+
+        mContactEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchEditFragment();
             }
         });
 
@@ -200,13 +207,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             public void onClick(View v) {
                 ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
-            }
-        });
-
-        mContactEditButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchEditFragment();
             }
         });
     }
