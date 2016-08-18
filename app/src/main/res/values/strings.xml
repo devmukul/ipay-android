@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">iPay</string>
     <string name="iPay_system">iPay Systems Ltd.</string>
-    <string name="iPay_copyright">Copyright 2016 @ iPay Systems Ltd.</string>
+    <string name="iPay_copyright">Copyright 2016 iPay Systems Ltd.</string>
     <string name="all_rights_reserved">All Rights Reserved. </string>
     <string name="bangladesh">Bangladesh</string>
     <string name="phone_init">+880</string>
