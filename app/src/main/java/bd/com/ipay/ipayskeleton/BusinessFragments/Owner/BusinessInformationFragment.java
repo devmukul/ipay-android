@@ -46,20 +46,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BusinessInformationFragment extends ProgressFragment implements HttpResponseListener {
-
-    private TextView mBusinessNameView;
-    private TextView mBusinessMobileNumberView;
-    private TextView mBusinessEmailView;
-    private TextView mBusinessTypeView;
-
-    private ImageButton mOfficeInfoEditButton;
-
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
 
     private GetBusinessTypesAsyncTask mGetBusinessTypesAsyncTask;
-
-    private List<BusinessType> mBusinessTypes;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
@@ -67,18 +57,39 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private HttpRequestGetAsyncTask mGetOccupationTask = null;
     private GetOccupationResponse mGetOccupationResponse;
 
+    private HttpRequestGetAsyncTask mGetUserAddressTask = null;
+    private GetUserAddressResponse mGetUserAddressResponse = null;
+
+    private HttpRequestGetAsyncTask mGetThanaListAsyncTask = null;
+    private GetThanaResponse mGetThanaResponse;
+
+    private HttpRequestGetAsyncTask mGetDistrictListAsyncTask = null;
+    private GetDistrictResponse mGetDistrictResponse;
+
     private ProgressDialog mProgressDialog;
+
+    private SharedPreferences pref;
+
+    private TextView mBusinessNameView;
+    private TextView mBusinessMobileNumberView;
+    private TextView mBusinessTypeView;
 
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mVerificationStatusView;
 
-    private TextView mDateOfBirthView;
-    private TextView mOccupationView;
-    private TextView mGenderView;
     private TextView mSignUpTimeView;
 
-    private SharedPreferences pref;
+    private TextView mPresentAddressView;
+
+    private View mPresentAddressHolder;
+
+    private ImageButton mPresentAddressEditButton;
+    private ImageButton mContactEditButton;
+
+    private ImageButton mOfficeInfoEditButton;
+
+    private AddressClass mPresentAddress;
 
     private String mName = "";
     private String mMobileNumber = "";
@@ -91,26 +102,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
 
-    private HttpRequestGetAsyncTask mGetUserAddressTask = null;
-    private GetUserAddressResponse mGetUserAddressResponse = null;
-
-    private HttpRequestGetAsyncTask mGetThanaListAsyncTask = null;
-    private GetThanaResponse mGetThanaResponse;
-
-    private HttpRequestGetAsyncTask mGetDistrictListAsyncTask = null;
-    private GetDistrictResponse mGetDistrictResponse;
-
-    private AddressClass mPresentAddress;
-
-    private TextView mPresentAddressView;
-
-    private View mPresentAddressHolder;
-
-    private ImageButton mPresentAddressEditButton;
-    private ImageButton mContactEditButton;
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
+    private List<BusinessType> mBusinessTypes;
+
 
     @Nullable
     @Override
@@ -121,19 +117,15 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mBusinessNameView = (TextView) v.findViewById(R.id.textview_business_name);
         mBusinessMobileNumberView = (TextView) v.findViewById(R.id.textview_business_mobile_number);
-        mBusinessEmailView = (TextView) v.findViewById(R.id.textview_business_email);
         mBusinessTypeView = (TextView) v.findViewById(R.id.textview_business_type);
-
         mOfficeInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_information);
+
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
-        mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
-        mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
-        mGenderView = (TextView) v.findViewById(R.id.textview_gender);
+
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-        mGender = pref.getString(Constants.GENDER, "");
-        mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
+
         mSignUpTimeView = (TextView) v.findViewById(R.id.textview_signup);
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -144,13 +136,13 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
 
-        if (ProfileInfoCacheManager.isAccountVerified()) {
+        /*if (ProfileInfoCacheManager.isAccountVerified()) {
             mOfficeInfoEditButton.setVisibility(View.GONE);
             mContactEditButton.setVisibility(View.GONE);
         } else {
             mOfficeInfoEditButton.setVisibility(View.VISIBLE);
             mContactEditButton.setVisibility(View.VISIBLE);
-        }
+        }*/
 
         mOfficeInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,13 +252,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
 
-        mGenderView.setText(mGender);
-        mDateOfBirthView.setText(mDateOfBirth);
-
-        mSignUpTimeView.setText(mSignUpTime);
-
-        if (GenderList.genderCodeToNameMap.containsKey(mGender))
-            mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
+        mSignUpTimeView.setText(getString(R.string.inception_date)+": "+mSignUpTime);
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -292,8 +278,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         if (mGetOccupationTask != null) {
             return;
         }
-
-        mOccupationView.setText(getString(R.string.please_wait));
 
         mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
                 new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
@@ -329,8 +313,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private void processBusinessInformationResponse() {
 
         mBusinessNameView.setText(mGetBusinessInformationResponse.getBusinessName());
-        mBusinessMobileNumberView.setText(mGetBusinessInformationResponse.getMobileNumber());
-        mBusinessEmailView.setText(mGetBusinessInformationResponse.getEmail());
+        mBusinessMobileNumberView.setText(getString(R.string.phone_number)+": "+mGetBusinessInformationResponse.getMobileNumber());
         mBusinessTypeView.setText(R.string.loading);
 
         setContentShown(true);
@@ -433,16 +416,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                     mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String occupation = mGetOccupationResponse.getOccupation(mOccupation);
-                        if (occupation != null)
-                            mOccupationView.setText(occupation);
-                        else
-                            mOccupationView.setText("");
-                    } else {
-                        mOccupationView.setText("");
+
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mOccupationView.setText("");
                 }
 
                 mGetOccupationTask = null;

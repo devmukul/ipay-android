@@ -178,11 +178,22 @@
         <item name="android:gravity">left</item>
     </style>
 
-    <style name="TextViewInfo" parent="@android:style/Widget.TextView">
+    <style name="TextViewInfoLabelBold" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:paddingTop">@dimen/value10</item>
         <item name="android:paddingBottom">@dimen/value10</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:textSize">@dimen/text_size_small_medium_value18</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextViewInfo" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">@dimen/value10</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
         <item name="android:layout_weight">0.5</item>
@@ -199,6 +210,15 @@
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_weight">0.5</item>
         <item name="android:gravity">right</item>
+    </style>
+
+    <style name="TextViewInfoLeftAlign" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:gravity">left</item>
     </style>
 
     <style name="EditTextInfo" parent="@android:style/Widget.EditText">
@@ -836,6 +856,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="LinearLayoutHolderVertical">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="TransactionHistoryDetailsRowLeft" parent="@android:style/Widget.TextView">

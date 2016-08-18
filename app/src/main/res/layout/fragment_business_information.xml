@@ -7,16 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textview_mobile_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text=""
-            android:textSize="20sp"
-            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textview_verification_status"
@@ -66,59 +58,44 @@
                     style="@style/EditIconButton"
                     android:padding="@dimen/activity_vertical_margin_card"
                     android:src="@drawable/ic_editgrey" />
+
             </LinearLayout>
 
-            <LinearLayout style="@style/LinearLayoutHolder">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/business_name" />
+            <LinearLayout style="@style/LinearLayoutHolderVertical">
 
                 <TextView
                     android:id="@+id/textview_business_name"
-                    style="@style/TextViewInfoColorPrimary" />
-
-            </LinearLayout>
-
-            <LinearLayout style="@style/LinearLayoutHolder">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/mobile_number" />
-
-                <TextView
-                    android:id="@+id/textview_business_mobile_number"
-                    style="@style/TextViewInfoColorPrimary" />
-
-            </LinearLayout>
-
-            <LinearLayout style="@style/LinearLayoutHolder">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/email" />
-
-                <TextView
-                    android:id="@+id/textview_business_email"
-                    style="@style/TextViewInfoColorPrimary" />
-
-            </LinearLayout>
-
-            <LinearLayout style="@style/LinearLayoutHolder">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/business_type" />
+                    style="@style/TextViewInfoLeftAlign"
+                    android:text="Grameen phone" />
 
                 <TextView
                     android:id="@+id/textview_business_type"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoLeftAlign"
+                    android:text="Telicom" />
+
+
+                <TextView
+                    android:id="@+id/textview_signup"
+                    style="@style/TextViewInfoLeftAlign"
+                    android:text="Inception Date :" />
+
+                <TextView
+                    android:id="@+id/textview_business_mobile_number"
+                    style="@style/TextViewInfoLeftAlign"
+                    android:text="Mobile Number :" />
+
+                <TextView
+                    android:id="@+id/textview_business_email"
+                    style="@style/TextViewInfoColorPrimary"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/divider_space"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:background="@color/colorDivider" />
 
             <LinearLayout
@@ -140,7 +117,7 @@
                         style="@style/AddressViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/contact_person" />
+                        android:text="@string/business_contact" />
 
                 </LinearLayout>
 
@@ -149,86 +126,38 @@
                     style="@style/EditIconButton"
                     android:padding="@dimen/activity_vertical_margin_card"
                     android:src="@drawable/ic_editgrey" />
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
+            <LinearLayout style="@style/LinearLayoutHolderVertical">
 
                 <TextView
-                    style="@style/TextViewInfoLabel"
+                    style="@style/AddressViewHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
                     android:text="@string/name" />
 
                 <TextView
                     android:id="@+id/textview_name"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoLeftAlign"
+                    android:text="MD. Raisul Islam" />
+
+                <TextView
+                    style="@style/AddressViewHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:text="@string/phone_number" />
+
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    style="@style/TextViewInfoLeftAlign"
+                    android:text="0176123456" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/date_of_birth" />
-
-                <TextView
-                    android:id="@+id/textview_dob"
-                    style="@style/TextViewInfoColorPrimary" />
-            </LinearLayout>
-
-
-            <!-- Spinners -->
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/occupation" />
-
-                <TextView
-                    android:id="@+id/textview_occupation"
-                    style="@style/TextViewInfoColorPrimary" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/gender" />
-
-                <TextView
-                    android:id="@+id/textview_gender"
-                    style="@style/TextViewInfoColorPrimary" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/member_since" />
-
-                <TextView
-                    android:id="@+id/textview_signup"
-                    style="@style/TextViewInfoColorPrimary" />
-
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -248,11 +177,12 @@
                         style="@style/AddressViewHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/present_address" />
+                        android:text="@string/address" />
 
                     <TextView
                         android:id="@+id/textview_present_address"
-                        style="@style/ProfileAddressTextStyle" />
+                        style="@style/ProfileAddressTextStyle"
+                        android:layout_marginTop="@dimen/activity_vertical_margin_card"/>
                 </LinearLayout>
 
                 <ImageButton
