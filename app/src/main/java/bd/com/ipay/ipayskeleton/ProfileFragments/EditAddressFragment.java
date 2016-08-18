@@ -141,9 +141,7 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     if (ProfileInfoCacheManager.isBusinessAccount()) {
                         if (getArguments().getString(Constants.EDIT_ADDRESS_SOURCE).equals("BUSINESS_PRESENT"))
-                            ((ProfileActivity) getActivity()).switchToBusinessContactFragment();
-                        else if (getArguments().getString(Constants.EDIT_ADDRESS_SOURCE).equals("BUSINESS_OFFICE"))
-                            ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
+                           ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
                     } else {
                         ((ProfileActivity) getActivity()).switchToAddressFragment();
                     }

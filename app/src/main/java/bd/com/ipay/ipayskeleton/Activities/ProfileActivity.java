@@ -2,33 +2,15 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessContactFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessInformationFragment;
-import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeeDetailsFragment;
-import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessBasicInfoFragment;
-import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EditBusinessInformationFragment;
-import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeeManagementFragment;
-import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeePrivilegeFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetRolesResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BasicInfoFragment;
@@ -142,7 +124,7 @@ public class ProfileActivity extends BaseActivity {
                     fragment = new TrustedNetworkFragment();
                     break;
                 case BASIC_PROFILE:
-                    if (ProfileInfoCacheManager.isBusinessAccount()) fragment = new BusinessContactFragment();
+                    if (ProfileInfoCacheManager.isBusinessAccount()) fragment = new BusinessInformationFragment();
                     else fragment = new BasicInfoFragment();
                     break;
                 case BUSINESS_INFO:
@@ -160,11 +142,11 @@ public class ProfileActivity extends BaseActivity {
                     fragment = new IdentificationHolderFragment();
                     break;
                 case PERSONAL_ADDRESS:
-                    if (ProfileInfoCacheManager.isBusinessAccount()) fragment = new BusinessContactFragment();
+                    if (ProfileInfoCacheManager.isBusinessAccount()) fragment = new BusinessInformationFragment();
                     else fragment = new AddressFragment();
                     break;
                 case BUSINESS_ADDRESS:
-                    fragment = new BusinessInformationFragment();
+                    fragment = new AddressFragment();
                     break;
                 case VERIFIED_EMAIL:
                     fragment = new EmailFragment();
@@ -194,7 +176,7 @@ public class ProfileActivity extends BaseActivity {
         }
     }
 
-    private void switchToProfileFragment() {
+    public void switchToProfileFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 
@@ -206,20 +188,6 @@ public class ProfileActivity extends BaseActivity {
             getSupportFragmentManager().popBackStackImmediate();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BasicInfoFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToBusinessContactFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
-            getSupportFragmentManager().popBackStackImmediate();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BusinessContactFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToBusinessBasicInfoHolderFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
-            getSupportFragmentManager().popBackStackImmediate();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BusinessBasicInfoFragment()).addToBackStack(null).commit();
     }
 
     public void switchToBusinessInfoFragment() {
@@ -290,13 +258,6 @@ public class ProfileActivity extends BaseActivity {
     }
 
     public void switchToIdentificationDocumentListFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
-            getSupportFragmentManager().popBackStackImmediate();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IdentificationDocumentListFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToIdentificationBusinessDocumentListFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 

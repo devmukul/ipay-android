@@ -133,7 +133,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             @Override
             public void onClick(View view) {
                 if (ProfileInfoCacheManager.isBusinessAccount())
-                    ((ProfileActivity) getActivity()).switchToBusinessBasicInfoHolderFragment();
+                    ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
                 else ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
             }
         });
