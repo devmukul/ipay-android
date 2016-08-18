@@ -68,6 +68,7 @@
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
     <string name="error_promo_code_empty">Please enter the promo code</string>
     <string name="error_invalid_first_name">Please enter name</string>
+    <string name="error_invalid_parent_name">Parents Name should have minimum length of 5 characters</string>
     <string name="error_invalid_name">Please enter name</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
     <string name="please_select_institution">Please select an institution</string>
