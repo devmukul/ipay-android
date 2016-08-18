@@ -55,7 +55,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistoryFragment extends ProgressFragment implements HttpResponseListener {
-
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
@@ -64,8 +63,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private RecyclerView.LayoutManager mLayoutManager;
     private List<TransactionHistoryClass> userTransactionHistoryClasses;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-
-    private View mProgressbarView;
 
     private String mMobileNumber;
 
@@ -153,8 +150,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
 
-        mProgressbarView = v.findViewById(R.id.progress_container);
-
         setActionsForServiceTypeFilter();
         setActionsForDateFilter();
 
@@ -193,7 +188,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setContentShown(false);
         getTransactionHistory();
     }
 
@@ -238,9 +232,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 serviceFilterLayout.setVisibility(View.VISIBLE);
                 return true;
             case R.id.action_clear_filter:
-                mProgressbarView.setVisibility(View.VISIBLE);
                 clearDateFilters();
                 clearServiceFilters();
+                setContentShown(false);
                 refreshTransactionHistory();
                 menu.findItem(R.id.action_clear_filter).setVisible(false);
                 return true;
@@ -261,6 +255,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             public void onClick(View v) {
                 clearDateFilters();
                 clearServiceFilters();
+                setContentShown(false);
                 refreshTransactionHistory();
             }
         });
@@ -271,6 +266,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 menu.findItem(R.id.action_clear_filter).setVisible(true);
                 clearServiceFilters();
                 dateFilterLayout.setVisibility(View.GONE);
+                setContentShown(false);
                 refreshTransactionHistory();
             }
         });
@@ -331,6 +327,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             public void onClick(View v) {
                 clearDateFilters();
                 clearServiceFilters();
+                setContentShown(false);
                 refreshTransactionHistory();
             }
         });
@@ -360,6 +357,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                         }
                     }
 
+                    setContentShown(false);
                     refreshTransactionHistory();
                     serviceFilterLayout.setVisibility(View.GONE);
                 }
@@ -465,6 +463,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mEmptyListTextView.setVisibility(View.VISIBLE);
 
         mTransactionHistoryAdapter.notifyDataSetChanged();
+        setContentShown(true);
     }
 
     @Override
@@ -473,9 +472,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mTransactionHistoryTask = null;
-            if (mProgressbarView.getVisibility() == View.VISIBLE) {
-                mProgressbarView.setVisibility(View.GONE);
-            }
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
@@ -507,9 +503,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             mSwipeRefreshLayout.setRefreshing(false);
             mTransactionHistoryTask = null;
             if (this.isAdded()) setContentShown(true);
-            if (mProgressbarView.getVisibility() == View.VISIBLE) {
-                mProgressbarView.setVisibility(View.GONE);
-            }
         }
     }
 

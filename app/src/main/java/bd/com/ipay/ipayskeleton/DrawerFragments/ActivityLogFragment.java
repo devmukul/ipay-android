@@ -49,8 +49,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;
 
-    private View mProgressbarView;
-
     private String[] activityLogTypes;
     private RecyclerView mActivityLogRecyclerView;
     private ActivityLogAdapter mActivityLogAdapter;
@@ -106,20 +104,18 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 if (eventFilterLayout.getVisibility() == View.VISIBLE)
                     eventFilterLayout.setVisibility(View.GONE);
                 dateFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(dateFilterLayout);
                 return true;
             case R.id.action_filter_by_event:
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
                 eventFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(eventFilterLayout);
                 return true;
             case R.id.action_clear_filter:
-                mProgressbarView.setVisibility(View.VISIBLE);
                 clearDateFilter();
                 clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 menu.findItem(R.id.action_clear_filter).setVisible(false);
                 return true;
@@ -156,7 +152,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
 
-        mProgressbarView = v.findViewById(R.id.progress_container);
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -230,6 +225,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
             }
         });
@@ -242,6 +238,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
             }
         });
@@ -307,6 +304,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -326,6 +324,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -345,6 +344,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -364,6 +364,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -383,6 +384,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -454,9 +456,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUserActivityTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
-            if (mProgressbarView.getVisibility() == View.VISIBLE) {
-                mProgressbarView.setVisibility(View.GONE);
-            }
+
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
@@ -483,6 +483,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                     hasNext = mUserActivityResponse.isHasNext();
                     mActivityLogAdapter.notifyDataSetChanged();
+                    setContentShown(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
@@ -496,9 +497,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
             mSwipeRefreshLayout.setRefreshing(false);
             mUserActivityTask = null;
-            if (mProgressbarView.getVisibility() == View.VISIBLE) {
-                mProgressbarView.setVisibility(View.GONE);
-            }
+
         }
 
         if (userActivityResponsesList != null && userActivityResponsesList.size() == 0)
@@ -618,7 +617,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             if (userActivityResponsesList == null || userActivityResponsesList.isEmpty())
                 return 0;
             else
-                return userActivityResponsesList.size() + 1 ;
+                return userActivityResponsesList.size() + 1;
         }
 
         @Override
