@@ -403,8 +403,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                             public void onResourceSelected(int selectedIndex, String action) {
                                 if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
                                     new AlertDialog.Builder(getActivity())
-                                            .setTitle(R.string.are_you_sure)
-                                            .setMessage(R.string.remove_this_account_query)
+                                            .setMessage(R.string.are_you_sure_to_remove_bank_account)
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     if (Utilities.isConnectionAvailable(getActivity())) {

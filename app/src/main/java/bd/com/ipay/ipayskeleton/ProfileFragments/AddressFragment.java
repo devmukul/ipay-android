@@ -52,6 +52,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     private TextView mOfficeAddressView;
 
     private View mPermanentAddressviewHolder;
+    private View mPresentAddressviewHolder;
     private View mOfficeAddressviewHolder;
     private View mPresentAddressHolder;
     private View mPermanentAddressHolder;
@@ -81,6 +82,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
         mOfficeAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_address);
 
         mPermanentAddressviewHolder = v.findViewById(R.id.permanent_address_view_holder);
+        mPresentAddressviewHolder = v.findViewById(R.id.present_address_view_holder);
         mOfficeAddressviewHolder = v.findViewById(R.id.office_address_view_holder);
 
         mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
@@ -106,6 +108,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     private void loadAddresses() {
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             mPermanentAddressviewHolder.setVisibility(View.GONE);
+            mPresentAddressviewHolder.setVisibility(View.GONE);
             mOfficeAddressviewHolder.setVisibility(View.VISIBLE);
 
             if (mOfficeAddress == null) {
@@ -116,6 +119,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
             }
         } else {
             mPermanentAddressviewHolder.setVisibility(View.VISIBLE);
+            mPresentAddressviewHolder.setVisibility(View.VISIBLE);
             mOfficeAddressviewHolder.setVisibility(View.GONE);
 
             if (mPermanentAddress == null) {
