@@ -165,12 +165,12 @@ public class DocumentPicker {
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
                     selectedImage = Uri.parse(returnedIntent.getData().toString());
                 } else {            /** ALBUM **/
-                    selectedImage = Uri.parse(Utilities.getFilePathfromData(context, returnedIntent.getData()));
+                    selectedImage = Uri.parse(Utilities.getFilePath(context, returnedIntent.getData()));
                 }
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
-                /*String fileExtension = Utilities.getExtension(selectedImage.getPath());
-                if (isCamera || !fileExtension.endsWith("pdf")) {
+                String fileExtension = Utilities.getExtension(selectedImage.getPath());
+                if (isCamera) {
                     Log.d(TAG, "Converting: " + selectedImage.getPath());
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
@@ -182,7 +182,7 @@ public class DocumentPicker {
                     File tempFile = getTempFile(context);
                     CameraUtilities.saveBitmapToFile(convertedBitmap, tempFile);
                     selectedImage = Uri.fromFile(tempFile);
-                }*/
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

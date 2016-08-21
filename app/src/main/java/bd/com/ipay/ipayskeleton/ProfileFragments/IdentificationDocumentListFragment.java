@@ -177,7 +177,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 if (ProfileInfoCacheManager.isBusinessAccount()) {
                     processGetBusinessDocumentListResponse(json);
                 } else
-                   processGetDocumentListResponse(json);
+                    processGetDocumentListResponse(json);
 
             }
         }
