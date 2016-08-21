@@ -232,8 +232,6 @@
                     style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
-
-
         </LinearLayout>
     </LinearLayout>
 

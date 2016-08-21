@@ -48,35 +48,31 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_PIN, "Set up PIN");
         PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK, "Setup trusted network");
         PROPERTY_NAME_TO_TITLE_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add people eligible for password recovery");
-        PROPERTY_NAME_TO_TITLE_MAP.put(INTRODUCER, "Get Introduced by Other iPay Users");
-        PROPERTY_NAME_TO_TITLE_MAP.put(BASIC_PROFILE, "Complete Basic Profile Information");
+        PROPERTY_NAME_TO_TITLE_MAP.put(INTRODUCER, "Get Introduced by iPay Users");
+        PROPERTY_NAME_TO_TITLE_MAP.put(BASIC_PROFILE, "Complete Basic Information");
         PROPERTY_NAME_TO_TITLE_MAP.put(BUSINESS_INFO, "Complete Basic Business Information");
         PROPERTY_NAME_TO_TITLE_MAP.put(BUSINESS_DOCUMENTS, "Submit Business Documents");
-        PROPERTY_NAME_TO_TITLE_MAP.put(PERSONAL_ADDRESS, "Add Present and Permanent Addresses");
-        PROPERTY_NAME_TO_TITLE_MAP.put(BUSINESS_ADDRESS, "Add Office Address");
+        PROPERTY_NAME_TO_TITLE_MAP.put(PERSONAL_ADDRESS, "Add Addresses");
+        PROPERTY_NAME_TO_TITLE_MAP.put(BUSINESS_ADDRESS, "Add Business Address");
         PROPERTY_NAME_TO_TITLE_MAP.put(PROFILE_PICTURE, "Add a Profile Picture");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a verified email");
         PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(LINK_AND_VERIFY_BANK, "Link and Verify Bank Account");
-        PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parents' Details");
+        PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parent's Information");
     }
 
     static {
-//        PROPERTY_NAME_TO_ICON_MAP.put(ADD_PIN, "Set up PIN");
-//        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK, "Setup Trusted Network");
-//        PROPERTY_NAME_TO_ICON_MAP.put(TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE, "Add People Eligible for Password Recovery");
-//        PROPERTY_NAME_TO_ICON_MAP.put(VERIFIED_EMAIL, "Add a Verified Email");
-        PROPERTY_NAME_TO_ICON_MAP.put(INTRODUCER, R.drawable.ic_introducer_profile);
+        PROPERTY_NAME_TO_ICON_MAP.put(INTRODUCER, R.drawable.ic_introducer);
         PROPERTY_NAME_TO_ICON_MAP.put(BASIC_PROFILE, R.drawable.ic_basicinfo_profile);
         PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_INFO, R.drawable.ic_basicinfo_profile);
         PROPERTY_NAME_TO_ICON_MAP.put(PERSONAL_ADDRESS, R.drawable.ic_address_profile);
-        PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_ADDRESS, R.drawable.ic_address_profile);
-        PROPERTY_NAME_TO_ICON_MAP.put(PROFILE_PICTURE, R.drawable.ic_profilepic);
+        PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_ADDRESS, R.drawable.ic_signup_add1);
+        PROPERTY_NAME_TO_ICON_MAP.put(PROFILE_PICTURE, R.drawable.ic_signup_personal);
         PROPERTY_NAME_TO_ICON_MAP.put(PHOTOID, R.drawable.ic_photoid);
-        PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_photoid);
+        PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_doc);
         PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_DOCUMENTS, R.drawable.ic_photoid);
-        PROPERTY_NAME_TO_ICON_MAP.put(LINK_AND_VERIFY_BANK, R.drawable.ic_bankteal);
+        PROPERTY_NAME_TO_ICON_MAP.put(LINK_AND_VERIFY_BANK, R.drawable.ic_bank);
         PROPERTY_NAME_TO_ICON_MAP.put(PARENT, R.drawable.ic_parent);
     }
 

@@ -32,12 +32,7 @@ public class RequestsSentClass {
         return requestTime;
     }
 
-    public String getTitle() {
-
-        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return title;
-        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return "Money requested";
-        else return title;
-    }
+    public String getTitle() { return title; }
 
     private UserProfile getOriginatorProfile() {
         return originatorProfile;
@@ -53,7 +48,8 @@ public class RequestsSentClass {
 
     public String getDescription() {
 
-        String customDescription = "";
+        return description;
+        /*String customDescription = "";
 
         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
             customDescription = getOriginatorProfile().getUserName() + " requested " + amount + " Tk.";
@@ -61,6 +57,6 @@ public class RequestsSentClass {
             customDescription = description + ": " + getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
         }
 
-        return customDescription;
+        return customDescription;*/
     }
 }

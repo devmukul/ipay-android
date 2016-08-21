@@ -81,7 +81,7 @@
             android:id="@+id/verification_status"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:src="@drawable/ic_contactsverified"
+            android:src="@drawable/ic_invoice_ok"
             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
             android:visibility="gone"/>
 

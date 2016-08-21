@@ -36,5 +36,4 @@
             android:text="@string/empty_list" />
 
     </RelativeLayout>
-
 </LinearLayout>

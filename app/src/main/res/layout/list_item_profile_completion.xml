@@ -19,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="@dimen/value20"
             android:src="@drawable/ic_signup_personal" />
 
         <LinearLayout
@@ -63,5 +64,7 @@
         android:layout_below="@+id/profile_completion_holder"
         android:background="@color/colorDivider"
         android:paddingLeft="@dimen/activity_horizontal_margin_card"
-        android:paddingRight="@dimen/activity_horizontal_margin_card" />
+        android:paddingRight="@dimen/activity_horizontal_margin_card"
+        android:paddingTop="@dimen/activity_horizontal_margin_card"
+        android:paddingBottom="@dimen/activity_horizontal_margin_card"/>
 </RelativeLayout>

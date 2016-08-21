@@ -19,6 +19,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/present_address_view_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
@@ -90,6 +91,8 @@
                         android:padding="@dimen/activity_vertical_margin_card"
                         android:src="@drawable/ic_editgrey" />
                 </LinearLayout>
+
+                <View style="@style/DividerWithoutMargin" />
             </LinearLayout>
 
             <LinearLayout
@@ -98,8 +101,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
-
-                <View style="@style/DividerWithoutMargin" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

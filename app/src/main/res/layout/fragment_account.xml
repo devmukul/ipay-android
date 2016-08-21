@@ -91,84 +91,88 @@
                 android:id="@+id/basic_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_email"
+                android:drawableLeft="@drawable/ic_basicinfo_profile"
+                android:paddingBottom="@dimen/value4"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingTop="@dimen/value4"
                 android:text="@string/basic_info" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
+            <View style="@style/Divider" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/present_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_signup_add1"
+                android:paddingBottom="@dimen/value4"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingTop="@dimen/value4"
                 android:text="@string/address" />
 
             <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
+                android:id="@+id/divider_present_address"
+                style="@style/Divider" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_email"
+                android:drawableLeft="@drawable/ic_contact3x"
+                android:paddingBottom="@dimen/value4"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingTop="@dimen/value4"
                 android:text="@string/email_address" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
-
+            <View style="@style/Divider" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/documents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_doc"
+                android:paddingBottom="@dimen/value4"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingTop="@dimen/value4"
                 android:text="@string/profile_documents" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
+            <View style="@style/Divider" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/introducer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_introducer"
+                android:paddingBottom="@dimen/value4"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingTop="@dimen/value4"
                 android:text="@string/introducers" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
+            <View style="@style/Divider" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/manage_employees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_completeness"
+                android:drawableLeft="@drawable/ic_managepeople"
+                android:paddingBottom="@dimen/value4"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingTop="@dimen/value4"
                 android:text="@string/manage_people"
                 android:visibility="gone" />
 
             <View
                 android:id="@+id/divider_manage_employee"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider"
+                style="@style/Divider"
                 android:visibility="gone" />
-
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/profile_completion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_completeness"
+                android:paddingBottom="@dimen/value4"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingTop="@dimen/value4"
                 android:text="@string/profile_completeness" />
 
         </LinearLayout>

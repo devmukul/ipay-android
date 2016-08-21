@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,8 +48,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
     private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;
-
-    private View mProgressbarView;
 
     private String[] activityLogTypes;
     private RecyclerView mActivityLogRecyclerView;
@@ -105,20 +104,18 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 if (eventFilterLayout.getVisibility() == View.VISIBLE)
                     eventFilterLayout.setVisibility(View.GONE);
                 dateFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(dateFilterLayout);
                 return true;
             case R.id.action_filter_by_event:
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
                 eventFilterLayout.setVisibility(View.VISIBLE);
-                Utilities.setLayoutAnim_slideDown(eventFilterLayout);
                 return true;
             case R.id.action_clear_filter:
-                mProgressbarView.setVisibility(View.VISIBLE);
                 clearDateFilter();
                 clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 menu.findItem(R.id.action_clear_filter).setVisible(false);
                 return true;
@@ -155,7 +152,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
         filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
 
-        mProgressbarView = v.findViewById(R.id.progress_container);
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -229,6 +225,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
             }
         });
@@ -241,6 +238,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearEventFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
             }
         });
@@ -306,6 +304,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -325,6 +324,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -344,6 +344,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -363,6 +364,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -382,6 +384,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 clearDateFilter();
                 historyPageCount = 0;
                 if (userActivityResponsesList != null) userActivityResponsesList.clear();
+                setContentShown(false);
                 getUserActivities();
                 eventFilterLayout.setVisibility(View.GONE);
             }
@@ -453,9 +456,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUserActivityTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
-            if (mProgressbarView.getVisibility() == View.VISIBLE) {
-                mProgressbarView.setVisibility(View.GONE);
-            }
+
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
@@ -482,6 +483,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                     hasNext = mUserActivityResponse.isHasNext();
                     mActivityLogAdapter.notifyDataSetChanged();
+                    setContentShown(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
@@ -495,9 +497,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
             mSwipeRefreshLayout.setRefreshing(false);
             mUserActivityTask = null;
-            if (mProgressbarView.getVisibility() == View.VISIBLE) {
-                mProgressbarView.setVisibility(View.GONE);
-            }
+
         }
 
         if (userActivityResponsesList != null && userActivityResponsesList.size() == 0)
@@ -512,7 +512,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
 
         public class ActivityLogViewHolder extends RecyclerView.ViewHolder {
-            private final RoundedImageView mPortrait;
+            private final ImageView mPortrait;
             private final TextView mTransactionDescription;
             private final TextView mTime;
 
@@ -521,7 +521,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                 mTransactionDescription = (TextView) itemView.findViewById(R.id.activity_description);
                 mTime = (TextView) itemView.findViewById(R.id.time);
-                mPortrait = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                mPortrait = (ImageView) itemView.findViewById(R.id.portrait);
             }
 
             public void bindView(int pos) {
@@ -534,35 +534,22 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
                 // Set icon for activity type
                 if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_PROFILE) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_change)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_change);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_IN) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_cash_in)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_activity_cash_in);
+
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_MONEY_OUT) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_activity_cash_out)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_activity_cash_out);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_VERIFICATION) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_verified_log)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_verified_log);
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_IN)) {
-                        Glide.with(getActivity())
-                                .load(R.drawable.ic_signin)
-                                .into(mPortrait);
+                        mPortrait.setImageResource(R.drawable.ic_signin);
                     } else if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_OUT)) {
-                        Glide.with(getActivity())
-                                .load(R.drawable.ic_signout)
-                                .into(mPortrait);
+                        mPortrait.setImageResource(R.drawable.ic_signout);
                     }
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
-                    Glide.with(getActivity())
-                            .load(R.drawable.ic_security)
-                            .into(mPortrait);
+                    mPortrait.setImageResource(R.drawable.ic_security);
                 }
             }
         }

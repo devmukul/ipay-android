@@ -51,6 +51,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private String mDescription;
+    private String mReferenceNumber;
     private String mError_message;
 
     private ProfileImageView mProfileImageView;
@@ -60,7 +61,11 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private TextView mAmountView;
     private TextView mServiceChargeView;
     private TextView mNetReceivedView;
+    private TextView mRefNumberView;
+
     private View mLinearLayoutDescriptionHolder;
+    private View mLinearLayoutRefNumberHolder;
+    private View mRefNumberDivider;
     private Button mPaymentButton;
 
 
@@ -71,6 +76,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
         mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
+        mReferenceNumber = getActivity().getIntent().getStringExtra(Constants.REFERENCE_NUMBER);
 
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
@@ -84,6 +90,9 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mRefNumberView = (TextView) v.findViewById(R.id.textview_reference_number);
+        mLinearLayoutRefNumberHolder = v.findViewById(R.id.reference_number_holder);
+        mRefNumberDivider = v.findViewById(R.id.reference_number_divider);
         mPaymentButton = (Button) v.findViewById(R.id.button_payment);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -107,6 +116,15 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         }
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
+
+        if (mReferenceNumber.isEmpty()) {
+            mLinearLayoutRefNumberHolder.setVisibility(View.GONE);
+            mRefNumberDivider.setVisibility(View.GONE);
+        } else {
+            mLinearLayoutRefNumberHolder.setVisibility(View.VISIBLE);
+            mRefNumberDivider.setVisibility(View.VISIBLE);
+            mRefNumberView.setText(mReferenceNumber);
+        }
 
         mPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +182,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mProgressDialog.show();
         PaymentRequest mPaymentRequest = new PaymentRequest(
                 ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
-                mAmount.toString(), mDescription, pin);
+                mAmount.toString(), mDescription, pin, mReferenceNumber);
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,

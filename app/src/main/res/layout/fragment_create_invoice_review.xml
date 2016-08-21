@@ -10,7 +10,6 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/value12">
 
-
         <LinearLayout
             android:id="@+id/profile"
             android:layout_width="match_parent"

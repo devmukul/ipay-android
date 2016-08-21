@@ -52,6 +52,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
     private EditText mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
+    private EditText mRefNumberEditText;
 
     private SharedPreferences pref;
 
@@ -67,6 +68,8 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
+        mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
+
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonPayment = (Button) v.findViewById(R.id.button_payment);
@@ -233,12 +236,14 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
 
         String receiver = mMobileNumberEditText.getText().toString().trim();
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
+        String referenceNumber = mRefNumberEditText.getText().toString().trim();
         String description = mDescriptionEditText.getText().toString().trim();
 
         Intent intent = new Intent(getActivity(), PaymentReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
+        intent.putExtra(Constants.REFERENCE_NUMBER, referenceNumber);
 
         startActivityForResult(intent, PAYMENT_REVIEW_REQUEST);
 

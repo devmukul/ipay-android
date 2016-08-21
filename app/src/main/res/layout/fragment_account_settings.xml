@@ -14,60 +14,60 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_signup_pwc"
+            android:paddingBottom="@dimen/value4"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingTop="@dimen/value4"
             android:text="@string/set_pin" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_space"
-            android:background="@color/colorDivider" />
+        <View style="@style/Divider" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/change_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_signup_pw"
+            android:paddingBottom="@dimen/value4"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingTop="@dimen/value4"
             android:text="@string/change_password" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_space"
-            android:background="@color/colorDivider" />
+        <View style="@style/Divider" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/password_recovery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/value4"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingTop="@dimen/value4"
             android:drawableLeft="@drawable/ic_pwr3x"
             android:text="@string/password_recovery" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_space"
-            android:background="@color/colorDivider" />
+        <View style="@style/Divider" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/trusted_device"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_signup_number"
+            android:paddingBottom="@dimen/value4"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingTop="@dimen/value4"
             android:text="@string/trusted_devices" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_space"
-            android:background="@color/colorDivider" />
+        <View style="@style/Divider" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/logout_from_all_devices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_logout23x"
+            android:paddingBottom="@dimen/value4"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingTop="@dimen/value4"
             android:text="@string/logout_from_all_device" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_space"
-            android:background="@color/colorDivider" />
+        <View style="@style/Divider" />
 
     </LinearLayout>
 

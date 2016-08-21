@@ -19,7 +19,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:background="@drawable/about"
+                android:background="@drawable/about_background"
                 style="@style/ProfileCardLayoutStyle">
 
                 <ImageView
@@ -28,7 +28,7 @@
                     android:layout_height="130dp"
                     android:layout_marginTop="5dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_logo" />
+                    android:src="@drawable/ic_logo_ipay_full_size" />
 
                 <TextView
                     android:id="@+id/iPay_name"
@@ -65,34 +65,34 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_contact3x"
+                    android:paddingBottom="@dimen/value4"
+                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                    android:paddingTop="@dimen/value4"
                     android:text="@string/contact_us" />
 
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:layout_marginLeft="@dimen/value48"
-                    android:background="@color/colorDivider" />
+                <View style="@style/Divider" />
 
                 <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                     android:id="@+id/terms_of_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_faq3x"
+                    android:drawableLeft="@drawable/ic_terms3x"
+                    android:paddingBottom="@dimen/value4"
+                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                    android:paddingTop="@dimen/value4"
                     android:text="@string/terms_of_service" />
 
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:layout_marginLeft="@dimen/value48"
-                    android:background="@color/colorDivider" />
+                <View style="@style/Divider" />
 
                 <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                     android:id="@+id/privacy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_terms3x"
+                    android:drawableLeft="@drawable/ic_faq3x"
+                    android:paddingBottom="@dimen/value4"
+                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                    android:paddingTop="@dimen/value4"
                     android:text="@string/privacy_policy" />
-
 
             </LinearLayout>
 

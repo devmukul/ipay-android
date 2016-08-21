@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -89,11 +90,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.passport,
             R.string.driving_license,
             R.string.birth_certificate,
-            R.string.tin,
-            R.string.business_tin,
-            R.string.trade_license,
-            R.string.vat_registration_certificate
-
     };
 
     private static final int[] BUSINESS_DOCUMENT_TYPE_NAMES = {
@@ -107,8 +103,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
     private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
-    private static final int COUNT_UPLOAD_PERSONAL_DOCUMENT = 4;
-    private static final int COUNT_UPLOAD_OTHER_DOCUMENT = 7;
+    private static final int COUNT_UPLOAD_PERSONAL_DOCUMENT = 3;
+    private static final int COUNT_UPLOAD_BUSINESS_DOCUMENT = 2;
     private int mSelectedItemId = -1;
     private int mPickerActionId = -1;
     private Uri mSelectedDocumentUri;
@@ -124,7 +120,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_PASSPORT,
                 Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
                 Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-                Constants.DOCUMENT_TYPE_TIN,
         };
         BUSINESS_DOCUMENT_TYPES = new String[]{
                 Constants.DOCUMENT_TYPE_BUSINESS_TIN,
@@ -146,10 +141,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
-            documentPreviewBindViewHolderList = new ArrayList<>(COUNT_UPLOAD_OTHER_DOCUMENT + 1);
-
-            for (String DOCUMENT_TYPE : DOCUMENT_TYPES)
-                documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
+            documentPreviewBindViewHolderList = new ArrayList<>(COUNT_UPLOAD_BUSINESS_DOCUMENT + 1);
 
             for (String DOCUMENT_TYPE : BUSINESS_DOCUMENT_TYPES)
                 documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
@@ -167,15 +159,26 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         super.onActivityCreated(savedInstanceState);
 
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE)) {
-            getIdentificationDocuments();
+            if (ProfileInfoCacheManager.isBusinessAccount()) {
+                getIdentificationBusinessDocuments();
+            } else
+                getIdentificationDocuments();
         } else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
             String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
 
             if (json == null) {
-                getIdentificationDocuments();
+
+                if (ProfileInfoCacheManager.isBusinessAccount()) {
+                    getIdentificationBusinessDocuments();
+                } else
+                    getIdentificationDocuments();
             } else {
-                getIdentificationDocuments();
+                if (ProfileInfoCacheManager.isBusinessAccount()) {
+                    getIdentificationBusinessDocuments();
+                } else
+                    getIdentificationDocuments();
+
             }
         }
 
@@ -221,28 +224,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private void loadDocumentInfo() {
 
-        int mCount = 0;
         mIdentificationDocumentDetails = new IdentificationDocumentDetails[documentPreviewBindViewHolderList.size()];
-
-        for (int i = 0; i < DOCUMENT_TYPES.length; i++) {
-            String documentId = "";
-            String verificationStatus = null;
-            String documentUrl = null;
-
-            for (IdentificationDocument identificationDocument : mIdentificationDocuments) {
-                if (identificationDocument.getDocumentType().equals(DOCUMENT_TYPES[i])) {
-                    documentId = identificationDocument.getDocumentIdNumber();
-                    verificationStatus = identificationDocument.getDocumentVerificationStatus();
-                    documentUrl = identificationDocument.getDocumentUrl();
-                    documentPreviewBindViewHolderList.get(i).setmDocumentId(documentId);
-                }
-            }
-
-            mIdentificationDocumentDetails[i] = new IdentificationDocumentDetails(DOCUMENT_TYPES[i],
-                    getString(DOCUMENT_TYPE_NAMES[i]), documentId, verificationStatus, documentUrl);
-
-            mCount++;
-        }
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             for (int i = 0; i < BUSINESS_DOCUMENT_TYPES.length; i++) {
@@ -255,14 +237,35 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         documentId = identificationDocument.getDocumentIdNumber();
                         verificationStatus = identificationDocument.getDocumentVerificationStatus();
                         documentUrl = identificationDocument.getDocumentUrl();
-                        documentPreviewBindViewHolderList.get(i + mCount).setmDocumentId(documentId);
+                        documentPreviewBindViewHolderList.get(i).setmDocumentId(documentId);
                     }
                 }
 
-                mIdentificationDocumentDetails[i + mCount] = new IdentificationDocumentDetails(BUSINESS_DOCUMENT_TYPES[i],
+                mIdentificationDocumentDetails[i] = new IdentificationDocumentDetails(BUSINESS_DOCUMENT_TYPES[i],
                         getString(BUSINESS_DOCUMENT_TYPE_NAMES[i]), documentId, verificationStatus, documentUrl);
             }
+        } else {
+            for (int i = 0; i < DOCUMENT_TYPES.length; i++) {
+                String documentId = "";
+                String verificationStatus = null;
+                String documentUrl = null;
+
+                for (IdentificationDocument identificationDocument : mIdentificationDocuments) {
+                    if (identificationDocument.getDocumentType().equals(DOCUMENT_TYPES[i])) {
+                        documentId = identificationDocument.getDocumentIdNumber();
+                        verificationStatus = identificationDocument.getDocumentVerificationStatus();
+                        documentUrl = identificationDocument.getDocumentUrl();
+                        documentPreviewBindViewHolderList.get(i).setmDocumentId(documentId);
+                    }
+                }
+
+                mIdentificationDocumentDetails[i] = new IdentificationDocumentDetails(DOCUMENT_TYPES[i],
+                        getString(DOCUMENT_TYPE_NAMES[i]), documentId, verificationStatus, documentUrl);
+
+            }
         }
+
+
     }
 
     private void getIdentificationDocuments() {
@@ -312,14 +315,15 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         String selectedOImagePath = documentPreviewBindViewHolderList.get(mID).getmSelectedDocumentUri().getPath();
         Log.w("Loading document", mID + " " + selectedOImagePath + " " + mDocumentType);
 
-        if (mID <= COUNT_UPLOAD_PERSONAL_DOCUMENT) {
-            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                    mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
-        } else if (mID > COUNT_UPLOAD_PERSONAL_DOCUMENT && mID <= COUNT_UPLOAD_OTHER_DOCUMENT) {
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
             mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                     Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
                     mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
+        } else {
+            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                    mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
         }
 
         mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
@@ -449,16 +453,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mIdentificationDocumentResponse = gson.fromJson(json, GetIdentificationDocumentResponse.class);
 
         mIdentificationDocuments = mIdentificationDocumentResponse.getDocuments();
+        loadDocumentInfo();
 
-        if (ProfileInfoCacheManager.isBusinessAccount())
-            getIdentificationBusinessDocuments();
-        else {
-            loadDocumentInfo();
-            mDocumentListAdapter = new DocumentListAdapter();
-            mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
-            setContentShown(true);
-        }
+        mDocumentListAdapter = new DocumentListAdapter();
+        mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
 
+        setContentShown(true);
 
     }
 
@@ -490,6 +490,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             }
 
         }
+        documentPreviewBindViewHolderList.get(id).setmSelectedDocumentUri(null);
+        documentPreviewBindViewHolderList.get(id).setmSelectedfilePath("");
         mDocumentListAdapter.notifyDataSetChanged();
     }
 
@@ -529,7 +531,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             public void bindView(final int pos) {
                 mDocumentIdEditTextView.setError(null);
                 mSelectFile.setError(null);
+                mSelectFile.setText("");
                 mPickerList = new ArrayList<>();
+                mBitmap = null;
 
                 final IdentificationDocumentDetails identificationDocumentDetail = mIdentificationDocumentDetails[pos];
 
@@ -566,18 +570,20 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 mDocumentIdEditTextView.setText(documentPreviewBindViewHolderList.get(pos).getmDocumentId());
 
+                //  Log.w("Loading document", documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri().getPath().toString());
                 if (documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri() != null) {
                     mFile = new File(documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri().getPath());
                     if (mFile.exists()) {
                         mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                         mPicker.setImageBitmap(mBitmap);
                     }
-                }
+                } else
+                    mPicker.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_addw));
 
-                if (documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath() != null) {
-                    mSelectFile.setText(documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath());
-                } else {
+                if (documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath().isEmpty()) {
                     mSelectFile.setText("");
+                } else {
+                    mSelectFile.setText(documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath());
                 }
 
                 if (documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
@@ -637,10 +643,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mDocumentIdEditTextView.getText().toString().isEmpty()) {
+                        if (mDocumentIdEditTextView.getText().toString() == null) {
                             mDocumentIdEditTextView.setError(getString(R.string.please_enter_document_number));
                             mDocumentIdEditTextView.requestFocus();
-                        } else if (documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath().isEmpty()) {
+                        } else if (documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri() == null) {
                             mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
                         } else
                             uploadDocument(documentPreviewBindViewHolderList.get(pos).getmDocumentId(), identificationDocumentDetail.getDocumentType(), pos);

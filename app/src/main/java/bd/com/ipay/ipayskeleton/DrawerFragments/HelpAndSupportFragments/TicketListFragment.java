@@ -40,6 +40,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private FloatingActionButton mNewTicketButton;
+    private TextView mEmptyListTextView;
 
     private List<Ticket> mTickets;
     private TicketListAdapter mTicketListAdapter;
@@ -48,6 +49,9 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ticket_list, container, false);
+
+
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
         mNewTicketButton = (FloatingActionButton) v.findViewById(R.id.fab_new_ticket);
 
@@ -100,8 +104,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetTicketsTask = null;
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -119,15 +122,17 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_TICKETS:
+                if (isAdded())
+                    setContentShown(true);
                 try {
                     mGetTicketsResponse = gson.fromJson(result.getJsonString(), GetTicketsResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mTickets = mGetTicketsResponse.getResponse().getTickets();
                         mTicketListAdapter.notifyDataSetChanged();
-
-                        if (isAdded())
-                            setContentShown(true);
+                        mEmptyListTextView.setVisibility(View.GONE);
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                        mEmptyListTextView.setVisibility(View.VISIBLE);
                     } else {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.failed_loading_tickets, Toast.LENGTH_LONG).show();

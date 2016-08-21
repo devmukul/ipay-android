@@ -718,7 +718,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 super.bindView(pos);
 
                 final int position = pos ;
-                final Business businessInvitation = mBusinessInvitations.get(pos);
+                final Business businessInvitation = (Business) mNotifications.get(pos);
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {

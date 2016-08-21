@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">iPay</string>
     <string name="iPay_system">iPay Systems Ltd.</string>
-    <string name="iPay_copyright">Copyright 2016 @ iPay Systems Ltd.</string>
-    <string name="all_rights_reserved">All rights reserved. </string>
+    <string name="iPay_copyright">Copyright 2016 iPay Systems Ltd.</string>
+    <string name="all_rights_reserved">All Rights Reserved. </string>
     <string name="bangladesh">Bangladesh</string>
     <string name="phone_init">+880</string>
     <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
@@ -49,6 +49,8 @@
     <string name="invalid_postcode">Please enter a valid 4-digit postcode</string>
     <string name="occupation">Occupation</string>
     <string name="mobile_number">Mobile Number</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="inception_date">Inception Date</string>
     <string name="contact_us">Contact Us</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -66,6 +68,7 @@
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
     <string name="error_promo_code_empty">Please enter the promo code</string>
     <string name="error_invalid_first_name">Please enter name</string>
+    <string name="error_invalid_parent_name">Parents Name should have minimum length of 5 characters</string>
     <string name="error_invalid_name">Please enter name</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
     <string name="please_select_institution">Please select an institution</string>
@@ -78,8 +81,10 @@
     <string name="enter_the_amount_we_sent">Enter the amount we sent to your bank account here.</string>
     <string name="bank_verification_help">We sent some money in your bank account.\nPlease click Verify by selecting the bank and then enter the amount we sent in your bank account to complete the verification process.</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="are_you_sure_to_invite">Are you sure you know this person and want to invite him/her to iPay?</string>
+    <string name="are_you_sure_to_remove_employee">Are you sure you want to remove this employee?</string>
     <string name="accept">Accept</string>
-    <string name="remove_this_account_query">Remove this account from your bank list?</string>
+    <string name="are_you_sure_to_remove_bank_account">Are you sure you want to remove this account from your bank list?</string>
     <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
     <string name="cancel_payment_request_confirm">Are you sure you want to cancel your request for payment?</string>
     <string name="account_type_personal">Personal Account</string>
@@ -273,6 +278,8 @@
     <string name="event_location">Event location</string>
     <string name="enter_vat">VAT in BDT(%)</string>
     <string name="enter_amount">Amount in BDT</string>
+    <string name="reference_number_optional">Reference Number (Optional)</string>
+    <string name="reference_number">Reference Number</string>
     <string name="send_money_description">Write a note</string>
     <string name="education_payment_description">Write a note</string>
     <string name="description_event">Event description</string>
@@ -346,7 +353,7 @@
     <string name="filter_system_event">System Events</string>
     <string name="filter">Filter</string>
     <string name="ticket_verified">Ticket Verified</string>
-    <string name="introducers">Introducers</string>
+    <string name="introducers">Introducer</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
     <string name="transaction_cancelled">Cancelled</string>
@@ -531,6 +538,7 @@
     <string name="profile_completion_text">Yout profile is 0% complete. Complete profile to get verified</string>
     <string name="business_contact">Business Contact</string>
     <string name="edit_basic_info">Edit Basic Info</string>
+    <string name="edit_contact_info">Edit Contact Info</string>
     <string name="edit_parent_info">Edit Parent Info</string>
     <string name="edit_address">Edit Address</string>
     <string name="you_need_to_have">You need to have at least&#160;</string>
@@ -603,12 +611,11 @@
     <string name="manage_emails">Manage Emails</string>
     <string name="education_management">Education Management</string>
     <string name="failed_loading_employee_list">Failed to load employee list</string>
-    <string name="confirmation_remove_employee">Remove this employee?</string>
     <string name="loading_accepting_invitation">Accepting invitation...</string>
     <string name="loading_rejecting_invitation">Rejecting invitation...</string>
     <string name="loading_marking_invitation_as_spam">Marking invitation as spam...</string>
     <string name="failed_confirming_business_invitation">Failed to confirm business invitation</string>
-    <string name="edit_office_information">Edit Office Information</string>
+    <string name="edit_business_information">Edit Business Information</string>
     <string name="get_balance">Get Balance</string>
     <string name="get_transactions">Get Transactions</string>
     <string name="friend_read">See frieds</string>
@@ -666,6 +673,7 @@
     <string name="dialog_verify_email">You need to set up your primary email to use the support system. Verify your email now?</string>
     <string name="no_primary_email">No Primary Email</string>
     <string name="failed_loading_tickets">Failed to load tickets</string>
+    <string name="no_tickets_available">"You haven't created any ticket. Press '+' to create one"</string>
     <string name="message">Message</string>
     <string name="failed_empty_subject">Subject cannot be empty</string>
     <string name="failed_empty_message">Message cannot be empty</string>

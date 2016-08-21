@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin_card"
         android:paddingRight="@dimen/value5"/>
 
     <LinearLayout

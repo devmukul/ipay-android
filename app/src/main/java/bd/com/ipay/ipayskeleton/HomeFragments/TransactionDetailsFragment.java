@@ -107,6 +107,14 @@ public class TransactionDetailsFragment extends Fragment {
             if (bankCode != null) otherImageView.setImageResource(bankIcon);
             else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
+        }  else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
+            mNameView.setText(bankName);
+            mMobileNumberView.setText(bankAccountNumber);
+            mProfileImageView.setVisibility(View.GONE);
+            otherImageView.setVisibility(View.VISIBLE);
+            if (bankCode != null) otherImageView.setImageResource(bankIcon);
+            else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
+
         } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
             mNameView.setText(R.string.opening_balance_to);
             mMobileNumberView.setText(mMobileNumber);

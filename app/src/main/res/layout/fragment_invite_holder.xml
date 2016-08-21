@@ -64,6 +64,5 @@
             android:layout_below="@+id/contact_header">
 
         </FrameLayout>
-
     </RelativeLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

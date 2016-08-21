@@ -32,8 +32,24 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/business_type"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="@string/type_of_business"
+                    android:inputType="textPostalAddress"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/Divider" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/business_mobile_number"
@@ -49,8 +65,7 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/business_email"
@@ -64,29 +79,12 @@
 
             <View style="@style/Divider" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
-
-                <EditText
-                    android:id="@+id/business_type"
-                    style="@style/CustomEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:hint="@string/type_of_business"
-                    android:inputType="textPostalAddress"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
-
-            <View style="@style/Divider" />
-
             <Button
                 android:id="@+id/button_save"
                 style="@style/PrimaryMediumButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin_semi_double"
                 android:text="@string/save" />
 
         </LinearLayout>

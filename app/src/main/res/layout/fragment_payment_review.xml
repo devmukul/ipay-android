@@ -95,6 +95,29 @@
                     style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
+            <View
+                android:id="@+id/reference_number_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/reference_number_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/reference_number" />
+
+                <TextView
+                    android:id="@+id/textview_reference_number"
+                    style="@style/TextViewInfoColorPrimary" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <View
