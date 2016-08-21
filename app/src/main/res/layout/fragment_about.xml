@@ -19,7 +19,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:background="@drawable/about_background"
+                android:background="@drawable/background_new"
                 style="@style/ProfileCardLayoutStyle">
 
                 <ImageView

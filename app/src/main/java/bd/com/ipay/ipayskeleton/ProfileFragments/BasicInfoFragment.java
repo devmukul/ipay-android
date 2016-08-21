@@ -140,6 +140,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        setContentShown(false);
+
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
                 || PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
             getProfileInfo();
@@ -273,7 +275,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             }
 
             mGetProfileInfoTask = null;
-        }   if (result.getApiCommand().equals(Constants.COMMAND_GET_PARENT_INFO_REQUEST)) {
+        }
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PARENT_INFO_REQUEST)) {
 
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -302,9 +305,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             }
 
             mGetParentInfoTask = null;
-        }
-
-        else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
 
             try {
                 mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
@@ -317,6 +318,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
                 } else {
                     mOccupationView.setText("");
                 }
+                setContentShown(true);
             } catch (Exception e) {
                 e.printStackTrace();
                 mOccupationView.setText("");
@@ -363,6 +365,5 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         setProfileInformation();
         getOccupationList();
 
-        setContentShown(true);
     }
 }
