@@ -146,6 +146,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     }
 
     private void launchEmailPage() {
+        getActivity().onBackPressed();
         Intent intent = new Intent(getActivity(), ProfileActivity.class);
         intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.VERIFIED_EMAIL);
         startActivity(intent);
