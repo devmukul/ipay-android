@@ -673,6 +673,7 @@
     <string name="dialog_verify_email">You need to set up your primary email to use the support system. Verify your email now?</string>
     <string name="no_primary_email">No Primary Email</string>
     <string name="failed_loading_tickets">Failed to load tickets</string>
+    <string name="no_tickets_available">"You haven't created any ticket. Press '+' to create one"</string>
     <string name="message">Message</string>
     <string name="failed_empty_subject">Subject cannot be empty</string>
     <string name="failed_empty_message">Message cannot be empty</string>

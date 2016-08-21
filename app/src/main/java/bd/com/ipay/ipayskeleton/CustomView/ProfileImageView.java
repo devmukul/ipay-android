@@ -73,6 +73,7 @@ public class ProfileImageView extends FrameLayout {
                     .placeholder(R.drawable.ic_profile)
                     .error(R.drawable.ic_profile)
                     .crossFade()
+                    .dontAnimate()
                     .transform(new CircleTransform(context))
                     .into(mProfilePictureView);
         } catch (Exception e) {
