@@ -14,4 +14,9 @@
         android:drawableLeft="@drawable/ic_education"
         android:paddingLeft="@dimen/activity_horizontal_margin_card" />
 
+    <View
+        style="@style/DividerafterIcon"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/item_services" />
+
 </RelativeLayout>

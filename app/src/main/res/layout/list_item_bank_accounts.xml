@@ -22,7 +22,7 @@
             android:layout_marginTop="@dimen/activity_horizontal_margin_card"
             android:scaleType="centerCrop"
             android:src="@drawable/bank111"
-            app:riv_border_color="@color/colorPrimary"
+            app:riv_border_color="@android:color/white"
             app:riv_border_width="1dip"
             app:riv_corner_radius="50dip"
             app:riv_oval="false" />
@@ -44,7 +44,7 @@
             android:layout_below="@+id/bank_name"
             android:layout_toLeftOf="@+id/bank_account_verify_status"
             android:layout_toRightOf="@+id/portrait"
-            android:singleLine="true"/>
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/bank_account_number"

@@ -97,7 +97,7 @@
                 android:paddingTop="@dimen/value4"
                 android:text="@string/basic_info" />
 
-            <View style="@style/Divider" />
+            <View style="@style/DividerafterIcon" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/present_address"
@@ -111,7 +111,7 @@
 
             <View
                 android:id="@+id/divider_present_address"
-                style="@style/Divider" />
+                style="@style/DividerafterIcon" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/email"
@@ -123,7 +123,7 @@
                 android:paddingTop="@dimen/value4"
                 android:text="@string/email_address" />
 
-            <View style="@style/Divider" />
+            <View style="@style/DividerafterIcon" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/documents"
@@ -135,7 +135,7 @@
                 android:paddingTop="@dimen/value4"
                 android:text="@string/profile_documents" />
 
-            <View style="@style/Divider" />
+            <View style="@style/DividerafterIcon" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/introducer"
@@ -147,7 +147,7 @@
                 android:paddingTop="@dimen/value4"
                 android:text="@string/introducers" />
 
-            <View style="@style/Divider" />
+            <View style="@style/DividerafterIcon" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/manage_employees"
@@ -162,7 +162,7 @@
 
             <View
                 android:id="@+id/divider_manage_employee"
-                style="@style/Divider"
+                style="@style/DividerafterIcon"
                 android:visibility="gone" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton

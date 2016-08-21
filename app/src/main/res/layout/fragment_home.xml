@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-            android:background="@drawable/profile_background"
+            android:background="@drawable/home_background_new"
             android:orientation="vertical">
 
             <RelativeLayout
