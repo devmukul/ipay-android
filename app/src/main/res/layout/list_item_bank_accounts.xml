@@ -42,13 +42,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/bank_name"
-            android:layout_toRightOf="@+id/portrait" />
+            android:layout_toLeftOf="@+id/bank_account_verify_status"
+            android:layout_toRightOf="@+id/portrait"
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/bank_account_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/bank_branch_name"
+            android:layout_toLeftOf="@+id/bank_account_verify_status"
             android:layout_toRightOf="@+id/portrait"
             android:textColor="@color/colorPrimary" />
 
@@ -58,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingRight="@dimen/activity_horizontal_margin" />
 
     </RelativeLayout>
