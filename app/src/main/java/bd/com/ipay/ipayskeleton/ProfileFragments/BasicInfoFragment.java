@@ -230,9 +230,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         if (mGetOccupationTask != null) {
             return;
         }
-
-        mOccupationView.setText(getString(R.string.please_wait));
-
         mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
                 new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
         mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
