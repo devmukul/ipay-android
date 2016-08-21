@@ -90,8 +90,9 @@ public class DocumentPicker {
         Set<Intent> intentList = new LinkedHashSet<>();
 
         if (id == OPTION_EXTERNAL_STORAGE) {
-            Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            pickIntent.setType("image/*|application/pdf|");
+            Intent pickIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
             intentList = addIntentsToList(context, intentList, pickIntent);
         } else {
             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -164,11 +165,11 @@ public class DocumentPicker {
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
                     selectedImage = Uri.parse(returnedIntent.getData().toString());
                 } else {            /** ALBUM **/
-                    selectedImage = Uri.parse(Utilities.getFilePath(context, returnedIntent.getData()));
+                    selectedImage = Uri.parse(Utilities.getFilePathfromData(context, returnedIntent.getData()));
                 }
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
-                String fileExtension = Utilities.getExtension(selectedImage.getPath());
+                /*String fileExtension = Utilities.getExtension(selectedImage.getPath());
                 if (isCamera || !fileExtension.endsWith("pdf")) {
                     Log.d(TAG, "Converting: " + selectedImage.getPath());
 
@@ -181,7 +182,7 @@ public class DocumentPicker {
                     File tempFile = getTempFile(context);
                     CameraUtilities.saveBitmapToFile(convertedBitmap, tempFile);
                     selectedImage = Uri.fromFile(tempFile);
-                }
+                }*/
             }
         } catch (Exception e) {
             e.printStackTrace();

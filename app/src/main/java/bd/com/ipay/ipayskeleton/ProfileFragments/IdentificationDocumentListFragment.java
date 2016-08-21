@@ -570,7 +570,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 mDocumentIdEditTextView.setText(documentPreviewBindViewHolderList.get(pos).getmDocumentId());
 
-                //  Log.w("Loading document", documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri().getPath().toString());
                 if (documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri() != null) {
                     mFile = new File(documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri().getPath());
                     if (mFile.exists()) {
