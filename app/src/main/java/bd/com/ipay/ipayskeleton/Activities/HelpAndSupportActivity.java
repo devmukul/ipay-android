@@ -37,7 +37,7 @@ public class HelpAndSupportActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateTicketFragment()).addToBackStack(null).commit();
     }
 
-    private void switchToTicketListFragment() {
+    public void switchToTicketListFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 

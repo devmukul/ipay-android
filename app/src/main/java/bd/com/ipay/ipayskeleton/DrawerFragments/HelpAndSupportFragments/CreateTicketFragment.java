@@ -18,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -107,6 +108,12 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                             launchEmailPage();
                         }
                     })
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            ((HelpAndSupportActivity) getActivity()).switchToTicketListFragment();
+                        }
+                    })
                     .show();
         } else {
             String primaryEmail = mGetEmailResponse.getVerifiedEmail();
@@ -123,6 +130,12 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                                 launchEmailPage();
                             }
                         })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                ((HelpAndSupportActivity) getActivity()).switchToTicketListFragment();
+                            }
+                        })
                         .show();
             } else {
 
@@ -133,6 +146,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     }
 
     private void launchEmailPage() {
+        getActivity().onBackPressed();
         Intent intent = new Intent(getActivity(), ProfileActivity.class);
         intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.VERIFIED_EMAIL);
         startActivity(intent);
