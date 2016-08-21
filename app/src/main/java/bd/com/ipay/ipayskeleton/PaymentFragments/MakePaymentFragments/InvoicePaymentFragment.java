@@ -237,6 +237,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
+        if (this.isAdded()) setContentShown(true);
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetAllNotificationsTask = null;
@@ -278,7 +279,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                         Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
                 }
 
-                if (this.isAdded()) setContentShown(true);
                 mGetAllNotificationsTask = null;
                 mSwipeRefreshLayout.setRefreshing(false);
 
@@ -319,8 +319,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                         Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
                     }
                 }
-
-                if (this.isAdded()) setContentShown(true);
                 mGetSingleInvoiceTask = null;
                 mSwipeRefreshLayout.setRefreshing(false);
                 mProgressDialog.dismiss();
