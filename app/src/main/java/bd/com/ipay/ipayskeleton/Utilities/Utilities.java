@@ -371,6 +371,18 @@ public class Utilities {
         return filePath;
     }
 
+    public static String getFilePathfromData(Context context, Uri uri) {
+        String[] projection = new String[]{"_data"};
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        String filePath = null;
+        int columnIndex = cursor.getColumnIndex(projection[0]);
+        if (cursor != null && cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex);
+            cursor.close();
+        }
+
+        return filePath;
+    }
     public static void setLayoutAnim_slideDown(ViewGroup panel) {
 
         AnimationSet set = new AnimationSet(true);

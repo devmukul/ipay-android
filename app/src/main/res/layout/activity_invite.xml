@@ -17,8 +17,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:src="@drawable/ic_ipaymember"
-        app:backgroundTint="@android:color/white"
+        android:src="@drawable/ic_contacts_add"
+        app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"
         app:elevation="4dp"
         app:borderWidth="0dp"/>

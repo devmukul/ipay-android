@@ -63,7 +63,7 @@
         android:layout_height="@dimen/divider_space"
         android:layout_below="@+id/profile_completion_holder"
         android:background="@color/colorDivider"
-        android:paddingLeft="@dimen/activity_horizontal_margin_card"
+        android:layout_marginLeft="@dimen/value48"
         android:paddingRight="@dimen/activity_horizontal_margin_card"
         android:paddingTop="@dimen/activity_horizontal_margin_card"
         android:paddingBottom="@dimen/activity_horizontal_margin_card"/>

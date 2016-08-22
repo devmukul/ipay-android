@@ -70,6 +70,7 @@ public class SingleInvoiceFragment extends Fragment implements HttpResponseListe
             if (TextUtils.isDigitsOnly(result))
                 getSingleInvoice(Integer.parseInt(result));
             else {
+                Toast.makeText(getActivity(),result, Toast.LENGTH_LONG).show();
                 Toast.makeText(getActivity(), R.string.not_a_valid_invoice_id, Toast.LENGTH_LONG).show();
                 getActivity().finish();
             }

@@ -90,8 +90,9 @@ public class DocumentPicker {
         Set<Intent> intentList = new LinkedHashSet<>();
 
         if (id == OPTION_EXTERNAL_STORAGE) {
-            Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            pickIntent.setType("image/*|application/pdf|");
+            Intent pickIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
             intentList = addIntentsToList(context, intentList, pickIntent);
         } else {
             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -169,7 +170,7 @@ public class DocumentPicker {
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
                 String fileExtension = Utilities.getExtension(selectedImage.getPath());
-                if (isCamera || !fileExtension.endsWith("pdf")) {
+                if (isCamera) {
                     Log.d(TAG, "Converting: " + selectedImage.getPath());
 
                     // Convert the image - handle auto rotate problem in some devices, scale down

@@ -309,17 +309,17 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
                 switch (requestStatus) {
                     case Constants.INTRODUCTION_REQUEST_STATUS_PENDING:
-                        mSentRequestStatus.setImageResource(R.drawable.ic_incomplete);
+                        mSentRequestStatus.setImageResource(R.drawable.ic_workinprogress);
                         break;
                     case Constants.INTRODUCTION_REQUEST_STATUS_APPROVED:
                         mSentRequestStatus.setImageResource(R.drawable.ic_verified);
                         break;
                     case Constants.INTRODUCTION_REQUEST_STATUS_SPAM:
-                        mSentRequestStatus.setImageResource(R.drawable.ic_warning);
+                        mSentRequestStatus.setImageResource(R.drawable.ic_introducer_warning);
                         break;
                     default:
                         // INTRODUCTION_REQUEST_STATUS_REJECTED
-                        mSentRequestStatus.setImageResource(R.drawable.ic_notverified);
+                        mSentRequestStatus.setImageResource(R.drawable.ic_introducer_notverified);
                         break;
                 }
             }
