@@ -313,7 +313,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mProgressDialog.show();
 
         String selectedOImagePath = documentPreviewBindViewHolderList.get(mID).getmSelectedDocumentUri().getPath();
-        Log.w("Loading document", mID + " " + selectedOImagePath + " " + mDocumentType);
+        Log.w("Loading document", mDocumentID+" "+mID + " " + selectedOImagePath + " " + mDocumentType);
 
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
@@ -647,8 +647,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             mDocumentIdEditTextView.requestFocus();
                         } else if (documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri() == null) {
                             mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
-                        } else
+                        } else {
+                            documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
                             uploadDocument(documentPreviewBindViewHolderList.get(pos).getmDocumentId(), identificationDocumentDetail.getDocumentType(), pos);
+                        }
                     }
                 });
             }
