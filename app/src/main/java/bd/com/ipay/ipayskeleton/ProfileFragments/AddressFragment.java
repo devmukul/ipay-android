@@ -139,7 +139,6 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
             mPermanentAddressEditButton.setVisibility(View.GONE);
-            mOfficeAddressEditButton.setVisibility(View.GONE);
         }
 
         final Bundle presentAddressBundle = new Bundle();
@@ -233,7 +232,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                         mOfficeAddress = mGetUserAddressResponse.getOfficeAddress();
 
                         loadAddresses();
-                        setContentShown(true);
+                        if (this.isAdded()) setContentShown(true);
                     } else {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
