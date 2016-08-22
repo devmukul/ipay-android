@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/value10">
+    android:orientation="vertical">
 
     <include layout="@layout/layout_progress_container" />
 
@@ -17,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_rounded_white"
-            android:paddingTop="@dimen/value10"
             android:paddingBottom="@dimen/value10">
 
             <TextView

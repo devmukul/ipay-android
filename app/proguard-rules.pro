@@ -28,6 +28,7 @@
 -keep class com.mikepenz.** { *; }
 -keep class junit.** { *; }
 -keep class org.mockito.** { *; }
+-keep class android.support.v7.widget.SearchView { *; }
 -keep class bd.com.ipay.ipayskeleton.Model.** { *; }
 -keepclassmembers class bd.com.ipay.ipayskeleton.Model.** { *; }
 

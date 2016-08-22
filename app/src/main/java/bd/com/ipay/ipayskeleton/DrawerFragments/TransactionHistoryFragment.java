@@ -597,11 +597,11 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_top);
+                    otherImageView.setImageResource(R.drawable.ic_top_up);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_EDUCATION) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_education);
+                    otherImageView.setImageResource(R.drawable.ic_transaction_education);
                 } else {
                     otherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);

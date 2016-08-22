@@ -9,7 +9,8 @@
         android:id="@+id/list_services"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="@dimen/divider_space"/>
+        android:divider="@null"
+        android:dividerHeight="@dimen/value0" />
 
     <View
         style="@style/DividerWithoutMarginPadding"

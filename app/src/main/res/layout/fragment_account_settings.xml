@@ -19,7 +19,7 @@
             android:paddingTop="@dimen/value4"
             android:text="@string/set_pin" />
 
-        <View style="@style/Divider" />
+        <View style="@style/DividerafterIcon" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/change_password"
@@ -31,7 +31,7 @@
             android:paddingTop="@dimen/value4"
             android:text="@string/change_password" />
 
-        <View style="@style/Divider" />
+        <View style="@style/DividerafterIcon" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/password_recovery"
@@ -43,7 +43,7 @@
             android:drawableLeft="@drawable/ic_pwr3x"
             android:text="@string/password_recovery" />
 
-        <View style="@style/Divider" />
+        <View style="@style/DividerafterIcon" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/trusted_device"
@@ -55,7 +55,7 @@
             android:paddingTop="@dimen/value4"
             android:text="@string/trusted_devices" />
 
-        <View style="@style/Divider" />
+        <View style="@style/DividerafterIcon" />
 
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/logout_from_all_devices"
@@ -67,7 +67,7 @@
             android:paddingTop="@dimen/value4"
             android:text="@string/logout_from_all_device" />
 
-        <View style="@style/Divider" />
+        <View style="@style/DividerafterIcon" />
 
     </LinearLayout>
 
