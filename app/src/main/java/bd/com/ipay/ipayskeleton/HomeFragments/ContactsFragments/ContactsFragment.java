@@ -233,7 +233,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         mSearchView = (SearchView) searchViewMenuItem.getActionView();
         int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
         ImageView searchIconImageView = (ImageView) mSearchView.findViewById(searchImgId);
-        searchIconImageView.setImageResource(R.drawable.ic_search_white_24dp);
+        searchIconImageView.setImageResource(R.drawable.ic_search);
         resetSearchKeyword();
     }
 
