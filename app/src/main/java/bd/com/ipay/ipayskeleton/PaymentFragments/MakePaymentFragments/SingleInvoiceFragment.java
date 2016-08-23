@@ -1,15 +1,18 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,7 +83,19 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
         mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
 
         String result = getArguments().getString(Constants.RESULT);
-        getSingleInvoice(result);
+        try {
+            if (TextUtils.isDigitsOnly(result))
+                getSingleInvoice(Integer.parseInt(result));
+            else {
+                Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.not_a_valid_invoice_id, Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            }
+        } catch (NumberFormatException e) {
+            Toast.makeText(getActivity(), R.string.not_a_valid_invoice_id, Toast.LENGTH_LONG).show();
+            getActivity().finish();
+        }
+
         paymentReviewAdapter = new PaymentReviewAdapter();
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         mReviewRecyclerView.setLayoutManager(mLayoutManager);
@@ -88,7 +103,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
         return v;
     }
 
-    private void getSingleInvoice(String result) {
+    private void getSingleInvoice(int invoiceId) {
         if (mGetSingleInvoiceTask != null) {
             return;
         }
@@ -96,7 +111,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
         mProgressDialog.setMessage(getString(R.string.progress_dialog_single_invoice));
         mProgressDialog.show();
         mGetSingleInvoiceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_INVOICE,
-                result, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT_GET_INVOICE + invoiceId + "/", getActivity());
         mGetSingleInvoiceTask.mHttpResponseListener = this;
         mGetSingleInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -187,8 +202,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
             mAcceptPaymentTask = null;
             mRejectRequestTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
-            getActivity().onBackPressed();
+                Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -216,14 +230,12 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
                     e.printStackTrace();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
                     }
                 }
 
             } else {
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
-                    getActivity().onBackPressed();
                 }
             }
 

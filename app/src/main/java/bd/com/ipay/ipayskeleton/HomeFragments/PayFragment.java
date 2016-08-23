@@ -102,12 +102,12 @@ public class PayFragment extends Fragment {
                 return;
             }
             final String result = scanResult.getContents();
-            if (result != null && URLUtil.isValidUrl(result)) {
+            if (result != null) {
                 Handler mHandler = new Handler();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (result.contains("invoice")) {
+                        try {
                             PinChecker singleInvoicePinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                 @Override
                                 public void ifPinAdded() {
@@ -117,12 +117,11 @@ public class PayFragment extends Fragment {
                                 }
                             });
                             singleInvoicePinChecker.execute();
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
                         }
-
                     }
                 });
-            } else {
-                Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
             }
         }
     }
