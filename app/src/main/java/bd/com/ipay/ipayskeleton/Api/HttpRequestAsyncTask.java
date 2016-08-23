@@ -142,7 +142,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
 
                try {
                     Gson gson = new Gson();
-                    message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
+                   //message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
