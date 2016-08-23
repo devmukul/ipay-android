@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -47,6 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
     private final Runnable disconnectCallback = new Runnable() {
         @Override
         public void run() {
+            Log.d(Constants.ApplicationTag, "Timer finished");
             if (!((Activity) context).isFinishing()) {
                 if (Utilities.isConnectionAvailable(context)) attemptLogout();
                 else {
@@ -58,6 +60,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
     };
 
     private void resetDisconnectTimer() {
+        Log.d(Constants.ApplicationTag, "Timer resetting");
         disconnectHandler.removeCallbacks(disconnectCallback);
         disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
     }
