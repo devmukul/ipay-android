@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -101,12 +102,12 @@ public class PayFragment extends Fragment {
                 return;
             }
             final String result = scanResult.getContents();
-            if (result != null) {
+            if (result != null && URLUtil.isValidUrl(result)) {
                 Handler mHandler = new Handler();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        try {
+                        if (result.contains("invoice")) {
                             PinChecker singleInvoicePinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                 @Override
                                 public void ifPinAdded() {
@@ -116,11 +117,12 @@ public class PayFragment extends Fragment {
                                 }
                             });
                             singleInvoicePinChecker.execute();
-                        } catch (NumberFormatException e) {
-                            Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
                         }
+
                     }
                 });
+            } else {
+                Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
             }
         }
     }

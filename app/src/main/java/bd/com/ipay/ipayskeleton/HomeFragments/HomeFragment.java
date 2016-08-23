@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -339,12 +340,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 return;
             }
             final String result = scanResult.getContents();
-            if (result != null) {
+            if (result != null && URLUtil.isValidUrl(result)) {
                 Handler mHandler = new Handler();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        try {
+                        if (result.contains("invoice")) {
                             PinChecker singleInvoicePinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                 @Override
                                 public void ifPinAdded() {
@@ -354,11 +355,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                                 }
                             });
                             singleInvoicePinChecker.execute();
-                        } catch (NumberFormatException e) {
-                            Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
                         }
+
                     }
                 });
+            } else {
+                Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
             }
         }
     }
