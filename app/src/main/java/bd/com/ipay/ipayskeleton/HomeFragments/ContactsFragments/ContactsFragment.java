@@ -161,7 +161,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
 
-
         mEmptyContactsTextView = (TextView) v.findViewById(R.id.contact_list_empty);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
@@ -179,7 +178,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void resetSearchKeyword() {
         if (mSearchView != null && !mQuery.isEmpty()) {
-            Log.d("Loader", "Resetting.. Previous query: " + mQuery);
+            if (Constants.DEBUG)
+                Log.d("Loader", "Resetting.. Previous query: " + mQuery);
+
             mQuery = "";
             mSearchView.setQuery("", false);
             getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
@@ -202,6 +203,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
             mSearchMenuItem = menu.findItem(R.id.action_search_contacts);
             mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+
             mSearchView.setOnQueryTextListener(this);
             mSearchView.setOnSearchClickListener(new View.OnClickListener() {
                 @Override
@@ -222,8 +224,17 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     return false;
                 }
             });
-
         }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem searchViewMenuItem = menu.findItem(R.id.action_search_contacts);
+        mSearchView = (SearchView) searchViewMenuItem.getActionView();
+        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
+        ImageView searchIconImageView = (ImageView) mSearchView.findViewById(searchImgId);
+        searchIconImageView.setImageResource(R.drawable.ic_search_white_24dp);
+        resetSearchKeyword();
     }
 
     private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
@@ -512,7 +523,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
             return;
         }
-
 
         Gson gson = new Gson();
 
