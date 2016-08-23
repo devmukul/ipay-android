@@ -606,7 +606,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                     mAmount = amount;
                                     mReceiverName = name;
                                     mReceiverMobileNumber = mobileNumber;
-                                    mPhotoUri = imageUrl;
+                                    mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
                                     mTitle = title;
                                     mDescription = description;
                                     mDescriptionofRequest = descriptionofRequest;
