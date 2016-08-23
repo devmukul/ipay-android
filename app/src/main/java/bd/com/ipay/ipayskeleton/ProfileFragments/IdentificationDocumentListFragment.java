@@ -89,7 +89,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.national_id,
             R.string.passport,
             R.string.driving_license,
-            R.string.birth_certificate,
     };
 
     private static final int[] BUSINESS_DOCUMENT_TYPE_NAMES = {
@@ -103,10 +102,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
     private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
-    private static final int COUNT_UPLOAD_PERSONAL_DOCUMENT = 3;
+    private static final int COUNT_UPLOAD_PERSONAL_DOCUMENT = 2;
     private static final int COUNT_UPLOAD_BUSINESS_DOCUMENT = 2;
     private int mSelectedItemId = -1;
     private int mPickerActionId = -1;
+
     private Uri mSelectedDocumentUri;
     private ArrayList<DocumentPreviewBindViewHolder> documentPreviewBindViewHolderList;
 
@@ -119,7 +119,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_NATIONAL_ID,
                 Constants.DOCUMENT_TYPE_PASSPORT,
                 Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-                Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
         };
         BUSINESS_DOCUMENT_TYPES = new String[]{
                 Constants.DOCUMENT_TYPE_BUSINESS_TIN,
