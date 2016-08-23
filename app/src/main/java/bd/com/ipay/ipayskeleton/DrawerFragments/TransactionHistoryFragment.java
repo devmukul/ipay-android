@@ -93,8 +93,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
 
-    private boolean isViewShown = false;
-
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
     private Menu menu;
@@ -197,12 +195,11 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null) {
-            isViewShown = true;
-            clearDateFilters();
-            clearServiceFilters();
-            refreshTransactionHistory();
-        } else {
-            isViewShown = false;
+            if(isVisibleToUser) {
+                clearDateFilters();
+                clearServiceFilters();
+                refreshTransactionHistory();
+            }
         }
     }
 

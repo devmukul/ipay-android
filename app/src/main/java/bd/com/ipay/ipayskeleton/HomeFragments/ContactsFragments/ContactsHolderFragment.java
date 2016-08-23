@@ -68,10 +68,11 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
     private String mRelationship;
     private int mSelectedRelationId = -1;
+    private View v;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_contact_holder, container, false);
+        v = inflater.inflate(R.layout.fragment_contact_holder, container, false);
 
         mBottomSheetLayout = (BottomSheetLayout) v.findViewById(R.id.bottom_sheet);
         mContactCount = (TextView) v.findViewById(R.id.contact_count);
@@ -113,7 +114,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         switchToiPayContacts();
     }
 
@@ -155,20 +155,20 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         });
 
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (verifyUserInputs()) {
-                            mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if (verifyUserInputs()) {
+                    mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
 
-                            addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(),mRelationship.toUpperCase());
+                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
 
-                            Utilities.hideKeyboard(getActivity(), nameView);
-                            Utilities.hideKeyboard(getActivity(), mobileNumberView);
+                    Utilities.hideKeyboard(getActivity(), nameView);
+                    Utilities.hideKeyboard(getActivity(), mobileNumberView);
 
-                            dialog.dismiss();
-                        }
-                    }
-                });
+                    dialog.dismiss();
+                }
+            }
+        });
 
         dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
