@@ -327,7 +327,7 @@
     <string name="wallet">Wallet</string>
     <string name="next">Next</string>
     <string name="continue_sign_up">Continue</string>
-    <string name="bank_list">Bank List</string>
+    <string name="bank_list">Banks</string>
     <string name="bank_branch">Select Branch</string>
     <string name="logout">Log out</string>
     <string name="bdt">BDT</string>
@@ -345,7 +345,7 @@
     <string name="select_an_occupation">Select Occupation</string>
     <string name="select_a_package">Select Package</string>
     <string name="select_an_operator">Select Operator</string>
-    <string name="recharge_to">Recharge to</string>
+    <string name="recharge_to">Topup to</string>
     <string name="opening_balance_to">Opening balance to</string>
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
     <string name="purpose">Purpose</string>
