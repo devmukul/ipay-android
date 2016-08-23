@@ -25,9 +25,8 @@ public class SingleInvoiceActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.RESULT, result);
         singleInvoiceFragment.setArguments(bundle);
-        getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, singleInvoiceFragment).commit();
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, singleInvoiceFragment).commit();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
