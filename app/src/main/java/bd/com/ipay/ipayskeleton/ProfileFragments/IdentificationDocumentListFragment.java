@@ -313,7 +313,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mProgressDialog.show();
 
         String selectedOImagePath = documentPreviewBindViewHolderList.get(mID).getmSelectedDocumentUri().getPath();
-        Log.w("Loading document", mDocumentID+" "+mID + " " + selectedOImagePath + " " + mDocumentType);
+        Log.w("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
@@ -546,6 +546,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mDocumentIdView.setText(R.string.not_submitted);
                     mUploadButton.setText(getString(R.string.upload));
                     mUploadButton.setVisibility(View.VISIBLE);
+                    mDocumentIdEditTextView.setEnabled(true);
                 }
                 // Document uploaded and verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -555,6 +556,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mVerificationStatus.setColorFilter(null);
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
                     mUploadButton.setVisibility(View.GONE);
+                    mDocumentIdEditTextView.setEnabled(false);
+
                 }
                 // Document uploaded but not verified
                 else if (verificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
@@ -565,6 +568,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mDocumentIdView.setText(identificationDocumentDetail.getDocumentId());
                     mUploadButton.setVisibility(View.VISIBLE);
                     mUploadButton.setText(getString(R.string.upload_again));
+                    mDocumentIdEditTextView.setEnabled(true);
                 }
                 mDocumentTypeNameView.setText(identificationDocumentDetail.getDocumentTypeName());
 
