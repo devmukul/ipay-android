@@ -130,15 +130,15 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }*/
 
     private void showAddFriendDialog() {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
-        dialog
+        MaterialDialog.Builder addFriendDialog = new MaterialDialog.Builder(getActivity());
+        addFriendDialog
                 .title(R.string.add_a_friend)
                 .autoDismiss(false)
                 .customView(R.layout.dialog_add_friend, false)
                 .positiveText(R.string.add)
                 .negativeText(R.string.cancel);
 
-        View dialogView = dialog.build().getCustomView();
+        View dialogView = addFriendDialog.build().getCustomView();
 
         nameView = (EditText) dialogView.findViewById(R.id.edit_text_name);
         mobileNumberView = (EditText) dialogView.findViewById(R.id.edit_text_mobile_number);
@@ -166,7 +166,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             }
         });
 
-        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+        addFriendDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 if (verifyUserInputs()) {
@@ -182,7 +182,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             }
         });
 
-        dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
+        addFriendDialog.onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 Utilities.hideKeyboard(getActivity(), nameView);
@@ -192,7 +192,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             }
         });
 
-        dialog.show();
+        addFriendDialog.show();
         nameView.requestFocus();
 
     }
