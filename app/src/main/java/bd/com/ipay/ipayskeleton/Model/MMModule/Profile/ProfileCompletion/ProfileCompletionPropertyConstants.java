@@ -63,9 +63,9 @@ public class ProfileCompletionPropertyConstants {
     }
 
     static {
-        PROPERTY_NAME_TO_ICON_MAP.put(INTRODUCER, R.drawable.ic_introducer);
+        PROPERTY_NAME_TO_ICON_MAP.put(INTRODUCER, R.drawable.ic_introducer_profile);
         PROPERTY_NAME_TO_ICON_MAP.put(BASIC_PROFILE, R.drawable.ic_basicinfo_profile);
-        PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_INFO, R.drawable.ic_basicinfo_profile);
+        PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_INFO, R.drawable.ic_basicinfo_bizinfo);
         PROPERTY_NAME_TO_ICON_MAP.put(PERSONAL_ADDRESS, R.drawable.ic_address_profile);
         PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_ADDRESS, R.drawable.ic_signup_add1);
         PROPERTY_NAME_TO_ICON_MAP.put(PROFILE_PICTURE, R.drawable.ic_signup_personal);

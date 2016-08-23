@@ -68,6 +68,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
     private String mRelationship;
     private int mSelectedRelationId = -1;
+    private boolean isViewShown=false;
     private View v;
 
     @Override
@@ -116,6 +117,17 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         super.onActivityCreated(savedInstanceState);
         switchToiPayContacts();
     }
+
+   /* @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getView() != null) {
+            if(!isVisibleToUser) {
+                miPayMemberContactsFragment = null;
+                switchToiPayContacts();
+            }
+        }
+    }*/
 
     private void showAddFriendDialog() {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
