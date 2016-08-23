@@ -309,7 +309,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetMoneyAndPaymentRequestTask = null;
             mServiceChargeTask = null;
             mConfirmBusinessInvitationTask = null;
@@ -602,23 +602,23 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     @Override
                     public void onClick(View v) {
 
-                                    mMoneyRequestId = id;
-                                    mAmount = amount;
-                                    mReceiverName = name;
-                                    mReceiverMobileNumber = mobileNumber;
-                                    mPhotoUri = imageUrl;
-                                    mTitle = title;
-                                    mDescription = description;
-                                    mDescriptionofRequest = descriptionofRequest;
-                                    mServiceID = serviceID;
-                                    mVat = vat;
-                                    mItemList = itemList;
+                        mMoneyRequestId = id;
+                        mAmount = amount;
+                        mReceiverName = name;
+                        mReceiverMobileNumber = mobileNumber;
+                        mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
+                        mTitle = title;
+                        mDescription = description;
+                        mDescriptionofRequest = descriptionofRequest;
+                        mServiceID = serviceID;
+                        mVat = vat;
+                        mItemList = itemList;
 
-                                    if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                                        attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
-                                    else {
-                                        launchInvoiceHistoryFragment();
-                                    }
+                        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+                            attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+                        else {
+                            launchInvoiceHistoryFragment();
+                        }
                     }
                 });
 
@@ -639,7 +639,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
                 super.bindView(pos);
 
-                final int position = pos ;
+                final int position = pos;
                 final IntroductionRequestClass introductionRequest = (IntroductionRequestClass) mNotifications.get(pos);
 
                 final long requestID = introductionRequest.getId();
@@ -651,7 +651,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     public void onClick(View v) {
                         if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
                             mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.introduce_action));
-                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(),mNotifications.get(position).getName(), mReceivedRequestActionList);
+                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), mNotifications.get(position).getName(), mReceivedRequestActionList);
                             mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                                 @Override
                                 public void onResourceSelected(int selectedIndex, String name) {
@@ -717,7 +717,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
                 super.bindView(pos);
 
-                final int position = pos ;
+                final int position = pos;
                 final Business businessInvitation = (Business) mNotifications.get(pos);
 
 
@@ -725,53 +725,53 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     @Override
                     public void onClick(View v) {
 
-                            mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.introduce_action));
-                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(),mNotifications.get(position).getName(), mReceivedRequestActionList);
-                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                                @Override
-                                public void onResourceSelected(int selectedIndex, String name) {
-                                    if (selectedIndex == ACTION_VERIFY) {
-                                        MaterialDialog.Builder verifyDialog = new MaterialDialog.Builder(getActivity());
-                                        verifyDialog.content(R.string.are_you_sure);
-                                        verifyDialog.positiveText(R.string.yes);
-                                        verifyDialog.negativeText(R.string.no);
-                                        verifyDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                            @Override
-                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                acceptBusinessInvitation(businessInvitation.getAssociationId());
-                                            }
-                                        });
-                                        verifyDialog.show();
+                        mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.introduce_action));
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), mNotifications.get(position).getName(), mReceivedRequestActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int selectedIndex, String name) {
+                                if (selectedIndex == ACTION_VERIFY) {
+                                    MaterialDialog.Builder verifyDialog = new MaterialDialog.Builder(getActivity());
+                                    verifyDialog.content(R.string.are_you_sure);
+                                    verifyDialog.positiveText(R.string.yes);
+                                    verifyDialog.negativeText(R.string.no);
+                                    verifyDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            acceptBusinessInvitation(businessInvitation.getAssociationId());
+                                        }
+                                    });
+                                    verifyDialog.show();
 
-                                    } else if (selectedIndex == ACTION_REJECT) {
-                                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                                        rejectDialog.content(R.string.are_you_sure);
-                                        rejectDialog.positiveText(R.string.yes);
-                                        rejectDialog.negativeText(R.string.no);
-                                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                            @Override
-                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                rejectBusinessInvitation(businessInvitation.getAssociationId());
-                                            }
-                                        });
-                                        rejectDialog.show();
+                                } else if (selectedIndex == ACTION_REJECT) {
+                                    MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                                    rejectDialog.content(R.string.are_you_sure);
+                                    rejectDialog.positiveText(R.string.yes);
+                                    rejectDialog.negativeText(R.string.no);
+                                    rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            rejectBusinessInvitation(businessInvitation.getAssociationId());
+                                        }
+                                    });
+                                    rejectDialog.show();
 
-                                    } else if (selectedIndex == ACTION_SPAM) {
-                                        MaterialDialog.Builder spamDialog = new MaterialDialog.Builder(getActivity());
-                                        spamDialog.content(R.string.are_you_sure);
-                                        spamDialog.positiveText(R.string.yes);
-                                        spamDialog.negativeText(R.string.no);
-                                        spamDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                            @Override
-                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                markBusinessInvitationAsSpam(businessInvitation.getAssociationId());
-                                            }
-                                        });
-                                        spamDialog.show();
-                                    }
+                                } else if (selectedIndex == ACTION_SPAM) {
+                                    MaterialDialog.Builder spamDialog = new MaterialDialog.Builder(getActivity());
+                                    spamDialog.content(R.string.are_you_sure);
+                                    spamDialog.positiveText(R.string.yes);
+                                    spamDialog.negativeText(R.string.no);
+                                    spamDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            markBusinessInvitationAsSpam(businessInvitation.getAssociationId());
+                                        }
+                                    });
+                                    spamDialog.show();
                                 }
-                            });
-                            mCustomSelectorDialog.show();
+                            }
+                        });
+                        mCustomSelectorDialog.show();
 
                     }
                 });
@@ -835,10 +835,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putString(Constants.AMOUNT, mAmount.toString());
         bundle.putString(Constants.TITLE, mTitle);
         bundle.putString(Constants.DESCRIPTION, mDescriptionofRequest);
-        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG,new ArrayList<>(mItemList));
+        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
         bundle.putString(Constants.TAG, Constants.INVOICE);
 
-        Intent intent = new Intent (this.getContext(), NotificationActivity.class);
+        Intent intent = new Intent(this.getContext(), NotificationActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -855,7 +855,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putString(Constants.PHOTO_URI, mPhotoUri);
         bundle.putString(Constants.TAG, Constants.REQUEST);
 
-        Intent intent = new Intent (this.getContext(), NotificationActivity.class);
+        Intent intent = new Intent(this.getContext(), NotificationActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }
