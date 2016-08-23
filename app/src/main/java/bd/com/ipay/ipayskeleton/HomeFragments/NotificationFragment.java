@@ -103,9 +103,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private String mPhotoUri;
     private long mMoneyRequestId;
     private String mTitle;
-    private String mDescription;
     private String mDescriptionofRequest;
-    private int mServiceID;
 
     private boolean mSwitchToEmployeeFragment;
 
@@ -608,9 +606,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mReceiverMobileNumber = mobileNumber;
                         mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
                         mTitle = title;
-                        mDescription = description;
                         mDescriptionofRequest = descriptionofRequest;
-                        mServiceID = serviceID;
                         mVat = vat;
                         mItemList = itemList;
 
