@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.HomeFragments;
+package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
