@@ -132,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/ReviewItemLabelStyle.Dialog"
-                    android:text="@string/net_received"/>
+                    android:text="@string/net_amount" />
 
                 <TextView
                     android:id="@+id/textview_net_received"

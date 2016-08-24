@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.EmployeeDetails;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetEmployeeDetailsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.PrivilegeConstants;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -45,6 +46,7 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mDesignationView;
+    private TextView mRoleView;
 
     private RecyclerView mPrivilegeListView;
     private ProgressDialog mProgressDialog;
@@ -65,6 +67,7 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDesignationView = (TextView) v.findViewById(R.id.textview_designation);
         mPrivilegeListView = (RecyclerView) v.findViewById(R.id.privilege_list);
+        mRoleView = (TextView) v.findViewById(R.id.role);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mPrivilegeListView.setLayoutManager(layoutManager);
@@ -114,6 +117,15 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
                         if (!mEmployeeDetails.getDesignation().equals(""))
                             mDesignationView.setText(mEmployeeDetails.getDesignation());
                         else mDesignationView.setVisibility(View.GONE);
+
+                        // Get the name of the Role
+                        for (Role role : ManagePeopleActivity.mAllRoleList) {
+                            if (role.getId() == mEmployeeDetails.getRoleId()) {
+                                mRoleView.setText(role.getName());
+                                break;
+                            }
+                        }
+
 
                         mPrivilegeList = Arrays.asList(ManagePeopleActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
                         mEmployeeDetailsAdapter = new EmployeeDetailsAdapter();

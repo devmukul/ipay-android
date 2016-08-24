@@ -35,7 +35,7 @@ android:orientation="vertical">
 
     <TextView
         style="@style/TextViewInfoLabel"
-        android:text="@string/total" />
+        android:text="@string/net_amount" />
 
     <TextView
         android:id="@+id/textview_total"

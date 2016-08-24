@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_rounded_white"
-            android:paddingBottom="@dimen/value10">
+            android:paddingBottom="@dimen/value10"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/intoduce_status"

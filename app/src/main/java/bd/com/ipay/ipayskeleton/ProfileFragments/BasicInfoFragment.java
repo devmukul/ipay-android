@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BasicInfoFragment extends ProgressFragment implements HttpResponseListener {
@@ -177,8 +178,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         Bundle bundle = new Bundle();
         bundle.putString(Constants.FATHERS_NAME, mFathersName);
         bundle.putString(Constants.MOTHERS_NAME, mMothersName);
-        bundle.putString(Constants.FATHERS_MOBILE, mFathersMobile);
-        bundle.putString(Constants.MOTHERS_MOBILE, mMothersMobile);
+        bundle.putString(Constants.FATHERS_MOBILE, ContactEngine.formatMobileNumberBD(mFathersMobile));
+        bundle.putString(Constants.MOTHERS_MOBILE, ContactEngine.formatMobileNumberBD(mMothersMobile));
 
         ((ProfileActivity) getActivity()).switchToEditParentInfoFragment(bundle);
     }

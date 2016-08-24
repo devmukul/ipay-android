@@ -162,6 +162,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                             MINIMUM_INTRODUCER_COUNT = mIntroducerListResponse.getRequiredForProfileCompletion();
 
                             if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT) {
+                                //Toast.makeText(getActivity(), "dhukci", Toast.LENGTH_LONG).show();
                                 mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
                                 mIntroducerStatusTextView.setText(getString(R.string.you_need_to_have) + MINIMUM_INTRODUCER_COUNT
                                         + getString(R.string.introducers_to_complete_the_account_verification_process));

@@ -142,7 +142,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
 
                try {
                     Gson gson = new Gson();
-                   //message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
+                   message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -157,7 +157,27 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                     e.printStackTrace();
                 }
 
-            } else {
+            } /*else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+                String message = mContext.getString(R.string.please_log_in_again);
+
+                try {
+                    Gson gson = new Gson();
+                    message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    // Switch back to login activity because the user is unauthorized
+                    Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
+                    intent.putExtra(Constants.MESSAGE, message);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    mContext.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }*/ else {
                 if (mHttpResponseListener != null)
                     mHttpResponseListener.httpResponseReceiver(result);
             }

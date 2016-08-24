@@ -220,6 +220,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         //Setting the correct image based on Operator
         int[] images = {
                 R.drawable.ic_gp,
+                R.drawable.ic_gp,
                 R.drawable.ic_robi,
                 R.drawable.ic_airtel,
                 R.drawable.ic_banglalink,
