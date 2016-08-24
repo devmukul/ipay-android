@@ -300,6 +300,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         //Setting the correct image based on Operator
         return new int[]{
                 R.drawable.ic_gp,
+                R.drawable.ic_gp,
                 R.drawable.ic_robi,
                 R.drawable.ic_airtel,
                 R.drawable.ic_banglalink,
