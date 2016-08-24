@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,19 +15,17 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introduced;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -42,9 +39,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
     private HttpRequestGetAsyncTask mGetRecommendationRequestsTask = null;
     private GetIntroductionRequestsResponse mRecommendationRequestsResponse;
-
-    private HttpRequestPostAsyncTask mRecommendActionTask = null;
-    private IntroduceActionResponse mIntroduceActionResponse;
 
     private List<IntroductionRequestClass> mRecommendationRequestList;
     private List<Introduced> mIntroducedList;
@@ -106,26 +100,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
         mGetRecommendationRequestsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
-        if (requestID == 0) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.verifying_user));
-        mProgressDialog.show();
-        mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION,
-                Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity());
-        mRecommendActionTask.mHttpResponseListener = this;
-        mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void refreshIntroductionRequestList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getRecommendationRequestsList();
-        }
-    }
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) throws RuntimeException {
@@ -199,36 +173,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
                 mProgressDialog.dismiss();
                 mGetRecommendationRequestsTask = null;
-
-                break;
-            case Constants.COMMAND_INTRODUCE_ACTION:
-
-                try {
-                    mIntroduceActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                        // Refresh recommendation requests list
-                        if (mRecommendationRequestList != null)
-                            mRecommendationRequestList.clear();
-                        mRecommendationRequestList = null;
-                        refreshIntroductionRequestList();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-                }
-
-                mProgressDialog.dismiss();
-                mRecommendActionTask = null;
                 break;
         }
-
         try {
             if (isAdded())
                 setContentShown(true);
@@ -241,16 +187,11 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
     }
 
-
     private class IntroducedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int RECOMMENDATION_ITEM_VIEW = 1;
         private static final int INTRODUCED_LIST_ITEM_VIEW = 2;
         private static final int INTRODUCED_LIST_HEADER_VIEW = 3;
-
-        private final int ACTION_VERIFY = 0;
-        private final int ACTION_REJECT = 1;
-        private final int ACTION_SPAM = 2;
 
         public IntroducedAdapter() {
         }
@@ -261,14 +202,10 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             private final TextView mIntroducedMobileNumber;
             private final ProfileImageView mIntroducedProfilePictureView;
 
-            private List<String> mReceivedRequestActionList;
-            private CustomSelectorDialog mCustomSelectorDialog;
-
             private final TextView mSenderName;
             private final TextView mSenderMobileNumber;
             private final TextView mDate;
 
-            private final View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -280,9 +217,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 mSenderName = (TextView) itemView.findViewById(R.id.textview_title);
                 mSenderMobileNumber = (TextView) itemView.findViewById(R.id.textview_description);
                 mDate = (TextView) itemView.findViewById(R.id.textview_time);
-
-                divider = itemView.findViewById(R.id.divider);
-
             }
 
             public void bindViewRecommendationList(int pos) {
@@ -290,8 +224,12 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 final long requestID = mRecommendationRequestList.get(pos).getId();
                 final String senderName = mRecommendationRequestList.get(pos).getName();
                 final String senderMobileNumber = mRecommendationRequestList.get(pos).getSenderMobileNumber();
+                final String photoUri = mRecommendationRequestList.get(pos).getSenderMobileNumber();
                 final String recommendationStatus = mRecommendationRequestList.get(pos).getStatus();
                 final String time = Utilities.getDateFormat(mRecommendationRequestList.get(pos).getDate());
+                final AddressClass mAddress=mRecommendationRequestList.get(pos).getPresentAddress();
+                final String fathersName=mRecommendationRequestList.get(pos).getFather();
+                final String mothersName=mRecommendationRequestList.get(pos).getMother();
 
                 mSenderName.setText(senderName);
                 mSenderMobileNumber.setText(senderMobileNumber);
@@ -301,60 +239,17 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
-                            mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.introduce_action));
-                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), senderName, mReceivedRequestActionList);
-                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                                @Override
-                                public void onResourceSelected(int selectedIndex, String name) {
-                                    if (selectedIndex == ACTION_VERIFY) {
-                                        new android.app.AlertDialog.Builder(getActivity())
-                                                .setTitle(R.string.are_you_sure)
-                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
-                                                    }
-                                                })
-                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        // Do nothing
-                                                    }
-                                                })
-                                                .show();
 
-                                    } else if (selectedIndex == ACTION_REJECT) {
-                                        new android.app.AlertDialog.Builder(getActivity())
-                                                .setTitle(R.string.are_you_sure)
-                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
-                                                    }
-                                                })
-                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        // Do nothing
-                                                    }
-                                                })
-                                                .show();
-                                    } else if (selectedIndex == ACTION_SPAM) {
-                                        new android.app.AlertDialog.Builder(getActivity())
-                                                .setTitle(R.string.are_you_sure)
-                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM);
-                                                    }
-                                                })
-                                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        // Do nothing
-                                                    }
-                                                })
-                                                .show();
-                                    }
-                                }
-                            });
-                            mCustomSelectorDialog.show();
-                        }
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(Constants.REQUEST_ID, requestID);
+                        bundle.putString(Constants.NAME, senderName);
+                        bundle.putString(Constants.PHOTO_URI, photoUri);
+                        bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
+                        bundle.putString(Constants.FATHERS_NAME,fathersName );
+                        bundle.putString(Constants.MOTHERS_NAME, mothersName);
+                        bundle.putSerializable(Constants.ADDRESS, mAddress);
+
+                        ((ProfileActivity) getActivity()).switchToRecommendationReviewFragment(bundle);
                     }
                 });
             }

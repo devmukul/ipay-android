@@ -12,7 +12,7 @@
     </declare-styleable>
 
     <declare-styleable name="IconifiedButton">
-        <attr name="android:text"/>
+        <attr name="android:text" />
         <attr name="android:drawableLeft" />
     </declare-styleable>
 
@@ -26,14 +26,15 @@
         <attr name="android:maxLines" />
         <attr name="android:enabled" />
         <attr name="borderType" format="integer">
-            <flag name="up" value="0x1"/>
-            <flag name="down" value="0x2"/>
+            <flag name="up" value="0x1" />
+            <flag name="down" value="0x2" />
         </attr>
     </declare-styleable>
 
     <declare-styleable name="IconifiedTextViewWithButton">
-        <attr name="android:text"/>
+        <attr name="android:text" />
         <attr name="android:drawableLeft" />
+        <attr name="arrowVisibility" format="boolean" />
     </declare-styleable>
 
 

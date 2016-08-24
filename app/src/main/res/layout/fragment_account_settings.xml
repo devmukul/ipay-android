@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,10 +38,10 @@
             android:id="@+id/password_recovery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_pwr3x"
             android:paddingBottom="@dimen/value4"
             android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingTop="@dimen/value4"
-            android:drawableLeft="@drawable/ic_pwr3x"
             android:text="@string/password_recovery" />
 
         <View style="@style/DividerafterIcon" />
@@ -65,7 +66,8 @@
             android:paddingBottom="@dimen/value4"
             android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingTop="@dimen/value4"
-            android:text="@string/logout_from_all_device" />
+            android:text="@string/logout_from_all_device"
+            app:arrowVisibility="false" />
 
         <View style="@style/DividerafterIcon" />
 

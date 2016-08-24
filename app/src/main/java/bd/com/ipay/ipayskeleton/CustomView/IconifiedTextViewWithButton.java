@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ public class IconifiedTextViewWithButton extends FrameLayout {
 
     private ImageView mImageView;
     private TextView mtextView;
+    private ImageView mArrowView;
 
     public IconifiedTextViewWithButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -40,16 +42,21 @@ public class IconifiedTextViewWithButton extends FrameLayout {
 
         mImageView = (ImageView) findViewById(R.id.icon);
         mtextView = (TextView) findViewById(R.id.textView);
+        mArrowView = (ImageView) findViewById(R.id.icon_arrow);
 
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconifiedTextViewWithButton, 0, 0);
 
             String text = a.getString(R.styleable.IconifiedTextViewWithButton_android_text);
             Drawable drawable = a.getDrawable(R.styleable.IconifiedTextViewWithButton_android_drawableLeft);
+            boolean arrowVisibility = a.getBoolean(R.styleable.IconifiedTextViewWithButton_arrowVisibility, true);
 
             mtextView.setText(text);
             mImageView.setImageDrawable(drawable);
 
+            if (!arrowVisibility) {
+                mArrowView.setVisibility(GONE);
+            }
             a.recycle();
         }
 

@@ -545,6 +545,7 @@
     <string name="introducers_to_complete_the_account_verification_process">&#160;introducers to complete the account verification process.</string>
     <string name="introduced_list_header">I have Introduced</string>
     <string name="introducer_list_header">Introduced by</string>
+    <string name="recommendation_details">Details</string>
     <string name="select_a_contact">Select a contact</string>
     <string name="progress_dialog_single_invoice">Fetching invoice...</string>
     <string name="failed_add_friend">Add friend failed</string>
@@ -684,6 +685,7 @@
     <string name="comment">Comment</string>
     <string name="add_comment">Add Comment</string>
     <string name="comment_cannot_be_empty">Comment cannot be empty</string>
+    <string name="not_available">Not Available</string>
 
 
     <string-array name="mobile_operators">

@@ -37,6 +37,7 @@ public class Constants {
     public static final String TAG = "TAG";
     public static final String INVOICE = "INVOICE";
     public static final String REQUEST = "REQUEST";
+    public static final String RECOMMENDATION = "RECOMMENDATION";
     public static final String TRANSACTION_DETAILS = "TRANSACTION_DETAILS";
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_DETAILS = "MONEY REQUESTS DETAILS";
@@ -61,6 +62,7 @@ public class Constants {
     public static final String RESOURCE_TOKEN = "resource-token";
     public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
 
+    public static final String REQUEST_ID = "REQUEST_ID";
     public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
     public static final String PROFILE_PICTURE = "_PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
@@ -128,7 +130,7 @@ public class Constants {
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     /**
      * If set to true (with DEBUG flag also being set to true),

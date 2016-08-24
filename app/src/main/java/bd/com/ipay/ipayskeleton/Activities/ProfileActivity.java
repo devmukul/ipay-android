@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentListFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -268,6 +269,16 @@ public class ProfileActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IdentificationHolderFragment()).addToBackStack(null).commit();
     }
+
+    public void switchToRecommendationReviewFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        RecommendationReviewFragment recommendationReviewFragment = new RecommendationReviewFragment();
+        recommendationReviewFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recommendationReviewFragment).addToBackStack(null).commit();
+    }
+
 
     @Override
     public Context setContext() {

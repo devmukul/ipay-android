@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.NotificationActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
@@ -49,6 +50,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRe
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.BusinessListRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
@@ -72,8 +74,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private HttpRequestGetAsyncTask mGetIntroductionRequestTask = null;
     private GetIntroductionRequestsResponse mIntroductionRequestsResponse;
-
-    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
 
     private HttpRequestGetAsyncTask mGetBusinessInvitationTask = null;
     private GetBusinessListResponse mGetBusinessListResponse;
@@ -565,8 +565,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class MoneyAndPaymentRequestViewHolder extends NotificationViewHolder {
             private final TextView mAmountView;
-            private CustomSelectorDialog mCustomSelectorDialog;
-            private List<String> mInvoiceActionList;
 
             public MoneyAndPaymentRequestViewHolder(final View itemView) {
 
@@ -623,9 +621,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class IntroductionRequestViewHolder extends NotificationViewHolder {
 
-            private List<String> mReceivedRequestActionList;
-            private CustomSelectorDialog mCustomSelectorDialog;
-
             public IntroductionRequestViewHolder(final View itemView) {
                 super(itemView);
 
@@ -641,63 +636,36 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final long requestID = introductionRequest.getId();
                 final String recommendationStatus = introductionRequest.getStatus();
 
+                final String senderName = introductionRequest.getName();
+                final String senderMobileNumber = introductionRequest.getSenderMobileNumber();
+                final String photoUri = introductionRequest.getSenderMobileNumber();
+
+                final String time = Utilities.getDateFormat(introductionRequest.getDate());
+                final AddressClass mAddress = introductionRequest.getPresentAddress();
+                final String fathersName = introductionRequest.getFather();
+                final String mothersName = introductionRequest.getMother();
+
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (recommendationStatus.equalsIgnoreCase(Constants.INTRODUCTION_REQUEST_STATUS_PENDING)) {
-                            mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.introduce_action));
-                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), mNotifications.get(position).getName(), mReceivedRequestActionList);
-                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                                @Override
-                                public void onResourceSelected(int selectedIndex, String name) {
-                                    if (selectedIndex == ACTION_VERIFY) {
-                                        MaterialDialog.Builder verifyDialog = new MaterialDialog.Builder(getActivity());
-                                        verifyDialog.content(R.string.are_you_sure);
-                                        verifyDialog.positiveText(R.string.yes);
-                                        verifyDialog.negativeText(R.string.no);
-                                        verifyDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                            @Override
-                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
-                                            }
-                                        });
-                                        verifyDialog.show();
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(Constants.REQUEST_ID, requestID);
+                        bundle.putString(Constants.NAME, senderName);
+                        bundle.putString(Constants.PHOTO_URI, photoUri);
+                        bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
+                        bundle.putString(Constants.FATHERS_NAME, fathersName);
+                        bundle.putString(Constants.MOTHERS_NAME, mothersName);
+                        bundle.putSerializable(Constants.ADDRESS, mAddress);
+                        bundle.putString(Constants.TAG, Constants.RECOMMENDATION);
 
-                                    } else if (selectedIndex == ACTION_REJECT) {
-                                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                                        rejectDialog.content(R.string.are_you_sure);
-                                        rejectDialog.positiveText(R.string.yes);
-                                        rejectDialog.negativeText(R.string.no);
-                                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                            @Override
-                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
-                                            }
-                                        });
-                                        rejectDialog.show();
-
-                                    } else if (selectedIndex == ACTION_SPAM) {
-                                        MaterialDialog.Builder spamDialog = new MaterialDialog.Builder(getActivity());
-                                        spamDialog.content(R.string.are_you_sure);
-                                        spamDialog.positiveText(R.string.yes);
-                                        spamDialog.negativeText(R.string.no);
-                                        spamDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                            @Override
-                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                                attemptSetRecommendationStatus(requestID, Constants.INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM);
-                                            }
-                                        });
-                                        spamDialog.show();
-
-                                    }
-                                }
-                            });
-                            mCustomSelectorDialog.show();
-                        }
+                        Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                     }
                 });
             }
+
         }
 
         public class BusinessInvitationViewHolder extends NotificationViewHolder {
@@ -855,4 +823,5 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         intent.putExtras(bundle);
         startActivity(intent);
     }
+
 }

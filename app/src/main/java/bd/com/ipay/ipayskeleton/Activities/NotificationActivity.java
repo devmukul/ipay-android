@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHistoryFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -22,6 +23,8 @@ public class NotificationActivity extends BaseActivity {
             switchToInvoiceHistoryFragment(getIntent().getExtras());
         else if (tag != null && tag.equals(Constants.REQUEST))
             switchToReceivedRequestReviewFragment();
+        else if (tag != null && tag.equals(Constants.RECOMMENDATION))
+            switchToRecommendationReviewFragment(getIntent().getExtras());
         else
             switchToNotificationFragment();
 
@@ -58,6 +61,13 @@ public class NotificationActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, receivedRequestReviewFragment).commit();
 
+    }
+
+    public void switchToRecommendationReviewFragment(Bundle bundle) {
+
+        RecommendationReviewFragment recommendationReviewFragment = new RecommendationReviewFragment();
+        recommendationReviewFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recommendationReviewFragment).commit();
     }
 
     @Override
