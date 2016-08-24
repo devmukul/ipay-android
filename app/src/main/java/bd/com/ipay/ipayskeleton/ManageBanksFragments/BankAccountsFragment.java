@@ -342,7 +342,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             private final ImageView mBankVerifiedStatus;
             private final TextView mBranchName;
             private final View divider;
-            private final RoundedImageView bankIcon;
+            private final ImageView bankIcon;
 
             private CustomSelectorDialog mCustomSelectorDialog;
             private List<String> mBankActionList;
@@ -355,7 +355,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 mBankVerifiedStatus = (ImageView) itemView.findViewById(R.id.bank_account_verify_status);
                 mBranchName = (TextView) itemView.findViewById(R.id.bank_branch_name);
                 divider = itemView.findViewById(R.id.divider);
-                bankIcon = (RoundedImageView) itemView.findViewById(R.id.portrait);
+                bankIcon = (ImageView) itemView.findViewById(R.id.portrait);
             }
 
             public void bindView(int pos) {
