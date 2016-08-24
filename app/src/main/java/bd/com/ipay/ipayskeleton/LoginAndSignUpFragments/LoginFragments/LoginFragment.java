@@ -70,9 +70,11 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mInfoView.setVisibility(View.VISIBLE);
             String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
             mUserNameEditText.setText(mobileNumber);
+            mButtonJoinUs.setVisibility(View.GONE);
         } else {
             mPasswordEditText.setText("");
             mUserNameEditText.setText("");
+            mButtonJoinUs.setVisibility(View.VISIBLE);
         }
 
         // Auto Login
