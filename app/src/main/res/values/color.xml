@@ -23,7 +23,7 @@
     <color name="colorDarkOrange">#f39431</color>
     <color name="colorBalanceBackground">#e3e3e3</color>
     <color name="colorRed">#ff0000</color>
-
+    <color name="colorYellow">#ffc000</color>
     <!-- zxinglib colors -->
     <color name="zxinglib_status_text">#ffffffff</color>
 
