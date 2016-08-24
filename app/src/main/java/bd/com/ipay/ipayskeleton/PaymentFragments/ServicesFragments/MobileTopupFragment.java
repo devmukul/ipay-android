@@ -200,7 +200,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private void setOperator(String phoneNumber) {
         phoneNumber = ContactEngine.trimPrefix(phoneNumber);
 
-        final String[] OPERATOR_PREFIXES = {"17", "18", "16", "19", "15"};
+        final String[] OPERATOR_PREFIXES = {"17", "13", "18", "16", "19", "15"};
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
             if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
                 mOperatorEditText.setText(mOperatorList.get(i));
