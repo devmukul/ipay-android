@@ -13,9 +13,7 @@
     <string name="prompt_mobile">Enter your mobile number </string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_new">Enter your password</string>
-    <string name="action_sign_in">Register</string>
     <string name="action_next_and_verify"><![CDATA[Next & Verify]]></string>
-    <string name="action_login">Login</string>
     <string name="prompt_business_name">Business Name</string>
     <string name="prompt_business_addr_line2">Address Line 2 (Optional)</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -101,7 +99,6 @@
     <string name="gender">Gender</string>
     <string name="department">Department</string>
     <string name="reject">Reject</string>
-    <string name="view">View</string>
     <string name="remove">Remove</string>
     <string name="mark_as_spam">Spam</string>
     <string name="to_date">To Date</string>
@@ -140,8 +137,6 @@
     <string name="please_select_a_branch">Please select a branch</string>
     <string name="please_enter_an_account_number">Please provide your Account Number and try again</string>
     <string name="business_information">Business Information</string>
-    <string name="organization_information">Organization Information</string>
-    <string name="organization_address">Organization address</string>
     <string name="account_holder_information">Information of Account Holder</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -173,7 +168,6 @@
     <string name="progress_dialog_rejecting">Rejecting request...</string>
     <string name="progress_dialog_accepted">Accepting request...</string>
     <string name="progress_dialog_signing_out">Signing out...</string>
-    <string name="please_select_your_birthday">Please select your birthday.</string>
     <string name="signup_successful">Sign up successful. Welcome to iPay</string>
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
@@ -187,13 +181,10 @@
     <string name="sending_otp">Sending OTP in your mobile...</string>
     <string name="change_pass_failed">Failed to change password</string>
     <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
-    <string name="activate">Activate</string>
     <string name="done">Done</string>
     <string name="verify">Verify</string>
     <string name="verify_email">Verify Email</string>
     <string name="resend_otp_description">If you have not received the SMS, please press Resend Code after the time elapses.</string>
-    <string name="resend_otp_description1">If you have not received the SMS, please press</string>
-    <string name="resend_otp_description2">after the time elapses</string>
     <string name="verify_otp_for_trust_description">You are seeing this because you are logging in from this device for the first time or you have reached the maximum number of trusted devices that can be added</string>
     <string name="resend">Resend Code</string>
     <string name="send_money">Send Money</string>
@@ -264,7 +255,6 @@
     <string name="submit">Submit</string>
     <string name="terms_condition_url"><a href="https://www.ipay.com.bd/legal/tos">Terms &amp; Conditions</a></string>
     <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
-    <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="please_select_a_gender">Please select a gender</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="try_again_later">Could not connect to iPay. Please try again later.</string>
@@ -430,8 +420,6 @@
     <string name="upload">UPLOAD</string>
     <string name="upload_small">Upload</string>
     <string name="driving_license">Driving License</string>
-    <string name="birth_certificate">Birth Certificate</string>
-    <string name="tin">TIN</string>
     <string name="business_tin">Business TIN</string>
     <string name="trade_license">Trade License</string>
     <string name="vat_registration_certificate">VAT Registration Certificate</string>
@@ -455,23 +443,18 @@
     <string name="mobile_topup_restriction_info">* Unverified users can recharge only their own mobile number</string>
     <string name="total_amount">Total Amount</string>
     <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
-    <string name="invoice_list">Invoice List</string>
     <string name="amount">Amount</string>
     <string name="item">Item</string>
     <string name="fee">Fee</string>
-    <string name="net_received">Net Received</string>
     <string name="net_payable">Net Payable</string>
     <string name="total">Total</string>
     <string name="service_charge">Service Charge</string>
-    <string name="topup_received">Topup Received</string>
     <string name="topup_package">Package</string>
     <string name="operator">Operator</string>
     <string name="invite_this_person_to_ipay" tools:keep="@string/invite_this_person_to_ipay">Invite this person to iPay</string>
     <string name="your_number">Your Number</string>
-    <string name="recharge_now">Top Up</string>
     <string name="enter_pin">Enter PIN</string>
     <string name="ok">OK</string>
-    <string name="you_will_receive">You will receive</string>
     <string name="confirm_ipay_invitation">Invite him/her to iPay?</string>
     <string name="amount_to_transfer">Amount to Transfer</string>
     <string name="total_received">Total Received</string>
@@ -524,7 +507,6 @@
     <string name="failed_get_document_list">Failed to fetch the list of documents</string>
     <string name="not_submitted">Not Submitted</string>
     <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload identification documents to get verified</string>
-    <string name="upload_identification_documents_to_confirm_identity">Upload identification documents to confirm your identity</string>
     <string name="document_id">Document ID</string>
     <string name="no_file_selected">No file selected</string>
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
@@ -573,9 +555,6 @@
     <string name="send_money_to_your_friends_and_family">Send Money to your friends and family.</string>
     <string name="request_money_from_your_friends_when_you_are_in_need">Request Money from your friends when you are in need.</string>
     <string name="make_payments_for_your_purchases">Make Payments for your purchases.</string>
-    <string name="business_name">Name</string>
-    <string name="office_info">Office Information</string>
-    <string name="contact_info">Contact Information</string>
     <string name="personal_info">Personal Information</string>
     <string name="parent_info">Parents Information</string>
     <string name="business_type">Business Type</string>
@@ -632,14 +611,8 @@
     <string name="manage_invitations">Manage invitations</string>
     <string name="manage_address">Manage address</string>
     <string name="see_profile_completion">See profile completeness</string>
-    <string name="switch_account">Switch Account</string>
-    <string name="show_privileges">Show Privileges</string>
     <string name="privileges">Privileges</string>
-    <string name="resign">Resign</string>
-    <string name="manage_employer">Manage Employer</string>
-    <string name="failed_fetching_employer_list">Failed to fetch employer list</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
-    <string name="fetching_all_roles_failed">Failed to fetch roles</string>
     <string name="add_money_info">It make three to five business day to complete the operation </string>
     <string name="withdraw_money_info">It make three to five business day to complete the operation </string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
