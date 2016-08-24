@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessEmployeeReviewFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHistoryFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
@@ -25,6 +26,8 @@ public class NotificationActivity extends BaseActivity {
             switchToReceivedRequestReviewFragment();
         else if (tag != null && tag.equals(Constants.RECOMMENDATION))
             switchToRecommendationReviewFragment(getIntent().getExtras());
+        else if (tag != null && tag.equals(Constants.BUSINESS))
+            switchToBusinessEmployeeReviewFragment(getIntent().getExtras());
         else
             switchToNotificationFragment();
 
@@ -69,6 +72,14 @@ public class NotificationActivity extends BaseActivity {
         recommendationReviewFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recommendationReviewFragment).commit();
     }
+
+    public void switchToBusinessEmployeeReviewFragment(Bundle bundle) {
+
+        BusinessEmployeeReviewFragment businessEmployeeReviewFragment = new BusinessEmployeeReviewFragment();
+        businessEmployeeReviewFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, businessEmployeeReviewFragment).commit();
+    }
+
 
     @Override
     public Context setContext() {

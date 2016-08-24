@@ -38,6 +38,7 @@ public class Constants {
     public static final String INVOICE = "INVOICE";
     public static final String REQUEST = "REQUEST";
     public static final String RECOMMENDATION = "RECOMMENDATION";
+    public static final String BUSINESS = "BUSINESS";
     public static final String TRANSACTION_DETAILS = "TRANSACTION_DETAILS";
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_DETAILS = "MONEY REQUESTS DETAILS";
@@ -63,7 +64,6 @@ public class Constants {
     public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
 
     public static final String REQUEST_ID = "REQUEST_ID";
-    public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
     public static final String PROFILE_PICTURE = "_PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
@@ -102,6 +102,9 @@ public class Constants {
     public static final String MOTHERS_NAME = "MOTHERS_NAME";
     public static final String FATHERS_MOBILE = "FATHERS_MOBILE";
     public static final String MOTHERS_MOBILE = "MOTHERS_MOBILE";
+
+    public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
+    public static final String ROLE_ID = "ROLE_ID";
 
     public static final String ADDRESS = "ADDRESS";
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -149,7 +152,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = true;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server

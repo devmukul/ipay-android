@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -35,7 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class RecommendationReviewFragment extends Fragment implements HttpResponseListener {
+public class RecommendationReviewFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetThanaListAsyncTask = null;
     private GetThanaResponse mGetThanaResponse;
@@ -45,15 +47,6 @@ public class RecommendationReviewFragment extends Fragment implements HttpRespon
 
     private HttpRequestPostAsyncTask mRecommendActionTask = null;
     private IntroduceActionResponse mIntroduceActionResponse;
-
-
-    private HttpRequestPostAsyncTask mAcceptRequestTask = null;
-
-    private HttpRequestPostAsyncTask mCancelRequestTask = null;
-
-    private HttpRequestPostAsyncTask mRejectRequestTask = null;
-
-    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
     private ProgressDialog mProgressDialog;
 
@@ -76,9 +69,6 @@ public class RecommendationReviewFragment extends Fragment implements HttpRespon
     private TextView mMothersNameView;
     private TextView mAddressView;
 
-    private View mFathersNameHolder;
-    private View mMothersNameHolder;
-
     private Button mRejectButton;
     private Button mAcceptButton;
     private Button mSpamButton;
@@ -87,7 +77,7 @@ public class RecommendationReviewFragment extends Fragment implements HttpRespon
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recommendation_review, container, false);
 
-        getActivity().setTitle(R.string.recommendation_details);
+        getActivity().setTitle(R.string.introducers);
 
         Bundle bundle = getArguments();
 
@@ -105,9 +95,6 @@ public class RecommendationReviewFragment extends Fragment implements HttpRespon
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
         mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
         mAddressView = (TextView) v.findViewById(R.id.textview_present_address);
-
-        mFathersNameHolder = v.findViewById(R.id.textview_fathers_name_view);
-        mMothersNameHolder = v.findViewById(R.id.textview_mothers_name_view);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
@@ -199,6 +186,12 @@ public class RecommendationReviewFragment extends Fragment implements HttpRespon
         return v;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
+    }
+
     private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
         if (requestID == 0) {
             if (getActivity() != null)
@@ -253,6 +246,7 @@ public class RecommendationReviewFragment extends Fragment implements HttpRespon
 
         Gson gson = new Gson();
 
+        if (this.isAdded()) setContentShown(true);
         switch (result.getApiCommand()) {
 
             case Constants.COMMAND_INTRODUCE_ACTION:
