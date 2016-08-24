@@ -69,17 +69,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private HttpRequestPostAsyncTask mServiceChargeTask = null;
     private GetServiceChargeResponse mGetServiceChargeResponse;
 
-    private HttpRequestPostAsyncTask mRecommendActionTask = null;
-    private IntroduceActionResponse mIntroduceActionResponse;
-
     private HttpRequestGetAsyncTask mGetIntroductionRequestTask = null;
     private GetIntroductionRequestsResponse mIntroductionRequestsResponse;
 
     private HttpRequestGetAsyncTask mGetBusinessInvitationTask = null;
     private GetBusinessListResponse mGetBusinessListResponse;
 
-    private HttpRequestPutAsyncTask mConfirmBusinessInvitationTask = null;
-    private ConfirmBusinessInvitationResponse mConfirmBusinessInvitationResponse;
 
     private RecyclerView mNotificationsRecyclerView;
     private NotificationListAdapter mNotificationListAdapter;
@@ -104,8 +99,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private long mMoneyRequestId;
     private String mTitle;
     private String mDescriptionofRequest;
-
-    private boolean mSwitchToEmployeeFragment;
 
     private OnNotificationUpdateListener mOnNotificationUpdateListener;
 
@@ -256,53 +249,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-    private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
-        if (requestID == 0) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.verifying_user));
-        mProgressDialog.show();
-        mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION,
-                Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity());
-        mRecommendActionTask.mHttpResponseListener = this;
-        mRecommendActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void acceptBusinessInvitation(long id) {
-        mSwitchToEmployeeFragment = true;
-        confirmBusinessInvitationRequest(id, Constants.BUSINESS_INVITATION_ACCEPTED, getString(R.string.loading_accepting_invitation));
-    }
-
-    private void rejectBusinessInvitation(long id) {
-        mSwitchToEmployeeFragment = false;
-        confirmBusinessInvitationRequest(id, Constants.BUSINESS_INVITATION_REJECTED, getString(R.string.loading_rejecting_invitation));
-    }
-
-    private void markBusinessInvitationAsSpam(long id) {
-        mSwitchToEmployeeFragment = false;
-        confirmBusinessInvitationRequest(id, Constants.BUSINESS_INVITATION_SPAM, getString(R.string.loading_marking_invitation_as_spam));
-    }
-
-    private void confirmBusinessInvitationRequest(long id, String status, String message) {
-        if (mConfirmBusinessInvitationTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(message);
-        mProgressDialog.show();
-
-        Gson gson = new Gson();
-        ConfirmBusinessInvitationRequest confirmBusinessInvitationRequest = new ConfirmBusinessInvitationRequest(id, status);
-        String json = gson.toJson(confirmBusinessInvitationRequest);
-
-        mConfirmBusinessInvitationTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CONFIRM_BUSINESS_INVITATION,
-                Constants.BASE_URL_MM + Constants.URL_CONFIRM_BUSINESS_INVITATION, json, getActivity(), this);
-        mConfirmBusinessInvitationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
@@ -310,7 +256,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetMoneyAndPaymentRequestTask = null;
             mServiceChargeTask = null;
-            mConfirmBusinessInvitationTask = null;
             mGetBusinessInvitationTask = null;
             mGetIntroductionRequestTask = null;
 
@@ -416,57 +361,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mServiceChargeTask = null;
                 break;
-            case Constants.COMMAND_INTRODUCE_ACTION:
-
-                try {
-                    mIntroduceActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                        // Refresh recommendation requests list
-                        if (mIntroductionRequests != null)
-                            mIntroductionRequests.clear();
-                        mIntroductionRequests = null;
-                        refreshIntroductionRequestList();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-                }
-
-                mProgressDialog.dismiss();
-                mRecommendActionTask = null;
-                break;
-            case Constants.COMMAND_CONFIRM_BUSINESS_INVITATION:
-                try {
-                    mConfirmBusinessInvitationResponse = gson.fromJson(result.getJsonString(), ConfirmBusinessInvitationResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (mSwitchToEmployeeFragment) {
-                            mSwitchToEmployeeFragment = false;
-                        }
-
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                    refreshBusinessInvitationList();
-
-                } catch (Exception e) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_confirming_business_invitation, Toast.LENGTH_LONG).show();
-                }
-
-                mProgressDialog.dismiss();
-                mConfirmBusinessInvitationTask = null;
-                break;
         }
     }
 
@@ -523,10 +417,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
-
-        private final int ACTION_VERIFY = 0;
-        private final int ACTION_REJECT = 1;
-        private final int ACTION_SPAM = 2;
 
         public class NotificationViewHolder extends RecyclerView.ViewHolder {
             private final TextView mTitleView;
@@ -630,17 +520,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
                 super.bindView(pos);
 
-                final int position = pos;
                 final IntroductionRequestClass introductionRequest = (IntroductionRequestClass) mNotifications.get(pos);
 
                 final long requestID = introductionRequest.getId();
-                final String recommendationStatus = introductionRequest.getStatus();
 
                 final String senderName = introductionRequest.getName();
                 final String senderMobileNumber = introductionRequest.getSenderMobileNumber();
                 final String photoUri = introductionRequest.getSenderMobileNumber();
 
-                final String time = Utilities.getDateFormat(introductionRequest.getDate());
                 final AddressClass mAddress = introductionRequest.getPresentAddress();
                 final String fathersName = introductionRequest.getFather();
                 final String mothersName = introductionRequest.getMother();
@@ -680,62 +567,32 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             @Override
             public void bindView(int pos) {
                 super.bindView(pos);
-
-                final int position = pos;
                 final Business businessInvitation = (Business) mNotifications.get(pos);
 
+
+                final String senderName = businessInvitation.getName();
+                final String senderMobileNumber = businessInvitation.getMobileNumber();
+                final String photoUri = businessInvitation.getImageUrl();
+                final String designation = businessInvitation.getDesignation();
+                final long associationId = businessInvitation.getAssociationId();
+                final int roleId = businessInvitation.getRoleId();
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        mReceivedRequestActionList = Arrays.asList(getResources().getStringArray(R.array.introduce_action));
-                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), mNotifications.get(position).getName(), mReceivedRequestActionList);
-                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                            @Override
-                            public void onResourceSelected(int selectedIndex, String name) {
-                                if (selectedIndex == ACTION_VERIFY) {
-                                    MaterialDialog.Builder verifyDialog = new MaterialDialog.Builder(getActivity());
-                                    verifyDialog.content(R.string.are_you_sure);
-                                    verifyDialog.positiveText(R.string.yes);
-                                    verifyDialog.negativeText(R.string.no);
-                                    verifyDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            acceptBusinessInvitation(businessInvitation.getAssociationId());
-                                        }
-                                    });
-                                    verifyDialog.show();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.NAME, senderName);
+                        bundle.putString(Constants.PHOTO_URI, photoUri);
+                        bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
+                        bundle.putString(Constants.DESIGNATION, designation);
+                        bundle.putLong(Constants.ASSOCIATION_ID, associationId);
+                        bundle.putInt(Constants.ROLE_ID, roleId);
+                        bundle.putString(Constants.TAG, Constants.BUSINESS);
 
-                                } else if (selectedIndex == ACTION_REJECT) {
-                                    MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                                    rejectDialog.content(R.string.are_you_sure);
-                                    rejectDialog.positiveText(R.string.yes);
-                                    rejectDialog.negativeText(R.string.no);
-                                    rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            rejectBusinessInvitation(businessInvitation.getAssociationId());
-                                        }
-                                    });
-                                    rejectDialog.show();
-
-                                } else if (selectedIndex == ACTION_SPAM) {
-                                    MaterialDialog.Builder spamDialog = new MaterialDialog.Builder(getActivity());
-                                    spamDialog.content(R.string.are_you_sure);
-                                    spamDialog.positiveText(R.string.yes);
-                                    spamDialog.negativeText(R.string.no);
-                                    spamDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            markBusinessInvitationAsSpam(businessInvitation.getAssociationId());
-                                        }
-                                    });
-                                    spamDialog.show();
-                                }
-                            }
-                        });
-                        mCustomSelectorDialog.show();
+                        Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
                     }
                 });

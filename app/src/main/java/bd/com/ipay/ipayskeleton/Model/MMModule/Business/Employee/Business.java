@@ -10,6 +10,16 @@ public class Business implements Notification {
     private String name;
     private String profilePictureUrl;
     private String status;
+    private int roleId;
+    private String designation;
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public int getRoleId() {
+        return roleId;
+    }
 
     public int getAccountId() {
         return accountId;

@@ -345,6 +345,7 @@
     <string name="filter">Filter</string>
     <string name="ticket_verified">Ticket Verified</string>
     <string name="introducers">Introducer</string>
+    <string name="business_invitation">Business Invitation</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
     <string name="transaction_cancelled">Cancelled</string>

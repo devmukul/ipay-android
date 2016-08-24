@@ -1,106 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_horizontal_margin">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/profile"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
-
-        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-            android:id="@+id/profile_picture"
-            style="@style/ReviewImageStyle">
-
-        </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/activity_horizontal_margin">
 
         <LinearLayout
+            android:id="@+id/profile"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textview_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/profile_picture"
+                style="@style/ReviewImageStyle">
 
-            <TextView
-                android:id="@+id/textview_mobile_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+            </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
-            <TextView
-                android:id="@+id/textview_designation"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textview_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/textview_designation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
 
+        <View
+            android:id="@+id/divider1"
+            style="@style/DividerWithoutMargin"
+            android:layout_below="@+id/profile" />
 
-    <View
-        android:id="@+id/divider1"
-        style="@style/DividerWithoutMargin"
-        android:layout_below="@+id/profile" />
+        <TextView
+            android:id="@+id/role_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider1"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:text="@string/role"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/role_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider1"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:text="@string/role"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/role"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/role_header"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/role"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/role_header"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="14sp" />
+        <View
+            android:id="@+id/divider"
+            style="@style/DividerWithoutMargin"
+            android:layout_below="@+id/role" />
 
-    <View
-        android:id="@+id/divider"
-        style="@style/DividerWithoutMargin"
-        android:layout_below="@+id/role" />
+        <TextView
+            android:id="@+id/privileges_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:text="@string/privileges"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/privileges_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:text="@string/privileges"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/privilege_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/privileges_header"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+            android:layout_marginTop="@dimen/activity_horizontal_margin_card">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/privilege_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/privileges_header"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-        android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+        </android.support.v7.widget.RecyclerView>
 
-    </android.support.v7.widget.RecyclerView>
-
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>
