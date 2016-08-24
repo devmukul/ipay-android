@@ -447,7 +447,6 @@
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_payable">Net Payable</string>
-    <string name="total">Total</string>
     <string name="service_charge">Service Charge</string>
     <string name="topup_package">Package</string>
     <string name="operator">Operator</string>
