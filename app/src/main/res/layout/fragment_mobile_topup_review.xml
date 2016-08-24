@@ -21,8 +21,7 @@
 
                 <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                     android:id="@+id/image_view_profile"
-                    style="@style/ReviewImageStyle"
-                    android:background="@drawable/ic_mobile_recharge_large" />
+                    style="@style/ReviewImageStyle" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

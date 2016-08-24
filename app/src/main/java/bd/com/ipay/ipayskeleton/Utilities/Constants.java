@@ -119,6 +119,14 @@ public class Constants {
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
 
+    public static final String OFFICE_PHONE_NUMBER = "+8801749763943 ";
+    public static final String OFFICE_EMAIL = "info@ipay.com.bd";
+    public static final String OFFICE_WEB = "www.ipay.com.bd";
+    public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
+
+    public static final double OFFICE_LATITUDE = 23.7810729;
+    public static final double OFFICE_LONGITUDE = 90.4169212;
+
 //    public static final String EMPLOYEE_PRIVILEGE = "EMPLOYEE_PRIVILEGE";
 
     public static final int STARTING_DATE = 01;
@@ -721,7 +729,7 @@ public class Constants {
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
     public static final String ACTION_TYPE_EDIT = "Edit";
     public static final String ACTION_TYPE_VIEW = "View";
-    public static final String ACTION_TYPE_TAKE_PICTURE= "Take a Picture";
+    public static final String ACTION_TYPE_TAKE_PICTURE = "Take a Picture";
     public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from Gallery";
     public static final String ACTION_TYPE_VIEW_UPLOADED_DOCUMENT = "View Uploaded Document";
 
@@ -738,7 +746,7 @@ public class Constants {
     public static final String TICKET_STATUS_SOLVED = "solved";
     public static final String TICKET_STATUS_CLOSED = "closed";
 
-    public static final int REQUEST_TYPE_RECEIVED_REQUEST= 1;
+    public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;
 
 }
