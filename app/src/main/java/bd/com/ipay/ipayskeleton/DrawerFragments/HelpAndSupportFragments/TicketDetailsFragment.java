@@ -286,7 +286,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 if (comment.getAuthorId().equals(requesterId)) {
                     profilePictureView.setProfilePicture(ProfileInfoCacheManager.getProfileImageUrl(), false);
                 } else {
-                    profilePictureView.setProfilePicture(R.drawable.logo_ipay);
+                    profilePictureView.setProfilePicture(R.drawable.ic_logo);
                 }
                 commentView.setText(comment.getBody());
                 timeView.setText(Utilities.getDateFormat(comment.getCreatedAt()));
