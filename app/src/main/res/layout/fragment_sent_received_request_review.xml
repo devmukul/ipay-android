@@ -28,13 +28,17 @@
 
                 <TextView
                     android:id="@+id/textview_name"
-                    style="@style/TextViewUserInfoPrimary"
-                    android:ellipsize="end"
-                    android:singleLine="true" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/value6"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textview_mobile_number"
-                    style="@style/TextViewUserInfoSecondary" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
 
