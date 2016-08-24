@@ -125,6 +125,7 @@
     <string name="all_contacts">All</string>
     <string name="select_an_institution">Select Institution</string>
     <string name="select_role">Select a role</string>
+    <string name="role">Role</string>
     <string name="select_a_fee_item">Select a fee item</string>
     <string name="select_session">Select Session</string>
     <string name="save">Save</string>

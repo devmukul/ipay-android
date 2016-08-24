@@ -48,10 +48,38 @@
 
     </LinearLayout>
 
+
+    <View
+        android:id="@+id/divider1"
+        style="@style/DividerWithoutMargin"
+        android:layout_below="@+id/profile" />
+
+    <TextView
+        android:id="@+id/role_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider1"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:text="@string/role"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/role"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/role_header"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="14sp" />
+
     <View
         android:id="@+id/divider"
         style="@style/DividerWithoutMargin"
-        android:layout_below="@+id/profile" />
+        android:layout_below="@+id/role" />
 
     <TextView
         android:id="@+id/privileges_header"

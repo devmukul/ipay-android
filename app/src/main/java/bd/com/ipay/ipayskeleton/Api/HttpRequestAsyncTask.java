@@ -157,7 +157,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                     e.printStackTrace();
                 }
 
-            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+            } /*else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                 String message = mContext.getString(R.string.please_log_in_again);
 
                 try {
@@ -177,7 +177,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                     e.printStackTrace();
                 }
 
-            } else {
+            }*/ else {
                 if (mHttpResponseListener != null)
                     mHttpResponseListener.httpResponseReceiver(result);
             }
