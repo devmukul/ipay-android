@@ -78,8 +78,8 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         nameView = (EditText) dialogView.findViewById(R.id.edit_text_name);
         mobileNumberView = (EditText) dialogView.findViewById(R.id.edit_text_mobile_number);
         mobileNumberView.setText(mMobileNumber);
-
         mEditTextRelationship = (EditText) dialogView.findViewById(R.id.edit_text_relationship);
+        mRelationship = null;
 
         Utilities.showKeyboard(context);
 
@@ -152,9 +152,12 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             error = true;
         }
 
+        if (mRelationship == null) {
+            mEditTextRelationship.setError(context.getResources().getString(R.string.please_enter_relationship));
+            error = true;
+        }
         return !error;
     }
-
 
 
     private void addFriend(String name, String phoneNumber, String relationship) {
@@ -218,7 +221,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             }
 
             mAddFriendAsyncTask = null;
-        } else  if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
             mProgressDialog.dismiss();
             try {
                 mSendInviteResponse = gson.fromJson(result.getJsonString(), SendInviteResponse.class);
@@ -233,7 +236,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                         mFinishCheckerListener.ifFinishNeeded();
                     }
 
-                } else  {
+                } else {
                     Toast.makeText(context, mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
