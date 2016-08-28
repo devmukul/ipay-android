@@ -21,7 +21,6 @@
                 android:id="@+id/list_my_requests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/value10"
                 android:clipToPadding="false"
                 android:paddingBottom="@dimen/value48" />
 

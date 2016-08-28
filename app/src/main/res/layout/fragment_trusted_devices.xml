@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/activity_horizontal_margin_card">
+    android:paddingLeft="@dimen/activity_horizontal_margin_card"
+    android:paddingRight="@dimen/activity_horizontal_margin_card"
+    android:paddingBottom="@dimen/activity_horizontal_margin_card">
 
     <include layout="@layout/layout_progress_container" />
 
