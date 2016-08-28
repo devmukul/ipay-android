@@ -11,11 +11,15 @@ public class GetBusinessInformationResponse {
     private int businessType;
     private String email;
     private String mobileNumber;
-
+    private String verificationStatus;
     private final List<UserProfilePictureClass> profilePictures = new ArrayList<>();
 
     public String getBusinessName() {
         return businessName;
+    }
+
+    public String getVerificationStatus() {
+        return verificationStatus;
     }
 
     public int getBusinessType() {
