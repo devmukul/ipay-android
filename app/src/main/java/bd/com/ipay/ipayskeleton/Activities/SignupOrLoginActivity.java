@@ -178,10 +178,12 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         Utilities.hideKeyboard(this);
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
-        } else {
+        } else if (!pref.contains(Constants.USERID)) {
             Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            this.finish();
+        } else {
             this.finish();
         }
     }
