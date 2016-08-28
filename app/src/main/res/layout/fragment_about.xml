@@ -70,7 +70,7 @@
                     android:paddingTop="@dimen/value4"
                     android:text="@string/contact_us" />
 
-                <View style="@style/DividerafterIcon" />
+                <View style="@style/Divider" />
 
                 <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                     android:id="@+id/terms_of_service"
@@ -82,7 +82,7 @@
                     android:paddingTop="@dimen/value4"
                     android:text="@string/terms_of_service" />
 
-                <View style="@style/DividerafterIcon" />
+                <View style="@style/Divider" />
 
                 <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                     android:id="@+id/privacy"

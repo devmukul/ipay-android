@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,18 +16,18 @@
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"  />
+            android:layout_marginRight="16dp" />
 
         <TextView
             android:id="@+id/introduced_name"
             style="@style/TextStylePrimaryMedium"
-            android:textSize="@dimen/text_size_small_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/introduced_profile_picture"
             android:paddingBottom="2dp"
             android:paddingTop="14dp"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_small_medium" />
 
         <TextView
             android:id="@+id/introduced_mobile_number"
@@ -52,8 +52,5 @@
 
     <View
         android:id="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/divider_space"
-        android:background="@color/colorDivider" />
-
+        style="@style/Divider" />
 </LinearLayout>
