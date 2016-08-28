@@ -40,6 +40,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
     private FloatingActionButton mFabAddNewEmployee;
     private List<Employee> mEmployeeList;
+    private TextView mEmptyListTextView;
 
     private HttpRequestGetAsyncTask mGetAllEmployeeAsyncTask;
     private GetAllEmployeesResponse mGetAllEmployeesResponse;
@@ -66,6 +67,8 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             }
         });
 
+
+        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mEmployeeListView = (RecyclerView) v.findViewById(R.id.list_employee);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mEmployeeListView.setLayoutManager(layoutManager);
@@ -187,6 +190,10 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             mRemoveAnEmployeeAsyncTask = null;
 
         }
+
+        if (mEmployeeList != null && mEmployeeList.size() == 0) {
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
     public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
