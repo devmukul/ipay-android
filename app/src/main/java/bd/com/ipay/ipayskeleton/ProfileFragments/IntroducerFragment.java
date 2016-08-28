@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,6 +62,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     private ImageView mAskForRecommendation;
     private IntroduceAdapter mIntroduceAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,12 +70,13 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         setHasOptionsMenu(true);
     }
 
-
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_introducer_requests, container, false);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.list_introducer_requests);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mCompleteIntroducerHeaderLayout = (RelativeLayout) v.findViewById(R.id.complete_introduction_header);
@@ -82,15 +85,20 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getIntroducerList();
-            getSentRequestList();
-        }
-
         mIntroduceAdapter = new IntroduceAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mIntroduceAdapter);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    getIntroducerList();
+                    getSentRequestList();
+                }
+            }
+        });
 
         return v;
     }
@@ -98,7 +106,11 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setContentShown(false);
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            setContentShown(false);
+            getIntroducerList();
+            getSentRequestList();
+        }
     }
 
     private void getIntroducerList() {
@@ -131,7 +143,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_recommendation));
         mProgressDialog.show();
         mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
-                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber,null, getActivity());
+                Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber, null, getActivity());
         mAskForRecommendationTask.mHttpResponseListener = this;
         mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -140,7 +152,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     public void httpResponseReceiver(HttpResponseObject result) throws RuntimeException {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mGetIntroducersTask = null;
 
@@ -193,9 +205,10 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                     Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
 
-
+                mGetIntroducersTask = null;
                 break;
             case Constants.COMMAND_GET_SENT_REQUEST_LIST:
+                if (this.isAdded()) setContentShown(true);
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mSentRequestListResponse = gson.fromJson(result.getJsonString(), GetRecommendationRequestsResponse.class);
@@ -218,6 +231,8 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                     Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
 
+                mSwipeRefreshLayout.setRefreshing(false);
+                mGetSentRequestTask = null;
                 break;
             case Constants.COMMAND_ASK_FOR_RECOMMENDATION:
                 try {
@@ -243,8 +258,9 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 break;
         }
         try {
-            if (isAdded())
+            if (isAdded()) {
                 setContentShown(true);
+            }
             if (mIntroducerList != null && mIntroducerList.size() == 0 && mSentRequestList != null && mSentRequestList.size() == 0)
                 mEmptyListTextView.setVisibility(View.VISIBLE);
             else mEmptyListTextView.setVisibility(View.GONE);
@@ -327,7 +343,8 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
             public void bindViewForIntroducerList(int pos) {
 
-                if ( mSentRequestList != null && mSentRequestList.size() != 0) pos = pos - mSentRequestList.size() - 1;
+                if (mSentRequestList != null && mSentRequestList.size() != 0)
+                    pos = pos - mSentRequestList.size() - 1;
 
                 final String introducerName = mIntroducerList.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
@@ -410,7 +427,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             int introducerListSize = 0;
             int sentRequestsListSize = 0;
 
-            if (mIntroducerList == null && mSentRequestList == null )
+            if (mIntroducerList == null && mSentRequestList == null)
                 return 0;
 
             // Get the sizes of the lists
@@ -420,9 +437,9 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 introducerListSize = mIntroducerList.size();
 
             if (sentRequestsListSize > 0 && introducerListSize > 0)
-                return sentRequestsListSize + 1 + introducerListSize ;
+                return sentRequestsListSize + 1 + introducerListSize;
             else if (introducerListSize > 0 && sentRequestsListSize == 0)
-                return introducerListSize ;
+                return introducerListSize;
             else if (introducerListSize == 0 && sentRequestsListSize > 0)
                 return sentRequestsListSize;
             else return 0;
@@ -440,13 +457,13 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
             if (mSentRequestList != null)
                 sentRequestListSize = mSentRequestList.size();
-            if(mIntroducerList != null)
+            if (mIntroducerList != null)
                 introducerListSize = mIntroducerList.size();
 
             if (sentRequestListSize > 0 && introducerListSize > 0) {
-                if (position == sentRequestListSize )
+                if (position == sentRequestListSize)
                     return INTRODUCER_LIST_HEADER_VIEW;
-                else if (position > sentRequestListSize )
+                else if (position > sentRequestListSize)
                     return INTRODUCER_LIST_ITEM_VIEW;
                 else return SENT_REQUEST_LIST_ITEM_VIEW;
 
@@ -455,8 +472,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
             } else if (introducerListSize == 0 && sentRequestListSize > 0) {
                 return SENT_REQUEST_LIST_ITEM_VIEW;
-            }
-            else return SENT_REQUEST_LIST_ITEM_VIEW;
+            } else return SENT_REQUEST_LIST_ITEM_VIEW;
         }
     }
 

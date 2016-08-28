@@ -249,6 +249,99 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    private boolean isAllNotificationsLoaded() {
+        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null && mGetBusinessInvitationTask == null;
+    }
+
+    private List<Notification> mergeNotificationLists() {
+        List<Notification> notifications = new ArrayList<>();
+        if (mMoneyAndPaymentRequests != null)
+            notifications.addAll(mMoneyAndPaymentRequests);
+        if (mIntroductionRequests != null)
+            notifications.addAll(mIntroductionRequests);
+        if (mBusinessInvitations != null)
+            notifications.addAll(mBusinessInvitations);
+
+        // Date wise sort all notifications
+        Collections.sort(notifications, new Comparator<Notification>() {
+            @Override
+            public int compare(Notification lhs, Notification rhs) {
+                if (lhs.getTime() > rhs.getTime())
+                    return -1;
+                else if (lhs.getTime() < rhs.getTime())
+                    return 1;
+                else
+                    return 0;
+            }
+        });
+
+        return notifications;
+    }
+
+    private void postProcessNotificationList() {
+        if (isAllNotificationsLoaded()) {
+
+            mNotifications = mergeNotificationLists();
+            if (isAdded()) {
+                if (mNotifications.isEmpty()) {
+                    mEmptyListTextView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyListTextView.setVisibility(View.GONE);
+                }
+
+                mSwipeRefreshLayout.setRefreshing(false);
+                mNotificationListAdapter.notifyDataSetChanged();
+                setContentShown(true);
+            }
+
+            // We just can't call something like getActivity().onNotificationUpdate.. because
+            // getActivity() might return if user hasn't yet navigated to the notification fragment.
+            if (mOnNotificationUpdateListener != null && mNotifications != null)
+                mOnNotificationUpdateListener.onNotificationUpdate(mNotifications);
+        }
+    }
+
+    private void launchInvoiceHistoryFragment() {
+
+        Bundle bundle = new Bundle();
+        bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+        bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
+        bundle.putString(Constants.NAME, mReceiverName);
+        bundle.putInt(Constants.MONEY_REQUEST_SERVICE_ID, Constants.SERVICE_ID_REQUEST_MONEY);
+        bundle.putString(Constants.VAT, mVat.toString());
+        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
+        bundle.putString(Constants.AMOUNT, mAmount.toString());
+        bundle.putString(Constants.TITLE, mTitle);
+        bundle.putString(Constants.DESCRIPTION, mDescriptionofRequest);
+        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        bundle.putString(Constants.TAG, Constants.INVOICE);
+
+        Intent intent = new Intent(this.getContext(), NotificationActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void launchReceivedRequestFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
+        bundle.putSerializable(Constants.AMOUNT, mAmount);
+        bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionofRequest);
+        bundle.putString(Constants.INVOICE_TITLE_TAG, mTitle);
+        bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+        bundle.putString(Constants.NAME, mReceiverName);
+        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
+        bundle.putString(Constants.TAG, Constants.REQUEST);
+
+        Intent intent = new Intent(this.getContext(), NotificationActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    public interface OnNotificationUpdateListener {
+        void onNotificationUpdate(List<Notification> notifications);
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
@@ -362,58 +455,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mServiceChargeTask = null;
                 break;
         }
-    }
-
-    private void postProcessNotificationList() {
-        if (isAllNotificationsLoaded()) {
-
-            mNotifications = mergeNotificationLists();
-            if (isAdded()) {
-                if (mNotifications.isEmpty()) {
-                    mEmptyListTextView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyListTextView.setVisibility(View.GONE);
-                }
-
-                mSwipeRefreshLayout.setRefreshing(false);
-                mNotificationListAdapter.notifyDataSetChanged();
-                setContentShown(true);
-            }
-
-            // We just can't call something like getActivity().onNotificationUpdate.. because
-            // getActivity() might return if user hasn't yet navigated to the notification fragment.
-            if (mOnNotificationUpdateListener != null && mNotifications != null)
-                mOnNotificationUpdateListener.onNotificationUpdate(mNotifications);
-        }
-    }
-
-    private boolean isAllNotificationsLoaded() {
-        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null && mGetBusinessInvitationTask == null;
-    }
-
-    private List<Notification> mergeNotificationLists() {
-        List<Notification> notifications = new ArrayList<>();
-        if (mMoneyAndPaymentRequests != null)
-            notifications.addAll(mMoneyAndPaymentRequests);
-        if (mIntroductionRequests != null)
-            notifications.addAll(mIntroductionRequests);
-        if (mBusinessInvitations != null)
-            notifications.addAll(mBusinessInvitations);
-
-        // Date wise sort all notifications
-        Collections.sort(notifications, new Comparator<Notification>() {
-            @Override
-            public int compare(Notification lhs, Notification rhs) {
-                if (lhs.getTime() > rhs.getTime())
-                    return -1;
-                else if (lhs.getTime() < rhs.getTime())
-                    return 1;
-                else
-                    return 0;
-            }
-        });
-
-        return notifications;
     }
 
     private class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
@@ -638,47 +679,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         public int getItemViewType(int position) {
             return mNotifications.get(position).getNotificationType();
         }
-    }
-
-    public interface OnNotificationUpdateListener {
-        void onNotificationUpdate(List<Notification> notifications);
-    }
-
-    private void launchInvoiceHistoryFragment() {
-
-        Bundle bundle = new Bundle();
-        bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
-        bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
-        bundle.putString(Constants.NAME, mReceiverName);
-        bundle.putInt(Constants.MONEY_REQUEST_SERVICE_ID, Constants.SERVICE_ID_REQUEST_MONEY);
-        bundle.putString(Constants.VAT, mVat.toString());
-        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
-        bundle.putString(Constants.AMOUNT, mAmount.toString());
-        bundle.putString(Constants.TITLE, mTitle);
-        bundle.putString(Constants.DESCRIPTION, mDescriptionofRequest);
-        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
-        bundle.putString(Constants.TAG, Constants.INVOICE);
-
-        Intent intent = new Intent(this.getContext(), NotificationActivity.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    private void launchReceivedRequestFragment() {
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
-        bundle.putSerializable(Constants.AMOUNT, mAmount);
-        bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
-        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionofRequest);
-        bundle.putString(Constants.INVOICE_TITLE_TAG, mTitle);
-        bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
-        bundle.putString(Constants.NAME, mReceiverName);
-        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
-        bundle.putString(Constants.TAG, Constants.REQUEST);
-
-        Intent intent = new Intent(this.getContext(), NotificationActivity.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
     }
 
 }

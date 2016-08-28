@@ -6,21 +6,21 @@
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"
-        android:layout_height="50dp"
         android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_centerVertical="true"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/request_number"
         style="@style/TextStylePrimaryMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_small_medium"
-        android:layout_toRightOf="@+id/profile_picture" />
+        android:layout_toRightOf="@+id/profile_picture"
+        android:textSize="@dimen/text_size_small_medium" />
 
     <TextView
         android:id="@+id/amount"
@@ -49,9 +49,6 @@
 
     <View
         android:id="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/divider_space"
-        android:background="@color/colorDivider"
-        android:layout_below="@+id/profile_picture"/>
-
+        style="@style/Divider"
+        android:layout_below="@+id/profile_picture" />
 </RelativeLayout>

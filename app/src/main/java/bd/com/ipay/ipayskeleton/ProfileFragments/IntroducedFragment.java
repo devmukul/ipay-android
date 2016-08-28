@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -46,28 +47,37 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     private ProgressDialog mProgressDialog;
     private RecyclerView mRecyclerView;
     private TextView mEmptyListTextView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private IntroducedAdapter mIntroduceAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_introduced_requests, container, false);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.list_introduced_requests);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
         mProgressDialog = new ProgressDialog(getActivity());
-
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getIntroducedList();
-            getRecommendationRequestsList();
-        }
 
         mIntroduceAdapter = new IntroducedAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mIntroduceAdapter);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    getIntroducedList();
+                    getRecommendationRequestsList();
+                }
+            }
+        });
 
         return v;
     }
@@ -75,14 +85,17 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setContentShown(false);
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            setContentShown(false);
+            getIntroducedList();
+            getRecommendationRequestsList();
+        }
     }
 
     private void getIntroducedList() {
         if (mGetIntroducedTask != null) {
             return;
         }
-
         mGetIntroducedTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCED_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity());
         mGetIntroducedTask.mHttpResponseListener = this;
@@ -142,6 +155,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                     Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
                 }
 
+                mGetIntroducedTask = null;
                 break;
             case Constants.COMMAND_GET_RECOMMENDATION_REQUESTS:
 
@@ -172,12 +186,14 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 }
 
                 mProgressDialog.dismiss();
+                mSwipeRefreshLayout.setRefreshing(false);
                 mGetRecommendationRequestsTask = null;
                 break;
         }
         try {
-            if (isAdded())
+            if (isAdded()) {
                 setContentShown(true);
+            }
             if (mIntroducedList != null && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
                 mEmptyListTextView.setVisibility(View.VISIBLE);
             else mEmptyListTextView.setVisibility(View.GONE);
@@ -227,9 +243,9 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 final String photoUri = mRecommendationRequestList.get(pos).getSenderMobileNumber();
                 final String recommendationStatus = mRecommendationRequestList.get(pos).getStatus();
                 final String time = Utilities.getDateFormat(mRecommendationRequestList.get(pos).getDate());
-                final AddressClass mAddress=mRecommendationRequestList.get(pos).getPresentAddress();
-                final String fathersName=mRecommendationRequestList.get(pos).getFather();
-                final String mothersName=mRecommendationRequestList.get(pos).getMother();
+                final AddressClass mAddress = mRecommendationRequestList.get(pos).getPresentAddress();
+                final String fathersName = mRecommendationRequestList.get(pos).getFather();
+                final String mothersName = mRecommendationRequestList.get(pos).getMother();
 
                 mSenderName.setText(senderName);
                 mSenderMobileNumber.setText(senderMobileNumber);
@@ -245,7 +261,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                         bundle.putString(Constants.NAME, senderName);
                         bundle.putString(Constants.PHOTO_URI, photoUri);
                         bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
-                        bundle.putString(Constants.FATHERS_NAME,fathersName );
+                        bundle.putString(Constants.FATHERS_NAME, fathersName);
                         bundle.putString(Constants.MOTHERS_NAME, mothersName);
                         bundle.putSerializable(Constants.ADDRESS, mAddress);
 
@@ -256,7 +272,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
             public void bindViewForIntroducedList(int pos) {
 
-                if (mRecommendationRequestList != null && mRecommendationRequestList.size() != 0 )  pos = pos - mRecommendationRequestList.size() - 1;
+                if (mRecommendationRequestList != null && mRecommendationRequestList.size() != 0)
+                    pos = pos - mRecommendationRequestList.size() - 1;
 
                 final String introducedName = mIntroducedList.get(pos).getName();
                 final String introducedMobileNumber = mIntroducedList.get(pos).getMobileNumber();
@@ -295,7 +312,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduced_list, parent, false);
                 return new IntroducedListItemViewHolder(v);
 
-            }  else if (viewType == RECOMMENDATION_ITEM_VIEW) {
+            } else if (viewType == RECOMMENDATION_ITEM_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests, parent, false);
                 return new RecommendationRequestViewHolder(v);
 
@@ -323,24 +340,25 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 e.printStackTrace();
             }
         }
+
         @Override
         public int getItemCount() {
 
             int introducedListSize = 0;
             int recommendationRequestListSize = 0;
 
-            if (mRecommendationRequestList == null && mIntroducedList == null )
+            if (mRecommendationRequestList == null && mIntroducedList == null)
                 return 0;
 
             if (mRecommendationRequestList != null)
                 recommendationRequestListSize = mRecommendationRequestList.size();
-            if(mIntroducedList != null)
+            if (mIntroducedList != null)
                 introducedListSize = mIntroducedList.size();
 
             if (recommendationRequestListSize > 0 && introducedListSize > 0)
-                return recommendationRequestListSize + 1 + introducedListSize ;
+                return recommendationRequestListSize + 1 + introducedListSize;
             else if (introducedListSize > 0 && recommendationRequestListSize == 0)
-                return introducedListSize ;
+                return introducedListSize;
             else if (introducedListSize == 0 && recommendationRequestListSize > 0)
                 return recommendationRequestListSize;
             else return 0;
@@ -358,23 +376,22 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
             if (mRecommendationRequestList != null)
                 recommendationRequestListSize = mRecommendationRequestList.size();
-            if(mIntroducedList != null)
+            if (mIntroducedList != null)
                 introducedListSize = mIntroducedList.size();
 
             if (recommendationRequestListSize > 0 && introducedListSize > 0) {
-                if (position == recommendationRequestListSize )
+                if (position == recommendationRequestListSize)
                     return INTRODUCED_LIST_HEADER_VIEW;
-                else if (position > recommendationRequestListSize )
+                else if (position > recommendationRequestListSize)
                     return INTRODUCED_LIST_ITEM_VIEW;
                 else return RECOMMENDATION_ITEM_VIEW;
 
             } else if (introducedListSize > 0 && recommendationRequestListSize == 0) {
-               return INTRODUCED_LIST_ITEM_VIEW;
+                return INTRODUCED_LIST_ITEM_VIEW;
 
             } else if (introducedListSize == 0 && recommendationRequestListSize > 0) {
                 return RECOMMENDATION_ITEM_VIEW;
-            }
-            else return RECOMMENDATION_ITEM_VIEW;
+            } else return RECOMMENDATION_ITEM_VIEW;
         }
     }
 

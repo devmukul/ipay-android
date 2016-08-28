@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:gravity="center" >
+    android:gravity="center">
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"
@@ -12,33 +12,32 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"  />
+        android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
     <LinearLayout
         android:id="@+id/description_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_toRightOf="@+id/profile_picture"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        >
+        android:paddingTop="@dimen/activity_vertical_margin">
 
         <TextView
             android:id="@+id/introducer_name"
             style="@style/TextStylePrimaryMedium"
-            android:textSize="@dimen/text_size_small_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="2dp"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textSize="@dimen/text_size_small_medium" />
 
         <TextView
             android:id="@+id/introducer_mobile_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:singleLine="true"/>
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/time"
@@ -60,8 +59,8 @@
         android:id="@+id/divider"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/divider_space"
-        android:background="@color/colorDivider"
         android:layout_below="@+id/description_holder"
-        />
-
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:background="@color/colorDivider" />
 </RelativeLayout>

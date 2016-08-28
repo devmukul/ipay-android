@@ -2,9 +2,11 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
 
     <LinearLayout
+        style="@style/ProfileCardLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/value15"
@@ -68,9 +70,6 @@
             android:paddingTop="@dimen/value4"
             android:text="@string/logout_from_all_device"
             app:arrowVisibility="false" />
-
-        <View style="@style/Divider" />
-
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
