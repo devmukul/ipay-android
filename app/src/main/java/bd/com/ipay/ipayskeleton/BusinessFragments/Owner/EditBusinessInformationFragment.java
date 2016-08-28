@@ -164,12 +164,6 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
             focusView = mBusinessMobileNumberEditText;
         }
 
-        if (!InputValidator.isValidEmail(mBusinessEmail)) {
-            mBusinessNameEditText.setError(getString(R.string.error_invalid_email));
-            focusView = mBusinessNameEditText;
-            cancel = true;
-        }
-
         if (cancel) {
             focusView.requestFocus();
             return false;
