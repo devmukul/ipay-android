@@ -178,7 +178,11 @@ public class HomeActivity extends BaseActivity
         switchToDashBoard();
 
         // Check if there's anything new from the server
-        getProfileInfo();
+        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, 0);
+        if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
+            getBusinessInformation();
+        } else getProfileInfo();
+
 
         // Sync contacts
         new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -587,10 +591,6 @@ public class HomeActivity extends BaseActivity
                     mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        if (mGetUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
-                            getBusinessInformation();
-                        } else {
-
                         mNameView.setText(mGetUserInfoResponse.getName());
 
                         String imageUrl = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
@@ -600,8 +600,6 @@ public class HomeActivity extends BaseActivity
 
                         PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
-                        }
-
 
                     } else {
                         Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
@@ -624,8 +622,7 @@ public class HomeActivity extends BaseActivity
                         String imageUrl = Utilities.getImage(mGetBusinessInformationResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
                         //saving user info in shared preference
-                        ProfileInfoCacheManager.updateCache(mGetBusinessInformationResponse.getBusinessName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
-
+                        ProfileInfoCacheManager.updateCache(mGetBusinessInformationResponse.getBusinessName(), imageUrl, mGetBusinessInformationResponse.getVerificationStatus());
                         PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
@@ -634,7 +631,7 @@ public class HomeActivity extends BaseActivity
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                        Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                    Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
 
                 }
 
@@ -661,7 +658,7 @@ public class HomeActivity extends BaseActivity
 
                 break;
 
-           case Constants.COMMAND_REFRESH_TOKEN:
+            case Constants.COMMAND_REFRESH_TOKEN:
                 try {
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -683,7 +680,7 @@ public class HomeActivity extends BaseActivity
 
                 HomeActivity.mRefreshTokenAsyncTask = null;
 
-            break;
+                break;
         }
     }
 
