@@ -149,6 +149,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
             mSearchView.setIconified(false);
             mSearchView.setOnQueryTextListener(this);
+
+            // prevent auto focus on Dialog launch
+            mSearchView.clearFocus();
         }
 
         if (getArguments() != null) {

@@ -42,4 +42,5 @@ public class FriendPickerDialogActivity extends FragmentActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment).commit();
     }
+
 }
