@@ -85,6 +85,9 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
     public void switchToEmployeeManagementFragment() {
 
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStackImmediate();
+
         Fragment employeeManagementFragment = new EmployeeManagementFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, employeeManagementFragment).commit();
@@ -92,6 +95,10 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
 
     public void switchToEmployeeInformationFragment(Bundle bundle) {
+
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+
         Fragment employeeInformationFragment = new CreateEmployeeFragment();
         if (bundle != null)
             employeeInformationFragment.setArguments(bundle);
@@ -101,6 +108,10 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
     }
 
     public void switchToEmployeeInformationDetailsFragment(Bundle bundle) {
+
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
+            getSupportFragmentManager().popBackStackImmediate();
+
         Fragment employeeInformationDetailsFragment = new EmployeeDetailsFragment();
         if (bundle != null)
             employeeInformationDetailsFragment.setArguments(bundle);
@@ -111,6 +122,10 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
 
     public void switchToEditEmployeeInformationFragment(Bundle bundle) {
+
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+
         Fragment editEmployeeInformationFragment = new CreateEmployeeFragment();
         if (bundle != null)
             editEmployeeInformationFragment.setArguments(bundle);
@@ -120,6 +135,10 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
     }
 
     public void switchToEmployeePrivilegeFragment(Bundle bundle) {
+
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
+            getSupportFragmentManager().popBackStackImmediate();
+
         Fragment employeePrivilegeFragment = new EmployeePrivilegeFragment();
         if (bundle != null)
             employeePrivilegeFragment.setArguments(bundle);

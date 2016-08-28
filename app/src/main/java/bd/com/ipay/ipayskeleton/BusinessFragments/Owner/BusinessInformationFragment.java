@@ -201,7 +201,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         final Bundle presentAddressBundle = new Bundle();
         presentAddressBundle.putString(Constants.ADDRESS_TYPE, Constants.ADDRESS_TYPE_PRESENT);
-        presentAddressBundle.putString(Constants.EDIT_ADDRESS_SOURCE, "BUSINESS_PRESENT");
         if (mPresentAddress != null) {
             presentAddressBundle.putSerializable(Constants.ADDRESS, mPresentAddress);
         }

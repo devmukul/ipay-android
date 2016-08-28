@@ -124,12 +124,6 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             cancel = true;
         }
 
-        if (designation.isEmpty()) {
-            focusView = mDesignationEditText;
-            mDesignationEditText.setError(getString(R.string.please_enter_designation));
-            cancel = true;
-        }
-
         if (cancel) {
             focusView.requestFocus();
             return false;
@@ -208,16 +202,18 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
                     launchPrevilegePage(mobileNumber, name, profilePicture, designation);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                    Toast.makeText(getActivity(), R.string.user_has_no_ipay_account, Toast.LENGTH_LONG).show();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.user_has_no_ipay_account, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
                 }
 
 
             } catch (Exception e) {
                 e.printStackTrace();
-
-                Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
             }
 
             mGetProfileInfoTask = null;

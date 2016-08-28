@@ -139,18 +139,7 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
                 mSetUserAddressResponse = gson.fromJson(result.getJsonString(), SetUserAddressResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    if (ProfileInfoCacheManager.isBusinessAccount()) {
-                        if (getArguments() != null && getArguments().containsKey(Constants.EDIT_ADDRESS_SOURCE)) {
-                            if (getArguments().getString(Constants.EDIT_ADDRESS_SOURCE).equals("BUSINESS_PRESENT")) {
-                                ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
-                            }
-                        }
-                        else {
-                            ((ProfileActivity) getActivity()).switchToAddressFragment();
-                        }
-                    } else {
-                        ((ProfileActivity) getActivity()).switchToAddressFragment();
-                    }
+                    getActivity().onBackPressed();
 
                 } else {
                     if (getActivity() != null)
