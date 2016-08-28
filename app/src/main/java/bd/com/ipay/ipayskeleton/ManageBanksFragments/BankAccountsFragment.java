@@ -30,6 +30,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -43,6 +44,8 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.RemoveBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankAccountRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -60,6 +63,9 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
+
+    private HttpRequestPostAsyncTask mSendForVerificationTask = null;
+    private VerifyBankAccountResponse mVerifyBankAccountResponse;
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mBankListRecyclerView;
@@ -238,6 +244,22 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
     }
 
+    private void attemptSendForVerification(Long userBankID) {
+        if (userBankID == 0) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        VerifyBankAccountRequest mVerifyBankAccountRequest = new VerifyBankAccountRequest(userBankID);
+        Gson gson = new Gson();
+        String json = gson.toJson(mVerifyBankAccountRequest);
+        mSendForVerificationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_FOR_VERIFICATION_BANK,
+                Constants.BASE_URL_SM + Constants.URL_SEND_FOR_VERIFICATION_BANK, json, getActivity());
+        mSendForVerificationTask.mHttpResponseListener = this;
+        mSendForVerificationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -245,6 +267,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             mProgressDialog.dismiss();
             mGetBankTask = null;
             mRemoveBankAccountTask = null;
+            mSendForVerificationTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -328,6 +351,32 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                 mProgressDialog.dismiss();
                 mSendForVerificationWithAmountTask = null;
                 break;
+            case Constants.COMMAND_SEND_FOR_VERIFICATION_BANK:
+
+                try {
+                    mVerifyBankAccountResponse = gson.fromJson(result.getJsonString(), VerifyBankAccountResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        // Refresh bank list
+                        if (mListUserBankClasses != null)
+                            mListUserBankClasses.clear();
+                        mListUserBankClasses = null;
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.failed_to_send_for_bank_verification, Toast.LENGTH_LONG).show();
+                }
+
+                mProgressDialog.dismiss();
+                mSendForVerificationTask = null;
+                break;
         }
     }
 
@@ -382,7 +431,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     case Constants.BANK_ACCOUNT_STATUS_NOT_VERIFIED:
                         mBankVerifiedStatus.setImageResource(R.drawable.ic_notverified);
                         mBankVerifiedStatus.setColorFilter(Color.RED);
-
+                        attemptSendForVerification(bankAccountID);
                         mBankActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_bank_action));
                         break;
                     default:
@@ -419,7 +468,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                                             .show();
 
                                 } else if (Constants.ACTION_TYPE_VERIFY.equals(action)) {
-                                    if (verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_PENDING)) {
+                                    if (!verificationStatus.equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
 
                                         final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                                         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
