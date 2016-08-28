@@ -212,5 +212,18 @@
                 style="@style/TextViewInfoColorPrimary" />
         </LinearLayout>
 
+        <View style="@style/Divider" />
+
+            <LinearLayout style="@style/LinearLayoutHolder"
+                android:id="@+id/failure_cause_layout">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/failure_cause" />
+
+                <TextView
+                    android:id="@+id/failure_cause"
+                    style="@style/TextViewInfoColorPrimary" />
+            </LinearLayout>
     </LinearLayout>
 </ScrollView>

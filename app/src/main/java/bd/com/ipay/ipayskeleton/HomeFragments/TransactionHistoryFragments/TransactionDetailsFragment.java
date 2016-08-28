@@ -30,8 +30,10 @@ public class TransactionDetailsFragment extends Fragment {
     private TextView balanceTextView;
     private TextView purposeTextView;
     private TextView statusTextView;
+    private TextView failureCauseTextView;
     private TextView mobileNumberTextView;
     private LinearLayout purposeLayout;
+    private LinearLayout failureCauseLayout;
     private ProfileImageView mProfileImageView;
     private ImageView otherImageView;
     private TextView mMobileNumberView;
@@ -53,8 +55,10 @@ public class TransactionDetailsFragment extends Fragment {
         balanceTextView = (TextView) v.findViewById(R.id.balance);
         purposeTextView = (TextView) v.findViewById(R.id.purpose);
         statusTextView = (TextView) v.findViewById(R.id.status);
+        failureCauseTextView = (TextView) v.findViewById(R.id.failure_cause);
         mobileNumberTextView = (TextView) v.findViewById(R.id.your_number);
         purposeLayout = (LinearLayout) v.findViewById(R.id.purpose_layout);
+        failureCauseLayout = (LinearLayout) v.findViewById(R.id.failure_cause_layout);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         otherImageView = (ImageView) v.findViewById(R.id.other_image);
@@ -139,6 +143,15 @@ public class TransactionDetailsFragment extends Fragment {
         }
 
         final Integer statusCode = transactionHistory.getStatusCode();
+
+        if (statusCode != Constants.TRANSACTION_STATUS_ACCEPTED && statusCode != Constants.TRANSACTION_STATUS_PROCESSING) {
+            final String status_description = transactionHistory.getStatusDescription();
+            failureCauseTextView.setText(status_description);
+            failureCauseTextView.setTextColor(getResources().getColor(R.color.background_red));
+            failureCauseLayout.setVisibility(View.VISIBLE);
+
+        } else
+            failureCauseLayout.setVisibility(View.GONE);
 
         if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
             statusTextView.setText(getString(R.string.transaction_successful));

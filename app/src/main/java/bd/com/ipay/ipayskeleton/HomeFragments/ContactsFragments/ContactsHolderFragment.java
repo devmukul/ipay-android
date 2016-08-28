@@ -143,6 +143,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         nameView = (EditText) dialogView.findViewById(R.id.edit_text_name);
         mobileNumberView = (EditText) dialogView.findViewById(R.id.edit_text_mobile_number);
         mEditTextRelationship = (EditText) dialogView.findViewById(R.id.edit_text_relationship);
+        mRelationship = null;
 
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -172,10 +173,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 if (verifyUserInputs()) {
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
 
-                    if (mRelationship != null)
-                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
-                    else
-                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), null);
+                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
+
 
                     Utilities.hideKeyboard(getActivity(), nameView);
                     Utilities.hideKeyboard(getActivity(), mobileNumberView);
@@ -217,6 +216,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             error = true;
         }
 
+        if (mRelationship == null) {
+            mEditTextRelationship.setError(getString(R.string.please_enter_relationship));
+            error = true;
+        }
         return !error;
     }
 
