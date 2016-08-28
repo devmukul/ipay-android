@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.DrawerFragments.AboutContactsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.AboutPrivacyFragment;
+import bd.com.ipay.ipayskeleton.DrawerFragments.AboutTermsandServicesFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 public class AboutActivity extends BaseActivity {
@@ -22,8 +25,10 @@ public class AboutActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStack();
+                setTitle(R.string.about);
+            }
             else {
                 finish();
             }
@@ -37,11 +42,27 @@ public class AboutActivity extends BaseActivity {
                 new AboutFragment()).commit();
     }
 
+    public void switchToAboutContactsFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new AboutContactsFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToAboutTermsandServicesFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new AboutTermsandServicesFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToAboutPrivacyFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new AboutPrivacyFragment()).addToBackStack(null).commit();
+    }
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
+            setTitle(R.string.about);
+        }
         else
             super.onBackPressed();
     }

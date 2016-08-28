@@ -5,6 +5,7 @@
     <string name="all_rights_reserved">All Rights Reserved. </string>
     <string name="bangladesh">Bangladesh</string>
     <string name="phone_init">+880</string>
+    <string name="web">Web</string>
     <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
     <string name="enter_OTP_sent_to_your_mobile">Enter OTP sent to your mobile</string>
     <string name="gcm_sender_id">799721005986</string>
@@ -52,6 +53,7 @@
     <string name="contact_us">Contact Us</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="contacts_info">iPay will be pleased to discuss any concern or scope of improvement in our Payment Application. Please feel free to contact us.</string>
     <string name="contact_person_mobile_number">Mobile number of contact person</string>
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>

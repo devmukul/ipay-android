@@ -14,7 +14,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin_card" />
 
     <View
-        style="@style/DividerafterIcon"
+        style="@style/Divider"
         android:layout_alignParentBottom="true"
         android:layout_below="@id/item_services" />
 

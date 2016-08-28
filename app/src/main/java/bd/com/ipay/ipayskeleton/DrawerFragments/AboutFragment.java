@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
 
@@ -41,31 +42,19 @@ public class AboutFragment extends Fragment {
 
         mContactView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(getContext().getString(R.string.contact_link)));
-                startActivity(intent);
+                ((AboutActivity)getActivity()).switchToAboutContactsFragment();
             }
         });
 
         mTermView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(getContext().getString(R.string.term_link)));
-                startActivity(intent);
+                ((AboutActivity)getActivity()).switchToAboutTermsandServicesFragment();
             }
         });
 
         mPrivacyView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(getContext().getString(R.string.privacy_link)));
-                startActivity(intent);
+                ((AboutActivity)getActivity()).switchToAboutPrivacyFragment();
             }
         });
 
