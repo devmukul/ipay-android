@@ -105,7 +105,7 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                         mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
 

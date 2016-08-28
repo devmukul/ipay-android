@@ -262,17 +262,13 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                             mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
 
                             mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture, false);
                             mNameView.setText(mEmployeeDetails.getName());
                             mMobileNumberView.setText(mEmployeeDetails.getMobileNumber());
-
-                            if (!mEmployeeDetails.getDesignation().equals(""))
-                                mDesignationView.setText(mEmployeeDetails.getDesignation());
-                            else mDesignationView.setVisibility(View.GONE);
 
                             mSelectedRoleId = mEmployeeDetails.getRoleId();
 
