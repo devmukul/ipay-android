@@ -680,15 +680,6 @@
         <item>Post-paid </item>
     </string-array>
 
-    <string-array name="activity_log_types">
-        <item>Profile information change</item>
-        <item>Money Received</item>
-        <item>Money Sent</item>
-        <item>Verification</item>
-        <item>System Event</item>
-        <item>Credentials Change</item>
-    </string-array>
-
     <string-array name="relationship">
         <item>Father</item>
         <item>Mother</item>

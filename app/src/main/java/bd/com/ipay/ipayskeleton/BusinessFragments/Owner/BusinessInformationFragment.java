@@ -317,7 +317,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mBusinessNameView.setText(mGetBusinessInformationResponse.getBusinessName());
         mBusinessMobileNumberView.setText(getString(R.string.phone_number)+": "+mGetBusinessInformationResponse.getMobileNumber());
         mBusinessTypeView.setText(R.string.loading);
-        mBusinessEmailView.setText(mGetBusinessInformationResponse.getEmail());
+
+        String email = mGetBusinessInformationResponse.getEmail();
+        if (!email.equals(null) && !email.equals("")) {
+            mBusinessEmailView.setVisibility(View.VISIBLE);
+            mBusinessEmailView.setText(email);
+        } else {
+            mBusinessEmailView.setVisibility(View.GONE);
+        }
 
         setContentShown(true);
 
