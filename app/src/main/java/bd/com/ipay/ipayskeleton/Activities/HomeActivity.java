@@ -178,12 +178,11 @@ public class HomeActivity extends BaseActivity
         switchToDashBoard();
 
         // Check if there's anything new from the server
-        if (pref.contains(Constants.ACCOUNT_TYPE)) {
-            int accountType = pref.getInt(Constants.ACCOUNT_TYPE, 0);
-            if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
-                getBusinessInformation();
-            }
+        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, 0);
+        if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
+            getBusinessInformation();
         } else getProfileInfo();
+
 
         // Sync contacts
         new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -632,7 +631,7 @@ public class HomeActivity extends BaseActivity
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                        Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                    Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
 
                 }
 
@@ -659,7 +658,7 @@ public class HomeActivity extends BaseActivity
 
                 break;
 
-           case Constants.COMMAND_REFRESH_TOKEN:
+            case Constants.COMMAND_REFRESH_TOKEN:
                 try {
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -681,7 +680,7 @@ public class HomeActivity extends BaseActivity
 
                 HomeActivity.mRefreshTokenAsyncTask = null;
 
-            break;
+                break;
         }
     }
 
