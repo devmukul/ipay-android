@@ -86,10 +86,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/value2"
-                                    android:fontFamily="sans-serif-thin"
                                     android:textColor="@android:color/white"
-                                    android:textSize="@dimen/text_size_small_medium"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/text_size_small_medium" />
 
                                 <ImageView
                                     android:id="@+id/verification_status"
@@ -107,10 +105,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/name_layout"
                                 android:layout_marginBottom="@dimen/value2"
-                                android:fontFamily="sans-serif-thin"
                                 android:textColor="@android:color/white"
-                                android:textSize="@dimen/text_size_small"
-                                android:textStyle="bold" />
+                                android:textSize="@dimen/text_size_small" />
 
                         </RelativeLayout>
 

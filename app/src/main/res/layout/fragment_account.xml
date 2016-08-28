@@ -39,10 +39,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/value2"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
-                        android:fontFamily="sans-serif-thin"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small_medium"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/text_size_small_medium" />
 
                     <ImageView
                         android:id="@+id/textview_verification_status"

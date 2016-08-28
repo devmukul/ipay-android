@@ -78,16 +78,8 @@ public class IntroductionRequestClass implements Notification {
         return father;
     }
 
-    public void setFather(String father) {
-        this.father = father;
-    }
-
     public String getMother() {
         return mother;
-    }
-
-    public void setMother(String mother) {
-        this.mother = mother;
     }
 
     public List<AddressContainer> getAddressList() {
@@ -143,5 +135,5 @@ public class IntroductionRequestClass implements Notification {
                     '}';
         }
     }
-    
+
 }

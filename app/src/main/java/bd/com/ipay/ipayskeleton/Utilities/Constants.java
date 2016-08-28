@@ -152,7 +152,7 @@ public class Constants {
      * <p/>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = true;
+    public static final boolean AUTO_LOGIN = false;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server

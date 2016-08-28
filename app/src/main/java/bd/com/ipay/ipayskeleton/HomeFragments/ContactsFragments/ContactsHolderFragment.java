@@ -68,7 +68,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
     private String mRelationship;
     private int mSelectedRelationId = -1;
-    private boolean isViewShown=false;
+    private boolean isViewShown = false;
     private View v;
 
     @Override
@@ -172,7 +172,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 if (verifyUserInputs()) {
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
 
-                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
+                    if (mRelationship != null)
+                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
+                    else
+                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), null);
 
                     Utilities.hideKeyboard(getActivity(), nameView);
                     Utilities.hideKeyboard(getActivity(), mobileNumberView);
