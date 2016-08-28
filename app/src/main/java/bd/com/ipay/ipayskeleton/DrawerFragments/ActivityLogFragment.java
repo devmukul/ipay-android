@@ -22,10 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,7 +47,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private HttpRequestGetAsyncTask mUserActivityTask = null;
     private UserActivityResponse mUserActivityResponse;
 
-    private String[] activityLogTypes;
     private RecyclerView mActivityLogRecyclerView;
     private ActivityLogAdapter mActivityLogAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -129,7 +126,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         View v = inflater.inflate(R.layout.fragment_activity_log, container, false);
 
         setTitle();
-        activityLogTypes = getResources().getStringArray(R.array.activity_log_types);
         mActivityLogRecyclerView = (RecyclerView) v.findViewById(R.id.list_recent_activity_logs);
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
