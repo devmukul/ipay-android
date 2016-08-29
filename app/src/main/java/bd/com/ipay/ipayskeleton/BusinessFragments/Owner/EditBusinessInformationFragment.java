@@ -30,20 +30,17 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBusinessInformationFragment extends Fragment implements HttpResponseListener {
 
     private EditText mBusinessNameEditText;
     private EditText mBusinessMobileNumberEditText;
-    private EditText mBusinessEmailEditText;
     private EditText mBusinessTypeEditText;
     private Button mInfoSaveButton;
 
     private String mBusinessName;
     private String mBusinessMobileNumber;
-    private String mBusinessEmail;
     private int mBusinessTypeId;
     private ArrayList<BusinessType> mBusinessTypes;
 
@@ -62,13 +59,11 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
 
         mBusinessNameEditText = (EditText) v.findViewById(R.id.business_name);
         mBusinessMobileNumberEditText = (EditText) v.findViewById(R.id.business_mobile_number);
-        mBusinessEmailEditText = (EditText) v.findViewById(R.id.business_email);
         mBusinessTypeEditText = (EditText) v.findViewById(R.id.business_type);
         mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
 
         mBusinessName = getArguments().getString(Constants.BUSINESS_NAME);
         mBusinessMobileNumber = getArguments().getString(Constants.BUSINESS_MOBILE_NUMBER);
-        mBusinessEmail = getArguments().getString(Constants.BUSINESS_EMAIL);
         mBusinessTypeId = getArguments().getInt(Constants.BUSINESS_TYPE);
         mBusinessTypes = getArguments().getParcelableArrayList(Constants.BUSINESS_TYPE_LIST);
 
@@ -91,7 +86,6 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
 
         mBusinessNameEditText.setText(mBusinessName);
         mBusinessMobileNumberEditText.setText(mBusinessMobileNumber);
-        mBusinessEmailEditText.setText(mBusinessEmail);
         for (BusinessType businessType : mBusinessTypes) {
             if (businessType.getId() == mBusinessTypeId) {
                 mBusinessTypeEditText.setText(businessType.getName());
@@ -135,7 +129,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
 
         Gson gson = new Gson();
         SetBusinessInformationRequest setBusinessInformationRequest = new SetBusinessInformationRequest(
-                mBusinessName, mBusinessTypeId, mBusinessEmail, mBusinessMobileNumber);
+                mBusinessName, mBusinessTypeId, mBusinessMobileNumber);
         String json = gson.toJson(setBusinessInformationRequest);
 
         mSetBusinessInformationRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_BUSINESS_INFORMATION,
@@ -149,7 +143,6 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
 
         mBusinessName = mBusinessNameEditText.getText().toString();
         mBusinessMobileNumber = ContactEngine.formatMobileNumberBD(mBusinessMobileNumberEditText.getText().toString());
-        mBusinessEmail = mBusinessEmailEditText.getText().toString();
         /** mBusinessTypeId has already been selected when the user picked an item from the dialog **/
 
         if (mBusinessName.isEmpty()) {

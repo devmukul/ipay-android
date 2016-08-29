@@ -4,13 +4,11 @@ public class SetBusinessInformationRequest {
 
     private final String businessName;
     private final int businessType;
-    private final String email;
     private final String mobileNumber;
 
-    public SetBusinessInformationRequest(String businessName, int businessType, String email, String mobileNumber) {
+    public SetBusinessInformationRequest(String businessName, int businessType, String mobileNumber) {
         this.businessName = businessName;
         this.businessType = businessType;
-        this.email = email;
         this.mobileNumber = mobileNumber;
     }
 
@@ -20,10 +18,6 @@ public class SetBusinessInformationRequest {
 
     public int getBusinessType() {
         return businessType;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getMobileNumber() {

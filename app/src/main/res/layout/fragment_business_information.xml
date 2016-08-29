@@ -81,10 +81,6 @@
                     android:id="@+id/textview_business_mobile_number"
                     style="@style/TextViewInfoLeftAlign" />
 
-                <TextView
-                    android:id="@+id/textview_business_email"
-                    style="@style/TextViewInfoLeftAlign" />
-
             </LinearLayout>
 
             <View
