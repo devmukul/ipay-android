@@ -13,22 +13,13 @@
             android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/value15">
+            android:orientation="horizontal">
 
-            <com.makeramen.roundedimageview.RoundedImageView
+            <ImageView
                 android:id="@+id/portrait"
-                style="@style/ReviewImageStyle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                style="@style/ReviewBankImageStyle"
                 android:scaleType="centerCrop"
-                android:src="@drawable/bank111"
-                app:riv_corner_radius="50dip"
-                app:riv_oval="false" />
+                android:src="@drawable/bank111" />
 
             <LinearLayout
                 android:layout_width="match_parent"

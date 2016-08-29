@@ -153,7 +153,7 @@
             android:label="@string/make_payment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.EventActivity"
             android:label="@string/events"

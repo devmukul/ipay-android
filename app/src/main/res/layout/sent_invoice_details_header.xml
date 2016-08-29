@@ -22,17 +22,13 @@
 
             <TextView
                 android:id="@+id/textview_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+                style="@style/TextViewUserInfoPrimary"
+                android:ellipsize="end"
+                android:singleLine="true" />
 
             <TextView
                 android:id="@+id/textview_mobile_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                style="@style/TextViewUserInfoSecondary" />
 
         </LinearLayout>
 
@@ -40,58 +36,59 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin">
+        android:layout_height="wrap_content">
 
         <TextView
-            style="@style/TextStylePrimarySmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+            style="@style/TextViewInfoLabel"
+            android:layout_weight=".8"
             android:text="@string/invoice_id" />
 
         <TextView
             android:id="@+id/invoice_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin_card" />
-
-
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/invoice_id" />
+            style="@style/TextViewInfoColorPrimary" />
 
     </RelativeLayout>
 
     <View style="@style/Divider" />
 
+    <LinearLayout style="@style/LinearLayoutHolder">
+
+        <TextView
+            style="@style/TextViewInfoLabel"
+            android:layout_weight=".8"
+            android:text="@string/time" />
+
+        <TextView
+            android:id="@+id/time"
+            style="@style/TextViewInfoColorPrimary" />
+    </LinearLayout>
+
+    <View style="@style/Divider" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/description_holder"
-            style="@style/TextStylePrimarySmall"
+            style="@style/TextViewInfoLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
             android:text="@string/description" />
 
         <TextView
             android:id="@+id/description"
-            android:textSize="@dimen/text_size_small"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/description_holder" />
+            android:layout_below="@+id/description_holder"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:paddingBottom="@dimen/value10"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_small_medium" />
 
     </RelativeLayout>
 

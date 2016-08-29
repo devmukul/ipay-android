@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,7 +61,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private TextView mServiceChargeView;
     private TextView mTotalView;
     private Button mWithdrawMoneyButton;
-    private RoundedImageView mBankIcon;
+    private ImageView mBankIcon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,7 +84,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
         mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
-        mBankIcon = (RoundedImageView) v.findViewById(R.id.portrait);
+        mBankIcon = (ImageView) v.findViewById(R.id.portrait);
 
         mProgressDialog = new ProgressDialog(getActivity());
 

@@ -23,9 +23,7 @@
 
             <ImageView
                 android:id="@+id/other_image"
-                style="@style/ReviewImageStyle.Dialog"
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
+                style="@style/ReviewBankImageStyle" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,22 +33,15 @@
 
                 <TextView
                     android:id="@+id/textview_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/value6"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
+                    style="@style/TextViewUserInfoPrimary" />
 
                 <TextView
                     android:id="@+id/textview_mobile_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    style="@style/TextViewUserInfoSecondary" />
 
             </LinearLayout>
         </LinearLayout>
 
-        <View style="@style/Divider" />
 
         <LinearLayout style="@style/LinearLayoutHolder">
 
@@ -214,16 +205,17 @@
 
         <View style="@style/Divider" />
 
-            <LinearLayout style="@style/LinearLayoutHolder"
-                android:id="@+id/failure_cause_layout">
+        <LinearLayout
+            android:id="@+id/failure_cause_layout"
+            style="@style/LinearLayoutHolder">
 
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/failure_cause" />
+            <TextView
+                style="@style/TextViewInfoLabel"
+                android:text="@string/failure_cause" />
 
-                <TextView
-                    android:id="@+id/failure_cause"
-                    style="@style/TextViewInfoColorPrimary" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/failure_cause"
+                style="@style/TextViewInfoColorPrimary" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

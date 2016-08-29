@@ -236,6 +236,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:layout_marginBottom">@dimen/value6</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
@@ -496,12 +497,21 @@
     </style>
 
     <style name="ReviewImageStyle">
-        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin_double</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginTop">@dimen/value18</item>
-        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:layout_marginBottom">@dimen/activity_horizontal_margin_semi_double</item>
         <item name="android:layout_width">74dp</item>
         <item name="android:layout_height">74dp</item>
+    </style>
+
+    <style name="ReviewBankImageStyle">
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/value18</item>
+        <item name="android:layout_marginBottom">@dimen/activity_horizontal_margin_semi_double</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">70dp</item>
     </style>
 
     <style name="ReviewImageStyle.Dialog" parent="ReviewImageStyle">
