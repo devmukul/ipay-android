@@ -54,7 +54,7 @@
                 </LinearLayout>
 
                 <ImageButton
-                    android:id="@+id/button_edit_business_information"
+                    android:id="@+id/button_edit_office_information"
                     style="@style/EditIconButton"
                     android:padding="@dimen/activity_vertical_margin_card"
                     android:src="@drawable/ic_editgrey" />
@@ -75,6 +75,10 @@
 
                 <TextView
                     android:id="@+id/textview_signup"
+                    style="@style/TextViewInfoLeftAlign" />
+
+                <TextView
+                    android:id="@+id/textview_business_mobile_number"
                     style="@style/TextViewInfoLeftAlign" />
 
             </LinearLayout>
