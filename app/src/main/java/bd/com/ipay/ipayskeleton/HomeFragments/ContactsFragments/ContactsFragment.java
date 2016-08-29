@@ -729,7 +729,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     inviteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setSelectedName(name);
+
+                            if (originalName != null && !originalName.isEmpty())
+                                setSelectedName(originalName);
+                            else setSelectedName(name);
                             setSelectedNumber(mobileNumber);
 
                             new android.app.AlertDialog.Builder(getActivity())
@@ -757,16 +760,19 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     @Override
                     public void onClick(View v) {
                         if (isDialogFragment()) {
-
                             Intent intent = new Intent();
-                            intent.putExtra(Constants.NAME, name);
+                            if (originalName != null && !originalName.isEmpty())
+                                intent.putExtra(Constants.NAME, originalName);
+                            else intent.putExtra(Constants.NAME, name);
                             intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
                             intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrlQualityHigh);
                             getActivity().setResult(Activity.RESULT_OK, intent);
                             getActivity().finish();
 
                         } else {
-                            setSelectedName(name);
+                            if (originalName != null && !originalName.isEmpty())
+                                setSelectedName(originalName);
+                            else setSelectedName(name);
                             setSelectedNumber(mobileNumber);
 
                             Utilities.hideKeyboard(getActivity());
@@ -783,9 +789,15 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                                         showNonMemberSheet(mobileNumber);
                                     }
 
-                                    setContactInformationInSheet(name,
-                                            profilePictureUrlQualityHigh, randomProfileBackgroundColor,
-                                            isMember, isVerified, accountType);
+                                    if (originalName != null && !originalName.isEmpty()) {
+                                        setContactInformationInSheet(originalName,
+                                                profilePictureUrlQualityHigh, randomProfileBackgroundColor,
+                                                isMember, isVerified, accountType);
+                                    } else {
+                                        setContactInformationInSheet(name,
+                                                profilePictureUrlQualityHigh, randomProfileBackgroundColor,
+                                                isMember, isVerified, accountType);
+                                    }
                                 }
                             }, 100);
                         }
