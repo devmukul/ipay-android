@@ -197,7 +197,7 @@
 
                 <TextView
                     style="@style/TextViewInfoLabel"
-                    android:text="@string/fathers_mobile" />
+                    android:text="@string/mobile" />
 
                 <TextView
                     android:id="@+id/textview_fathers_mobile"
@@ -225,7 +225,7 @@
 
                 <TextView
                     style="@style/TextViewInfoLabel"
-                    android:text="@string/mothers_mobile" />
+                    android:text="@string/mobile" />
 
                 <TextView
                     android:id="@+id/textview_mothers_mobile"
