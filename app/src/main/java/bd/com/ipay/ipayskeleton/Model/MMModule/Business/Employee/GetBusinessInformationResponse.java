@@ -9,7 +9,6 @@ public class GetBusinessInformationResponse {
 
     private String businessName;
     private int businessType;
-    private String mobileNumber;
     private String verificationStatus;
     private final List<UserProfilePictureClass> profilePictures = new ArrayList<>();
 
@@ -23,10 +22,6 @@ public class GetBusinessInformationResponse {
 
     public int getBusinessType() {
         return businessType;
-    }
-
-    public String getMobileNumber() {
-        return mobileNumber;
     }
 
     public List<UserProfilePictureClass> getProfilePictures() {
