@@ -97,8 +97,8 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
         mFathersName = mFathersNameEditText.getText().toString().trim();
         mMothersName = mMothersNameEditText.getText().toString().trim();
 
-        mFathersMobile = mFathersMobileEditText.getText().toString().trim();
-        mMothersMobile = mMothersMobileEditText.getText().toString().trim();
+        mFathersMobile = ContactEngine.formatMobileNumberBD(mFathersMobileEditText.getText().toString().trim());
+        mMothersMobile = ContactEngine.formatMobileNumberBD(mMothersMobileEditText.getText().toString().trim());
 
         if (mFathersName.isEmpty()) {
             mFathersNameEditText.setError(getString(R.string.error_invalid_first_name));
