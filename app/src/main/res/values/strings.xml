@@ -29,7 +29,10 @@
     <string name="confirm_new_pass">Confirm new password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="email">Email</string>
+    <string name="not_set_yet">Not set yet</string>
     <string name="email_address">Email Address</string>
+    <string name="primary_email_address">Primary Email Address</string>
+    <string name="other_email_address">Other Email Addresses</string>
     <string name="full_name">Full Name</string>
     <string name="address">Address</string>
     <string name="address_line_1">Address Line 1</string>

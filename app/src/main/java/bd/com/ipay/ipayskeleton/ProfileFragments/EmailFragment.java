@@ -81,6 +81,9 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private FloatingActionButton mFabAddNewEmail;
     private ProgressDialog mProgressDialog;
 
+    private TextView mPrimaryEmailView;
+    private ImageView mPrimaryVerificationStatus;
+
     private TextView mEmptyListTextView;
 
     @Nullable
@@ -98,6 +101,9 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         getActivity().setTitle(R.string.email);
 
+
+        mPrimaryEmailView = (TextView) v.findViewById(R.id.textview_email);
+        mPrimaryVerificationStatus = (ImageView) v.findViewById(R.id.email_verification_status);
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
@@ -399,6 +405,14 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             }
         });
 
+        if (mEmails.size() > 0 && mEmails.get(0).isPrimary()) {
+            mPrimaryEmailView.setText(mEmails.get(0).getEmailAddress());
+            mEmails.remove(0);
+        } else {
+            mPrimaryEmailView.setText(R.string.not_set_yet);
+            mPrimaryVerificationStatus.setVisibility(View.INVISIBLE);
+        }
+
         setContentShown(true);
 
         mEmailListAdapter.notifyDataSetChanged();
@@ -413,9 +427,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         public class EmailViewHolder extends RecyclerView.ViewHolder {
             private final TextView mEmailView;
-            private final TextView mIsPrimaryView;
             private final ImageView mVerificationStatus;
-            private final View divider1;
 
             private CustomSelectorDialog mCustomSelectorDialog;
             private List<String> mEmailActionList;
@@ -428,9 +440,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 else mEmptyListTextView.setVisibility(View.GONE);
 
                 mEmailView = (TextView) itemView.findViewById(R.id.textview_email);
-                mIsPrimaryView = (TextView) itemView.findViewById(R.id.textview_is_primary);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.email_verification_status);
-                divider1 = itemView.findViewById(R.id.divider1);
             }
 
             public void bindView(int pos) {
@@ -458,9 +468,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
                         mEmailActionList = Arrays.asList(getResources().getStringArray(R.array.not_verified_email_action));
                         break;
-                }
-                if (email.isPrimary()) {
-                    mIsPrimaryView.setVisibility(View.VISIBLE);
                 }
 
                 mEmailView.setText(email.getEmailAddress());
