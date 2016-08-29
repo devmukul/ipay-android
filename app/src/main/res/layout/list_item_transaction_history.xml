@@ -38,17 +38,14 @@
             <TextView
                 android:id="@+id/activity_description"
                 style="@style/TransactionHistoryLeftTextViewStyle"
-                android:layout_toLeftOf="@+id/net_amount"
+                android:layout_toLeftOf="@+id/status_description"
                 android:fontFamily="sans-serif-light"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/net_amount"
-                style="@style/TransactionHistoryRightTextViewStyle"
-                android:fontFamily="sans-serif-light"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+                android:id="@+id/status_description"
+                style="@style/TransactionHistoryRightTextViewStyle" />
 
         </RelativeLayout>
 
@@ -59,9 +56,15 @@
 
             <TextView
                 android:id="@+id/receiver"
-                style="@style/TransactionHistoryLeftTextViewStyle" />
+                style="@style/TransactionHistoryLeftTextViewStyle"
+                android:layout_toLeftOf="@+id/net_amount" />
 
-
+            <TextView
+                android:id="@+id/net_amount"
+                style="@style/TransactionHistoryRightTextViewStyle"
+                android:fontFamily="sans-serif-light"
+                android:textSize="13sp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,13 +90,8 @@
             <TextView
                 android:id="@+id/time"
                 style="@style/TransactionHistoryLeftTextViewStyle"
-                android:layout_toLeftOf="@+id/status_description"
                 android:textColor="@color/colorBlackTransparent"
                 android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/status_description"
-                style="@style/TransactionHistoryRightTextViewStyle" />
 
         </RelativeLayout>
     </LinearLayout>

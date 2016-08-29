@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class AboutContactsFragment extends Fragment {
 
-    private ImageView mapView;
+    private View mapView;
     private TextView mAddressView;
     private TextView mPhoneView;
     private TextView mEmailView;
@@ -29,7 +29,7 @@ public class AboutContactsFragment extends Fragment {
 
         getActivity().setTitle(R.string.contact_us);
 
-        mapView = (ImageView) v.findViewById(R.id.mapview);
+        mapView = v.findViewById(R.id.mapview);
         mAddressView = (TextView) v.findViewById(R.id.address);
         mPhoneView = (TextView) v.findViewById(R.id.phone_number);
         mEmailView = (TextView) v.findViewById(R.id.email);
