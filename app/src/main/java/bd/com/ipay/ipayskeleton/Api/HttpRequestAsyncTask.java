@@ -57,7 +57,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         if (Utilities.isConnectionAvailable(mContext))
             mHttpResponse = makeRequest();
         else {
-            Log.d("Error", API_COMMAND);
+            if (Constants.DEBUG) Log.d(Constants.ERROR, API_COMMAND);
             error = true;
             return null;
         }
@@ -79,13 +79,16 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                         CountDownTimer tokenTimer = TokenManager.getTokenTimer();
 
                         if (tokenTimer != null) {
-                            Log.w("Token Timer", "Starting... " + TokenManager.getiPayTokenTimeInMs());
+                            if (Constants.DEBUG)
+                                Log.w("Token Timer", "Starting... " + TokenManager.getiPayTokenTimeInMs());
+
                             tokenTimer.cancel();
                             tokenTimer.start();
                         }
                     } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
                         TokenManager.setRefreshToken(header.getValue());
-                        Log.d(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
+                        if (Constants.DEBUG)
+                            Log.d(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
                     }
                 }
             }
@@ -140,9 +143,9 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 String message = mContext.getString(R.string.please_log_in_again);
 
-               try {
+                try {
                     Gson gson = new Gson();
-                   message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
+                    message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
