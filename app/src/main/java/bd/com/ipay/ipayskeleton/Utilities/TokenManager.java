@@ -70,7 +70,8 @@ public class TokenManager {
     }
 
     public static void setiPayTokenTimeInMs(long iPayTokenTimeInMs) {
-        Log.w("Token Timer Interval", iPayTokenTimeInMs + "");
+        if (Constants.DEBUG)
+            Log.w("Token Timer Interval", iPayTokenTimeInMs + "");
         TokenManager.iPayTokenTimeInMs = iPayTokenTimeInMs;
     }
 }
