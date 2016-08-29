@@ -52,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHis
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistoryFragment extends ProgressFragment implements HttpResponseListener {
@@ -195,7 +196,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null) {
-            if(isVisibleToUser) {
+            if (isVisibleToUser) {
                 clearDateFilters();
                 clearServiceFilters();
                 refreshTransactionHistory();
@@ -606,7 +607,11 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_top_up);
+                    if (ContactEngine.isValidNumber(receiver)) {
+                        int icon = getOperatorIcon(receiver);
+                        otherImageView.setImageResource(icon);
+                    }
+                    //otherImageView.setImageResource(R.drawable.ic_top_up);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_EDUCATION) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
@@ -718,6 +723,28 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
             return super.getItemViewType(position);
         }
+
+        private int getOperatorIcon(String phoneNumber) {
+            phoneNumber = ContactEngine.trimPrefix(phoneNumber);
+
+            final String[] OPERATOR_PREFIXES = {"17", "13", "18", "16", "19", "15"};
+            int[] operator_array = new int[]{
+                    R.drawable.ic_gp2,
+                    R.drawable.ic_gp2,
+                    R.drawable.ic_robi2,
+                    R.drawable.ic_airtel2,
+                    R.drawable.ic_banglalink2,
+                    R.drawable.ic_teletalk2,
+            };
+
+            for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
+                if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
+                    return operator_array[i];
+                }
+            }
+            return 0;
+        }
+
     }
 
     private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
