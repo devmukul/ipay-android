@@ -66,6 +66,9 @@ public class TokenManager {
     }
 
     public static long getiPayTokenTimeInMs() {
+        // We need to call for refresh token 15 seconds before the server timer valid limit.
+        // Server has a token window for 20 seconds right now.
+        // It'll serve new token in this 20 seconds window before and after a token time expires
         return iPayTokenTimeInMs - 15000;
     }
 
