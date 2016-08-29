@@ -48,8 +48,7 @@ public class TransactionHistoryClass implements Parcelable {
         try {
             switch (serviceID) {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
-                    if (receiverInfo != null && !receiverInfo.equals("")) return receiverInfo;
-                    else return getPhoneNumber(description);
+                    return receiverInfo;
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
                     return getBankName();
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
@@ -180,7 +179,7 @@ public class TransactionHistoryClass implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                     return "Top up failed and returned " + Utilities.formatTaka(getNetAmount());
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
-                    return "Withdraw money failed to " + getPhoneNumber(description) + ", " + "returned " + Utilities.formatTaka(getNetAmount());
+                    return "Withdraw money failed and returned " + Utilities.formatTaka(getNetAmount());
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                     return "Opening balance from iPay";
                 case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
@@ -335,16 +334,6 @@ public class TransactionHistoryClass implements Parcelable {
             return "Bank";
         else
             return additionalInfo.getBranchName();
-    }
-
-    private String getPhoneNumber(String str) {
-        int numberStartIndex = str.indexOf("+");
-        if (numberStartIndex >= 0) {
-            str = str.substring(numberStartIndex);
-            return str.substring(0, 14);
-        } else {
-            return "";
-        }
     }
 
     public double getAmount(String userMobileNumber) {

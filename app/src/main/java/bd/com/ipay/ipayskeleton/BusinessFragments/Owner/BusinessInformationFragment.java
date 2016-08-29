@@ -67,6 +67,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private GetDistrictResponse mGetDistrictResponse;
 
     private TextView mBusinessNameView;
+    private TextView mBusinessMobileNumberView;
     private TextView mBusinessTypeView;
 
     private TextView mNameView;
@@ -82,7 +83,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private ImageButton mPresentAddressEditButton;
     private ImageButton mContactEditButton;
 
-    private ImageButton mBusinessInfoEditButton;
+    private ImageButton mOfficeInfoEditButton;
 
     private AddressClass mPresentAddress;
 
@@ -110,9 +111,10 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         getActivity().setTitle(R.string.basic_info);
 
         mBusinessNameView = (TextView) v.findViewById(R.id.textview_business_name);
+        mBusinessMobileNumberView = (TextView) v.findViewById(R.id.textview_business_mobile_number);
         mBusinessTypeView = (TextView) v.findViewById(R.id.textview_business_type);
 
-        mBusinessInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_business_information);
+        mOfficeInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_information);
 
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
@@ -130,14 +132,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
-            mBusinessInfoEditButton.setVisibility(View.GONE);
+            mOfficeInfoEditButton.setVisibility(View.GONE);
             mContactEditButton.setVisibility(View.GONE);
         } else {
-            mBusinessInfoEditButton.setVisibility(View.VISIBLE);
+            mOfficeInfoEditButton.setVisibility(View.VISIBLE);
             mContactEditButton.setVisibility(View.VISIBLE);
         }
 
-        mBusinessInfoEditButton.setOnClickListener(new View.OnClickListener() {
+        mOfficeInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchEditBusinessInformationFragment();
@@ -285,6 +287,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         }
 
         bundle.putString(Constants.BUSINESS_NAME, mGetBusinessInformationResponse.getBusinessName());
+        bundle.putString(Constants.BUSINESS_MOBILE_NUMBER, mGetBusinessInformationResponse.getMobileNumber());
         bundle.putInt(Constants.BUSINESS_TYPE, mGetBusinessInformationResponse.getBusinessType());
         bundle.putParcelableArrayList(Constants.BUSINESS_TYPE_LIST, new ArrayList<>(mBusinessTypes));
 
@@ -303,6 +306,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private void processBusinessInformationResponse() {
 
         mBusinessNameView.setText(mGetBusinessInformationResponse.getBusinessName());
+        mBusinessMobileNumberView.setText(getString(R.string.phone_number) + ": " + mGetBusinessInformationResponse.getMobileNumber());
         mBusinessTypeView.setText(R.string.loading);
 
         setContentShown(true);
