@@ -12,6 +12,7 @@ public class Business implements Notification {
     private String status;
     private int roleId;
     private String designation;
+    private Long timeAdded;
 
     public String getDesignation() {
         return designation;
@@ -35,6 +36,10 @@ public class Business implements Notification {
 
     public String getName() {
         return name;
+    }
+
+    public Long getTimeAdded() {
+        return timeAdded;
     }
 
     public String getProfilePictureUrl() {
@@ -62,7 +67,7 @@ public class Business implements Notification {
 
     @Override
     public long getTime() {
-        return 0;
+        return getTimeAdded();
     }
 
     @Override
