@@ -37,6 +37,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -48,6 +49,7 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.AskForIntroductionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -474,6 +476,8 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         });
 
         Button mAskForRecommendationButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_ask_for_introduction);
+        Button mMakePaymentButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_make_payment);
+
         mAskForRecommendationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -484,6 +488,21 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 }
             }
         });
+
+        mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
+                intent.putExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, true);
+                startActivity(intent);
+
+                if (mBottomSheetLayout.isSheetShowing()) {
+                    mBottomSheetLayout.dismissSheet();
+                }
+            }
+        });
+
     }
 
     private void sendRecommendationRequest(String mobileNumber) {
@@ -581,20 +600,28 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         }
     }
 
-    private void showMemberSheet(boolean isVerified) {
+    private void showMemberSheet(boolean isVerified, int accountType) {
         if (mBottomSheetLayout == null)
             return;
 
         selectedBottomSheetView = mSheetViewIpayMember;
 
         Button askForConfirmationButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_ask_for_introduction);
-        if (!isVerified) {
-            if (askForConfirmationButton != null)
-                askForConfirmationButton.setVisibility(View.GONE);
+        Button mMakePaymentButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_make_payment);
 
+        if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
+            askForConfirmationButton.setVisibility(View.GONE);
+            mMakePaymentButton.setVisibility(View.VISIBLE);
         } else {
-            if (askForConfirmationButton != null)
-                askForConfirmationButton.setVisibility(View.VISIBLE);
+            mMakePaymentButton.setVisibility(View.GONE);
+            if (!isVerified) {
+                if (askForConfirmationButton != null)
+                    askForConfirmationButton.setVisibility(View.GONE);
+
+            } else {
+                if (askForConfirmationButton != null)
+                    askForConfirmationButton.setVisibility(View.VISIBLE);
+            }
         }
 
         mBottomSheetLayout.showWithSheetView(mSheetViewIpayMember);
@@ -624,7 +651,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private void setSelectedNumber(String contactNumber) {
         this.mSelectedNumber = contactNumber;
     }
-
 
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -784,7 +810,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                                 public void run() {
                                     int randomProfileBackgroundColor = PROFILE_PICTURE_BACKGROUNDS[getAdapterPosition() % PROFILE_PICTURE_BACKGROUNDS.length];
                                     if (isMember) {
-                                        showMemberSheet(isVerified);
+                                        showMemberSheet(isVerified, accountType);
                                     } else {
                                         showNonMemberSheet(mobileNumber);
                                     }

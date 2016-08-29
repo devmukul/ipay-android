@@ -21,6 +21,12 @@ public class PaymentActivity extends BaseActivity {
     private boolean switchedToPendingList = true;
     public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
+    /**
+     * If this value is set in the intent extras,
+     * you would be taken directly to the new request page
+     */
+    public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +41,12 @@ public class PaymentActivity extends BaseActivity {
                 switchToMakePaymentFragment();
             }
         });
+
+
+        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
+            switchToMakePaymentFragment();
+        else
+            switchToInvoicePaymentFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -55,7 +67,9 @@ public class PaymentActivity extends BaseActivity {
     }
 
     public void onBackPressed() {
-        if (switchedToPendingList) {
+        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
+            finish();
+        } else if (switchedToPendingList) {
             super.onBackPressed();
         } else {
             switchToInvoicePaymentFragment();

@@ -35,6 +35,14 @@
             android:text="@string/request_money" />
 
         <Button
+            android:id="@+id/button_make_payment"
+            style="@style/SheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_action_ask_for_introduction"
+            android:text="@string/make_payment" />
+
+        <Button
             android:id="@+id/button_ask_for_introduction"
             style="@style/SheetButton"
             android:layout_width="match_parent"
