@@ -47,7 +47,7 @@
                     style="@style/CustomEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/fathers_mobile"
+                    android:hint="@string/mobile"
                     android:inputType="phone"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -82,7 +82,7 @@
                     style="@style/CustomEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/mothers_mobile"
+                    android:hint="@string/mobile"
                     android:inputType="phone"
                     android:maxLines="1"
                     android:singleLine="true">
