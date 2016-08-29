@@ -550,11 +550,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             }
 
             public void bindView(int pos) {
-
-                if (pos == userTransactionHistoryClasses.size() - 1)
-                    divider.setVisibility(View.GONE);
-                else divider.setVisibility(View.VISIBLE);
-
                 final TransactionHistoryClass transactionHistory = userTransactionHistoryClasses.get(pos);
 
                 final String description = transactionHistory.getShortDescription(mMobileNumber);

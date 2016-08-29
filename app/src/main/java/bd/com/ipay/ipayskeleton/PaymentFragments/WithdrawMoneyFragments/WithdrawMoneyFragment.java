@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -47,14 +50,19 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
     private static final int WITHDRAW_MONEY_REVIEW_REQUEST = 101;
 
     private Button buttonWithdrawMoney;
-    private EditText mBankAccountNumberEditText;
+    private TextView mBankNameTextView;
+    private TextView mBankBranchTextView;
+    private TextView mBankAccountTextView;
+    private TextView mBankAccountNumberHintTextView;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private TextView mLinkABankNoteTextView;
+    private ImageView mBankIcon;
     private List<UserBankClass> mListUserBankClasses;
     private ArrayList<String> mUserBankNameList;
     private ArrayList<String> mUserBankAccountNumberList;
     private ArrayList<String> mUserBankList;
+    private int[] mBankIconArray;
     private int selectedBankPosition = 0;
 
     private SharedPreferences pref;
@@ -66,11 +74,15 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_withdraw_money, container, false);
-        mBankAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
+        mBankNameTextView = (TextView) v.findViewById(R.id.bank_name);
+        mBankBranchTextView = (TextView) v.findViewById(R.id.bank_branch);
+        mBankAccountTextView = (TextView) v.findViewById(R.id.bank_account_number);
+        mBankAccountNumberHintTextView = (TextView) v.findViewById(R.id.bank_account_number_hint);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         buttonWithdrawMoney = (Button) v.findViewById(R.id.button_cash_out);
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
+        mBankIcon = (ImageView) v.findViewById(R.id.portrait);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
@@ -101,7 +113,26 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        mBankAccountNumberEditText.setOnClickListener(new View.OnClickListener() {
+        mBankNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBankListAlertDialogue();
+            }
+        });
+        mBankIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBankListAlertDialogue();
+            }
+        });
+
+        mBankBranchTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBankListAlertDialogue();
+            }
+        });
+        mBankAccountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showBankListAlertDialogue();
@@ -200,9 +231,9 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
 
         }
 
-        if (!(mBankAccountNumberEditText.getText().toString().trim().length() > 0)) {
-            focusView = mBankAccountNumberEditText;
-            mBankAccountNumberEditText.setError(getString(R.string.select_a_bank));
+        if (!(mBankNameTextView.getText().toString().trim().length() > 0)) {
+            focusView = mBankNameTextView;
+            mBankNameTextView.setError(getString(R.string.select_a_bank));
             cancel = true;
         }
 
@@ -246,17 +277,27 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
 
 
     private void showBankListAlertDialogue() {
-        CustomSelectorDialog bankSelectorDialog = new CustomSelectorDialog(getActivity(), getString(R.string.select_a_bank), mUserBankList);
-        bankSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+        CustomSelectorDialogWithIcon bankSelectorDialogWithIcon = new CustomSelectorDialogWithIcon(getActivity(), getString(R.string.select_a_bank), mUserBankList, mBankIconArray);
+        bankSelectorDialogWithIcon.setOnResourceSelectedListener(new CustomSelectorDialogWithIcon.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
-                mBankAccountNumberEditText.setError(null);
-                mBankAccountNumberEditText.setText(name);
+                selectedBankPosition = id;
+                mBankNameTextView.setError(null);
+                mBankBranchTextView.setVisibility(View.VISIBLE);
+                mBankAccountTextView.setVisibility(View.VISIBLE);
+                mBankAccountNumberHintTextView.setVisibility(View.VISIBLE);
+                mBankIcon.setVisibility(View.VISIBLE);
+                Drawable icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()));
+                mBankIcon.setImageDrawable(icon);
+
+                mBankNameTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBankName());
+                mBankBranchTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBranchName());
+                mBankAccountTextView.setText(mListUserBankClasses.get(selectedBankPosition).getAccountNumber());
 
             }
         });
 
-        bankSelectorDialog.show();
+        bankSelectorDialogWithIcon.show();
     }
 
     @Override
@@ -293,15 +334,28 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                         bankListValidator.showVerifiedBankDialog(getActivity());
                     } else {
                         mLinkABankNoteTextView.setVisibility(View.GONE);
+                        mBankIconArray = new int[mListUserBankClasses.size()];
+
                         for (int i = 0; i < mListUserBankClasses.size(); i++) {
                             mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
                             mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
-                            mUserBankList.add(mListUserBankClasses.get(i).getBankName() + "\n" + "A/c No: " + mListUserBankClasses.get(i).getAccountNumber());
+                            mUserBankList.add(mListUserBankClasses.get(i).getBankName() + "\n" + mListUserBankClasses.get(i).getBranchName() + "\n" + mListUserBankClasses.get(i).getAccountNumber());
+                            int icon = mListUserBankClasses.get(i).getBankIcon(getActivity());
+                            mBankIconArray[i] = icon;
                         }
                     }
 
                     if (mUserBankNameList.size() == 1) {
-                        mBankAccountNumberEditText.setText(mUserBankNameList.get(0) + " (A/c No: " + mUserBankAccountNumberList.get(0) + ")");
+                        mBankBranchTextView.setVisibility(View.VISIBLE);
+                        mBankAccountTextView.setVisibility(View.VISIBLE);
+                        mBankAccountNumberHintTextView.setVisibility(View.VISIBLE);
+                        mBankIcon.setVisibility(View.VISIBLE);
+                        Drawable icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()));
+                        mBankIcon.setImageDrawable(icon);
+
+                        mBankNameTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBankName());
+                        mBankBranchTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBranchName());
+                        mBankAccountTextView.setText(mListUserBankClasses.get(selectedBankPosition).getAccountNumber());
                     }
 
                 } catch (Exception e) {
