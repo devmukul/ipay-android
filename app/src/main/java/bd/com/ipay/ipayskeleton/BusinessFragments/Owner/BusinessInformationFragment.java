@@ -66,14 +66,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private HttpRequestGetAsyncTask mGetDistrictListAsyncTask = null;
     private GetDistrictResponse mGetDistrictResponse;
 
-    private ProgressDialog mProgressDialog;
-
-    private SharedPreferences pref;
-
     private TextView mBusinessNameView;
-    private TextView mBusinessMobileNumberView;
     private TextView mBusinessTypeView;
-    private TextView mBusinessEmailView;
 
     private TextView mNameView;
     private TextView mMobileNumberView;
@@ -88,7 +82,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private ImageButton mPresentAddressEditButton;
     private ImageButton mContactEditButton;
 
-    private ImageButton mOfficeInfoEditButton;
+    private ImageButton mBusinessInfoEditButton;
 
     private AddressClass mPresentAddress;
 
@@ -113,15 +107,12 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_business_information, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.basic_info);
 
         mBusinessNameView = (TextView) v.findViewById(R.id.textview_business_name);
-        mBusinessMobileNumberView = (TextView) v.findViewById(R.id.textview_business_mobile_number);
         mBusinessTypeView = (TextView) v.findViewById(R.id.textview_business_type);
-        mBusinessEmailView = (TextView) v.findViewById(R.id.textview_business_email);
 
-        mOfficeInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_information);
+        mBusinessInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_business_information);
 
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
@@ -130,7 +121,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
         mSignUpTimeView = (TextView) v.findViewById(R.id.textview_signup);
-        mProgressDialog = new ProgressDialog(getActivity());
 
         mPresentAddressView = (TextView) v.findViewById(R.id.textview_present_address);
 
@@ -140,14 +130,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
-            mOfficeInfoEditButton.setVisibility(View.GONE);
+            mBusinessInfoEditButton.setVisibility(View.GONE);
             mContactEditButton.setVisibility(View.GONE);
         } else {
-            mOfficeInfoEditButton.setVisibility(View.VISIBLE);
+            mBusinessInfoEditButton.setVisibility(View.VISIBLE);
             mContactEditButton.setVisibility(View.VISIBLE);
         }
 
-        mOfficeInfoEditButton.setOnClickListener(new View.OnClickListener() {
+        mBusinessInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchEditBusinessInformationFragment();
@@ -295,8 +285,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         }
 
         bundle.putString(Constants.BUSINESS_NAME, mGetBusinessInformationResponse.getBusinessName());
-        bundle.putString(Constants.BUSINESS_MOBILE_NUMBER, mGetBusinessInformationResponse.getMobileNumber());
-        bundle.putString(Constants.BUSINESS_EMAIL, mGetBusinessInformationResponse.getEmail());
         bundle.putInt(Constants.BUSINESS_TYPE, mGetBusinessInformationResponse.getBusinessType());
         bundle.putParcelableArrayList(Constants.BUSINESS_TYPE_LIST, new ArrayList<>(mBusinessTypes));
 
@@ -315,16 +303,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private void processBusinessInformationResponse() {
 
         mBusinessNameView.setText(mGetBusinessInformationResponse.getBusinessName());
-        mBusinessMobileNumberView.setText(getString(R.string.phone_number)+": "+mGetBusinessInformationResponse.getMobileNumber());
         mBusinessTypeView.setText(R.string.loading);
-
-        String email = mGetBusinessInformationResponse.getEmail();
-        if (!email.equals(null) && !email.equals("")) {
-            mBusinessEmailView.setVisibility(View.VISIBLE);
-            mBusinessEmailView.setText(email);
-        } else {
-            mBusinessEmailView.setVisibility(View.GONE);
-        }
 
         setContentShown(true);
 

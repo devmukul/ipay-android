@@ -24,13 +24,6 @@
                 android:gravity="left"
                 android:singleLine="true" />
 
-            <TextView
-                android:id="@+id/textview_is_primary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/primary_email"
-                android:textStyle="bold"
-                android:visibility="gone" />
         </LinearLayout>
 
         <ImageView

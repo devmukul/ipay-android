@@ -252,6 +252,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                         calendar.setTime(fromDate);
                         DatePickerDialog dpd = new DatePickerDialog(getActivity(), mFromDateSetListener, calendar.get(Calendar.YEAR)
                                 , calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                        dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
                         dpd.show();
 
                     } catch (ParseException e) {
@@ -278,6 +279,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     DatePickerDialog dpd = new DatePickerDialog(getActivity(), mToDateSetListener, Constants.STARTING_YEAR
                             , Constants.STARTING_MONTH, Constants.STARTING_DATE);
                     dpd.getDatePicker().setMinDate(fromDate.getTime());
+                    dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
                     dpd.show();
 
                 } catch (ParseException e) {

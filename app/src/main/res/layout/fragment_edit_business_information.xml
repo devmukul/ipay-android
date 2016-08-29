@@ -47,38 +47,6 @@
 
             <View style="@style/Divider" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/business_mobile_number"
-                    style="@style/CustomEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/business_mobile_number"
-                    android:inputType="phone"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
-
-            <View style="@style/Divider" />
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/business_email"
-                    style="@style/CustomEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/email"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
-
-            <View style="@style/Divider" />
-
             <Button
                 android:id="@+id/button_save"
                 style="@style/PrimaryMediumButton"
