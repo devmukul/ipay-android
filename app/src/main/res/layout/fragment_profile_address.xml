@@ -121,7 +121,7 @@
                             style="@style/AddressViewHeader"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/office_address" />
+                            android:text="@string/business_address" />
 
                         <TextView
                             android:id="@+id/textview_office_address"
