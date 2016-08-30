@@ -52,7 +52,7 @@ public class TransactionHistoryClass implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
                     return getBankName();
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
-                    return "";
+                    return "iPay";
                 case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
                     if (additionalInfo != null)
                         return additionalInfo.getUserName();

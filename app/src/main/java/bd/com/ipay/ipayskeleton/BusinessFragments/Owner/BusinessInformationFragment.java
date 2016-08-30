@@ -72,6 +72,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
     private TextView mNameView;
     private TextView mMobileNumberView;
+    private TextView mOccupationView;
     private TextView mVerificationStatusView;
 
     private TextView mSignUpTimeView;
@@ -117,6 +118,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mOfficeInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_information);
 
         mNameView = (TextView) v.findViewById(R.id.textview_name);
+        mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
 
@@ -243,8 +245,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
     private void setProfileInformation() {
 
-        mMobileNumberView.setText(mMobileNumber);
-        mNameView.setText(mName);
+        mMobileNumberView.setText(getString(R.string.phone_number) + ": " + mMobileNumber);
+        if (mOccupation == 0) {
+            mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
+        } else mOccupationView.setText(getString(R.string.occupation) + ": " + mOccupation);
+        mNameView.setText(getString(R.string.name) + ": " + mName);
 
         mSignUpTimeView.setText(getString(R.string.inception_date)+": "+mSignUpTime);
 
