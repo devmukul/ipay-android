@@ -1,13 +1,13 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class LauncherActivity extends BaseActivity {
+public class LauncherActivity extends AppCompatActivity {
 
     private boolean firstLaunch = false;
 
@@ -26,24 +26,10 @@ public class LauncherActivity extends BaseActivity {
         } else {
             i = new Intent(LauncherActivity.this, SignupOrLoginActivity.class);
             i.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
-            // Test
-            // TODO: remove for test
-//            pref.edit().putString(Constants.USERID, "+8801782182129").commit();
-//            pref.edit().putString(Constants.NAME, "Reaz Murshed").commit();
-//            pref.edit().putString(Constants.BIRTHDAY, "01-09-1989").commit();
-//            pref.edit().putString(Constants.GENDER, "M").commit();
-//            i = new Intent(LauncherActivity.this, HomeActivity.class);
-
-
             startActivity(i);
             finish();
         }
 
         finish();
-    }
-
-    @Override
-    public Context setContext() {
-        return LauncherActivity.this;
     }
 }
