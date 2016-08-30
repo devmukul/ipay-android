@@ -245,7 +245,6 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             int[] images = {
                     R.drawable.ic_browser3x,
                     R.drawable.ic_android3x,
-                    R.drawable.ic_ios3x
             };
 
             String deviceID = trustedDevice.getDeviceId();
@@ -256,7 +255,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 deviceImageView.setImageResource(images[1]);
 
             } else if (deviceID.toLowerCase().contains(IOS.toLowerCase())) {
-                deviceImageView.setImageResource(images[2]);
+                deviceImageView.setImageResource(images[1]);
 
             } else if (deviceID.toLowerCase().contains(Computer.toLowerCase())) {
                 deviceImageView.setImageResource(images[0]);
@@ -270,6 +269,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             grantTimeView.setText(trustedDevice.getCreatedTimeString());
 
             if (myDeviceID.equals(deviceID)) {
+                deviceNameView.setText(trustedDevice.getDeviceName() + getString(R.string.this_device));
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
             } else {
                 view.setOnClickListener(new View.OnClickListener() {

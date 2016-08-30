@@ -1,8 +1,10 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -119,8 +121,16 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
                     int accountType = mGetUserInfoResponse.getAccountType();
 
                     if (accountType != Constants.BUSINESS_ACCOUNT_TYPE) {
-                        Toast.makeText(this, R.string.not_a_business_user, Toast.LENGTH_SHORT).show();
-                        finish();
+                        new AlertDialog.Builder(PaymentReviewActivity.this)
+                                .setMessage(R.string.not_a_business_user)
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                })
+
+                                .setCancelable(false)
+                                .show();
                     }
 
                     String profilePicture = null;

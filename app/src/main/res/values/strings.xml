@@ -480,6 +480,7 @@
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
     <string name="mobile">Mobile No.</string>
+    <string name="this_device">(this device)</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
     <string name="business_address">Business Address</string>
@@ -518,7 +519,7 @@
     <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
     <string name="failed_get_document_list">Failed to fetch the list of documents</string>
     <string name="not_submitted">Not Submitted</string>
-    <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload identification documents to get verified</string>
+    <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload at least one identification documents to get verified</string>
     <string name="document_id">Document ID</string>
     <string name="no_file_selected">No file selected</string>
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
@@ -572,6 +573,7 @@
     <string name="parent_info">Parents Information</string>
     <string name="business_type">Business Type</string>
     <string name="not_a_business_user">This person is not a business user. You can only make payment to a business user</string>
+    <string name="verified_user_can_send_invitation">Only verified users can send invitations</string>
     <string name="failed_loading_business_type">Loading failed</string>
     <string name="failed_loading_business_information">Failed loading business information</string>
     <string name="invite">Invite</string>
