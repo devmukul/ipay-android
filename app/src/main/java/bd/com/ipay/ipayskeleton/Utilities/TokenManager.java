@@ -63,8 +63,6 @@ public class TokenManager {
     }
 
     public static void setTokenTimer(CountDownTimer tokenTimer) {
-        if (getTokenTimer() != null)
-            getTokenTimer().cancel();
         BaseActivity.tokenTimer = tokenTimer;
     }
 
