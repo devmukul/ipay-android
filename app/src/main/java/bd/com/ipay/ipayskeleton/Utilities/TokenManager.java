@@ -3,6 +3,8 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.os.CountDownTimer;
 import android.util.Log;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+
 /**
  * We get an authentication token from the server when the user logs in. This token needs to be
  * sent to the server with subsequent requests. It also needs to be refreshed periodically. All
@@ -16,7 +18,7 @@ public class TokenManager {
     private static String token = "";
     private static String refreshToken = "";
 
-    private static CountDownTimer tokenTimer;
+    //    private static CountDownTimer tokenTimer;
     private static long iPayTokenTimeInMs = Constants.DEFAULT_TOKEN_TIME;
     private static long tokenWindowOverlapTime = Constants.DEFAULT_TOKEN_OVERLAP_TIME;
 
@@ -57,13 +59,13 @@ public class TokenManager {
     }
 
     public static CountDownTimer getTokenTimer() {
-        return tokenTimer;
+        return BaseActivity.tokenTimer;
     }
 
     public static void setTokenTimer(CountDownTimer tokenTimer) {
         if (getTokenTimer() != null)
             getTokenTimer().cancel();
-        TokenManager.tokenTimer = tokenTimer;
+        BaseActivity.tokenTimer = tokenTimer;
     }
 
     public static long getiPayTokenTimeInMs() {
@@ -71,6 +73,10 @@ public class TokenManager {
         // We need to set the overlapping time for a refresh token.
         // We take one fifth of the original token time as overlapping time for now.
         tokenWindowOverlapTime = iPayTokenTimeInMs / 5;
+
+        // If the time is less than the default overlap time, take the default one.
+        if (tokenWindowOverlapTime < Constants.DEFAULT_TOKEN_OVERLAP_TIME)
+            tokenWindowOverlapTime = Constants.DEFAULT_TOKEN_OVERLAP_TIME;
 
         // We need to call for refresh token few seconds before the server timer valid limit.
         // Server has a token window for few seconds/minutes. By default this is 15 seconds.
