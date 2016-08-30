@@ -39,7 +39,7 @@
             style="@style/SheetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_ask_for_introduction"
+            android:drawableLeft="@drawable/ic_action_make_payment"
             android:text="@string/make_payment" />
 
         <Button
