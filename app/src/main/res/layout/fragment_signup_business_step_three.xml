@@ -51,26 +51,6 @@
 
                 <View style="@style/DividerOnly" />
 
-                <android.support.design.widget.TextInputLayout
-                    style="@style/CustomTextInputLayoutWithMargin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/CustomTextInputLayout">
-
-                    <EditText
-                        android:id="@+id/personal_mobile_number"
-                        style="@style/CustomEditTextLogInSignUp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/personal_mobile_number"
-                        android:inputType="phone"
-                        android:maxLength="14"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
-
-                <View style="@style/DividerOnly" />
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -248,7 +228,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:text="@string/action_next_and_verify" />
+                android:text="@string/continue_sign_up" />
 
         </LinearLayout>
     </ScrollView>
