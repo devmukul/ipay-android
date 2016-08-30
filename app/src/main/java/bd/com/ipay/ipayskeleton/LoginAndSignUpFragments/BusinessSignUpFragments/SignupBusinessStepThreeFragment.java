@@ -47,7 +47,6 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
 
     private Button mSignupBusinessButton;
     private EditText mBirthdayEditText;
-    private EditText mPersonalMobileNumberView;
     private EditText mGenderEditText;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
@@ -80,7 +79,6 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mBusinessHolderFullNameView = (EditText) v.findViewById(R.id.full_name);
 
         mSignupBusinessButton = (Button) v.findViewById(R.id.business_sign_in_button);
-        mPersonalMobileNumberView = (EditText) v.findViewById(R.id.personal_mobile_number);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mGenderEditText = (EditText) v.findViewById(R.id.genderEditText);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
@@ -163,8 +161,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         String name = mBusinessHolderFullNameView.getText().toString().trim();
 
         // Store values at the time of the login attempt.
-        SignupOrLoginActivity.mMobileNumberPersonal = ContactEngine.formatMobileNumberBD(
-                mPersonalMobileNumberView.getText().toString().trim());
+        SignupOrLoginActivity.mMobileNumberPersonal = SignupOrLoginActivity.mMobileNumberBusiness;
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
         SignupOrLoginActivity.mBirthdayBusinessHolder = mDOB;
         SignupOrLoginActivity.mNameBusiness = name;
@@ -180,11 +177,6 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         if (mBusinessHolderFullNameView.getText().toString().trim().length() == 0) {
             mBusinessHolderFullNameView.setError(getString(R.string.error_invalid_name));
             focusView = mBusinessHolderFullNameView;
-            cancel = true;
-
-        } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumberPersonal)) {
-            mPersonalMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
-            focusView = mPersonalMobileNumberView;
             cancel = true;
 
         } else if (SignupOrLoginActivity.mBirthdayBusinessHolder == null || SignupOrLoginActivity.mBirthdayBusinessHolder.length() == 0) {

@@ -10,6 +10,7 @@ public class Constants {
     public static final String USER_BALANCE = "USER_BALANCE";
     public static final String USER_NAME = "USER_NAME";
     public static final String UUID = "UUID";
+    public static final String ERROR = "ERROR";
     public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String USER_AGENT = "User-Agent";
     public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
@@ -110,8 +111,6 @@ public class Constants {
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
     public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";
 
-    public static final String EDIT_ADDRESS_SOURCE = "ADDRESS_SOURCE";
-
     public static final String REQUEST_TYPE = "request_type";
     public static final String AMOUNT = "amount";
     public static final String BANK_NAME = "bank_name";
@@ -125,6 +124,7 @@ public class Constants {
     public static final String OFFICE_PHONE_NUMBER = "+8801749763943 ";
     public static final String OFFICE_EMAIL = "info@ipay.com.bd";
     public static final String OFFICE_WEB = "www.ipay.com.bd";
+    public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
 
     public static final double OFFICE_LATITUDE = 23.7810729;
@@ -159,7 +159,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = 3;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
