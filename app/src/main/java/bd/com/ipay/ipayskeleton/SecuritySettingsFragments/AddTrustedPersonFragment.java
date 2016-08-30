@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.AddTrusted
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddTrustedPersonFragment extends Fragment implements HttpResponseListener {
 
@@ -85,6 +86,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int selectedIndex, String mRelation) {
+                mEditTextRelationship.setError(null);
                 mEditTextRelationship.setText(mRelation);
                 mSelectedRelationId = selectedIndex;
                 mRelationship = mRelation;
@@ -94,6 +96,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utilities.hideKeyboard(getActivity());
                 if (verifyUserInputs()) {
                     AddTrustedPersonRequest addTrustedPersonRequest = new AddTrustedPersonRequest(mName,
                             ContactEngine.formatMobileNumberBD(mMobileNumber), mRelationship.toUpperCase());

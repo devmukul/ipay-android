@@ -24,6 +24,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="name">Name</string>
     <string name="enter_your_pin">Enter your PIN</string>
+    <string name="enter_new_pin">Enter your PIN(4 digit)</string>
     <string name="confirm_your_pin">Confirm your PIN</string>
     <string name="enter_new_pass">Enter a new password</string>
     <string name="confirm_new_pass">Confirm new password</string>
@@ -188,6 +189,7 @@
     <string name="sending_otp">Sending OTP in your mobile...</string>
     <string name="change_pass_failed">Failed to change password</string>
     <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
+    <string name="otp_going_to_send_sign_up">We have sent you a code via sms, please enter it below and press done</string>
     <string name="done">Done</string>
     <string name="verify">Verify</string>
     <string name="verify_email">Verify Email</string>
@@ -622,7 +624,7 @@
     <string name="see_profile_completion">See profile completeness</string>
     <string name="privileges">Privileges</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
-    <string name="add_money_info">It make three to five business day to complete the operation </string>
+    <string name="add_money_info">It make 3-5 business days to complete the operation </string>
     <string name="withdraw_money_info">It make three to five business day to complete the operation </string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
     <string name="session">Session</string>
