@@ -56,8 +56,8 @@
 
                 <ImageView
                     android:id="@+id/portrait"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/value48"
+                    android:layout_height="@dimen/value48"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"

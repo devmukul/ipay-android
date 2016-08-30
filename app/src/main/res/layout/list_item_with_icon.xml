@@ -7,11 +7,11 @@
 
     <ImageView
         android:id="@+id/icon_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/value80"
+        android:layout_height="@dimen/value80"
         android:layout_alignParentLeft="true"
         android:layout_centerHorizontal="true"
-        android:paddingLeft="@dimen/activity_vertical_margin_double"
+        android:paddingLeft="@dimen/activity_vertical_margin"
         android:paddingRight="@dimen/activity_horizontal_margin_card"
         android:paddingTop="@dimen/value5"
         android:paddingBottom="@dimen/value5"
