@@ -140,7 +140,8 @@
                     android:id="@+id/checkboxBusinessAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@android:color/white" />
+                    android:buttonTint="@android:color/white"
+                    android:layout_marginTop="-6dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
