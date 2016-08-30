@@ -15,6 +15,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHis
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionDetailsFragment extends Fragment {
@@ -123,7 +124,10 @@ public class TransactionDetailsFragment extends Fragment {
             mMobileNumberView.setText(receiver);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_top);
+            if (ContactEngine.isValidNumber(receiver)) {
+                int mIcon = getOperatorIcon(receiver);
+                otherImageView.setImageResource(mIcon);
+            }
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
             mNameView.setText(R.string.topup_rollback);
@@ -169,4 +173,27 @@ public class TransactionDetailsFragment extends Fragment {
 
         return v;
     }
+
+
+    private int getOperatorIcon(String phoneNumber) {
+        phoneNumber = ContactEngine.trimPrefix(phoneNumber);
+
+        final String[] OPERATOR_PREFIXES = {"17", "13", "18", "16", "19", "15"};
+        int[] operator_array = new int[]{
+                R.drawable.ic_gp,
+                R.drawable.ic_gp,
+                R.drawable.ic_robi,
+                R.drawable.ic_airtel,
+                R.drawable.ic_banglalink,
+                R.drawable.ic_teletalk,
+        };
+
+        for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
+            if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
+                return operator_array[i];
+            }
+        }
+        return 0;
+    }
+
 }

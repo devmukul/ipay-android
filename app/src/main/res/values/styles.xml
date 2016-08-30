@@ -63,8 +63,8 @@
         <item name="android:textSize">16sp</item>
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin_semi_double</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin_semi_double</item>
-        <item name="android:paddingTop">@dimen/value35</item>
-        <item name="android:paddingBottom">@dimen/value35</item>
+        <item name="android:paddingTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingBottom">@dimen/activity_horizontal_margin</item>
     </style>
 
     <style name="HomeDividerStyleColorGrey">

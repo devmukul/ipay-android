@@ -608,10 +608,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     if (ContactEngine.isValidNumber(receiver)) {
-                        int icon = getOperatorIcon(receiver);
-                        otherImageView.setImageResource(icon);
+                        int mIcon = getOperatorIcon(receiver);
+                        otherImageView.setImageResource(mIcon);
                     }
-                    //otherImageView.setImageResource(R.drawable.ic_top_up);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_EDUCATION) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
