@@ -419,6 +419,9 @@ public class Constants {
     public static final int MOBILE_TYPE_PREPAID = 1;
     public static final int MOBILE_TYPE_POSTPAID = 2;
 
+    public static final long DEFAULT_TOKEN_TIME = 60000;   // By default token time is one minute
+    public static final long DEFAULT_TOKEN_OVERLAP_TIME = 15000;   // By default token time is one minute
+
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
     public static final String COMMAND_CHECK_PROMO_CODE = "COMMAND_CHECK_PROMO_CODE";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";

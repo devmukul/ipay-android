@@ -17,7 +17,8 @@ public class TokenManager {
     private static String refreshToken = "";
 
     private static CountDownTimer tokenTimer;
-    private static long iPayTokenTimeInMs = 60000;  // By default this is one minute
+    private static long iPayTokenTimeInMs = Constants.DEFAULT_TOKEN_TIME;
+    private static long tokenWindowOverlapTime = Constants.DEFAULT_TOKEN_OVERLAP_TIME;
 
     public static String getOperatingOnAccountId() {
         return operatingOnAccountId;
@@ -66,10 +67,15 @@ public class TokenManager {
     }
 
     public static long getiPayTokenTimeInMs() {
-        // We need to call for refresh token 15 seconds before the server timer valid limit.
-        // Server has a token window for 20 seconds right now.
-        // It'll serve new token in this 20 seconds window before and after a token time expires
-        return iPayTokenTimeInMs - 15000;
+
+        // We need to set the overlapping time for a refresh token.
+        // We take one fifth of the original token time as overlapping time for now.
+        tokenWindowOverlapTime = iPayTokenTimeInMs / 5;
+
+        // We need to call for refresh token few seconds before the server timer valid limit.
+        // Server has a token window for few seconds/minutes. By default this is 15 seconds.
+        // It'll serve new token in this overlapping time window before and after the token time expires.
+        return iPayTokenTimeInMs - tokenWindowOverlapTime;
     }
 
     public static void setiPayTokenTimeInMs(long iPayTokenTimeInMs) {
