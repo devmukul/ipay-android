@@ -231,16 +231,19 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
         boolean cancel = false;
         View focusedView = null;
         mAddressLine1Field.setError(null);
+        mDistrictSelection.setError(null);
+        mThanaSelection.setError(null);
+        mPostalCodeField.setError(null);
 
         if (mAddressLine1Field.getText().toString().trim().length() == 0) {
             mAddressLine1Field.setError(context.getString(R.string.invalid_address_line_1));
             focusedView = mAddressLine1Field;
             cancel = true;
-        } else if (mSelectedDistrictId < 0) {
+        } else if (mDistrictSelection.getText().toString().trim().length() == 0) {
             mDistrictSelection.setError(context.getString(R.string.invalid_district));
             focusedView = mDistrictSelection;
             cancel = true;
-        } else if (mSelectedThanaId < 0) {
+        } else if (mThanaSelection.getText().toString().trim().length() == 0) {
             mThanaSelection.setError(context.getString(R.string.invalid_thana));
             focusedView = mThanaSelection;
             cancel = true;

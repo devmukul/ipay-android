@@ -31,10 +31,10 @@
                         android:id="@+id/profile_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/value20"
+                        android:paddingBottom="@dimen/value15"
                         android:paddingLeft="@dimen/activity_horizontal_margin_double"
                         android:paddingRight="@dimen/activity_horizontal_margin"
-                        android:paddingTop="@dimen/value20">
+                        android:paddingTop="@dimen/value15">
 
                         <RelativeLayout
                             android:id="@+id/profile_picture_holder"
@@ -175,11 +175,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_marginBottom="6dp"
                         android:fontFamily="sans-serif-light"
                         android:text="@string/ipay_balance"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small_medium_value18" />
+                        android:textSize="@dimen/text_size_small_medium" />
 
                     <TextView
                         android:id="@+id/balance"

@@ -67,6 +67,10 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_signup_business_page);
+        if (mMaleCheckBox.isChecked())
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        if (mFemaleCheckBox.isChecked())
+            mFemaleCheckBox.setTextColor((Color.WHITE));
     }
 
     @Override

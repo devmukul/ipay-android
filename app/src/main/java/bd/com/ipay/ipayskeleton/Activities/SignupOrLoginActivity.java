@@ -95,7 +95,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public void switchToOTPVerificationPersonalFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OTPVerificationPersonalFragment()).commit();
+                .replace(R.id.fragment_container, new OTPVerificationPersonalFragment()).addToBackStack(null).commit();
     }
 
     public void switchToSignupPersonalStepOneFragment() {
