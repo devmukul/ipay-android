@@ -95,7 +95,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         String currentPasswordValidationMsg = InputValidator.isPasswordValid(mEnterCurrentPasswordEditText.getText().toString().trim());
 
         if (currentPasswordValidationMsg.length() > 0) {
-            mEnterCurrentPasswordEditText.setError(passwordValidationMsg);
+            mEnterCurrentPasswordEditText.setError(currentPasswordValidationMsg);
             focusView = mEnterCurrentPasswordEditText;
             cancel = true;
 
