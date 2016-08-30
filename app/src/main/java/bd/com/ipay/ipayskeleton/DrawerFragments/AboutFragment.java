@@ -42,19 +42,27 @@ public class AboutFragment extends Fragment {
 
         mContactView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ((AboutActivity)getActivity()).switchToAboutContactsFragment();
+                ((AboutActivity) getActivity()).switchToAboutContactsFragment();
             }
         });
 
         mTermView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ((AboutActivity)getActivity()).switchToAboutTermsandServicesFragment();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse(getContext().getString(R.string.term_link)));
+                startActivity(intent);
             }
         });
 
         mPrivacyView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ((AboutActivity)getActivity()).switchToAboutPrivacyFragment();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse(getContext().getString(R.string.privacy_link)));
+                startActivity(intent);
             }
         });
 

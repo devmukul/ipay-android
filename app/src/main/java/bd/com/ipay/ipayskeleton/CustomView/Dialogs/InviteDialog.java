@@ -96,6 +96,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int selectedIndex, String mRelation) {
+                mEditTextRelationship.setError(null);
                 mEditTextRelationship.setText(mRelation);
                 mSelectedRelationId = selectedIndex;
                 mRelationship = mRelation;

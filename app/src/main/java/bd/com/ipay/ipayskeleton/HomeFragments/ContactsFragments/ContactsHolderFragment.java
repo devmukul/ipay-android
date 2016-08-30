@@ -161,6 +161,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int selectedIndex, String mRelation) {
+                mEditTextRelationship.setError(null);
                 mEditTextRelationship.setText(mRelation);
                 mSelectedRelationId = selectedIndex;
                 mRelationship = mRelation;

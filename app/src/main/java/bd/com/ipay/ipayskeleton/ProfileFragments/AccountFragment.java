@@ -91,15 +91,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
         mManageEmployee = (IconifiedTextViewWithButton) v.findViewById(R.id.manage_employees);
 
-
-        if (ProfileInfoCacheManager.isBusinessAccount()) {
-            mManageEmployee.setVisibility(View.VISIBLE);
-            mDividerMAnageEmployee.setVisibility(View.VISIBLE);
-        } else {
-            mManageEmployee.setVisibility(View.GONE);
-            mDividerMAnageEmployee.setVisibility(View.GONE);
-        }
-
         mProgressDialog = new ProgressDialog(getActivity());
 
         mName = ProfileInfoCacheManager.getName();
