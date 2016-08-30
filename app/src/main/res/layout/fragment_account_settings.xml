@@ -56,7 +56,7 @@
             android:paddingBottom="@dimen/value4"
             android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingTop="@dimen/value4"
-            android:text="@string/trusted_devices" />
+            android:text="@string/browsers_and_apps" />
 
         <View style="@style/Divider" />
 
