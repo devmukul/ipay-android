@@ -10,6 +10,7 @@ public class Constants {
     public static final String USER_BALANCE = "USER_BALANCE";
     public static final String USER_NAME = "USER_NAME";
     public static final String UUID = "UUID";
+    public static final String ERROR = "ERROR";
     public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String USER_AGENT = "User-Agent";
     public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
@@ -159,7 +160,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = 3;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
