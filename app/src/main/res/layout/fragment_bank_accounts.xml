@@ -2,7 +2,8 @@
 <bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,7 +30,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:text="@string/empty_bank_account_list" />
+                android:text="@string/empty_bank_account_list"
+                android:layout_gravity="center_vertical"/>
 
 
             <TextView
@@ -37,7 +39,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/bank_verification_help"
-                android:gravity="left" />
+                android:gravity="left"
+                android:visibility="gone"/>
         </LinearLayout>
     </RelativeLayout>
 

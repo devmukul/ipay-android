@@ -360,6 +360,9 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
     public class UserBankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+        private static final int FOOTER_VIEW = 1;
+        private static final int BANK_LIST_ITEM_VIEW = 2;
+
         public UserBankListAdapter() {
         }
 
@@ -499,23 +502,36 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             }
         }
 
+        public class FooterViewHolder extends RecyclerView.ViewHolder {
+
+            public FooterViewHolder(View itemView) {
+                super(itemView);
+            }
+
+        }
+
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_bank_accounts,
-                    parent, false);
 
-            return new ViewHolder(v);
+            if (viewType == FOOTER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_bank_footer, parent, false);
+                return new FooterViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_bank_accounts, parent, false);
+                return new ViewHolder(v);
+            }
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             try {
-                ViewHolder vh = (ViewHolder) holder;
-                vh.bindView(position);
-
+                if (holder instanceof ViewHolder) {
+                    ViewHolder vh = (ViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof FooterViewHolder) {
+                    FooterViewHolder vh = (FooterViewHolder) holder;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -524,13 +540,17 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         @Override
         public int getItemCount() {
             if (mListUserBankClasses != null)
-                return mListUserBankClasses.size();
-            else return 0;
+                return mListUserBankClasses.size() + 1;
+            else return 1;
         }
 
         @Override
         public int getItemViewType(int position) {
-            return super.getItemViewType(position);
+            if (position == getItemCount() - 1) {
+                return FOOTER_VIEW;
+            } else {
+                return BANK_LIST_ITEM_VIEW;
+            }
         }
     }
 }
