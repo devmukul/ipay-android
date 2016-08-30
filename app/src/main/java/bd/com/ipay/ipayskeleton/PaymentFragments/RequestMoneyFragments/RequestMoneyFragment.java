@@ -1,11 +1,18 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -92,6 +99,32 @@ public class RequestMoneyFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.scan_qr_code, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_scan_qr_code) {
+            Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
+            String userID = ProfileInfoCacheManager.getMobileNumber().replaceAll("\\D", "");
+            intent.putExtra(Constants.STRING_TO_ENCODE, userID);
+            intent.putExtra(Constants.ACTIVITY_TITLE, getString(R.string.request_money));
+            startActivity(intent);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
     private boolean verifyUserInputs() {
         mAmountEditText.setError(null);
         mMobileNumberEditText.setError(null);
@@ -101,7 +134,7 @@ public class RequestMoneyFragment extends Fragment {
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        if (! (mTitleEditText.getText().toString().trim().length() > 0)) {
+        if (!(mTitleEditText.getText().toString().trim().length() > 0)) {
             focusView = mTitleEditText;
             mTitleEditText.setError(getString(R.string.please_write_title));
             cancel = true;
@@ -114,7 +147,7 @@ public class RequestMoneyFragment extends Fragment {
             cancel = true;
         }
 
-        if (! (mDescriptionEditText.getText().toString().trim().length() > 0)) {
+        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
