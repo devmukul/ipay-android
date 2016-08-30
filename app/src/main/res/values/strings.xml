@@ -584,8 +584,8 @@
     <string name="preparing">Preparing</string>
     <string name="see_other_activity">See Other Activity</string>
     <string name="manage_people">Manage People</string>
-    <string name="received_request">Received Requests</string>
-    <string name="sent_request">Sent Requests</string>
+    <string name="received_request">Requests Received</string>
+    <string name="sent_request">Requests Sent</string>
     <string name="manage_bank_accounts">Manage Bank Accounts</string>
     <string name="create_new_employee">Creating new employee...</string>
     <string name="edit_employee_details">Saving changes...</string>
