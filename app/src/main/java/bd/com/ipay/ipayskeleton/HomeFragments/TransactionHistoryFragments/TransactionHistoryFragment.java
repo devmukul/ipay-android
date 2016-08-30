@@ -562,7 +562,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final double balance = transactionHistory.getBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
-                final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
+                final int bankIcon = transactionHistory.getAdditionalInfo().getBankIconWithBorder(getContext());
                 final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();
 

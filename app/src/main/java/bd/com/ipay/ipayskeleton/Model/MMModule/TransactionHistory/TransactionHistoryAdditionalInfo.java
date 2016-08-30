@@ -68,6 +68,12 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
                 context.getPackageName());
     }
 
+    public int getBankIconWithBorder(Context context) {
+        Resources resources = context.getResources();
+        return resources.getIdentifier("ic_bank" + getBankCode(), "drawable",
+                context.getPackageName());
+    }
+
     public EducationPaymentDetails getEducationPayment() {
         return educationPayment;
     }
