@@ -270,6 +270,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             grantTimeView.setText(trustedDevice.getCreatedTimeString());
 
             if (myDeviceID.equals(deviceID)) {
+                deviceNameView.setText(trustedDevice.getDeviceName() + getString(R.string.this_device));
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
             } else {
                 view.setOnClickListener(new View.OnClickListener() {
