@@ -19,13 +19,14 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:background="@drawable/background_new"
-                style="@style/ProfileCardLayoutStyle">
+                android:background="@drawable/bg_about"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/value200">
 
                 <ImageView
                     android:id="@+id/iPay_logo"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
                     android:layout_marginTop="5dp"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_logo_ipay_full_size" />

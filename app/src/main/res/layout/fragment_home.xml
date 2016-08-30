@@ -17,7 +17,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="@dimen/value140"
                 android:background="@drawable/bg"
                 android:orientation="vertical">
 
@@ -115,7 +115,7 @@
                     <RelativeLayout
                         android:id="@+id/profile_completion"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/value80"
                         android:layout_centerVertical="true"
                         android:background="@android:color/white"
                         android:clickable="true"
@@ -165,10 +165,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/activity_horizontal_margin_card"
                     android:paddingLeft="@dimen/activity_horizontal_margin_double"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/activity_horizontal_margin_card">
+                    android:paddingRight="@dimen/activity_horizontal_margin">
 
                     <TextView
                         android:id="@+id/balance_label"

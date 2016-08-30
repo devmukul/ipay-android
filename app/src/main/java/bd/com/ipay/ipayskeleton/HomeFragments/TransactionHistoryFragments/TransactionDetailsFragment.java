@@ -127,14 +127,18 @@ public class TransactionDetailsFragment extends Fragment {
             if (ContactEngine.isValidNumber(receiver)) {
                 int mIcon = getOperatorIcon(receiver);
                 otherImageView.setImageResource(mIcon);
-            }
-
+            }else
+                otherImageView.setImageResource(R.drawable.ic_top_up);
         } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
             mNameView.setText(R.string.topup_rollback);
             mMobileNumberView.setText(receiver);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_top);
+            if (ContactEngine.isValidNumber(receiver)) {
+                int mIcon = getOperatorIcon(receiver);
+                otherImageView.setImageResource(mIcon);
+            } else
+                otherImageView.setImageResource(R.drawable.ic_top_up);
         } else {
             if (otherName != null) {
                 mNameView.setText(otherName);
