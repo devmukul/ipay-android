@@ -22,6 +22,7 @@
     <string name="error_invalid_QR_code">This QR code is invalid</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">Password must contain minimum 8 characters. </string>
+    <string name="password_hint">Password must contain minimum 8 characters and be alphanumeric. </string>
     <string name="name">Name</string>
     <string name="enter_your_pin">Enter your PIN</string>
     <string name="enter_new_pin">Enter your PIN(4 digit)</string>
