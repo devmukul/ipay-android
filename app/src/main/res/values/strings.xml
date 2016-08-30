@@ -519,7 +519,7 @@
     <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
     <string name="failed_get_document_list">Failed to fetch the list of documents</string>
     <string name="not_submitted">Not Submitted</string>
-    <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload identification documents to get verified</string>
+    <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload at least one identification documents to get verified</string>
     <string name="document_id">Document ID</string>
     <string name="no_file_selected">No file selected</string>
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
