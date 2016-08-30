@@ -190,14 +190,14 @@ public class ProfileActivity extends BaseActivity {
     }
 
     public void switchToBusinessInfoFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 3)
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStackImmediate();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new BusinessInformationFragment()).addToBackStack(null).commit();
     }
 
     public void switchToEditBusinessInformationFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 3)
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
             getSupportFragmentManager().popBackStackImmediate();
 
         Fragment editBusinessInformationFragment = new EditBusinessInformationFragment();
