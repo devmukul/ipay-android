@@ -40,16 +40,18 @@
 
                 <CheckBox
                     android:id="@+id/checkbox_contacts_all"
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:text="@string/all_contacts"
+                    android:gravity="center"
                     style="@style/ContactsSelectorStyle"
                     android:background="@drawable/background_left_round_checkbox"/>
 
                 <CheckBox
                     android:id="@+id/checkbox_contacts_invited"
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="@string/invited"
                     style="@style/ContactsSelectorStyle"
                     android:background="@drawable/background_right_round_checkbox"/>
