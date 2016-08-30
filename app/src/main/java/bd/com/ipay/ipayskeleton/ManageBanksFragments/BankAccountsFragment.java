@@ -112,6 +112,8 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
+        
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE))
             getBankList();
         else {
@@ -150,8 +152,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         if (mGetBankTask != null) {
             return;
         }
-
-        setContentShown(false);
 
         mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
