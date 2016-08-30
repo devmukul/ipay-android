@@ -9,7 +9,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -46,19 +45,19 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         tokenTimer = new CountDownTimer(TokenManager.getiPayTokenTimeInMs(), 1000) {
 
             public void onTick(long millisUntilFinished) {
-                if (Constants.DEBUG)
-                    Log.w("Token_Timer_Tick", millisUntilFinished + "");
+//                if (Constants.DEBUG)
+//                    Log.w("Token_Timer_Tick", millisUntilFinished + "");
             }
 
             public void onFinish() {
-                if (Constants.DEBUG)
-                    Log.w("Token_Timer", "Token timer finished");
+//                if (Constants.DEBUG)
+//                    Log.w("Token_Timer", "Token timer finished");
                 refreshToken();
             }
         }.start();
 
-        if (Constants.DEBUG)
-            Log.w("Token_Timer", "Token timer initialized " + TokenManager.getiPayTokenTimeInMs() + "");
+//        if (Constants.DEBUG)
+//            Log.w("Token_Timer", "Token timer initialized " + TokenManager.getiPayTokenTimeInMs() + "");
         TokenManager.setTokenTimer(tokenTimer);
     }
 
@@ -83,8 +82,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
     };
 
     private void resetDisconnectTimer() {
-        if (Constants.DEBUG)
-            Log.w("User_Interaction", "User interaction timer started");
+//        if (Constants.DEBUG)
+//            Log.w("User_Interaction", "User interaction timer started");
         disconnectHandler.removeCallbacks(disconnectCallback);
         disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
     }
@@ -113,8 +112,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
 
     void refreshToken() {
 
-        if (Constants.DEBUG)
-            Log.w("Token_Timer", "Refresh token called");
+//        if (Constants.DEBUG)
+//            Log.w("Token_Timer", "Refresh token called");
 
         if (HomeActivity.mRefreshTokenAsyncTask != null) {
             HomeActivity.mRefreshTokenAsyncTask.cancel(true);
