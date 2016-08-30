@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="@dimen/activity_horizontal_margin_double">
 
-        <RelativeLayout
+        <ImageView
             android:id="@+id/mapview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/map2"
-            android:padding="@dimen/value10"/>
+            android:layout_height="200dp"
+            android:src="@drawable/map" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,6 +105,19 @@
 
             </LinearLayout>
         </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_add_black_24dp"
+            app:fabSize="normal"
+            app:elevation="4dp"
+            app:borderWidth="0dp"
+            app:backgroundTint="@color/background_fab" />
 
     </RelativeLayout>
 </ScrollView>
