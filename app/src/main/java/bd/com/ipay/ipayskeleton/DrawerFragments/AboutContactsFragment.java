@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,12 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class AboutContactsFragment extends Fragment {
 
-    private View mapView;
+    private ImageView mapView;
     private TextView mAddressView;
     private TextView mPhoneView;
     private TextView mEmailView;
     private TextView mWebView;
-
+    private FloatingActionButton mFabFeedback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,7 +30,8 @@ public class AboutContactsFragment extends Fragment {
 
         getActivity().setTitle(R.string.contact_us);
 
-        mapView = v.findViewById(R.id.mapview);
+        mFabFeedback = (FloatingActionButton) v.findViewById(R.id.fab_feedback);
+        mapView = (ImageView) v.findViewById(R.id.mapview);
         mAddressView = (TextView) v.findViewById(R.id.address);
         mPhoneView = (TextView) v.findViewById(R.id.phone_number);
         mEmailView = (TextView) v.findViewById(R.id.email);
@@ -39,6 +41,15 @@ public class AboutContactsFragment extends Fragment {
         mPhoneView.setText(": " + Constants.OFFICE_PHONE_NUMBER);
         mEmailView.setText(": " + Constants.OFFICE_EMAIL);
         mWebView.setText(": " + Constants.OFFICE_WEB);
+
+        mFabFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:" + Constants.FEEDBACK));
+                startActivity(Intent.createChooser(intent, ""));
+            }
+        });
 
         mapView.setOnClickListener(new View.OnClickListener() {
             @Override
