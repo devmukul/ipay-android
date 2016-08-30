@@ -122,27 +122,13 @@
             </LinearLayout>
 
             <LinearLayout style="@style/LinearLayoutHolderVertical">
-
-                <TextView
-                    style="@style/AddressViewHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:text="@string/name" />
-
                 <TextView
                     android:id="@+id/textview_name"
                     style="@style/TextViewInfoLeftAlign" />
 
                 <TextView
-                    style="@style/AddressViewHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:text="@string/phone_number" />
+                    android:id="@+id/textview_occupation"
+                    style="@style/TextViewInfoLeftAlign" />
 
                 <TextView
                     android:id="@+id/textview_mobile_number"
