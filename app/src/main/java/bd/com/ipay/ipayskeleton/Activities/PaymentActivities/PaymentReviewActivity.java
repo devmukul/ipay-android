@@ -128,12 +128,8 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
                                         finish();
                                     }
                                 })
-                                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(final DialogInterface arg0) {
-                                        finish();
-                                    }
-                                })
+
+                                .setCancelable(false)
                                 .show();
                     }
 

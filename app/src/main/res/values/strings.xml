@@ -573,6 +573,7 @@
     <string name="parent_info">Parents Information</string>
     <string name="business_type">Business Type</string>
     <string name="not_a_business_user">This person is not a business user. You can only make payment to a business user</string>
+    <string name="verified_user_can_send_invitation">Only verified users can send invitations</string>
     <string name="failed_loading_business_type">Loading failed</string>
     <string name="failed_loading_business_information">Failed loading business information</string>
     <string name="invite">Invite</string>
