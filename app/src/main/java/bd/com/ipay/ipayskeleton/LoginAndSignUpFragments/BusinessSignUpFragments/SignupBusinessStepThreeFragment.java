@@ -301,6 +301,14 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
+                // Previous OTP has not been expired yet
+                SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
+                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
+
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
