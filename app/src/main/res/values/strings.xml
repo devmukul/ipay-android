@@ -482,7 +482,7 @@
     <string name="mobile">Mobile No.</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
-    <string name="office_address">Office Address</string>
+    <string name="business_address">Business Address</string>
     <string name="address_line_2">Address Line 2 (Optional)</string>
     <string name="business_address_line_1">Business Address Line 1</string>
     <string name="business_address_line_2">Business Address Line 2 (Optional)</string>
