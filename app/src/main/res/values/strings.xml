@@ -187,7 +187,7 @@
     <string name="please_login_again">Please sign in again.</string>
     <string name="sending_otp">Sending OTP in your mobile...</string>
     <string name="change_pass_failed">Failed to change password</string>
-    <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
+    <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press done</string>
     <string name="done">Done</string>
     <string name="verify">Verify</string>
     <string name="verify_email">Verify Email</string>
