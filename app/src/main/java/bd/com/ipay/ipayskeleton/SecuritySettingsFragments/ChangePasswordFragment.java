@@ -92,9 +92,10 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         View focusView = null;
 
         String passwordValidationMsg = InputValidator.isPasswordValid(mEnterNewPasswordEditText.getText().toString().trim());
+        String currentPasswordValidationMsg = InputValidator.isPasswordValid(mEnterCurrentPasswordEditText.getText().toString().trim());
 
-        if (mEnterCurrentPasswordEditText.getText().toString().length() < 5) {
-            mEnterCurrentPasswordEditText.setError(getString(R.string.error_invalid_password));
+        if (currentPasswordValidationMsg.length() > 0) {
+            mEnterCurrentPasswordEditText.setError(currentPasswordValidationMsg);
             focusView = mEnterCurrentPasswordEditText;
             cancel = true;
 
@@ -103,8 +104,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
             focusView = mEnterNewPasswordEditText;
             cancel = true;
 
-        } else if (mEnterConfirmNewPasswordEditText.getText().toString().length() < 5
-                || !(mEnterNewPasswordEditText.getText().toString()
+        } else if (!(mEnterNewPasswordEditText.getText().toString()
                 .equals(mEnterConfirmNewPasswordEditText.getText().toString()))) {
             mEnterConfirmNewPasswordEditText.setError(getString(R.string.confirm_password_not_matched));
             focusView = mEnterConfirmNewPasswordEditText;

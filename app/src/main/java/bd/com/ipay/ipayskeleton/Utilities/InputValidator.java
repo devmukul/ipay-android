@@ -16,9 +16,9 @@ public class InputValidator {
     public static String isPasswordValid(String password) {
         // Return empty string if the password is valid
         if (password.length() == 0) return "Enter a password";
-        if (password.length() < 8) return "This password is too short";
-        if (!password.matches(".*[a-zA-Z]+.*")) return "Password should contain an alphabet";
-        if (!password.matches(".*[0-9]+.*")) return "Password should contain a number";
+        if (password.length() < 8) return "Password must contain minimum 8 characters.";
+        if (!password.matches(".*[a-zA-Z]+.*")) return "Password must contain a letter.";
+        if (!password.matches(".*[0-9]+.*")) return "Password must contain a digit.";
         return "";
     }
 
