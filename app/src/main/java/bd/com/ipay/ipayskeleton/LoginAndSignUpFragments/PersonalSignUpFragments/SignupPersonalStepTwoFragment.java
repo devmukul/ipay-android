@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +36,8 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
 
     private TextView mTermsConditions;
     private TextView mPrivacyPolicy;
-
     private AddressInputSignUpView mPersonalAddressView;
+    private CheckBox mAgreementCheckBox;
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
@@ -59,6 +60,7 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
         mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
         mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
         mPersonalAddressView = (AddressInputSignUpView) v.findViewById(R.id.personal_address);
+        mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
@@ -93,6 +95,12 @@ public class SignupPersonalStepTwoFragment extends Fragment implements HttpRespo
 
         if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
+        }
+
+        if (!mAgreementCheckBox.isChecked()) {
+            cancel = true;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
         }
 
         if (cancel) {

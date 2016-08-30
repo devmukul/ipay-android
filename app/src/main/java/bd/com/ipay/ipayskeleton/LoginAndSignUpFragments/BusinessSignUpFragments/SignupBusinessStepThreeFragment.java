@@ -32,7 +32,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestBusiness
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseBusinessSignup;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -52,6 +51,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private CheckBox mFemaleCheckBox;
     private TextView mTermsConditions;
     private TextView mPrivacyPolicy;
+    private CheckBox mAgreementCheckBox;
 
     private int mYear;
     private int mMonth;
@@ -86,6 +86,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mAddressCheckbox = (CheckBox) v.findViewById(R.id.checkboxBusinessAddress);
         mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
         mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
+        mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
 
         mPersonalAddressView = (AddressInputSignUpView) v.findViewById(R.id.personal_address);
 
@@ -196,8 +197,11 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         } else if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
 
+        } else if (!mAgreementCheckBox.isChecked()) {
+            cancel = true;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
         }
-
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
