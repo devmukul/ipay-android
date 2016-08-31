@@ -59,13 +59,14 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        Log.w("Push Found", "From: " + from + ", data: " + data);
+        if (Constants.DEBUG)
+            Log.w("Push Found", "From: " + from + ", data: " + data);
 
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
         boolean isLoggedIn = pref.getBoolean(Constants.LOGGED_IN, false);
 
         tag = data.getString(Constants.PUSH_NOTIFICATION_EVENT);
-        
+
         switch (tag) {
             case Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
                 if (isForeground() && isLoggedIn)
@@ -234,7 +235,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
 //            mUserInfoTask = null;
             return;
         }
