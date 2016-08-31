@@ -26,16 +26,6 @@
                 android:paddingBottom="@dimen/value48" />
 
             <TextView
-                android:id="@+id/empty_list_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:gravity="center"
-                android:text="@string/empty_bank_account_list" />
-
-
-            <TextView
                 style="@style/CustomNoteTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,6 +33,17 @@
                 android:text="@string/bank_verification_help"
                 android:visibility="gone" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/empty_list_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:gravity="center"
+            android:text="@string/empty_bank_account_list" />
+
     </RelativeLayout>
 
 </bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout>

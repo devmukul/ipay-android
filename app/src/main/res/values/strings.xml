@@ -142,6 +142,7 @@
     <string name="please_select_a_district">Please select a district</string>
     <string name="please_select_a_branch">Please select a branch</string>
     <string name="please_enter_an_account_number">Please provide your Account Number and try again</string>
+    <string name="please_enter_an_account_number_of_minimum_digit">Account Number must be at least 8 digit</string>
     <string name="business_information">Business Information</string>
     <string name="account_holder_information">Information of Account Holder</string>
     <string name="yes">Yes</string>

@@ -93,7 +93,8 @@
             android:inputType="number"
             android:maxLines="1"
             android:singleLine="true"
-            custom:borderType="down"/>
+            custom:borderType="down"
+            android:maxLength="20"/>
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />
