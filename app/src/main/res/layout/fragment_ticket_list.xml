@@ -4,9 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-<LinearLayout
-    android:orientation="vertical"
+    <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -52,7 +50,7 @@
 
     </FrameLayout>
 
-</LinearLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_new_ticket"

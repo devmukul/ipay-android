@@ -4,17 +4,16 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <include layout="@layout/layout_progress_container" />
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
             android:id="@+id/content_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <RelativeLayout
                 android:id="@+id/complete_introduction_header"
@@ -61,5 +60,5 @@
                 android:gravity="center"
                 android:text="@string/empty_list" />
         </RelativeLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
