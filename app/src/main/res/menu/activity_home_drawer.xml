@@ -25,12 +25,13 @@
         <item
             android:id="@+id/nav_invite"
             android:icon="@drawable/ic_invite_friend"
-            android:visible="true"
-            android:title="@string/invite_a_friend"/>
+            android:title="@string/invite_a_friend"
+            android:visible="true" />
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_helpw"
-            android:title="@string/help" />
+            android:title="@string/help"
+            android:visible="false" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_drawer_about"

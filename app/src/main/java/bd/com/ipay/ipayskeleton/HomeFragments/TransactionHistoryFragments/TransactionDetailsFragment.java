@@ -117,7 +117,7 @@ public class TransactionDetailsFragment extends Fragment {
             mMobileNumberView.setText(mMobileNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_openingbalance);
+            otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
             mNameView.setText(R.string.recharge_to);
@@ -127,7 +127,7 @@ public class TransactionDetailsFragment extends Fragment {
             if (ContactEngine.isValidNumber(receiver)) {
                 int mIcon = getOperatorIcon(receiver);
                 otherImageView.setImageResource(mIcon);
-            }else
+            } else
                 otherImageView.setImageResource(R.drawable.ic_top_up);
         } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
             mNameView.setText(R.string.topup_rollback);
