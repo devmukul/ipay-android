@@ -143,21 +143,28 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                     mGetTicketsResponse = gson.fromJson(result.getJsonString(), GetTicketsResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mTickets = mGetTicketsResponse.getResponse().getTickets();
-                        mTicketListAdapter.notifyDataSetChanged();
-                        mEmptyListTextView.setVisibility(View.GONE);
+                        if (mGetTicketsResponse.getResponse() != null) {
+                            mTickets = mGetTicketsResponse.getResponse().getTickets();
+                            if (mTickets != null) {
+                                mTicketListAdapter.notifyDataSetChanged();
+                                mEmptyListTextView.setVisibility(View.GONE);
+                            } else
+                                mEmptyListTextView.setVisibility(View.VISIBLE);
+
+                        } else
+                            mEmptyListTextView.setVisibility(View.VISIBLE);
+
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                         mEmptyListTextView.setVisibility(View.VISIBLE);
+
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_tickets, Toast.LENGTH_LONG).show();
                             showErrorDialog();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_tickets, Toast.LENGTH_LONG).show();
                         showErrorDialog();
                     }
                 }
