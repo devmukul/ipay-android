@@ -14,17 +14,13 @@
     <string name="prompt_mobile">Enter your mobile number </string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_new">Enter your password</string>
-    <string name="action_next_and_verify"><![CDATA[Next & Verify]]></string>
     <string name="prompt_business_name">Business Name</string>
     <string name="prompt_business_addr_line2">Address Line 2 (Optional)</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="type_of_business">Type of Business</string>
     <string name="error_invalid_QR_code">This QR code is invalid</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">Password must contain minimum 8 characters. </string>
     <string name="password_hint">Password must contain minimum 8 characters and be alphanumeric. </string>
     <string name="name">Name</string>
-    <string name="enter_your_pin">Enter your PIN</string>
     <string name="enter_new_pin">Enter your PIN(4 digit)</string>
     <string name="confirm_your_pin">Confirm your PIN</string>
     <string name="enter_new_pass">Enter a new password</string>
@@ -441,7 +437,6 @@
     <string name="transaction_successful">Successful</string>
     <string name="not_applicable">N/A</string>
     <string name="upload_again">Upload again</string>
-    <string name="personal_mobile_number">Personal Mobile Number</string>
     <string name="verified">Verified</string>
     <string name="unverified">Not Verified</string>
     <string name="invited">Invited</string>
@@ -492,7 +487,6 @@
     <string name="add_an_email">Add an Email</string>
     <string name="progress_dialog_add_email">Adding email...</string>
     <string name="progress_dialog_delete_email">Deleting email..</string>
-    <string name="primary_email">Primary Email</string>
     <string name="failed_loading_emails">Failed to load emails</string>
     <string name="enter_valid_email">Please enter an valid email</string>
     <string name="failed_add_email">Failed adding email</string>
@@ -541,7 +535,6 @@
     <string name="introducers_to_complete_the_account_verification_process">&#160;introducers to complete the account verification process.</string>
     <string name="introduced_list_header">I have Introduced</string>
     <string name="introducer_list_header">Introduced by</string>
-    <string name="recommendation_details">Details</string>
     <string name="select_a_contact">Select a contact</string>
     <string name="progress_dialog_single_invoice">Fetching invoice...</string>
     <string name="failed_add_friend">Add friend failed</string>
@@ -566,7 +559,6 @@
     <string name="error_camera_permission_denied">Camera permission is denied</string>
     <string name="log_in">Log In</string>
     <string name="sign_up">Sign Up</string>
-    <string name="do_you">do you...</string>
     <string name="send_money_to_your_friends_and_family">Send Money to your friends and family.</string>
     <string name="request_money_from_your_friends_when_you_are_in_need">Request Money from your friends when you are in need.</string>
     <string name="make_payments_for_your_purchases">Make Payments for your purchases.</string>
@@ -584,7 +576,6 @@
     <string name="designation">Designation</string>
     <string name="create_employee">Create Employee</string>
     <string name="edit_employee">Save Changes</string>
-    <string name="please_enter_designation">Please enter designation of the employee</string>
     <string name="user_has_no_ipay_account">Sorry, this user has no iPay account</string>
     <string name="preparing">Preparing</string>
     <string name="see_other_activity">See Other Activity</string>
@@ -630,7 +621,6 @@
     <string name="privileges">Privileges</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
     <string name="add_money_info">It make 3-5 business days to complete the operation </string>
-    <string name="withdraw_money_info">It make three to five business day to complete the operation </string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
@@ -644,7 +634,6 @@
     <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
     <string name="dialog_requesting_top_up">Preparing for Top Up...</string>
 
-    <string name="contact_link">https://www.ipay.com.bd</string>
     <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
     <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
     <string name="forget_password_link">https://www.ipay.com.bd/forgot-password</string>
@@ -698,12 +687,6 @@
         <item>Husband</item>
         <item>Wife</item>
         <item>Friend</item>
-    </string-array>
-
-    <string-array name="introduce_action">
-        <item>Verify</item>
-        <item>Reject</item>
-        <item>Spam</item>
     </string-array>
 
 
