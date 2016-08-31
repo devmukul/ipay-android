@@ -74,8 +74,16 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             if (!((Activity) context).isFinishing()) {
                 if (Utilities.isConnectionAvailable(context)) attemptLogout();
                 else {
-                    Intent intent = new Intent(context, SignupOrLoginActivity.class);
-                    startActivity(intent);
+                    SharedPreferences pref;
+                    pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                    boolean loggedIn = pref.getBoolean(Constants.LOGGED_IN, true);
+
+                    if (loggedIn) {
+                        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+
+                        Intent intent = new Intent(context, SignupOrLoginActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
         }
