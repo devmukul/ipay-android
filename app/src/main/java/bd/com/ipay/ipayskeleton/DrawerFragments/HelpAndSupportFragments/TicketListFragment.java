@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -98,6 +100,19 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         mGetTicketsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void showErrorDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(R.string.support_not_available)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().onBackPressed();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (getActivity() != null) {
@@ -108,7 +123,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             mGetTicketsTask = null;
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-                getActivity().onBackPressed();
+                showErrorDialog();
             }
             return;
         }
@@ -136,14 +151,14 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                     } else {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.failed_loading_tickets, Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            showErrorDialog();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_loading_tickets, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
+                        showErrorDialog();
                     }
                 }
 
