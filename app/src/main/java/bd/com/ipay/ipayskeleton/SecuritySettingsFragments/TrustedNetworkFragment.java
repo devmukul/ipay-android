@@ -274,7 +274,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
         @Override
         public int getItemCount() {
-            if (mTrustedPersons != null)
+            if (mTrustedPersons != null && mTrustedPersons.size() > 0)
                 return mTrustedPersons.size() + 1;
             else return 0;
         }
