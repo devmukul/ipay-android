@@ -91,6 +91,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private String mDateOfBirth = "";
 
     private int mOccupation = 0;
+    private String occupation = "";
     private String mGender = "";
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
@@ -242,9 +243,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private void setProfileInformation() {
 
         mMobileNumberView.setText(getString(R.string.phone_number) + ": " + mMobileNumber);
-        if (mOccupation == 0) {
-            mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
-        } else mOccupationView.setText(getString(R.string.occupation) + ": " + mOccupation);
         mNameView.setText(getString(R.string.name) + ": " + mName);
 
         mSignUpTimeView.setText(getString(R.string.inception_date)+": "+mSignUpTime);
@@ -405,16 +403,22 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 mGetBusinessInformationAsyncTask = null;
                 break;
             case Constants.COMMAND_GET_OCCUPATIONS_REQUEST:
-
                 try {
                     mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
+                        String occupation = mGetOccupationResponse.getOccupation(mOccupation);
+                        if (occupation != null)
+                            mOccupationView.setText(getString(R.string.occupation) + ": " + occupation);
+                        else
+                            mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
+                    } else {
+                        mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
                     }
-
+                    setContentShown(true);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                    mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
+                    }
 
                 mGetOccupationTask = null;
                 break;
