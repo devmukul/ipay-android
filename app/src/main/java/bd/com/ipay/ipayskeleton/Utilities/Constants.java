@@ -208,7 +208,7 @@ public class Constants {
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
-            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_ADMIN = "http://www.ipay.com.bd/api/v1/support/";
             SERVER_NAME = "live";
 
         } else {
