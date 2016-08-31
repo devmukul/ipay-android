@@ -4,7 +4,6 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class IntroductionRequestClass implements Notification {

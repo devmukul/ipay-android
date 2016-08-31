@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -155,19 +154,6 @@ public class HomeActivity extends BaseActivity
         mDeviceID = DeviceInfoFactory.getDeviceId(HomeActivity.this);
 
         pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
-
-        // Initialize token timer
-        CountDownTimer tokenTimer = new CountDownTimer(TokenManager.getiPayTokenTimeInMs(), 1000) {
-
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                refreshToken();
-            }
-        }.start();
-        Log.w("Token Timer Home", TokenManager.getiPayTokenTimeInMs() + "");
-        TokenManager.setTokenTimer(tokenTimer);
 
         mMobileNumberView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);

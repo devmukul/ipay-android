@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -504,7 +503,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final String imageUrl = moneyAndPaymentRequest.getOriginatorProfile().getUserProfilePicture();
                 final String name = moneyAndPaymentRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyAndPaymentRequest.originatorProfile.getUserMobileNumber();
-                final String description = moneyAndPaymentRequest.getDescription();
                 final String descriptionofRequest = moneyAndPaymentRequest.getDescriptionofRequest();
                 final String title = moneyAndPaymentRequest.getTitle();
                 final long id = moneyAndPaymentRequest.getId();

@@ -63,9 +63,11 @@ public class TokenManager {
     }
 
     public static void setTokenTimer(CountDownTimer tokenTimer) {
-        if (getTokenTimer() != null)
-            getTokenTimer().cancel();
         BaseActivity.tokenTimer = tokenTimer;
+    }
+
+    public static void stopTokenTimer() {
+        BaseActivity.tokenTimer.cancel();
     }
 
     public static long getiPayTokenTimeInMs() {

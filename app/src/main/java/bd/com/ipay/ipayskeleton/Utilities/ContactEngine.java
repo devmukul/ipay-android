@@ -946,7 +946,6 @@ public class ContactEngine {
 
         if (phoneContactsCursor.moveToFirst()) {
             int nameIndex = phoneContactsCursor.getColumnIndex(Phone.DISPLAY_NAME);
-            int contactIdIndex = phoneContactsCursor.getColumnIndex(Phone._ID);
             int photoUrlIndex = phoneContactsCursor.getColumnIndex(Phone.PHOTO_URI);
             int numberIndex = phoneContactsCursor.getColumnIndex(Phone.NUMBER);
 

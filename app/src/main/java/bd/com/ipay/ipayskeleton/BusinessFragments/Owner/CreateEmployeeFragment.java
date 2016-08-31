@@ -116,7 +116,6 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         View focusView = null;
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-        String designation = mDesignationEditText.getText().toString().trim();
 
         if (!ContactEngine.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
