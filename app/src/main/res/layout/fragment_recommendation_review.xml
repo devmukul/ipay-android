@@ -2,84 +2,108 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <include layout="@layout/layout_progress_container" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/content_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                    android:id="@+id/profile_picture"
-                    style="@style/ReviewImageStyle">
-
-                </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+                android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/profile"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textview_name"
-                        style="@style/TextViewUserInfoPrimary"
-                        android:ellipsize="end"
-                        android:singleLine="true" />
+                    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                        android:id="@+id/profile_picture"
+                        style="@style/ReviewImageStyle">
 
-                    <TextView
-                        android:id="@+id/textview_mobile_number"
-                        style="@style/TextViewUserInfoSecondary" />
+                    </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/value4"
-                android:background="@color/colorDividerGapGray" />
-
-            <LinearLayout
-                style="@style/LinearLayoutHolderVertical"
-                android:layout_marginTop="@dimen/activity_horizontal_margin">
-
-                <LinearLayout
-                    android:id="@+id/textview_fathers_name_view"
-                    style="@style/LinearLayoutHolderVertical">
-
-                    <TextView
-                        style="@style/AddressViewHeader"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_vertical_margin"
-                        android:layout_marginRight="@dimen/activity_vertical_margin"
-                        android:text="@string/fathers_name" />
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textview_fathers_name"
-                        style="@style/TextViewInfoLeftAlign"
-                        android:text="@string/not_available" />
+                        <TextView
+                            android:id="@+id/textview_name"
+                            style="@style/TextViewUserInfoPrimary"
+                            android:ellipsize="end"
+                            android:singleLine="true" />
+
+                        <TextView
+                            android:id="@+id/textview_mobile_number"
+                            style="@style/TextViewUserInfoSecondary" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/value4"
+                    android:background="@color/colorDividerGapGray" />
+
+                <LinearLayout
+                    style="@style/LinearLayoutHolderVertical"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+                    <LinearLayout
+                        android:id="@+id/textview_fathers_name_view"
+                        style="@style/LinearLayoutHolderVertical">
+
+                        <TextView
+                            style="@style/AddressViewHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/activity_vertical_margin"
+                            android:layout_marginRight="@dimen/activity_vertical_margin"
+                            android:text="@string/fathers_name" />
+
+                        <TextView
+                            android:id="@+id/textview_fathers_name"
+                            style="@style/TextViewInfoLeftAlign"
+                            android:text="@string/not_available" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/textview_mothers_name_view"
+                        style="@style/LinearLayoutHolderVertical">
+
+                        <TextView
+                            style="@style/AddressViewHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/activity_vertical_margin"
+                            android:layout_marginRight="@dimen/activity_vertical_margin"
+                            android:layout_marginTop="@dimen/activity_vertical_margin"
+                            android:text="@string/mothers_name" />
+
+                        <TextView
+                            android:id="@+id/textview_mothers_name"
+                            style="@style/TextViewInfoLeftAlign"
+                            android:text="@string/not_available" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/textview_mothers_name_view"
-                    style="@style/LinearLayoutHolderVertical">
+                    style="@style/LinearLayoutHolderVertical"
+                    android:paddingBottom="@dimen/activity_horizontal_margin">
 
                     <TextView
                         style="@style/AddressViewHeader"
@@ -88,72 +112,53 @@
                         android:layout_marginLeft="@dimen/activity_vertical_margin"
                         android:layout_marginRight="@dimen/activity_vertical_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:text="@string/mothers_name" />
+                        android:text="@string/present_address" />
 
                     <TextView
-                        android:id="@+id/textview_mothers_name"
-                        style="@style/TextViewInfoLeftAlign"
-                        android:text="@string/not_available" />
+                        android:id="@+id/textview_present_address"
+                        style="@style/TextViewInfoLeftAlign" />
                 </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                style="@style/LinearLayoutHolderVertical"
-                android:paddingBottom="@dimen/activity_horizontal_margin">
-
-                <TextView
-                    style="@style/AddressViewHeader"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:text="@string/present_address" />
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin_double">
 
-                <TextView
-                    android:id="@+id/textview_present_address"
-                    style="@style/TextViewInfoLeftAlign" />
+                    <Button
+                        android:id="@+id/button_spam"
+                        style="@style/PrimaryMediumButtonSpamNoMargin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/value4"
+                        android:layout_weight="1"
+                        android:text="@string/mark_as_spam" />
+
+                    <Button
+                        android:id="@+id/button_reject"
+                        style="@style/PrimaryMediumButtonRejectNoMargin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/value4"
+                        android:layout_marginRight="@dimen/value4"
+                        android:layout_weight="1"
+                        android:text="@string/reject" />
+
+                    <Button
+                        android:id="@+id/button_accept"
+                        style="@style/ButtonStyleMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="@dimen/value4"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_weight="1"
+                        android:text="@string/accept" />
+                </LinearLayout>
+
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_horizontal_margin_double">
-
-                <Button
-                    android:id="@+id/button_spam"
-                    style="@style/PrimaryMediumButtonSpamNoMargin"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/value4"
-                    android:layout_weight="1"
-                    android:text="@string/mark_as_spam" />
-
-                <Button
-                    android:id="@+id/button_reject"
-                    style="@style/PrimaryMediumButtonRejectNoMargin"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/value4"
-                    android:layout_marginRight="@dimen/value4"
-                    android:layout_weight="1"
-                    android:text="@string/reject" />
-
-                <Button
-                    android:id="@+id/button_accept"
-                    style="@style/ButtonStyleMedium"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="@dimen/value4"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:layout_weight="1"
-                    android:text="@string/accept" />
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </ScrollView>
