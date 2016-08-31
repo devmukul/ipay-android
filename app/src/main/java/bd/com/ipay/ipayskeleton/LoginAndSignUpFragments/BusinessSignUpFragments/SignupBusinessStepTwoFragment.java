@@ -37,6 +37,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
     private ProgressDialog mProgressDialog;
     private int mSelectedBusinessTypeId = -1;
 
+
     @Override
     public void onResume() {
         super.onResume();

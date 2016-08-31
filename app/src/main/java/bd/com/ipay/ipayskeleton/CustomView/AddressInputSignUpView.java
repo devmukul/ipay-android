@@ -39,8 +39,8 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
 
-    private int mSelectedThanaId = -1;
-    private int mSelectedDistrictId = -1;
+    public int mSelectedThanaId = -1;
+    public int mSelectedDistrictId = -1;
 
     private AddressClass mAddressClass;
 
@@ -143,7 +143,6 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
             public void onResourceSelected(int id, String name) {
                 mDistrictSelection.setError(null);
                 mDistrictSelection.setText(name);
-                mDistrictSelection.setError(null);
                 mSelectedDistrictId = id;
 
                 mThanaList = null;
@@ -175,11 +174,17 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
             mPostalCodeField.setText(mAddressClass.getPostalCode());
 
         mSelectedDistrictId = mAddressClass.getDistrictCode();
+        if (mSelectedDistrictId >= 0)
+            getDistrictList();
+
         if (mDistrictList != null) {
             setDistrictName(mSelectedDistrictId);
         }
 
         mSelectedThanaId = mAddressClass.getThanaCode();
+        if (mSelectedThanaId >= 0)
+            getThanaList(mSelectedDistrictId);
+
         if (mThanaList != null) {
             setThanaName(mSelectedThanaId);
         }
