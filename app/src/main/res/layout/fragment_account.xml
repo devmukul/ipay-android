@@ -40,7 +40,7 @@
                         android:layout_marginBottom="@dimen/value2"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small_medium" />
+                        android:textSize="@dimen/text_size_small_medium_value18" />
 
                     <ImageView
                         android:id="@+id/textview_verification_status"
@@ -168,6 +168,10 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin_card"
                 android:paddingTop="@dimen/value4"
                 android:text="@string/profile_completeness" />
+
+            <View
+                style="@style/Divider"
+                android:visibility="invisible" />
 
         </LinearLayout>
 

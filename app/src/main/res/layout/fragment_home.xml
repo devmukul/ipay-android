@@ -87,7 +87,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/value2"
                                     android:textColor="@android:color/white"
-                                    android:textSize="@dimen/text_size_small_medium" />
+                                    android:textSize="@dimen/text_size_small_medium_value18" />
 
                                 <ImageView
                                     android:id="@+id/verification_status"

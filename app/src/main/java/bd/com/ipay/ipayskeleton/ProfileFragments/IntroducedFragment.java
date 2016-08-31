@@ -217,11 +217,11 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             private final TextView mIntroducedName;
             private final TextView mIntroducedMobileNumber;
             private final ProfileImageView mIntroducedProfilePictureView;
-
             private final TextView mSenderName;
             private final TextView mSenderMobileNumber;
             private final TextView mDate;
             private final ProfileImageView mRecommendationProfilePictureView;
+            private final View divider;
 
 
             public ViewHolder(final View itemView) {
@@ -235,6 +235,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 mSenderMobileNumber = (TextView) itemView.findViewById(R.id.textview_description);
                 mDate = (TextView) itemView.findViewById(R.id.textview_time);
                 mRecommendationProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
+                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindViewRecommendationList(int pos) {
@@ -253,6 +254,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 mDate.setText(time);
                 mRecommendationProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + photoUri, false);
 
+                if (pos == mRecommendationRequestList.size() - 1)
+                    divider.setVisibility(View.GONE);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

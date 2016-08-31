@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -152,6 +153,10 @@ public class PayFragment extends Fragment {
                 v = getActivity().getLayoutInflater().inflate(mResource, null);
 
                 IconifiedTextViewWithButton actionView = (IconifiedTextViewWithButton) v.findViewById(R.id.item_services);
+                View divider = v.findViewById(R.id.divider);
+                if (position == mServiceActionList.size() - 1)
+                    divider.setVisibility(View.INVISIBLE);
+
                 actionView.setText(serviceAction.text);
                 actionView.setDrawableLeft(getResources().getDrawable(PayPropertyConstants.PAY_PROPERTY_NAME_TO_ICON_MAP.get(serviceAction.text)));
 

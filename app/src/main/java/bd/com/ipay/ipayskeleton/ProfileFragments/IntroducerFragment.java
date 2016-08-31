@@ -285,19 +285,15 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             private final TextView mIntroducerName;
             private final TextView mIntroducerMobileNumber;
             private final ProfileImageView mIntroducerProfilePictureView;
-
             private final TextView mRequestedName;
             private final TextView mRequestedMobileNumber;
             private final ProfileImageView mRequestedProfilePictureView;
             private final ImageView mSentRequestStatus;
             private final TextView mTimeView;
-
-
             private final View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-
 
                 mIntroducerName = (TextView) itemView.findViewById(R.id.introducer_name);
                 mIntroducerMobileNumber = (TextView) itemView.findViewById(R.id.introducer_mobile_number);
@@ -308,9 +304,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 mRequestedProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.requested_profile_picture);
                 mSentRequestStatus = (ImageView) itemView.findViewById(R.id.request_status);
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
-
                 divider = itemView.findViewById(R.id.divider);
-
             }
 
 
@@ -323,6 +317,9 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 mRequestedProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mRequestedName.setText(RequestedName);
                 mRequestedMobileNumber.setText(RequestedMobileNumber);
+
+                if (pos == mSentRequestList.size() - 1)
+                    divider.setVisibility(View.GONE);
 
                 switch (requestStatus) {
                     case Constants.INTRODUCTION_REQUEST_STATUS_PENDING:

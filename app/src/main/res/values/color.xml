@@ -27,6 +27,7 @@
     <color name="colorDarkKGray">#484848</color>
     <!-- zxinglib colors -->
     <color name="zxinglib_status_text">#ffffffff</color>
+    <color name="colorWhite">#ffffff</color>
 
     <!-- Random background colors -->
     <color name="background_bright_pink">#C15562</color>

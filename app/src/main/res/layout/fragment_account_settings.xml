@@ -70,6 +70,10 @@
             android:paddingTop="@dimen/value4"
             android:text="@string/logout_from_all_device"
             app:arrowVisibility="false" />
+
+        <View
+            style="@style/Divider"
+            android:visibility="invisible" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
