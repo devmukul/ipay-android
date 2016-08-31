@@ -36,7 +36,6 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-
 public class PaymentReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mPaymentTask = null;
@@ -202,7 +201,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
-
 
     @Override
     public int getServiceID() {

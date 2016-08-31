@@ -80,7 +80,6 @@ public class NotificationActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, businessEmployeeReviewFragment).commit();
     }
 
-
     @Override
     public Context setContext() {
         return NotificationActivity.this;

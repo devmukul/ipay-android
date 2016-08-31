@@ -14,7 +14,6 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymen
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-
 public class PaymentActivity extends BaseActivity {
 
     private FloatingActionButton mFabMakingPayment;

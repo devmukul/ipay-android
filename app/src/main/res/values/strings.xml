@@ -65,7 +65,7 @@
     <string name="empty_transaction_history">No transaction to show right now.</string>
     <string name="empty_list">Nothing to show right now.</string>
     <string name="not_empty_list_for_password_recovery"> If you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network, you will be asked to enter the codes contained in those messages.</string>
-    <string name="empty_list_for_password_recovery">Tap + to add a person to your Trusted Network. If you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network, you will be asked to enter the codes contained in those messages.</string>
+    <string name="empty_list_for_password_recovery">Tap + to add a person to your Trusted Network.\n\nIf you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network.\nYou will be asked to enter the codes contained in those messages.</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
@@ -349,6 +349,7 @@
     <string name="recharge_to">Topup to</string>
     <string name="opening_balance_to">Opening balance to</string>
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
+    <string name="support_not_available">Customer support is not available right now. Please try again later.</string>
     <string name="purpose">Purpose</string>
     <string name="failure_cause">Failure Cause</string>
     <string name="filter_profile_change">Profile Changes</string>
@@ -364,6 +365,7 @@
     <string name="draft">Saved but not send</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_service">Filter by service</string>
+    <string name="filter_by_event">Filter by event</string>
     <string name="filter_verification">Verification Events</string>
     <string name="filter_security_changes">Security Changes</string>
     <string name="clear_filter">Clear Filter</string>
@@ -687,8 +689,6 @@
         <item>Mother</item>
         <item>Brother</item>
         <item>Sister</item>
-        <item>Husband</item>
-        <item>Wife</item>
         <item>Friend</item>
     </string-array>
 
