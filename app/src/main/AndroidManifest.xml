@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <permission
         android:name="bd.com.ipay.android.permission.C2D_MESSAGE"
@@ -81,7 +82,7 @@
             android:screenOrientation="portrait"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.PaymentActivities.SendMoneyActivity"
             android:label="@string/send_money"
@@ -123,13 +124,13 @@
             android:label="@string/send_money"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.RequestPaymentReviewActivity"
             android:label="@string/request_payment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.PaymentReviewActivity"
             android:label="@string/make_payment"
@@ -146,7 +147,7 @@
             android:label="@string/mobile_topup"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.PaymentActivity"
             android:label="@string/make_payment"
