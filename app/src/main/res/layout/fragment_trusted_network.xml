@@ -7,7 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
 
         <include layout="@layout/layout_progress_container" />
 
@@ -26,7 +27,6 @@
                     android:id="@+id/list_trusted_person"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:clipToPadding="false"
                     android:paddingBottom="@dimen/activity_horizontal_margin_double" />
 

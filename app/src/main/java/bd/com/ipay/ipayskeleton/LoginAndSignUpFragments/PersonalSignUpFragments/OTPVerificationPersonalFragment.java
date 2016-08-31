@@ -105,6 +105,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mActivateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utilities.hideKeyboard(getActivity());
                 if (Utilities.isConnectionAvailable(getActivity())) attemptSignUp();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();

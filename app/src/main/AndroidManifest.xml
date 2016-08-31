@@ -243,7 +243,7 @@
             android:label="@string/security"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".Activities.TransactionDetailsActivity"
             android:label="@string/transaction_details"
