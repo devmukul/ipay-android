@@ -279,7 +279,6 @@ public class ProfileActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recommendationReviewFragment).addToBackStack(null).commit();
     }
 
-
     @Override
     public Context setContext() {
         return ProfileActivity.this;

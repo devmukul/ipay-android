@@ -18,7 +18,6 @@ public class InviteActivity extends BaseActivity {
 
     private FloatingActionButton mSendInviteButton;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +64,6 @@ public class InviteActivity extends BaseActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
 
     @Override
     protected Context setContext() {
