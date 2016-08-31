@@ -165,11 +165,17 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
             mPostalCodeField.setText(mAddressClass.getPostalCode());
 
         mSelectedDistrictId = mAddressClass.getDistrictCode();
+        if (mSelectedDistrictId >= 0)
+            getDistrictList();
+
         if (mDistrictList != null) {
             setDistrictName(mSelectedDistrictId);
         }
 
         mSelectedThanaId = mAddressClass.getThanaCode();
+        if (mSelectedThanaId >= 0)
+            getThanaList(mSelectedDistrictId);
+
         if (mThanaList != null) {
             setThanaName(mSelectedThanaId);
         }

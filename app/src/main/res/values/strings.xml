@@ -60,7 +60,7 @@
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>
     <string name="confirm_pin_not_matched">PIN did not match</string>
-    <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account</string>
+    <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account.</string>
     <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
     <string name="empty_transaction_history">No transaction to show right now.</string>
     <string name="empty_list">Nothing to show right now.</string>
@@ -299,6 +299,7 @@
     <string name="please_write_note">Please write a note.</string>
     <string name="please_write_title">Please write a title.</string>
     <string name="please_enter_minimum_amount">Please enter minimum amount of </string>
+    <string name="insufficient_balance">Balance insufficient.</string>
     <string name="please_enter_not_more_than_max_amount">You can not send more than </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="please_select_relation">Please select a relation</string>
@@ -481,7 +482,7 @@
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
     <string name="mobile">Mobile No.</string>
-    <string name="this_device">this device</string>
+    <string name="this_device">This device</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
     <string name="business_address">Business Address</string>
