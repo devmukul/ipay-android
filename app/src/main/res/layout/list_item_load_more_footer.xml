@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/load_more"
     style="@android:style/Widget.Holo.Button.Borderless"
-    android:textSize="14sp"
-    android:textColor="@color/colorTextPrimary"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:textColor="@color/colorTextPrimary"
+    android:textSize="14sp" />
