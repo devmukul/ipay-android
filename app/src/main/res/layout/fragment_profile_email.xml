@@ -39,7 +39,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/divider"
                             android:background="@color/colorBalanceBackground"
-                            android:padding="@dimen/activity_horizontal_margin"
+                            android:padding="@dimen/activity_horizontal_margin_card"
                             android:text="@string/primary_email_address"
                             android:textSize="20dp" />
 
@@ -92,10 +92,9 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/divider1"
                         android:background="@color/colorBalanceBackground"
-                        android:padding="@dimen/activity_horizontal_margin"
+                        android:padding="@dimen/activity_horizontal_margin_card"
                         android:text="@string/other_email_address"
                         android:textSize="20dp" />
-
 
                     <View
                         android:layout_width="match_parent"
@@ -104,7 +103,6 @@
                         android:background="@color/colorDivider" />
 
                 </RelativeLayout>
-
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_email"
