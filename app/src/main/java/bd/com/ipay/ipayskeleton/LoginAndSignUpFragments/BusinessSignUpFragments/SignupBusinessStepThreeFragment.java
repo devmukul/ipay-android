@@ -294,6 +294,9 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
 
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.otp_going_to_send, Toast.LENGTH_LONG).show();
+
                 SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
