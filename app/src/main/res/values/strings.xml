@@ -364,6 +364,7 @@
     <string name="draft">Saved but not send</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_service">Filter by service</string>
+    <string name="filter_by_event">Filter by event</string>
     <string name="filter_verification">Verification Events</string>
     <string name="filter_security_changes">Security Changes</string>
     <string name="clear_filter">Clear Filter</string>
@@ -687,8 +688,6 @@
         <item>Mother</item>
         <item>Brother</item>
         <item>Sister</item>
-        <item>Husband</item>
-        <item>Wife</item>
         <item>Friend</item>
     </string-array>
 
