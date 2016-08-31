@@ -36,13 +36,8 @@ public class SignupBusinessStepTwoFragment extends Fragment {
 
     private ProgressDialog mProgressDialog;
     private int mSelectedBusinessTypeId = -1;
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.title_signup_business_page);
-    }
+    public int mSelectedThanaId = -1;
+    public int mSelectedDistrictId = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,6 +81,21 @@ public class SignupBusinessStepTwoFragment extends Fragment {
         getBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         return v;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSelectedDistrictId = mBusinessAddressView.mSelectedDistrictId;
+        mSelectedThanaId = mBusinessAddressView.mSelectedThanaId;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_signup_business_page);
+        mBusinessAddressView.mSelectedDistrictId = mSelectedDistrictId;
+        mBusinessAddressView.mSelectedThanaId = mSelectedThanaId;
     }
 
     private void attemptGoNextPage() {
