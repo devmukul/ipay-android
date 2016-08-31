@@ -477,7 +477,7 @@
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
     <string name="mobile">Mobile No.</string>
-    <string name="this_device">(this device)</string>
+    <string name="this_device">this device</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
     <string name="business_address">Business Address</string>
@@ -686,6 +686,8 @@
         <item>Mother</item>
         <item>Brother</item>
         <item>Sister</item>
+        <item>Husband</item>
+        <item>Wife</item>
         <item>Friend</item>
     </string-array>
 

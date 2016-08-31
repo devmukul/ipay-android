@@ -39,6 +39,18 @@
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="@dimen/text_size_small_medium" />
 
+
+            <TextView
+                android:id="@+id/textview_this_device"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:singleLine="true"
+                android:text="@string/this_device"
+                android:visibility="gone"
+                android:textSize="@dimen/text_size_extra_small" />
+
             <TextView
                 android:id="@+id/textview_time"
                 android:layout_width="wrap_content"

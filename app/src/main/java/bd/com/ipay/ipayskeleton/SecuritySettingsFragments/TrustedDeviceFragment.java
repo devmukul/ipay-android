@@ -240,6 +240,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             ImageView deviceImageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
             TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
             TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);
+            TextView thisDeviceView = (TextView) view.findViewById(R.id.textview_this_device);
 
             //Setting the correct image based on trusted device type
             int[] images = {
@@ -269,9 +270,11 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             grantTimeView.setText(trustedDevice.getCreatedTimeString());
 
             if (myDeviceID.equals(deviceID)) {
-                deviceNameView.setText(trustedDevice.getDeviceName() + getString(R.string.this_device));
+                deviceNameView.setText(trustedDevice.getDeviceName());
+                thisDeviceView.setVisibility(View.VISIBLE);
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
             } else {
+                thisDeviceView.setVisibility(View.GONE);
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
