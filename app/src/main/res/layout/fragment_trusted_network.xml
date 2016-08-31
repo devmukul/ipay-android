@@ -36,7 +36,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:gravity="center"
+                android:gravity="left"
+                android:padding="@dimen/activity_horizontal_margin"
                 android:text="@string/empty_list_for_password_recovery" />
 
         </RelativeLayout>
