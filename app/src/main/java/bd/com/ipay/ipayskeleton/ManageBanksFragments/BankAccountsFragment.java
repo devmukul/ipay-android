@@ -113,7 +113,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
-        
+
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE))
             getBankList();
         else {
