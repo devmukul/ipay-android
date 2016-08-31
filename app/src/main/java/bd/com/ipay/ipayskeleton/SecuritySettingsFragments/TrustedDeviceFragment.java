@@ -272,6 +272,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 deviceNameView.setText(trustedDevice.getDeviceName() + getString(R.string.this_device));
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
             } else {
+                deviceNameView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

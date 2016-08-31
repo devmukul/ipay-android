@@ -221,6 +221,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             private final TextView mSenderName;
             private final TextView mSenderMobileNumber;
             private final TextView mDate;
+            private final ProfileImageView mRecommendationProfilePictureView;
 
 
             public ViewHolder(final View itemView) {
@@ -233,6 +234,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 mSenderName = (TextView) itemView.findViewById(R.id.textview_title);
                 mSenderMobileNumber = (TextView) itemView.findViewById(R.id.textview_description);
                 mDate = (TextView) itemView.findViewById(R.id.textview_time);
+                mRecommendationProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
             }
 
             public void bindViewRecommendationList(int pos) {
@@ -240,7 +242,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 final long requestID = mRecommendationRequestList.get(pos).getId();
                 final String senderName = mRecommendationRequestList.get(pos).getName();
                 final String senderMobileNumber = mRecommendationRequestList.get(pos).getSenderMobileNumber();
-                final String photoUri = mRecommendationRequestList.get(pos).getSenderMobileNumber();
+                final String photoUri = mRecommendationRequestList.get(pos).getImageUrl();
                 final String time = Utilities.getDateFormat(mRecommendationRequestList.get(pos).getDate());
                 final AddressClass mAddress = mRecommendationRequestList.get(pos).getPresentAddress();
                 final String fathersName = mRecommendationRequestList.get(pos).getFather();
@@ -249,6 +251,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 mSenderName.setText(senderName);
                 mSenderMobileNumber.setText(senderMobileNumber);
                 mDate.setText(time);
+                mRecommendationProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + photoUri, false);
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {
