@@ -378,9 +378,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
 
         if (ProfileInfoCacheManager.isAccountVerified())
-            mVerificationStatusView.setVisibility(View.VISIBLE);
+            mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_verified_profile));
         else
-            mVerificationStatusView.setVisibility(View.GONE);
+            mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_not_verified));
     }
 
     private void promptForProfileCompletion() {

@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -21,12 +22,13 @@
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_trusted_person"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@android:color/white"
                     android:clipToPadding="false"
                     android:paddingBottom="@dimen/activity_horizontal_margin_double" />
 
@@ -38,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:text="@string/empty_list_for_password_recovery"/>
+                android:text="@string/empty_list_for_password_recovery" />
 
         </RelativeLayout>
 

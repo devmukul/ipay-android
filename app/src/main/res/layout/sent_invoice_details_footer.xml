@@ -1,49 +1,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-<LinearLayout style="@style/LinearLayoutHolder">
+    <LinearLayout style="@style/LinearLayoutHolder">
 
-    <TextView
-        style="@style/TextViewInfoLabel"
-        android:text="@string/total_amount" />
+        <TextView
+            style="@style/TextViewInfoLabel"
+            android:text="@string/total_amount" />
 
-    <TextView
-        android:id="@+id/textview_net_amount"
-        style="@style/TextViewInfoColorPrimary" />
+        <TextView
+            android:id="@+id/textview_net_amount"
+            style="@style/TextViewInfoColorPrimary" />
 
-</LinearLayout>
+    </LinearLayout>
 
-<View style="@style/Divider" />
+    <View style="@style/Divider" />
 
-<LinearLayout style="@style/LinearLayoutHolder">
+    <LinearLayout style="@style/LinearLayoutHolder">
 
-    <TextView
-        style="@style/TextViewInfoLabel"
-        android:text="@string/vat" />
+        <TextView
+            style="@style/TextViewInfoLabel"
+            android:text="@string/vat" />
 
-    <TextView
-        android:id="@+id/textview_vat"
-        style="@style/TextViewInfoColorPrimary" />
+        <TextView
+            android:id="@+id/textview_vat"
+            style="@style/TextViewInfoColorPrimary" />
 
-</LinearLayout>
+    </LinearLayout>
 
-<View style="@style/Divider" />
+    <View style="@style/Divider" />
 
-<LinearLayout style="@style/LinearLayoutHolder">
+    <LinearLayout style="@style/LinearLayoutHolder">
 
-    <TextView
-        style="@style/TextViewInfoLabel"
-        android:text="@string/net_amount" />
+        <TextView
+            style="@style/TextViewInfoLabel"
+            android:text="@string/net_amount" />
 
-    <TextView
-        android:id="@+id/textview_total"
-        style="@style/TextViewInfoColorPrimary" />
+        <TextView
+            android:id="@+id/textview_total"
+            style="@style/TextViewInfoColorPrimary" />
 
-</LinearLayout>
+    </LinearLayout>
 
-<View style="@style/Divider" />
+    <View style="@style/Divider" />
 
     <LinearLayout style="@style/LinearLayoutHolder">
 
@@ -59,24 +60,24 @@ android:orientation="vertical">
 
     <View style="@style/Divider" />
 
-<android.support.design.widget.TextInputLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/activity_horizontal_margin_card">
-
-    <EditText
-        android:id="@+id/pin"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_pin"
-        android:inputType="numberPassword"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:visibility="gone">
+        android:layout_marginTop="@dimen/activity_horizontal_margin_card">
 
-        <requestFocus />
-    </EditText>
-</android.support.design.widget.TextInputLayout>
+        <EditText
+            android:id="@+id/pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_pin"
+            android:inputType="numberPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:visibility="gone">
+
+            <requestFocus />
+        </EditText>
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/button_reject"
@@ -84,5 +85,5 @@ android:orientation="vertical">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </LinearLayout>

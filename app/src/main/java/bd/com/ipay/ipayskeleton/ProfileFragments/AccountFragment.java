@@ -244,9 +244,9 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 mProfilePicture, false);
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
-            mVerificationStatusView.setVisibility(View.VISIBLE);
+            mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_verified_profile));
         } else {
-            mVerificationStatusView.setVisibility(View.GONE);
+            mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_not_verified));
         }
     }
 
