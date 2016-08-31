@@ -647,30 +647,6 @@ public class HomeActivity extends BaseActivity
                 mAddTrustedDeviceTask = null;
 
                 break;
-
-//            case Constants.COMMAND_REFRESH_TOKEN:
-//                try {
-//
-//                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-//                        // Do nothing
-//                    } else {
-//                        Toast.makeText(this, R.string.please_log_in_again, Toast.LENGTH_LONG).show();
-//                        finish();
-//                        Intent intent = new Intent(this, SignupOrLoginActivity.class);
-//                        startActivity(intent);
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(this, R.string.please_login_again, Toast.LENGTH_LONG).show();
-//                    finish();
-//                    Intent intent = new Intent(this, SignupOrLoginActivity.class);
-//                    startActivity(intent);
-//                }
-//
-//                HomeActivity.mRefreshTokenAsyncTask = null;
-//
-//                break;
         }
     }
 
