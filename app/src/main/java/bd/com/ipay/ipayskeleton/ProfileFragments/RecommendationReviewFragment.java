@@ -98,7 +98,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
+        mProfileImageView.setProfilePicture(mPhotoUri, false);
 
         if (mSenderName == null || mSenderName.isEmpty()) {
             mSenderNameView.setVisibility(View.GONE);

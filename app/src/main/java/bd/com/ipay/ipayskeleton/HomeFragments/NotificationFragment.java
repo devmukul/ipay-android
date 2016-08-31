@@ -556,7 +556,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 final String senderName = introductionRequest.getName();
                 final String senderMobileNumber = introductionRequest.getSenderMobileNumber();
-                final String photoUri = introductionRequest.getSenderMobileNumber();
+                final String photoUri = introductionRequest.getImageUrl();
 
                 final AddressClass mAddress = introductionRequest.getPresentAddress();
                 final String fathersName = introductionRequest.getFather();
@@ -569,7 +569,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         Bundle bundle = new Bundle();
                         bundle.putLong(Constants.REQUEST_ID, requestID);
                         bundle.putString(Constants.NAME, senderName);
-                        bundle.putString(Constants.PHOTO_URI, photoUri);
+                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + photoUri);
                         bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
                         bundle.putString(Constants.FATHERS_NAME, fathersName);
                         bundle.putString(Constants.MOTHERS_NAME, mothersName);
