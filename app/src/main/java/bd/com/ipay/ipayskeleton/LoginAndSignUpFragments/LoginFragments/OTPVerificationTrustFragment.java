@@ -248,6 +248,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
         } else if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
             mOTPResponseTrustedDevice = gson.fromJson(result.getJsonString(), OTPResponseTrustedDevice.class);
+            SignupOrLoginActivity.otpDuration = mOTPResponseTrustedDevice.getOtpValidFor();
             String message = mOTPResponseTrustedDevice.getMessage();
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
