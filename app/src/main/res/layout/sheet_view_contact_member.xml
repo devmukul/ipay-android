@@ -31,7 +31,7 @@
             style="@style/SheetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_receive_money"
+            android:drawableLeft="@drawable/ic_contacts_req"
             android:text="@string/request_money" />
 
         <Button

@@ -537,7 +537,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         public int getItemCount() {
             if (mListUserBankClasses != null)
                 return mListUserBankClasses.size() + 1;
-            else return 1;
+            else return 0;
         }
 
         @Override

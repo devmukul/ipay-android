@@ -30,6 +30,7 @@
     <dimen name="value140">140dip</dimen>
     <dimen name="value200">200dip</dimen>
     <dimen name="value230">230dip</dimen>
+    <dimen name="value250">250dip</dimen>
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_small_medium">16sp</dimen>
     <dimen name="text_size_small_medium_value18">18sp</dimen>
