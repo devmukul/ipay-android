@@ -1,8 +1,5 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.Education;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class InvoicePayableAccountRelation {
     public Integer payableAccountHeadId;
     public Double fee;

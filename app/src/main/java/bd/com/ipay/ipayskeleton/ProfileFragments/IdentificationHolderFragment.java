@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class IdentificationHolderFragment extends Fragment {
     private ViewPager viewPager;

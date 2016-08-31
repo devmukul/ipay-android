@@ -12,7 +12,6 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.InviteDialog;
 import bd.com.ipay.ipayskeleton.DrawerFragments.InviteListHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class InviteActivity extends BaseActivity {

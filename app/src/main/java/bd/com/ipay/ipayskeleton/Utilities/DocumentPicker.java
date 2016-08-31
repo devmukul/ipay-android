@@ -169,7 +169,6 @@ public class DocumentPicker {
                 }
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
-                String fileExtension = Utilities.getExtension(selectedImage.getPath());
                 if (isCamera) {
                     Log.d(TAG, "Converting: " + selectedImage.getPath());
 

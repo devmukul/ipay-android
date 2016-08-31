@@ -1,8 +1,5 @@
 package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,7 +38,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -413,7 +409,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 try {
                     mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        String occupation = mGetOccupationResponse.getOccupation(mOccupation);
 
                     }
 

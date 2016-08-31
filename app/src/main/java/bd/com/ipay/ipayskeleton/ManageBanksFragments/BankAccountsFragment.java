@@ -25,19 +25,16 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -530,7 +527,6 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     ViewHolder vh = (ViewHolder) holder;
                     vh.bindView(position);
                 } else if (holder instanceof FooterViewHolder) {
-                    FooterViewHolder vh = (FooterViewHolder) holder;
                 }
             } catch (Exception e) {
                 e.printStackTrace();

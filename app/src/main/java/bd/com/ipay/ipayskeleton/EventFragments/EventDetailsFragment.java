@@ -150,10 +150,6 @@ public class EventDetailsFragment extends ProgressFragment implements HttpRespon
         if (mGetEventDetailsTask != null) {
             return;
         }
-
-        RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest("", 0, "", "");
-
-        Gson gson = new Gson();
         mGetEventDetailsTask.mHttpResponseListener = this;
         mGetEventDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -163,10 +159,6 @@ public class EventDetailsFragment extends ProgressFragment implements HttpRespon
         if (mVerifyTicketTask != null) {
             return;
         }
-
-        RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest("", 0, "", "");
-
-        Gson gson = new Gson();
         mVerifyTicketTask.mHttpResponseListener = this;
         mVerifyTicketTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

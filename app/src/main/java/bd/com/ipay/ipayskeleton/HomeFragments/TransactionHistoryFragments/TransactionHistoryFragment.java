@@ -113,8 +113,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
-        SharedPreferences pref = getActivity()
-                .getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);

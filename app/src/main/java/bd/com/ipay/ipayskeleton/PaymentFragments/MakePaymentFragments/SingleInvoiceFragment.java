@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -208,89 +206,93 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_SINGLE_INVOICE)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_SINGLE_INVOICE:
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                try {
-                    mGetSingleInvoiceResponse = gson.fromJson(result.getJsonString(), MoneyAndPaymentRequest.class);
+                    try {
+                        mGetSingleInvoiceResponse = gson.fromJson(result.getJsonString(), MoneyAndPaymentRequest.class);
 
-                    mPhotoUri = mGetSingleInvoiceResponse.getOriginatorProfile().getUserProfilePicture();
-                    mReceiverName = mGetSingleInvoiceResponse.originatorProfile.getUserName();
-                    mReceiverMobileNumber = mGetSingleInvoiceResponse.originatorProfile.getUserMobileNumber();
-                    mDescription = mGetSingleInvoiceResponse.getDescriptionofRequest();
-                    mTitle = mGetSingleInvoiceResponse.getTitle();
-                    mRequestId = mGetSingleInvoiceResponse.getId();
-                    mAmount = mGetSingleInvoiceResponse.getAmount();
-                    mVat = mGetSingleInvoiceResponse.getVat();
-                    mItemList = mGetSingleInvoiceResponse.getItemList();
+                        mPhotoUri = mGetSingleInvoiceResponse.getOriginatorProfile().getUserProfilePicture();
+                        mReceiverName = mGetSingleInvoiceResponse.originatorProfile.getUserName();
+                        mReceiverMobileNumber = mGetSingleInvoiceResponse.originatorProfile.getUserMobileNumber();
+                        mDescription = mGetSingleInvoiceResponse.getDescriptionofRequest();
+                        mTitle = mGetSingleInvoiceResponse.getTitle();
+                        mRequestId = mGetSingleInvoiceResponse.getId();
+                        mAmount = mGetSingleInvoiceResponse.getAmount();
+                        mVat = mGetSingleInvoiceResponse.getVat();
+                        mItemList = mGetSingleInvoiceResponse.getItemList();
 
-                    mReviewRecyclerView.setAdapter(paymentReviewAdapter);
+                        mReviewRecyclerView.setAdapter(paymentReviewAdapter);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
                     }
                 }
 
-            } else {
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
-                }
-            }
+                mGetSingleInvoiceTask = null;
+                mProgressDialog.dismiss();
 
-            mGetSingleInvoiceTask = null;
-            mProgressDialog.dismiss();
+                break;
+            case Constants.COMMAND_ACCEPT_PAYMENT_REQUEST:
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
+                try {
+                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            PaymentAcceptRejectOrCancelResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            getActivity().onBackPressed();
+                        }
 
-            try {
-                mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                        PaymentAcceptRejectOrCancelResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
-            }
-            mProgressDialog.dismiss();
-            mAcceptPaymentTask = null;
+                mProgressDialog.dismiss();
+                mAcceptPaymentTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+                break;
+            case Constants.COMMAND_REJECT_REQUESTS_MONEY:
 
-            try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
-                        RequestMoneyAcceptRejectOrCancelResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
+                try {
+                    mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            RequestMoneyAcceptRejectOrCancelResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            getActivity().onBackPressed();
+                        }
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
-            }
 
-            mProgressDialog.dismiss();
-            mRejectRequestTask = null;
+                mProgressDialog.dismiss();
+                mRejectRequestTask = null;
 
+                break;
         }
     }
 
