@@ -204,6 +204,9 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
     public class TrustedPersonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+        private static final int FOOTER_VIEW = 1;
+        private static final int TRUSTED_LIST_ITEM_VIEW = 2;
+
         public TrustedPersonListAdapter() {
         }
 
@@ -211,6 +214,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             private TextView mNameView;
             private TextView mMobileNumberView;
             private TextView mRelationshipView;
+            private final View divider;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -218,6 +222,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 mNameView = (TextView) itemView.findViewById(R.id.textview_name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
                 mRelationshipView = (TextView) itemView.findViewById(R.id.textview_relationship);
+                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindView(int pos) {
@@ -227,27 +232,41 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 mNameView.setText(trustedPerson.getName());
                 mMobileNumberView.setText(trustedPerson.getMobileNumber());
                 mRelationshipView.setText(trustedPerson.getRelationship());
+                if (pos == mTrustedPersons.size() - 1)
+                    divider.setVisibility(View.GONE);
             }
+        }
+
+
+        public class FooterViewHolder extends RecyclerView.ViewHolder {
+
+            public FooterViewHolder(View itemView) {
+                super(itemView);
+            }
+
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network,
-                    parent, false);
 
-            ViewHolder vh = new ViewHolder(v);
-
-            return vh;
+            if (viewType == FOOTER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network_footer, parent, false);
+                return new FooterViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network, parent, false);
+                return new ViewHolder(v);
+            }
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             try {
-                ViewHolder vh = (ViewHolder) holder;
-                vh.bindView(position);
-
+                if (holder instanceof ViewHolder) {
+                    ViewHolder vh = (ViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof FooterViewHolder) {
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -256,13 +275,17 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         @Override
         public int getItemCount() {
             if (mTrustedPersons != null)
-                return mTrustedPersons.size();
+                return mTrustedPersons.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            return super.getItemViewType(position);
+            if (position == getItemCount() - 1) {
+                return FOOTER_VIEW;
+            } else {
+                return TRUSTED_LIST_ITEM_VIEW;
+            }
         }
     }
 }

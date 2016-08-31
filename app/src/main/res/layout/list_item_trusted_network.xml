@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
         android:id="@+id/info_layout"
@@ -57,6 +59,7 @@
             android:visibility="gone" />
 
         <View
+            android:id="@+id/divider"
             style="@style/DividerWithoutMargin"
             android:layout_alignParentBottom="true" />
     </RelativeLayout>

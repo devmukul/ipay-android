@@ -14,7 +14,7 @@
         <ImageView
             android:id="@+id/mapview"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/value250"
+            android:layout_height="@dimen/value200"
             android:src="@drawable/map_new" />
 
         <LinearLayout
