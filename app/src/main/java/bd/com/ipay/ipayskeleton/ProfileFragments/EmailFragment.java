@@ -101,7 +101,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         getActivity().setTitle(R.string.email);
 
-
         mPrimaryEmailView = (TextView) v.findViewById(R.id.textview_email);
         mPrimaryVerificationStatus = (ImageView) v.findViewById(R.id.email_verification_status);
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);

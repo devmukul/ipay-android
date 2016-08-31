@@ -78,14 +78,16 @@
                                 android:id="@+id/name_layout"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:id="@+id/textview_name"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/value2"
+                                    android:layout_weight="1"
+                                    android:ellipsize="end"
+                                    android:maxLines="2"
                                     android:textColor="@android:color/white"
                                     android:textSize="@dimen/text_size_small_medium_value18" />
 
@@ -93,8 +95,9 @@
                                     android:id="@+id/verification_status"
                                     android:layout_width="@dimen/value15"
                                     android:layout_height="@dimen/value15"
+                                    android:layout_gravity="center_vertical"
                                     android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                                    android:src="@drawable/ic_not_verified"/>
+                                    android:src="@drawable/ic_not_verified" />
 
                             </LinearLayout>
 
