@@ -551,6 +551,7 @@
     <string name="add_bank">Add Bank</string>
     <string name="verify_bank">Verify Bank</string>
     <string name="bank_added_successfully">Bank added successfully</string>
+    <string name="bank_successfully_placed_for_verification">Bank successfully placed for verification.</string>
     <string name="progress_dialog_loading_document_preview">Loading document preview...</string>
     <string name="failed_document_preview_loading">Failed to load document preview</string>
     <string name="allow_access">Allow Access</string>

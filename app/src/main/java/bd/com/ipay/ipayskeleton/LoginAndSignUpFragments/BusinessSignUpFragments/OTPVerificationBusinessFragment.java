@@ -249,7 +249,6 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder).apply();
                     pref.edit().putString(Constants.GENDER, "M").apply();
                     pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE).apply();
-                    pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
 
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();
@@ -311,7 +310,8 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    Toast.makeText(getActivity(), R.string.signup_successful, Toast.LENGTH_LONG).show();
+                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                    pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
                     ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                 } else {

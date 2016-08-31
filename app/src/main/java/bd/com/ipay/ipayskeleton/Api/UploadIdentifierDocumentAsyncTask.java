@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.Api;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -85,6 +87,11 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
 
         if (result != null) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
+                // Set the preference first
+                SharedPreferences pref;
+                pref = mContext.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+
                 // In case of un-authorization go to login activity
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
                 mContext.startActivity(intent);

@@ -251,7 +251,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         pref.edit().putString(Constants.GENDER, SignupOrLoginActivity.mGender).apply();
                         pref.edit().putString(Constants.USERCOUNTRY, "Bangladesh").apply();   // TODO
                         pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE).apply();
-                        pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
 
                         // Request a login immediately after sign up
                         if (Utilities.isConnectionAvailable(getActivity()))
@@ -321,8 +320,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String message = mLoginResponseModel.getMessage();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                        Toast.makeText(getActivity(), R.string.signup_successful, Toast.LENGTH_LONG).show();
+                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                        pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                     } else {

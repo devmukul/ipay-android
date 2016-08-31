@@ -439,6 +439,10 @@ public class HomeActivity extends BaseActivity
             if (Utilities.isConnectionAvailable(HomeActivity.this))
                 attemptLogout();
             else {
+                SharedPreferences pref;
+                pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+
                 finish();
                 Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
                 startActivity(intent);
@@ -644,29 +648,29 @@ public class HomeActivity extends BaseActivity
 
                 break;
 
-            case Constants.COMMAND_REFRESH_TOKEN:
-                try {
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        // Do nothing
-                    } else {
-                        Toast.makeText(this, R.string.please_log_in_again, Toast.LENGTH_LONG).show();
-                        finish();
-                        Intent intent = new Intent(this, SignupOrLoginActivity.class);
-                        startActivity(intent);
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, R.string.please_login_again, Toast.LENGTH_LONG).show();
-                    finish();
-                    Intent intent = new Intent(this, SignupOrLoginActivity.class);
-                    startActivity(intent);
-                }
-
-                HomeActivity.mRefreshTokenAsyncTask = null;
-
-                break;
+//            case Constants.COMMAND_REFRESH_TOKEN:
+//                try {
+//
+//                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+//                        // Do nothing
+//                    } else {
+//                        Toast.makeText(this, R.string.please_log_in_again, Toast.LENGTH_LONG).show();
+//                        finish();
+//                        Intent intent = new Intent(this, SignupOrLoginActivity.class);
+//                        startActivity(intent);
+//                    }
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(this, R.string.please_login_again, Toast.LENGTH_LONG).show();
+//                    finish();
+//                    Intent intent = new Intent(this, SignupOrLoginActivity.class);
+//                    startActivity(intent);
+//                }
+//
+//                HomeActivity.mRefreshTokenAsyncTask = null;
+//
+//                break;
         }
     }
 
