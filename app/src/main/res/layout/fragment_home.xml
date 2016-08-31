@@ -94,8 +94,7 @@
                                     android:layout_width="@dimen/value20"
                                     android:layout_height="@dimen/value20"
                                     android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                                    android:src="@drawable/ic_verified_profile"
-                                    android:visibility="gone" />
+                                    android:src="@drawable/ic_verified_profile"/>
 
                             </LinearLayout>
 
