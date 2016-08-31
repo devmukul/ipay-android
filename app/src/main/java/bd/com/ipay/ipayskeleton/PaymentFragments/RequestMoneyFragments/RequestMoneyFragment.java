@@ -86,9 +86,10 @@ public class RequestMoneyFragment extends Fragment {
         buttonRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity()) && verifyUserInputs())
-                    launchReviewPage();
-                else if (getActivity() != null)
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    if (verifyUserInputs())
+                        launchReviewPage();
+                } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
