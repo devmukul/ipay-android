@@ -12,7 +12,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/value200"
+            android:layout_height="@dimen/value180"
             android:background="@drawable/bg_account"
             android:orientation="vertical">
 
@@ -33,28 +33,40 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/profile_picture">
 
-                    <TextView
-                        android:id="@+id/textview_name"
+                    <LinearLayout
+                        android:id="@+id/name_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/value2"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small_medium_value18" />
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/textview_verification_status"
-                        android:layout_width="@dimen/value15"
-                        android:layout_height="@dimen/value15"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_toRightOf="@+id/textview_name"
-                        android:src="@drawable/ic_verified_profile" />
+                        <TextView
+                            android:id="@+id/textview_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/value2"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/text_size_small_medium_value18" />
+
+                        <ImageView
+                            android:id="@+id/textview_verification_status"
+                            android:layout_width="@dimen/value15"
+                            android:layout_height="@dimen/value15"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                            android:layout_marginRight="@dimen/activity_horizontal_margin"
+                            android:layout_toRightOf="@+id/textview_name"
+                            android:src="@drawable/ic_verified_profile" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/textview_mobile_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textview_name"
+                        android:layout_below="@+id/name_view"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin_semi_double"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/text_size_small" />
