@@ -173,6 +173,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                         intent.putExtra(Constants.MESSAGE, message);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         mContext.startActivity(intent);
+
+                    } else {
+                        // Wrong user name or password returns HTTP_RESPONSE_STATUS_UNAUTHORIZED too
+                        if (mHttpResponseListener != null)
+                            mHttpResponseListener.httpResponseReceiver(result);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
