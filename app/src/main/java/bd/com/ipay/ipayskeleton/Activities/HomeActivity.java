@@ -659,7 +659,9 @@ public class HomeActivity extends BaseActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Log.d("Broadcast home activity", newProfilePicture);
+            if (Constants.DEBUG)
+                Log.d("Broadcast home activity", newProfilePicture);
+            
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
