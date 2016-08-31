@@ -1,74 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/activity_horizontal_margin">
+    android:background="@android:color/white">
 
-    <android.support.design.widget.TextInputLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/CustomTextInputLayout">
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/activity_horizontal_margin">
 
-        <EditText
-            android:id="@+id/password"
-            style="@style/CustomEditText"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_current_pass"
-            android:imeOptions="actionUnspecified"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
+            android:theme="@style/CustomTextInputLayout">
 
-    <View style="@style/Divider" />
+            <EditText
+                android:id="@+id/password"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_current_pass"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/CustomTextInputLayout">
+        <View style="@style/Divider" />
 
-        <EditText
-            android:id="@+id/new_pin"
-            style="@style/CustomEditText"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_new_pin"
-            android:inputType="numberPassword"
-            android:maxLength="4"
-            android:maxLines="1"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
+            android:theme="@style/CustomTextInputLayout">
 
-    <View style="@style/Divider" />
+            <EditText
+                android:id="@+id/new_pin"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_new_pin"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/CustomTextInputLayout">
+        <View style="@style/Divider" />
 
-        <EditText
-            android:id="@+id/confirm_pin"
-            style="@style/CustomEditText"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/confirm_your_pin"
-            android:inputType="numberPassword"
-            android:maxLength="4"
-            android:maxLines="1"
-            android:singleLine="true" />
+            android:theme="@style/CustomTextInputLayout">
 
-    </android.support.design.widget.TextInputLayout>
+            <EditText
+                android:id="@+id/confirm_pin"
+                style="@style/CustomEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/confirm_your_pin"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:maxLines="1"
+                android:singleLine="true" />
 
-    <View style="@style/Divider" />
+        </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/save_pin"
-        style="@style/PrimaryMediumButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/save" />
+        <View style="@style/Divider" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/save_pin"
+            style="@style/PrimaryMediumButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save" />
+
+    </LinearLayout>
+</ScrollView>

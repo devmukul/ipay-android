@@ -143,7 +143,7 @@
     <string name="please_select_a_district">Please select a district</string>
     <string name="please_select_a_branch">Please select a branch</string>
     <string name="please_enter_an_account_number">Please provide your Account Number and try again</string>
-    <string name="please_enter_an_account_number_of_minimum_digit">Account number at least 8 digit long</string>
+    <string name="please_enter_an_account_number_of_minimum_digit">Account number must be at least 8 digit long</string>
     <string name="business_information">Business Information</string>
     <string name="account_holder_information">Information of Account Holder</string>
     <string name="yes">Yes</string>
@@ -626,7 +626,7 @@
     <string name="see_profile_completion">See profile completeness</string>
     <string name="privileges">Privileges</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
-    <string name="add_money_info">It make 3-5 business days to complete the operation </string>
+    <string name="add_money_info">It may take 3-5 business days to complete the operation </string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
