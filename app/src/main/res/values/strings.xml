@@ -350,6 +350,7 @@
     <string name="opening_balance_to">Opening balance to</string>
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
     <string name="support_not_available">Customer support is not available right now. Please try again later.</string>
+    <string name="education_not_available">Education service is not available right now. Please try again later.</string>
     <string name="purpose">Purpose</string>
     <string name="failure_cause">Failure Cause</string>
     <string name="filter_profile_change">Profile Changes</string>

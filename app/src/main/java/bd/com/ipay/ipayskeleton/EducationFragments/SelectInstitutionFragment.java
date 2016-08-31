@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.EducationFragments;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -190,6 +192,19 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
         mGetAllInstitutionsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void showErrorDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(R.string.education_not_available)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().onBackPressed();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
     private void getSessionsByInstituteID(long instituteID) {
         if (mGetSessionsByInstitutionTask != null) {
             return;
@@ -258,6 +273,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
                             e.printStackTrace();
                         }
                     } else {
+                        showErrorDialog();
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.get_all_institution_failed, Toast.LENGTH_SHORT).show();
                     }
