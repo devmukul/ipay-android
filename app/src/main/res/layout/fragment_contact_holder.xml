@@ -41,7 +41,7 @@
                 <CheckBox
                     android:id="@+id/checkbox_contacts_all"
                     style="@style/ContactsSelectorStyle"
-                    android:layout_width="56dp"
+                    android:layout_width="@dimen/value60"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:background="@drawable/background_left_round_checkbox"
@@ -50,7 +50,7 @@
                 <CheckBox
                     android:id="@+id/checkbox_contacts_ipay"
                     style="@style/ContactsSelectorStyle"
-                    android:layout_width="56dp"
+                    android:layout_width="@dimen/value60"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_right_round_checkbox"
                     android:text="@string/ipay_contacts" />
