@@ -578,8 +578,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                         mPicker.setImageBitmap(mBitmap);
                     }
-                } else
+                } else {
+                    if(verificationStatus == null)
                     mPicker.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_addw));
+                    else
+                        mPicker.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_image));
+                }
 
                 if (documentPreviewBindViewHolderList.get(pos).getmSelectedfilePath().isEmpty()) {
                     mSelectFile.setText("");

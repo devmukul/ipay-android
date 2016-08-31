@@ -601,7 +601,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_openingbalance);
+                    otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
