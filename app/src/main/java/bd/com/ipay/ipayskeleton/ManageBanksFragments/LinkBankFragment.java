@@ -371,8 +371,8 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
 
                         if (!startedFromProfileCompletion)
                             ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
-                        else //TODO
-                            Toast.makeText(getActivity(), R.string.bank_added_successfully, Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG).show();
 
                     } else {
                         if (getActivity() != null)
