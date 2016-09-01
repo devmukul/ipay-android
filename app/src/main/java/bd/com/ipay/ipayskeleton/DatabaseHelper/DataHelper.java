@@ -94,7 +94,8 @@ public class DataHelper {
 
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_FRIENDS
                     + " WHERE (" + DBConstants.KEY_NAME + " LIKE '%" + query + "%'"
-                    + " OR " + DBConstants.KEY_MOBILE_NUMBER + " LIKE '%" + query + "%')";
+                    + " OR " + DBConstants.KEY_MOBILE_NUMBER + " LIKE '%" + query + "%'"
+                    + " OR " + DBConstants.KEY_ORIGINAL_NAME + " LIKE '%" + query + "%')";
 
             // Get Verified Users
             if (verifiedOnly)
