@@ -185,7 +185,6 @@
     <string name="invalid_otp">Enter a valid OTP</string>
     <string name="recharge_failed">Mobile recharge failed.</string>
     <string name="save_failed">Failed to save...</string>
-    <string name="please_login_again">Please sign in again.</string>
     <string name="sending_otp">Sending OTP in your mobile...</string>
     <string name="change_pass_failed">Failed to change password</string>
     <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
@@ -555,7 +554,6 @@
     <string name="verify_bank_prompt">You need to have at least one verified bank account to add or withdraw money. Do you want to verify a bank account now?</string>
     <string name="add_bank">Add Bank</string>
     <string name="verify_bank">Verify Bank</string>
-    <string name="bank_added_successfully">Bank added successfully</string>
     <string name="bank_successfully_placed_for_verification">Bank successfully placed for verification.</string>
     <string name="progress_dialog_loading_document_preview">Loading document preview...</string>
     <string name="failed_document_preview_loading">Failed to load document preview</string>
@@ -657,7 +655,6 @@
     <string name="dialog_add_new_email">You need to set up your primary email to use the support system. Add an email now?</string>
     <string name="dialog_verify_email">You need to set up your primary email to use the support system. Verify your email now?</string>
     <string name="no_primary_email">No Primary Email</string>
-    <string name="failed_loading_tickets">Failed to load tickets</string>
     <string name="no_tickets_available">"You haven't created any ticket. Press '+' to create one"</string>
     <string name="message">Message</string>
     <string name="failed_empty_subject">Subject cannot be empty</string>
