@@ -493,7 +493,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PaymentActivity.class);
                 intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
-                intent.putExtra(RequestMoneyActivity.LAUNCH_NEW_REQUEST, true);
+                intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
                 startActivity(intent);
 
                 if (mBottomSheetLayout.isSheetShowing()) {

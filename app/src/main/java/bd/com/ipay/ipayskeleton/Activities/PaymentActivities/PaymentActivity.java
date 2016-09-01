@@ -50,11 +50,14 @@ public class PaymentActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Utilities.hideKeyboard(this);
         if (item.getItemId() == android.R.id.home) {
             if (switchedToPendingList) {
+                super.onBackPressed();
+            } else if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
                 super.onBackPressed();
             } else {
                 switchToInvoicePaymentFragment();
