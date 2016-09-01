@@ -264,7 +264,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                         Bundle bundle = new Bundle();
                         bundle.putLong(Constants.REQUEST_ID, requestID);
                         bundle.putString(Constants.NAME, senderName);
-                        bundle.putString(Constants.PHOTO_URI, photoUri);
+                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + photoUri);
                         bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
                         bundle.putString(Constants.FATHERS_NAME, fathersName);
                         bundle.putString(Constants.MOTHERS_NAME, mothersName);
