@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.CustomView;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -108,7 +109,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
     }
 
     private void setThanaAdapter(List<Thana> thanaList) {
-        thanaSelectorDialog = new ResourceSelectorDialog<>(context,context.getString(R.string.select_a_thana),thanaList, mSelectedThanaId);
+        thanaSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_thana), thanaList, mSelectedThanaId);
         thanaSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -127,7 +128,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
     }
 
     private void setDistrictAdapter(List<District> districtList) {
-        districtSelectorDialog = new ResourceSelectorDialog<>(context,context.getString(R.string.select_a_district), districtList, mSelectedDistrictId);
+        districtSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_district), districtList, mSelectedDistrictId);
         districtSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -165,19 +166,13 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
             mPostalCodeField.setText(mAddressClass.getPostalCode());
 
         mSelectedDistrictId = mAddressClass.getDistrictCode();
-        if (mSelectedDistrictId >= 0)
-            getDistrictList();
-
-        if (mDistrictList != null) {
-            setDistrictName(mSelectedDistrictId);
-        }
-
         mSelectedThanaId = mAddressClass.getThanaCode();
-        if (mSelectedThanaId >= 0)
-            getThanaList(mSelectedDistrictId);
 
-        if (mThanaList != null) {
-            setThanaName(mSelectedThanaId);
+        if (mDistrictList == null)
+            getDistrictList();
+        else {
+            setDistrictName(mSelectedDistrictId);
+            getThanaList(mSelectedDistrictId);
         }
 
         String countryCode = mAddressClass.getCountryCode();
@@ -203,6 +198,23 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
     }
 
     private void setThanaName(int thana) {
+        if (mThanaList != null) {
+            for (int i = 0; i < mThanaList.size(); i++) {
+                if (thana == mThanaList.get(i).getId()) {
+                    mThanaSelection.setText(mThanaList.get(i).getName());
+                    return;
+                }
+            }
+
+            // No selected thana, select the first thana
+            if (mThanaList.size() > 0) {
+                mSelectedThanaId = mThanaList.get(0).getId();
+                mThanaSelection.setText(mThanaList.get(0).getName());
+            }
+        }
+    }
+
+    private void setThanaNamebyID(int thana) {
         if (mThanaList != null) {
             for (int i = 0; i < mThanaList.size(); i++) {
                 if (thana == mThanaList.get(i).getId()) {
@@ -269,7 +281,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                    || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
             if (context != null)
