@@ -174,19 +174,13 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
             mPostalCodeField.setText(mAddressClass.getPostalCode());
 
         mSelectedDistrictId = mAddressClass.getDistrictCode();
-        if (mSelectedDistrictId >= 0)
-            getDistrictList();
-
-        if (mDistrictList != null) {
-            setDistrictName(mSelectedDistrictId);
-        }
-
         mSelectedThanaId = mAddressClass.getThanaCode();
-        if (mSelectedThanaId >= 0)
-            getThanaList(mSelectedDistrictId);
 
-        if (mThanaList != null) {
-            setThanaName(mSelectedThanaId);
+        if (mDistrictList == null)
+            getDistrictList();
+        else {
+            setDistrictName(mSelectedDistrictId);
+            getThanaList(mSelectedDistrictId);
         }
 
         String countryCode = mAddressClass.getCountryCode();
