@@ -100,6 +100,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             dialog
                     .title(R.string.no_email_added)
                     .content(R.string.dialog_add_new_email)
+                    .cancelable(false)
                     .positiveText(R.string.add_email)
                     .negativeText(R.string.cancel)
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
