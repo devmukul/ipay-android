@@ -184,12 +184,12 @@ public class TransactionDetailsFragment extends Fragment {
 
         final String[] OPERATOR_PREFIXES = {"17", "13", "18", "16", "19", "15"};
         int[] operator_array = new int[]{
-                R.drawable.ic_gp,
-                R.drawable.ic_gp,
-                R.drawable.ic_robi,
-                R.drawable.ic_airtel,
-                R.drawable.ic_banglalink,
-                R.drawable.ic_teletalk,
+                R.drawable.ic_gp2,
+                R.drawable.ic_gp2,
+                R.drawable.ic_robi2,
+                R.drawable.ic_airtel2,
+                R.drawable.ic_banglalink2,
+                R.drawable.ic_teletalk2,
         };
 
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {

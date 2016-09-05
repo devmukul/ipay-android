@@ -108,16 +108,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-//
-//                pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-//                    @Override
-//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                        attemptRequestMoney(pinInputDialogBuilder.getPin());
-//                    }
-//                });
-//
-//                pinInputDialogBuilder.show();
                 attemptRequestMoney();
             }
         });

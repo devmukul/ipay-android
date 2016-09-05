@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.Util;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
@@ -425,7 +426,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
 
                             Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
                         }
 
                     } else {
@@ -579,8 +579,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mPicker.setImageBitmap(mBitmap);
                     }
                 } else {
-                    if(verificationStatus == null)
-                    mPicker.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_addw));
+                    if (verificationStatus == null)
+                        mPicker.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_addw));
                     else
                         mPicker.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_image));
                 }
@@ -654,6 +654,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         } else if (documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri() == null) {
                             mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
                         } else {
+                            Utilities.hideKeyboard(getActivity());
                             documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
                             uploadDocument(documentPreviewBindViewHolderList.get(pos).getmDocumentId(), identificationDocumentDetail.getDocumentType(), pos);
                         }

@@ -54,7 +54,7 @@ public class ProfileImageView extends FrameLayout {
 
     public void setProfilePicturePlaceHolder() {
         Glide.with(context)
-                .load(R.drawable.ic_profile5)
+                .load(R.drawable.ic_profile)
                 .crossFade()
                 .into(mProfilePictureView);
     }
@@ -70,8 +70,8 @@ public class ProfileImageView extends FrameLayout {
             }
 
             glide
-                    .placeholder(R.drawable.ic_profile5)
-                    .error(R.drawable.ic_profile5)
+                    .placeholder(R.drawable.ic_profile)
+                    .error(R.drawable.ic_profile)
                     .crossFade()
                     .dontAnimate()
                     .transform(new CircleTransform(context))

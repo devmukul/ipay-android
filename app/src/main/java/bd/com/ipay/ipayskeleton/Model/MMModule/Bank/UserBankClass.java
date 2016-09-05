@@ -62,12 +62,14 @@ public class UserBankClass {
         Resources resources = context.getResources();
         int resourceId;
         if(bankCode!=null)
-        resourceId = resources.getIdentifier("bank" + getBankCode(), "drawable",
+        resourceId = resources.getIdentifier("ic_bank" + getBankCode(), "drawable",
                 context.getPackageName());
         else
-            resourceId = resources.getIdentifier("bank" + "111", "drawable",
+            resourceId = resources.getIdentifier("ic_bank" + "111", "drawable",
                     context.getPackageName());
         return resourceId;
         //return resources.getDrawable(resourceId);
     }
+
 }
+

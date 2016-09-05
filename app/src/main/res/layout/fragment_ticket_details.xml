@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin">
+            android:layout_marginBottom="@dimen/value70">
 
             <TextView
                 android:layout_width="match_parent"
@@ -63,6 +63,7 @@
             android:layout_gravity="bottom|right"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
             android:src="@drawable/ic_addw"
             app:backgroundTint="@color/colorPrimary"
             app:fabSize="normal"

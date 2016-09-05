@@ -141,7 +141,7 @@ public class Constants {
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     /**
      * If set to true (with DEBUG flag also being set to true),
@@ -159,7 +159,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 4;
+    public static final int SERVER_TYPE = 1;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
@@ -208,7 +208,7 @@ public class Constants {
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
-            BASE_URL_ADMIN = "http://www.ipay.com.bd/api/v1/support/";
+            BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
             SERVER_NAME = "live";
 
         } else {

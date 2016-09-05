@@ -24,7 +24,7 @@
                     android:id="@+id/portrait"
                     style="@style/ReviewBankImageStyle"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/bank111" />
+                    android:src="@drawable/ic_bank111" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

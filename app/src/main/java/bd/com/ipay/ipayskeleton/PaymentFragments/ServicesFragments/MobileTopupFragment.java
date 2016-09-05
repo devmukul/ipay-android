@@ -299,12 +299,12 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private int[] getOperatorIcons() {
         //Setting the correct image based on Operator
         return new int[]{
-                R.drawable.ic_gp,
-                R.drawable.ic_gp,
-                R.drawable.ic_robi,
-                R.drawable.ic_airtel,
-                R.drawable.ic_banglalink,
-                R.drawable.ic_teletalk,
+                R.drawable.ic_gp2,
+                R.drawable.ic_gp2,
+                R.drawable.ic_robi2,
+                R.drawable.ic_airtel2,
+                R.drawable.ic_banglalink2,
+                R.drawable.ic_teletalk2,
 
         };
 
