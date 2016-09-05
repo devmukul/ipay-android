@@ -139,17 +139,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
 
-        if (ProfileInfoCacheManager.isBusinessAccount()) {
-            documentPreviewBindViewHolderList = new ArrayList<>(COUNT_UPLOAD_BUSINESS_DOCUMENT + 1);
-
-            for (String DOCUMENT_TYPE : BUSINESS_DOCUMENT_TYPES)
-                documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
-        } else {
-            documentPreviewBindViewHolderList = new ArrayList<>(COUNT_UPLOAD_PERSONAL_DOCUMENT + 1);
-
-            for (String DOCUMENT_TYPE : DOCUMENT_TYPES)
-                documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
-        }
         return v;
     }
 
@@ -223,6 +212,17 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private void loadDocumentInfo() {
 
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            documentPreviewBindViewHolderList = new ArrayList<>(COUNT_UPLOAD_BUSINESS_DOCUMENT + 1);
+
+            for (String DOCUMENT_TYPE : BUSINESS_DOCUMENT_TYPES)
+                documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
+        } else {
+            documentPreviewBindViewHolderList = new ArrayList<>(COUNT_UPLOAD_PERSONAL_DOCUMENT + 1);
+
+            for (String DOCUMENT_TYPE : DOCUMENT_TYPES)
+                documentPreviewBindViewHolderList.add(new DocumentPreviewBindViewHolder());
+        }
         mIdentificationDocumentDetails = new IdentificationDocumentDetails[documentPreviewBindViewHolderList.size()];
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
@@ -426,6 +426,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
 
                             Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                            if (ProfileInfoCacheManager.isBusinessAccount()) {
+                                getIdentificationBusinessDocuments();
+                            } else
+                                getIdentificationDocuments();
                         }
 
                     } else {
