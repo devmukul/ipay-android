@@ -22,7 +22,6 @@
 -keep class com.makeramen.** { *; }
 -keep class com.github.** { *; }
 -keep class org.apache.** { *; }
--keep class com.kogitune.** { *; }
 -keep class com.flipboard.** { *; }
 -keep class com.android.** { *; }
 -keep class com.mikepenz.** { *; }
