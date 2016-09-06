@@ -151,7 +151,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
         mProgressDialog.show();
-
+        mProgressDialog.setCanceledOnTouchOutside(false);
         AddMoneyRequest mAddMoneyRequest = new AddMoneyRequest(mBankAccountId, mAmount, mDescription, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);

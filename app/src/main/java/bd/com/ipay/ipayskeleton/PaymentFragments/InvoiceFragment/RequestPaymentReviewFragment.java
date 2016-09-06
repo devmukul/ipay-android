@@ -115,7 +115,7 @@ public class RequestPaymentReviewFragment extends Fragment implements HttpRespon
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invoice));
         mProgressDialog.show();
-
+        mProgressDialog.setCanceledOnTouchOutside(false);
         SendInvoiceRequest mCreateInvoiceRequest = new SendInvoiceRequest(mAmount, mReceiverMobileNumber, mDescription, null, mVat);
         Gson gson = new Gson();
         String json = gson.toJson(mCreateInvoiceRequest);

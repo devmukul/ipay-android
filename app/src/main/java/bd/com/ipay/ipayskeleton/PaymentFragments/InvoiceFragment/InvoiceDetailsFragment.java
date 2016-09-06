@@ -104,7 +104,7 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
         mProgressDialog.show();
-
+        mProgressDialog.setCanceledOnTouchOutside(false);
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, null);
         Gson gson = new Gson();

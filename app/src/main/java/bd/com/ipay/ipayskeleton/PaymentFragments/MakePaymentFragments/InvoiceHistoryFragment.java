@@ -125,6 +125,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
+        mProgressDialog.setCanceledOnTouchOutside(false);
         PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
                 new PaymentAcceptRejectOrCancelRequest(id, pin);
         Gson gson = new Gson();
@@ -142,6 +143,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
+        mProgressDialog.setCanceledOnTouchOutside(false);
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id);
         Gson gson = new Gson();

@@ -121,7 +121,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             mDescriptionView.setVisibility(View.GONE);
         } else
             mDescriptionView.setText(mDescription);
-        
+
         if (mTitle == null || mTitle.isEmpty()) {
             mTitleTagView.setVisibility(View.GONE);
             mTitleView.setVisibility(View.GONE);
@@ -221,6 +221,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
         mProgressDialog.show();
+        mProgressDialog.setCanceledOnTouchOutside(false);
         // No PIN needed for now to place a request from me
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, null);
@@ -239,7 +240,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
-
+        mProgressDialog.setCanceledOnTouchOutside(false);
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id);
         Gson gson = new Gson();
@@ -257,6 +258,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
+        mProgressDialog.setCanceledOnTouchOutside(false);
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, pin);
         Gson gson = new Gson();

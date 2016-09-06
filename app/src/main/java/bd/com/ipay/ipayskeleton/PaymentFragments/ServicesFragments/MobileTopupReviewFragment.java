@@ -161,7 +161,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
         mProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
         mProgressDialog.show();
-
+        mProgressDialog.setCanceledOnTouchOutside(false);
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
