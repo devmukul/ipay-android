@@ -55,12 +55,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewInfoLabel"
+                    style="@style/TextViewInfoLabelReview"
                     android:text="@string/total_amount" />
 
                 <TextView
                     android:id="@+id/textview_amount"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimaryReview" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -117,12 +117,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextViewInfoLabel"
+                    style="@style/TextViewInfoLabelReview"
                     android:text="@string/topup_package" />
 
                 <TextView
                     android:id="@+id/textview_package"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimaryReview" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -134,7 +134,7 @@
                 android:visibility="visible">
 
                 <TextView
-                    style="@style/TextViewInfoLabel"
+                    style="@style/TextViewInfoLabelReview"
                     android:text="@string/operator" />
 
                 <ImageView

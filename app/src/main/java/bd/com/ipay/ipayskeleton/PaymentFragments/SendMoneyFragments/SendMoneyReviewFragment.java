@@ -158,6 +158,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
         mProgressDialog.show();
+        mProgressDialog.setCanceledOnTouchOutside(false);
         SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(
                 mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
                 mAmount.toString(), mDescription, pin);

@@ -61,12 +61,12 @@
             <LinearLayout style="@style/LinearLayoutHolder">
 
                 <TextView
-                    style="@style/TextViewInfoLabel"
+                    style="@style/TextViewInfoLabelReview"
                     android:text="@string/quantity" />
 
                 <TextView
                     android:id="@+id/textview_quantity"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimaryReview" />
 
             </LinearLayout>
 
@@ -75,12 +75,12 @@
             <LinearLayout style="@style/LinearLayoutHolder">
 
                 <TextView
-                    style="@style/TextViewInfoLabel"
+                    style="@style/TextViewInfoLabelReview"
                     android:text="@string/rate" />
 
                 <TextView
                     android:id="@+id/textview_rate"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimaryReview" />
 
             </LinearLayout>
 
@@ -89,12 +89,12 @@
             <LinearLayout style="@style/LinearLayoutHolder">
 
                 <TextView
-                    style="@style/TextViewInfoLabel"
+                    style="@style/TextViewInfoLabelReview"
                     android:text="@string/AMOUNT" />
 
                 <TextView
                     android:id="@+id/textview_amount"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimaryReview" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -102,12 +102,12 @@
             <LinearLayout style="@style/LinearLayoutHolder">
 
                 <TextView
-                    style="@style/TextViewInfoLabel"
+                    style="@style/TextViewInfoLabelReview"
                     android:text="@string/vat" />
 
                 <TextView
                     android:id="@+id/textview_vat"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimaryReview" />
 
             </LinearLayout>
 
@@ -116,12 +116,12 @@
             <LinearLayout style="@style/LinearLayoutHolder">
 
                 <TextView
-                    style="@style/TextViewInfoLabel"
+                    style="@style/TextViewInfoLabelReview"
                     android:text="@string/TOTAL" />
 
                 <TextView
                     android:id="@+id/textview_total"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimaryReview" />
 
             </LinearLayout>
         </LinearLayout>
