@@ -12,8 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginRight="@dimen/value20"
         android:paddingBottom="@dimen/value5"
-        android:paddingTop="@dimen/value5"
-        android:src="@drawable/ic_number" />
+        android:paddingTop="@dimen/value5" />
 
     <TextView
         android:id="@id/textView"

@@ -54,8 +54,7 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin_card"
             android:layout_marginTop="@dimen/value6"
             android:clickable="true"
-            android:padding="@dimen/value5"
-            android:src="@drawable/ic_error_black_24dp" />
+            android:padding="@dimen/value5" />
     </RelativeLayout>
 
     <View

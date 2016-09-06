@@ -132,7 +132,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <ImageView
-                android:id="@+id/startDatePicker"
+                android:id="@+id/startDic_numberatePicker"
                 style="@style/ButtonStyleAccentSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

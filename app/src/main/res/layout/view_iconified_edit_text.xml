@@ -14,8 +14,7 @@
         android:layout_marginLeft="@dimen/value10"
         android:layout_marginRight="@dimen/value20"
         android:paddingBottom="@dimen/value5"
-        android:paddingTop="@dimen/value5"
-        android:src="@drawable/ic_number" />
+        android:paddingTop="@dimen/value5" />
 
     <EditText
         android:id="@+id/edit_text"
