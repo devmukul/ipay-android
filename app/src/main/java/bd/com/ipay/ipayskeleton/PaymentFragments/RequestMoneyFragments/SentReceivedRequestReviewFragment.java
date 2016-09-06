@@ -55,6 +55,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
     private TextView mMobileNumberView;
+    private TextView mDescriptionTagView;
+    private TextView mTitleTagView;
     private TextView mDescriptionView;
     private TextView mTitleView;
     private View mDescriptionHolder;
@@ -89,6 +91,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mDescriptionTagView = (TextView) v.findViewById(R.id.description);
+        mTitleTagView = (TextView) v.findViewById(R.id.title);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mTitleView = (TextView) v.findViewById(R.id.textview_title);
         mDescriptionHolder = v.findViewById(R.id.layout_description_holder);
@@ -112,21 +116,17 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mMobileNumberView.setText(mReceiverMobileNumber);
 
-        if ((mDescription == null || mDescription.isEmpty()) && (mTitle == null || mTitle.isEmpty())) {
-            mDescriptionHolder.setVisibility(View.GONE);
-        } else {
-            if (mDescription == null || mDescription.isEmpty()) {
-                mDescriptionView.setVisibility(View.GONE);
-            } else {
-                mDescriptionView.setText(mDescription);
-            }
-
-            if (mTitle == null || mTitle.isEmpty()) {
-                mTitleView.setVisibility(View.GONE);
-            } else {
-                mTitleView.setText(mTitle);
-            }
-        }
+        if (mDescription == null || mDescription.isEmpty()) {
+            mDescriptionTagView.setVisibility(View.GONE);
+            mDescriptionView.setVisibility(View.GONE);
+        } else
+            mDescriptionView.setText(mDescription);
+        
+        if (mTitle == null || mTitle.isEmpty()) {
+            mTitleTagView.setVisibility(View.GONE);
+            mTitleView.setVisibility(View.GONE);
+        } else
+            mTitleView.setText(mTitle);
 
         if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
             mAcceptButton.setVisibility(View.VISIBLE);

@@ -106,12 +106,13 @@
             android:background="@color/colorDividerGapGray" />
 
         <LinearLayout
-            android:id="@+id/layout_description_holder"
+            android:id="@+id/layout_title_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/title"
                 style="@style/ListHeaderStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -124,6 +125,7 @@
                 style="@style/TextViewDescription" />
 
             <TextView
+                android:id="@+id/description"
                 style="@style/ListHeaderStyle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
