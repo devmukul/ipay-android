@@ -171,7 +171,7 @@
             android:label="@string/events"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.TourActivity"
             android:label="@string/app_name"
