@@ -184,7 +184,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
                     mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
                     mBirthdayEditText.setError(null);
-                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + mMonthArray[mMonth - 1] + " , " + mYear);
+                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
                 }
             };
 
