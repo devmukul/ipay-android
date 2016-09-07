@@ -128,7 +128,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     }
 
     public void setTitle() {
-        getActivity().setTitle(R.string.trusted_devices);
+        getActivity().setTitle(R.string.browsers_and_apps);
     }
 
     @Override
