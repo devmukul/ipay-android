@@ -281,13 +281,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginBottom">@dimen/value5</item>
-        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin_card</item>
-        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
         <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin_card</item>
         <item name="android:background">@drawable/background_transparent_with_border_gray</item>
     </style>
 

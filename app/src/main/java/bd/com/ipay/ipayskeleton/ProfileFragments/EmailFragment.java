@@ -129,6 +129,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setContentShown(false);
 
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
             getEmails();
@@ -204,8 +205,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         if (mGetEmailsTask != null) {
             return;
         }
-
-        setContentShown(false);
 
         mGetEmailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMAILS,
                 Constants.BASE_URL_MM + Constants.URL_GET_EMAIL, getActivity(), this);
@@ -377,10 +376,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 break;
         }
 
-        if (mEmails != null && mEmails.size() == 0)
-            mEmptyListTextView.setVisibility(View.VISIBLE);
-        else mEmptyListTextView.setVisibility(View.GONE);
-
     }
 
     private void processGetEmailListResponse(String json) {
@@ -403,6 +398,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 }
             }
         });
+
+        if (mEmails != null && mEmails.size() == 0)
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        else mEmptyListTextView.setVisibility(View.GONE);
 
         if (mEmails.size() > 0 && mEmails.get(0).isPrimary()) {
             mPrimaryEmailView.setText(mEmails.get(0).getEmailAddress());
@@ -433,10 +432,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
             public EmailViewHolder(final View itemView) {
                 super(itemView);
-
-                if (mEmails != null && mEmails.size() == 0)
-                    mEmptyListTextView.setVisibility(View.VISIBLE);
-                else mEmptyListTextView.setVisibility(View.GONE);
 
                 mEmailView = (TextView) itemView.findViewById(R.id.textview_email);
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.email_verification_status);
