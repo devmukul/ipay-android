@@ -6,6 +6,10 @@
     <string name="bangladesh">Bangladesh</string>
     <string name="phone_init">+880</string>
     <string name="web">Web</string>
+    <string name="android">android</string>
+    <string name="ios">ios</string>
+    <string name="browser">browser</string>
+    <string name="mobile_android">mobile-android-</string>
     <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
     <string name="enter_OTP_sent_to_your_mobile">Enter OTP sent to your mobile</string>
     <string name="gcm_sender_id">799721005986</string>
@@ -383,6 +387,7 @@
     <string name="title_otp_verification_for_add_trusted_device">Enter Code</string>
     <string name="title_otp_verification_for_business">Enter Code</string>
     <string name="title_select_account_type_page">Welcome</string>
+    <string name="version">Version</string>
 
     <!-- ARCA -->
 

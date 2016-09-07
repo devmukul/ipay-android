@@ -249,9 +249,9 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             };
 
             String deviceID = trustedDevice.getDeviceId();
-            String Android = "android";
-            String IOS = "ios";
-            String Computer = "browser";
+            String Android = getString(R.string.android);
+            String IOS = getString(R.string.ios);
+            String Computer = getString(R.string.browser);
             if (deviceID.toLowerCase().contains(Android.toLowerCase())) {
                 deviceImageView.setImageResource(images[1]);
 
@@ -263,7 +263,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
             }
 
-            String myDeviceID = "mobile-android-";
+            String myDeviceID = getString(R.string.mobile_android);
             myDeviceID = myDeviceID.concat(DeviceInfoFactory.getDeviceId(getActivity()));
 
             deviceNameView.setText(trustedDevice.getDeviceName());

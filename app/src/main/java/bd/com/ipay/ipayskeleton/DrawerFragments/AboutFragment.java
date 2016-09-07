@@ -35,7 +35,7 @@ public class AboutFragment extends Fragment {
         try {
             PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
             String version = pInfo.versionName;
-            mBuildNumberView.setText("Version: " + version);
+            mBuildNumberView.setText(getString(R.string.version) + ": " + version);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

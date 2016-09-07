@@ -118,7 +118,7 @@ public class InviteListHolderFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mContactCount.setText("Contacts (" + contactCount + ")");
+                mContactCount.setText(getString(R.string.contacts) + " (" + contactCount + ")");
             }
         });
     }
