@@ -114,13 +114,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        mOccupationEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOccupationTypeResourceSelectorDialog.show();
-            }
-        });
-
         mInfoSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -329,6 +322,13 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             public void onResourceSelected(int id, String name) {
                 mOccupationEditText.setText(name);
                 mOccupation = id;
+            }
+        });
+
+        mOccupationEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOccupationTypeResourceSelectorDialog.show();
             }
         });
     }
