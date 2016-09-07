@@ -352,7 +352,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
                 if (introducedTime == 0) mTimeView.setVisibility(View.GONE);
-                else mTimeView.setText("Introduced on: " + time);
+                else mTimeView.setText(getString(R.string.introduced_on) + " " + time);
             }
 
         }

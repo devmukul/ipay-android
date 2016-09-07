@@ -388,7 +388,7 @@
     <style name="TextStyleSecondarySmall" parent="@android:style/Widget.TextView">
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@color/colorTextSecondary</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">left</item>
     </style>
 
     <style name="TextStyleWhiteSmallBold" parent="@android:style/Widget.TextView">

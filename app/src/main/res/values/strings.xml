@@ -38,6 +38,7 @@
     <string name="select_from_date_first">Please select the from date first</string>
     <string name="browsers_and_apps"><![CDATA[Browsers & Apps]]></string>
     <string name="same_as_present_address">Same as Present Address</string>
+    <string name="introduced_on">Introduced on: </string>
 
     <string name="invalid_business_name">Enter a business name</string>
     <string name="thana">Thana</string>
