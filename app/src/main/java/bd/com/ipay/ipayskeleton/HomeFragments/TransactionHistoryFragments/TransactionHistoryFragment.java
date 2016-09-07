@@ -1,12 +1,10 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -97,7 +95,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
     private Menu menu;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -490,7 +487,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
@@ -724,7 +720,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         private int getOperatorIcon(String phoneNumber) {
             phoneNumber = ContactEngine.trimPrefix(phoneNumber);
 
-            final String[] OPERATOR_PREFIXES = {"17", "13", "18", "16", "19", "15"};
+            final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
             int[] operator_array = new int[]{
                     R.drawable.ic_gp2,
                     R.drawable.ic_gp2,
@@ -741,7 +737,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             }
             return 0;
         }
-
     }
 
     private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {

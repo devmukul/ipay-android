@@ -182,7 +182,7 @@ public class TransactionDetailsFragment extends Fragment {
     private int getOperatorIcon(String phoneNumber) {
         phoneNumber = ContactEngine.trimPrefix(phoneNumber);
 
-        final String[] OPERATOR_PREFIXES = {"17", "13", "18", "16", "19", "15"};
+        final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
         int[] operator_array = new int[]{
                 R.drawable.ic_gp2,
                 R.drawable.ic_gp2,
