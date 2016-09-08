@@ -676,11 +676,11 @@
 
 
     <string-array name="mobile_operators">
-        <item>Grameen Phone</item>
-        <item>Grameen Phone</item>
+        <item>Grameenphone</item>
+        <item>Grameenphone</item>
         <item>Robi</item>
         <item>Airtel</item>
-        <item>Banglalink</item>Teletalk
+        <item>Banglalink</item>
         <item>Teletalk</item>
     </string-array>
 
