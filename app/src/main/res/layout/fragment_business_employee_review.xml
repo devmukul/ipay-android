@@ -120,7 +120,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="14sp" />
 
-
                 <View
                     style="@style/DividerWithoutMargin"
                     android:layout_below="@+id/role_container" />

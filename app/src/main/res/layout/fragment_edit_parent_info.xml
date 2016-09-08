@@ -36,7 +36,6 @@
 
             <View style="@style/Divider" />
 
-
             <!-- Relative Names -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -85,7 +84,7 @@
                     android:hint="@string/mobile"
                     android:inputType="phone"
                     android:maxLines="1"
-                    android:singleLine="true"></EditText>
+                    android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
