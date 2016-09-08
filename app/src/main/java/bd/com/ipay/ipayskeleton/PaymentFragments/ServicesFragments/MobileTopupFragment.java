@@ -305,7 +305,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 R.drawable.ic_airtel2,
                 R.drawable.ic_banglalink2,
                 R.drawable.ic_teletalk2,
-
         };
 
     }

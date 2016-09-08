@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -81,7 +82,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private IdentificationDocumentDetails[] mIdentificationDocumentDetails;
 
-    private String[] DOCUMENT_TYPES, BUSINESS_DOCUMENT_TYPES;
+    private String[] DOCUMENT_TYPES, BUSINESS_DOCUMENT_TYPES, DOCUMENT_HINT_TYPES;
 
     private String mFileName;
 
@@ -169,6 +170,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
             }
         }
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            DOCUMENT_HINT_TYPES = getResources().getStringArray(R.array.business_document_id);
+        } else
+            DOCUMENT_HINT_TYPES = getResources().getStringArray(R.array.personal_document_id);
+
 
     }
 
@@ -506,6 +513,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private final ImageView mVerificationStatus;
             private final RelativeLayout mInfoLayout;
             private final LinearLayout mOptionsLayout;
+            private TextInputLayout mDocumentIdTextInputLayoutView;
             private EditText mDocumentIdEditTextView;
             private final EditText mSelectFile;
             private final Button mUploadButton;
@@ -524,6 +532,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mVerificationStatus = (ImageView) itemView.findViewById(R.id.document_verification_status);
                 mInfoLayout = (RelativeLayout) itemView.findViewById(R.id.info_layout);
                 mOptionsLayout = (LinearLayout) itemView.findViewById(R.id.options_layout);
+                mDocumentIdTextInputLayoutView = (TextInputLayout) itemView.findViewById(R.id.text_inputlayout_document_id);
                 mDocumentIdEditTextView = (EditText) itemView.findViewById(R.id.edit_text_document_id);
                 mSelectFile = (EditText) itemView.findViewById(R.id.select_file);
                 mUploadButton = (Button) itemView.findViewById(R.id.button_upload);
@@ -541,6 +550,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 final IdentificationDocumentDetails identificationDocumentDetail = mIdentificationDocumentDetails[pos];
 
                 final String verificationStatus = identificationDocumentDetail.getVerificationStatus();
+
+                mDocumentIdTextInputLayoutView.setHint(DOCUMENT_HINT_TYPES[pos]);
 
                 // Unverified, document not yet uploaded
                 if (verificationStatus == null) {
@@ -605,6 +616,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Utilities.hideKeyboard(getActivity());
                         if (mPickerList.size() > 0) {
                             // When account is verified, we wouldn't allow the user to upload new document
                             if (documentPreviewBindViewHolderList.get(pos).isViewOpen()) {
@@ -629,7 +641,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                             @Override
                             public void onResourceSelected(int mActionId, String action) {
-
                                 mSelectedItemId = pos;
                                 documentPreviewBindViewHolderList.get(pos).setmDocumentId(mDocumentIdEditTextView.getText().toString());
                                 documentPreviewBindViewHolderList.get(pos).setmSelectedfilePath(mSelectFile.getText().toString());

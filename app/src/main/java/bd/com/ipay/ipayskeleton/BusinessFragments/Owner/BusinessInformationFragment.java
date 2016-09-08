@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
@@ -100,6 +101,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
     private List<BusinessType> mBusinessTypes;
+    private List<Occupation> mOccupationList;
 
 
     @Nullable
@@ -236,7 +238,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
-
+        bundle.putParcelableArrayList(Constants.OCCUPATION_LIST, new ArrayList<>(mOccupationList));
         ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
     }
 
@@ -245,7 +247,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mMobileNumberView.setText(getString(R.string.phone_number) + ": " + mMobileNumber);
         mNameView.setText(getString(R.string.name) + ": " + mName);
 
-        mSignUpTimeView.setText(getString(R.string.inception_date)+": "+mSignUpTime);
+        mSignUpTimeView.setText(getString(R.string.inception_date) + ": " + mSignUpTime);
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -406,6 +408,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 try {
                     mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mOccupationList = mGetOccupationResponse.getOccupations();
                         String occupation = mGetOccupationResponse.getOccupation(mOccupation);
                         if (occupation != null)
                             mOccupationView.setText(getString(R.string.occupation) + ": " + occupation);
@@ -418,7 +421,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 } catch (Exception e) {
                     e.printStackTrace();
                     mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
-                    }
+                }
 
                 mGetOccupationTask = null;
                 break;

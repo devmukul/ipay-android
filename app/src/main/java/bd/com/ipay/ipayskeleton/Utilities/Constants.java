@@ -90,6 +90,7 @@ public class Constants {
 
     public static final String NAME = "NAME";
     public static final String OCCUPATION = "OCCUPATION";
+    public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
     public static final String DESIGNATION = "DESIGNATION";
 
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
@@ -141,7 +142,7 @@ public class Constants {
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG =true;
 
     /**
      * If set to true (with DEBUG flag also being set to true),

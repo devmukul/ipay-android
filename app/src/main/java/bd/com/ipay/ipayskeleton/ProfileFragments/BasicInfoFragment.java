@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -24,6 +27,7 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
@@ -38,13 +42,13 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
 
-
     private HttpRequestGetAsyncTask mGetParentInfoTask = null;
     private GetParentInfoResponse mGetParentInfoResponse;
 
-
     private HttpRequestGetAsyncTask mGetOccupationTask = null;
     private GetOccupationResponse mGetOccupationResponse;
+
+    private List<Occupation> mOccupationList;
 
     private ProgressDialog mProgressDialog;
 
@@ -169,7 +173,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
-
+        bundle.putParcelableArrayList(Constants.OCCUPATION_LIST, new ArrayList<>(mOccupationList));
         ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
     }
 
@@ -311,6 +315,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             try {
                 mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mOccupationList = mGetOccupationResponse.getOccupations();
                     String occupation = mGetOccupationResponse.getOccupation(mOccupation);
                     if (occupation != null)
                         mOccupationView.setText(occupation);

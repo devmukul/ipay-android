@@ -43,9 +43,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
     private SetProfileInfoResponse mSetProfileInfoResponse;
 
-    private HttpRequestGetAsyncTask mGetOccupationTask = null;
-    private GetOccupationResponse mGetOccupationResponse;
-
     private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
 
     private EditText mNameEditText;
@@ -84,13 +81,14 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
+        mOccupationList= bundle.getParcelableArrayList(Constants.OCCUPATION_LIST);
+
         mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
         mNameEditText = (EditText) v.findViewById(R.id.name);
         mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mOccupationEditText = (EditText) v.findViewById(R.id.occupationEditText);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
-
         mProgressDialog = new ProgressDialog(getActivity());
 
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +132,9 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         });
 
         setProfileInformation();
-        getOccupationList();
+
+        setOccupationAdapter();
+        setOccupation();
 
         return v;
     }
@@ -177,16 +177,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         } else {
             return true;
         }
-    }
-
-    private void getOccupationList() {
-        if (mGetOccupationTask != null) {
-            return;
-        }
-
-        mGetOccupationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_OCCUPATIONS_REQUEST,
-                new OccupationRequestBuilder().getGeneratedUri(), getActivity(), this);
-        mGetOccupationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptSaveBasicInfo() {
@@ -241,7 +231,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mSetProfileInfoTask = null;
-            mGetOccupationTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -279,44 +268,25 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
                 mSetProfileInfoTask = null;
                 break;
-
-            case Constants.COMMAND_GET_OCCUPATIONS_REQUEST:
-
-                try {
-                    mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mOccupationList = mGetOccupationResponse.getOccupations();
-
-                        setOccupationAdapter(mOccupationList);
-
-                        for (int i = 0; i < mOccupationList.size(); i++) {
-                            if (mOccupationList.get(i).getId() == mOccupation) {
-                                String occupation = mGetOccupationResponse.getOccupation(mOccupation);
-                                if (occupation != null) {
-                                    mOccupationEditText.setText(occupation);
-                                }
-
-                                break;
-                            }
-                        }
-
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_loading_occupation_list, Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_loading_occupation_list, Toast.LENGTH_LONG).show();
-                }
-
-                mGetOccupationTask = null;
-                break;
         }
     }
 
-    private void setOccupationAdapter(List<Occupation> occupationList) {
-        mOccupationTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.select_an_occupation), occupationList, mOccupation);
+    private void setOccupation() {
+
+        for (int i = 0; i < mOccupationList.size(); i++) {
+            if (mOccupationList.get(i).getId() == mOccupation) {
+                String occupation = mOccupationList.get(i).getName();
+                if (occupation != null) {
+                    mOccupationEditText.setText(occupation);
+                }
+
+                break;
+            }
+        }
+    }
+
+    private void setOccupationAdapter() {
+        mOccupationTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.select_an_occupation), mOccupationList, mOccupation);
         mOccupationTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
