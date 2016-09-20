@@ -232,14 +232,14 @@ public class Constants {
     public static final String URL_ADD_A_BANK = "bank/";
     public static final String URL_GET_BANK = "bank/";
     public static final String URL_REMOVE_A_BANK = "bank/";
+    public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
 
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
 
     // Bank Verify Rest
-    public static final String URL_SEND_FOR_VERIFICATION_BANK = "bank-verify";
-    public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "bank-verify/check";
+    public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "verify";
 
     // Trusted device CRUD operations
     public static final String URL_ADD_TRUSTED_DEVICE = "device";
