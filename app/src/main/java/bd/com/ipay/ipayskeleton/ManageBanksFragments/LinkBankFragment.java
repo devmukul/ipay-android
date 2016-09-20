@@ -51,10 +51,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mAddBankTask = null;
     private AddBankResponse mAddBankResponse;
 
-    private HttpRequestPostAsyncTask mSendForVerificationTask = null;
-    private VerifyBankAccountResponse mVerifyBankAccountResponse;
-
-
     private ProgressDialog mProgressDialog;
     private List<UserBankClass> mListUserBankClasses;
 
@@ -259,31 +255,12 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void attemptSendForVerification(Long userBankID) {
-        if (userBankID == 0) {
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.sending_for_verification));
-        mProgressDialog.show();
-        VerifyBankAccountRequest mVerifyBankAccountRequest = new VerifyBankAccountRequest(userBankID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mVerifyBankAccountRequest);
-        mSendForVerificationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_FOR_VERIFICATION_BANK,
-                Constants.BASE_URL_SM + Constants.URL_SEND_FOR_VERIFICATION_BANK, json, getActivity());
-        mSendForVerificationTask.mHttpResponseListener = this;
-        mSendForVerificationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mAddBankTask = null;
-            mSendForVerificationTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -300,15 +277,15 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                        long bankAccountID = mAddBankResponse.getId();
-
                         // Refresh bank list
                         if (mListUserBankClasses != null)
                             mListUserBankClasses.clear();
                         mListUserBankClasses = null;
 
-                        // Send the verification status
-                        attemptSendForVerification(bankAccountID);
+                        if (!startedFromProfileCompletion)
+                            ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
+                        else
+                            Toast.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG).show();
 
                     } else {
                         if (getActivity() != null)
@@ -355,37 +332,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                 mProgressDialog.dismiss();
                 mGetBankBranchesTask = null;
 
-                break;
-            case Constants.COMMAND_SEND_FOR_VERIFICATION_BANK:
-
-                try {
-                    mVerifyBankAccountResponse = gson.fromJson(result.getJsonString(), VerifyBankAccountResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                        // Refresh bank list
-                        if (mListUserBankClasses != null)
-                            mListUserBankClasses.clear();
-                        mListUserBankClasses = null;
-
-                        if (!startedFromProfileCompletion)
-                            ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
-                        else
-                            Toast.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG).show();
-
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mVerifyBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_to_send_for_bank_verification, Toast.LENGTH_LONG).show();
-                }
-
-                mProgressDialog.dismiss();
-                mSendForVerificationTask = null;
                 break;
         }
     }
