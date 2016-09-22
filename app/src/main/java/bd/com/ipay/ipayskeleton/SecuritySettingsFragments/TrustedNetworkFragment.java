@@ -192,13 +192,18 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     }
 
     private void processGetTrustedPersonList(String json) {
-        Gson gson = new Gson();
-        mGetTrustedPersonsResponse = gson.fromJson(json, GetTrustedPersonsResponse.class);
+        try {
+            Gson gson = new Gson();
+            mGetTrustedPersonsResponse = gson.fromJson(json, GetTrustedPersonsResponse.class);
 
-        mTrustedPersons = mGetTrustedPersonsResponse.getTrustedPersons();
-        mTrustedPersonListAdapter.notifyDataSetChanged();
+            mTrustedPersons = mGetTrustedPersonsResponse.getTrustedPersons();
+            mTrustedPersonListAdapter.notifyDataSetChanged();
 
-        setContentShown(true);
+            setContentShown(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

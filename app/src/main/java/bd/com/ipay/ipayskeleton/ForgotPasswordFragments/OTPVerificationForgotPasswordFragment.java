@@ -235,7 +235,6 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
 
         if (result.getApiCommand().equals(Constants.COMMAND_FORGET_PASSWORD_CONFIRM_OTP)) {
 
-
             try {
                 mForgetPassOTPConfirmationResponse = gson.fromJson(result.getJsonString(), ForgetPassOTPConfirmationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -255,7 +254,6 @@ public class OTPVerificationForgotPasswordFragment extends Fragment implements H
 
             mProgressDialog.dismiss();
             mOTPConfirmationTask = null;
-
         }
     }
 }

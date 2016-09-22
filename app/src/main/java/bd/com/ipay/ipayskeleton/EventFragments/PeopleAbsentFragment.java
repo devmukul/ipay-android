@@ -144,7 +144,6 @@ public class PeopleAbsentFragment extends ProgressFragment implements HttpRespon
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
-
                     mGetPendingRequestResponse = gson.fromJson(result.getJsonString(), GetPendingRequestResponse.class);
 
                     if (listOfAbsents == null) {

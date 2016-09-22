@@ -577,7 +577,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_ASK_FOR_RECOMMENDATION)) {
             try {
-
                 mAskForIntroductionResponse = gson.fromJson(result.getJsonString(), AskForIntroductionResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -589,6 +588,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
                 }

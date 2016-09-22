@@ -235,8 +235,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_SIGN_UP:
-
-
                 try {
                     mSignupResponseModel = gson.fromJson(result.getJsonString(), SignupResponsePersonal.class);
                     String message = mSignupResponseModel.getMessage();
@@ -274,8 +272,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
                 break;
             case Constants.COMMAND_OTP_VERIFICATION:
-
-
                 try {
                     mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
                     String message = mOtpResponsePersonalSignup.getMessage();
@@ -313,8 +309,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
                 break;
             case Constants.COMMAND_LOG_IN:
-
-
                 try {
                     mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
                     String message = mLoginResponseModel.getMessage();

@@ -379,41 +379,47 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     }
 
     private void processGetEmailListResponse(String json) {
-        Gson gson = new Gson();
-        mGetEmailResponse = gson.fromJson(json, GetEmailResponse.class);
 
-        mEmails = mGetEmailResponse.getEmailAdressList();
+        try {
+            Gson gson = new Gson();
+            mGetEmailResponse = gson.fromJson(json, GetEmailResponse.class);
 
-        Collections.sort(mEmails, new Comparator<Email>() {
-            @Override
-            public int compare(Email lhs, Email rhs) {
+            mEmails = mGetEmailResponse.getEmailAdressList();
 
-                if ((lhs.isPrimary() && !rhs.isPrimary()) || (!lhs.isPrimary() && rhs.isPrimary())) {
-                    if (lhs.isPrimary())
-                        return -1;
-                    else
-                        return 1;
-                } else {
-                    return (int) (lhs.getEmailId() - rhs.getEmailId());
+            Collections.sort(mEmails, new Comparator<Email>() {
+                @Override
+                public int compare(Email lhs, Email rhs) {
+
+                    if ((lhs.isPrimary() && !rhs.isPrimary()) || (!lhs.isPrimary() && rhs.isPrimary())) {
+                        if (lhs.isPrimary())
+                            return -1;
+                        else
+                            return 1;
+                    } else {
+                        return (int) (lhs.getEmailId() - rhs.getEmailId());
+                    }
                 }
+            });
+
+            if (mEmails != null && mEmails.size() == 0)
+                mEmptyListTextView.setVisibility(View.VISIBLE);
+            else mEmptyListTextView.setVisibility(View.GONE);
+
+            if (mEmails.size() > 0 && mEmails.get(0).isPrimary()) {
+                mPrimaryEmailView.setText(mEmails.get(0).getEmailAddress());
+                mEmails.remove(0);
+            } else {
+                mPrimaryEmailView.setText(R.string.not_set_yet);
+                mPrimaryVerificationStatus.setVisibility(View.INVISIBLE);
             }
-        });
 
-        if (mEmails != null && mEmails.size() == 0)
-            mEmptyListTextView.setVisibility(View.VISIBLE);
-        else mEmptyListTextView.setVisibility(View.GONE);
+            setContentShown(true);
 
-        if (mEmails.size() > 0 && mEmails.get(0).isPrimary()) {
-            mPrimaryEmailView.setText(mEmails.get(0).getEmailAddress());
-            mEmails.remove(0);
-        } else {
-            mPrimaryEmailView.setText(R.string.not_set_yet);
-            mPrimaryVerificationStatus.setVisibility(View.INVISIBLE);
+            mEmailListAdapter.notifyDataSetChanged();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        setContentShown(true);
-
-        mEmailListAdapter.notifyDataSetChanged();
 
     }
 

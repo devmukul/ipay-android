@@ -333,31 +333,35 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
     private void processProfileInfoResponse(String json) {
-        Gson gson = new Gson();
-        mGetProfileInfoResponse = gson.fromJson(json, GetProfileInfoResponse.class);
+        try {
+            Gson gson = new Gson();
+            mGetProfileInfoResponse = gson.fromJson(json, GetProfileInfoResponse.class);
 
-        if (mGetProfileInfoResponse.getName() != null)
-            mName = mGetProfileInfoResponse.getName();
-        if (mGetProfileInfoResponse.getMobileNumber() != null)
-            mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
+            if (mGetProfileInfoResponse.getName() != null)
+                mName = mGetProfileInfoResponse.getName();
+            if (mGetProfileInfoResponse.getMobileNumber() != null)
+                mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
 
-        if (mGetProfileInfoResponse.getDateOfBirth() != null)
-            mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
+            if (mGetProfileInfoResponse.getDateOfBirth() != null)
+                mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
 
-        if (mGetProfileInfoResponse.getGender() != null)
-            mGender = mGetProfileInfoResponse.getGender();
+            if (mGetProfileInfoResponse.getGender() != null)
+                mGender = mGetProfileInfoResponse.getGender();
 
-        if (mGetProfileInfoResponse.getSignUpTime() != null) {
-            mSignUpTime = mGetProfileInfoResponse.getSignUpTime();
+            if (mGetProfileInfoResponse.getSignUpTime() != null) {
+                mSignUpTime = mGetProfileInfoResponse.getSignUpTime();
+            }
+
+            mOccupation = mGetProfileInfoResponse.getOccupation();
+            mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
+
+            mProfileImageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+
+            setProfileInformation();
+            getOccupationList();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        mOccupation = mGetProfileInfoResponse.getOccupation();
-        mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
-
-        mProfileImageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-
-        setProfileInformation();
-        getOccupationList();
     }
 
     @Override

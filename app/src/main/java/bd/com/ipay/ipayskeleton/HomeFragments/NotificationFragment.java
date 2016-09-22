@@ -355,20 +355,24 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS:
-                mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
+                try {
+                    mGetMoneyAndPaymentRequestResponse = gson.fromJson(result.getJsonString(), GetMoneyAndPaymentRequestResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    try {
-                        mMoneyAndPaymentRequests = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        try {
+                            mMoneyAndPaymentRequests = mGetMoneyAndPaymentRequestResponse.getAllMoneyAndPaymentRequests();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                    } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
                     }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 mGetMoneyAndPaymentRequestTask = null;

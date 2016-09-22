@@ -245,37 +245,41 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                     Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
             }
             mLoginTask = null;
+
         } else if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
-            mOTPResponseTrustedDevice = gson.fromJson(result.getJsonString(), OTPResponseTrustedDevice.class);
-            SignupOrLoginActivity.otpDuration = mOTPResponseTrustedDevice.getOtpValidFor();
-            String message = mOTPResponseTrustedDevice.getMessage();
+            try {
+                mOTPResponseTrustedDevice = gson.fromJson(result.getJsonString(), OTPResponseTrustedDevice.class);
+                SignupOrLoginActivity.otpDuration = mOTPResponseTrustedDevice.getOtpValidFor();
+                String message = mOTPResponseTrustedDevice.getMessage();
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
 
-                // Start timer again
-                mTimerTextView.setVisibility(View.VISIBLE);
-                mResendOTPButton.setEnabled(false);
-                new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+                    // Start timer again
+                    mTimerTextView.setVisibility(View.VISIBLE);
+                    mResendOTPButton.setEnabled(false);
+                    new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
 
-                    public void onTick(long millisUntilFinished) {
-                        mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
-                    }
+                        public void onTick(long millisUntilFinished) {
+                            mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                        }
 
-                    public void onFinish() {
-                        mTimerTextView.setVisibility(View.INVISIBLE);
-                        mResendOTPButton.setEnabled(true);
-                    }
-                }.start();
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        public void onFinish() {
+                            mTimerTextView.setVisibility(View.INVISIBLE);
+                            mResendOTPButton.setEnabled(true);
+                        }
+                    }.start();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             mRequestOTPTask = null;
-
         }
     }
 }

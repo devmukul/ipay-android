@@ -236,7 +236,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 break;
             case Constants.COMMAND_ASK_FOR_RECOMMENDATION:
                 try {
-
                     mAskForIntroductionResponse = gson.fromJson(result.getJsonString(), AskForIntroductionResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

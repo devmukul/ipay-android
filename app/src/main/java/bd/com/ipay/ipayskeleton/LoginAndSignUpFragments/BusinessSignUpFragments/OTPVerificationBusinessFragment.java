@@ -231,98 +231,105 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             return;
         }
 
-
         Gson gson = new Gson();
 
         switch (result.getApiCommand()) {
-            case Constants.COMMAND_SIGN_UP_BUSINESS: {
+            case Constants.COMMAND_SIGN_UP_BUSINESS:
+                try {
+                    mSignupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
+                    String message = mSignupResponseBusiness.getMessage();
+                    String otp = mSignupResponseBusiness.getOtp();
 
-                mSignupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
-                String message = mSignupResponseBusiness.getMessage();
-                String otp = mSignupResponseBusiness.getOtp();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).apply();
+                        pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPasswordBusiness).apply();
+                        pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mNameBusiness).apply();
+                        pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder).apply();
+                        pref.edit().putString(Constants.GENDER, "M").apply();
+                        pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE).apply();
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).apply();
-                    pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPasswordBusiness).apply();
-                    pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mNameBusiness).apply();
-                    pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder).apply();
-                    pref.edit().putString(Constants.GENDER, "M").apply();
-                    pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE).apply();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();
 
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();
+                        // Request a login immediately after sign up
+                        attemptLogin(SignupOrLoginActivity.mMobileNumberBusiness, SignupOrLoginActivity.mPasswordBusiness, otp);
 
-                    // Request a login immediately after sign up
-                    attemptLogin(SignupOrLoginActivity.mMobileNumberBusiness, SignupOrLoginActivity.mPasswordBusiness, otp);
-
-                    // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
+                        // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
 //                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
 
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 mProgressDialog.dismiss();
                 mSignUpTask = null;
 
                 break;
-            }
-            case Constants.COMMAND_OTP_VERIFICATION: {
 
-                mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
-                String message = mOtpResponseBusinessSignup.getMessage();
+            case Constants.COMMAND_OTP_VERIFICATION:
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
+                try {
+                    mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
+                    String message = mOtpResponseBusinessSignup.getMessage();
 
-                    // Start timer again
-                    mTimerTextView.setVisibility(View.VISIBLE);
-                    mResendOTPButton.setEnabled(false);
-                    new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
 
-                        public void onTick(long millisUntilFinished) {
-                            mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
-                        }
+                        // Start timer again
+                        mTimerTextView.setVisibility(View.VISIBLE);
+                        mResendOTPButton.setEnabled(false);
+                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
 
-                        public void onFinish() {
-                            mTimerTextView.setVisibility(View.INVISIBLE);
-                            mResendOTPButton.setEnabled(true);
-                        }
-                    }.start();
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            public void onTick(long millisUntilFinished) {
+                                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                            }
+
+                            public void onFinish() {
+                                mTimerTextView.setVisibility(View.INVISIBLE);
+                                mResendOTPButton.setEnabled(true);
+                            }
+                        }.start();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 mProgressDialog.dismiss();
                 mRequestOTPTask = null;
-
                 break;
-            }
-            case Constants.COMMAND_LOG_IN: {
 
-                mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
-                String message = mLoginResponseModel.getMessage();
+            case Constants.COMMAND_LOG_IN:
+                try {
+                    mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
+                    String message = mLoginResponseModel.getMessage();
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
-                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                        pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 mProgressDialog.dismiss();
                 mLoginTask = null;
                 break;
-            }
         }
     }
 }

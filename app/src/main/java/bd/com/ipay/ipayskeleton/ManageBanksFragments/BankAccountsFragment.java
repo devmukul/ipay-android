@@ -198,25 +198,30 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
 
     private void processGetBankListResponse(String json) {
-        Gson gson = new Gson();
-        mBankListResponse = gson.fromJson(json, GetBankListResponse.class);
 
-        if (mListUserBankClasses == null) {
-            mListUserBankClasses = mBankListResponse.getBanks();
-        } else {
-            List<UserBankClass> tempBankClasses;
-            tempBankClasses = mBankListResponse.getBanks();
-            mListUserBankClasses.clear();
-            mListUserBankClasses.addAll(tempBankClasses);
+        try {
+            Gson gson = new Gson();
+            mBankListResponse = gson.fromJson(json, GetBankListResponse.class);
+
+            if (mListUserBankClasses == null) {
+                mListUserBankClasses = mBankListResponse.getBanks();
+            } else {
+                List<UserBankClass> tempBankClasses;
+                tempBankClasses = mBankListResponse.getBanks();
+                mListUserBankClasses.clear();
+                mListUserBankClasses.addAll(tempBankClasses);
+            }
+
+            if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
+                mEmptyListTextView.setVisibility(View.GONE);
+            else mEmptyListTextView.setVisibility(View.VISIBLE);
+
+            mUserBankListAdapter.notifyDataSetChanged();
+
+            PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        if (mListUserBankClasses != null && mListUserBankClasses.size() > 0)
-            mEmptyListTextView.setVisibility(View.GONE);
-        else mEmptyListTextView.setVisibility(View.VISIBLE);
-
-        mUserBankListAdapter.notifyDataSetChanged();
-
-        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
 
     }
 

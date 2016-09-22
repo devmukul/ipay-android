@@ -459,31 +459,39 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     }
 
     private void processGetDocumentListResponse(String json) {
-        Gson gson = new Gson();
-        mIdentificationDocumentResponse = gson.fromJson(json, GetIdentificationDocumentResponse.class);
+        try {
+            Gson gson = new Gson();
+            mIdentificationDocumentResponse = gson.fromJson(json, GetIdentificationDocumentResponse.class);
 
-        mIdentificationDocuments = mIdentificationDocumentResponse.getDocuments();
-        loadDocumentInfo();
+            mIdentificationDocuments = mIdentificationDocumentResponse.getDocuments();
+            loadDocumentInfo();
 
-        mDocumentListAdapter = new DocumentListAdapter();
-        mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
+            mDocumentListAdapter = new DocumentListAdapter();
+            mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
 
-        setContentShown(true);
+            setContentShown(true);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void processGetBusinessDocumentListResponse(String json) {
-        Gson gson = new Gson();
-        mIdentificationBusinessDocumentResponse = gson.fromJson(json, GetIdentificationDocumentResponse.class);
+        try {
+            Gson gson = new Gson();
+            mIdentificationBusinessDocumentResponse = gson.fromJson(json, GetIdentificationDocumentResponse.class);
 
-        mIdentificationBusinessDocuments = mIdentificationBusinessDocumentResponse.getDocuments();
-        loadDocumentInfo();
+            mIdentificationBusinessDocuments = mIdentificationBusinessDocumentResponse.getDocuments();
+            loadDocumentInfo();
 
-        mDocumentListAdapter = new DocumentListAdapter();
-        mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
+            mDocumentListAdapter = new DocumentListAdapter();
+            mDocumentListRecyclerView.setAdapter(mDocumentListAdapter);
 
-        setContentShown(true);
+            setContentShown(true);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void selectDocument(int id) {

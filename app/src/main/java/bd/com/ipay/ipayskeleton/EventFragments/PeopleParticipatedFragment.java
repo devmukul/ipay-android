@@ -144,7 +144,6 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
-
                     mGetPendingRequestResponse = gson.fromJson(result.getJsonString(), GetPendingRequestResponse.class);
 
                     if (listOfParticipants == null) {

@@ -92,38 +92,17 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     }
 
     private void processGetEmailListResponse(String json) {
-        Gson gson = new Gson();
-        mGetEmailResponse = gson.fromJson(json, GetEmailResponse.class);
+        try {
+            Gson gson = new Gson();
+            mGetEmailResponse = gson.fromJson(json, GetEmailResponse.class);
 
-        if (mGetEmailResponse.getEmailAdressList().isEmpty()) {
-            MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
-            dialog
-                    .title(R.string.no_email_added)
-                    .content(R.string.dialog_add_new_email)
-                    .cancelable(false)
-                    .positiveText(R.string.add_email)
-                    .negativeText(R.string.cancel)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            launchEmailPage();
-                        }
-                    })
-                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            ((HelpAndSupportActivity) getActivity()).switchToTicketListFragment();
-                        }
-                    })
-                    .show();
-        } else {
-            String primaryEmail = mGetEmailResponse.getVerifiedEmail();
-            if (primaryEmail == null) {
+            if (mGetEmailResponse.getEmailAdressList().isEmpty()) {
                 MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
                 dialog
-                        .title(R.string.no_primary_email)
-                        .content(R.string.dialog_verify_email)
-                        .positiveText(R.string.verify_email)
+                        .title(R.string.no_email_added)
+                        .content(R.string.dialog_add_new_email)
+                        .cancelable(false)
+                        .positiveText(R.string.add_email)
                         .negativeText(R.string.cancel)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -139,11 +118,37 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                         })
                         .show();
             } else {
+                String primaryEmail = mGetEmailResponse.getVerifiedEmail();
+                if (primaryEmail == null) {
+                    MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+                    dialog
+                            .title(R.string.no_primary_email)
+                            .content(R.string.dialog_verify_email)
+                            .positiveText(R.string.verify_email)
+                            .negativeText(R.string.cancel)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    launchEmailPage();
+                                }
+                            })
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    ((HelpAndSupportActivity) getActivity()).switchToTicketListFragment();
+                                }
+                            })
+                            .show();
+                } else {
 
+                }
             }
-        }
 
-        setContentShown(true);
+            setContentShown(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void launchEmailPage() {

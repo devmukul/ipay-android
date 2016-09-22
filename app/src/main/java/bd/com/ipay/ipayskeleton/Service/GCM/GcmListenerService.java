@@ -247,15 +247,20 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                    try {
+                        mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
+                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
-                    String imageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
+                        String imageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
-                    ProfileInfoCacheManager.updateCache(mGetProfileInfoResponse.getName(),
-                            mGetProfileInfoResponse.getMobileNumber(), imageUrl, mGetProfileInfoResponse.getVerificationStatus());
+                        ProfileInfoCacheManager.updateCache(mGetProfileInfoResponse.getName(),
+                                mGetProfileInfoResponse.getMobileNumber(), imageUrl, mGetProfileInfoResponse.getVerificationStatus());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 mGetProfileInfoTask = null;
