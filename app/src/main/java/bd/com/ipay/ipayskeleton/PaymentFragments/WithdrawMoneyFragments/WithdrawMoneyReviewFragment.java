@@ -152,7 +152,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         WithdrawMoneyRequest mAddMoneyRequest = new WithdrawMoneyRequest(mBankAccountId, mAmount, mDescription, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);

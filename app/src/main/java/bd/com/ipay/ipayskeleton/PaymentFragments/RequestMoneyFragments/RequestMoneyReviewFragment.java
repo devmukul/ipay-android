@@ -124,7 +124,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
         mProgressDialog.setMessage(getString(R.string.requesting_money));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(mReceiverMobileNumber,
                 mAmount.doubleValue(), mTitle, mDescription);
         Gson gson = new Gson();

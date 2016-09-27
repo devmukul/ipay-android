@@ -142,7 +142,7 @@ public class CreateInvoiceReviewFragment extends Fragment implements HttpRespons
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_invoice));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         SendInvoiceRequest mCreateInvoiceRequest = new SendInvoiceRequest(mTotal, mReceiverMobileNumber, mDescription, requestId, mVat);
         Gson gson = new Gson();
         String json = gson.toJson(mCreateInvoiceRequest);

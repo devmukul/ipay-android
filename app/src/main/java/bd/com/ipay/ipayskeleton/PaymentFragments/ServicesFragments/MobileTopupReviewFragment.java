@@ -161,7 +161,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
         mProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         Gson gson = new Gson();
         String json = gson.toJson(mTopupRequestModel);
         mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
@@ -195,11 +195,10 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        if( serviceCharge.compareTo(BigDecimal.ZERO) == 0 ) {
+        if (serviceCharge.compareTo(BigDecimal.ZERO) == 0) {
             mServiceCharge.setVisibility(View.GONE);
 
-        }
-        else {
+        } else {
             mServiceCharge.setVisibility(View.VISIBLE);
             mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
             mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));

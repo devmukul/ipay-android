@@ -221,7 +221,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         // No PIN needed for now to place a request from me
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, null);
@@ -240,7 +240,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id);
         Gson gson = new Gson();
@@ -258,7 +258,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, pin);
         Gson gson = new Gson();
