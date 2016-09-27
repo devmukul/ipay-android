@@ -240,7 +240,9 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             }
         }
 
-        if (!ContactEngine.isValidNumber(mMobileNumberEditText.getText().toString())) {
+        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+
+        if (!ContactEngine.isValidNumber(mobileNumber)) {
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             focusView = mMobileNumberEditText;
             cancel = true;
@@ -274,7 +276,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         // TODO remove this once gateway problem is fixed. We are doing this now because topup
         // gateway only accepts integer amount
         double amount = Math.floor(Double.parseDouble(mAmountEditText.getText().toString().trim()));
-        String mobileNumber = mMobileNumberEditText.getText().toString();
+        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
         int mobileNumberType;
         if (mSelectedPackageTypeId > 0)
@@ -287,7 +289,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         String countryCode = "+88"; // TODO: For now Bangladesh Only
 
         Intent intent = new Intent(getActivity(), TopUpReviewActivity.class);
-        intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
+        intent.putExtra(Constants.MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mobileNumber));
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.MOBILE_NUMBER_TYPE, mobileNumberType);
         intent.putExtra(Constants.OPERATOR_CODE, operatorCode);
