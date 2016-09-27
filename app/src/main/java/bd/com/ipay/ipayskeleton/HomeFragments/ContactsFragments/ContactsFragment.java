@@ -400,7 +400,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private void setPlaceHolderImage(ImageView contactImage, int backgroundColor) {
         contactImage.setBackgroundResource(backgroundColor);
         Glide.with(getActivity())
-                .load(R.drawable.people)
+                .load(R.drawable.place_holder)
                 .fitCenter()
                 .into(contactImage);
     }
