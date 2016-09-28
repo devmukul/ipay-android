@@ -12,6 +12,16 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_margin="5dp"
+            android:gravity="left"
+            android:text="@string/mandatory_field"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_small" />
+
         <bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView
             android:id="@+id/personal_address"
             android:layout_width="match_parent"
