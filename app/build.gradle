@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
 
 
-ext.systemProperties= System.properties
-//def a = ${systemProperties.BAR}
+def ServerType= java.lang.System.getProperty('ServerType') ?: "1"
 
 android {
     compileSdkVersion 23
@@ -18,11 +17,11 @@ android {
         multiDexEnabled true
     }
     buildTypes {
-        buildTypes.each {
-            it.buildConfigField 'int', 'SERVER_TYPE', '4'
+        debug {
+            buildConfigField "int", "ServerType", ServerType
         }
         release {
-
+            buildConfigField "int", "ServerType", ServerType
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

@@ -166,7 +166,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = BuildConfig.SERVER_TYPE;
+    public static final int SERVER_TYPE = BuildConfig.ServerType;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
