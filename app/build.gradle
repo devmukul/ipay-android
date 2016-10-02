@@ -1,8 +1,13 @@
 apply plugin: 'com.android.application'
 
+
+ext.systemProperties= System.properties
+//def a = ${systemProperties.BAR}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+
 
     defaultConfig {
         applicationId "bd.com.ipay.android"
@@ -13,8 +18,12 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        buildTypes.each {
+            it.buildConfigField 'int', 'SERVER_TYPE', ${systemProperties.SERVER_TYPE}
+        }
         release {
-            minifyEnabled true
+
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
