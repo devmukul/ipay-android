@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import bd.com.ipay.ipayskeleton.BuildConfig;
+
 public class Constants {
     public static final String ApplicationTag = "iPay";
     public static final String ApplicationPackage = "bd.com.ipay.android";
@@ -160,7 +162,7 @@ public class Constants {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    public static final int SERVER_TYPE = 1;
+    public static final int SERVER_TYPE = BuildConfig.ServerType;
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;

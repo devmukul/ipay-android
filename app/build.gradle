@@ -13,7 +13,11 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            buildConfigField "int", "ServerType", "4"
+        }
         release {
+            buildConfigField "int", "ServerType", "1"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
