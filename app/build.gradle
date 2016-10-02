@@ -19,11 +19,11 @@ android {
     }
     buildTypes {
         buildTypes.each {
-            it.buildConfigField 'int', 'SERVER_TYPE', ${systemProperties.SERVER_TYPE}
+            it.buildConfigField 'int', 'SERVER_TYPE', '4'
         }
         release {
 
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
