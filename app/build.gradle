@@ -13,6 +13,9 @@ android {
         multiDexEnabled true
     }
 
+    lintOptions {
+        abortOnError false
+    }
 
     def ServerType= java.lang.System.getProperty('ServerType') ?: "1"
 
