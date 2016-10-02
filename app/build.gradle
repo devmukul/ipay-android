@@ -12,12 +12,16 @@ android {
         versionName "1.0.3"
         multiDexEnabled true
     }
+
+
+    def ServerType= java.lang.System.getProperty('ServerType') ?: "1"
+
     buildTypes {
         debug {
-            buildConfigField "int", "ServerType", "4"
+            buildConfigField "int", "ServerType", ServerType
         }
         release {
-            buildConfigField "int", "ServerType", "1"
+            buildConfigField "int", "ServerType", ServerType
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
