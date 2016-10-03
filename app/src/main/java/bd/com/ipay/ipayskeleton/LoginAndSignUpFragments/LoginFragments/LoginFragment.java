@@ -110,6 +110,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mPasswordEditText = (EditText) v.findViewById(R.id.login_password);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
 
+        if (pref.contains(Constants.USERID)) {
+            mButtonJoinUs.setVisibility(View.GONE);
+        }
+
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

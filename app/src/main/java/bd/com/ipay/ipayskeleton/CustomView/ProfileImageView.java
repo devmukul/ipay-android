@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.StringSignature;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import bd.com.ipay.ipayskeleton.R;
@@ -63,10 +64,12 @@ public class ProfileImageView extends FrameLayout {
         try {
             final DrawableTypeRequest<String> glide = Glide.with(context).load(photoUri);
 
+            glide
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+
             if (forceLoad) {
                 glide
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE);
+                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
             }
 
             glide

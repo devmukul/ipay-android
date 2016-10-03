@@ -179,10 +179,13 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
-            Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            this.finish();
+            if (!pref.contains(Constants.USERID)) {
+                Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                this.finish();
+            } else
+                this.finish();
         }
     }
 
