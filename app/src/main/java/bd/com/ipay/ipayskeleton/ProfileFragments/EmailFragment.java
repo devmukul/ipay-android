@@ -82,6 +82,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private ProgressDialog mProgressDialog;
 
     private TextView mPrimaryEmailView;
+    private TextView mOtherEmailView;
     private ImageView mPrimaryVerificationStatus;
 
     private TextView mEmptyListTextView;
@@ -102,6 +103,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         getActivity().setTitle(R.string.email);
 
         mPrimaryEmailView = (TextView) v.findViewById(R.id.textview_email);
+        mOtherEmailView = (TextView) v.findViewById(R.id.other_email_header);
         mPrimaryVerificationStatus = (ImageView) v.findViewById(R.id.email_verification_status);
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -412,6 +414,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 mPrimaryEmailView.setText(R.string.not_set_yet);
                 mPrimaryVerificationStatus.setVisibility(View.INVISIBLE);
             }
+            if (mEmails.size() > 0)
+                mOtherEmailView.setVisibility(View.VISIBLE);
+            else
+                mOtherEmailView.setVisibility(View.GONE);
 
             setContentShown(true);
 
