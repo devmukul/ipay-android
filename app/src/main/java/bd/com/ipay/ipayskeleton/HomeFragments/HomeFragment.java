@@ -26,6 +26,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,12 +83,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private View mAddMoneyButton;
     private View mWithdrawMoneyButton;
-    private TextView mSendMoneyButton;
-    private TextView mRequestMoneyButton;
-    private TextView mMobileTopUpButton;
+    private LinearLayout mSendMoneyButton;
+    private LinearLayout mRequestMoneyButton;
+    private LinearLayout mMobileTopUpButton;
     private TextView mMakePaymentButton;
     private TextView mCreateInvoiceButton;
-    private TextView mPayByQRCodeButton;
+    private LinearLayout mPayByQRCodeButton;
 
     private ImageView refreshBalanceButton;
 
@@ -128,12 +129,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mAddMoneyButton = v.findViewById(R.id.button_add_money);
         mWithdrawMoneyButton = v.findViewById(R.id.button_withdraw_money);
-        mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
-        mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
-        mMobileTopUpButton = (Button) v.findViewById(R.id.button_mobile_topup);
+        mSendMoneyButton = (LinearLayout) v.findViewById(R.id.button_send_money);
+        mRequestMoneyButton = (LinearLayout) v.findViewById(R.id.button_request_money);
+        mMobileTopUpButton = (LinearLayout) v.findViewById(R.id.button_mobile_topup);
         mMakePaymentButton = (Button) v.findViewById(R.id.button_make_payment);
         mCreateInvoiceButton = (Button) v.findViewById(R.id.button_create_invoice);
-        mPayByQRCodeButton = (Button) v.findViewById(R.id.button_pay_by_QR_code);
+        mPayByQRCodeButton = (LinearLayout) v.findViewById(R.id.button_pay_by_QR_code);
 
         mProgressBarWithoutAnimation = (ProgressBar) v.findViewById(R.id.circular_progress_bar);
 
