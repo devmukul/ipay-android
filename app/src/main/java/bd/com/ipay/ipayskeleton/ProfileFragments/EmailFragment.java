@@ -82,6 +82,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private ProgressDialog mProgressDialog;
 
     private TextView mPrimaryEmailView;
+    private TextView mPrimaryEmailViewHeader;
+    private TextView mOtherEmailViewHeader;
     private ImageView mPrimaryVerificationStatus;
 
     private TextView mEmptyListTextView;
@@ -102,6 +104,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         getActivity().setTitle(R.string.email);
 
         mPrimaryEmailView = (TextView) v.findViewById(R.id.textview_email);
+        mPrimaryEmailViewHeader = (TextView) v.findViewById(R.id.primary_email_header);
+        mOtherEmailViewHeader = (TextView) v.findViewById(R.id.other_email_header);
         mPrimaryVerificationStatus = (ImageView) v.findViewById(R.id.email_verification_status);
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -406,12 +410,22 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             else mEmptyListTextView.setVisibility(View.GONE);
 
             if (mEmails.size() > 0 && mEmails.get(0).isPrimary()) {
+                mPrimaryEmailViewHeader.setVisibility(View.VISIBLE);
+                mPrimaryEmailView.setVisibility(View.VISIBLE);
+                mPrimaryVerificationStatus.setVisibility(View.VISIBLE);
                 mPrimaryEmailView.setText(mEmails.get(0).getEmailAddress());
                 mEmails.remove(0);
+
             } else {
-                mPrimaryEmailView.setText(R.string.not_set_yet);
-                mPrimaryVerificationStatus.setVisibility(View.INVISIBLE);
+                mPrimaryEmailViewHeader.setVisibility(View.GONE);
+                mPrimaryEmailView.setVisibility(View.GONE);
+                mPrimaryVerificationStatus.setVisibility(View.GONE);
             }
+
+            if (mEmails.size() > 0)
+                mOtherEmailViewHeader.setVisibility(View.VISIBLE);
+            else
+                mOtherEmailViewHeader.setVisibility(View.GONE);
 
             setContentShown(true);
 
