@@ -67,6 +67,25 @@
         <item name="android:paddingBottom">@dimen/value20</item>
     </style>
 
+    <style name="HomeImageLinearLayoutStyleHorizontal" >
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/background_home_image_button</item>
+        <item name="android:layout_margin">@dimen/value10</item>
+    </style>
+
+    <style name="HomeImageLinearLayoutTextStyleHorizontal">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:drawablePadding">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="HomeDividerStyleColorGrey">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/value1</item>

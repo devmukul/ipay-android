@@ -1,8 +1,22 @@
 apply plugin: 'com.android.application'
 
+def keystorePropertiesFile = rootProject.file("../iPay_KeyStore/keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+
+    signingConfigs {
+        iPaySigningConfig {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+
+        }
+    }
 
     defaultConfig {
         applicationId "bd.com.ipay.android"
@@ -24,11 +38,14 @@ android {
             buildConfigField "int", "ServerType", ServerType
         }
         release {
+            signingConfig signingConfigs.iPaySigningConfig
             buildConfigField "int", "ServerType", ServerType
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 
     useLibrary 'org.apache.http.legacy'
 }

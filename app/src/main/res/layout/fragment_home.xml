@@ -1,40 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+            android:layout_height="0dp"
+            android:layout_weight="45"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/value160"
+                android:layout_height="match_parent"
                 android:background="@drawable/background_final_home"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="5"
+                android:layout_above="@+id/layout_button">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:animateLayoutChanges="true"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_weight="3">
 
                     <RelativeLayout
                         android:id="@+id/profile_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/value15"
                         android:paddingLeft="@dimen/activity_horizontal_margin_double"
                         android:paddingRight="@dimen/activity_horizontal_margin"
-                        android:paddingTop="@dimen/value15">
+                        android:layout_centerVertical="true">
 
                         <RelativeLayout
                             android:id="@+id/profile_picture_holder"
@@ -165,32 +170,43 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_height="0dp"
                     android:paddingLeft="@dimen/activity_horizontal_margin_double"
-                    android:paddingRight="@dimen/activity_horizontal_margin">
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:layout_weight="2">
 
-                    <TextView
-                        android:id="@+id/balance_label"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:fontFamily="sans-serif-light"
-                        android:text="@string/ipay_balance"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_small" />
+                        android:orientation="vertical"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true">
 
-                    <TextView
-                        android:id="@+id/balance"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/balance_label"
-                        android:fontFamily="sans-serif-thin"
-                        android:paddingBottom="@dimen/activity_horizontal_margin_card"
-                        android:text="@string/loading"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/text_size_medium"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/balance_label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:fontFamily="sans-serif-light"
+                            android:text="@string/ipay_balance"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/text_size_small" />
+
+                        <TextView
+                            android:id="@+id/balance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/balance_label"
+                            android:fontFamily="sans-serif-thin"
+                            android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                            android:text="@string/loading"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/text_size_medium"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
 
                     <ImageView
                         android:id="@+id/refresh_balance_button"
@@ -209,7 +225,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/layout_button"
+                android:layout_alignParentBottom="true">
 
                 <View
                     android:layout_width="match_parent"
@@ -268,36 +286,54 @@
 
             </LinearLayout>
 
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="55">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/colorBackground"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/activity_horizontal_margin_card">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white">
+                    android:background="@android:color/white"
+                    android:layout_weight="1">
 
-                    <Button
+                    <LinearLayout
                         android:id="@+id/button_send_money"
-                        style="@style/HomeImageButtonStyleHorizontal"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/background_icon_send_money"
-                        android:text="@string/send_money" />
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
 
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/background_icon_send_money"
+                            android:text="@string/send_money" />
+
+                    </LinearLayout>
                     <View
                         android:layout_width="@dimen/value1"
                         android:layout_height="match_parent"
                         android:background="@color/colorDivider" />
 
-                    <Button
+                    <LinearLayout
                         android:id="@+id/button_request_money"
-                        style="@style/HomeImageButtonStyleHorizontal"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/background_icon_request_money"
-                        android:text="@string/request_money" />
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/background_icon_request_money"
+                            android:text="@string/request_money"/>
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <View style="@style/HomeDividerStyleColorGrey" />
@@ -305,27 +341,37 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white">
+                    android:background="@android:color/white"
+                    android:layout_weight="1">
 
-                    <Button
+                    <LinearLayout
                         android:id="@+id/button_mobile_topup"
-                        style="@style/HomeImageButtonStyleHorizontal"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/background_icon_topup"
-                        android:text="@string/mobile_topup" />
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/background_icon_topup"
+                            android:text="@string/mobile_topup" />
+
+                    </LinearLayout>
 
                     <View
                         android:layout_width="@dimen/value1"
                         android:layout_height="match_parent"
                         android:background="@color/colorDivider" />
 
-                    <Button
+                    <LinearLayout
                         android:id="@+id/button_pay_by_QR_code"
-                        style="@style/HomeImageButtonStyleHorizontal"
-                        android:layout_weight="1"
-                        android:drawableTop="@drawable/background_pay_by_qr_code"
-                        android:text="@string/pay_by_QR_code" />
+                        style="@style/HomeImageLinearLayoutStyleHorizontal"
+                        android:layout_weight="1">
 
+                        <TextView
+                            style="@style/HomeImageLinearLayoutTextStyleHorizontal"
+                            android:drawableTop="@drawable/background_pay_by_qr_code"
+                            android:text="@string/pay_by_QR_code" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <View style="@style/HomeDividerStyleColorGrey" />
@@ -364,6 +410,9 @@
                     android:visibility="gone" />
             </LinearLayout>
 
+
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>
+
+
