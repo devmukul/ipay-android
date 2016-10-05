@@ -72,7 +72,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/background_home_image_button</item>
-        <item name="android:layout_margin">@dimen/value10</item>
+        <item name="android:padding">@dimen/value10</item>
     </style>
 
     <style name="HomeImageLinearLayoutTextStyleHorizontal">
