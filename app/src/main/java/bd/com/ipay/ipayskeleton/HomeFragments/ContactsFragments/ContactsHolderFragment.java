@@ -118,17 +118,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         switchToiPayContacts();
     }
 
-   /* @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (getView() != null) {
-            if(!isVisibleToUser) {
-                miPayMemberContactsFragment = null;
-                switchToiPayContacts();
-            }
-        }
-    }*/
-
     private void showAddFriendDialog() {
         MaterialDialog.Builder addFriendDialog = new MaterialDialog.Builder(getActivity());
         addFriendDialog

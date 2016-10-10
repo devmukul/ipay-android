@@ -81,7 +81,7 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/add_title"
+                android:hint="@string/title"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -99,7 +99,7 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/send_money_description"
+                android:hint="@string/note"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -109,10 +109,16 @@
 
         <Button
             android:id="@+id/button_request_money"
-            style="@style/PrimaryMediumButton"
+            style="@style/PrimaryMediumButtonWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:text="@string/continue_request_money" />
+
+        <TextView
+            style="@style/CustomNoteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/request_money_description_info" />
     </LinearLayout>
 </ScrollView>

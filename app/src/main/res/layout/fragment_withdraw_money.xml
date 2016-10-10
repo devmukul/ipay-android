@@ -139,7 +139,7 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/send_money_description"
+                android:hint="@string/note"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -149,7 +149,7 @@
 
         <Button
             android:id="@+id/button_cash_out"
-            style="@style/PrimaryMediumButton"
+            style="@style/PrimaryMediumButtonWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/continue_add_money" />

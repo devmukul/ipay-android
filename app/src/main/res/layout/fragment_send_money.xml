@@ -82,7 +82,7 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/send_money_description"
+                android:hint="@string/note"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -92,10 +92,16 @@
 
         <Button
             android:id="@+id/button_send_money"
-            style="@style/PrimaryMediumButton"
+            style="@style/PrimaryMediumButtonWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/continue_send_money" />
+
+        <TextView
+            style="@style/CustomNoteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send_money_description_info" />
 
     </LinearLayout>
 </ScrollView>

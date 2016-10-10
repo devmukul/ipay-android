@@ -25,9 +25,10 @@
     <string name="error_invalid_QR_code">This QR code is invalid</string>
     <string name="password_hint">Password must contain minimum 8 characters and be alphanumeric. </string>
     <string name="name">Name</string>
-    <string name="enter_new_pin">Enter your PIN(4 digit)</string>
-    <string name="confirm_your_pin">Confirm your PIN</string>
+    <string name="enter_new_pin">PIN(4 digit)</string>
+    <string name="confirm_your_pin">Confirm PIN</string>
     <string name="enter_new_pass">Enter a new password</string>
+    <string name="new_pass">New password</string>
     <string name="confirm_new_pass">Confirm new password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="email">Email</string>
@@ -328,13 +329,14 @@
     <string name="failed_add_trusted_device">Could not add trusted device</string>
     <string name="change_password_progress">Change password on progress...</string>
     <string name="enter_current_pass">Enter current password</string>
+    <string name="current_pass">Current password</string>
     <string name="server_down">Can not process your request right now. Please try again later</string>
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="wallet">Wallet</string>
     <string name="next">Next</string>
     <string name="continue_sign_up">Continue</string>
     <string name="bank_list">Banks</string>
-    <string name="bank_branch">Select Branch</string>
+    <string name="bank_branch">Branch</string>
     <string name="logout">Log out</string>
     <string name="bdt">BDT</string>
     <string name="make_payment">Make Payment</string>
@@ -349,7 +351,7 @@
     <string name="select_a_district">Select District</string>
     <string name="select_a_thana">Select Thana</string>
     <string name="select_an_occupation">Select Occupation</string>
-    <string name="select_a_package">Select Package</string>
+    <string name="select_a_package">Operator Type</string>
     <string name="select_an_operator">Select Operator</string>
     <string name="recharge_to">Topup to</string>
     <string name="opening_balance_to">Opening balance to</string>
@@ -376,6 +378,7 @@
     <string name="filter_security_changes">Security Changes</string>
     <string name="clear_filter">Clear Filter</string>
     <string name="select_a_bank">Select Bank</string>
+    <string name="bank_name">Bank Name</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="saving_parent_information">Saving parent information</string>
     <string name="title_login_page">Login</string>
@@ -462,6 +465,9 @@
     <string name="select_a_document">Select a Document</string>
     <string name="mobile_topup">Mobile TopUp</string>
     <string name="mobile_topup_restriction_info">* Unverified users can recharge only their own mobile number</string>
+    <string name="send_money_description_info">Enter the details of the recipient to send money</string>
+    <string name="request_money_description_info">Enter the details of the recipient to request money</string>
+    <string name="make_payment_description_info">Enter the details of the recipient to make payment</string>
     <string name="total_amount">Total Amount</string>
     <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
     <string name="amount">Amount</string>
@@ -469,7 +475,7 @@
     <string name="fee">Fee</string>
     <string name="net_payable">Net Payable</string>
     <string name="service_charge">Service Charge</string>
-    <string name="topup_package">Package</string>
+    <string name="topup_package">Type</string>
     <string name="operator">Operator</string>
     <string name="invite_this_person_to_ipay" tools:keep="@string/invite_this_person_to_ipay">Invite this person to iPay</string>
     <string name="your_number">Your Number</string>
@@ -555,7 +561,7 @@
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
     <string name="search">Search</string>
     <string name="member_since">Member Since</string>
-    <string name="select_district">Select District</string>
+    <string name="select_district">District</string>
     <string name="add_bank_prompt">You need to have verified bank accounts to add or withdraw money. Do you want to link a bank account now?</string>
     <string name="verify_bank_prompt">You need to have at least one verified bank account to add or withdraw money. Do you want to verify a bank account now?</string>
     <string name="add_bank">Add Bank</string>
@@ -640,6 +646,7 @@
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>
     <string name="add_a_friend">Add a Friend</string>
+    <string name="add_a_contact">Add a Contact</string>
     <string name="invite_a_friend">Invite a Friend</string>
     <string name="progress_dialog_adding_friend">Adding friend...</string>
     <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
