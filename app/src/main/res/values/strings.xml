@@ -129,6 +129,8 @@
     <string name="get_student_failed">Failed to find the details of the student</string>
     <string name="get_student_not_found">Found no student with this student ID</string>
     <string name="confirm_query">Are you sure?</string>
+    <string name="introduction_request_review_dialog_content">By accepting this request,
+        you confirm that you know this person and the information shown about them is correct.</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
     <string name="parent_info_save_failed">Failed to save parent information.</string>
@@ -139,7 +141,7 @@
     <string name="select_role">Select a role</string>
     <string name="role">Role</string>
     <string name="select_a_fee_item">Select a fee item</string>
-    <string name="select_session">Select Session</string>
+    <string name="select_session"><Sele></Sele>ct Session</string>
     <string name="save">Save</string>
     <string name="ipay_contacts">iPay</string>
     <string name="activity_log">Activity log</string>

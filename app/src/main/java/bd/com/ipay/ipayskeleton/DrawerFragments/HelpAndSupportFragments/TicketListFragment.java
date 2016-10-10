@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -101,7 +104,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     }
 
     private void showErrorDialog() {
-        new AlertDialog.Builder(getContext())
+        /*new AlertDialog.Builder(getContext())
                 .setMessage(R.string.support_not_available)
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -110,6 +113,18 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();*/
+
+        new MaterialDialog.Builder(getActivity())
+                .content(R.string.support_not_available)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        getActivity().onBackPressed();
+                    }
+                })
                 .show();
     }
 
