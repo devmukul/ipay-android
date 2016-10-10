@@ -116,6 +116,7 @@
             android:text="@string/continue_mobile_recharge" />
 
         <TextView
+            android:id="@+id/text_view_mobile_restriction_info"
             style="@style/CustomNoteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
