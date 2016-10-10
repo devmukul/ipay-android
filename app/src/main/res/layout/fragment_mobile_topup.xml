@@ -116,15 +116,10 @@
             android:text="@string/continue_mobile_recharge" />
 
         <TextView
-            android:id="@+id/text_view_mobile_restriction_info"
-            android:layout_width="wrap_content"
+            style="@style/CustomNoteTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/activity_vertical_margin_card"
-            android:gravity="center"
             android:text="@string/mobile_topup_restriction_info"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="italic"
-            android:visibility="gone" />
+            android:visibility="visible"/>
     </LinearLayout>
 </ScrollView>
