@@ -58,11 +58,14 @@
 
                         <ImageView
                             android:id="@+id/email_verification_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/icon_size"
+                            android:layout_height="@dimen/icon_size"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:padding="@dimen/activity_horizontal_margin"
+                            android:paddingTop="@dimen/activity_horizontal_margin_card"
+                            android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                            android:paddingRight="@dimen/activity_horizontal_margin_card"
                             android:src="@drawable/ic_verified" />
                     </RelativeLayout>
 
