@@ -175,7 +175,7 @@ public class Constants {
     static {
         if (SERVER_TYPE == 1) {
 
-            BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
+            BASE_URL_MM = "http://10.10.10.10:10001/mm/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
