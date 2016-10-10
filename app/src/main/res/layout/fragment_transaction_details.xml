@@ -105,7 +105,6 @@
                 android:paddingBottom="@dimen/value10"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
