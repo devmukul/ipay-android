@@ -257,6 +257,11 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         getTransactionHistory();
     }
 
+    private boolean verifyDateFilter() {
+        if (mFromDateButton.getText().toString().equals("")) return false;
+        else return true;
+    }
+
     private void setActionsForDateFilter() {
         clearDateFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,15 +276,15 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         filterByDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mFromDateButton.getText().toString().equals("")){
-                    Toast.makeText(getActivity(), "Please select a valid date.", Toast.LENGTH_LONG).show();
-                }
-                else{
+
+                if (verifyDateFilter()) {
                     menu.findItem(R.id.action_clear_filter).setVisible(true);
                     clearServiceFilters();
                     dateFilterLayout.setVisibility(View.GONE);
                     setContentShown(false);
                     refreshTransactionHistory();
+                } else {
+                    Toast.makeText(getActivity(), R.string.select_a_valid_date, Toast.LENGTH_LONG).show();
                 }
             }
         });
