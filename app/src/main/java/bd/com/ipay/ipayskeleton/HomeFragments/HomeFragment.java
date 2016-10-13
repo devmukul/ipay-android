@@ -213,6 +213,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     @Override
                     public void ifPinAdded() {
                         Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                        intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
                         startActivity(intent);
                     }
                 });

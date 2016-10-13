@@ -78,7 +78,7 @@ public class PaymentActivity extends BaseActivity {
         }
     }
 
-    private void switchToMakePaymentFragment() {
+    public void switchToMakePaymentFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new MakePaymentFragment()).commit();
         mFabMakingPayment.setVisibility(View.GONE);
