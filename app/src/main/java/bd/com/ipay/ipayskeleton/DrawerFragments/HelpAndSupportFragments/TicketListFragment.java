@@ -104,18 +104,9 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     }
 
     private void showErrorDialog() {
-        /*new AlertDialog.Builder(getContext())
-                .setMessage(R.string.support_not_available)
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        getActivity().onBackPressed();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();*/
 
         new MaterialDialog.Builder(getActivity())
+                .title(R.string.sorry)
                 .content(R.string.support_not_available)
                 .cancelable(false)
                 .positiveText(R.string.ok)

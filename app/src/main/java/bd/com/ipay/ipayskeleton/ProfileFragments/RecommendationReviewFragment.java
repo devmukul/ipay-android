@@ -152,6 +152,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
                 new MaterialDialog.Builder(getActivity())
                         .title(R.string.are_you_sure)
+                        .content(R.string.introduction_request_reject_dialog_content)
                         .positiveText(R.string.yes)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -177,6 +178,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
                 new MaterialDialog.Builder(getActivity())
                         .title(R.string.are_you_sure)
+                        .content(R.string.introduction_request_spam_dialog_content)
                         .positiveText(R.string.yes)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
