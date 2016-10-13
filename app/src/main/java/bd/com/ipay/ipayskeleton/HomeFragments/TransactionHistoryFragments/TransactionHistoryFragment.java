@@ -271,11 +271,16 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         filterByDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                menu.findItem(R.id.action_clear_filter).setVisible(true);
-                clearServiceFilters();
-                dateFilterLayout.setVisibility(View.GONE);
-                setContentShown(false);
-                refreshTransactionHistory();
+                if(mFromDateButton.getText().toString().equals("")){
+                    Toast.makeText(getActivity(), "Please select a valid date.", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    menu.findItem(R.id.action_clear_filter).setVisible(true);
+                    clearServiceFilters();
+                    dateFilterLayout.setVisibility(View.GONE);
+                    setContentShown(false);
+                    refreshTransactionHistory();
+                }
             }
         });
 
