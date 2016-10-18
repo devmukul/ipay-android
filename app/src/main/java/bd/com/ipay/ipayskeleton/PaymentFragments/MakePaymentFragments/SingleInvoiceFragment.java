@@ -114,8 +114,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
         mGetSingleInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-
-    private void attempAccepttPaymentRequestWithPinCheck() {
+    private void attemptAcceptPaymentRequestWithPinCheck() {
         if (this.isPinRequired) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -398,7 +397,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
                 mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        attempAccepttPaymentRequestWithPinCheck();
+                        attemptAcceptPaymentRequestWithPinCheck();
                     }
                 });
 

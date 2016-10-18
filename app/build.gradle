@@ -14,7 +14,6 @@ android {
             keyPassword keystoreProperties['keyPassword']
             storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
-
         }
     }
 
@@ -31,7 +30,7 @@ android {
         abortOnError false
     }
 
-    def ServerType= java.lang.System.getProperty('ServerType') ?: "1"
+    def ServerType = java.lang.System.getProperty('ServerType') ?: "1"
 
     buildTypes {
         debug {
@@ -44,8 +43,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-
 
     useLibrary 'org.apache.http.legacy'
 }
