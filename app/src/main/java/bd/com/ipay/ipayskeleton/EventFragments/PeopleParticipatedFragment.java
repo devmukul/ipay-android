@@ -24,8 +24,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequestResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -35,7 +35,7 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
 
     private HttpRequestPostAsyncTask mGetParticipantsListTask = null;
     // TODO: Change the response class
-    private GetPendingRequestResponse mGetPendingRequestResponse;
+    private GetRequestResponse mGetPendingRequestResponse;
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mParticipantsListRecyclerView;
@@ -115,7 +115,7 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
             return;
         }
 
-        GetPendingMoneyRequest mUserActivityRequest = new GetPendingMoneyRequest(pageCount, Constants.SERVICE_ID_REQUEST_MONEY);
+        GetMoneyRequest mUserActivityRequest = new GetMoneyRequest(pageCount, Constants.SERVICE_ID_REQUEST_MONEY);
         Gson gson = new Gson();
         String json = gson.toJson(mUserActivityRequest);
         mGetParticipantsListTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_REQUESTS_ME,
@@ -144,7 +144,7 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
-                    mGetPendingRequestResponse = gson.fromJson(result.getJsonString(), GetPendingRequestResponse.class);
+                    mGetPendingRequestResponse = gson.fromJson(result.getJsonString(), GetRequestResponse.class);
 
                     if (listOfParticipants == null) {
                         listOfParticipants = mGetPendingRequestResponse.getAllNotifications();

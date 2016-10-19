@@ -14,6 +14,7 @@ public class RequestsSentClass {
     private String description;
     private UserProfile originatorProfile;
     private UserProfile receiverProfile;
+    private int status;
 
     public RequestsSentClass() {
     }
@@ -43,6 +44,10 @@ public class RequestsSentClass {
 
     public Long getServiceID() {
         return serviceID;
+    }
+
+    public int getStatus() {
+        return status;
     }
 
     public String getDescription() {

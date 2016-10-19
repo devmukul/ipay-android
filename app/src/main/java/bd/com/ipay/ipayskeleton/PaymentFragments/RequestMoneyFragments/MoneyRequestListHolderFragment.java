@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.R;
 
 public class MoneyRequestListHolderFragment extends Fragment {
@@ -50,6 +51,22 @@ public class MoneyRequestListHolderFragment extends Fragment {
             mSentRequestTab.select();
         }
 
+        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                if (tab.getPosition() == 0) {
+                    RequestMoneyActivity.switchedToReceivedRequestFragment = true;
+                    RequestMoneyActivity.switchedToSentRequestFragment = false;
+                }
+                else if (tab.getPosition() == 1) {
+                    RequestMoneyActivity.switchedToReceivedRequestFragment = false;
+                    RequestMoneyActivity.switchedToSentRequestFragment = true;
+
+                }
+                super.onTabSelected(tab);
+            }
+        });
         return v;
     }
 
@@ -98,5 +115,6 @@ public class MoneyRequestListHolderFragment extends Fragment {
         }
 
     }
+
 
 }

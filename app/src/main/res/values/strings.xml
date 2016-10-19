@@ -499,6 +499,7 @@
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
     <string name="mobile">Mobile No.</string>
+    <string name="history">History</string>
     <string name="this_device">This device</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>

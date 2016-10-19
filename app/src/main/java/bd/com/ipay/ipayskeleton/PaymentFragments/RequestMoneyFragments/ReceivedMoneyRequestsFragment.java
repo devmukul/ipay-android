@@ -20,15 +20,16 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -37,7 +38,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ReceivedMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
+    private HttpRequestPostAsyncTask mGetMoneyRequestTask = null;
     private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
@@ -115,18 +116,18 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     }
 
     private void getMoneyRequests() {
-        if (mGetAllNotificationsTask != null) {
+        if (mGetMoneyRequestTask != null) {
             return;
         }
 
-        GetMoneyAndPaymentRequest mTransactionHistoryRequest = new GetMoneyAndPaymentRequest(pageCount,
-                Constants.SERVICE_ID_REQUEST_MONEY);
+        GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
+                Constants.SERVICE_ID_REQUEST_MONEY,Constants.REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
-        String json = gson.toJson(mTransactionHistoryRequest);
-        mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
+        String json = gson.toJson(mMoneyRequest);
+        mGetMoneyRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
                 Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
-        mGetAllNotificationsTask.mHttpResponseListener = this;
-        mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mGetMoneyRequestTask.mHttpResponseListener = this;
+        mGetMoneyRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -135,7 +136,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         if (this.isAdded()) setContentShown(true);
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mGetAllNotificationsTask = null;
+            mGetMoneyRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
@@ -175,7 +176,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                         Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
                 }
 
-                mGetAllNotificationsTask = null;
+                mGetMoneyRequestTask = null;
                 mSwipeRefreshLayout.setRefreshing(false);
 
                 break;

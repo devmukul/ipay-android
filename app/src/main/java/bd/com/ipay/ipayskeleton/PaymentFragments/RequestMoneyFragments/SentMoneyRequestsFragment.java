@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -29,8 +30,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetPendingRequestResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
@@ -44,7 +45,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     private final int ACTION_CANCEL_REQUEST = 0;
 
     private HttpRequestPostAsyncTask mPendingRequestTask = null;
-    private GetPendingRequestResponse mGetPendingRequestResponse;
+    private GetRequestResponse mGetPendingRequestResponse;
 
     private HttpRequestPostAsyncTask mCancelRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
@@ -124,9 +125,11 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             return;
         }
 
-        GetPendingMoneyRequest mUserActivityRequest = new GetPendingMoneyRequest(pageCount, Constants.SERVICE_ID_REQUEST_MONEY);
+        GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
+                Constants.SERVICE_ID_REQUEST_MONEY,
+                Constants.REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
-        String json = gson.toJson(mUserActivityRequest);
+        String json = gson.toJson(mMoneyRequest);
         mPendingRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_REQUESTS_ME,
                 Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity());
         mPendingRequestTask.mHttpResponseListener = this;
@@ -172,7 +175,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
 
-                    mGetPendingRequestResponse = gson.fromJson(result.getJsonString(), GetPendingRequestResponse.class);
+                    mGetPendingRequestResponse = gson.fromJson(result.getJsonString(), GetRequestResponse.class);
 
                     if (clearListAfterLoading || pendingMoneyRequestClasses == null) {
                         pendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
@@ -267,8 +270,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             }
 
             public void bindView(int pos) {
-
-                if (pos == pendingMoneyRequestClasses.size() - 1) divider.setVisibility(View.GONE);
 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
                 String time = Utilities.getDateFormat(pendingMoneyRequestClasses.get(pos).getRequestTime());

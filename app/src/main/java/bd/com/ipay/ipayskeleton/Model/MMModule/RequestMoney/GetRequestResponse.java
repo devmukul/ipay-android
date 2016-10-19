@@ -2,12 +2,12 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney;
 
 import java.util.List;
 
-public class GetPendingRequestResponse {
+public class GetRequestResponse {
 
     private List<RequestsSentClass> requests;
     private boolean hasNext;
 
-    public GetPendingRequestResponse() {
+    public GetRequestResponse() {
     }
 
     public List<RequestsSentClass> getAllNotifications() {

@@ -16,4 +16,5 @@ public class GetMoneyAndPaymentRequest {
         this.page = page;
         this.serviceID = serviceID;
     }
+
 }

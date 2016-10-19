@@ -332,6 +332,7 @@ public class Constants {
 
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
+    public static final String URL_TRANSACTION_HISTORY_SINGLE = "report/transactions/single";
 
     // SM User Rest
     public static final String URL_REFRESH_BALANCE = "user/balance";
@@ -453,6 +454,7 @@ public class Constants {
     public static final String COMMAND_ACCEPT_PAYMENT_REQUEST = "COMMAND_ACCEPT_PAYMENT_REQUEST";
     public static final String COMMAND_REJECT_PAYMENT_REQUEST = "COMMAND_REJECT_PAYMENT_REQUEST";
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
+    public static final String COMMAND_GET_SENT_REQUEST_MONEY_HISTORY = "COMMAND_GET_SENT_REQUEST_MONEY_HISTORY";
     public static final String COMMAND_GET_ALL_PARTICIPANTS_LIST = "COMMAND_GET_ALL_PARTICIPANTS_LIST";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
     public static final String COMMAND_SEND_INVOICE = "COMMAND_SEND_INVOICE";
@@ -495,6 +497,7 @@ public class Constants {
     public static final String COMMAND_UPDATE_FRIENDS = "COMMAND_UPDATE_FRIENDS";
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
+    public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
 
     // Event
     public static final String COMMAND_GET_MY_EVENTS = "COMMAND_GET_MY_EVENTS";
@@ -707,6 +710,14 @@ public class Constants {
     public static final int INVOICE_STATUS_CANCELED = 2;
     public static final int INVOICE_STATUS_REJECTED = 3;
     public static final int INVOICE_STATUS_DRAFT = 4;
+
+    public static final int REQUEST_STATUS_ACCEPTED = 200;
+    public static final int REQUEST_STATUS_PROCESSING = 102;
+    public static final int REQUEST_STATUS_CANCELED = 2;
+    public static final int REQUEST_STATUS_REJECTED = 3;
+    public static final int REQUEST_STATUS_DRAFT = 4;
+    public static final int REQUEST_STATUS_ALL = -1;
+
 
     public static final int TRANSACTION_STATUS_ACCEPTED = 200;
     public static final int TRANSACTION_STATUS_PROCESSING = 102;
