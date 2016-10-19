@@ -18,6 +18,7 @@ public class MoneyAndPaymentRequest implements Notification {
     private UserProfile receiverProfile;
     private BigDecimal vat;
     private List<ItemList> itemList;
+    private int status;
 
 
     public MoneyAndPaymentRequest() {
@@ -103,5 +104,9 @@ public class MoneyAndPaymentRequest implements Notification {
     @Override
     public long getTime() {
         return getRequestTime();
+    }
+
+    public int getStatus() {
+        return status;
     }
 }

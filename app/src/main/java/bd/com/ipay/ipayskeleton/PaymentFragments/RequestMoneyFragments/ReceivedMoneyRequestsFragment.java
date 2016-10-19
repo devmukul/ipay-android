@@ -119,7 +119,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         if (mGetMoneyRequestTask != null) {
             return;
         }
-
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
                 Constants.SERVICE_ID_REQUEST_MONEY,Constants.REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
