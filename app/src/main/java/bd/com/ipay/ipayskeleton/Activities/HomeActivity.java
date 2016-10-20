@@ -64,6 +64,7 @@ import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
@@ -100,6 +101,7 @@ public class HomeActivity extends BaseActivity
     private Menu mOptionsMenu;
 
     private int mBadgeCount = 0;
+    private int savedCriticalPreferenceVersion;
 
     private static boolean switchedToHomeFragment = true;
 
@@ -216,7 +218,13 @@ public class HomeActivity extends BaseActivity
         // request user for permission.
         attemptRequestForPermission();
 
+        // Send Analytics for test purpose in Firebase
         sendAnalytics();
+
+        // Check if the stored critical preference version is lesser than the version found from config
+        savedCriticalPreferenceVersion = pref.getInt(Constants.CRITICAL_PREFERENCE_VERSION, 0);
+        if (Config.criticalPreferenceVersion > savedCriticalPreferenceVersion)
+            todoCheckList(savedCriticalPreferenceVersion);
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -302,6 +310,22 @@ public class HomeActivity extends BaseActivity
             bundle.putString(AnalyticsConstants.DEVICE_LONG_LAT, longLat);
 
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+    }
+
+    private void todoCheckList(int storedCriticalPreferenceVersion) {
+
+        // Do not put any try-catch here. The operations must go smoothly.
+        // If anything goes wrong, just store the last successful operation number in preference.
+        // Only the last case will have a break statement like the onUpgrade function in DataBaseOpenHelper
+        switch (storedCriticalPreferenceVersion) {
+            case 0:
+                // Migration code from 0 to 1
+                // TODO: fetchBusinessAccounts(storedCriticalPreferenceVersion);
+                break;
+        }
+
+        // Store the updated critical preference version after all necessary actions.
+        pref.edit().putInt(Constants.CRITICAL_PREFERENCE_VERSION, Config.criticalPreferenceVersion);
     }
 
     private void addToTrustedDeviceList() {
@@ -661,7 +685,7 @@ public class HomeActivity extends BaseActivity
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
             if (Constants.DEBUG)
                 Log.d("Broadcast home activity", newProfilePicture);
-            
+
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
