@@ -390,6 +390,7 @@ public class Constants {
 
     // Business Information (Employee)
     public static final String URL_GET_BUSINESS_LIST = "business/list";
+    public static final String URL_GET_BUSINESS_LIST_ALL = "business/list/all";
     public static final String URL_CONFIRM_BUSINESS_INVITATION = "business/user/confirm";
 
     // Education
