@@ -14,7 +14,6 @@ android {
             keyPassword keystoreProperties['keyPassword']
             storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
-
         }
     }
 
@@ -22,8 +21,8 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 69
-        versionName "1.0.5"
+        versionCode 70
+        versionName "1.0.6"
         multiDexEnabled true
     }
 
@@ -31,7 +30,7 @@ android {
         abortOnError false
     }
 
-    def ServerType= java.lang.System.getProperty('ServerType') ?: "1"
+    def ServerType = java.lang.System.getProperty('ServerType') ?: "1"
 
     buildTypes {
         debug {
@@ -44,8 +43,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-
 
     useLibrary 'org.apache.http.legacy'
 }

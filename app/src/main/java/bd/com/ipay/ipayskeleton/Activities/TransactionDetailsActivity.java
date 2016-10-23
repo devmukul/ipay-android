@@ -100,13 +100,15 @@ public class TransactionDetailsActivity extends BaseActivity {
                 try {
                     mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), SingleTransactionHistoryResponse.class);
                     transactionHistoryClass = mTransactionHistoryResponse.getTransaction();
-                    TransactionDetailsFragment transactionDetailsFragment = new TransactionDetailsFragment();
+                    if (transactionHistoryClass != null) {
+                        TransactionDetailsFragment transactionDetailsFragment = new TransactionDetailsFragment();
 
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistoryClass);
-                    transactionDetailsFragment.setArguments(bundle);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistoryClass);
+                        transactionDetailsFragment.setArguments(bundle);
 
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, transactionDetailsFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, transactionDetailsFragment).commit();
+                    }
 
 
                 } catch (Exception e) {

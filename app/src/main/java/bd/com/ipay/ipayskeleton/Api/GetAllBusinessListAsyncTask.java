@@ -8,20 +8,20 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.BusinessContact;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.GetAllBusinessContactResponse;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactResponse;
+import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask implements HttpResponseListener {
     GetAllBusinessContactResponse mBusinessContactResponse;
-    List<BusinessContact> mBusinessContacts;
+    List<BusinessAccountEntry> mBusinessContacts;
     private Context context;
 
     public GetAllBusinessListAsyncTask(Context context, String mUri) {
         super(Constants.COMMAND_GET_ALL_BUSINESS_LIST, mUri, context);
         mHttpResponseListener = this;
-        context = context;
+        this.context = context;
     }
 
 
@@ -39,14 +39,10 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
                 Gson gson = new Gson();
                 mBusinessContactResponse = gson.fromJson(result.getJsonString(), GetAllBusinessContactResponse.class);
                 mBusinessContacts = mBusinessContactResponse.getBusinessContacts();
-                Toast.makeText(getContext(), result.toString(), Toast.LENGTH_LONG).show();
-                for(BusinessContact businessContact: mBusinessContacts)
-                    Toast.makeText(getContext(),businessContact.getBusinessName(), Toast.LENGTH_LONG).show();
 
-
-                // Save the friend list fetched from the server into the database
-                //DataHelper dataHelper = DataHelper.getInstance(context);
-                //dataHelper.createFriends(mBusinessContacts);
+                // Save the list fetched from the server into the database
+                DataHelper dataHelper = DataHelper.getInstance(context);
+                dataHelper.createBusinessAccounts(mBusinessContacts);
             } else {
                 if (getContext() != null) {
                     Toast.makeText(getContext(), R.string.contacts_sync_failed, Toast.LENGTH_LONG).show();

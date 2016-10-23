@@ -17,7 +17,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyHistoryActivity extends BaseActivity {
 
-    public static int requestType = 1;
+    private int requestType = Constants.REQUEST_TYPE_RECEIVED_REQUEST;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -12,10 +12,12 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
+import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -73,7 +75,41 @@ public class DataHelper {
 
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_FRIENDS_URI, null);
 
-            Log.i("Friends", "Inserted into the database");
+            if (Constants.DEBUG) Log.i("Friends", "Inserted into the database");
+        }
+    }
+
+    // TODO: Maliha
+    public void createBusinessAccounts(List<BusinessAccountEntry> businessAccountEntries) {
+        if (businessAccountEntries != null && !businessAccountEntries.isEmpty()) {
+
+            SQLiteDatabase db = dOpenHelper.getWritableDatabase();
+            db.beginTransaction();
+
+            try {
+                for (BusinessAccountEntry mBusinessAccountEntry : businessAccountEntries) {
+                    ContentValues values = new ContentValues();
+                    values.put(DBConstants.KEY__BUSINESS_MOBILE_NUMBER, mBusinessAccountEntry.getMobileNumber());
+                    values.put(DBConstants.KEY_BUSINESS_NAME, mBusinessAccountEntry.getBusinessName());
+                    values.put(DBConstants.BUSINESS_EMAIL, mBusinessAccountEntry.getEmail());
+                    values.put(DBConstants.KEY_BUSINESS_TYPE, mBusinessAccountEntry.getBusinessType());
+                    values.put(DBConstants.KEY_BUSINESS_PROFILE_PICTURE, mBusinessAccountEntry.getProfilePictureUrl());
+                    values.put(DBConstants.KEY_BUSINESS_PROFILE_PICTURE_QUALITY_MEDIUM, mBusinessAccountEntry.getProfilePictureUrlMedium());
+                    values.put(DBConstants.KEY_BUSINESS_PROFILE_PICTURE_QUALITY_HIGH, mBusinessAccountEntry.getProfilePictureUrlHigh());
+                    values.put(DBConstants.KEY_BUSINESS_ACCOUNT_ID, mBusinessAccountEntry.getBusinessId());
+
+                    db.insertWithOnConflict(DBConstants.DB_TABLE_BUSINESS_ACCOUNTS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
+            context.getContentResolver().notifyChange(DBConstants.DB_TABLE_BUSINESS_URI, null);
+
+            if (Constants.DEBUG) Log.i("Business", "Inserted into the database");
         }
     }
 
@@ -81,12 +117,12 @@ public class DataHelper {
         return searchFriends(query, false, false, false);
     }
 
-    public Cursor searchFriends(String query, boolean memberOnly,boolean businessMemberOnly, boolean verifiedOnly) {
+    public Cursor searchFriends(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
         return searchFriends(query, memberOnly, businessMemberOnly, false, verifiedOnly, false, false, null);
     }
 
     public Cursor searchFriends(String query, boolean memberOnly, boolean businessMemberOnly, boolean nonMemberOnly,
-                            boolean verifiedOnly, boolean invitedOnly, boolean nonInvitedOnly, List<String> invitees) {
+                                boolean verifiedOnly, boolean invitedOnly, boolean nonInvitedOnly, List<String> invitees) {
         Cursor cursor = null;
 
         try {
@@ -125,7 +161,7 @@ public class DataHelper {
                     // Get invited users
                     queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " IN " + inviteeListStr;
                 }
-                
+
                 if (nonInvitedOnly) {
                     // Get invited users
                     queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " NOT IN " + inviteeListStr;

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee;
+package bd.com.ipay.ipayskeleton.Model.BusinessContact;
 
 import android.net.Uri;
 

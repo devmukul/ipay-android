@@ -60,7 +60,7 @@ public class RequestMoneyActivity extends BaseActivity {
             return true;
         } else if (item.getItemId() == R.id.action_notification) {
             Intent intent = new Intent(this, RequestMoneyHistoryActivity.class);
-            if(switchedToReceivedRequestFragment)
+            if(this.switchedToReceivedRequestFragment)
             intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
             else intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
             startActivity(intent);

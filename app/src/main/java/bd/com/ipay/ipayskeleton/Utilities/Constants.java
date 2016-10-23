@@ -18,6 +18,7 @@ public class Constants {
     public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
     public static final String LOGGED_IN = "LOGGED_IN";
     public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
+    public static final String CRITICAL_PREFERENCE_VERSION = "CRITICAL_PREFERENCE_VERSION";
     public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
     public static final String PASSWORD = "PASSWORD";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
@@ -144,7 +145,7 @@ public class Constants {
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG =true;
+    public static final boolean DEBUG = true;
 
     /**
      * If set to true (with DEBUG flag also being set to true),
