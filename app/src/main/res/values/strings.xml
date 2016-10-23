@@ -301,6 +301,7 @@
     <string name="please_add_description">Please add a description</string>
     <string name="please_add_item_name">Please add item name</string>
     <string name="add_title">Add a title</string>
+    <string name="attention">Attention</string>
     <string name="otp_sent">OTP sent. Please wait...</string>
     <string name="please_enter_valid_mobile_number">Please enter a valid mobile number.</string>
     <string name="please_enter_valid_date_of_birth">Please enter a valid date of birth.</string>
@@ -363,6 +364,7 @@
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
     <string name="sorry">Sorry</string>
     <string name="support_not_available">Customer support is not available right now. Please try again later.</string>
+    <string name="allow_overlay_permission">You need to allow the overlay permission for this application to work smoothly.</string>
     <string name="education_not_available">Education service is not available right now. Please try again later.</string>
     <string name="purpose">Purpose</string>
     <string name="failure_cause">Failure Cause</string>

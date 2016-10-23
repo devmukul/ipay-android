@@ -14,22 +14,26 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent i;
 
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
         firstLaunch = pref.getBoolean(Constants.FIRST_LAUNCH, true);
-
-        if (firstLaunch) {
-            i = new Intent(LauncherActivity.this, TourActivity.class);
-            startActivity(i);
-            finish();
-        } else {
-            i = new Intent(LauncherActivity.this, SignupOrLoginActivity.class);
-            i.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
-            startActivity(i);
-            finish();
-        }
+        startApplication();
 
         finish();
+    }
+
+    private void startApplication() {
+        Intent intent;
+
+        if (firstLaunch) {
+            intent = new Intent(LauncherActivity.this, TourActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            intent = new Intent(LauncherActivity.this, SignupOrLoginActivity.class);
+            intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
+            startActivity(intent);
+            finish();
+        }
     }
 }
