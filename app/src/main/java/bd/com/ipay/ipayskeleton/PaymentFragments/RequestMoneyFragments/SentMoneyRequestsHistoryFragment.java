@@ -217,7 +217,7 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
                         if (sentMoneyRequestClasses.get(pos).getStatus() == Constants.REQUEST_STATUS_ACCEPTED) {
                             Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
                             intent.putExtra(Constants.STATUS, Constants.REQUEST_STATUS_ACCEPTED);
-                            intent.putExtra(Constants.MONEY_REQUEST_ID, "74I226-1576A432A2B");
+                            intent.putExtra(Constants.MONEY_REQUEST_ID, sentMoneyRequestClasses.get(pos).getTransactionID());
                             startActivity(intent);
                         }
                     }

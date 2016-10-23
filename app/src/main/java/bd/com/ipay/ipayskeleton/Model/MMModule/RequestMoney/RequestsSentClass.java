@@ -15,6 +15,7 @@ public class RequestsSentClass {
     private UserProfile originatorProfile;
     private UserProfile receiverProfile;
     private int status;
+    private String transactionID;
 
     public RequestsSentClass() {
     }
@@ -48,6 +49,10 @@ public class RequestsSentClass {
 
     public int getStatus() {
         return status;
+    }
+
+    public String getTransactionID() {
+        return transactionID;
     }
 
     public String getDescription() {

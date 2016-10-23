@@ -1,23 +1,18 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,22 +21,12 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
-import java.util.List;
-
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.AskForIntroductionResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-
-import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
 
 public class BusinessContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener {
@@ -51,49 +36,20 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
     private TextView mEmptyContactsTextView;
 
     private String mQuery = "";
 
-    // When a contact item is clicked, we need to access its name and number from the sheet view.
-    // So saving these in these two variables.
-    private String mSelectedName;
-    private String mSelectedNumber;
-
-    private View mSheetViewNonIpayMember;
-    private View mSheetViewIpayMember;
-    private View selectedBottomSheetView;
-
-    private HttpRequestPostAsyncTask mSendInviteTask = null;
-    private SendInviteResponse mSendInviteResponse;
-
-    private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
-    private AskForIntroductionResponse mAskForIntroductionResponse;
-
-    private ProgressDialog mProgressDialog;
-
     private ContactListAdapter mAdapter;
     private Cursor mCursor;
 
-    private boolean mShowVerifiedUsersOnly;
-    private boolean miPayMembersOnly;
-    private boolean mBusinessMemberOnly;
-    private boolean mShowInvitedOnly;
-    private boolean mShowNonInvitedNonMembersOnly;
-
-    private int nameIndex;
     private int originalNameIndex;
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
-    private int profilePictureUrlQualityMediumIndex;
-    private int profilePictureUrlQualityHighIndex;
-    private int relationshipIndex;
-    private int verificationStatusIndex;
-    private int accountTypeIndex;
-    private int isMemberIndex;
+    private int businessTypeIndex;
+
 
     private ContactLoadFinishListener contactLoadFinishListener;
 
@@ -111,24 +67,14 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
-        mProgressDialog = new ProgressDialog(getActivity());
 
-        // If the fragment is a dialog fragment, we are using the searchview at the bottom.
-        // Otherwise, we are using the searchview from the action bar.
+        // We are using the searchview at the bottom.
         mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
 
         // prevent auto focus on Dialog launch
         mSearchView.clearFocus();
-
-        if (getArguments() != null) {
-            mShowVerifiedUsersOnly = getArguments().getBoolean(Constants.VERIFIED_USERS_ONLY, false);
-            miPayMembersOnly = getArguments().getBoolean(Constants.IPAY_MEMBERS_ONLY, false);
-            mBusinessMemberOnly = getArguments().getBoolean(Constants.BUSINESS_ACCOUNTS_ONLY, false);
-            mShowInvitedOnly = getArguments().getBoolean(Constants.SHOW_INVITED_ONLY, false);
-            mShowNonInvitedNonMembersOnly = getArguments().getBoolean(Constants.SHOW_NON_INVITED_NON_MEMBERS_ONLY, false);
-        }
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
 
@@ -189,29 +135,20 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
                  * in Contacts fragment when doing database query. It is used in the database query
                  * from invite fragment, but by that time the invitee list should already have loaded.
                  */
-                List<String> invitees = null;
-                if (ContactsHolderFragment.mGetInviteInfoResponse != null)
-                    invitees = ContactsHolderFragment.mGetInviteInfoResponse.getInvitees();
 
-                Cursor cursor = dataHelper.searchFriends(mQuery);
+                Cursor cursor = dataHelper.searchBusinessContacts(mQuery);
 
                 if (cursor != null) {
-                    nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
-                    originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_ORIGINAL_NAME);
+                    originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
                     phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
-                    profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
-                    profilePictureUrlQualityMediumIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM);
-                    profilePictureUrlQualityHighIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH);
-                    relationshipIndex = cursor.getColumnIndex(DBConstants.KEY_RELATIONSHIP);
-                    verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
-                    accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
-                    isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
+                    profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
+                    businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
 
                     if (contactLoadFinishListener != null) {
                         contactLoadFinishListener.onContactLoadFinish(cursor.getCount());
                     }
 
-                    this.registerContentObserver(cursor, DBConstants.DB_TABLE_FRIENDS_URI);
+                    this.registerContentObserver(cursor, DBConstants.DB_TABLE_BUSINESS_URI);
                 }
 
                 return cursor;
@@ -221,17 +158,12 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        populateList(data, mShowVerifiedUsersOnly ?
-                getString(R.string.no_verified_contacts) : getString(R.string.no_contacts));
+        populateList(data, getString(R.string.no_contacts));
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-    boolean isDialogFragment() {
-        return false;
     }
 
     @Override
@@ -260,27 +192,10 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
         }
     }
 
-
-    private void setPlaceHolderImage(ImageView contactImage, int backgroundColor) {
-        contactImage.setBackgroundResource(backgroundColor);
-        Glide.with(getActivity())
-                .load(R.drawable.place_holder)
-                .fitCenter()
-                .into(contactImage);
-    }
-
-    private void setSelectedName(String name) {
-        this.mSelectedName = name;
-    }
-
-    private void setSelectedNumber(String contactNumber) {
-        this.mSelectedNumber = contactNumber;
-    }
-
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int EMPTY_VIEW = 10;
-        private static final int FRIEND_VIEW = 100;
+        private static final int CONTACT_VIEW = 100;
 
         public class EmptyViewHolder extends RecyclerView.ViewHolder {
             public final TextView mEmptyDescription;
@@ -289,15 +204,6 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
                 super(itemView);
                 mEmptyDescription = (TextView) itemView.findViewById(R.id.empty_description);
             }
-        }
-
-        public boolean isInvited(String phoneNumber) {
-            if (ContactsHolderFragment.mGetInviteInfoResponse == null ||
-                    ContactsHolderFragment.mGetInviteInfoResponse.getInvitees() == null)
-                return false;
-            else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
-                return true;
-            return false;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -330,119 +236,37 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
             public void bindView(int pos) {
 
                 mCursor.moveToPosition(pos);
-
-                final String name = mCursor.getString(nameIndex);
                 final String originalName = mCursor.getString(originalNameIndex);
                 final String mobileNumber = mCursor.getString(phoneNumberIndex);
-                final String profilePictureUrlQualityMedium = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityMediumIndex);
-                final String profilePictureUrlQualityHigh = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlQualityHighIndex);
-                final boolean isVerified = mCursor.getInt(verificationStatusIndex) == DBConstants.VERIFIED_USER;
-                final int accountType = mCursor.getInt(accountTypeIndex);
-                final boolean isMember = mCursor.getInt(isMemberIndex) == DBConstants.IPAY_MEMBER;
-
-                boolean isInvited = isInvited(mobileNumber);
+                final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlIndex);
 
                 /**
                  * We need to show original name on the top if exists
                  */
                 if (originalName != null && !originalName.isEmpty()) {
                     name1View.setText(originalName);
-                    name2View.setVisibility(View.VISIBLE);
-                    name2View.setText(name);
-                } else {
-                    name1View.setText(name);
-                    name2View.setVisibility(View.GONE);
                 }
 
                 mobileNumberView.setText(mobileNumber);
+                profilePictureView.setProfilePicture(profilePictureUrl, false);
 
-                if (!isDialogFragment() && !isMember && !mShowInvitedOnly && isInvited)
-                    inviteStatusTextView.setVisibility(View.VISIBLE);
-                else
-                    inviteStatusTextView.setVisibility(View.GONE);
-
-
-                if (isMember) {
-                    isSubscriber.setVisibility(View.VISIBLE);
-                } else {
-                    isSubscriber.setVisibility(View.GONE);
-                }
-
-                if (isVerified) {
-                    verificationStatus.setVisibility(View.VISIBLE);
-                } else {
-                    verificationStatus.setVisibility(View.GONE);
-                }
-
-                if (mShowNonInvitedNonMembersOnly) {
-                    inviteButton.setVisibility(View.VISIBLE);
-                    inviteButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            if (originalName != null && !originalName.isEmpty())
-                                setSelectedName(originalName);
-                            else setSelectedName(name);
-                            setSelectedNumber(mobileNumber);
-
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setMessage(R.string.are_you_sure_to_invite)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // Do nothing
-                                        }
-                                    })
-                                    .show();
-                        }
-                    });
-                } else {
-                    inviteButton.setVisibility(View.GONE);
-                }
-
-                profilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
+                name2View.setVisibility(View.GONE);
+                inviteStatusTextView.setVisibility(View.GONE);
+                verificationStatus.setVisibility(View.GONE);
+                isSubscriber.setVisibility(View.GONE);
+                inviteButton.setVisibility(View.GONE);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (isDialogFragment()) {
-                            Intent intent = new Intent();
-                            if (originalName != null && !originalName.isEmpty())
-                                intent.putExtra(Constants.NAME, originalName);
-                            else intent.putExtra(Constants.NAME, name);
-                            intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
-                            intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrlQualityHigh);
-                            getActivity().setResult(Activity.RESULT_OK, intent);
-                            getActivity().finish();
+                        Intent intent = new Intent();
+                        if (originalName != null && !originalName.isEmpty())
+                            intent.putExtra(Constants.NAME, originalName);
+                        intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
+                        intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrl);
+                        getActivity().setResult(Activity.RESULT_OK, intent);
+                        getActivity().finish();
 
-                        } else {
-                            if (originalName != null && !originalName.isEmpty())
-                                setSelectedName(originalName);
-                            else setSelectedName(name);
-                            setSelectedNumber(mobileNumber);
-
-                            Utilities.hideKeyboard(getActivity());
-
-                            // Add a delay to hide keyboard and then open up the bottom sheet
-                            final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    int randomProfileBackgroundColor = PROFILE_PICTURE_BACKGROUNDS[getAdapterPosition() % PROFILE_PICTURE_BACKGROUNDS.length];
-                                    if (isMember) {
-                                    } else {
-                                    }
-
-                                    if (originalName != null && !originalName.isEmpty()) {
-
-                                    } else {
-                                    }
-                                }
-                            }, 100);
-                        }
                     }
                 });
             }
@@ -493,7 +317,7 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
             if (getItemCount() == 0)
                 return EMPTY_VIEW;
             else
-                return FRIEND_VIEW;
+                return CONTACT_VIEW;
         }
     }
 

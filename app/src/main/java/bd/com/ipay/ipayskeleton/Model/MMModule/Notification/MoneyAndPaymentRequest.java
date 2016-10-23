@@ -19,6 +19,7 @@ public class MoneyAndPaymentRequest implements Notification {
     private BigDecimal vat;
     private List<ItemList> itemList;
     private int status;
+    private String transactionID;
 
 
     public MoneyAndPaymentRequest() {
@@ -108,5 +109,9 @@ public class MoneyAndPaymentRequest implements Notification {
 
     public int getStatus() {
         return status;
+    }
+
+    public String getTransactionID() {
+        return transactionID;
     }
 }

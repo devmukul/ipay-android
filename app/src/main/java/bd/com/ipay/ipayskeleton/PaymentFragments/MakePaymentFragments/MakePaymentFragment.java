@@ -25,6 +25,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.BusinessContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentReviewActivity;
@@ -83,8 +84,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
-                intent.putExtra(Constants.BUSINESS_ACCOUNTS_ONLY, true);
+                Intent intent = new Intent(getActivity(), BusinessContactPickerDialogActivity.class);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });

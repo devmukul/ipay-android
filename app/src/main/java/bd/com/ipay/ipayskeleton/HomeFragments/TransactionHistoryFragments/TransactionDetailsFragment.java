@@ -67,7 +67,8 @@ public class TransactionDetailsFragment extends Fragment {
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
 
         String mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-        descriptionTextView.setText(transactionHistory.getDescription(mMobileNumber));
+        if (transactionHistory.getDescription(mMobileNumber) != null)
+            descriptionTextView.setText(transactionHistory.getDescription(mMobileNumber));
         timeTextView.setText(Utilities.getDateFormat(transactionHistory.getResponseTime()));
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));

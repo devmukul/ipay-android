@@ -190,6 +190,31 @@ public class DataHelper {
         return cursor;
     }
 
+    public Cursor searchBusinessContacts(String query) {
+        Cursor cursor = null;
+
+        try {
+            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
+
+            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS
+                    + " WHERE (" + DBConstants.KEY_BUSINESS_NAME + " LIKE '%" + query + "%'"
+                    + " OR " + DBConstants.KEY__BUSINESS_MOBILE_NUMBER + " LIKE '%" + query +"%')";
+
+            Log.w("Query", queryString);
+
+            cursor = db.rawQuery(queryString, null);
+
+            if (cursor != null) {
+                cursor.getCount();
+                Log.w("Query", cursor.getCount()+"");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cursor;
+    }
+
     public void updatePushEvents(String tagName, String jsonString) {
 
         try {
