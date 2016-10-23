@@ -23,7 +23,7 @@ public class RequestMoneyActivity extends BaseActivity {
     public static boolean switchedToSentRequestFragment = false;
     public static boolean switchedToReceivedRequestFragment = true;
 
-    private Menu mOptionsMenu;
+    private Menu menu;
 
     /**
      * If this value is set in the intent extras,
@@ -58,26 +58,9 @@ public class RequestMoneyActivity extends BaseActivity {
             Utilities.hideKeyboard(this);
             onBackPressed();
             return true;
-        } else if (item.getItemId() == R.id.action_notification) {
-            Intent intent = new Intent(this, RequestMoneyHistoryActivity.class);
-            if(this.switchedToReceivedRequestFragment)
-            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
-            else intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
-            startActivity(intent);
-            return true;
         }
         return super.onOptionsItemSelected(item);
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.home_activity, menu);
-        mOptionsMenu = menu;
-
-        // If the menu is recreated, then restore the previous badge count
-        return true;
     }
 
     @Override

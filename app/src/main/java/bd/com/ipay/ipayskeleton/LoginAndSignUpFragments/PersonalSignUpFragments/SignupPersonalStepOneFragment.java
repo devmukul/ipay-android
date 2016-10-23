@@ -211,8 +211,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPassword);
 
-        /*if (mMaleCheckBox.isChecked()) SignupOrLoginActivity.mGender = Constants.GENDER_MALE;
-        else SignupOrLoginActivity.mGender = Constants.GENDER_FEMALE;*/
+        if (mMaleCheckBox.isChecked()) SignupOrLoginActivity.mGender = Constants.GENDER_MALE;
+        else SignupOrLoginActivity.mGender = Constants.GENDER_FEMALE;
 
         boolean cancel = false;
         View focusView = null;
@@ -247,11 +247,11 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             focusView = mBirthdayEditText;
             cancel = true;
 
-        } /*else if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
+        } else if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
             //mGenderEditText.setError(getString(R.string.please_select_a_gender));
             Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
             cancel = true;
-        }*/
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first

@@ -78,6 +78,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private String mMothersName = "";
     private String mFathersMobile = "";
     private String mMothersMobile = "";
+    private String occupation = "";
 
     private int mOccupation = 0;
     private String mGender = "";
@@ -287,17 +288,27 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mGetParentInfoResponse = gson.fromJson(result.getJsonString(), GetParentInfoResponse.class);
 
-                    if (mGetParentInfoResponse.getFatherName() != null)
+                    if (mGetParentInfoResponse.getFatherName() != null) {
                         mFathersName = mGetParentInfoResponse.getFatherName();
-                    if (mGetParentInfoResponse.getFatherMobileNumber() != null)
+                        mFathersNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        mFathersNameView.setText(mFathersName);
+                    }
+                    if (mGetParentInfoResponse.getFatherMobileNumber() != null) {
                         mFathersMobile = mGetParentInfoResponse.getFatherMobileNumber();
+                        mFathersMobileView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        mFathersMobileView.setText(mFathersMobile);
+                    }
 
-                    if (mGetParentInfoResponse.getMotherName() != null)
+                    if (mGetParentInfoResponse.getMotherName() != null) {
                         mMothersName = mGetParentInfoResponse.getMotherName();
-                    if (mGetParentInfoResponse.getMotherMobileNumber() != null)
+                        mMothersNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        mMothersNameView.setText(mMothersName);
+                    }
+                    if (mGetParentInfoResponse.getMotherMobileNumber() != null) {
                         mMothersMobile = mGetParentInfoResponse.getMotherMobileNumber();
-
-                    setParentInfo();
+                        mMothersMobileView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        mMothersMobileView.setText(mMothersMobile);
+                    }
 
                 } else {
                     if (getActivity() != null)
@@ -316,31 +327,20 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
                 mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mOccupationList = mGetOccupationResponse.getOccupations();
-                    String occupation = mGetOccupationResponse.getOccupation(mOccupation);
-                    if (occupation != null)
+                    if (mGetOccupationResponse.getOccupation(mOccupation) != null) {
+                        occupation = mGetOccupationResponse.getOccupation(mOccupation);
+                        mOccupationView.setTextColor(getResources().getColor(R.color.colorPrimary));
                         mOccupationView.setText(occupation);
-                    else
-                        mOccupationView.setText("");
-                } else {
-                    mOccupationView.setText("");
+                    }
                 }
                 setContentShown(true);
             } catch (Exception e) {
                 e.printStackTrace();
-                mOccupationView.setText("");
             }
 
             mGetOccupationTask = null;
         }
     }
-
-    private void setParentInfo() {
-        mFathersNameView.setText(mFathersName);
-        mMothersNameView.setText(mMothersName);
-        mFathersMobileView.setText(mFathersMobile);
-        mMothersMobileView.setText(mMothersMobile);
-    }
-
 
     private void processProfileInfoResponse(String json) {
         Gson gson = new Gson();
@@ -354,8 +354,10 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         if (mGetProfileInfoResponse.getDateOfBirth() != null)
             mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
 
-        if (mGetProfileInfoResponse.getGender() != null)
+        if (mGetProfileInfoResponse.getGender() != null) {
             mGender = mGetProfileInfoResponse.getGender();
+            mGenderView.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
 
         if (mGetProfileInfoResponse.getSignUpTime() != null) {
             mSignUpTime = mGetProfileInfoResponse.getSignUpTime();

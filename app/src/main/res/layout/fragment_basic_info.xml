@@ -81,7 +81,7 @@
                 <TextView
                     android:id="@+id/textview_name"
                     style="@style/TextViewInfoColorPrimary"
-                    android:layout_weight=".3"/>
+                    android:layout_weight=".3" />
             </LinearLayout>
 
             <LinearLayout
@@ -111,7 +111,9 @@
                 <TextView
                     android:id="@+id/textview_occupation"
                     style="@style/TextViewInfoColorPrimary"
-                    android:layout_weight=".3"/>
+                    android:layout_weight=".3"
+                    android:text="@string/not_set"
+                    android:textColor="@color/background_red" />
             </LinearLayout>
 
             <LinearLayout
@@ -125,7 +127,9 @@
 
                 <TextView
                     android:id="@+id/textview_gender"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimary"
+                    android:text="@string/not_set"
+                    android:textColor="@color/background_red" />
             </LinearLayout>
 
             <LinearLayout
@@ -190,7 +194,9 @@
                 <TextView
                     android:id="@+id/textview_fathers_name"
                     style="@style/TextViewInfoColorPrimary"
-                    android:layout_weight=".3"/>
+                    android:layout_weight=".3"
+                    android:text="@string/not_set"
+                    android:textColor="@color/background_red" />
             </LinearLayout>
 
             <LinearLayout
@@ -204,7 +210,9 @@
 
                 <TextView
                     android:id="@+id/textview_fathers_mobile"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimary"
+                    android:text="@string/not_set"
+                    android:textColor="@color/background_red" />
             </LinearLayout>
 
             <LinearLayout
@@ -219,7 +227,9 @@
                 <TextView
                     android:id="@+id/textview_mothers_name"
                     style="@style/TextViewInfoColorPrimary"
-                    android:layout_weight=".3"/>
+                    android:layout_weight=".3"
+                    android:text="@string/not_set"
+                    android:textColor="@color/background_red" />
             </LinearLayout>
 
             <LinearLayout
@@ -233,7 +243,9 @@
 
                 <TextView
                     android:id="@+id/textview_mothers_mobile"
-                    style="@style/TextViewInfoColorPrimary" />
+                    style="@style/TextViewInfoColorPrimary"
+                    android:text="@string/not_set"
+                    android:textColor="@color/background_red" />
             </LinearLayout>
 
         </LinearLayout>

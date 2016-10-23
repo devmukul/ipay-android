@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -8,13 +9,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyHistoryActivity;
+import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class MoneyRequestListHolderFragment extends Fragment {
     private ViewPager viewPager;
@@ -58,8 +66,7 @@ public class MoneyRequestListHolderFragment extends Fragment {
                 if (tab.getPosition() == 0) {
                     RequestMoneyActivity.switchedToReceivedRequestFragment = true;
                     RequestMoneyActivity.switchedToSentRequestFragment = false;
-                }
-                else if (tab.getPosition() == 1) {
+                } else if (tab.getPosition() == 1) {
                     RequestMoneyActivity.switchedToReceivedRequestFragment = false;
                     RequestMoneyActivity.switchedToSentRequestFragment = true;
 
@@ -68,6 +75,32 @@ public class MoneyRequestListHolderFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.home_activity, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_notification) {
+            Intent intent = new Intent(getActivity(), RequestMoneyHistoryActivity.class);
+            if (RequestMoneyActivity.switchedToReceivedRequestFragment)
+                intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
+            else intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+            startActivity(intent);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setupCustomViewsForTabLayout() {

@@ -301,12 +301,10 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     Intent intent = new Intent(Constants.PROFILE_COMPLETION_UPDATE_BROADCAST);
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
-                    if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
                         mProfileCompletionStatusView.setText("Your profile is " +
                                 mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                                + "complete. Complete profile to get verified.");
+                                + "complete.");
                         mProfileCompletionStatusView.setVisibility(View.VISIBLE);
-                    }
 
                 } else {
                     if (getActivity() != null)

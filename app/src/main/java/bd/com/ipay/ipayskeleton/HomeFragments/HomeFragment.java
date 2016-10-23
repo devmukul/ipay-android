@@ -396,7 +396,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 mProfileCompletionMessageView.setText("Your profile is " +
                         mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                        + "complete. Complete profile to get verified.");
+                        + "complete.");
 
                 mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
 
