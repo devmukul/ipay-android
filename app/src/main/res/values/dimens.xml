@@ -5,6 +5,7 @@
     <dimen name="activity_horizontal_margin_semi_double">24dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin_semi_card">12dp</dimen>
     <dimen name="activity_vertical_margin_card">8dp</dimen>
     <dimen name="activity_horizontal_margin_card">8dp</dimen>
     <dimen name="activity_vertical_margin_double">24dp</dimen>
@@ -50,5 +51,5 @@
     <dimen name="contact_switcher_radius">4dp</dimen>
     <dimen name="ticket_comment_radius">3dp</dimen>
     <dimen name="ticket_profile_picture_size">40dp</dimen>
-    <dimen name="icon_size">35dp</dimen>
+    <dimen name="icon_size">40dp</dimen>
 </resources>
