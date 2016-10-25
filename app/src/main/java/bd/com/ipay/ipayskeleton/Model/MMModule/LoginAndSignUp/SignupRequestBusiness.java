@@ -10,7 +10,6 @@ public class SignupRequestBusiness {
     private final int accountType;
     private final String dob;
     private final String password;
-    private final String gender;
     private final String otp;
     private final String businessName;
     private final long businessType;
@@ -22,7 +21,7 @@ public class SignupRequestBusiness {
 
     public SignupRequestBusiness(String mobileNumber, String deviceId,
                                  String name, int accountType, String dob,
-                                 String password, String gender, String otp, String businessName,
+                                 String password, String otp, String businessName,
                                  long businessType, String businessEmail, String personalEmail,
                                  String personalMobileNumber, AddressClass personalAddress,
                                  AddressClass businessAddress, String promoCode) {
@@ -32,7 +31,6 @@ public class SignupRequestBusiness {
         this.accountType = accountType;
         this.dob = dob;
         this.password = password;
-        this.gender = gender;
         this.otp = otp;
         this.businessName = businessName;
         this.businessType = businessType;

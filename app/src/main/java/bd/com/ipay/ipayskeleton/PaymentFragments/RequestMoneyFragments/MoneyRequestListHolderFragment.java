@@ -82,14 +82,16 @@ public class MoneyRequestListHolderFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+/*
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.home_activity, menu);
     }
+*/
 
-    @Override
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_notification) {
             Intent intent = new Intent(getActivity(), RequestMoneyHistoryActivity.class);
@@ -102,7 +104,7 @@ public class MoneyRequestListHolderFragment extends Fragment {
             return super.onOptionsItemSelected(item);
         }
     }
-
+*/
     private void setupCustomViewsForTabLayout() {
         mReceivedRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         mSentRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);

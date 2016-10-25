@@ -184,7 +184,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             SignupRequestBusiness mSignupModel = new SignupRequestBusiness(SignupOrLoginActivity.mMobileNumberBusiness,
                     Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mNameBusiness, SignupOrLoginActivity.mAccountType,
                     SignupOrLoginActivity.mBirthdayBusinessHolder,
-                    SignupOrLoginActivity.mPasswordBusiness, SignupOrLoginActivity.mGender, otp,
+                    SignupOrLoginActivity.mPasswordBusiness, otp,
                     SignupOrLoginActivity.mBusinessName, SignupOrLoginActivity.mTypeofBusiness,
                     SignupOrLoginActivity.mEmailBusiness, SignupOrLoginActivity.mEmailBusiness,
                     SignupOrLoginActivity.mMobileNumberPersonal, SignupOrLoginActivity.mAddressBusiness,

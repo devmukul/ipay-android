@@ -86,13 +86,16 @@
                     </android.support.design.widget.TextInputLayout>
                 </RelativeLayout>
 
-                <View style="@style/DividerOnly" />
+                <View
+                    style="@style/DividerOnly"
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5">
+                    android:paddingTop="@dimen/value5"
+                    android:visibility="gone">
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="wrap_content"

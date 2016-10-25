@@ -170,8 +170,6 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
         SignupOrLoginActivity.mBirthdayBusinessHolder = mDOB;
         SignupOrLoginActivity.mNameBusiness = name;
-        if (mMaleCheckBox.isChecked()) SignupOrLoginActivity.mGender = Constants.GENDER_MALE;
-        else SignupOrLoginActivity.mGender = Constants.GENDER_FEMALE;
 
         boolean cancel = false;
         View focusView = null;
@@ -194,11 +192,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             focusView = mBirthdayEditText;
             cancel = true;
 
-        } else if (!mMaleCheckBox.isChecked() && !mFemaleCheckBox.isChecked()) {
-            Toast.makeText(getActivity(), R.string.please_select_a_gender, Toast.LENGTH_LONG).show();
-            cancel = true;
-
-        } else if (!mPersonalAddressView.verifyUserInputs()) {
+        }  else if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
 
         } else if (!mAgreementCheckBox.isChecked()) {
