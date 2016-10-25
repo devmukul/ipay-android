@@ -12,8 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,7 +23,9 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class BusinessContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
@@ -45,13 +45,10 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
     private ContactListAdapter mAdapter;
     private Cursor mCursor;
 
-    private int originalNameIndex;
+    private int businessNameIndex;
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int businessTypeIndex;
-
-
-    private ContactLoadFinishListener contactLoadFinishListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +65,7 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_contacts, container, false);
 
-        // We are using the searchview at the bottom.
+        // We are using the SearchView at the bottom.
         mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
         mSearchView.setIconified(false);
         mSearchView.setOnQueryTextListener(this);
@@ -89,10 +86,6 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
         return v;
     }
 
-    public void setContactLoadFinishListener(ContactLoadFinishListener contactLoadFinishListener) {
-        this.contactLoadFinishListener = contactLoadFinishListener;
-    }
-
     private void resetSearchKeyword() {
         if (mSearchView != null && !mQuery.isEmpty()) {
             if (Constants.DEBUG)
@@ -111,13 +104,6 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
         super.onDestroyView();
     }
 
-    private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
-        for (int i = 0; i < menu.size(); ++i) {
-            MenuItem item = menu.getItem(i);
-            if (item != null && item != exception) item.setVisible(visible);
-        }
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -126,27 +112,13 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
 
-
-                // TODO hack
-                /**
-                 * Caution: It takes some time to load invite response from the server. So if you are
-                 * loading this Fragment from Contacts page, it is very much possible that invitee list
-                 * will be null. This is generally not a problem because invitee list is not used
-                 * in Contacts fragment when doing database query. It is used in the database query
-                 * from invite fragment, but by that time the invitee list should already have loaded.
-                 */
-
                 Cursor cursor = dataHelper.searchBusinessContacts(mQuery);
 
                 if (cursor != null) {
-                    originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
+                    businessNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
                     phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
                     profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
                     businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
-
-                    if (contactLoadFinishListener != null) {
-                        contactLoadFinishListener.onContactLoadFinish(cursor.getCount());
-                    }
 
                     this.registerContentObserver(cursor, DBConstants.DB_TABLE_BUSINESS_URI);
                 }
@@ -209,59 +181,48 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final View itemView;
 
-            private final TextView name1View;
-            private final TextView name2View;
+            private final TextView businessNameView;
+            private final TextView businessTypeView;
             private final ProfileImageView profilePictureView;
             private final TextView mobileNumberView;
-            private final ImageView isSubscriber;
-            private final ImageView verificationStatus;
-            private final TextView inviteStatusTextView;
-            private final Button inviteButton;
 
             public ViewHolder(View itemView) {
                 super(itemView);
 
                 this.itemView = itemView;
 
-                name1View = (TextView) itemView.findViewById(R.id.name1);
-                name2View = (TextView) itemView.findViewById(R.id.name2);
+                businessNameView = (TextView) itemView.findViewById(R.id.business_name);
+                businessTypeView = (TextView) itemView.findViewById(R.id.business_type);
                 mobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
                 profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                isSubscriber = (ImageView) itemView.findViewById(R.id.is_member);
-                verificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
-                inviteStatusTextView = (TextView) itemView.findViewById(R.id.invite_status);
-                inviteButton = (Button) itemView.findViewById(R.id.button_invite);
             }
 
             public void bindView(int pos) {
 
                 mCursor.moveToPosition(pos);
-                final String originalName = mCursor.getString(originalNameIndex);
+                final String businessName = mCursor.getString(businessNameIndex);
                 final String mobileNumber = mCursor.getString(phoneNumberIndex);
+                final int businessTypeID = mCursor.getInt(businessTypeIndex);
                 final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + mCursor.getString(profilePictureUrlIndex);
 
-                /**
-                 * We need to show original name on the top if exists
-                 */
-                if (originalName != null && !originalName.isEmpty()) {
-                    name1View.setText(originalName);
+                if (businessName != null && !businessName.isEmpty()) {
+                    businessNameView.setText(businessName);
                 }
 
                 mobileNumberView.setText(mobileNumber);
                 profilePictureView.setProfilePicture(profilePictureUrl, false);
 
-                name2View.setVisibility(View.GONE);
-                inviteStatusTextView.setVisibility(View.GONE);
-                verificationStatus.setVisibility(View.GONE);
-                isSubscriber.setVisibility(View.GONE);
-                inviteButton.setVisibility(View.GONE);
+                for (BusinessType businessType : CommonData.getBusinessTypes()) {
+                    if (businessType.getId() == businessTypeID)
+                        businessTypeView.setText(businessType.getName());
+                }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent();
-                        if (originalName != null && !originalName.isEmpty())
-                            intent.putExtra(Constants.NAME, originalName);
+                        if (businessName != null && !businessName.isEmpty())
+                            intent.putExtra(Constants.BUSINESS_NAME, businessName);
                         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
                         intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrl);
                         getActivity().setResult(Activity.RESULT_OK, intent);
@@ -283,7 +244,7 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
                 return new EmptyViewHolder(v);
             } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_contact, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_contact, parent, false);
                 return new ViewHolder(v);
             }
         }
@@ -321,7 +282,4 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
         }
     }
 
-    public interface ContactLoadFinishListener {
-        void onContactLoadFinish(int contactCount);
-    }
 }

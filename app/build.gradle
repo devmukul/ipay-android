@@ -30,7 +30,7 @@ android {
         abortOnError false
     }
 
-    def ServerType = java.lang.System.getProperty('ServerType') ?: "4"
+    def ServerType = java.lang.System.getProperty('ServerType') ?: "1"
 
     buildTypes {
         debug {

@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -59,6 +60,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -88,6 +90,8 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
+
+    private GetBusinessTypesAsyncTask mGetBusinessTypesAsyncTask;
 
     private TextView mMobileNumberView;
     private TextView mNameView;
@@ -215,6 +219,9 @@ public class HomeActivity extends BaseActivity
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
 
+        // Load the list of available business types, which will be accessed from multiple activities
+        getAvailableBusinessTypes();
+
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
         attemptRequestForPermission();
@@ -280,7 +287,6 @@ public class HomeActivity extends BaseActivity
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
     }
 
-
     private void attemptRequestForPermission() {
         String[] requiredPermissions = {Manifest.permission.READ_CONTACTS};
 
@@ -313,25 +319,6 @@ public class HomeActivity extends BaseActivity
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
-    private void todoCheckList(int storedCriticalPreferenceVersion) {
-
-        // Do not put any try-catch here. The operations must go smoothly.
-        // If anything goes wrong, just store the last successful operation number in preference.
-        // Only the last case will have a break statement like the onUpgrade function in DataBaseOpenHelper
-        switch (storedCriticalPreferenceVersion) {
-            case 0:
-                // Migration code from 0 to 1
-
-                // Get Business contacts
-                GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder=new GetAllBusinessContactRequestBuilder();
-                new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                break;
-        }
-
-        // Store the updated critical preference version after all necessary actions.
-        pref.edit().putInt(Constants.CRITICAL_PREFERENCE_VERSION, Config.criticalPreferenceVersion);
-    }
-
     private void addToTrustedDeviceList() {
         if (mAddTrustedDeviceTask != null) {
             return;
@@ -350,6 +337,24 @@ public class HomeActivity extends BaseActivity
                 Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, this);
         mAddTrustedDeviceTask.mHttpResponseListener = this;
         mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void todoCheckList(int storedCriticalPreferenceVersion) {
+
+        // Do not put any try-catch here. The operations must go smoothly.
+        // If anything goes wrong, just store the last successful operation number in preference.
+        // Only the last case will have a break statement like the onUpgrade function in DataBaseOpenHelper
+        switch (storedCriticalPreferenceVersion) {
+            case 0:
+                // Migration code from 0 to 1
+                // Get Business contacts
+                GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder();
+                new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                break;
+        }
+
+        // Store the updated critical preference version after all necessary actions.
+        pref.edit().putInt(Constants.CRITICAL_PREFERENCE_VERSION, Config.criticalPreferenceVersion);
     }
 
     @Override
@@ -389,7 +394,6 @@ public class HomeActivity extends BaseActivity
             }
         }
     }
-
 
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
@@ -559,6 +563,20 @@ public class HomeActivity extends BaseActivity
     private void getAvailableBankList() {
         GetAvailableBankAsyncTask getAvailableBanksTask = new GetAvailableBankAsyncTask(this);
         getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getAvailableBusinessTypes() {
+        // Load business types, then extract the name of the business type from businessTypeId
+        mGetBusinessTypesAsyncTask = new GetBusinessTypesAsyncTask(this, new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
+            @Override
+            public void onLoadSuccess(List<BusinessType> businessTypes) {
+            }
+
+            @Override
+            public void onLoadFailed() {
+            }
+        });
+        mGetBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

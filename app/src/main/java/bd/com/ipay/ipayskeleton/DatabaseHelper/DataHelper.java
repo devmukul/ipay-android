@@ -79,7 +79,6 @@ public class DataHelper {
         }
     }
 
-    // TODO: Maliha
     public void createBusinessAccounts(List<BusinessAccountEntry> businessAccountEntries) {
         if (businessAccountEntries != null && !businessAccountEntries.isEmpty()) {
 
