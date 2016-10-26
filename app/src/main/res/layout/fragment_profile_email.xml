@@ -62,10 +62,10 @@
                             android:layout_height="@dimen/icon_size"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:paddingTop="@dimen/activity_horizontal_margin_card"
                             android:paddingBottom="@dimen/activity_horizontal_margin_card"
-                            android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                            android:paddingRight="@dimen/activity_horizontal_margin_card"
+                            android:paddingLeft="@dimen/activity_vertical_margin_card"
+                            android:paddingRight="@dimen/activity_vertical_margin_semi_card"
+                            android:paddingTop="@dimen/activity_horizontal_margin_card"
                             android:src="@drawable/ic_verified" />
                     </RelativeLayout>
 
