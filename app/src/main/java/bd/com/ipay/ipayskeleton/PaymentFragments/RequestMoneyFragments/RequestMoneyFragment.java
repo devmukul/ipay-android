@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,22 +18,33 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class RequestMoneyFragment extends Fragment {
+public class RequestMoneyFragment extends Fragment implements HttpResponseListener {
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
+
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private Button buttonRequest;
     private ImageView buttonSelectFromContacts;
@@ -94,6 +106,9 @@ public class RequestMoneyFragment extends Fragment {
             }
         });
 
+        // Get business rule
+        attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
+
         return v;
     }
 
@@ -139,10 +154,26 @@ public class RequestMoneyFragment extends Fragment {
 
         }
 
+        // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             cancel = true;
+
+        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
+                && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+
+            BigDecimal maxAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
+
+            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                    SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+
+            if (error_message != null) {
+                focusView = mAmountEditText;
+                mAmountEditText.setError(error_message);
+                cancel = true;
+            }
         }
 
         if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
@@ -195,6 +226,62 @@ public class RequestMoneyFragment extends Fragment {
             }
         } else if (requestCode == REQUEST_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             ((RequestMoneyActivity) getActivity()).switchToMoneyRequestListFragment(true);
+        }
+    }
+
+    private void attemptGetBusinessRule(int serviceID) {
+
+        if (mGetBusinessRuleTask != null) {
+            return;
+        }
+
+        String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                mUri, getActivity(), this);
+
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void httpResponseReceiver(HttpResponseObject result) {
+
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                try {
+                    Gson gson = new Gson();
+
+                    BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
+
+                    if (businessRuleArray != null) {
+
+                        for (BusinessRule rule : businessRuleArray) {
+                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                                SendMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+
+                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                                SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            }
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+            }
+
+            mGetBusinessRuleTask = null;
         }
     }
 
