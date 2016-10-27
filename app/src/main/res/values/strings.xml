@@ -169,6 +169,7 @@
     <string name="could_not_fetch_the_number">Could not fetch the mobile number.</string>
     <string name="progress_dialog_text_logging_in">Signing in...</string>
     <string name="event_not_found">Event not found. The event might have been removed.</string>
+    <string name="progress_dialog_send_for_introduction">Sending introduction request...</string>
     <string name="progress_dialog_send_for_recommendation">Sending recommendation request...</string>
     <string name="progress_dialog_saving_new_pass">Saving new password...</string>
     <string name="please_link_a_bank_for_cash_in">Please link your bank account with iPay to add money from your bank account. You can use this feature once your linked bank account gets verified!</string>
@@ -427,10 +428,12 @@
     <string name="ask_for_introduction">Ask for Introduction</string>
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
     <string name="failed_asking_recommendation">Failed to place a recommendation request.</string>
+    <string name="failed_asking_introduction">Failed to place an introduction request.</string>
     <string name="invitaiton_limit_exceeded">Maximum invitation limit exceeded</string>
     <string name="failed_request">Request failed</string>
     <string name="invitation_sent">Invitation sent</string>
     <string name="ask_for_recommendation_sent">Recommendation request sent</string>
+    <string name="introduction_request_sent">Introduction request sent</string>
     <string name="please_log_in_again">Please log in again</string>
     <string name="identification">Identification</string>
     <string name="identification_documents">Identification Documents</string>

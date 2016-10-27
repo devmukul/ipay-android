@@ -581,7 +581,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.introduction_request_sent, Toast.LENGTH_LONG).show();
                     }
                 } else if (getActivity() != null) {
                     Toast.makeText(getActivity(), mAskForIntroductionResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -590,7 +590,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 e.printStackTrace();
 
                 if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.failed_asking_introduction, Toast.LENGTH_LONG).show();
                 }
             }
 
