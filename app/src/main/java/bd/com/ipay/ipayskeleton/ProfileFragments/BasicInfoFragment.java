@@ -81,7 +81,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private String occupation = "";
 
     private int mOccupation = 0;
-    private String mGender = null;
+    private String mGender;
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
 

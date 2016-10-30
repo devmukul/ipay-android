@@ -93,7 +93,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
     private int mOccupation = 0;
     private String occupation = "";
-    private String mGender = "";
+    private String mGender;
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
 
