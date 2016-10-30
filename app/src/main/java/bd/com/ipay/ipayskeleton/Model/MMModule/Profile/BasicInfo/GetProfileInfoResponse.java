@@ -11,7 +11,7 @@ public class GetProfileInfoResponse {
     private String mobileNumber;
     private String name;
     private String gender;
-    private String dob;
+    private long dob;
     private int occupation;
     private int accountType;
     private String verificationStatus;
@@ -38,7 +38,7 @@ public class GetProfileInfoResponse {
         return gender;
     }
 
-    public String getDateOfBirth() {
+    public long getDateOfBirth() {
         return dob;
     }
 

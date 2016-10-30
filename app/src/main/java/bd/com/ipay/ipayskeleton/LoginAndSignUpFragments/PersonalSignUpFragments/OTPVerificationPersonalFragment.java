@@ -183,7 +183,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
                     Constants.MOBILE_ANDROID + mDeviceID,
                     SignupOrLoginActivity.mName,
-                    SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword, otp, SignupOrLoginActivity.mPromoCode,
+                    Utilities.dateToMilliSecond(SignupOrLoginActivity.mBirthday), SignupOrLoginActivity.mPassword, otp, SignupOrLoginActivity.mPromoCode,
                     Constants.PERSONAL_ACCOUNT_TYPE, SignupOrLoginActivity.mAddressPersonal);
             Gson gson = new Gson();
             String json = gson.toJson(mSignupModel);

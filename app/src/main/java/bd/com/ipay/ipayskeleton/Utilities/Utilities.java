@@ -49,8 +49,10 @@ import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -124,6 +126,30 @@ public class Utilities {
             sbuf.append(Integer.toHexString(intVal).toUpperCase());
         }
         return sbuf.toString();
+    }
+
+    /**
+     * Convert date string to millisecond
+     */
+    public static long dateToMilliSecond(String dateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date mDate = sdf.parse(dateString);
+            long timeInMilliseconds = mDate.getTime();
+            return timeInMilliseconds;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Convert millisecond to date string
+     */
+    public static String milliSecondToDate(long millisecond) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String mDate = dateFormat.format(new Date(millisecond));
+        return mDate;
     }
 
     /**
@@ -383,6 +409,7 @@ public class Utilities {
 
         return filePath;
     }
+
     public static void setLayoutAnim_slideDown(ViewGroup panel) {
 
         AnimationSet set = new AnimationSet(true);
@@ -449,7 +476,7 @@ public class Utilities {
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMinimumFractionDigits(2);
         numberFormat.setMaximumFractionDigits(2);
-        return  numberFormat.format(amount);
+        return numberFormat.format(amount);
     }
 
     public static String formatTaka(BigDecimal amount) {
@@ -578,7 +605,7 @@ public class Utilities {
         activity.getActionBar().setTitle(title);
     }
 
-    public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct){
+    public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct) {
         return base.multiply(pct).divide(new BigDecimal(100));
     }
 }

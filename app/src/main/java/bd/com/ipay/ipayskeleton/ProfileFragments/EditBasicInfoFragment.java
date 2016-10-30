@@ -58,7 +58,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private String mDateOfBirth = "";
 
     private int mOccupation = -1;
-    private String mGender = "";
+    private String mGender = null;
 
     private List<Occupation> mOccupationList;
 
@@ -73,7 +73,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
 
-        if (ProfileInfoCacheManager.isBusinessAccount()) getActivity().setTitle(getString(R.string.edit_contact_info));
+        if (ProfileInfoCacheManager.isBusinessAccount())
+            getActivity().setTitle(getString(R.string.edit_contact_info));
         else getActivity().setTitle(getString(R.string.edit_basic_info));
         Bundle bundle = getArguments();
 
@@ -81,7 +82,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
-        mOccupationList= bundle.getParcelableArrayList(Constants.OCCUPATION_LIST);
+        mOccupationList = bundle.getParcelableArrayList(Constants.OCCUPATION_LIST);
 
         mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
         mNameEditText = (EditText) v.findViewById(R.id.name);
@@ -185,7 +186,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         Gson gson = new Gson();
 
-        SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, mDateOfBirth,
+        SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, Utilities.dateToMilliSecond(mDateOfBirth),
                 mOccupation);
 
         String profileInfoJson = gson.toJson(setProfileInfoRequest);
@@ -202,18 +203,20 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         String[] genderArray = GenderList.genderNames;
 
-        if (mGender.equals(GenderList.genderNameToCodeMap.get(
-                genderArray[0]))) {
-            mMaleCheckBox.setChecked(true);
-            mFemaleCheckBox.setChecked(false);
-            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-            mMaleCheckBox.setTextColor((Color.WHITE));
-        } else if (mGender.equals(GenderList.genderNameToCodeMap.get(
-                genderArray[1]))) {
-            mMaleCheckBox.setChecked(false);
-            mFemaleCheckBox.setChecked(true);
-            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-            mFemaleCheckBox.setTextColor((Color.WHITE));
+        if (mGender != null) {
+            if (mGender.equals(GenderList.genderNameToCodeMap.get(
+                    genderArray[0]))) {
+                mMaleCheckBox.setChecked(true);
+                mFemaleCheckBox.setChecked(false);
+                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                mMaleCheckBox.setTextColor((Color.WHITE));
+            } else if (mGender.equals(GenderList.genderNameToCodeMap.get(
+                    genderArray[1]))) {
+                mMaleCheckBox.setChecked(false);
+                mFemaleCheckBox.setChecked(true);
+                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                mFemaleCheckBox.setTextColor((Color.WHITE));
+            }
         }
     }
 

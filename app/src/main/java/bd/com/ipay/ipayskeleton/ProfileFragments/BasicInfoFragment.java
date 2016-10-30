@@ -81,7 +81,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private String occupation = "";
 
     private int mOccupation = 0;
-    private String mGender = "";
+    private String mGender = null;
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
 
@@ -193,7 +193,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
 
-        if(mGender!= "")
+        if(mGender!= null)
         mGenderView.setText(mGender);
 
         mDateOfBirthView.setText(mDateOfBirth);
@@ -352,8 +352,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         if (mGetProfileInfoResponse.getMobileNumber() != null)
             mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
 
-        if (mGetProfileInfoResponse.getDateOfBirth() != null)
-            mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
+        if (Utilities.milliSecondToDate(mGetProfileInfoResponse.getDateOfBirth()) != null)
+            mDateOfBirth = Utilities.milliSecondToDate(mGetProfileInfoResponse.getDateOfBirth());
 
         if (mGetProfileInfoResponse.getGender() != null) {
             mGender = mGetProfileInfoResponse.getGender();
